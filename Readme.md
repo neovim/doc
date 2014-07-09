@@ -1,0 +1,3 @@
+Neovim generated documentation
+==============================
+
