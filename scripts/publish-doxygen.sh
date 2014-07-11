@@ -23,8 +23,8 @@ git clone https://github.com/neovim/neovim ./repos/neovim
 # clone the neovim/doc and switch to gh_pages branch
 git clone --branch gh-pages https://github.com/neovim/doc ./repos/doc
 
-# delete the old doxygen folder
-rm -rf ./repos/doc/doxygen
+# delete the old dev folder
+rm -rf ./repos/doc/dev
 
 # build the documentation
 cd repos/neovim
@@ -32,7 +32,7 @@ mkdir build
 doxygen
 
 # move the generated docs into the doc repo
-mv build/doxygen/html ../doc/doxygen
+mv build/doxygen/html ../doc/dev
 
 # cd into the doc dir and commit and push the new docs.
 # GH_TOKEN was passed encrypted to travis and should have been decrypted
