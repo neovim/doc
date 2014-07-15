@@ -41,7 +41,7 @@ generate_clang_report() {
 }
 
 # Clone code & doc repos
-git clone https://github.com/${NEOVIM_REPO} ${NEOVIM_DIR} --branch ${NEOVIM_BRANCH}
+git clone --depth 1 https://github.com/${NEOVIM_REPO} ${NEOVIM_DIR} --branch ${NEOVIM_BRANCH}
 git clone https://github.com/${DOC_REPO} ${DOC_DIR} --branch ${DOC_BRANCH}
 
 # Generate documentation & reports
