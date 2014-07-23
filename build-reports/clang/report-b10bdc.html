@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+<head>
+<title>/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/garray.c</title>
+<style type="text/css">
+ body { color:#000000; background-color:#ffffff }
+ body { font-family:Helvetica, sans-serif; font-size:10pt }
+ h1 { font-size:14pt }
+ .code { border-collapse:collapse; width:100%; }
+ .code { font-family: "Monospace", monospace; font-size:10pt }
+ .code { line-height: 1.2em }
+ .comment { color: green; font-style: oblique }
+ .keyword { color: blue }
+ .string_literal { color: red }
+ .directive { color: darkmagenta }
+ .expansion { display: none; }
+ .macro:hover .expansion { display: block; border: 2px solid #FF0000; padding: 2px; background-color:#FFF0F0; font-weight: normal;   -webkit-border-radius:5px;  -webkit-box-shadow:1px 1px 7px #000; position: absolute; top: -1em; left:10em; z-index: 1 } 
+ .macro { color: darkmagenta; background-color:LemonChiffon; position: relative }
+ .num { width:2.5em; padding-right:2ex; background-color:#eeeeee }
+ .num { text-align:right; font-size:8pt }
+ .num { color:#444444 }
+ .line { padding-left: 1ex; border-left: 3px solid #ccc }
+ .line { white-space: pre }
+ .msg { -webkit-box-shadow:1px 1px 7px #000 }
+ .msg { -webkit-border-radius:5px }
+ .msg { font-family:Helvetica, sans-serif; font-size:8pt }
+ .msg { float:left }
+ .msg { padding:0.25em 1ex 0.25em 1ex }
+ .msg { margin-top:10px; margin-bottom:10px }
+ .msg { font-weight:bold }
+ .msg { max-width:60em; word-wrap: break-word; white-space: pre-wrap }
+ .msgT { padding:0x; spacing:0x }
+ .msgEvent { background-color:#fff8b4; color:#000000 }
+ .msgControl { background-color:#bbbbbb; color:#000000 }
+ .mrange { background-color:#dfddf3 }
+ .mrange { border-bottom:1px solid #6F9DBE }
+ .PathIndex { font-weight: bold; padding:0px 5px; margin-right:5px; }
+ .PathIndex { -webkit-border-radius:8px }
+ .PathIndexEvent { background-color:#bfba87 }
+ .PathIndexControl { background-color:#8c8c8c }
+ .PathNav a { text-decoration:none; font-size: larger }
+ .CodeInsertionHint { font-weight: bold; background-color: #10dd10 }
+ .CodeRemovalHint { background-color:#de1010 }
+ .CodeRemovalHint { border-bottom:1px solid #6F9DBE }
+ table.simpletable {
+   padding: 5px;
+   font-size:12pt;
+   margin:20px;
+   border-collapse: collapse; border-spacing: 0px;
+ }
+ td.rowname {
+   text-align:right; font-weight:bold; color:#444444;
+   padding-right:2ex; }
+</style>
+</head>
+<body>
+<!-- BUGDESC Value stored to 's' is never read -->
+
+<!-- BUGTYPE Dead assignment -->
+
+<!-- BUGCATEGORY Dead store -->
+
+<!-- BUGFILE /home/travis/build/neovim/bot-ci/build/neovim/src/nvim/garray.c -->
+
+<!-- BUGLINE 162 -->
+
+<!-- BUGCOLUMN 3 -->
+
+<!-- BUGPATHLENGTH 1 -->
+
+<!-- BUGMETAEND -->
+<!-- REPORTHEADER -->
+<h3>Bug Summary</h3>
+<table class="simpletable">
+<tr><td class="rowname">File:</td><td>garray.c</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 162, column 3</a></td></tr>
+<tr><td class="rowname">Description:</td><td>Value stored to 's' is never read</td></tr>
+</table>
+<!-- REPORTSUMMARYEXTRA -->
+<h3>Annotated Source Code</h3>
+<table class="code">
+<tr><td class="num" id="LN1">1</td><td class="line"><span class='comment'>/// @file garray.c</span></td></tr>
+<tr><td class="num" id="LN2">2</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN3">3</td><td class="line"><span class='comment'>/// Functions for handling growing arrays.</span></td></tr>
+<tr><td class="num" id="LN4">4</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5">5</td><td class="line"><span class='directive'>#include &lt;string.h&gt;</span></td></tr>
+<tr><td class="num" id="LN6">6</td><td class="line"><span class='directive'>#include &lt;inttypes.h&gt;</span></td></tr>
+<tr><td class="num" id="LN7">7</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN8">8</td><td class="line"><span class='directive'>#include "nvim/vim.h"</span></td></tr>
+<tr><td class="num" id="LN9">9</td><td class="line"><span class='directive'>#include "nvim/ascii.h"</span></td></tr>
+<tr><td class="num" id="LN10">10</td><td class="line"><span class='directive'>#include "nvim/log.h"</span></td></tr>
+<tr><td class="num" id="LN11">11</td><td class="line"><span class='directive'>#include "nvim/misc2.h"</span></td></tr>
+<tr><td class="num" id="LN12">12</td><td class="line"><span class='directive'>#include "nvim/memory.h"</span></td></tr>
+<tr><td class="num" id="LN13">13</td><td class="line"><span class='directive'>#include "nvim/path.h"</span></td></tr>
+<tr><td class="num" id="LN14">14</td><td class="line"><span class='directive'>#include "nvim/garray.h"</span></td></tr>
+<tr><td class="num" id="LN15">15</td><td class="line"><span class='directive'>#include "nvim/strings.h"</span></td></tr>
+<tr><td class="num" id="LN16">16</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN17">17</td><td class="line"><span class='comment'>// #include "nvim/globals.h"</span></td></tr>
+<tr><td class="num" id="LN18">18</td><td class="line"><span class='directive'>#include "nvim/memline.h"</span></td></tr>
+<tr><td class="num" id="LN19">19</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN20">20</td><td class="line"><span class='directive'>#ifdef <span class='macro'>INCLUDE_GENERATED_DECLARATIONS<span class='expansion'>1</span></span></span></td></tr>
+<tr><td class="num" id="LN21">21</td><td class="line"><span class='directive'># include "garray.c.generated.h"</span></td></tr>
+<tr><td class="num" id="LN22">22</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN23">23</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN24">24</td><td class="line"><span class='comment'>/// Clear an allocated growing array.</span></td></tr>
+<tr><td class="num" id="LN25">25</td><td class="line"><span class='keyword'>void</span> ga_clear(garray_T *gap)</td></tr>
+<tr><td class="num" id="LN26">26</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN27">27</td><td class="line">  free(gap-&gt;ga_data);</td></tr>
+<tr><td class="num" id="LN28">28</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN29">29</td><td class="line">  <span class='comment'>// Initialize growing array without resetting itemsize or growsize</span></td></tr>
+<tr><td class="num" id="LN30">30</td><td class="line">  gap-&gt;ga_data = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN31">31</td><td class="line">  gap-&gt;ga_maxlen = 0;</td></tr>
+<tr><td class="num" id="LN32">32</td><td class="line">  gap-&gt;ga_len = 0;</td></tr>
+<tr><td class="num" id="LN33">33</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN34">34</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN35">35</td><td class="line"><span class='comment'>/// Clear a growing array that contains a list of strings.</span></td></tr>
+<tr><td class="num" id="LN36">36</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN37">37</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN38">38</td><td class="line"><span class='keyword'>void</span> ga_clear_strings(garray_T *gap)</td></tr>
+<tr><td class="num" id="LN39">39</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN40">40</td><td class="line">  <span class='keyword'>for</span> (<span class='keyword'>int</span> i = 0; i &lt; gap-&gt;ga_len; ++i) {</td></tr>
+<tr><td class="num" id="LN41">41</td><td class="line">    free(((char_u **)(gap-&gt;ga_data))[i]);</td></tr>
+<tr><td class="num" id="LN42">42</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN43">43</td><td class="line">  ga_clear(gap);</td></tr>
+<tr><td class="num" id="LN44">44</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN45">45</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN46">46</td><td class="line"><span class='comment'>/// Initialize a growing array.</span></td></tr>
+<tr><td class="num" id="LN47">47</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN48">48</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN49">49</td><td class="line"><span class='comment'>/// @param itemsize</span></td></tr>
+<tr><td class="num" id="LN50">50</td><td class="line"><span class='comment'>/// @param growsize</span></td></tr>
+<tr><td class="num" id="LN51">51</td><td class="line"><span class='keyword'>void</span> ga_init(garray_T *gap, <span class='keyword'>int</span> itemsize, <span class='keyword'>int</span> growsize)</td></tr>
+<tr><td class="num" id="LN52">52</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN53">53</td><td class="line">  gap-&gt;ga_data = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN54">54</td><td class="line">  gap-&gt;ga_maxlen = 0;</td></tr>
+<tr><td class="num" id="LN55">55</td><td class="line">  gap-&gt;ga_len = 0;</td></tr>
+<tr><td class="num" id="LN56">56</td><td class="line">  gap-&gt;ga_itemsize = itemsize;</td></tr>
+<tr><td class="num" id="LN57">57</td><td class="line">  ga_set_growsize(gap, growsize);</td></tr>
+<tr><td class="num" id="LN58">58</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN59">59</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN60">60</td><td class="line"><span class='comment'>/// A setter for the growsize that guarantees it will be at least 1.</span></td></tr>
+<tr><td class="num" id="LN61">61</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN62">62</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN63">63</td><td class="line"><span class='comment'>/// @param growsize</span></td></tr>
+<tr><td class="num" id="LN64">64</td><td class="line"><span class='keyword'>void</span> ga_set_growsize(garray_T *gap, <span class='keyword'>int</span> growsize)</td></tr>
+<tr><td class="num" id="LN65">65</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN66">66</td><td class="line">  <span class='keyword'>if</span> (growsize &lt; 1) {</td></tr>
+<tr><td class="num" id="LN67">67</td><td class="line">    <span class='macro'>WLOG(<span class='string_literal'>"trying to set an invalid ga_growsize: %d"</span>, growsize)<span class='expansion'>do_log(2, __func__, 67, "trying to set an invalid ga_growsize: %d"<br>, growsize)</span></span>;</td></tr>
+<tr><td class="num" id="LN68">68</td><td class="line">    gap-&gt;ga_growsize = 1;</td></tr>
+<tr><td class="num" id="LN69">69</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN70">70</td><td class="line">    gap-&gt;ga_growsize = growsize;</td></tr>
+<tr><td class="num" id="LN71">71</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN72">72</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN73">73</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN74">74</td><td class="line"><span class='comment'>/// Make room in growing array "gap" for at least "n" items.</span></td></tr>
+<tr><td class="num" id="LN75">75</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN76">76</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN77">77</td><td class="line"><span class='comment'>/// @param n</span></td></tr>
+<tr><td class="num" id="LN78">78</td><td class="line"><span class='keyword'>void</span> ga_grow(garray_T *gap, <span class='keyword'>int</span> n)</td></tr>
+<tr><td class="num" id="LN79">79</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN80">80</td><td class="line">  <span class='keyword'>if</span> (gap-&gt;ga_maxlen - gap-&gt;ga_len &gt;= n) {</td></tr>
+<tr><td class="num" id="LN81">81</td><td class="line">    <span class='comment'>// the garray still has enough space, do nothing</span></td></tr>
+<tr><td class="num" id="LN82">82</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN83">83</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN84">84</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN85">85</td><td class="line">  <span class='keyword'>if</span> (gap-&gt;ga_growsize &lt; 1) {</td></tr>
+<tr><td class="num" id="LN86">86</td><td class="line">    <span class='macro'>WLOG(<span class='string_literal'>"ga_growsize(%d) is less than 1"</span>, gap-&gt;ga_growsize)<span class='expansion'>do_log(2, __func__, 86, "ga_growsize(%d) is less than 1", gap<br>-&gt;ga_growsize)</span></span>;</td></tr>
+<tr><td class="num" id="LN87">87</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN88">88</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN89">89</td><td class="line">  <span class='comment'>// the garray grows by at least growsize</span></td></tr>
+<tr><td class="num" id="LN90">90</td><td class="line">  <span class='keyword'>if</span> (n &lt; gap-&gt;ga_growsize) {</td></tr>
+<tr><td class="num" id="LN91">91</td><td class="line">    n = gap-&gt;ga_growsize;</td></tr>
+<tr><td class="num" id="LN92">92</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN93">93</td><td class="line">  <span class='keyword'>int</span> new_maxlen = gap-&gt;ga_len + n;</td></tr>
+<tr><td class="num" id="LN94">94</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN95">95</td><td class="line">  size_t new_size = (size_t)(gap-&gt;ga_itemsize * new_maxlen);</td></tr>
+<tr><td class="num" id="LN96">96</td><td class="line">  size_t old_size = (size_t)(gap-&gt;ga_itemsize * gap-&gt;ga_maxlen);</td></tr>
+<tr><td class="num" id="LN97">97</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN98">98</td><td class="line">  <span class='comment'>// reallocate and clear the new memory</span></td></tr>
+<tr><td class="num" id="LN99">99</td><td class="line">  <span class='keyword'>char</span> *pp = xrealloc(gap-&gt;ga_data, new_size);</td></tr>
+<tr><td class="num" id="LN100">100</td><td class="line">  memset(pp + old_size, 0, new_size - old_size);</td></tr>
+<tr><td class="num" id="LN101">101</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN102">102</td><td class="line">  gap-&gt;ga_maxlen = new_maxlen;</td></tr>
+<tr><td class="num" id="LN103">103</td><td class="line">  gap-&gt;ga_data = pp;</td></tr>
+<tr><td class="num" id="LN104">104</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN105">105</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN106">106</td><td class="line"><span class='comment'>/// Sort "gap" and remove duplicate entries. "gap" is expected to contain a</span></td></tr>
+<tr><td class="num" id="LN107">107</td><td class="line"><span class='comment'>/// list of file names in allocated memory.</span></td></tr>
+<tr><td class="num" id="LN108">108</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN109">109</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN110">110</td><td class="line"><span class='keyword'>void</span> ga_remove_duplicate_strings(garray_T *gap)</td></tr>
+<tr><td class="num" id="LN111">111</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN112">112</td><td class="line">  char_u **fnames = gap-&gt;ga_data;</td></tr>
+<tr><td class="num" id="LN113">113</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN114">114</td><td class="line">  <span class='comment'>// sort the growing array, which puts duplicates next to each other</span></td></tr>
+<tr><td class="num" id="LN115">115</td><td class="line">  sort_strings(fnames, gap-&gt;ga_len);</td></tr>
+<tr><td class="num" id="LN116">116</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN117">117</td><td class="line">  <span class='comment'>// loop over the growing array in reverse</span></td></tr>
+<tr><td class="num" id="LN118">118</td><td class="line">  <span class='keyword'>for</span> (<span class='keyword'>int</span> i = gap-&gt;ga_len - 1; i &gt; 0; i--) {</td></tr>
+<tr><td class="num" id="LN119">119</td><td class="line">    <span class='keyword'>if</span> (<span class='macro'>fnamecmp(fnames[i - 1], fnames[i])<span class='expansion'>vim_fnamecmp((char_u *)(fnames[i - 1]), (char_u *)(fnames[i])<br>)</span></span> == 0) {</td></tr>
+<tr><td class="num" id="LN120">120</td><td class="line">      free(fnames[i]);</td></tr>
+<tr><td class="num" id="LN121">121</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN122">122</td><td class="line">      <span class='comment'>// close the gap (move all strings one slot lower)</span></td></tr>
+<tr><td class="num" id="LN123">123</td><td class="line">      <span class='keyword'>for</span> (<span class='keyword'>int</span> j = i + 1; j &lt; gap-&gt;ga_len; j++) {</td></tr>
+<tr><td class="num" id="LN124">124</td><td class="line">        fnames[j - 1] = fnames[j];</td></tr>
+<tr><td class="num" id="LN125">125</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN126">126</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN127">127</td><td class="line">      --gap-&gt;ga_len;</td></tr>
+<tr><td class="num" id="LN128">128</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN129">129</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN130">130</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN131">131</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN132">132</td><td class="line"><span class='comment'>/// For a growing array that contains a list of strings: concatenate all the</span></td></tr>
+<tr><td class="num" id="LN133">133</td><td class="line"><span class='comment'>/// strings with sep as separator.</span></td></tr>
+<tr><td class="num" id="LN134">134</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN135">135</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN136">136</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN137">137</td><td class="line"><span class='comment'>/// @returns the concatenated strings</span></td></tr>
+<tr><td class="num" id="LN138">138</td><td class="line">char_u *ga_concat_strings_sep(<span class='keyword'>const</span> garray_T *gap, <span class='keyword'>const</span> <span class='keyword'>char</span> *sep)</td></tr>
+<tr><td class="num" id="LN139">139</td><td class="line">  FUNC_ATTR_NONNULL_RET</td></tr>
+<tr><td class="num" id="LN140">140</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN141">141</td><td class="line">  <span class='keyword'>const</span> size_t nelem = (size_t) gap-&gt;ga_len;</td></tr>
+<tr><td class="num" id="LN142">142</td><td class="line">  <span class='keyword'>const</span> <span class='keyword'>char</span> **strings = gap-&gt;ga_data;</td></tr>
+<tr><td class="num" id="LN143">143</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN144">144</td><td class="line">  <span class='keyword'>if</span> (nelem == 0) {</td></tr>
+<tr><td class="num" id="LN145">145</td><td class="line">    <span class='keyword'>return</span> (char_u *) xstrdup(<span class='string_literal'>""</span>);</td></tr>
+<tr><td class="num" id="LN146">146</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN147">147</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN148">148</td><td class="line">  size_t len = 0;</td></tr>
+<tr><td class="num" id="LN149">149</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; nelem; i++) {</td></tr>
+<tr><td class="num" id="LN150">150</td><td class="line">    len += strlen(strings[i]);</td></tr>
+<tr><td class="num" id="LN151">151</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN152">152</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN153">153</td><td class="line">  <span class='comment'>// add some space for the (num - 1) separators</span></td></tr>
+<tr><td class="num" id="LN154">154</td><td class="line">  len += (nelem - 1) * strlen(sep);</td></tr>
+<tr><td class="num" id="LN155">155</td><td class="line">  <span class='keyword'>char</span> *<span class='keyword'>const</span> ret = xmallocz(len);</td></tr>
+<tr><td class="num" id="LN156">156</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN157">157</td><td class="line">  <span class='keyword'>char</span> *s = ret;</td></tr>
+<tr><td class="num" id="LN158">158</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; nelem - 1; i++) {</td></tr>
+<tr><td class="num" id="LN159">159</td><td class="line">    s = xstpcpy(s, strings[i]);</td></tr>
+<tr><td class="num" id="LN160">160</td><td class="line">    s = xstpcpy(s, sep);</td></tr>
+<tr><td class="num" id="LN161">161</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN162">162</td><td class="line">  s = <span class="mrange">xstpcpy(s, strings[nelem - 1])</span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:3ex">Value stored to 's' is never read</div></td></tr>
+<tr><td class="num" id="LN163">163</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN164">164</td><td class="line">  <span class='keyword'>return</span> (char_u *) ret;</td></tr>
+<tr><td class="num" id="LN165">165</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN166">166</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN167">167</td><td class="line"><span class='comment'>/// For a growing array that contains a list of strings: concatenate all the</span></td></tr>
+<tr><td class="num" id="LN168">168</td><td class="line"><span class='comment'>/// strings with a separating comma.</span></td></tr>
+<tr><td class="num" id="LN169">169</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN170">170</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN171">171</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN172">172</td><td class="line"><span class='comment'>/// @returns the concatenated strings</span></td></tr>
+<tr><td class="num" id="LN173">173</td><td class="line">char_u* ga_concat_strings(<span class='keyword'>const</span> garray_T *gap) FUNC_ATTR_NONNULL_RET</td></tr>
+<tr><td class="num" id="LN174">174</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN175">175</td><td class="line">  <span class='keyword'>return</span> ga_concat_strings_sep(gap, <span class='string_literal'>","</span>);</td></tr>
+<tr><td class="num" id="LN176">176</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN177">177</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN178">178</td><td class="line"><span class='comment'>/// Concatenate a string to a growarray which contains characters.</span></td></tr>
+<tr><td class="num" id="LN179">179</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN180">180</td><td class="line"><span class='comment'>/// WARNING:</span></td></tr>
+<tr><td class="num" id="LN181">181</td><td class="line"><span class='comment'>/// - Does NOT copy the NUL at the end!</span></td></tr>
+<tr><td class="num" id="LN182">182</td><td class="line"><span class='comment'>/// - The parameter may not overlap with the growing array</span></td></tr>
+<tr><td class="num" id="LN183">183</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN184">184</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN185">185</td><td class="line"><span class='comment'>/// @param s</span></td></tr>
+<tr><td class="num" id="LN186">186</td><td class="line"><span class='keyword'>void</span> ga_concat(garray_T *gap, <span class='keyword'>const</span> char_u *<span class='keyword'>restrict</span> s)</td></tr>
+<tr><td class="num" id="LN187">187</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN188">188</td><td class="line">  <span class='keyword'>int</span> len = (<span class='keyword'>int</span>)strlen((<span class='keyword'>char</span> *) s);</td></tr>
+<tr><td class="num" id="LN189">189</td><td class="line">  ga_grow(gap, len);</td></tr>
+<tr><td class="num" id="LN190">190</td><td class="line">  <span class='keyword'>char</span> *data = gap-&gt;ga_data;</td></tr>
+<tr><td class="num" id="LN191">191</td><td class="line">  memcpy(data + gap-&gt;ga_len, s, (size_t) len);</td></tr>
+<tr><td class="num" id="LN192">192</td><td class="line">  gap-&gt;ga_len += len;</td></tr>
+<tr><td class="num" id="LN193">193</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN194">194</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN195">195</td><td class="line"><span class='comment'>/// Append one byte to a growarray which contains bytes.</span></td></tr>
+<tr><td class="num" id="LN196">196</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN197">197</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN198">198</td><td class="line"><span class='comment'>/// @param c</span></td></tr>
+<tr><td class="num" id="LN199">199</td><td class="line"><span class='keyword'>void</span> ga_append(garray_T *gap, <span class='keyword'>char</span> c)</td></tr>
+<tr><td class="num" id="LN200">200</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN201">201</td><td class="line">  <span class='macro'>GA_APPEND(<span class='keyword'>char</span>, gap, c)<span class='expansion'>do { ga_grow(gap, 1); ((char *)(gap)-&gt;ga_data)[(gap)-&gt;ga_len<br>++] = (c); } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN202">202</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN203">203</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN204">204</td><td class="line"><span class='directive'>#if defined(UNIX) || defined(WIN3264) || defined(PROTO)</span></td></tr>
+<tr><td class="num" id="LN205">205</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN206">206</td><td class="line"><span class='comment'>/// Append the text in "gap" below the cursor line and clear "gap".</span></td></tr>
+<tr><td class="num" id="LN207">207</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN208">208</td><td class="line"><span class='comment'>/// @param gap</span></td></tr>
+<tr><td class="num" id="LN209">209</td><td class="line"><span class='keyword'>void</span> append_ga_line(garray_T *gap)</td></tr>
+<tr><td class="num" id="LN210">210</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN211">211</td><td class="line">  <span class='comment'>// Remove trailing CR.</span></td></tr>
+<tr><td class="num" id="LN212">212</td><td class="line">  <span class='keyword'>if</span> (!<span class='macro'>GA_EMPTY(gap)<span class='expansion'>((gap)-&gt;ga_len &lt;= 0)</span></span></td></tr>
+<tr><td class="num" id="LN213">213</td><td class="line">      &amp;&amp; !curbuf-&gt;b_p_bin</td></tr>
+<tr><td class="num" id="LN214">214</td><td class="line">      &amp;&amp; (((char_u *)gap-&gt;ga_data)[gap-&gt;ga_len - 1] == <span class='macro'>CAR<span class='expansion'>'\015'</span></span>)) {</td></tr>
+<tr><td class="num" id="LN215">215</td><td class="line">    gap-&gt;ga_len--;</td></tr>
+<tr><td class="num" id="LN216">216</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN217">217</td><td class="line">  ga_append(gap, <span class='macro'>NUL<span class='expansion'>'\000'</span></span>);</td></tr>
+<tr><td class="num" id="LN218">218</td><td class="line">  ml_append(curwin-&gt;w_cursor.lnum++, gap-&gt;ga_data, 0, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
+<tr><td class="num" id="LN219">219</td><td class="line">  gap-&gt;ga_len = 0;</td></tr>
+<tr><td class="num" id="LN220">220</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN221">221</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN222">222</td><td class="line"><span class='directive'>#endif  // if defined(UNIX) || defined(WIN3264)</span></td></tr>
+</table></body></html>
