@@ -63,5 +63,5 @@ git config --global user.email ${GIT_EMAIL}
 # Commit the updated docs
 cd ${DOC_DIR}
 git add --all .
-git commit --amend --reset-author -m "Documentation: Automatic update."
+git commit -m "Documentation: Automatic update."
 git push --force https://${GH_TOKEN}@github.com/${DOC_REPO} ${DOC_BRANCH}
