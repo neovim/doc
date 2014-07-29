@@ -32,8 +32,8 @@ generate_report() {
 }
 
 # Clone code & doc repos
-git clone --branch ${NEOVIM_BRANCH} --depth 1 https://github.com/${NEOVIM_REPO} ${NEOVIM_DIR}
-git clone --branch ${DOC_BRANCH} --depth 1 https://github.com/${DOC_REPO} ${DOC_DIR}
+git clone --branch ${NEOVIM_BRANCH} --depth 1 git://github.com/${NEOVIM_REPO} ${NEOVIM_DIR}
+git clone --branch ${DOC_BRANCH} --depth 1 git://github.com/${DOC_REPO} ${DOC_DIR}
 NEOVIM_COMMIT=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse HEAD)
 
 # Generate documentation & reports

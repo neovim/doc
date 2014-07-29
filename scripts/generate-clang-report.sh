@@ -2,7 +2,6 @@ generate_clang_report() {
   cd ${NEOVIM_DIR}
 
   # Generate static analysis report
-  ${MAKE_CMD} deps
   mkdir -p build/clang-report
   scan-build \
     --use-analyzer=$(which clang) \
