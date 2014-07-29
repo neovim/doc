@@ -4,8 +4,14 @@
 # pushes generated HTML to a "doc" Git repository.
 # This script is based on http://philipuren.com/serendipity/index.php?/archives/21-Using-Travis-to-automatically-publish-documentation.html
 
-# Set BUILD_DIR default value for local test runs
-BUILD_DIR=${TRAVIS_BUILD_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"}
+if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
+  LOCAL_BUILD=true
+  BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
+else
+  LOCAL_BUILD=false
+  BUILD_DIR=${TRAVIS_BUILD_DIR}
+fi
+
 NEOVIM_DIR=${BUILD_DIR}/build/neovim
 NEOVIM_REPO=neovim/neovim
 NEOVIM_BRANCH=master
@@ -31,6 +37,14 @@ generate_report() {
   envsubst < "${BUILD_DIR}/templates/report.sh.html" > "${3}"
 }
 
+# Install dependencies
+source ${BUILD_DIR}/scripts/install-deps.sh
+if [[ ${LOCAL_BUILD} == false ]]; then
+  install_deps
+else
+  echo "Local build, not installing dependencies."
+fi
+
 # Clone code & doc repos
 git clone --branch ${NEOVIM_BRANCH} --depth 1 git://github.com/${NEOVIM_REPO} ${NEOVIM_DIR}
 git clone --branch ${DOC_BRANCH} --depth 1 git://github.com/${DOC_REPO} ${DOC_DIR}
@@ -45,8 +59,8 @@ done
 
 # Exit early if not built on Travis to simplify
 # local test runs of this script
-if [[ -z "${GH_TOKEN}" ]]; then
-  echo "GH_TOKEN not set, exiting..."
+if [[ ${LOCAL_BUILD} == true ]]; then
+  echo "Local build, exiting early..."
   exit 1
 fi
 
