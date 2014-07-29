@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['if',['if',['../memory_8c.html#a966ffa31eafe026e5aa2abf4c33b1c05',1,'memory.c']]],
+  ['if',['if',['../memory_8c.html#a966ffa31eafe026e5aa2abf4c33b1c05',1,'if(!ret &amp;&amp;!count||!size):&#160;memory.c'],['../shell_8c.html#a95c401819f3bbc7584514f74678b8228',1,'if(i&lt;=0):&#160;shell.c'],['../shell_8c.html#a0070e39776cdab71d8db36ab95b71073',1,'if(input):&#160;shell.c'],['../shell_8c.html#ab1caf8275f7e41ce577a145804bc388a',1,'if(buf.len==0):&#160;shell.c'],['../shell_8c.html#a89ee1c7c9d970bb9227202ebbac7e755',1,'if(nread):&#160;shell.c']]],
   ['ignorecase',['ignorecase',['../search_8c.html#ac933d01ee3bd76741479d1611b6a6e44',1,'search.c']]],
   ['in_5fcinkeys',['in_cinkeys',['../edit_8c.html#a98732aa9290f4ff6e71868739dff6d9d',1,'edit.c']]],
   ['in_5fwin_5fborder',['in_win_border',['../charset_8c.html#abb5dda9a21a87e090368c2e22694fb7c',1,'charset.c']]],

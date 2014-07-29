@@ -7,5 +7,6 @@ var searchData=
   ['wline_5ft',['wline_T',['../buffer__defs_8h.html#a09f14e54278aae2c075bbe94edaf03c5',1,'buffer_defs.h']]],
   ['wordcount_5ft',['wordcount_T',['../spell_8c.html#af48ab66df8b5a7d4ba17b564c9232532',1,'spell.c']]],
   ['wordnode_5ft',['wordnode_T',['../spell_8c.html#a224d539cd783c694685e9a4bb7322dfa',1,'spell.c']]],
-  ['wstream',['WStream',['../wstream__defs_8h.html#a58584a56b8365599ef0c55fd659bbf83',1,'wstream_defs.h']]]
+  ['wstream',['WStream',['../wstream__defs_8h.html#a58584a56b8365599ef0c55fd659bbf83',1,'wstream_defs.h']]],
+  ['wstream_5fcb',['wstream_cb',['../wstream__defs_8h.html#aed1a6706c71d0450fd91023fb5b6482a',1,'wstream_defs.h']]]
 ];

@@ -79,5 +79,6 @@ var searchData=
   ['wstream_5fnew',['wstream_new',['../wstream_8c.html#a653aa720b3159be031dbbd83fa0b4c63',1,'wstream.c']]],
   ['wstream_5fnew_5fbuffer',['wstream_new_buffer',['../wstream_8c.html#ade1794e093b6379124f86a469042b7ba',1,'wstream.c']]],
   ['wstream_5fset_5fstream',['wstream_set_stream',['../wstream_8c.html#a1ffd3b729141333bcecb61376b3d5716',1,'wstream.c']]],
+  ['wstream_5fset_5fwrite_5fcb',['wstream_set_write_cb',['../wstream_8c.html#a1b6de8d8cf1566acd6ab2fd2b69b399a',1,'wstream.c']]],
   ['wstream_5fwrite',['wstream_write',['../wstream_8c.html#a9c9c3d09541a66942b11014944d4a493',1,'wstream.c']]]
 ];

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['dal',['DAL',['../farsi_8h.html#a444dc22bc3041dfa0a4cbb5c4f22d8b6',1,'farsi.h']]],
-  ['data',['data',['../structString.html#aac3cd44be218d486e9fe9ecb08662752',1,'String::data()'],['../structobject.html#a4f7540178c8343c0c89a1fcf399b5292',1,'object::data()'],['../structChannel.html#a111fee74ec428fb52eb580d7d722848d',1,'Channel::data()'],['../structEvent.html#af78d46fb50f785a5deb89c9fce35de80',1,'Event::data()'],['../structjob.html#a23916c5141ae6ff4d34281f3d0d334bf',1,'job::data()'],['../structrstream.html#a812c0b0f25665a469257fada652897fb',1,'rstream::data()'],['../structwbuffer.html#a38d305068d35e90c926112dde6f4d86a',1,'wbuffer::data()']]],
+  ['data',['data',['../structString.html#aac3cd44be218d486e9fe9ecb08662752',1,'String::data()'],['../structobject.html#a4f7540178c8343c0c89a1fcf399b5292',1,'object::data()'],['../structChannel.html#a111fee74ec428fb52eb580d7d722848d',1,'Channel::data()'],['../structEvent.html#af78d46fb50f785a5deb89c9fce35de80',1,'Event::data()'],['../structjob.html#a23916c5141ae6ff4d34281f3d0d334bf',1,'job::data()'],['../structrstream.html#a812c0b0f25665a469257fada652897fb',1,'rstream::data()'],['../structdyn__buffer__t.html#a469440d1943c09bb8b1ec72b1d759a45',1,'dyn_buffer_t::data()'],['../structwstream.html#a8368548ec85277ca76a628f6ffcfe9cd',1,'wstream::data()'],['../structwbuffer.html#a38d305068d35e90c926112dde6f4d86a',1,'wbuffer::data()']]],
   ['data_5fbl',['DATA_BL',['../memline_8c.html#aa644b4da792aa82847aa9bfab40cafab',1,'memline.c']]],
   ['data_5fblock',['data_block',['../structdata__block.html',1,'']]],
   ['data_5fid',['DATA_ID',['../memline_8c.html#a55aa586df150c1192826a1c57dd87401',1,'memline.c']]],
@@ -309,5 +309,6 @@ var searchData=
   ['dv_5fused_5fprev',['dv_used_prev',['../structdictvar__S.html#a0fc974b3b82a4afc244a1c59518c3a38',1,'dictvar_S']]],
   ['dy_5fflags',['dy_flags',['../option__defs_8h.html#a21e7ca7e1d2cbf40a1b2ef20ddbd696e',1,'option_defs.h']]],
   ['dy_5flastline',['DY_LASTLINE',['../option__defs_8h.html#ad62df1d4620616e36e6fb6d70851e04f',1,'option_defs.h']]],
-  ['dy_5fuhex',['DY_UHEX',['../option__defs_8h.html#a1007c4a21dc5336fafb7f5226addaa71',1,'option_defs.h']]]
+  ['dy_5fuhex',['DY_UHEX',['../option__defs_8h.html#a1007c4a21dc5336fafb7f5226addaa71',1,'option_defs.h']]],
+  ['dyn_5fbuffer_5ft',['dyn_buffer_t',['../structdyn__buffer__t.html',1,'']]]
 ];

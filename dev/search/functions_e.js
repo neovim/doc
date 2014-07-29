@@ -71,6 +71,7 @@ var searchData=
   ['os_5frmdir',['os_rmdir',['../fs_8c.html#af0172bdef64c71b6a09c4a6d80d4385f',1,'fs.c']]],
   ['os_5fsetenv',['os_setenv',['../env_8c.html#abec153184ee85102cce2767adff2863e',1,'env.c']]],
   ['os_5fsetperm',['os_setperm',['../fs_8c.html#a98eba3989dcc614cc6e349c6dace3cf8',1,'fs.c']]],
+  ['os_5fsystem',['os_system',['../shell_8c.html#a66413fb73a00bde7a3c8647317cd16b6',1,'shell.c']]],
   ['otherfile',['otherfile',['../buffer_8c.html#aac13c3cf91629ec59eb1dda6748c8ea1',1,'buffer.c']]],
   ['out_5fchar',['out_char',['../term_8c.html#a21e6735866ee176008eb91fb8ab07e39',1,'term.c']]],
   ['out_5fflush',['out_flush',['../term_8c.html#a696dc856975fd30035140f53329ba0ef',1,'term.c']]],

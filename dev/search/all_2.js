@@ -376,7 +376,7 @@ var searchData=
   ['bt_5fquickfix',['bt_quickfix',['../quickfix_8c.html#a806bcef2a3de70b1ffbb6b8c7c2cc953',1,'quickfix.c']]],
   ['bt_5fregprog_5ft',['bt_regprog_T',['../structbt__regprog__T.html',1,'']]],
   ['bt_5fstring',['bt_string',['../structbuiltin__term.html#a7993a3a17b9bd54be9a747c4ea141d9b',1,'builtin_term']]],
-  ['buf',['buf',['../structmatch__T.html#afa57795a77761f19f71805f148ca6ead',1,'match_T']]],
+  ['buf',['buf',['../structmatch__T.html#afa57795a77761f19f71805f148ca6ead',1,'match_T::buf()'],['../shell_8c.html#a9a67ee408a72be73638afd6280b5b61d',1,'buf():&#160;shell.c']]],
   ['buf_5faddsign',['buf_addsign',['../buffer_8c.html#a7d1bbfb924b283e321f2803a4a0d8cd5',1,'buffer.c']]],
   ['buf_5fchange_5fsign_5ftype',['buf_change_sign_type',['../buffer_8c.html#a41397b8639ac43de34e9c43b376b33c1',1,'buffer.c']]],
   ['buf_5fcheck_5ftimestamp',['buf_check_timestamp',['../fileio_8c.html#a4daa59e54d84ede285f49eafc8d09133',1,'fileio.c']]],

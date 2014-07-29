@@ -9,5 +9,6 @@ var searchData=
   ['dictvar_5fs',['dictvar_S',['../structdictvar__S.html',1,'']]],
   ['diffblock_5fs',['diffblock_S',['../structdiffblock__S.html',1,'']]],
   ['digraph',['digraph',['../structdigraph.html',1,'']]],
-  ['dir_5fstack_5ft',['dir_stack_T',['../structdir__stack__T.html',1,'']]]
+  ['dir_5fstack_5ft',['dir_stack_T',['../structdir__stack__T.html',1,'']]],
+  ['dyn_5fbuffer_5ft',['dyn_buffer_t',['../structdyn__buffer__t.html',1,'']]]
 ];

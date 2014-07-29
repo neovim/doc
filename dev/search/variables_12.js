@@ -271,6 +271,7 @@ var searchData=
   ['startspaces',['startspaces',['../structblock__def.html#ad4b78521a483cf61f221b30e11efb774',1,'block_def']]],
   ['starttime',['starttime',['../globals_8h.html#abd633ace69012a463b3debf8177c97c1',1,'globals.h']]],
   ['state',['state',['../structnfa__regprog__T.html#abe39b7b3c6ef3d7ac41344c2e3349142',1,'nfa_regprog_T::state()'],['../structnfa__pim__S.html#ad5dfe726cf99a40395415a36ed1f3d59',1,'nfa_pim_S::state()'],['../structnfa__thread__T.html#a136ad133019feafef67a18b0c837b285',1,'nfa_thread_T::state()'],['../structcontext__sha256__T.html#a8a63c7766cd6c17e903f18fa88877e69',1,'context_sha256_T::state()']]],
+  ['status',['status',['../structjob.html#a4c4c2986196f55e6419c47e9da1b2773',1,'job::status()'],['../shell_8c.html#a9611b3a00430a86619b5923de30f9fdb',1,'status():&#160;shell.c']]],
   ['stderr_5fcb',['stderr_cb',['../structjob.html#a31bf38c9fa20cad2a6b1f0112faef1c9',1,'job']]],
   ['stdio',['stdio',['../structjob.html#af53c19b4c64190cc6150f56254e84b42',1,'job']]],
   ['stdout_5fcb',['stdout_cb',['../structjob.html#af92830943827accd490437cba616f2e8',1,'job']]],

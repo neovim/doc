@@ -4,7 +4,7 @@ var searchData=
   ['rangestart',['rangeStart',['../structconvertStruct.html#a9d04d27328b672cd0fcd6a58e1865d6d',1,'convertStruct']]],
   ['rbuffer',['rbuffer',['../structProcessData.html#a5dc80922bfd704b93fdfc0003c4dfa15',1,'ProcessData']]],
   ['read_5fedit',['read_edit',['../structexarg.html#a890d17f4aaf19e596b75ab4db4a152c6',1,'exarg']]],
-  ['reading',['reading',['../structrstream.html#a1a0159781c88085662aac3dbef8396e0',1,'rstream::reading()'],['../structProcessData.html#abbb1879d52fbec04d0a6702ae7ba445e',1,'ProcessData::reading()']]],
+  ['reading',['reading',['../structProcessData.html#abbb1879d52fbec04d0a6702ae7ba445e',1,'ProcessData']]],
   ['refcnt',['refcnt',['../structreg__extmatch__T.html#abb0946f16ec7489b59022c64f7ecc22e',1,'reg_extmatch_T']]],
   ['refcount',['refcount',['../structwbuffer.html#a106eeb826a586037de17e77cd18527b1',1,'wbuffer']]],
   ['reg_5fprog',['reg_prog',['../structAutoPat.html#a2c46743cf6036ab5ec84eb1c82cf243b',1,'AutoPat']]],
