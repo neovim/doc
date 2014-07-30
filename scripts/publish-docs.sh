@@ -4,55 +4,63 @@
 # pushes generated HTML to a "doc" Git repository.
 # This script is based on http://philipuren.com/serendipity/index.php?/archives/21-Using-Travis-to-automatically-publish-documentation.html
 
-# Set BUILD_DIR to build/ for local runs
-BUILD_DIR=${TRAVIS_BUILD_DIR:-"$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"}/build
-NEOVIM_DIR=${BUILD_DIR}/neovim
+if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
+  LOCAL_BUILD=true
+  BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)"
+else
+  LOCAL_BUILD=false
+  BUILD_DIR=${TRAVIS_BUILD_DIR}
+fi
+
+NEOVIM_DIR=${BUILD_DIR}/build/neovim
 NEOVIM_REPO=neovim/neovim
 NEOVIM_BRANCH=master
-DOC_DIR=${BUILD_DIR}/doc
+DOC_DIR=${BUILD_DIR}/build/doc
 DOC_REPO=neovim/doc
 DOC_BRANCH=gh-pages
 MAKE_CMD="make -j2"
+REPORTS=(doxygen clang-report translation-report)
 
-generate_doxygen() {
-  cd ${NEOVIM_DIR}
-
-  mkdir -p build
-  doxygen
-
-  rm -rf ${DOC_DIR}/dev
-  mv build/doxygen/html ${DOC_DIR}/dev
+# Helper function for report generation
+# ${1}:   Report title
+# ${2}:   Report body
+# ${3}:   Path to HTML output file
+# Output: None
+generate_report() {
+  report_title="${1}" \
+  report_body="${2}" \
+  report_date=$(date -u) \
+  report_commit="${NEOVIM_COMMIT}" \
+  report_short_commit="${NEOVIM_COMMIT:0:7}" \
+  report_repo="${NEOVIM_REPO}" \
+  report_header=$(<${BUILD_DIR}/templates/${REPORT}/head.html) \
+  envsubst < "${BUILD_DIR}/templates/report.sh.html" > "${3}"
 }
 
-generate_clang_report() {
-  cd ${NEOVIM_DIR}
-
-  ${MAKE_CMD} deps
-  mkdir -p build/clang-report
-  scan-build \
-    --use-analyzer=$(which clang) \
-    --html-title="Neovim Static Analysis Report" \
-    -o build/clang-report \
-    ${MAKE_CMD}
-
-  rm -rf ${DOC_DIR}/build-reports/clang
-  mkdir -p ${DOC_DIR}/build-reports/clang
-  cp -r build/clang-report/*/* ${DOC_DIR}/build-reports/clang
-}
+# Install dependencies
+source ${BUILD_DIR}/scripts/install-deps.sh
+if [[ ${LOCAL_BUILD} == false ]]; then
+  install_deps
+else
+  echo "Local build, not installing dependencies."
+fi
 
 # Clone code & doc repos
-git clone --depth 1 https://github.com/${NEOVIM_REPO} ${NEOVIM_DIR} --branch ${NEOVIM_BRANCH}
-git clone https://github.com/${DOC_REPO} ${DOC_DIR} --branch ${DOC_BRANCH}
+git clone --branch ${NEOVIM_BRANCH} --depth 1 git://github.com/${NEOVIM_REPO} ${NEOVIM_DIR}
+git clone --branch ${DOC_BRANCH} --depth 1 git://github.com/${DOC_REPO} ${DOC_DIR}
+NEOVIM_COMMIT=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse HEAD)
 
 # Generate documentation & reports
-generate_doxygen
-generate_clang_report
+for REPORT in ${REPORTS[@]}; do
+  echo "Generating ${REPORT//-/ }."
+  source ${BUILD_DIR}/scripts/generate-${REPORT}.sh
+  generate_${REPORT//-/_}
+done
 
 # Exit early if not built on Travis to simplify
 # local test runs of this script
-if [ -z "${GH_TOKEN}" ]
-then
-  echo "GH_TOKEN not set, exiting..."
+if [[ ${LOCAL_BUILD} == true ]]; then
+  echo "Local build, exiting early..."
   exit 1
 fi
 

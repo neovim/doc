@@ -1,0 +1,101 @@
+<style>
+  .translation-progress {
+      width: 60%;
+      height: 1em;
+      position: relative;
+  }
+  .translation-progress > .translated {
+      background-color: #54A23D;
+      height: 1em;
+      position: absolute;
+  }
+  .translation-progress > .fuzzy {
+      background-color: #F7931A;
+      height: 1em;
+      position: absolute;
+  }
+  .translation-progress > .untranslated {
+      background-color: #D72929;
+      height: 1em;
+      width: 100%;
+      position: absolute;
+  }
+  .translated {
+    color: #54A23D;
+  }
+  .fuzzy {
+    color: #F7931A;
+  }
+  .untranslated {
+    color: #D72929;
+  }
+  .no-warnings {
+    color: #54A23D;
+  }
+  .warnings {
+    color: #D72929;
+  }
+  .warnings-container {
+    width: 60%;
+    background-color: #F4F4F4;
+    padding: 0.5em;
+    margin: 0;
+  }
+  .warnings-container > pre {
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<script type="text/javascript">
+  // Helper function to support IE before version 9
+  // See https://stackoverflow.com/questions/6348494/addeventlistener-vs-onclick
+  function addEvent(element, eventName, callback){
+    if (element.attachEvent) {
+      return element.attachEvent("on" + eventName, callback);
+    }
+    else {
+      return element.addEventListener(eventName, callback, false);
+    }
+  }
+
+  window.onload = function() {
+    // Hide warning boxes by default
+    var divs = document.getElementsByTagName("div");
+    for (var i = 0; i < divs.length; i++) {
+      if (divs[i].className === "warnings-container") {
+        divs[i].style.display = "none";
+      }
+    }
+
+    // Add toggle links
+    var spans = document.getElementsByTagName("span");
+    for (var i = 0; i < spans.length; i++) {
+      if (spans[i].className === "toggle-warnings-placeholder") {
+        var language = spans[i].id.substring("toggle-".length);
+
+        // Set up toggle link
+        var toggleLink = document.createElement("a");
+        toggleLink.className = "toggle-warnings";
+        toggleLink.href = "#/";
+        toggleLink.id = ("toggle-" + language);
+        toggleLink.innerHTML = "(Show)";
+        addEvent(toggleLink, "click", function() {
+          var language = this.id.substring("toggle-".length);
+          var containerId = "warnings-" + language;
+          var warningsContainer = document.getElementById(containerId);
+          if (warningsContainer.style.display === "none") {
+            this.innerHTML = "(Hide)";
+            warningsContainer.style.display = "";
+          }
+          else {
+            this.innerHTML = "(Show)";
+            warningsContainer.style.display = "none";
+          }
+        });
+
+        // Add link to span
+        spans[i].appendChild(toggleLink);
+      }
+    }
+  };
+</script>
