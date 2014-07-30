@@ -200,7 +200,6 @@ var searchData=
   ['hlf_5fwm',['HLF_WM',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60ab1029e84742e175c9710ce85562fc5a6',1,'globals.h']]],
   ['hlg_5fid',['hlg_id',['../structmatchitem.html#a8c26e7c04d279fa354ce9eb03acd16d4',1,'matchitem']]],
   ['hmt_5fdec',['HMT_DEC',['../term_8c.html#afaebaa47fac9e316a7a3c1921ec3353d',1,'term.c']]],
-  ['hmt_5fjsbterm',['HMT_JSBTERM',['../term_8c.html#afa1a11f5e2a41c0bc6dbe19265ae266b',1,'term.c']]],
   ['hmt_5fnetterm',['HMT_NETTERM',['../term_8c.html#a88bcc99d8f0583650c7008ab6d019238',1,'term.c']]],
   ['hmt_5fnormal',['HMT_NORMAL',['../term_8c.html#abe9e44fa446dc1a343489e78723d7b35',1,'term.c']]],
   ['hmt_5fpterm',['HMT_PTERM',['../term_8c.html#a46d34c2fbaddb191c3e94e037850e3be',1,'term.c']]],

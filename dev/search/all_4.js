@@ -56,7 +56,6 @@ var searchData=
   ['default_5fmaxmem',['DEFAULT_MAXMEM',['../wstream_8c.html#a30044fe3de8646b508f2b1a2d4cfabce',1,'wstream.c']]],
   ['default_5fterm',['DEFAULT_TERM',['../term_8c.html#a8f97baea443b2adf76de92088d5b9a1e',1,'term.c']]],
   ['defcs',['defcs',['../structprt__ps__mbfont__S.html#ad77571933a5b85451fc7e170ae234fee',1,'prt_ps_mbfont_S']]],
-  ['defer',['defer',['../structjob.html#af932cc9887d74a9cefab07d255b27981',1,'job']]],
   ['defs_2eh',['defs.h',['../defs_8h.html',1,'']]],
   ['del',['DEL',['../ascii_8h.html#ad1e508e805e4ddbc05119be4bb260985',1,'ascii.h']]],
   ['del_5fbytes',['del_bytes',['../misc1_8c.html#a247de39e0c278e8c7f401d481f99d705',1,'misc1.c']]],
