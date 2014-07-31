@@ -18,6 +18,7 @@ NEOVIM_BRANCH=master
 DOC_DIR=${BUILD_DIR}/build/doc
 DOC_REPO=neovim/doc
 DOC_BRANCH=gh-pages
+INDEX_PAGE_URL=http://neovim.org/doc_index
 MAKE_CMD="make -j2"
 REPORTS=(doxygen clang-report translation-report)
 
@@ -56,6 +57,10 @@ for REPORT in ${REPORTS[@]}; do
   source ${BUILD_DIR}/scripts/generate-${REPORT}.sh
   generate_${REPORT//-/_}
 done
+
+# Update the index page
+echo "Updating index.html from ${INDEX_PAGE_URL}."
+wget -q ${INDEX_PAGE_URL} -O ${DOC_DIR}/index.html
 
 # Exit early if not built on Travis to simplify
 # local test runs of this script
