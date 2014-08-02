@@ -7,7 +7,7 @@ generate_clang_report() {
     --use-analyzer=$(which clang) \
     --html-title="Neovim Static Analysis Report" \
     -o build/clang-report \
-    ${MAKE_CMD}
+    ${MAKE_CMD} > scan-build.out
 
   # Copy to doc repository
   rm -rf ${DOC_DIR}/build-reports/clang
@@ -16,6 +16,9 @@ generate_clang_report() {
 
   # Modify HTML to match Neovim's layout
   modify_clang_report
+
+  # Download badge from shields.io
+  download_badge
 }
 
 # Helper function to modify Clang report's index.html
@@ -70,3 +73,39 @@ extract_inline_script() {
     | tail -n +2
 }
 
+# Helper function to download badge from shields.io
+download_badge() {
+  local all_bugs_number="$(find_all_bugs_number scan-build.out)"
+  local code_quality_color="$(get_code_quality_color ${all_bugs_number})"
+  local badge="clang_analysis-${all_bugs_number}-${code_quality_color}"
+  wget https://img.shields.io/badge/${badge}.svg \
+    -O ${DOC_DIR}/build-reports/clang/badge.svg
+}
+
+# Helper function to find number of all bugs in build-scan output
+# ${1}:   Path to scan-build output file
+# Output: Number of all found bugs
+find_all_bugs_number() {
+  # 1. Extract count from line "scan-build: * bugs found".
+  # 2. Substitute "No" by 0
+  sed -n 's/scan-build: \(.*\) bugs found./\1/p' scan-build.out \
+    | sed 's/No/0/'
+}
+
+# Helper function to get the code quality color based on number of bugs
+# ${1}:   Number of all found bugs
+# Output: The name of the color
+get_code_quality_color() {
+  max_bugs=100
+  yellow_threshold=$(($max_bugs / 2))
+  bugs=$(($1 < $max_bugs ? $1 : $max_bugs))
+  if [[ $bugs -ge $yellow_threshold ]]; then
+    red=255
+    green=$((255 - 255 * ($bugs - $yellow_threshold) / $yellow_threshold))
+  else
+    red=$((255 * $bugs / $yellow_threshold))
+    green=255
+  fi
+  blue=0
+  printf "%.2x%.2x%.2x" $red $green $blue
+}
