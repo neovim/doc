@@ -19,7 +19,7 @@ var searchData=
   ['term_5fcursor_5fshape',['term_cursor_shape',['../term_8c.html#ad18cb02340128af6c6a8e76073042b73',1,'term.c']]],
   ['term_5fdelete_5flines',['term_delete_lines',['../term_8c.html#a4ea42802a5a8f86ba2082f1a60b9ca7d',1,'term.c']]],
   ['term_5ffg_5fcolor',['term_fg_color',['../term_8c.html#aa1aeed56672dcaa0e409f46e4615ca8e',1,'term.c']]],
-  ['term_5fis_5f8bit',['term_is_8bit',['../term_8c.html#af3f8f067a0431ab2c9e2c0480372c229',1,'term.c']]],
+  ['term_5fis_5f8bit',['term_is_8bit',['../term_8c.html#ae4206dcbd26da2a43b3a9cd397c1c09d',1,'term.c']]],
   ['term_5fwindgoto',['term_windgoto',['../term_8c.html#a881b40a90c401aee8c9a0297df227fbd',1,'term.c']]],
   ['termcapinit',['termcapinit',['../term_8c.html#a5d33f98d250d2459b73737c45c090736',1,'term.c']]],
   ['text_5flocked',['text_locked',['../ex__getln_8c.html#abd39074aecf602eb5023fb4d03f60664',1,'ex_getln.c']]],

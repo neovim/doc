@@ -136,7 +136,7 @@ var searchData=
   ['term_5fdefs_2eh',['term_defs.h',['../term__defs_8h.html',1,'']]],
   ['term_5fdelete_5flines',['term_delete_lines',['../term_8c.html#a4ea42802a5a8f86ba2082f1a60b9ca7d',1,'term.c']]],
   ['term_5ffg_5fcolor',['term_fg_color',['../term_8c.html#aa1aeed56672dcaa0e409f46e4615ca8e',1,'term.c']]],
-  ['term_5fis_5f8bit',['term_is_8bit',['../term_8c.html#af3f8f067a0431ab2c9e2c0480372c229',1,'term.c']]],
+  ['term_5fis_5f8bit',['term_is_8bit',['../term_8c.html#ae4206dcbd26da2a43b3a9cd397c1c09d',1,'term.c']]],
   ['term_5fstr',['term_str',['../vim_8h.html#a40bb20d0855d869e16ce55af407d3b18',1,'vim.h']]],
   ['term_5fstrings',['term_strings',['../term_8c.html#ad4755acac6a5a183ac996f1389832094',1,'term_strings():&#160;term.c'],['../term__defs_8h.html#abb17c8229480af73bbf2f93c36007d0b',1,'term_strings():&#160;term.c']]],
   ['term_5fwindgoto',['term_windgoto',['../term_8c.html#a881b40a90c401aee8c9a0297df227fbd',1,'term.c']]],
