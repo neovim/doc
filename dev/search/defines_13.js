@@ -68,7 +68,6 @@ var searchData=
   ['search_5fstart',['SEARCH_START',['../search_8h.html#a2e199ef5fb21516212933ce629fbb35c',1,'search.h']]],
   ['seek_5fend',['SEEK_END',['../misc1_8c.html#ad2a2e6c114780c3071efd24f16c7f7d8',1,'SEEK_END():&#160;misc1.c'],['../os__unix_8c.html#ad2a2e6c114780c3071efd24f16c7f7d8',1,'SEEK_END():&#160;os_unix.c']]],
   ['seek_5fset',['SEEK_SET',['../misc1_8c.html#a0d112bae8fd35be772185b6ec6bcbe64',1,'SEEK_SET():&#160;misc1.c'],['../os__unix_8c.html#a0d112bae8fd35be772185b6ec6bcbe64',1,'SEEK_SET():&#160;os_unix.c']]],
-  ['select',['select',['../os__unix_8c.html#a2b406456012f9f74aeb33de6f3df053c',1,'os_unix.c']]],
   ['selectmode',['SELECTMODE',['../vim_8h.html#a1a494303c1f194480adadd34a07588a3',1,'vim.h']]],
   ['session_5ffile',['SESSION_FILE',['../vim_8h.html#a697cd3b7b23cb2355eb3b3a3fcc3a37a',1,'vim.h']]],
   ['set_5fapi_5ferror',['set_api_error',['../helpers_8h.html#a0a3d815bab90bafc51059f616f11cc81',1,'helpers.h']]],

@@ -34,7 +34,7 @@ var searchData=
   ['find_5fterm_5fbykeys',['find_term_bykeys',['../term_8c.html#ab41e318e8c917150f293c8ebe477bec6',1,'term.c']]],
   ['find_5ftermcode',['find_termcode',['../term_8c.html#a09155a23354b4462b5100293dc86c56d',1,'term.c']]],
   ['find_5fviminfo_5fparameter',['find_viminfo_parameter',['../option_8c.html#a22170e23531bc2b473892f6c04fa597b',1,'option.c']]],
-  ['find_5fwin_5ffor_5fbuf',['find_win_for_buf',['../buffer_8c.html#a2a2326196ff80144a739ee21539d7b39',1,'buffer.c']]],
+  ['find_5fwin_5ffor_5fbuf',['find_win_for_buf',['../buffer_8c.html#aa952bd64e3bd3023242b3f74f0cc8e55',1,'buffer.c']]],
   ['find_5fwindow_5fby_5fhandle',['find_window_by_handle',['../helpers_8c.html#a6976fd33ec5c6c5f0c4dd0f0f95eb671',1,'helpers.c']]],
   ['find_5fwl_5fentry',['find_wl_entry',['../fold_8c.html#a40fb697f27928bcc3cfdf250abebfedb',1,'fold.c']]],
   ['find_5fword_5fend',['find_word_end',['../edit_8c.html#aec3e3b60904ce51842f0957ea59ae6b7',1,'edit.c']]],

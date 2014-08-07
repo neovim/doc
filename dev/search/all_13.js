@@ -164,7 +164,6 @@ var searchData=
   ['searchit',['searchit',['../search_8c.html#a5faf5ecb453b03e5c3697a220fc4cf02',1,'search.c']]],
   ['seek_5fend',['SEEK_END',['../misc1_8c.html#ad2a2e6c114780c3071efd24f16c7f7d8',1,'SEEK_END():&#160;misc1.c'],['../os__unix_8c.html#ad2a2e6c114780c3071efd24f16c7f7d8',1,'SEEK_END():&#160;os_unix.c']]],
   ['seek_5fset',['SEEK_SET',['../misc1_8c.html#a0d112bae8fd35be772185b6ec6bcbe64',1,'SEEK_SET():&#160;misc1.c'],['../os__unix_8c.html#a0d112bae8fd35be772185b6ec6bcbe64',1,'SEEK_SET():&#160;os_unix.c']]],
-  ['select',['select',['../os__unix_8c.html#a2b406456012f9f74aeb33de6f3df053c',1,'os_unix.c']]],
   ['selectmode',['SELECTMODE',['../vim_8h.html#a1a494303c1f194480adadd34a07588a3',1,'vim.h']]],
   ['separate_5fnextcmd',['separate_nextcmd',['../ex__docmd_8c.html#a29e59938a706f2ec860a11dfa2ccfe37',1,'ex_docmd.c']]],
   ['seq',['seq',['../structu__header.html#a33b9eceb67411f9c3b31025e6f59d224',1,'u_header']]],

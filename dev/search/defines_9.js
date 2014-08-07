@@ -66,7 +66,6 @@ var searchData=
   ['idx_5futf8',['IDX_UTF8',['../mbyte_8c.html#ae2601dc61bb3c9399e8c4d46240f4b6e',1,'mbyte.c']]],
   ['ie',['IE',['../farsi_8h.html#ac4d73397b6a181409fa4b2b104e97273',1,'farsi.h']]],
   ['ie_5f',['IE_',['../farsi_8h.html#ad203d0ef5ab2f636857e3024e4c0860f',1,'farsi.h']]],
-  ['if_5feb',['IF_EB',['../ascii_8h.html#ac17b9b684d5e70b1487fb391e58c24de',1,'ascii.h']]],
   ['if_5fsyn_5ftime',['IF_SYN_TIME',['../syntax_8c.html#a131bb41e4bb4c87839065cad9457990f',1,'syntax.c']]],
   ['ilog',['ILOG',['../log_8h.html#a0c221110c77b993968e98cb53c0d652e',1,'ILOG():&#160;log.h'],['../log_8h.html#a0c221110c77b993968e98cb53c0d652e',1,'ILOG():&#160;log.h']]],
   ['in_5fbuffer',['IN_BUFFER',['../ui_8h.html#a1c3fc56ae80b0e77b16b64d1b805dbd1',1,'ui.h']]],
