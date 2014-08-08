@@ -109,8 +109,6 @@ var searchData=
   ['window_5fobj',['WINDOW_OBJ',['../helpers_8h.html#a1160d3db217096276ad1338ed1f75687',1,'helpers.h']]],
   ['windowarray_5fobj',['WINDOWARRAY_OBJ',['../helpers_8h.html#a0ef2e2640c590e3d341749a847d652d0',1,'helpers.h']]],
   ['with_5fnl',['WITH_NL',['../regexp_8c.html#a75fdad70107fb24fd42cd3abd01b9414',1,'regexp.c']]],
-  ['with_5foff',['WITH_OFF',['../screen_8c.html#a26ce07e339ce4e0ece86c956e1a62985',1,'screen.c']]],
-  ['with_5fwidth',['WITH_WIDTH',['../screen_8c.html#aab4aecd90b8ae77f5262ef44cd0d79a0',1,'screen.c']]],
   ['wl_5fcmdline',['WL_CMDLINE',['../screen_8c.html#a382cd4f8ac3a573370c611e5ad266817',1,'screen.c']]],
   ['wl_5ffold',['WL_FOLD',['../screen_8c.html#a0e3319f03c73e3ed2c65bcc79ae0e8ee',1,'screen.c']]],
   ['wl_5fline',['WL_LINE',['../screen_8c.html#a67ec173a7ea8661a02b0d546cced4ae1',1,'screen.c']]],

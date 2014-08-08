@@ -294,8 +294,6 @@ var searchData=
   ['winopt_5ft',['winopt_T',['../structwinopt__T.html',1,'']]],
   ['wipe_5fbuffer',['wipe_buffer',['../buffer_8c.html#a7f81f36671721cad9be127b279004363',1,'buffer.c']]],
   ['with_5fnl',['WITH_NL',['../regexp_8c.html#a75fdad70107fb24fd42cd3abd01b9414',1,'regexp.c']]],
-  ['with_5foff',['WITH_OFF',['../screen_8c.html#a26ce07e339ce4e0ece86c956e1a62985',1,'screen.c']]],
-  ['with_5fwidth',['WITH_WIDTH',['../screen_8c.html#aab4aecd90b8ae77f5262ef44cd0d79a0',1,'screen.c']]],
   ['wl_5fcmdline',['WL_CMDLINE',['../screen_8c.html#a382cd4f8ac3a573370c611e5ad266817',1,'screen.c']]],
   ['wl_5ffold',['WL_FOLD',['../screen_8c.html#a0e3319f03c73e3ed2c65bcc79ae0e8ee',1,'screen.c']]],
   ['wl_5ffolded',['wl_folded',['../structw__line.html#a212f808f0b5aa77a99b1621f784e63a8',1,'w_line']]],

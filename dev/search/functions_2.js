@@ -138,6 +138,7 @@ var searchData=
   ['cs_5ffree_5ftags',['cs_free_tags',['../if__cscope_8c.html#a66258251200a426683b0d8c7f4468690',1,'if_cscope.c']]],
   ['cs_5fprint_5ftags',['cs_print_tags',['../if__cscope_8c.html#aebe9d25b7e776a5ce36eabf674c4fa11',1,'if_cscope.c']]],
   ['csh_5flike_5fshell',['csh_like_shell',['../misc2_8c.html#ad9f35b9a8a8080c7dab4f8e532b5fe10',1,'misc2.c']]],
+  ['cstr_5fas_5fstring',['cstr_as_string',['../helpers_8c.html#af2ce604f03e07380f037c9886b021003',1,'helpers.c']]],
   ['cstr_5fto_5fstring',['cstr_to_string',['../helpers_8c.html#a5b30f07edebe989a67d6f1faaf615228',1,'helpers.c']]],
   ['curbuf_5flocked',['curbuf_locked',['../ex__getln_8c.html#ae74004f6ed7ef6d7dadf94fa073799fb',1,'ex_getln.c']]],
   ['curbufischanged',['curbufIsChanged',['../undo_8c.html#a99b7fd898257eca4128a28d3e7e60d75',1,'undo.c']]],
