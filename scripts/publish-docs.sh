@@ -20,7 +20,7 @@ DOC_REPO=neovim/doc
 DOC_BRANCH=gh-pages
 INDEX_PAGE_URL=http://neovim.org/doc_index
 MAKE_CMD="make -j2"
-REPORTS=(doxygen clang-report translation-report)
+REPORTS=(doxygen clang-report translation-report vimpatch-report)
 
 # Helper function for report generation
 # ${1}:   Report title
@@ -34,13 +34,13 @@ generate_report() {
   report_commit="${NEOVIM_COMMIT}" \
   report_short_commit="${NEOVIM_COMMIT:0:7}" \
   report_repo="${NEOVIM_REPO}" \
-  report_header=$(<${BUILD_DIR}/templates/${REPORT}/head.html) \
+  report_header=$([ -f ${BUILD_DIR}/templates/${REPORT}/head.html ] && cat ${BUILD_DIR}/templates/${REPORT}/head.html) \
   envsubst < "${BUILD_DIR}/templates/report.sh.html" > "${3}"
 }
 
 # Install dependencies
-source ${BUILD_DIR}/scripts/install-deps.sh
 if [[ ${LOCAL_BUILD} == false ]]; then
+  source ${BUILD_DIR}/scripts/install-deps.sh
   install_deps
 else
   echo "Local build, not installing dependencies."
