@@ -29,10 +29,10 @@ get_version_c() {
   local patches=$(sed -n '/static int included_patches/,/}/p' ${NEOVIM_DIR}/src/nvim/version.c |
                   grep -e '^  .*[0-9]' | sed 's/[ ,]//g' | grep -ve '^00*$')
 
-  echo "<h2>Not merged</h2>"
-  echo "$patches" | grep \/\/ | sed 's/\/\///g' | linkify_numbers
-  echo "<h2>Merged</h2>"
-  echo "$patches" | grep -v \/\/ | linkify_numbers
+  not_merged=$(echo "$patches" | grep \/\/ | sed 's/\/\///g' | linkify_numbers) \
+  merged=$(echo "$patches" | grep -v \/\/ | linkify_numbers) \
+  not_applicable="[TODO]" \
+  envsubst < ${BUILD_DIR}/templates/vimpatch-report/body.sh.html
 }
 
 # Generate HTML report of the current 'vim-patch' pull requests on GitHub
