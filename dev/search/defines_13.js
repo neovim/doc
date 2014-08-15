@@ -113,6 +113,7 @@ var searchData=
   ['shm_5fa',['SHM_A',['../option__defs_8h.html#a587b2630c0b66716380faad18bf83264',1,'option_defs.h']]],
   ['shm_5fall',['SHM_ALL',['../option__defs_8h.html#aa6ca5f09810dca6e980663e0f914b63d',1,'option_defs.h']]],
   ['shm_5fattention',['SHM_ATTENTION',['../option__defs_8h.html#a4067a59443206ab22efad3fc618a8f4e',1,'option_defs.h']]],
+  ['shm_5fcompletionmenu',['SHM_COMPLETIONMENU',['../option__defs_8h.html#a0d5517cd64645cdbddb9e5bed701af12',1,'option_defs.h']]],
   ['shm_5ffile',['SHM_FILE',['../option__defs_8h.html#ab90237524aad95dbb3e1e450f5d4c744',1,'option_defs.h']]],
   ['shm_5fintro',['SHM_INTRO',['../option__defs_8h.html#a361eec911c2bfc9633983f20d7e39dc4',1,'option_defs.h']]],
   ['shm_5flast',['SHM_LAST',['../option__defs_8h.html#ac51da659ab2eeea69a9516aa356bf6ef',1,'option_defs.h']]],
