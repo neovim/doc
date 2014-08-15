@@ -141,6 +141,7 @@ var searchData=
   ['b_5fp_5fkeymap',['b_p_keymap',['../structfile__buffer.html#a44ebcf697a9cf5b3426c37f3cb181267',1,'file_buffer']]],
   ['b_5fp_5fkp',['b_p_kp',['../structfile__buffer.html#a584e65dc760e6d3d075fd38b6a17c434',1,'file_buffer']]],
   ['b_5fp_5flisp',['b_p_lisp',['../structfile__buffer.html#aedca450c54b99fce205088725ceb4270',1,'file_buffer']]],
+  ['b_5fp_5flw',['b_p_lw',['../structfile__buffer.html#afc284c9223b8637f131ef8dc4095c283',1,'file_buffer']]],
   ['b_5fp_5fma',['b_p_ma',['../structfile__buffer.html#a87d0277ec3f2a9109dcb9f2a8970f1d2',1,'file_buffer']]],
   ['b_5fp_5fml',['b_p_ml',['../structfile__buffer.html#a8bfdc279de8067de430ee1010a884d95',1,'file_buffer']]],
   ['b_5fp_5fml_5fnobin',['b_p_ml_nobin',['../structfile__buffer.html#a397069fcefa5140fcc67131a9fe6f6e5',1,'file_buffer']]],

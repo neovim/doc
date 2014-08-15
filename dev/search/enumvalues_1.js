@@ -49,6 +49,7 @@ var searchData=
   ['bv_5fkmap',['BV_KMAP',['../option__defs_8h.html#abc5c98fcc1211af2b80116dd6e0a035da5480b08c887c068f0218375d2985b8bf',1,'option_defs.h']]],
   ['bv_5fkp',['BV_KP',['../option__defs_8h.html#abc5c98fcc1211af2b80116dd6e0a035da79a982614fde2d1446a4d946988a9156',1,'option_defs.h']]],
   ['bv_5flisp',['BV_LISP',['../option__defs_8h.html#abc5c98fcc1211af2b80116dd6e0a035daf77429d931d817a01ccc2814b276bb89',1,'option_defs.h']]],
+  ['bv_5flw',['BV_LW',['../option__defs_8h.html#abc5c98fcc1211af2b80116dd6e0a035da62e932ae3e880d9c4d53793a9920611e',1,'option_defs.h']]],
   ['bv_5fma',['BV_MA',['../option__defs_8h.html#abc5c98fcc1211af2b80116dd6e0a035dad6f35ced0ac42161f3a3faa394fc328f',1,'option_defs.h']]],
   ['bv_5fml',['BV_ML',['../option__defs_8h.html#abc5c98fcc1211af2b80116dd6e0a035da74c0e096a130f85b5a7ce57ce6314ab5',1,'option_defs.h']]],
   ['bv_5fmod',['BV_MOD',['../option__defs_8h.html#abc5c98fcc1211af2b80116dd6e0a035da541a2d89dcb14b4f42c7bf0ef60505fc',1,'option_defs.h']]],
