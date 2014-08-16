@@ -27,17 +27,18 @@ linkify_numbers() {
 #   - N/A patches:      commented-out with "//123 NA"
 get_version_c() {
   local patches=$(sed -n '/static int included_patches/,/}/p' ${NEOVIM_DIR}/src/nvim/version.c |
-                  grep -e '^  .*[0-9]' | sed 's/[ ,]//g' | grep -ve '^00*$')
+                  grep -e '[0-9]' | sed 's/[ ,]//g' | grep -ve '^00*$')
 
-  not_merged=$(echo "$patches" | grep \/\/ | sed 's/\/\///g' | linkify_numbers) \
   merged=$(echo "$patches" | grep -v \/\/ | linkify_numbers) \
-  not_applicable="[TODO]" \
+  not_merged=$(echo "$patches" | grep \/\/ | grep -v NA | sed 's/\/\///g' | linkify_numbers) \
+  not_applicable=$(echo "$patches" | grep -e '\/\/.*NA' | sed 's/\/\/\|NA//g' | linkify_numbers) \
   envsubst < ${BUILD_DIR}/templates/vimpatch-report/body.sh.html
 }
 
 # Generate HTML report of the current 'vim-patch' pull requests on GitHub
 get_open_pullrequests() {
-  echo "<h2>Pull requests</h2>"
+  echo "<div class=\"col\"><h2>Pull requests</h2>"
+
   curl "https://api.github.com/repos/neovim/neovim/pulls?state=open" 2>/dev/null |
   jq '[.[] | {html_url, title} |  select(contains({title: "vim-patch"}))] | sort_by(.title) | map("<a href=\"\(.html_url)\">\(.title)</a><br/>")' |
   # use sed until travis gets jq 1.3+ (has 'reduce' and '@html')
@@ -46,4 +47,6 @@ get_open_pullrequests() {
   sed 's/^\[//' |
   sed 's/^\]//' |
   sed 's/\\"/"/g'
+
+  echo "</div>"
 }
