@@ -32,6 +32,7 @@ var searchData=
   ['os_5fchdir',['os_chdir',['../fs_8c.html#a6af14a94be59bdbc8198fdd4838faa15',1,'fs.c']]],
   ['os_5fdelay',['os_delay',['../time_8c.html#a38ba6f7625c0f588da79ea8f334d4138',1,'time.c']]],
   ['os_5fdirname',['os_dirname',['../fs_8c.html#a7aa84f364ad8b14d06c398eeb4b28e30',1,'fs.c']]],
+  ['os_5ffchown',['os_fchown',['../fs_8c.html#a2d3a68a0e4542c8de6bc142a0df7df2c',1,'fs.c']]],
   ['os_5ffile_5fexists',['os_file_exists',['../fs_8c.html#ad2233068550f49023498777ab1b80acf',1,'fs.c']]],
   ['os_5ffile_5fid_5fequal',['os_file_id_equal',['../fs_8c.html#a6d487fd90b8cfc93368b831903ff1476',1,'fs.c']]],
   ['os_5ffile_5fid_5fequal_5ffile_5finfo',['os_file_id_equal_file_info',['../fs_8c.html#a61e8f728928d317533b0f20381a875c2',1,'fs.c']]],
