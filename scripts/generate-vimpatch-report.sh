@@ -39,7 +39,7 @@ get_version_c() {
 get_open_pullrequests() {
   echo "<div class=\"col\"><h2>Pull requests</h2>"
 
-  curl "https://api.github.com/repos/neovim/neovim/pulls?state=open" 2>/dev/null |
+  curl 'https://api.github.com/repos/neovim/neovim/pulls?state=open&per_page=100' 2>/dev/null |
   jq '[.[] | {html_url, title} |  select(contains({title: "vim-patch"}))] | sort_by(.title) | map("<a href=\"\(.html_url)\">\(.title)</a><br/>")' |
   # use sed until travis gets jq 1.3+ (has 'reduce' and '@html')
   sed 's/^  "//' |
