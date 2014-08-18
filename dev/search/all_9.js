@@ -173,6 +173,7 @@ var searchData=
   ['invalidate_5fbotline_5fwin',['invalidate_botline_win',['../move_8c.html#ac88c83a4e678102a35e81bcc4b882576',1,'move.c']]],
   ['inverted',['INVERTED',['../screen_8h.html#ab05995eec69c22f9170313d727c35788',1,'screen.h']]],
   ['inverted_5fall',['INVERTED_ALL',['../screen_8h.html#aa529a8f28d6bea4f6d0efb6d27ad7097',1,'screen.h']]],
+  ['invocation_5fpath_5ftail',['invocation_path_tail',['../path_8c.html#a2a42e0c33c8c4c5489f70a81ad83a09d',1,'path.c']]],
   ['iobuff',['IObuff',['../globals_8h.html#a25dd1dca05697b8974eb48c2f50f1f9e',1,'globals.h']]],
   ['iosize',['IOSIZE',['../globals_8h.html#acf7963125f809e9f6d864f961226a4f6',1,'globals.h']]],
   ['ip_5fbnum',['ip_bnum',['../structinfo__pointer.html#a140d83e56091daa97560a9a4a82a8c1b',1,'info_pointer']]],

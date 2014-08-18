@@ -198,7 +198,7 @@ var searchData=
   ['global_5fwo',['GLOBAL_WO',['../buffer__defs_8h.html#a3a494d9abbb64e276b40da3a0e9f22bf',1,'buffer_defs.h']]],
   ['globaldir',['globaldir',['../structaco__save__T.html#aac59471518e29fcbdade5f4e2e5c7028',1,'aco_save_T']]],
   ['globals_2eh',['globals.h',['../globals_8h.html',1,'']]],
-  ['globpath',['globpath',['../ex__getln_8c.html#af522c1bbd04736a5d1cafdaf0a5d6172',1,'ex_getln.c']]],
+  ['globpath',['globpath',['../ex__getln_8c.html#aec8e65c3bbff6b7c5003d94481fe137e',1,'ex_getln.c']]],
   ['globvardict',['globvardict',['../globals_8h.html#aa1e3b6594df899f03e14287849995349',1,'globals.h']]],
   ['globvarht',['globvarht',['../eval_8c.html#ad68c9f8c69caf43e2b0f573759e79c53',1,'eval.c']]],
   ['glv_5fno_5fautoload',['GLV_NO_AUTOLOAD',['../eval_8c.html#ae1f54ef47c368db7b1ff128dfe02ed6c',1,'eval.c']]],

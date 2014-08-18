@@ -41,5 +41,6 @@ var searchData=
   ['intro_5fmessage',['intro_message',['../version_8c.html#adc94ae3e8797bd98124ca5f6004611be',1,'version.c']]],
   ['invalidate_5fbotline',['invalidate_botline',['../move_8c.html#a7583590ea0d4e25a11eb3f42ebcdb513',1,'move.c']]],
   ['invalidate_5fbotline_5fwin',['invalidate_botline_win',['../move_8c.html#ac88c83a4e678102a35e81bcc4b882576',1,'move.c']]],
+  ['invocation_5fpath_5ftail',['invocation_path_tail',['../path_8c.html#a2a42e0c33c8c4c5489f70a81ad83a09d',1,'path.c']]],
   ['is_5fmouse_5fkey',['is_mouse_key',['../misc1_8c.html#a2ffe0587106d5145d9944d8227b38456',1,'misc1.c']]]
 ];
