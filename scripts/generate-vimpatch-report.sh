@@ -1,3 +1,5 @@
+DOC_SUBTREE="/build-reports/vimpatch/"
+
 generate_vimpatch_report() {
   # http://stedolan.github.io/jq/
   sudo apt-get install -y -q jq

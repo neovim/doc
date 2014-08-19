@@ -1,3 +1,5 @@
+DOC_SUBTREE="/dev/"
+
 generate_doxygen() {
   cd ${NEOVIM_DIR}
 

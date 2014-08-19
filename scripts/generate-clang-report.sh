@@ -1,3 +1,5 @@
+DOC_SUBTREE="/build-reports/clang/"
+
 generate_clang_report() {
   cd ${NEOVIM_DIR}
 

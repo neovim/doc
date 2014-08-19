@@ -1,3 +1,5 @@
+DOC_SUBTREE="/build-reports/translations/"
+
 generate_translation_report() {
   cd ${NEOVIM_DIR}
 
