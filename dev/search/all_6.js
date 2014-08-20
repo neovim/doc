@@ -308,6 +308,7 @@ var searchData=
   ['foldtext_5fcleanup',['foldtext_cleanup',['../fold_8c.html#ae434a735d4ec384d7b669a9deb064323',1,'fold.c']]],
   ['foldupdate',['foldUpdate',['../fold_8c.html#a24e4b52e8a4b89209e2aac49aabb284b',1,'fold.c']]],
   ['foldupdateall',['foldUpdateAll',['../fold_8c.html#a2e8c67487e90a1d4957853f4e328bbf9',1,'fold.c']]],
+  ['for_5fall_5fbuffers',['FOR_ALL_BUFFERS',['../globals_8h.html#ab2dfc04411a40f8bcaf0f45b0d16f482',1,'globals.h']]],
   ['for_5fall_5ftab_5fwindows',['FOR_ALL_TAB_WINDOWS',['../globals_8h.html#a7ec3ef1eaaad38a0f6b3b1965c6d1624',1,'globals.h']]],
   ['for_5fall_5fwindows',['FOR_ALL_WINDOWS',['../globals_8h.html#ace47feb394b092f7e9f5e736b86ae91b',1,'globals.h']]],
   ['force_5fabort',['force_abort',['../structdbg__stuff.html#a2b60dc3ceaf7927fa8ce23423cef994c',1,'dbg_stuff']]],

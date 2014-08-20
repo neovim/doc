@@ -138,6 +138,7 @@ var searchData=
   ['fo_5fwhite_5fpar',['FO_WHITE_PAR',['../option__defs_8h.html#abc9a118de99d4923d600a313eaf73a83',1,'option_defs.h']]],
   ['fo_5fwrap',['FO_WRAP',['../option__defs_8h.html#a7d4031c6345a87fa91d6bedf0efb7a73',1,'option_defs.h']]],
   ['fo_5fwrap_5fcoms',['FO_WRAP_COMS',['../option__defs_8h.html#ab55eb23c5d4d653c94de5501364f756f',1,'option_defs.h']]],
+  ['for_5fall_5fbuffers',['FOR_ALL_BUFFERS',['../globals_8h.html#ab2dfc04411a40f8bcaf0f45b0d16f482',1,'globals.h']]],
   ['for_5fall_5ftab_5fwindows',['FOR_ALL_TAB_WINDOWS',['../globals_8h.html#a7ec3ef1eaaad38a0f6b3b1965c6d1624',1,'globals.h']]],
   ['for_5fall_5fwindows',['FOR_ALL_WINDOWS',['../globals_8h.html#ace47feb394b092f7e9f5e736b86ae91b',1,'globals.h']]],
   ['force_5fbin',['FORCE_BIN',['../ex__cmds__defs_8h.html#adade35874286a0d3adf67ddd3bf8c4bc',1,'ex_cmds_defs.h']]],
