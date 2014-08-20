@@ -18,9 +18,7 @@ NEOVIM_BRANCH=master
 DOC_DIR=${BUILD_DIR}/build/doc
 DOC_REPO=neovim/doc
 DOC_BRANCH=gh-pages
-INDEX_PAGE_URL=http://neovim.org/doc_index
 MAKE_CMD="make -j2"
-REPORTS=(doxygen clang-report translation-report vimpatch-report)
 
 # Helper function for report generation
 # ${1}:   Report title
@@ -46,21 +44,26 @@ else
   echo "Local build, not installing dependencies."
 fi
 
-# Clone code & doc repos
+# Clone code repo
 git clone --branch ${NEOVIM_BRANCH} --depth 1 git://github.com/${NEOVIM_REPO} ${NEOVIM_DIR}
-git clone --branch ${DOC_BRANCH} --depth 1 git://github.com/${DOC_REPO} ${DOC_DIR}
 NEOVIM_COMMIT=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse HEAD)
 
-# Generate documentation & reports
-for REPORT in ${REPORTS[@]}; do
-  echo "Generating ${REPORT//-/ }."
-  source ${BUILD_DIR}/scripts/generate-${REPORT}.sh
-  generate_${REPORT//-/_}
-done
+# Include report functions
+source ${BUILD_DIR}/scripts/generate-${REPORT}.sh
 
-# Update the index page
-echo "Updating index.html from ${INDEX_PAGE_URL}."
-wget -q ${INDEX_PAGE_URL} -O ${DOC_DIR}/index.html
+# Clone subdirectory according to report type
+(
+  git init ${DOC_DIR}
+  cd ${DOC_DIR}
+  git remote add origin git://github.com/${DOC_REPO}
+  git config core.sparsecheckout true
+  echo "${DOC_SUBTREE}" >> .git/info/sparse-checkout
+  git checkout -b ${DOC_BRANCH}
+  git pull --depth 1 origin ${DOC_BRANCH}
+)
+
+# Generate report
+generate_${REPORT//-/_}
 
 # Exit early if not built on Travis to simplify
 # local test runs of this script
@@ -74,7 +77,7 @@ git config --global user.name "${GIT_NAME}"
 git config --global user.email ${GIT_EMAIL}
 
 # Commit the updated docs
-cd ${DOC_DIR}
+cd $(dirname "${DOC_DIR}${DOC_SUBTREE}")
 git add --all .
-git commit -m "Documentation: Automatic update."
-git push --force https://${GH_TOKEN}@github.com/${DOC_REPO} ${DOC_BRANCH}
+git commit -m "${REPORT//-/ }: Automatic update." || echo "No changes for ${REPORT//-/ }."
+until (git pull --rebase origin ${DOC_BRANCH} && git push https://${GH_TOKEN}@github.com/${DOC_REPO} ${DOC_BRANCH}); do echo "Retry pushing to ${DOC_REPO}."; sleep 1; done
