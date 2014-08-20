@@ -1,6 +1,8 @@
 var searchData=
 [
   ['wv_5farab',['WV_ARAB',['../option__defs_8h.html#ac36f475ca5b446f4fde4c9b90bec77c8af9adca67a3afabcaf6579d6f4b1381d4',1,'option_defs.h']]],
+  ['wv_5fbri',['WV_BRI',['../option__defs_8h.html#ac36f475ca5b446f4fde4c9b90bec77c8ab79caabaaadb3d150b7b5eff06a27624',1,'option_defs.h']]],
+  ['wv_5fbriopt',['WV_BRIOPT',['../option__defs_8h.html#ac36f475ca5b446f4fde4c9b90bec77c8a9d66e73794dc8c4faebec9d3c932bbb0',1,'option_defs.h']]],
   ['wv_5fcc',['WV_CC',['../option__defs_8h.html#ac36f475ca5b446f4fde4c9b90bec77c8a7ed120154ad0410b0bd0df31ecb1dd5c',1,'option_defs.h']]],
   ['wv_5fcocu',['WV_COCU',['../option__defs_8h.html#ac36f475ca5b446f4fde4c9b90bec77c8a66d168d3875ddc9b3366785613910264',1,'option_defs.h']]],
   ['wv_5fcole',['WV_COLE',['../option__defs_8h.html#ac36f475ca5b446f4fde4c9b90bec77c8a718e2888ee59a85d71e66d0941fc6f36',1,'option_defs.h']]],

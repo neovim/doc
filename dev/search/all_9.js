@@ -91,7 +91,7 @@ var searchData=
   ['in_5fuse',['in_use',['../structregsub__T.html#a27725d0c17dd3a4c391817b2cec117e3',1,'regsub_T']]],
   ['in_5fwin_5fborder',['in_win_border',['../charset_8c.html#abb5dda9a21a87e090368c2e22694fb7c',1,'charset.c']]],
   ['inbufpollresult',['InbufPollResult',['../input_8c.html#aba659b7ea89ff3ccbfb12e87073859cf',1,'input.c']]],
-  ['inc',['INC',['../option_8c.html#af735670d9b1cd3dfa2d927db387f7123',1,'INC():&#160;option.c'],['../misc2_8c.html#a0f1f4c4c9324421c76c2e29e8f418f86',1,'inc(pos_T *lp):&#160;misc2.c']]],
+  ['inc',['inc',['../misc2_8c.html#a0f1f4c4c9324421c76c2e29e8f418f86',1,'inc(pos_T *lp):&#160;misc2.c'],['../option_8c.html#af735670d9b1cd3dfa2d927db387f7123',1,'INC():&#160;option.c']]],
   ['inc2',['INC2',['../term_8c.html#a199da525fad2f3a06fb0d30035f2eb9e',1,'term.c']]],
   ['inc3',['INC3',['../term_8c.html#a93ce256b5509045f01294b734e8509c7',1,'term.c']]],
   ['inc_5fcursor',['inc_cursor',['../cursor_8c.html#abf466a63a4b512bf655ae0c818664c43',1,'cursor.c']]],

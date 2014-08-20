@@ -10,6 +10,7 @@ var searchData=
   ['beginline',['beginline',['../edit_8c.html#a838f72908360f3408ea70f31e121dfa5',1,'edit.c']]],
   ['block_5fautocmds',['block_autocmds',['../fileio_8c.html#a72d96ea10a9b77765cf2f19cdc82a12a',1,'fileio.c']]],
   ['bomb_5fsize',['bomb_size',['../mbyte_8c.html#a363045e8c761ea31b75ef6ffa37bc32b',1,'mbyte.c']]],
+  ['briopt_5fcheck',['briopt_check',['../option_8c.html#a44888b7c1b61197532077ecb1da3247e',1,'option.c']]],
   ['bt_5fdontwrite',['bt_dontwrite',['../quickfix_8c.html#a48e2c238e378bc286d5d22f04d1695f4',1,'quickfix.c']]],
   ['bt_5fdontwrite_5fmsg',['bt_dontwrite_msg',['../quickfix_8c.html#a35aac3c828a1591e66856192135d47a9',1,'quickfix.c']]],
   ['bt_5fnofile',['bt_nofile',['../quickfix_8c.html#a016276412bb4269f1ad464afa8219456',1,'quickfix.c']]],

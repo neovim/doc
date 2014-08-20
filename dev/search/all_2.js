@@ -360,6 +360,7 @@ var searchData=
   ['breakcheck_5fskip',['BREAKCHECK_SKIP',['../misc1_8c.html#a4d3e4dfb870786ba369e93c3a5e40955',1,'misc1.c']]],
   ['breakp',['BREAKP',['../ex__cmds2_8c.html#a5b0ee4a93329e250c4cb6a13e851c2d9',1,'ex_cmds2.c']]],
   ['breakpoint',['breakpoint',['../structfunccall__S.html#abf15aaaa05e78406c01c73c5a17a3240',1,'funccall_S::breakpoint()'],['../structsource__cookie.html#a5a9f0f78254de8f5eaef34a99e776ac0',1,'source_cookie::breakpoint()']]],
+  ['briopt_5fcheck',['briopt_check',['../option_8c.html#a44888b7c1b61197532077ecb1da3247e',1,'option.c']]],
   ['bs',['BS',['../ascii_8h.html#a580a88f98668df1ac5e1683cae31c0b3',1,'ascii.h']]],
   ['bs_5fcchar',['bs_cchar',['../structbuf__state.html#aaa4add954f1fed063a4c15c7f0c4298f',1,'buf_state']]],
   ['bs_5feol',['BS_EOL',['../option__defs_8h.html#a5cd2a5292cb376547d03be490154ae7b',1,'option_defs.h']]],

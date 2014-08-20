@@ -133,6 +133,8 @@ var searchData=
   ['pv_5fbl',['PV_BL',['../option_8c.html#a356732e2d808f6e9905487b4a01e47ed',1,'option.c']]],
   ['pv_5fbomb',['PV_BOMB',['../option_8c.html#a500e99e22d4d7f445ba707cf4a143f4d',1,'option.c']]],
   ['pv_5fboth',['PV_BOTH',['../option_8c.html#a803539cbf53b2bee1cdfe8ae34a16d3f',1,'option.c']]],
+  ['pv_5fbri',['PV_BRI',['../option_8c.html#add8dc04520f759cf0da3a59319d5ec3d',1,'option.c']]],
+  ['pv_5fbriopt',['PV_BRIOPT',['../option_8c.html#a553a9d81a463cd353552bbf1a8fb87e4',1,'option.c']]],
   ['pv_5fbt',['PV_BT',['../option_8c.html#a2b49275c98a75ff6b9813742e211527c',1,'option.c']]],
   ['pv_5fbuf',['PV_BUF',['../option_8c.html#a2ef9656c12e1187417c7a311f5b30eba',1,'option.c']]],
   ['pv_5fcc',['PV_CC',['../option_8c.html#a4bef9ad0897cc614df78527388269b5e',1,'option.c']]],
