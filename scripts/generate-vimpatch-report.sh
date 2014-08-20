@@ -1,14 +1,14 @@
-DOC_SUBTREE="/build-reports/vimpatch/"
+DOC_SUBTREE="/reports/vimpatch/"
 
 generate_vimpatch_report() {
   # http://stedolan.github.io/jq/
   sudo apt-get install -y -q jq
 
-  rm -rf ${DOC_DIR}/build-reports/vimpatch
-  mkdir -p ${DOC_DIR}/build-reports/vimpatch
+  rm -rf ${DOC_DIR}/reports/vimpatch
+  mkdir -p ${DOC_DIR}/reports/vimpatch
 
   generate_report "vim-patch report" "$(get_vimpatch_report_body)" \
-    ${DOC_DIR}/build-reports/vimpatch/index.html
+    ${DOC_DIR}/reports/vimpatch/index.html
 }
 
 get_vimpatch_report_body() {

@@ -1,4 +1,4 @@
-DOC_SUBTREE="/build-reports/clang/"
+DOC_SUBTREE="/reports/clang/"
 
 generate_clang_report() {
   cd ${NEOVIM_DIR}
@@ -12,9 +12,9 @@ generate_clang_report() {
     ${MAKE_CMD} > scan-build.out
 
   # Copy to doc repository
-  rm -rf ${DOC_DIR}/build-reports/clang
-  mkdir -p ${DOC_DIR}/build-reports/clang
-  cp -r build/clang-report/*/* ${DOC_DIR}/build-reports/clang
+  rm -rf ${DOC_DIR}/reports/clang
+  mkdir -p ${DOC_DIR}/reports/clang
+  cp -r build/clang-report/*/* ${DOC_DIR}/reports/clang
 
   # Modify HTML to match Neovim's layout
   modify_clang_report
@@ -26,14 +26,14 @@ generate_clang_report() {
 # Helper function to modify Clang report's index.html
 # to use Neovim layout
 modify_clang_report() {
-  local index_file=${DOC_DIR}/build-reports/clang/index.html
-  local script_file=${DOC_DIR}/build-reports/clang/clang-index.js
+  local index_file=${DOC_DIR}/reports/clang/index.html
+  local script_file=${DOC_DIR}/reports/clang/clang-index.js
 
   # Move inline JavaScript to separate file
   extract_inline_script ${index_file} > ${script_file}
 
   # Remove colliding styles from scan-build's CSS
-  local style_file=${DOC_DIR}/build-reports/clang/scanview.css
+  local style_file=${DOC_DIR}/reports/clang/scanview.css
   sed -i -e '/^body/d' ${style_file} \
     -e '/^h1/d' ${style_file} \
     -e '/^h2/d' ${style_file} \
@@ -81,7 +81,7 @@ download_badge() {
   local code_quality_color="$(get_code_quality_color ${all_bugs_number})"
   local badge="clang_analysis-${all_bugs_number}-${code_quality_color}"
   wget https://img.shields.io/badge/${badge}.svg \
-    -O ${DOC_DIR}/build-reports/clang/badge.svg
+    -O ${DOC_DIR}/reports/clang/badge.svg
 }
 
 # Helper function to find number of all bugs in build-scan output

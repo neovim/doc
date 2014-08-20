@@ -1,4 +1,4 @@
-DOC_SUBTREE="/build-reports/translations/"
+DOC_SUBTREE="/reports/translations/"
 
 generate_translation_report() {
   cd ${NEOVIM_DIR}
@@ -12,10 +12,10 @@ generate_translation_report() {
   ${MAKE_CMD} translations
 
   # Rebuild the translation report
-  rm -rf ${DOC_DIR}/build-reports/translations
-  mkdir -p ${DOC_DIR}/build-reports/translations
+  rm -rf ${DOC_DIR}/reports/translations
+  mkdir -p ${DOC_DIR}/reports/translations
   generate_report "Neovim Translation Report" "$(get_translation_report_body)" \
-    ${DOC_DIR}/build-reports/translations/index.html
+    ${DOC_DIR}/reports/translations/index.html
 }
 
 # Helper function for translation report

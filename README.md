@@ -14,7 +14,7 @@ neovim.org
   doc
     dev
     user [todo]
-    build-reports
+    reports
       clang
       translations
       vimpatch
