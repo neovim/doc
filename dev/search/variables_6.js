@@ -6,7 +6,7 @@ var searchData=
   ['ga_5fitemsize',['ga_itemsize',['../structgrowarray.html#a60462e3856dac7e6db392e69f13cfc02',1,'growarray']]],
   ['ga_5flen',['ga_len',['../structgrowarray.html#ad98cc748707bb96fbb28f26bb44d3d65',1,'growarray']]],
   ['ga_5fmaxlen',['ga_maxlen',['../structgrowarray.html#a1d63b1d96cd87a4c5b5f4fade4a28e87',1,'growarray']]],
-  ['getline',['getline',['../structexarg.html#a5591d11c435ac693907635355eafbe04',1,'exarg::getline()'],['../structloop__cookie.html#a388f05573192d543f1169df28e2bf15a',1,'loop_cookie::getline()']]],
+  ['getline',['getline',['../structexarg.html#a569632c37c5cfc359711a51eb7fd52ab',1,'exarg::getline()'],['../structloop__cookie.html#a388f05573192d543f1169df28e2bf15a',1,'loop_cookie::getline()']]],
   ['global_5falist',['global_alist',['../globals_8h.html#a5ad902bd6d0455a0473c1d8490369979',1,'globals.h']]],
   ['globaldir',['globaldir',['../structaco__save__T.html#aac59471518e29fcbdade5f4e2e5c7028',1,'aco_save_T']]],
   ['globvardict',['globvardict',['../globals_8h.html#aa1e3b6594df899f03e14287849995349',1,'globals.h']]],

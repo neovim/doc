@@ -291,7 +291,6 @@ var searchData=
   ['nv_5fss',['NV_SS',['../normal_8c.html#a3b2ec1534be60ace3fc755225b300da5',1,'normal.c']]],
   ['nv_5fsss',['NV_SSS',['../normal_8c.html#ab0a0ab7f6e6fc7379ed91717c0198688',1,'normal.c']]],
   ['nv_5fsts',['NV_STS',['../normal_8c.html#ab21df0e441f00f996a8be425a4c974e2',1,'normal.c']]],
-  ['nvim_5fex_5fcmds_5fdefs_5fh',['NVIM_EX_CMDS_DEFS_H',['../ex__cmds__defs_8h.html#a318929e90d9e9633c810c5c40c5853ea',1,'ex_cmds_defs.h']]],
   ['nwhite',['NWHITE',['../regexp_8c.html#a98528b31e0aebb5f1f49e2da00f90f80',1,'regexp.c']]],
   ['nword',['NWORD',['../regexp_8c.html#abf0dfc8479e7a526b8191efde6942daf',1,'regexp.c']]]
 ];

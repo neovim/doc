@@ -64,7 +64,7 @@ var searchData=
   ['line_5fstart',['line_start',['../structprt__resfile__buffer__S.html#a05e4c014c5c2cc2d02217942f4df6d6c',1,'prt_resfile_buffer_S']]],
   ['lineempty',['lineempty',['../macros_8h.html#ad7981a4627e42d1e51ff57915944be5e',1,'macros.h']]],
   ['linefolded',['lineFolded',['../fold_8c.html#ae93bdeb0b47100cebcf73bbd682fc778',1,'fold.c']]],
-  ['linegetter',['LineGetter',['../ex__docmd_8h.html#a523220ff41715f2590ff32879f9b775b',1,'ex_docmd.h']]],
+  ['linegetter',['LineGetter',['../ex__cmds__defs_8h.html#a523220ff41715f2590ff32879f9b775b',1,'ex_cmds_defs.h']]],
   ['linenr',['linenr',['../structfunccall__S.html#a86dcf22edb5afebfdf08a047bd31166e',1,'funccall_S']]],
   ['linenr_5ft',['linenr_T',['../pos_8h.html#a934ce754d29a8aee92b71e970b7e2ae4',1,'pos.h']]],
   ['lineoff_5ft',['lineoff_T',['../structlineoff__T.html',1,'']]],

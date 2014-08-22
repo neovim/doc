@@ -2,7 +2,7 @@ var searchData=
 [
   ['langp_5ft',['langp_T',['../spell_8c.html#a4cd2e721b36cd381854c0b6236665c42',1,'spell.c']]],
   ['levelgetter',['LevelGetter',['../fold_8c.html#a2b8ee534cc37c9ce59f52a19914aae8f',1,'fold.c']]],
-  ['linegetter',['LineGetter',['../ex__docmd_8h.html#a523220ff41715f2590ff32879f9b775b',1,'ex_docmd.h']]],
+  ['linegetter',['LineGetter',['../ex__cmds__defs_8h.html#a523220ff41715f2590ff32879f9b775b',1,'ex_cmds_defs.h']]],
   ['linenr_5ft',['linenr_T',['../pos_8h.html#a934ce754d29a8aee92b71e970b7e2ae4',1,'pos.h']]],
   ['list_5ft',['list_T',['../eval__defs_8h.html#a11ffae1e2b70b0e8b9d419277639945a',1,'eval_defs.h']]],
   ['listitem_5ft',['listitem_T',['../eval__defs_8h.html#ae67d3a76b367f373d49940f75ebbe21a',1,'eval_defs.h']]],

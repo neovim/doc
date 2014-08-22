@@ -173,7 +173,7 @@ var searchData=
   ['getf_5fswitch',['GETF_SWITCH',['../buffer_8h.html#ac96334ce9e91c5c4ae8c4e2a92a2c2b1a54200224b689ae68d028a723451a638d',1,'buffer.h']]],
   ['getf_5fvalues',['getf_values',['../buffer_8h.html#ac96334ce9e91c5c4ae8c4e2a92a2c2b1',1,'buffer.h']]],
   ['getfile',['getfile',['../ex__cmds_8c.html#a26284a250850ebb7306e0300fd2d79e7',1,'ex_cmds.c']]],
-  ['getline',['getline',['../structexarg.html#a5591d11c435ac693907635355eafbe04',1,'exarg::getline()'],['../structloop__cookie.html#a388f05573192d543f1169df28e2bf15a',1,'loop_cookie::getline()']]],
+  ['getline',['getline',['../structexarg.html#a569632c37c5cfc359711a51eb7fd52ab',1,'exarg::getline()'],['../structloop__cookie.html#a388f05573192d543f1169df28e2bf15a',1,'loop_cookie::getline()']]],
   ['getline_5fcookie',['getline_cookie',['../ex__docmd_8c.html#a5903f5b88acb30ad43710d199528791d',1,'ex_docmd.c']]],
   ['getline_5fequal',['getline_equal',['../ex__docmd_8c.html#a3ea5e86b7a4175ad05907d7e26f2bcb1',1,'ex_docmd.c']]],
   ['getmark',['getmark',['../mark_8c.html#a7f6d498feb240726d9b31f340698c72f',1,'mark.c']]],

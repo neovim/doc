@@ -73,7 +73,6 @@ var searchData=
   ['check_5ftopfill',['check_topfill',['../move_8c.html#a14a5df09c8b59af4a8f4a0af4abac386',1,'move.c']]],
   ['check_5fvisual_5fhighlight',['check_visual_highlight',['../normal_8c.html#a77bcb06f75de76209df6c95c2618e97a',1,'normal.c']]],
   ['check_5fwin_5foptions',['check_win_options',['../option_8c.html#a96e17d6b30556178ef8dd34135816880',1,'option.c']]],
-  ['check_5fwinopt',['check_winopt',['../option_8c.html#abc94b80862d22bdb57433fb23b6feda9',1,'option.c']]],
   ['checkforcmd',['checkforcmd',['../ex__docmd_8c.html#a63af5709853d73aead14d174f904fed8',1,'ex_docmd.c']]],
   ['checkpcmark',['checkpcmark',['../mark_8c.html#a726c2658188f169cd4d6fd4714e93472',1,'mark.c']]],
   ['cin_5fis_5fcinword',['cin_is_cinword',['../indent__c_8c.html#a4071386ec71ef5978ff5ec063200182c',1,'indent_c.c']]],

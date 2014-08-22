@@ -77,7 +77,6 @@ var searchData=
   ['ew_5fnotwild',['EW_NOTWILD',['../path_8h.html#a66530b1b04ece8c4ff7e4ab86d13a282',1,'path.h']]],
   ['ew_5fpath',['EW_PATH',['../path_8h.html#a169617d85640de63d62a13a546d7a12e',1,'path.h']]],
   ['ew_5fsilent',['EW_SILENT',['../path_8h.html#a70c2e1c93622f9cc806906ebe68fe5cf',1,'path.h']]],
-  ['ex',['EX',['../ex__cmds__defs_8h.html#ae976bb6a9bdb7ffce452f5806faaa959',1,'ex_cmds_defs.h']]],
   ['ex_5fdrop',['ex_drop',['../ex__docmd_8c.html#a1017d86aeb2b974787a16e947e63be41',1,'ex_docmd.c']]],
   ['ex_5fgui',['ex_gui',['../ex__docmd_8c.html#a377cd6ad1ecbe8d0ceb214f4fdcb3089',1,'ex_docmd.c']]],
   ['ex_5fhelpfind',['ex_helpfind',['../ex__docmd_8c.html#aaaf3d80a5f9ebff419c94c35a062c170',1,'ex_docmd.c']]],
