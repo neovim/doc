@@ -80,4 +80,9 @@ git config --global user.email ${GIT_EMAIL}
 cd $(dirname "${DOC_DIR}${DOC_SUBTREE}")
 git add --all .
 git commit -m "${REPORT//-/ }: Automatic update." || echo "No changes for ${REPORT//-/ }."
-until (git pull --rebase origin ${DOC_BRANCH} && git push https://${GH_TOKEN}@github.com/${DOC_REPO} ${DOC_BRANCH}); do echo "Retry pushing to ${DOC_REPO}."; sleep 1; done
+until (git pull --rebase origin ${DOC_BRANCH} &&
+       git push -q https://${GH_TOKEN}@github.com/${DOC_REPO} ${DOC_BRANCH} &&
+       echo "Pushed to ${DOC_REPO} ${DOC_BRANCH}."); do
+  echo "Retry pushing to ${DOC_REPO} ${DOC_BRANCH}."
+  sleep 1
+done
