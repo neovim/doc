@@ -89,7 +89,7 @@ var searchData=
   ['fr_5fwidth',['fr_width',['../structframe__S.html#a786d48cb692945beb2c9afcb95168589',1,'frame_S']]],
   ['fr_5fwin',['fr_win',['../structframe__S.html#a55af38f818ea55b90095b108fdf97ec1',1,'frame_S']]],
   ['fread_5fidle',['fread_idle',['../structrstream.html#a43140039bf2ae301c48cbd2eab52110f',1,'rstream']]],
-  ['free_5fhandle',['free_handle',['../structrstream.html#a70da08d4e4d13e7aedd33aa85fb70a7f',1,'rstream']]],
+  ['free_5fhandle',['free_handle',['../structrstream.html#a70da08d4e4d13e7aedd33aa85fb70a7f',1,'rstream::free_handle()'],['../structwstream.html#aa7f82602df5c15626c021ffd3a4a9722',1,'wstream::free_handle()']]],
   ['freed',['freed',['../structwstream.html#a97a9368b4f41f85de1240166a27956b7',1,'wstream']]],
   ['from',['from',['../structkmap__T.html#add6d97bcc25b6661a6e2ea4e024f93b6',1,'kmap_T::from()'],['../structmenutrans__T.html#aa05917a5deda31ea9cc3886168f0e0a2',1,'menutrans_T::from()'],['../structlangmap__entry__T.html#a7ba289b5922739470704b755db21eb8b',1,'langmap_entry_T::from()']]],
   ['from_5fnoamp',['from_noamp',['../structmenutrans__T.html#a46f669416be4939adf91f880c5e7fa26',1,'menutrans_T']]],

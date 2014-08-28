@@ -48,6 +48,7 @@ var searchData=
   ['channel',['Channel',['../structChannel.html',1,'']]],
   ['channel_2ec',['channel.c',['../channel_8c.html',1,'']]],
   ['channel_2eh',['channel.h',['../channel_8h.html',1,'']]],
+  ['channel_5fbuffer_5fsize',['CHANNEL_BUFFER_SIZE',['../channel_8c.html#af29b65459670533eee2cfe975af7e114',1,'channel.c']]],
   ['channel_5fexists',['channel_exists',['../channel_8c.html#a75704490a1fdab46744415f59d12cebd',1,'channel.c']]],
   ['channel_5ffrom_5fjob',['channel_from_job',['../channel_8c.html#ac7a37bb8167e08516ccbc4d6eb6f74af',1,'channel.c']]],
   ['channel_5ffrom_5fstream',['channel_from_stream',['../channel_8c.html#a00dd5b0e6861104502d841a702e67a07',1,'channel.c']]],

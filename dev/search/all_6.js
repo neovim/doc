@@ -350,7 +350,7 @@ var searchData=
   ['free_5ffname',['FREE_FNAME',['../edit_8c.html#ace3b3dd5e214f68a1eefa4a8afab852c',1,'edit.c']]],
   ['free_5ffor_5finfo',['free_for_info',['../eval_8c.html#ae1fc5a9f8e51c57356aea736a15fc631',1,'eval.c']]],
   ['free_5fglobal_5fmsglist',['free_global_msglist',['../ex__eval_8c.html#aff7dacd236b513c266566f46c64eb2e1',1,'ex_eval.c']]],
-  ['free_5fhandle',['free_handle',['../structrstream.html#a70da08d4e4d13e7aedd33aa85fb70a7f',1,'rstream']]],
+  ['free_5fhandle',['free_handle',['../structrstream.html#a70da08d4e4d13e7aedd33aa85fb70a7f',1,'rstream::free_handle()'],['../structwstream.html#aa7f82602df5c15626c021ffd3a4a9722',1,'wstream::free_handle()']]],
   ['free_5fjumplist',['free_jumplist',['../mark_8c.html#a019d8c124beadae40d9ff8c607d47cbf',1,'mark.c']]],
   ['free_5fone_5ftermoption',['free_one_termoption',['../option_8c.html#af9c5cf6e5739c2335a59a30f20946cb4',1,'option.c']]],
   ['free_5fscreenlines',['free_screenlines',['../screen_8c.html#ac2d84d0963228f7dcc393f00d3488086',1,'screen.c']]],

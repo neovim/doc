@@ -117,7 +117,7 @@ var searchData=
   ['info_5fpointer',['info_pointer',['../structinfo__pointer.html',1,'']]],
   ['infoptr_5ft',['infoptr_T',['../memline__defs_8h.html#a6a6c3ed39110def50a0b6730300915db',1,'memline_defs.h']]],
   ['inindent',['inindent',['../indent_8c.html#a2705b12f4d0970023193b6d86d5d74f1',1,'indent.c']]],
-  ['init',['INIT',['../globals_8h.html#a6964dec5207b7152ab40ad9402b46727',1,'INIT():&#160;globals.h'],['../globals_8h.html#a08d4f1e057f00d4dddc3b8295f9a0d31',1,'INIT(=80):&#160;globals.h']]],
+  ['init',['INIT',['../globals_8h.html#a6964dec5207b7152ab40ad9402b46727',1,'INIT():&#160;globals.h'],['../globals_8h.html#a5827e797d22e4f08f26e9b395d21b113',1,'INIT(=80):&#160;globals.h']]],
   ['init_5fchartab',['init_chartab',['../charset_8c.html#a8751e2d3c8738c511e4eddc27161e18f',1,'charset.c']]],
   ['init_5fhighlight',['init_highlight',['../syntax_8c.html#a2ea133fa4b192c5bf37ecea68a3fc39b',1,'syntax.c']]],
   ['init_5fhistory',['init_history',['../ex__getln_8c.html#a3b9830ecbd98de7ce0be571922d58286',1,'ex_getln.c']]],

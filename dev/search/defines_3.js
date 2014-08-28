@@ -12,6 +12,7 @@ var searchData=
   ['cent',['CENT',['../syntax_8c.html#aa1bc3d74dafaea89a299b12d74773a94',1,'syntax.c']]],
   ['cf_5fupper',['CF_UPPER',['../spell_8c.html#a7c9ce45c91817be15b4e0df67b87e8b6',1,'spell.c']]],
   ['cf_5fword',['CF_WORD',['../spell_8c.html#a81a2b090be2ee85e9dd29c239395a9c0',1,'spell.c']]],
+  ['channel_5fbuffer_5fsize',['CHANNEL_BUFFER_SIZE',['../channel_8c.html#af29b65459670533eee2cfe975af7e114',1,'channel.c']]],
   ['char_5fcells',['CHAR_CELLS',['../screen_8c.html#a5f369bdf6dac3c6be7e1ca594bd2ee1f',1,'screen.c']]],
   ['charord',['CharOrd',['../ascii_8h.html#a4cbe40941b37154b8527d248cea76f6d',1,'ascii.h']]],
   ['charordlow',['CharOrdLow',['../ascii_8h.html#a6f21749f65d79fd712c67c558ff2db39',1,'ascii.h']]],
