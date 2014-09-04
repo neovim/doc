@@ -38,7 +38,7 @@ var searchData=
   ['buf_5fset_5ffile_5fid',['buf_set_file_id',['../buffer_8c.html#a6059fea2a7db08f6e3432a12ae377342',1,'buffer.c']]],
   ['buf_5fset_5fname',['buf_set_name',['../buffer_8c.html#a33a7d1510268556598a03fc1653af58b',1,'buffer.c']]],
   ['buf_5fspname',['buf_spname',['../buffer_8c.html#ae729d3d218b6375165add7d4917b7a4f',1,'buffer.c']]],
-  ['buf_5fstore_5ffile_5finfo',['buf_store_file_info',['../fileio_8c.html#ad65bedcef59fb07d033da54b2872aeec',1,'fileio.c']]],
+  ['buf_5fstore_5ffile_5finfo',['buf_store_file_info',['../fileio_8c.html#a0411f1f723f921983d433cff7bd8b548',1,'fileio.c']]],
   ['buf_5fvalid',['buf_valid',['../buffer_8c.html#a4f91004d6ff5a923897f89f11ee736b1',1,'buffer.c']]],
   ['buf_5fwrite',['buf_write',['../fileio_8c.html#abe4b559b304c0ead467732cbf735afdb',1,'fileio.c']]],
   ['buf_5fwrite_5fall',['buf_write_all',['../ex__cmds2_8c.html#a37e53763b92f3608415c7bcddc8f28ba',1,'ex_cmds2.c']]],

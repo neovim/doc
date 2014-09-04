@@ -94,7 +94,7 @@ var searchData=
   ['b_5fop_5fstart',['b_op_start',['../structfile__buffer.html#a28827de62ec0e630a4c2c372a17cc8d2',1,'file_buffer']]],
   ['b_5fop_5fstart_5forig',['b_op_start_orig',['../structfile__buffer.html#a1f53e7ec19dbe85b2556e614d58b02ba',1,'file_buffer']]],
   ['b_5forig_5fmode',['b_orig_mode',['../structfile__buffer.html#a44e966d8856ead5eae8184fc9fabceeb',1,'file_buffer']]],
-  ['b_5forig_5fsize',['b_orig_size',['../structfile__buffer.html#a62ad17d4ce75fc98fbc3ce0c9755d174',1,'file_buffer']]],
+  ['b_5forig_5fsize',['b_orig_size',['../structfile__buffer.html#a24a0ce00ecc137d5a4774f8db40f538c',1,'file_buffer']]],
   ['b_5fp_5fai',['b_p_ai',['../structfile__buffer.html#aa0128ffaf4325e1c5c8358facec231fb',1,'file_buffer']]],
   ['b_5fp_5fai_5fnopaste',['b_p_ai_nopaste',['../structfile__buffer.html#a4635675a30046110f9484064cc782220',1,'file_buffer']]],
   ['b_5fp_5far',['b_p_ar',['../structfile__buffer.html#aad0a8e6957ab89390fba0d283563a8b4',1,'file_buffer']]],
