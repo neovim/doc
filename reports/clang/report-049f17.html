@@ -5324,59 +5324,63 @@
 <tr><td class="num" id="LN5232">5232</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN5233">5233</td><td class="line">  <span class='keyword'>struct</span> yankreg *reg = &amp;y_regs[<span class='macro'>CLIP_REGISTER<span class='expansion'>37</span></span>];</td></tr>
 <tr><td class="num" id="LN5234">5234</td><td class="line">  free_register(reg);</td></tr>
-<tr><td class="num" id="LN5235">5235</td><td class="line">  Object result = provider_call(<span class='string_literal'>"clipboard_get"</span>, <span class='macro'>NIL<span class='expansion'>((Object) {.type = kObjectTypeNil})</span></span>);</td></tr>
-<tr><td class="num" id="LN5236">5236</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5237">5237</td><td class="line">  <span class='keyword'>if</span> (result.type != kObjectTypeArray) {</td></tr>
-<tr><td class="num" id="LN5238">5238</td><td class="line">    <span class='keyword'>goto</span> err;</td></tr>
-<tr><td class="num" id="LN5239">5239</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5240">5240</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5241">5241</td><td class="line">  Array lines = result.data.array;</td></tr>
-<tr><td class="num" id="LN5242">5242</td><td class="line">  reg-&gt;y_array = xcalloc(lines.size, <span class='keyword'>sizeof</span>(uint8_t *));</td></tr>
-<tr><td class="num" id="LN5243">5243</td><td class="line">  reg-&gt;y_size = lines.size;</td></tr>
-<tr><td class="num" id="LN5244">5244</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5245">5245</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; lines.size; i++) {</td></tr>
-<tr><td class="num" id="LN5246">5246</td><td class="line">    <span class='keyword'>if</span> (lines.items[i].type != kObjectTypeString) {</td></tr>
-<tr><td class="num" id="LN5247">5247</td><td class="line">      <span class='keyword'>goto</span> err;</td></tr>
-<tr><td class="num" id="LN5248">5248</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN5249">5249</td><td class="line">    reg-&gt;y_array[i] = (uint8_t *)lines.items[i].data.string.data;</td></tr>
-<tr><td class="num" id="LN5250">5250</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5251">5251</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5252">5252</td><td class="line">  <span class='keyword'>if</span> (!name &amp;&amp; p_unc) {</td></tr>
-<tr><td class="num" id="LN5253">5253</td><td class="line">    <span class='comment'>// copy to the unnamed register</span></td></tr>
-<tr><td class="num" id="LN5254">5254</td><td class="line">    copy_register(&amp;y_regs[0], reg);</td></tr>
-<tr><td class="num" id="LN5255">5255</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5256">5256</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5257">5257</td><td class="line">  <span class='keyword'>return</span>;</td></tr>
-<tr><td class="num" id="LN5258">5258</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5259">5259</td><td class="line">err:</td></tr>
-<tr><td class="num" id="LN5260">5260</td><td class="line">  msgpack_rpc_free_object(result);</td></tr>
-<tr><td class="num" id="LN5261">5261</td><td class="line">  free(reg-&gt;y_array);</td></tr>
-<tr><td class="num" id="LN5262">5262</td><td class="line">  reg-&gt;y_array = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN5263">5263</td><td class="line">  reg-&gt;y_size = 0;</td></tr>
-<tr><td class="num" id="LN5264">5264</td><td class="line">  <span class='macro'>EMSG(<span class='string_literal'>"Clipboard provider returned invalid data"</span>)<span class='expansion'>emsg((char_u *)("Clipboard provider returned invalid data"))</span></span>;</td></tr>
-<tr><td class="num" id="LN5265">5265</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN5266">5266</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5267">5267</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> set_clipboard(<span class='keyword'>int</span> name)</td></tr>
-<tr><td class="num" id="LN5268">5268</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN5269">5269</td><td class="line">  <span class='keyword'>if</span> (!(name == '*' || name == '+'</td></tr>
-<tr><td class="num" id="LN5270">5270</td><td class="line">        || (p_unc &amp;&amp; !name &amp;&amp; provider_has_feature(<span class='string_literal'>"clipboard"</span>)))) {</td></tr>
-<tr><td class="num" id="LN5271">5271</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
-<tr><td class="num" id="LN5272">5272</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5273">5273</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5274">5274</td><td class="line">  <span class='keyword'>struct</span> yankreg *reg = &amp;y_regs[<span class='macro'>CLIP_REGISTER<span class='expansion'>37</span></span>];</td></tr>
-<tr><td class="num" id="LN5275">5275</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5276">5276</td><td class="line">  <span class='keyword'>if</span> (!name &amp;&amp; p_unc) {</td></tr>
-<tr><td class="num" id="LN5277">5277</td><td class="line">    <span class='comment'>// copy from the unnamed register</span></td></tr>
-<tr><td class="num" id="LN5278">5278</td><td class="line">    copy_register(reg, &amp;y_regs[0]);</td></tr>
-<tr><td class="num" id="LN5279">5279</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5280">5280</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5281">5281</td><td class="line">  Array lines = {0, 0, 0};</td></tr>
-<tr><td class="num" id="LN5282">5282</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5283">5283</td><td class="line">  <span class='keyword'>for</span> (<span class='keyword'>int</span> i = 0; i &lt; reg-&gt;y_size; i++) {</td></tr>
-<tr><td class="num" id="LN5284">5284</td><td class="line">    <span class='macro'>ADD(lines, STRING_OBJ(cstr_to_string((<span class='keyword'>char</span> *)reg-&gt;y_array[i])))<span class='expansion'>do { if ((lines).size == (lines).capacity) { (lines).capacity<br> = (lines).capacity? (lines).capacity&lt;&lt;1 : 8; (lines).items<br> = (Object*)xrealloc((lines).items, sizeof(Object) * (lines).<br>capacity); } (lines).items[(lines).size++] = (((Object) { .type<br> = kObjectTypeString, .data.string = cstr_to_string((char *)reg<br>-&gt;y_array[i]) })); } while (0)</span></span>;</td></tr>
-<tr><td class="num" id="LN5285">5285</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5286">5286</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5287">5287</td><td class="line">  Object result = provider_call(<span class='string_literal'>"clipboard_set"</span>, <span class='macro'>ARRAY_OBJ(lines)<span class='expansion'>((Object) { .type = kObjectTypeArray, .data.array = lines })</span></span>);</td></tr>
-<tr><td class="num" id="LN5288">5288</td><td class="line">  msgpack_rpc_free_object(result);</td></tr>
-<tr><td class="num" id="LN5289">5289</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN5235">5235</td><td class="line">  Array args = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN5236">5236</td><td class="line">  Object result = provider_call(<span class='string_literal'>"clipboard_get"</span>, args);</td></tr>
+<tr><td class="num" id="LN5237">5237</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5238">5238</td><td class="line">  <span class='keyword'>if</span> (result.type != kObjectTypeArray) {</td></tr>
+<tr><td class="num" id="LN5239">5239</td><td class="line">    <span class='keyword'>goto</span> err;</td></tr>
+<tr><td class="num" id="LN5240">5240</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5241">5241</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5242">5242</td><td class="line">  Array lines = result.data.array;</td></tr>
+<tr><td class="num" id="LN5243">5243</td><td class="line">  reg-&gt;y_array = xcalloc(lines.size, <span class='keyword'>sizeof</span>(uint8_t *));</td></tr>
+<tr><td class="num" id="LN5244">5244</td><td class="line">  reg-&gt;y_size = lines.size;</td></tr>
+<tr><td class="num" id="LN5245">5245</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5246">5246</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; lines.size; i++) {</td></tr>
+<tr><td class="num" id="LN5247">5247</td><td class="line">    <span class='keyword'>if</span> (lines.items[i].type != kObjectTypeString) {</td></tr>
+<tr><td class="num" id="LN5248">5248</td><td class="line">      <span class='keyword'>goto</span> err;</td></tr>
+<tr><td class="num" id="LN5249">5249</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN5250">5250</td><td class="line">    reg-&gt;y_array[i] = (uint8_t *)lines.items[i].data.string.data;</td></tr>
+<tr><td class="num" id="LN5251">5251</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5252">5252</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5253">5253</td><td class="line">  <span class='keyword'>if</span> (!name &amp;&amp; p_unc) {</td></tr>
+<tr><td class="num" id="LN5254">5254</td><td class="line">    <span class='comment'>// copy to the unnamed register</span></td></tr>
+<tr><td class="num" id="LN5255">5255</td><td class="line">    copy_register(&amp;y_regs[0], reg);</td></tr>
+<tr><td class="num" id="LN5256">5256</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5257">5257</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5258">5258</td><td class="line">  <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN5259">5259</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5260">5260</td><td class="line">err:</td></tr>
+<tr><td class="num" id="LN5261">5261</td><td class="line">  msgpack_rpc_free_object(result);</td></tr>
+<tr><td class="num" id="LN5262">5262</td><td class="line">  free(reg-&gt;y_array);</td></tr>
+<tr><td class="num" id="LN5263">5263</td><td class="line">  reg-&gt;y_array = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN5264">5264</td><td class="line">  reg-&gt;y_size = 0;</td></tr>
+<tr><td class="num" id="LN5265">5265</td><td class="line">  <span class='macro'>EMSG(<span class='string_literal'>"Clipboard provider returned invalid data"</span>)<span class='expansion'>emsg((char_u *)("Clipboard provider returned invalid data"))</span></span>;</td></tr>
+<tr><td class="num" id="LN5266">5266</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN5267">5267</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5268">5268</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> set_clipboard(<span class='keyword'>int</span> name)</td></tr>
+<tr><td class="num" id="LN5269">5269</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN5270">5270</td><td class="line">  <span class='keyword'>if</span> (!(name == '*' || name == '+'</td></tr>
+<tr><td class="num" id="LN5271">5271</td><td class="line">        || (p_unc &amp;&amp; !name &amp;&amp; provider_has_feature(<span class='string_literal'>"clipboard"</span>)))) {</td></tr>
+<tr><td class="num" id="LN5272">5272</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN5273">5273</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5274">5274</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5275">5275</td><td class="line">  <span class='keyword'>struct</span> yankreg *reg = &amp;y_regs[<span class='macro'>CLIP_REGISTER<span class='expansion'>37</span></span>];</td></tr>
+<tr><td class="num" id="LN5276">5276</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5277">5277</td><td class="line">  <span class='keyword'>if</span> (!name &amp;&amp; p_unc) {</td></tr>
+<tr><td class="num" id="LN5278">5278</td><td class="line">    <span class='comment'>// copy from the unnamed register</span></td></tr>
+<tr><td class="num" id="LN5279">5279</td><td class="line">    copy_register(reg, &amp;y_regs[0]);</td></tr>
+<tr><td class="num" id="LN5280">5280</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5281">5281</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5282">5282</td><td class="line">  Array lines = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN5283">5283</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5284">5284</td><td class="line">  <span class='keyword'>for</span> (<span class='keyword'>int</span> i = 0; i &lt; reg-&gt;y_size; i++) {</td></tr>
+<tr><td class="num" id="LN5285">5285</td><td class="line">    <span class='macro'>ADD(lines, STRING_OBJ(cstr_to_string((<span class='keyword'>char</span> *)reg-&gt;y_array[i])))<span class='expansion'>do { if ((lines).size == (lines).capacity) { (lines).capacity<br> = (lines).capacity? (lines).capacity&lt;&lt;1 : 8; (lines).items<br> = (Object*)xrealloc((lines).items, sizeof(Object) * (lines).<br>capacity); } (lines).items[(lines).size++] = (((Object) { .type<br> = kObjectTypeString, .data.string = cstr_to_string((char *)reg<br>-&gt;y_array[i]) })); } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN5286">5286</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5287">5287</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5288">5288</td><td class="line">  Array args = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN5289">5289</td><td class="line">  <span class='macro'>ADD(args, ARRAY_OBJ(lines))<span class='expansion'>do { if ((args).size == (args).capacity) { (args).capacity = (<br>args).capacity? (args).capacity&lt;&lt;1 : 8; (args).items = (<br>Object*)xrealloc((args).items, sizeof(Object) * (args).capacity<br>); } (args).items[(args).size++] = (((Object) { .type = kObjectTypeArray<br>, .data.array = lines })); } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN5290">5290</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5291">5291</td><td class="line">  Object result = provider_call(<span class='string_literal'>"clipboard_set"</span>, args);</td></tr>
+<tr><td class="num" id="LN5292">5292</td><td class="line">  msgpack_rpc_free_object(result);</td></tr>
+<tr><td class="num" id="LN5293">5293</td><td class="line">}</td></tr>
 </table></body></html>

@@ -2515,7 +2515,7 @@
 <tr><td class="num" id="LN2417">2417</td><td class="line">   <span class='comment'>*/</span></td></tr>
 <tr><td class="num" id="LN2418">2418</td><td class="line">  save_current_SID = current_SID;</td></tr>
 <tr><td class="num" id="LN2419">2419</td><td class="line">  FileID file_id;</td></tr>
-<tr><td class="num" id="LN2420">2420</td><td class="line">  <span class='macro'>bool<span class='expansion'>_Bool</span></span> file_id_ok = os_get_file_id((<span class='keyword'>char</span> *)fname_exp, &amp;file_id);</td></tr>
+<tr><td class="num" id="LN2420">2420</td><td class="line">  <span class='macro'>bool<span class='expansion'>_Bool</span></span> file_id_ok = os_fileid((<span class='keyword'>char</span> *)fname_exp, &amp;file_id);</td></tr>
 <tr><td class="num" id="LN2421">2421</td><td class="line">  <span class='keyword'>for</span> (current_SID = script_items.ga_len; <span class="mrange">current_SID &gt; 0</span>; --current_SID) {</td></tr>
 <tr><td class="num"></td><td class="line"><div id="Path18" class="msg msgEvent" style="margin-left:43ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">18</div></td><td><div class="PathNav"><a href="#Path17" title="Previous event (17)">&#x2190;</a></div></td></td><td>Assuming 'current_SID' is &lt;= 0</td><td><div class="PathNav"><a href="#Path19" title="Next event (19)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num"></td><td class="line"><div id="Path19" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">19</div></td><td><div class="PathNav"><a href="#Path18" title="Previous event (18)">&#x2190;</a></div></td></td><td>Loop condition is false. Execution continues on line 2432</td><td><div class="PathNav"><a href="#Path20" title="Next event (20)">&#x2192;</a></div></td></tr></table></div></td></tr>
@@ -2523,7 +2523,7 @@
 <tr><td class="num" id="LN2423">2423</td><td class="line">    <span class='comment'>// Compare dev/ino when possible, it catches symbolic links.</span></td></tr>
 <tr><td class="num" id="LN2424">2424</td><td class="line">    <span class='comment'>// Also compare file names, the inode may change when the file was edited.</span></td></tr>
 <tr><td class="num" id="LN2425">2425</td><td class="line">    <span class='macro'>bool<span class='expansion'>_Bool</span></span> file_id_equal = file_id_ok &amp;&amp; si-&gt;file_id_valid</td></tr>
-<tr><td class="num" id="LN2426">2426</td><td class="line">                         &amp;&amp; os_file_id_equal(&amp;(si-&gt;file_id), &amp;file_id);</td></tr>
+<tr><td class="num" id="LN2426">2426</td><td class="line">                         &amp;&amp; os_fileid_equal(&amp;(si-&gt;file_id), &amp;file_id);</td></tr>
 <tr><td class="num" id="LN2427">2427</td><td class="line">    <span class='keyword'>if</span> (si-&gt;sn_name != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
 <tr><td class="num" id="LN2428">2428</td><td class="line">        &amp;&amp; (file_id_equal || <span class='macro'>fnamecmp(si-&gt;sn_name, fname_exp)<span class='expansion'>vim_fnamecmp((char_u *)(si-&gt;sn_name), (char_u *)(fname_exp<br>))</span></span> == 0)) {</td></tr>
 <tr><td class="num" id="LN2429">2429</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
@@ -3359,34 +3359,36 @@
 <tr><td class="num" id="LN3251">3251</td><td class="line">  <span class='keyword'>char</span> *script = (<span class='keyword'>char</span> *)script_get(eap, eap-&gt;arg);</td></tr>
 <tr><td class="num" id="LN3252">3252</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN3253">3253</td><td class="line">  <span class='keyword'>if</span> (!eap-&gt;skip) {</td></tr>
-<tr><td class="num" id="LN3254">3254</td><td class="line">    String str = cstr_to_string(script ? script : (<span class='keyword'>char</span> *)eap-&gt;arg);</td></tr>
-<tr><td class="num" id="LN3255">3255</td><td class="line">    Object result = provider_call(method, <span class='macro'>STRING_OBJ(str)<span class='expansion'>((Object) { .type = kObjectTypeString, .data.string = str })</span></span>);</td></tr>
-<tr><td class="num" id="LN3256">3256</td><td class="line">    <span class='comment'>// We don't care about the result, so free it just in case a bad provider</span></td></tr>
-<tr><td class="num" id="LN3257">3257</td><td class="line">    <span class='comment'>// returned something</span></td></tr>
-<tr><td class="num" id="LN3258">3258</td><td class="line">    msgpack_rpc_free_object(result);</td></tr>
-<tr><td class="num" id="LN3259">3259</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN3260">3260</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3261">3261</td><td class="line">  free(script);</td></tr>
-<tr><td class="num" id="LN3262">3262</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN3263">3263</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3264">3264</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> script_host_execute_file(<span class='keyword'>char</span> *method, exarg_T *eap)</td></tr>
-<tr><td class="num" id="LN3265">3265</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN3266">3266</td><td class="line">  <span class='keyword'>char</span> buffer[<span class='macro'>MAXPATHL<span class='expansion'>4096</span></span>];</td></tr>
-<tr><td class="num" id="LN3267">3267</td><td class="line">  vim_FullName(eap-&gt;arg, (uint8_t *)buffer, <span class='keyword'>sizeof</span>(buffer), <span class='macro'>false<span class='expansion'>0</span></span>);</td></tr>
-<tr><td class="num" id="LN3268">3268</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3269">3269</td><td class="line">  String file = cstr_to_string(buffer);</td></tr>
-<tr><td class="num" id="LN3270">3270</td><td class="line">  Object result = provider_call(method, <span class='macro'>STRING_OBJ(file)<span class='expansion'>((Object) { .type = kObjectTypeString, .data.string = file })</span></span>);</td></tr>
-<tr><td class="num" id="LN3271">3271</td><td class="line">  msgpack_rpc_free_object(result);</td></tr>
-<tr><td class="num" id="LN3272">3272</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN3273">3273</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3274">3274</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> script_host_do_range(<span class='keyword'>char</span> *method, exarg_T *eap)</td></tr>
-<tr><td class="num" id="LN3275">3275</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN3276">3276</td><td class="line">  Array arg = {0, 0, 0};</td></tr>
-<tr><td class="num" id="LN3277">3277</td><td class="line">  <span class='macro'>ADD(arg, INTEGER_OBJ(eap-&gt;line1))<span class='expansion'>do { if ((arg).size == (arg).capacity) { (arg).capacity = (arg<br>).capacity? (arg).capacity&lt;&lt;1 : 8; (arg).items = (Object<br>*)xrealloc((arg).items, sizeof(Object) * (arg).capacity); } (<br>arg).items[(arg).size++] = (((Object) { .type = kObjectTypeInteger<br>, .data.integer = eap-&gt;line1 })); } while (0)</span></span>;</td></tr>
-<tr><td class="num" id="LN3278">3278</td><td class="line">  <span class='macro'>ADD(arg, INTEGER_OBJ(eap-&gt;line2))<span class='expansion'>do { if ((arg).size == (arg).capacity) { (arg).capacity = (arg<br>).capacity? (arg).capacity&lt;&lt;1 : 8; (arg).items = (Object<br>*)xrealloc((arg).items, sizeof(Object) * (arg).capacity); } (<br>arg).items[(arg).size++] = (((Object) { .type = kObjectTypeInteger<br>, .data.integer = eap-&gt;line2 })); } while (0)</span></span>;</td></tr>
-<tr><td class="num" id="LN3279">3279</td><td class="line">  <span class='macro'>ADD(arg, STRING_OBJ(cstr_to_string((<span class='keyword'>char</span> *)eap-&gt;arg)))<span class='expansion'>do { if ((arg).size == (arg).capacity) { (arg).capacity = (arg<br>).capacity? (arg).capacity&lt;&lt;1 : 8; (arg).items = (Object<br>*)xrealloc((arg).items, sizeof(Object) * (arg).capacity); } (<br>arg).items[(arg).size++] = (((Object) { .type = kObjectTypeString<br>, .data.string = cstr_to_string((char *)eap-&gt;arg) })); } while<br> (0)</span></span>;</td></tr>
-<tr><td class="num" id="LN3280">3280</td><td class="line">  Object result = provider_call(method, <span class='macro'>ARRAY_OBJ(arg)<span class='expansion'>((Object) { .type = kObjectTypeArray, .data.array = arg })</span></span>);</td></tr>
-<tr><td class="num" id="LN3281">3281</td><td class="line">  msgpack_rpc_free_object(result);</td></tr>
-<tr><td class="num" id="LN3282">3282</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN3283">3283</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3254">3254</td><td class="line">    Array args = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN3255">3255</td><td class="line">    <span class='macro'>ADD(args, STRING_OBJ(cstr_to_string(script ? script : (<span class='keyword'>char</span> *)eap-&gt;arg)))<span class='expansion'>do { if ((args).size == (args).capacity) { (args).capacity = (<br>args).capacity? (args).capacity&lt;&lt;1 : 8; (args).items = (<br>Object*)xrealloc((args).items, sizeof(Object) * (args).capacity<br>); } (args).items[(args).size++] = (((Object) { .type = kObjectTypeString<br>, .data.string = cstr_to_string(script ? script : (char *)eap<br>-&gt;arg) })); } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN3256">3256</td><td class="line">    Object result = provider_call(method, args);</td></tr>
+<tr><td class="num" id="LN3257">3257</td><td class="line">    <span class='comment'>// We don't care about the result, so free it just in case a bad provider</span></td></tr>
+<tr><td class="num" id="LN3258">3258</td><td class="line">    <span class='comment'>// returned something</span></td></tr>
+<tr><td class="num" id="LN3259">3259</td><td class="line">    msgpack_rpc_free_object(result);</td></tr>
+<tr><td class="num" id="LN3260">3260</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN3261">3261</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3262">3262</td><td class="line">  free(script);</td></tr>
+<tr><td class="num" id="LN3263">3263</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN3264">3264</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3265">3265</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> script_host_execute_file(<span class='keyword'>char</span> *method, exarg_T *eap)</td></tr>
+<tr><td class="num" id="LN3266">3266</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN3267">3267</td><td class="line">  <span class='keyword'>char</span> buffer[<span class='macro'>MAXPATHL<span class='expansion'>4096</span></span>];</td></tr>
+<tr><td class="num" id="LN3268">3268</td><td class="line">  vim_FullName(eap-&gt;arg, (uint8_t *)buffer, <span class='keyword'>sizeof</span>(buffer), <span class='macro'>false<span class='expansion'>0</span></span>);</td></tr>
+<tr><td class="num" id="LN3269">3269</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3270">3270</td><td class="line">  Array args = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN3271">3271</td><td class="line">  <span class='macro'>ADD(args, STRING_OBJ(cstr_to_string(buffer)))<span class='expansion'>do { if ((args).size == (args).capacity) { (args).capacity = (<br>args).capacity? (args).capacity&lt;&lt;1 : 8; (args).items = (<br>Object*)xrealloc((args).items, sizeof(Object) * (args).capacity<br>); } (args).items[(args).size++] = (((Object) { .type = kObjectTypeString<br>, .data.string = cstr_to_string(buffer) })); } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN3272">3272</td><td class="line">  Object result = provider_call(method, args);</td></tr>
+<tr><td class="num" id="LN3273">3273</td><td class="line">  msgpack_rpc_free_object(result);</td></tr>
+<tr><td class="num" id="LN3274">3274</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN3275">3275</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3276">3276</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> script_host_do_range(<span class='keyword'>char</span> *method, exarg_T *eap)</td></tr>
+<tr><td class="num" id="LN3277">3277</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN3278">3278</td><td class="line">  Array args = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN3279">3279</td><td class="line">  <span class='macro'>ADD(args, INTEGER_OBJ(eap-&gt;line1))<span class='expansion'>do { if ((args).size == (args).capacity) { (args).capacity = (<br>args).capacity? (args).capacity&lt;&lt;1 : 8; (args).items = (<br>Object*)xrealloc((args).items, sizeof(Object) * (args).capacity<br>); } (args).items[(args).size++] = (((Object) { .type = kObjectTypeInteger<br>, .data.integer = eap-&gt;line1 })); } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN3280">3280</td><td class="line">  <span class='macro'>ADD(args, INTEGER_OBJ(eap-&gt;line2))<span class='expansion'>do { if ((args).size == (args).capacity) { (args).capacity = (<br>args).capacity? (args).capacity&lt;&lt;1 : 8; (args).items = (<br>Object*)xrealloc((args).items, sizeof(Object) * (args).capacity<br>); } (args).items[(args).size++] = (((Object) { .type = kObjectTypeInteger<br>, .data.integer = eap-&gt;line2 })); } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN3281">3281</td><td class="line">  <span class='macro'>ADD(args, STRING_OBJ(cstr_to_string((<span class='keyword'>char</span> *)eap-&gt;arg)))<span class='expansion'>do { if ((args).size == (args).capacity) { (args).capacity = (<br>args).capacity? (args).capacity&lt;&lt;1 : 8; (args).items = (<br>Object*)xrealloc((args).items, sizeof(Object) * (args).capacity<br>); } (args).items[(args).size++] = (((Object) { .type = kObjectTypeString<br>, .data.string = cstr_to_string((char *)eap-&gt;arg) })); } while<br> (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN3282">3282</td><td class="line">  Object result = provider_call(method, args);</td></tr>
+<tr><td class="num" id="LN3283">3283</td><td class="line">  msgpack_rpc_free_object(result);</td></tr>
+<tr><td class="num" id="LN3284">3284</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN3285">3285</td><td class="line"> </td></tr>
 </table></body></html>
