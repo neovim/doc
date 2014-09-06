@@ -54,7 +54,7 @@
 </style>
 </head>
 <body>
-<!-- BUGDESC Access to field 'fr_width' results in a dereference of a null pointer (loaded from variable 'fr') -->
+<!-- BUGDESC Access to field 'fr_prev' results in a dereference of a null pointer (loaded from field 'fr_child') -->
 
 <!-- BUGTYPE Dereference of null pointer -->
 
@@ -62,19 +62,19 @@
 
 <!-- BUGFILE /home/travis/build/neovim/bot-ci/build/neovim/src/nvim/window.c -->
 
-<!-- BUGLINE 4432 -->
+<!-- BUGLINE 2127 -->
 
-<!-- BUGCOLUMN 23 -->
+<!-- BUGCOLUMN 30 -->
 
-<!-- BUGPATHLENGTH 19 -->
+<!-- BUGPATHLENGTH 15 -->
 
 <!-- BUGMETAEND -->
 <!-- REPORTHEADER -->
 <h3>Bug Summary</h3>
 <table class="simpletable">
 <tr><td class="rowname">File:</td><td>window.c</td></tr>
-<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 4432, column 23</a></td></tr>
-<tr><td class="rowname">Description:</td><td>Access to field 'fr_width' results in a dereference of a null pointer (loaded from variable 'fr')</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 2127, column 30</a></td></tr>
+<tr><td class="rowname">Description:</td><td>Access to field 'fr_prev' results in a dereference of a null pointer (loaded from field 'fr_child')</td></tr>
 </table>
 <!-- REPORTSUMMARYEXTRA -->
 <h3>Annotated Source Code</h3>
@@ -2105,7 +2105,10 @@
 <tr><td class="num" id="LN2024">2024</td><td class="line">  <span class='comment'>/*</span></td></tr>
 <tr><td class="num" id="LN2025">2025</td><td class="line">   <span class='comment'>* If there is only one window there is nothing to remove.</span></td></tr>
 <tr><td class="num" id="LN2026">2026</td><td class="line">   <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN2027">2027</td><td class="line">  <span class='keyword'>if</span> (tp == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? firstwin == lastwin : tp-&gt;tp_firstwin == tp-&gt;tp_lastwin)</td></tr>
+<tr><td class="num" id="LN2027">2027</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">tp == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span> ? firstwin == lastwin : tp-&gt;tp_firstwin == tp-&gt;tp_lastwin)</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>Assuming 'tp' is not equal to null</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>'?' condition is false</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path4" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2028">2028</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
 <tr><td class="num" id="LN2029">2029</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN2030">2030</td><td class="line">  <span class='comment'>/*</span></td></tr>
@@ -2118,6 +2121,7 @@
 <tr><td class="num" id="LN2037">2037</td><td class="line">  frame_remove(frp_close);</td></tr>
 <tr><td class="num" id="LN2038">2038</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN2039">2039</td><td class="line">  <span class='keyword'>if</span> (frp_close-&gt;fr_parent-&gt;fr_layout == <span class='macro'>FR_COL<span class='expansion'>2</span></span>) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path4" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path5" title="Next event (5)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2040">2040</td><td class="line">    <span class='comment'>/* When 'winfixheight' is set, try to find another frame in the column</span></td></tr>
 <tr><td class="num" id="LN2041">2041</td><td class="line">     <span class='comment'>* (as close to the closed frame as possible) to distribute the height</span></td></tr>
 <tr><td class="num" id="LN2042">2042</td><td class="line">     <span class='comment'>* to. */</span></td></tr>
@@ -2174,12 +2178,14 @@
 <tr><td class="num" id="LN2093">2093</td><td class="line">    }</td></tr>
 <tr><td class="num" id="LN2094">2094</td><td class="line">    frame_new_width(frp2, frp2-&gt;fr_width + frp_close-&gt;fr_width,</td></tr>
 <tr><td class="num" id="LN2095">2095</td><td class="line">        frp2 == frp_close-&gt;fr_next ? <span class='macro'>TRUE<span class='expansion'>1</span></span> : <span class='macro'>FALSE<span class='expansion'>0</span></span>, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path5" class="msg msgControl" style="margin-left:9ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">5</div></td><td><div class="PathNav"><a href="#Path4" title="Previous event (4)">&#x2190;</a></div></td></td><td>'?' condition is false</td><td><div class="PathNav"><a href="#Path6" title="Next event (6)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2096">2096</td><td class="line">    *dirp = 'h';</td></tr>
 <tr><td class="num" id="LN2097">2097</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN2098">2098</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN2099">2099</td><td class="line">  <span class='comment'>/* If rows/columns go to a window below/right its positions need to be</span></td></tr>
 <tr><td class="num" id="LN2100">2100</td><td class="line">   <span class='comment'>* updated.  Can only be done after the sizes have been updated. */</span></td></tr>
 <tr><td class="num" id="LN2101">2101</td><td class="line">  <span class='keyword'>if</span> (frp2 == frp_close-&gt;fr_next) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path7" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2102">2102</td><td class="line">    <span class='keyword'>int</span> row = win-&gt;w_winrow;</td></tr>
 <tr><td class="num" id="LN2103">2103</td><td class="line">    <span class='keyword'>int</span> col = win-&gt;w_wincol;</td></tr>
 <tr><td class="num" id="LN2104">2104</td><td class="line"> </td></tr>
@@ -2187,25 +2193,34 @@
 <tr><td class="num" id="LN2106">2106</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN2107">2107</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN2108">2108</td><td class="line">  <span class='keyword'>if</span> (frp2-&gt;fr_next == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; frp2-&gt;fr_prev == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path7" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path8" title="Next event (8)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2109">2109</td><td class="line">    <span class='comment'>/* There is no other frame in this list, move its info to the parent</span></td></tr>
 <tr><td class="num" id="LN2110">2110</td><td class="line">     <span class='comment'>* and remove it. */</span></td></tr>
 <tr><td class="num" id="LN2111">2111</td><td class="line">    frp2-&gt;fr_parent-&gt;fr_layout = frp2-&gt;fr_layout;</td></tr>
-<tr><td class="num" id="LN2112">2112</td><td class="line">    frp2-&gt;fr_parent-&gt;fr_child = frp2-&gt;fr_child;</td></tr>
-<tr><td class="num" id="LN2113">2113</td><td class="line">    <span class='keyword'>for</span> (frp = frp2-&gt;fr_child; frp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; frp = frp-&gt;fr_next)</td></tr>
+<tr><td class="num" id="LN2112">2112</td><td class="line">    <span class="mrange">frp2-&gt;fr_parent-&gt;fr_child = frp2-&gt;fr_child</span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path8" class="msg msgEvent" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">8</div></td><td><div class="PathNav"><a href="#Path7" title="Previous event (7)">&#x2190;</a></div></td></td><td>Value assigned to field 'fr_child'</td><td><div class="PathNav"><a href="#Path9" title="Next event (9)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2113">2113</td><td class="line">    <span class='keyword'>for</span> (frp = frp2-&gt;fr_child; <span class="mrange">frp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>; frp = frp-&gt;fr_next)</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path9" class="msg msgEvent" style="margin-left:32ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">9</div></td><td><div class="PathNav"><a href="#Path8" title="Previous event (8)">&#x2190;</a></div></td></td><td>Assuming 'frp' is equal to null</td><td><div class="PathNav"><a href="#Path10" title="Next event (10)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path10" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">10</div></td><td><div class="PathNav"><a href="#Path9" title="Previous event (9)">&#x2190;</a></div></td></td><td>Loop condition is false. Execution continues on line 2115</td><td><div class="PathNav"><a href="#Path11" title="Next event (11)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2114">2114</td><td class="line">      frp-&gt;fr_parent = frp2-&gt;fr_parent;</td></tr>
 <tr><td class="num" id="LN2115">2115</td><td class="line">    frp2-&gt;fr_parent-&gt;fr_win = frp2-&gt;fr_win;</td></tr>
 <tr><td class="num" id="LN2116">2116</td><td class="line">    <span class='keyword'>if</span> (frp2-&gt;fr_win != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path11" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">11</div></td><td><div class="PathNav"><a href="#Path10" title="Previous event (10)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path12" title="Next event (12)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2117">2117</td><td class="line">      frp2-&gt;fr_win-&gt;w_frame = frp2-&gt;fr_parent;</td></tr>
 <tr><td class="num" id="LN2118">2118</td><td class="line">    frp = frp2-&gt;fr_parent;</td></tr>
 <tr><td class="num" id="LN2119">2119</td><td class="line">    free(frp2);</td></tr>
 <tr><td class="num" id="LN2120">2120</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN2121">2121</td><td class="line">    frp2 = frp-&gt;fr_parent;</td></tr>
-<tr><td class="num" id="LN2122">2122</td><td class="line">    <span class='keyword'>if</span> (frp2 != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; frp2-&gt;fr_layout == frp-&gt;fr_layout) {</td></tr>
+<tr><td class="num" id="LN2122">2122</td><td class="line">    <span class='keyword'>if</span> (<span class="mrange">frp2 != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span> &amp;&amp; frp2-&gt;fr_layout == frp-&gt;fr_layout) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path12" class="msg msgEvent" style="margin-left:9ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">12</div></td><td><div class="PathNav"><a href="#Path11" title="Previous event (11)">&#x2190;</a></div></td></td><td>Assuming 'frp2' is not equal to null</td><td><div class="PathNav"><a href="#Path13" title="Next event (13)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path13" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">13</div></td><td><div class="PathNav"><a href="#Path12" title="Previous event (12)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path14" title="Next event (14)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2123">2123</td><td class="line">      <span class='comment'>/* The frame above the parent has the same layout, have to merge</span></td></tr>
 <tr><td class="num" id="LN2124">2124</td><td class="line">       <span class='comment'>* the frames into this list. */</span></td></tr>
 <tr><td class="num" id="LN2125">2125</td><td class="line">      <span class='keyword'>if</span> (frp2-&gt;fr_child == frp)</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path14" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">14</div></td><td><div class="PathNav"><a href="#Path13" title="Previous event (13)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#EndPath" title="Next event (15)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2126">2126</td><td class="line">        frp2-&gt;fr_child = frp-&gt;fr_child;</td></tr>
-<tr><td class="num" id="LN2127">2127</td><td class="line">      frp-&gt;fr_child-&gt;fr_prev = frp-&gt;fr_prev;</td></tr>
+<tr><td class="num" id="LN2127">2127</td><td class="line">      frp-&gt;<span class="mrange">fr_child</span>-&gt;fr_prev = frp-&gt;fr_prev;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:30ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">15</div></td><td><div class="PathNav"><a href="#Path14" title="Previous event (14)">&#x2190;</a></div></td></td><td>Access to field 'fr_prev' results in a dereference of a null pointer (loaded from field 'fr_child')</td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2128">2128</td><td class="line">      <span class='keyword'>if</span> (frp-&gt;fr_prev != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
 <tr><td class="num" id="LN2129">2129</td><td class="line">        frp-&gt;fr_prev-&gt;fr_next = frp-&gt;fr_child;</td></tr>
 <tr><td class="num" id="LN2130">2130</td><td class="line">      <span class='keyword'>for</span> (frp3 = frp-&gt;fr_child;; frp3 = frp3-&gt;fr_next) {</td></tr>
@@ -4459,15 +4474,12 @@
 <tr><td class="num" id="LN4378">4378</td><td class="line">  <span class='keyword'>int</span> n;</td></tr>
 <tr><td class="num" id="LN4379">4379</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN4380">4380</td><td class="line">  fr = dragwin-&gt;w_frame;</td></tr>
-<tr><td class="num" id="LN4381">4381</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">fr == topframe</span>)           <span class='comment'>/* only one window (cannot happen?) */</span></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>Assuming 'fr' is not equal to 'topframe'</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN4381">4381</td><td class="line">  <span class='keyword'>if</span> (fr == topframe)           <span class='comment'>/* only one window (cannot happen?) */</span></td></tr>
 <tr><td class="num" id="LN4382">4382</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
 <tr><td class="num" id="LN4383">4383</td><td class="line">  curfr = fr;</td></tr>
 <tr><td class="num" id="LN4384">4384</td><td class="line">  fr = fr-&gt;fr_parent;</td></tr>
 <tr><td class="num" id="LN4385">4385</td><td class="line">  <span class='comment'>/* When the parent frame is not a row of frames, its parent should be. */</span></td></tr>
 <tr><td class="num" id="LN4386">4386</td><td class="line">  <span class='keyword'>if</span> (fr-&gt;fr_layout != <span class='macro'>FR_ROW<span class='expansion'>1</span></span>) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path4" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN4387">4387</td><td class="line">    <span class='keyword'>if</span> (fr == topframe)         <span class='comment'>/* only a column of windows (cannot happen?) */</span></td></tr>
 <tr><td class="num" id="LN4388">4388</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
 <tr><td class="num" id="LN4389">4389</td><td class="line">    curfr = fr;</td></tr>
@@ -4476,14 +4488,9 @@
 <tr><td class="num" id="LN4392">4392</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN4393">4393</td><td class="line">  <span class='comment'>/* If this is the last frame in a row, may want to resize a parent</span></td></tr>
 <tr><td class="num" id="LN4394">4394</td><td class="line">   <span class='comment'>* frame instead. */</span></td></tr>
-<tr><td class="num" id="LN4395">4395</td><td class="line">  <span class='keyword'>while</span> (<span class="mrange">curfr-&gt;fr_next == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path4" class="msg msgEvent" style="margin-left:10ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Assuming pointer value is null</td><td><div class="PathNav"><a href="#Path5" title="Next event (5)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path5" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">5</div></td><td><div class="PathNav"><a href="#Path4" title="Previous event (4)">&#x2190;</a></div></td></td><td>Loop condition is true.  Entering loop body</td><td><div class="PathNav"><a href="#Path6" title="Next event (6)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num" id="LN4396">4396</td><td class="line">    <span class='keyword'>if</span> (<span class="mrange">fr == topframe</span>)</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgEvent" style="margin-left:9ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Assuming 'fr' is equal to 'topframe'</td><td><div class="PathNav"><a href="#Path7" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path7" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path8" title="Next event (8)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN4395">4395</td><td class="line">  <span class='keyword'>while</span> (curfr-&gt;fr_next == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN4396">4396</td><td class="line">    <span class='keyword'>if</span> (fr == topframe)</td></tr>
 <tr><td class="num" id="LN4397">4397</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path8" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">8</div></td><td><div class="PathNav"><a href="#Path7" title="Previous event (7)">&#x2190;</a></div></td></td><td> Execution continues on line 4406</td><td><div class="PathNav"><a href="#Path9" title="Next event (9)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN4398">4398</td><td class="line">    curfr = fr;</td></tr>
 <tr><td class="num" id="LN4399">4399</td><td class="line">    fr = fr-&gt;fr_parent;</td></tr>
 <tr><td class="num" id="LN4400">4400</td><td class="line">    <span class='keyword'>if</span> (fr != topframe) {</td></tr>
@@ -4492,24 +4499,17 @@
 <tr><td class="num" id="LN4403">4403</td><td class="line">    }</td></tr>
 <tr><td class="num" id="LN4404">4404</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN4405">4405</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN4406">4406</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">offset &lt; 0</span>) { <span class='comment'>/* drag left */</span></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path9" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">9</div></td><td><div class="PathNav"><a href="#Path8" title="Previous event (8)">&#x2190;</a></div></td></td><td>Assuming 'offset' is &lt; 0</td><td><div class="PathNav"><a href="#Path10" title="Next event (10)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path10" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">10</div></td><td><div class="PathNav"><a href="#Path9" title="Previous event (9)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path11" title="Next event (11)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN4406">4406</td><td class="line">  <span class='keyword'>if</span> (offset &lt; 0) { <span class='comment'>/* drag left */</span></td></tr>
 <tr><td class="num" id="LN4407">4407</td><td class="line">    left = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
 <tr><td class="num" id="LN4408">4408</td><td class="line">    offset = -offset;</td></tr>
 <tr><td class="num" id="LN4409">4409</td><td class="line">    <span class='comment'>/* sum up the room of the current frame and left of it */</span></td></tr>
 <tr><td class="num" id="LN4410">4410</td><td class="line">    room = 0;</td></tr>
 <tr><td class="num" id="LN4411">4411</td><td class="line">    <span class='keyword'>for</span> (fr = fr-&gt;fr_child;; fr = fr-&gt;fr_next) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path11" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">11</div></td><td><div class="PathNav"><a href="#Path10" title="Previous event (10)">&#x2190;</a></div></td></td><td>Loop condition is true.  Entering loop body</td><td><div class="PathNav"><a href="#Path12" title="Next event (12)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN4412">4412</td><td class="line">      room += fr-&gt;fr_width - frame_minwidth(fr, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
-<tr><td class="num" id="LN4413">4413</td><td class="line">      <span class='keyword'>if</span> (<span class="mrange">fr == curfr</span>)</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path12" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">12</div></td><td><div class="PathNav"><a href="#Path11" title="Previous event (11)">&#x2190;</a></div></td></td><td>Assuming 'fr' is equal to 'curfr'</td><td><div class="PathNav"><a href="#Path13" title="Next event (13)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path13" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">13</div></td><td><div class="PathNav"><a href="#Path12" title="Previous event (12)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path14" title="Next event (14)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN4413">4413</td><td class="line">      <span class='keyword'>if</span> (fr == curfr)</td></tr>
 <tr><td class="num" id="LN4414">4414</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path14" class="msg msgControl" style="margin-left:9ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">14</div></td><td><div class="PathNav"><a href="#Path13" title="Previous event (13)">&#x2190;</a></div></td></td><td> Execution continues on line 4416</td><td><div class="PathNav"><a href="#Path15" title="Next event (15)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN4415">4415</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN4416">4416</td><td class="line">    <span class="mrange">fr = curfr-&gt;fr_next</span>;                <span class='comment'>/* put fr at frame that grows */</span></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path15" class="msg msgEvent" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">15</div></td><td><div class="PathNav"><a href="#Path14" title="Previous event (14)">&#x2190;</a></div></td></td><td>Null pointer value stored to 'fr'</td><td><div class="PathNav"><a href="#Path16" title="Next event (16)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN4416">4416</td><td class="line">    fr = curfr-&gt;fr_next;                <span class='comment'>/* put fr at frame that grows */</span></td></tr>
 <tr><td class="num" id="LN4417">4417</td><td class="line">  } <span class='keyword'>else</span> { <span class='comment'>/* drag right */</span></td></tr>
 <tr><td class="num" id="LN4418">4418</td><td class="line">    left = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
 <tr><td class="num" id="LN4419">4419</td><td class="line">    <span class='comment'>/* sum up the room of frames right of the current one */</span></td></tr>
@@ -4520,16 +4520,12 @@
 <tr><td class="num" id="LN4424">4424</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN4425">4425</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN4426">4426</td><td class="line">  <span class='keyword'>if</span> (room &lt; offset)            <span class='comment'>/* Not enough room */</span></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path16" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">16</div></td><td><div class="PathNav"><a href="#Path15" title="Previous event (15)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path17" title="Next event (17)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN4427">4427</td><td class="line">    offset = room;              <span class='comment'>/* Move as far as we can */</span></td></tr>
-<tr><td class="num" id="LN4428">4428</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">offset &lt;= 0</span>)              <span class='comment'>/* No room at all, quit. */</span></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path17" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">17</div></td><td><div class="PathNav"><a href="#Path16" title="Previous event (16)">&#x2190;</a></div></td></td><td>Assuming 'offset' is &gt; 0</td><td><div class="PathNav"><a href="#Path18" title="Next event (18)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path18" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">18</div></td><td><div class="PathNav"><a href="#Path17" title="Previous event (17)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#EndPath" title="Next event (19)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN4428">4428</td><td class="line">  <span class='keyword'>if</span> (offset &lt;= 0)              <span class='comment'>/* No room at all, quit. */</span></td></tr>
 <tr><td class="num" id="LN4429">4429</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
 <tr><td class="num" id="LN4430">4430</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN4431">4431</td><td class="line">  <span class='comment'>/* grow frame fr by offset lines */</span></td></tr>
-<tr><td class="num" id="LN4432">4432</td><td class="line">  frame_new_width(fr, <span class="mrange">fr</span>-&gt;fr_width + offset, left, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
-<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:23ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">19</div></td><td><div class="PathNav"><a href="#Path18" title="Previous event (18)">&#x2190;</a></div></td></td><td>Access to field 'fr_width' results in a dereference of a null pointer (loaded from variable 'fr')</td></tr></table></div></td></tr>
+<tr><td class="num" id="LN4432">4432</td><td class="line">  frame_new_width(fr, fr-&gt;fr_width + offset, left, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
 <tr><td class="num" id="LN4433">4433</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN4434">4434</td><td class="line">  <span class='comment'>/* shrink other frames: current and at the left or at the right */</span></td></tr>
 <tr><td class="num" id="LN4435">4435</td><td class="line">  <span class='keyword'>if</span> (left)</td></tr>
@@ -5290,180 +5286,292 @@
 <tr><td class="num" id="LN5190">5190</td><td class="line"> <span class='comment'>* If no particular ID is desired, -1 must be specified for 'id'.</span></td></tr>
 <tr><td class="num" id="LN5191">5191</td><td class="line"> <span class='comment'>* Return ID of added match, -1 on failure.</span></td></tr>
 <tr><td class="num" id="LN5192">5192</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN5193">5193</td><td class="line"><span class='keyword'>int</span> match_add(win_T *wp, char_u *grp, char_u *pat, <span class='keyword'>int</span> prio, <span class='keyword'>int</span> id)</td></tr>
+<tr><td class="num" id="LN5193">5193</td><td class="line"><span class='keyword'>int</span> match_add(win_T *wp, char_u *grp, char_u *pat, <span class='keyword'>int</span> prio, <span class='keyword'>int</span> id, list_T *pos_list)</td></tr>
 <tr><td class="num" id="LN5194">5194</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN5195">5195</td><td class="line">  matchitem_T *cur;</td></tr>
 <tr><td class="num" id="LN5196">5196</td><td class="line">  matchitem_T *prev;</td></tr>
 <tr><td class="num" id="LN5197">5197</td><td class="line">  matchitem_T *m;</td></tr>
 <tr><td class="num" id="LN5198">5198</td><td class="line">  <span class='keyword'>int</span> hlg_id;</td></tr>
-<tr><td class="num" id="LN5199">5199</td><td class="line">  regprog_T   *regprog;</td></tr>
-<tr><td class="num" id="LN5200">5200</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5201">5201</td><td class="line">  <span class='keyword'>if</span> (*grp == <span class='macro'>NUL<span class='expansion'>'\000'</span></span> || *pat == <span class='macro'>NUL<span class='expansion'>'\000'</span></span>)</td></tr>
-<tr><td class="num" id="LN5202">5202</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
-<tr><td class="num" id="LN5203">5203</td><td class="line">  <span class='keyword'>if</span> (id &lt; -1 || id == 0) {</td></tr>
-<tr><td class="num" id="LN5204">5204</td><td class="line">    <span class='macro'>EMSGN(<span class='string_literal'>"E799: Invalid ID: %"</span> PRId64<span class='expansion'>emsgn((char_u *)("E799: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span></td></tr>
-<tr><td class="num" id="LN5205">5205</td><td class="line">          <span class='string_literal'><span class='macro'>" (must be greater than or equal to 1)"</span>,<span class='expansion'>emsgn((char_u *)("E799: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span></td></tr>
-<tr><td class="num" id="LN5206">5206</td><td class="line">          <span class='macro'>id)<span class='expansion'>emsgn((char_u *)("E799: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span>;</td></tr>
-<tr><td class="num" id="LN5207">5207</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
-<tr><td class="num" id="LN5208">5208</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5209">5209</td><td class="line">  <span class='keyword'>if</span> (id != -1) {</td></tr>
-<tr><td class="num" id="LN5210">5210</td><td class="line">    cur = wp-&gt;w_match_head;</td></tr>
-<tr><td class="num" id="LN5211">5211</td><td class="line">    <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num" id="LN5212">5212</td><td class="line">      <span class='keyword'>if</span> (cur-&gt;id == id) {</td></tr>
-<tr><td class="num" id="LN5213">5213</td><td class="line">        <span class='macro'>EMSGN(<span class='string_literal'>"E801: ID already taken: %"</span> PRId64, id)<span class='expansion'>emsgn((char_u *)("E801: ID already taken: %" "l" "d"), (int64_t<br>)(id))</span></span>;</td></tr>
-<tr><td class="num" id="LN5214">5214</td><td class="line">        <span class='keyword'>return</span> -1;</td></tr>
-<tr><td class="num" id="LN5215">5215</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN5216">5216</td><td class="line">      cur = cur-&gt;next;</td></tr>
-<tr><td class="num" id="LN5217">5217</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN5218">5218</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5219">5219</td><td class="line">  <span class='keyword'>if</span> ((hlg_id = syn_namen2id(grp, (<span class='keyword'>int</span>)<span class='macro'>STRLEN(grp)<span class='expansion'>strlen((char *)(grp))</span></span>)) == 0) {</td></tr>
-<tr><td class="num" id="LN5220">5220</td><td class="line">    <span class='macro'>EMSG2(_(e_nogroup), grp)<span class='expansion'>emsg2((char_u *)(gettext((char *)(e_nogroup))), (char_u *)(grp<br>))</span></span>;</td></tr>
-<tr><td class="num" id="LN5221">5221</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
-<tr><td class="num" id="LN5222">5222</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5223">5223</td><td class="line">  <span class='keyword'>if</span> ((regprog = vim_regcomp(pat, <span class='macro'>RE_MAGIC<span class='expansion'>1</span></span>)) == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num" id="LN5224">5224</td><td class="line">    <span class='macro'>EMSG2(_(e_invarg2), pat)<span class='expansion'>emsg2((char_u *)(gettext((char *)(e_invarg2))), (char_u *)(pat<br>))</span></span>;</td></tr>
-<tr><td class="num" id="LN5225">5225</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
-<tr><td class="num" id="LN5226">5226</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5227">5227</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5228">5228</td><td class="line">  <span class='comment'>/* Find available match ID. */</span></td></tr>
-<tr><td class="num" id="LN5229">5229</td><td class="line">  <span class='keyword'>while</span> (id == -1) {</td></tr>
-<tr><td class="num" id="LN5230">5230</td><td class="line">    cur = wp-&gt;w_match_head;</td></tr>
-<tr><td class="num" id="LN5231">5231</td><td class="line">    <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; cur-&gt;id != wp-&gt;w_next_match_id)</td></tr>
-<tr><td class="num" id="LN5232">5232</td><td class="line">      cur = cur-&gt;next;</td></tr>
-<tr><td class="num" id="LN5233">5233</td><td class="line">    <span class='keyword'>if</span> (cur == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN5234">5234</td><td class="line">      id = wp-&gt;w_next_match_id;</td></tr>
-<tr><td class="num" id="LN5235">5235</td><td class="line">    wp-&gt;w_next_match_id++;</td></tr>
-<tr><td class="num" id="LN5236">5236</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5237">5237</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5238">5238</td><td class="line">  <span class='comment'>/* Build new match. */</span></td></tr>
-<tr><td class="num" id="LN5239">5239</td><td class="line">  m = xmalloc(<span class='keyword'>sizeof</span>(matchitem_T));</td></tr>
-<tr><td class="num" id="LN5240">5240</td><td class="line">  m-&gt;id = id;</td></tr>
-<tr><td class="num" id="LN5241">5241</td><td class="line">  m-&gt;priority = prio;</td></tr>
-<tr><td class="num" id="LN5242">5242</td><td class="line">  m-&gt;pattern = vim_strsave(pat);</td></tr>
-<tr><td class="num" id="LN5243">5243</td><td class="line">  m-&gt;hlg_id = hlg_id;</td></tr>
-<tr><td class="num" id="LN5244">5244</td><td class="line">  m-&gt;match.regprog = regprog;</td></tr>
-<tr><td class="num" id="LN5245">5245</td><td class="line">  m-&gt;match.rmm_ic = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN5246">5246</td><td class="line">  m-&gt;match.rmm_maxcol = 0;</td></tr>
-<tr><td class="num" id="LN5247">5247</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5248">5248</td><td class="line">  <span class='comment'>/* Insert new match.  The match list is in ascending order with regard to</span></td></tr>
-<tr><td class="num" id="LN5249">5249</td><td class="line">   <span class='comment'>* the match priorities. */</span></td></tr>
-<tr><td class="num" id="LN5250">5250</td><td class="line">  cur = wp-&gt;w_match_head;</td></tr>
-<tr><td class="num" id="LN5251">5251</td><td class="line">  prev = cur;</td></tr>
-<tr><td class="num" id="LN5252">5252</td><td class="line">  <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; prio &gt;= cur-&gt;priority) {</td></tr>
-<tr><td class="num" id="LN5253">5253</td><td class="line">    prev = cur;</td></tr>
-<tr><td class="num" id="LN5254">5254</td><td class="line">    cur = cur-&gt;next;</td></tr>
-<tr><td class="num" id="LN5255">5255</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5256">5256</td><td class="line">  <span class='keyword'>if</span> (cur == prev)</td></tr>
-<tr><td class="num" id="LN5257">5257</td><td class="line">    wp-&gt;w_match_head = m;</td></tr>
-<tr><td class="num" id="LN5258">5258</td><td class="line">  <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN5259">5259</td><td class="line">    prev-&gt;next = m;</td></tr>
-<tr><td class="num" id="LN5260">5260</td><td class="line">  m-&gt;next = cur;</td></tr>
-<tr><td class="num" id="LN5261">5261</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5262">5262</td><td class="line">  redraw_later(<span class='macro'>SOME_VALID<span class='expansion'>35</span></span>);</td></tr>
-<tr><td class="num" id="LN5263">5263</td><td class="line">  <span class='keyword'>return</span> id;</td></tr>
-<tr><td class="num" id="LN5264">5264</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN5265">5265</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5266">5266</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN5267">5267</td><td class="line"> <span class='comment'>* Delete match with ID 'id' in the match list of window 'wp'.</span></td></tr>
-<tr><td class="num" id="LN5268">5268</td><td class="line"> <span class='comment'>* Print error messages if 'perr' is TRUE.</span></td></tr>
-<tr><td class="num" id="LN5269">5269</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN5270">5270</td><td class="line"><span class='keyword'>int</span> match_delete(win_T *wp, <span class='keyword'>int</span> id, <span class='keyword'>int</span> perr)</td></tr>
-<tr><td class="num" id="LN5271">5271</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN5272">5272</td><td class="line">  matchitem_T *cur = wp-&gt;w_match_head;</td></tr>
-<tr><td class="num" id="LN5273">5273</td><td class="line">  matchitem_T *prev = cur;</td></tr>
-<tr><td class="num" id="LN5274">5274</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5275">5275</td><td class="line">  <span class='keyword'>if</span> (id &lt; 1) {</td></tr>
-<tr><td class="num" id="LN5276">5276</td><td class="line">    <span class='keyword'>if</span> (perr == <span class='macro'>TRUE<span class='expansion'>1</span></span>)</td></tr>
-<tr><td class="num" id="LN5277">5277</td><td class="line">      <span class='macro'>EMSGN(<span class='string_literal'>"E802: Invalid ID: %"</span> PRId64<span class='expansion'>emsgn((char_u *)("E802: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span></td></tr>
-<tr><td class="num" id="LN5278">5278</td><td class="line">            <span class='string_literal'><span class='macro'>" (must be greater than or equal to 1)"</span>,<span class='expansion'>emsgn((char_u *)("E802: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span></td></tr>
-<tr><td class="num" id="LN5279">5279</td><td class="line">            <span class='macro'>id)<span class='expansion'>emsgn((char_u *)("E802: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span>;</td></tr>
-<tr><td class="num" id="LN5280">5280</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
-<tr><td class="num" id="LN5281">5281</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5282">5282</td><td class="line">  <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; cur-&gt;id != id) {</td></tr>
-<tr><td class="num" id="LN5283">5283</td><td class="line">    prev = cur;</td></tr>
-<tr><td class="num" id="LN5284">5284</td><td class="line">    cur = cur-&gt;next;</td></tr>
-<tr><td class="num" id="LN5285">5285</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5286">5286</td><td class="line">  <span class='keyword'>if</span> (cur == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num" id="LN5287">5287</td><td class="line">    <span class='keyword'>if</span> (perr == <span class='macro'>TRUE<span class='expansion'>1</span></span>)</td></tr>
-<tr><td class="num" id="LN5288">5288</td><td class="line">      <span class='macro'>EMSGN(<span class='string_literal'>"E803: ID not found: %"</span> PRId64, id)<span class='expansion'>emsgn((char_u *)("E803: ID not found: %" "l" "d"), (int64_t)(<br>id))</span></span>;</td></tr>
-<tr><td class="num" id="LN5289">5289</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
-<tr><td class="num" id="LN5290">5290</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5291">5291</td><td class="line">  <span class='keyword'>if</span> (cur == prev)</td></tr>
-<tr><td class="num" id="LN5292">5292</td><td class="line">    wp-&gt;w_match_head = cur-&gt;next;</td></tr>
-<tr><td class="num" id="LN5293">5293</td><td class="line">  <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN5294">5294</td><td class="line">    prev-&gt;next = cur-&gt;next;</td></tr>
-<tr><td class="num" id="LN5295">5295</td><td class="line">  vim_regfree(cur-&gt;match.regprog);</td></tr>
-<tr><td class="num" id="LN5296">5296</td><td class="line">  free(cur-&gt;pattern);</td></tr>
-<tr><td class="num" id="LN5297">5297</td><td class="line">  free(cur);</td></tr>
-<tr><td class="num" id="LN5298">5298</td><td class="line">  redraw_later(<span class='macro'>SOME_VALID<span class='expansion'>35</span></span>);</td></tr>
-<tr><td class="num" id="LN5299">5299</td><td class="line">  <span class='keyword'>return</span> 0;</td></tr>
-<tr><td class="num" id="LN5300">5300</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN5301">5301</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5302">5302</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN5303">5303</td><td class="line"> <span class='comment'>* Delete all matches in the match list of window 'wp'.</span></td></tr>
-<tr><td class="num" id="LN5304">5304</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN5305">5305</td><td class="line"><span class='keyword'>void</span> clear_matches(win_T *wp)</td></tr>
-<tr><td class="num" id="LN5306">5306</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN5307">5307</td><td class="line">  matchitem_T *m;</td></tr>
-<tr><td class="num" id="LN5308">5308</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5309">5309</td><td class="line">  <span class='keyword'>while</span> (wp-&gt;w_match_head != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num" id="LN5310">5310</td><td class="line">    m = wp-&gt;w_match_head-&gt;next;</td></tr>
-<tr><td class="num" id="LN5311">5311</td><td class="line">    vim_regfree(wp-&gt;w_match_head-&gt;match.regprog);</td></tr>
-<tr><td class="num" id="LN5312">5312</td><td class="line">    free(wp-&gt;w_match_head-&gt;pattern);</td></tr>
-<tr><td class="num" id="LN5313">5313</td><td class="line">    free(wp-&gt;w_match_head);</td></tr>
-<tr><td class="num" id="LN5314">5314</td><td class="line">    wp-&gt;w_match_head = m;</td></tr>
-<tr><td class="num" id="LN5315">5315</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN5316">5316</td><td class="line">  redraw_later(<span class='macro'>SOME_VALID<span class='expansion'>35</span></span>);</td></tr>
-<tr><td class="num" id="LN5317">5317</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN5318">5318</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5319">5319</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN5320">5320</td><td class="line"> <span class='comment'>* Get match from ID 'id' in window 'wp'.</span></td></tr>
-<tr><td class="num" id="LN5321">5321</td><td class="line"> <span class='comment'>* Return NULL if match not found.</span></td></tr>
-<tr><td class="num" id="LN5322">5322</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN5323">5323</td><td class="line">matchitem_T *get_match(win_T *wp, <span class='keyword'>int</span> id)</td></tr>
-<tr><td class="num" id="LN5324">5324</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN5325">5325</td><td class="line">  matchitem_T *cur = wp-&gt;w_match_head;</td></tr>
-<tr><td class="num" id="LN5326">5326</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5327">5327</td><td class="line">  <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; cur-&gt;id != id)</td></tr>
-<tr><td class="num" id="LN5328">5328</td><td class="line">    cur = cur-&gt;next;</td></tr>
-<tr><td class="num" id="LN5329">5329</td><td class="line">  <span class='keyword'>return</span> cur;</td></tr>
-<tr><td class="num" id="LN5330">5330</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN5331">5331</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5332">5332</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5333">5333</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN5334">5334</td><td class="line"> <span class='comment'>* Return TRUE if "topfrp" and its children are at the right height.</span></td></tr>
-<tr><td class="num" id="LN5335">5335</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN5336">5336</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>int</span> frame_check_height(frame_T *topfrp, <span class='keyword'>int</span> height)</td></tr>
-<tr><td class="num" id="LN5337">5337</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN5338">5338</td><td class="line">  frame_T *frp;</td></tr>
+<tr><td class="num" id="LN5199">5199</td><td class="line">  regprog_T   *regprog = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN5200">5200</td><td class="line">  <span class='keyword'>int</span> rtype = <span class='macro'>SOME_VALID<span class='expansion'>35</span></span>;</td></tr>
+<tr><td class="num" id="LN5201">5201</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5202">5202</td><td class="line">  <span class='keyword'>if</span> (*grp == <span class='macro'>NUL<span class='expansion'>'\000'</span></span> || (pat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; *pat == <span class='macro'>NUL<span class='expansion'>'\000'</span></span>)) {</td></tr>
+<tr><td class="num" id="LN5203">5203</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
+<tr><td class="num" id="LN5204">5204</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5205">5205</td><td class="line">  <span class='keyword'>if</span> (id &lt; -1 || id == 0) {</td></tr>
+<tr><td class="num" id="LN5206">5206</td><td class="line">    <span class='macro'>EMSGN(<span class='string_literal'>"E799: Invalid ID: %"</span> PRId64<span class='expansion'>emsgn((char_u *)("E799: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span></td></tr>
+<tr><td class="num" id="LN5207">5207</td><td class="line">          <span class='string_literal'><span class='macro'>" (must be greater than or equal to 1)"</span>,<span class='expansion'>emsgn((char_u *)("E799: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span></td></tr>
+<tr><td class="num" id="LN5208">5208</td><td class="line">          <span class='macro'>id)<span class='expansion'>emsgn((char_u *)("E799: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span>;</td></tr>
+<tr><td class="num" id="LN5209">5209</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
+<tr><td class="num" id="LN5210">5210</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5211">5211</td><td class="line">  <span class='keyword'>if</span> (id != -1) {</td></tr>
+<tr><td class="num" id="LN5212">5212</td><td class="line">    cur = wp-&gt;w_match_head;</td></tr>
+<tr><td class="num" id="LN5213">5213</td><td class="line">    <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN5214">5214</td><td class="line">      <span class='keyword'>if</span> (cur-&gt;id == id) {</td></tr>
+<tr><td class="num" id="LN5215">5215</td><td class="line">        <span class='macro'>EMSGN(<span class='string_literal'>"E801: ID already taken: %"</span> PRId64, id)<span class='expansion'>emsgn((char_u *)("E801: ID already taken: %" "l" "d"), (int64_t<br>)(id))</span></span>;</td></tr>
+<tr><td class="num" id="LN5216">5216</td><td class="line">        <span class='keyword'>return</span> -1;</td></tr>
+<tr><td class="num" id="LN5217">5217</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN5218">5218</td><td class="line">      cur = cur-&gt;next;</td></tr>
+<tr><td class="num" id="LN5219">5219</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN5220">5220</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5221">5221</td><td class="line">  <span class='keyword'>if</span> ((hlg_id = syn_namen2id(grp, (<span class='keyword'>int</span>)<span class='macro'>STRLEN(grp)<span class='expansion'>strlen((char *)(grp))</span></span>)) == 0) {</td></tr>
+<tr><td class="num" id="LN5222">5222</td><td class="line">    <span class='macro'>EMSG2(_(e_nogroup), grp)<span class='expansion'>emsg2((char_u *)(gettext((char *)(e_nogroup))), (char_u *)(grp<br>))</span></span>;</td></tr>
+<tr><td class="num" id="LN5223">5223</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
+<tr><td class="num" id="LN5224">5224</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5225">5225</td><td class="line">  <span class='keyword'>if</span> (pat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; (regprog = vim_regcomp(pat, <span class='macro'>RE_MAGIC<span class='expansion'>1</span></span>)) == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN5226">5226</td><td class="line">    <span class='macro'>EMSG2(_(e_invarg2), pat)<span class='expansion'>emsg2((char_u *)(gettext((char *)(e_invarg2))), (char_u *)(pat<br>))</span></span>;</td></tr>
+<tr><td class="num" id="LN5227">5227</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
+<tr><td class="num" id="LN5228">5228</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5229">5229</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5230">5230</td><td class="line">  <span class='comment'>/* Find available match ID. */</span></td></tr>
+<tr><td class="num" id="LN5231">5231</td><td class="line">  <span class='keyword'>while</span> (id == -1) {</td></tr>
+<tr><td class="num" id="LN5232">5232</td><td class="line">    cur = wp-&gt;w_match_head;</td></tr>
+<tr><td class="num" id="LN5233">5233</td><td class="line">    <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; cur-&gt;id != wp-&gt;w_next_match_id)</td></tr>
+<tr><td class="num" id="LN5234">5234</td><td class="line">      cur = cur-&gt;next;</td></tr>
+<tr><td class="num" id="LN5235">5235</td><td class="line">    <span class='keyword'>if</span> (cur == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN5236">5236</td><td class="line">      id = wp-&gt;w_next_match_id;</td></tr>
+<tr><td class="num" id="LN5237">5237</td><td class="line">    wp-&gt;w_next_match_id++;</td></tr>
+<tr><td class="num" id="LN5238">5238</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5239">5239</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5240">5240</td><td class="line">  <span class='comment'>/* Build new match. */</span></td></tr>
+<tr><td class="num" id="LN5241">5241</td><td class="line">  m = xcalloc(1, <span class='keyword'>sizeof</span>(matchitem_T));</td></tr>
+<tr><td class="num" id="LN5242">5242</td><td class="line">  m-&gt;id = id;</td></tr>
+<tr><td class="num" id="LN5243">5243</td><td class="line">  m-&gt;priority = prio;</td></tr>
+<tr><td class="num" id="LN5244">5244</td><td class="line">  m-&gt;pattern = pat == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>: vim_strsave(pat);</td></tr>
+<tr><td class="num" id="LN5245">5245</td><td class="line">  m-&gt;hlg_id = hlg_id;</td></tr>
+<tr><td class="num" id="LN5246">5246</td><td class="line">  m-&gt;match.regprog = regprog;</td></tr>
+<tr><td class="num" id="LN5247">5247</td><td class="line">  m-&gt;match.rmm_ic = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN5248">5248</td><td class="line">  m-&gt;match.rmm_maxcol = 0;</td></tr>
+<tr><td class="num" id="LN5249">5249</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5250">5250</td><td class="line">  <span class='comment'>// Set up position matches</span></td></tr>
+<tr><td class="num" id="LN5251">5251</td><td class="line">  <span class='keyword'>if</span> (pos_list != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN5252">5252</td><td class="line">  {</td></tr>
+<tr><td class="num" id="LN5253">5253</td><td class="line">    linenr_T	toplnum = 0;</td></tr>
+<tr><td class="num" id="LN5254">5254</td><td class="line">    linenr_T	botlnum = 0;</td></tr>
+<tr><td class="num" id="LN5255">5255</td><td class="line">    listitem_T	*li;</td></tr>
+<tr><td class="num" id="LN5256">5256</td><td class="line">    <span class='keyword'>int</span>		i;</td></tr>
+<tr><td class="num" id="LN5257">5257</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5258">5258</td><td class="line">    <span class='keyword'>for</span> (i = 0, li = pos_list-&gt;lv_first; li != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; i &lt; <span class='macro'>MAXPOSMATCH<span class='expansion'>8</span></span>;</td></tr>
+<tr><td class="num" id="LN5259">5259</td><td class="line">        i++, li = li-&gt;li_next) {</td></tr>
+<tr><td class="num" id="LN5260">5260</td><td class="line">      linenr_T	  lnum = 0;</td></tr>
+<tr><td class="num" id="LN5261">5261</td><td class="line">      colnr_T	  col = 0;</td></tr>
+<tr><td class="num" id="LN5262">5262</td><td class="line">      <span class='keyword'>int</span>	  len = 1;</td></tr>
+<tr><td class="num" id="LN5263">5263</td><td class="line">      list_T	  *subl;</td></tr>
+<tr><td class="num" id="LN5264">5264</td><td class="line">      listitem_T  *subli;</td></tr>
+<tr><td class="num" id="LN5265">5265</td><td class="line">      <span class='keyword'>int</span>	  error = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN5266">5266</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5267">5267</td><td class="line">      <span class='keyword'>if</span> (li-&gt;li_tv.v_type == <span class='macro'>VAR_LIST<span class='expansion'>4</span></span>) {</td></tr>
+<tr><td class="num" id="LN5268">5268</td><td class="line">        subl = li-&gt;li_tv.vval.v_list;</td></tr>
+<tr><td class="num" id="LN5269">5269</td><td class="line">        <span class='keyword'>if</span> (subl == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN5270">5270</td><td class="line">          <span class='keyword'>goto</span> fail;</td></tr>
+<tr><td class="num" id="LN5271">5271</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN5272">5272</td><td class="line">        subli = subl-&gt;lv_first;</td></tr>
+<tr><td class="num" id="LN5273">5273</td><td class="line">        <span class='keyword'>if</span> (subli == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN5274">5274</td><td class="line">          <span class='keyword'>goto</span> fail;</td></tr>
+<tr><td class="num" id="LN5275">5275</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN5276">5276</td><td class="line">        lnum = get_tv_number_chk(&amp;subli-&gt;li_tv, &amp;error);</td></tr>
+<tr><td class="num" id="LN5277">5277</td><td class="line">        <span class='keyword'>if</span> (error == <span class='macro'>true<span class='expansion'>1</span></span>) {</td></tr>
+<tr><td class="num" id="LN5278">5278</td><td class="line">          <span class='keyword'>goto</span> fail;</td></tr>
+<tr><td class="num" id="LN5279">5279</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN5280">5280</td><td class="line">        <span class='keyword'>if</span> (lnum == 0) {</td></tr>
+<tr><td class="num" id="LN5281">5281</td><td class="line">          --i;</td></tr>
+<tr><td class="num" id="LN5282">5282</td><td class="line">          <span class='keyword'>continue</span>;</td></tr>
+<tr><td class="num" id="LN5283">5283</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN5284">5284</td><td class="line">        m-&gt;pos.pos[i].lnum = lnum;</td></tr>
+<tr><td class="num" id="LN5285">5285</td><td class="line">        subli = subli-&gt;li_next;</td></tr>
+<tr><td class="num" id="LN5286">5286</td><td class="line">        <span class='keyword'>if</span> (subli != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN5287">5287</td><td class="line">          col = get_tv_number_chk(&amp;subli-&gt;li_tv, &amp;error);</td></tr>
+<tr><td class="num" id="LN5288">5288</td><td class="line">          <span class='keyword'>if</span> (error == <span class='macro'>true<span class='expansion'>1</span></span>)</td></tr>
+<tr><td class="num" id="LN5289">5289</td><td class="line">            <span class='keyword'>goto</span> fail;</td></tr>
+<tr><td class="num" id="LN5290">5290</td><td class="line">          subli = subli-&gt;li_next;</td></tr>
+<tr><td class="num" id="LN5291">5291</td><td class="line">          <span class='keyword'>if</span> (subli != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN5292">5292</td><td class="line">            len = get_tv_number_chk(&amp;subli-&gt;li_tv, &amp;error);</td></tr>
+<tr><td class="num" id="LN5293">5293</td><td class="line">            <span class='keyword'>if</span> (error == <span class='macro'>true<span class='expansion'>1</span></span>) {</td></tr>
+<tr><td class="num" id="LN5294">5294</td><td class="line">              <span class='keyword'>goto</span> fail;</td></tr>
+<tr><td class="num" id="LN5295">5295</td><td class="line">            }</td></tr>
+<tr><td class="num" id="LN5296">5296</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN5297">5297</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN5298">5298</td><td class="line">        m-&gt;pos.pos[i].col = col;</td></tr>
+<tr><td class="num" id="LN5299">5299</td><td class="line">        m-&gt;pos.pos[i].len = len;</td></tr>
+<tr><td class="num" id="LN5300">5300</td><td class="line">      } <span class='keyword'>else</span> <span class='keyword'>if</span> (li-&gt;li_tv.v_type == <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>) {</td></tr>
+<tr><td class="num" id="LN5301">5301</td><td class="line">        <span class='keyword'>if</span> (li-&gt;li_tv.vval.v_number == 0) {</td></tr>
+<tr><td class="num" id="LN5302">5302</td><td class="line">          --i;</td></tr>
+<tr><td class="num" id="LN5303">5303</td><td class="line">          <span class='keyword'>continue</span>;</td></tr>
+<tr><td class="num" id="LN5304">5304</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN5305">5305</td><td class="line">        m-&gt;pos.pos[i].lnum = li-&gt;li_tv.vval.v_number;</td></tr>
+<tr><td class="num" id="LN5306">5306</td><td class="line">        m-&gt;pos.pos[i].col = 0;</td></tr>
+<tr><td class="num" id="LN5307">5307</td><td class="line">        m-&gt;pos.pos[i].len = 0;</td></tr>
+<tr><td class="num" id="LN5308">5308</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN5309">5309</td><td class="line">        <span class='macro'>EMSG(_(<span class='string_literal'>"List or number required"</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("List or number required")))<br>)</span></span>;</td></tr>
+<tr><td class="num" id="LN5310">5310</td><td class="line">        <span class='keyword'>goto</span> fail;</td></tr>
+<tr><td class="num" id="LN5311">5311</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN5312">5312</td><td class="line">      <span class='keyword'>if</span> (toplnum == 0 || lnum &lt; toplnum) {</td></tr>
+<tr><td class="num" id="LN5313">5313</td><td class="line">        toplnum = lnum;</td></tr>
+<tr><td class="num" id="LN5314">5314</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN5315">5315</td><td class="line">      <span class='keyword'>if</span> (botlnum == 0 || lnum &gt;= botlnum) {</td></tr>
+<tr><td class="num" id="LN5316">5316</td><td class="line">        botlnum = lnum + 1;</td></tr>
+<tr><td class="num" id="LN5317">5317</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN5318">5318</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN5319">5319</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5320">5320</td><td class="line">    <span class='comment'>// Calculate top and bottom lines for redrawing area </span></td></tr>
+<tr><td class="num" id="LN5321">5321</td><td class="line">    <span class='keyword'>if</span> (toplnum != 0){</td></tr>
+<tr><td class="num" id="LN5322">5322</td><td class="line">      <span class='keyword'>if</span> (wp-&gt;w_buffer-&gt;b_mod_set) {</td></tr>
+<tr><td class="num" id="LN5323">5323</td><td class="line">        <span class='keyword'>if</span> (wp-&gt;w_buffer-&gt;b_mod_top &gt; toplnum) {</td></tr>
+<tr><td class="num" id="LN5324">5324</td><td class="line">          wp-&gt;w_buffer-&gt;b_mod_top = toplnum;</td></tr>
+<tr><td class="num" id="LN5325">5325</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN5326">5326</td><td class="line">        <span class='keyword'>if</span> (wp-&gt;w_buffer-&gt;b_mod_bot &lt; botlnum) {</td></tr>
+<tr><td class="num" id="LN5327">5327</td><td class="line">          wp-&gt;w_buffer-&gt;b_mod_bot = botlnum;</td></tr>
+<tr><td class="num" id="LN5328">5328</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN5329">5329</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN5330">5330</td><td class="line">        wp-&gt;w_buffer-&gt;b_mod_top = toplnum;</td></tr>
+<tr><td class="num" id="LN5331">5331</td><td class="line">        wp-&gt;w_buffer-&gt;b_mod_bot = botlnum;</td></tr>
+<tr><td class="num" id="LN5332">5332</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN5333">5333</td><td class="line">      m-&gt;pos.toplnum = toplnum;</td></tr>
+<tr><td class="num" id="LN5334">5334</td><td class="line">      m-&gt;pos.botlnum = botlnum;</td></tr>
+<tr><td class="num" id="LN5335">5335</td><td class="line">      wp-&gt;w_buffer-&gt;b_mod_set = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN5336">5336</td><td class="line">      rtype = <span class='macro'>VALID<span class='expansion'>10</span></span>;</td></tr>
+<tr><td class="num" id="LN5337">5337</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN5338">5338</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN5339">5339</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5340">5340</td><td class="line">  <span class='keyword'>if</span> (topfrp-&gt;fr_height != height)</td></tr>
-<tr><td class="num" id="LN5341">5341</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN5342">5342</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5343">5343</td><td class="line">  <span class='keyword'>if</span> (topfrp-&gt;fr_layout == <span class='macro'>FR_ROW<span class='expansion'>1</span></span>)</td></tr>
-<tr><td class="num" id="LN5344">5344</td><td class="line">    <span class='keyword'>for</span> (frp = topfrp-&gt;fr_child; frp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; frp = frp-&gt;fr_next)</td></tr>
-<tr><td class="num" id="LN5345">5345</td><td class="line">      <span class='keyword'>if</span> (frp-&gt;fr_height != height)</td></tr>
-<tr><td class="num" id="LN5346">5346</td><td class="line">        <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN5347">5347</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5348">5348</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN5349">5349</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN5350">5350</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5351">5351</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN5352">5352</td><td class="line"> <span class='comment'>* Return TRUE if "topfrp" and its children are at the right width.</span></td></tr>
-<tr><td class="num" id="LN5353">5353</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN5354">5354</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>int</span> frame_check_width(frame_T *topfrp, <span class='keyword'>int</span> width)</td></tr>
-<tr><td class="num" id="LN5355">5355</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN5356">5356</td><td class="line">  frame_T *frp;</td></tr>
-<tr><td class="num" id="LN5357">5357</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5358">5358</td><td class="line">  <span class='keyword'>if</span> (topfrp-&gt;fr_width != width)</td></tr>
-<tr><td class="num" id="LN5359">5359</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN5360">5360</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5361">5361</td><td class="line">  <span class='keyword'>if</span> (topfrp-&gt;fr_layout == <span class='macro'>FR_COL<span class='expansion'>2</span></span>)</td></tr>
-<tr><td class="num" id="LN5362">5362</td><td class="line">    <span class='keyword'>for</span> (frp = topfrp-&gt;fr_child; frp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; frp = frp-&gt;fr_next)</td></tr>
-<tr><td class="num" id="LN5363">5363</td><td class="line">      <span class='keyword'>if</span> (frp-&gt;fr_width != width)</td></tr>
-<tr><td class="num" id="LN5364">5364</td><td class="line">        <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN5365">5365</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5366">5366</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN5367">5367</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN5368">5368</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5340">5340</td><td class="line">  <span class='comment'>/* Insert new match.  The match list is in ascending order with regard to</span></td></tr>
+<tr><td class="num" id="LN5341">5341</td><td class="line">   <span class='comment'>* the match priorities. */</span></td></tr>
+<tr><td class="num" id="LN5342">5342</td><td class="line">  cur = wp-&gt;w_match_head;</td></tr>
+<tr><td class="num" id="LN5343">5343</td><td class="line">  prev = cur;</td></tr>
+<tr><td class="num" id="LN5344">5344</td><td class="line">  <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; prio &gt;= cur-&gt;priority) {</td></tr>
+<tr><td class="num" id="LN5345">5345</td><td class="line">    prev = cur;</td></tr>
+<tr><td class="num" id="LN5346">5346</td><td class="line">    cur = cur-&gt;next;</td></tr>
+<tr><td class="num" id="LN5347">5347</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5348">5348</td><td class="line">  <span class='keyword'>if</span> (cur == prev)</td></tr>
+<tr><td class="num" id="LN5349">5349</td><td class="line">    wp-&gt;w_match_head = m;</td></tr>
+<tr><td class="num" id="LN5350">5350</td><td class="line">  <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN5351">5351</td><td class="line">    prev-&gt;next = m;</td></tr>
+<tr><td class="num" id="LN5352">5352</td><td class="line">  m-&gt;next = cur;</td></tr>
+<tr><td class="num" id="LN5353">5353</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5354">5354</td><td class="line">  redraw_later(rtype);</td></tr>
+<tr><td class="num" id="LN5355">5355</td><td class="line">  <span class='keyword'>return</span> id;</td></tr>
+<tr><td class="num" id="LN5356">5356</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5357">5357</td><td class="line">fail:</td></tr>
+<tr><td class="num" id="LN5358">5358</td><td class="line">  free(m);</td></tr>
+<tr><td class="num" id="LN5359">5359</td><td class="line">  <span class='keyword'>return</span> -1;</td></tr>
+<tr><td class="num" id="LN5360">5360</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN5361">5361</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5362">5362</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN5363">5363</td><td class="line"> <span class='comment'>* Delete match with ID 'id' in the match list of window 'wp'.</span></td></tr>
+<tr><td class="num" id="LN5364">5364</td><td class="line"> <span class='comment'>* Print error messages if 'perr' is TRUE.</span></td></tr>
+<tr><td class="num" id="LN5365">5365</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN5366">5366</td><td class="line"><span class='keyword'>int</span> match_delete(win_T *wp, <span class='keyword'>int</span> id, <span class='keyword'>int</span> perr)</td></tr>
+<tr><td class="num" id="LN5367">5367</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN5368">5368</td><td class="line">  matchitem_T *cur = wp-&gt;w_match_head;</td></tr>
+<tr><td class="num" id="LN5369">5369</td><td class="line">  matchitem_T *prev = cur;</td></tr>
+<tr><td class="num" id="LN5370">5370</td><td class="line">  <span class='keyword'>int</span> rtype = <span class='macro'>SOME_VALID<span class='expansion'>35</span></span>;</td></tr>
+<tr><td class="num" id="LN5371">5371</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5372">5372</td><td class="line">  <span class='keyword'>if</span> (id &lt; 1) {</td></tr>
+<tr><td class="num" id="LN5373">5373</td><td class="line">    <span class='keyword'>if</span> (perr == <span class='macro'>TRUE<span class='expansion'>1</span></span>)</td></tr>
+<tr><td class="num" id="LN5374">5374</td><td class="line">      <span class='macro'>EMSGN(<span class='string_literal'>"E802: Invalid ID: %"</span> PRId64<span class='expansion'>emsgn((char_u *)("E802: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span></td></tr>
+<tr><td class="num" id="LN5375">5375</td><td class="line">            <span class='string_literal'><span class='macro'>" (must be greater than or equal to 1)"</span>,<span class='expansion'>emsgn((char_u *)("E802: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span></td></tr>
+<tr><td class="num" id="LN5376">5376</td><td class="line">            <span class='macro'>id)<span class='expansion'>emsgn((char_u *)("E802: Invalid ID: %" "l" "d" " (must be greater than or equal to 1)"<br>), (int64_t)(id))</span></span>;</td></tr>
+<tr><td class="num" id="LN5377">5377</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
+<tr><td class="num" id="LN5378">5378</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5379">5379</td><td class="line">  <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; cur-&gt;id != id) {</td></tr>
+<tr><td class="num" id="LN5380">5380</td><td class="line">    prev = cur;</td></tr>
+<tr><td class="num" id="LN5381">5381</td><td class="line">    cur = cur-&gt;next;</td></tr>
+<tr><td class="num" id="LN5382">5382</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5383">5383</td><td class="line">  <span class='keyword'>if</span> (cur == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN5384">5384</td><td class="line">    <span class='keyword'>if</span> (perr == <span class='macro'>TRUE<span class='expansion'>1</span></span>)</td></tr>
+<tr><td class="num" id="LN5385">5385</td><td class="line">      <span class='macro'>EMSGN(<span class='string_literal'>"E803: ID not found: %"</span> PRId64, id)<span class='expansion'>emsgn((char_u *)("E803: ID not found: %" "l" "d"), (int64_t)(<br>id))</span></span>;</td></tr>
+<tr><td class="num" id="LN5386">5386</td><td class="line">    <span class='keyword'>return</span> -1;</td></tr>
+<tr><td class="num" id="LN5387">5387</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5388">5388</td><td class="line">  <span class='keyword'>if</span> (cur == prev)</td></tr>
+<tr><td class="num" id="LN5389">5389</td><td class="line">    wp-&gt;w_match_head = cur-&gt;next;</td></tr>
+<tr><td class="num" id="LN5390">5390</td><td class="line">  <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN5391">5391</td><td class="line">    prev-&gt;next = cur-&gt;next;</td></tr>
+<tr><td class="num" id="LN5392">5392</td><td class="line">  vim_regfree(cur-&gt;match.regprog);</td></tr>
+<tr><td class="num" id="LN5393">5393</td><td class="line">  free(cur-&gt;pattern);</td></tr>
+<tr><td class="num" id="LN5394">5394</td><td class="line">  <span class='keyword'>if</span> (cur-&gt;pos.toplnum != 0) {</td></tr>
+<tr><td class="num" id="LN5395">5395</td><td class="line">    <span class='keyword'>if</span> (wp-&gt;w_buffer-&gt;b_mod_set) {</td></tr>
+<tr><td class="num" id="LN5396">5396</td><td class="line">      <span class='keyword'>if</span> (wp-&gt;w_buffer-&gt;b_mod_top &gt; cur-&gt;pos.toplnum) {</td></tr>
+<tr><td class="num" id="LN5397">5397</td><td class="line">        wp-&gt;w_buffer-&gt;b_mod_top = cur-&gt;pos.toplnum;</td></tr>
+<tr><td class="num" id="LN5398">5398</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN5399">5399</td><td class="line">      <span class='keyword'>if</span> (wp-&gt;w_buffer-&gt;b_mod_bot &lt; cur-&gt;pos.botlnum) {</td></tr>
+<tr><td class="num" id="LN5400">5400</td><td class="line">        wp-&gt;w_buffer-&gt;b_mod_bot = cur-&gt;pos.botlnum;</td></tr>
+<tr><td class="num" id="LN5401">5401</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN5402">5402</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN5403">5403</td><td class="line">      wp-&gt;w_buffer-&gt;b_mod_top = cur-&gt;pos.toplnum;</td></tr>
+<tr><td class="num" id="LN5404">5404</td><td class="line">      wp-&gt;w_buffer-&gt;b_mod_bot = cur-&gt;pos.botlnum;</td></tr>
+<tr><td class="num" id="LN5405">5405</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN5406">5406</td><td class="line">    wp-&gt;w_buffer-&gt;b_mod_set = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN5407">5407</td><td class="line">    rtype = <span class='macro'>VALID<span class='expansion'>10</span></span>;</td></tr>
+<tr><td class="num" id="LN5408">5408</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5409">5409</td><td class="line">  free(cur);</td></tr>
+<tr><td class="num" id="LN5410">5410</td><td class="line">  redraw_later(rtype);</td></tr>
+<tr><td class="num" id="LN5411">5411</td><td class="line">  <span class='keyword'>return</span> 0;</td></tr>
+<tr><td class="num" id="LN5412">5412</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN5413">5413</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5414">5414</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN5415">5415</td><td class="line"> <span class='comment'>* Delete all matches in the match list of window 'wp'.</span></td></tr>
+<tr><td class="num" id="LN5416">5416</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN5417">5417</td><td class="line"><span class='keyword'>void</span> clear_matches(win_T *wp)</td></tr>
+<tr><td class="num" id="LN5418">5418</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN5419">5419</td><td class="line">  matchitem_T *m;</td></tr>
+<tr><td class="num" id="LN5420">5420</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5421">5421</td><td class="line">  <span class='keyword'>while</span> (wp-&gt;w_match_head != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN5422">5422</td><td class="line">    m = wp-&gt;w_match_head-&gt;next;</td></tr>
+<tr><td class="num" id="LN5423">5423</td><td class="line">    vim_regfree(wp-&gt;w_match_head-&gt;match.regprog);</td></tr>
+<tr><td class="num" id="LN5424">5424</td><td class="line">    free(wp-&gt;w_match_head-&gt;pattern);</td></tr>
+<tr><td class="num" id="LN5425">5425</td><td class="line">    free(wp-&gt;w_match_head);</td></tr>
+<tr><td class="num" id="LN5426">5426</td><td class="line">    wp-&gt;w_match_head = m;</td></tr>
+<tr><td class="num" id="LN5427">5427</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN5428">5428</td><td class="line">  redraw_later(<span class='macro'>SOME_VALID<span class='expansion'>35</span></span>);</td></tr>
+<tr><td class="num" id="LN5429">5429</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN5430">5430</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5431">5431</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN5432">5432</td><td class="line"> <span class='comment'>* Get match from ID 'id' in window 'wp'.</span></td></tr>
+<tr><td class="num" id="LN5433">5433</td><td class="line"> <span class='comment'>* Return NULL if match not found.</span></td></tr>
+<tr><td class="num" id="LN5434">5434</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN5435">5435</td><td class="line">matchitem_T *get_match(win_T *wp, <span class='keyword'>int</span> id)</td></tr>
+<tr><td class="num" id="LN5436">5436</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN5437">5437</td><td class="line">  matchitem_T *cur = wp-&gt;w_match_head;</td></tr>
+<tr><td class="num" id="LN5438">5438</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5439">5439</td><td class="line">  <span class='keyword'>while</span> (cur != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; cur-&gt;id != id)</td></tr>
+<tr><td class="num" id="LN5440">5440</td><td class="line">    cur = cur-&gt;next;</td></tr>
+<tr><td class="num" id="LN5441">5441</td><td class="line">  <span class='keyword'>return</span> cur;</td></tr>
+<tr><td class="num" id="LN5442">5442</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN5443">5443</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5444">5444</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5445">5445</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN5446">5446</td><td class="line"> <span class='comment'>* Return TRUE if "topfrp" and its children are at the right height.</span></td></tr>
+<tr><td class="num" id="LN5447">5447</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN5448">5448</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>int</span> frame_check_height(frame_T *topfrp, <span class='keyword'>int</span> height)</td></tr>
+<tr><td class="num" id="LN5449">5449</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN5450">5450</td><td class="line">  frame_T *frp;</td></tr>
+<tr><td class="num" id="LN5451">5451</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5452">5452</td><td class="line">  <span class='keyword'>if</span> (topfrp-&gt;fr_height != height)</td></tr>
+<tr><td class="num" id="LN5453">5453</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN5454">5454</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5455">5455</td><td class="line">  <span class='keyword'>if</span> (topfrp-&gt;fr_layout == <span class='macro'>FR_ROW<span class='expansion'>1</span></span>)</td></tr>
+<tr><td class="num" id="LN5456">5456</td><td class="line">    <span class='keyword'>for</span> (frp = topfrp-&gt;fr_child; frp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; frp = frp-&gt;fr_next)</td></tr>
+<tr><td class="num" id="LN5457">5457</td><td class="line">      <span class='keyword'>if</span> (frp-&gt;fr_height != height)</td></tr>
+<tr><td class="num" id="LN5458">5458</td><td class="line">        <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN5459">5459</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5460">5460</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN5461">5461</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN5462">5462</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5463">5463</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN5464">5464</td><td class="line"> <span class='comment'>* Return TRUE if "topfrp" and its children are at the right width.</span></td></tr>
+<tr><td class="num" id="LN5465">5465</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN5466">5466</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>int</span> frame_check_width(frame_T *topfrp, <span class='keyword'>int</span> width)</td></tr>
+<tr><td class="num" id="LN5467">5467</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN5468">5468</td><td class="line">  frame_T *frp;</td></tr>
+<tr><td class="num" id="LN5469">5469</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5470">5470</td><td class="line">  <span class='keyword'>if</span> (topfrp-&gt;fr_width != width)</td></tr>
+<tr><td class="num" id="LN5471">5471</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN5472">5472</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5473">5473</td><td class="line">  <span class='keyword'>if</span> (topfrp-&gt;fr_layout == <span class='macro'>FR_COL<span class='expansion'>2</span></span>)</td></tr>
+<tr><td class="num" id="LN5474">5474</td><td class="line">    <span class='keyword'>for</span> (frp = topfrp-&gt;fr_child; frp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; frp = frp-&gt;fr_next)</td></tr>
+<tr><td class="num" id="LN5475">5475</td><td class="line">      <span class='keyword'>if</span> (frp-&gt;fr_width != width)</td></tr>
+<tr><td class="num" id="LN5476">5476</td><td class="line">        <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN5477">5477</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5478">5478</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN5479">5479</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN5480">5480</td><td class="line"> </td></tr>
 </table></body></html>
