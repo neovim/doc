@@ -19,7 +19,7 @@ var searchData=
   ['map_5fto_5fexists_5fmode',['map_to_exists_mode',['../getchar_8c.html#a0322f0dbcebaa1da5ee52556527507fe',1,'getchar.c']]],
   ['mark_5fadjust',['mark_adjust',['../mark_8c.html#a2e021e15ceaa5cafb16d056331aace34',1,'mark.c']]],
   ['mark_5fcol_5fadjust',['mark_col_adjust',['../mark_8c.html#a94cc6edb4136aeb5ff9fd4478bddbc41',1,'mark.c']]],
-  ['match_5fadd',['match_add',['../window_8c.html#a99205d6e88de70085b8414faefbc8e8a',1,'window.c']]],
+  ['match_5fadd',['match_add',['../window_8c.html#a50bfc75e037ae31a343d0b46437db47d',1,'window.c']]],
   ['match_5fdelete',['match_delete',['../window_8c.html#af9cbde92fb248a3fa829c388d8d570ac',1,'window.c']]],
   ['match_5ffile_5flist',['match_file_list',['../fileio_8c.html#a3602af7edabfec4256655718ba789d1e',1,'fileio.c']]],
   ['match_5ffile_5fpat',['match_file_pat',['../fileio_8c.html#a4586ebb572db8057d6948a79a2e516b1',1,'fileio.c']]],

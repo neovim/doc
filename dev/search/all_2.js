@@ -346,6 +346,7 @@ var searchData=
   ['bomb_5fsize',['bomb_size',['../mbyte_8c.html#a363045e8c761ea31b75ef6ffa37bc32b',1,'mbyte.c']]],
   ['boolean',['boolean',['../structobject.html#a0996cc24bc84e42db0699ffd53857f10',1,'object::boolean()'],['../defs_8h.html#a3790b6de8c45ebee9af548380c3fb8d2',1,'Boolean():&#160;defs.h']]],
   ['boolean_5fobj',['BOOLEAN_OBJ',['../helpers_8h.html#a54fd7906326ebadfb3e157b17c6291fe',1,'helpers.h']]],
+  ['botlnum',['botlnum',['../structposmatch.html#a2c728dd6c31832a3a7d6c62cd78d64ce',1,'posmatch']]],
   ['bow',['BOW',['../regexp_8c.html#aa4f7e4cfe33c3863e12ee5fbcf16dea6',1,'regexp.c']]],
   ['bp_5fpos',['bp_pos',['../structbackpos__S.html#ac93932333575d36c6f14ed38c721938d',1,'backpos_S']]],
   ['bp_5fscan',['bp_scan',['../structbackpos__S.html#afd828b38abb99641acbe2b6463c24b9a',1,'backpos_S']]],

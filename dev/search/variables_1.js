@@ -256,6 +256,7 @@ var searchData=
   ['block_5fmode',['block_mode',['../structoparg__S.html#a038bc3a08d0d6a5c2c14268314bdd133',1,'oparg_S']]],
   ['bold',['bold',['../structprt__text__attr__T.html#ab37f5ca4915973f9817871b3c7f51cb4',1,'prt_text_attr_T']]],
   ['boolean',['boolean',['../structobject.html#a0996cc24bc84e42db0699ffd53857f10',1,'object']]],
+  ['botlnum',['botlnum',['../structposmatch.html#a2c728dd6c31832a3a7d6c62cd78d64ce',1,'posmatch']]],
   ['bp_5fpos',['bp_pos',['../structbackpos__S.html#ac93932333575d36c6f14ed38c721938d',1,'backpos_S']]],
   ['bp_5fscan',['bp_scan',['../structbackpos__S.html#afd828b38abb99641acbe2b6463c24b9a',1,'backpos_S']]],
   ['breakat_5fflags',['breakat_flags',['../globals_8h.html#afa12e740685e29874093784d97217929',1,'globals.h']]],
