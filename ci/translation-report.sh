@@ -1,4 +1,8 @@
-DOC_SUBTREE="/reports/translations/"
+#!/bin/bash -e
+
+BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source ${BUILD_DIR}/ci/common/documentation.sh
+source ${BUILD_DIR}/ci/common/html.sh
 
 generate_translation_report() {
   cd ${NEOVIM_DIR}
@@ -64,3 +68,12 @@ get_translation_report_body() {
     fi
   done
 }
+
+(
+  DOC_SUBTREE="/reports/translations/"
+  install_dependencies
+  clone_doc
+  clone_neovim
+  generate_translation_report
+  commit_doc
+)

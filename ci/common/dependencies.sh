@@ -1,29 +1,32 @@
-#!/bin/bash -e
-
-# Install necessary dependencies for scripts/publish-docs.sh
-# on Travis CI.
+# Install necessary dependencies for reports on Travis CI.
 #
 # Required environment variables:
-# ${TRAVIS_BUILD_DIR}
+# ${BUILD_DIR}
 
-install_deps() {
+install_dependencies() {
+  if [[ ${CI} != true ]]; then
+    echo "Local build, not installing dependencies."
+    return
+  fi
+
   local doxygen_version=1.8.7
   local clang_version=3.4
   local neovim_deps_repo=neovim/deps
   local neovim_deps_branch=master
   local neovim_deps_dir=/opt/neovim-deps
 
-  local bin_dir=${TRAVIS_BUILD_DIR}/deps/bin
+  local deps_dir=${BUILD_DIR}/build/.deps
+  local bin_dir=${deps_dir}/bin
 
+  mkdir -p ${deps_dir}
   mkdir -p ${bin_dir}
-  cd ${TRAVIS_BUILD_DIR}/deps
 
   # Install doxygen
   echo "Installing Doxygen ${doxygen_version}..."
-  mkdir -p doxygen
+  mkdir -p ${deps_dir}/doxygen
   wget -q -O - http://ftp.stack.nl/pub/users/dimitri/doxygen-${doxygen_version}.linux.bin.tar.gz \
-    | tar xzf - --strip-components=1 -C doxygen
-  ln -fs ${PWD}/doxygen/bin/doxygen ${bin_dir}
+    | tar xzf - --strip-components=1 -C ${deps_dir}/doxygen
+  ln -fs ${deps_dir}/doxygen/bin/doxygen ${bin_dir}
 
   # Install scan-build from PPA
   echo "Installing Clang ${clang_version}..."
@@ -33,6 +36,9 @@ install_deps() {
   sudo apt-get install -y -q clang-${clang_version}
   ln -fs /usr/bin/clang ${bin_dir}
   ln -fs /usr/bin/scan-build ${bin_dir}
+
+  # Install jq (http://stedolan.github.io/jq)
+  sudo apt-get install -y -q jq
 
   # Setup prebuilt dependencies
   echo "Setting up prebuilt dependencies from ${neovim_deps_repo}..."

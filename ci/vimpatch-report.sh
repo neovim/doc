@@ -1,9 +1,10 @@
-DOC_SUBTREE="/reports/vimpatch/"
+#!/bin/bash -e
+
+BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source ${BUILD_DIR}/ci/common/documentation.sh
+source ${BUILD_DIR}/ci/common/html.sh
 
 generate_vimpatch_report() {
-  # http://stedolan.github.io/jq/
-  sudo apt-get install -y -q jq
-
   rm -rf ${DOC_DIR}/reports/vimpatch
   mkdir -p ${DOC_DIR}/reports/vimpatch
 
@@ -52,3 +53,12 @@ get_open_pullrequests() {
 
   echo "</div>"
 }
+
+(
+  DOC_SUBTREE="/reports/vimpatch/"
+  install_dependencies
+  clone_doc
+  clone_neovim
+  generate_vimpatch_report
+  commit_doc
+)
