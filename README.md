@@ -23,10 +23,34 @@ neovim.org
 Building Locally
 ================
 
-To generate individual reports locally, execute a command similar to the following:
+To generate individual reports locally, execute `./ci/<build script>`, where `build script` is any executable shell script. Override environment variables as necessary, e.g.:
 
 ```bash
-REPORT=vimpatch-report ./scripts/publish-docs.sh
+NEOVIM_REPO=<username>/neovim NEOVIM_BRANCH=my-branch ./ci/clang-report.sh
 ```
 
-To see which report types are available, have a look at the contents of `./scripts/`.
+Testing PRs
+===========
+
+Building of PRs is disabled for this repository, because that would change the contents of `neovim/doc`. To test your PRs using Travis CI, follow these steps:
+
+ * Fork the `neovim/doc` repository to `<username>/doc`.
+ * Using your `neovim/bot-ci` fork:
+   * Enable Travis CI.
+   * Create a new testing branch based on your PR branch (e.g. `git checkout pr-branch && git checkout -b pr-branch-test`).
+   * Obtain a [Github personal access token](https://github.com/settings/applications) and encrypt it for Travis using `travis encrypt 'GH_TOKEN=<token>' -r <username>/bot-ci`.
+   * Modify `.travis.yml` and override environment variables as necessary, e.g.:
+
+```yaml
+# ...
+env:
+  global:
+    - DOC_REPO=<username>/doc
+    - NEOVIM_REPO=<username>/neovim
+    - NEOVIM_BRANCH=my-branch
+    - secure: <output of travis encrypt>
+# ...
+```
+
+After committing and pushing these changes to your PR testing branch, Travis will perform the build and push the results to `<username>/doc`. If you make changes to your PR, don't forget to rebase and push your PR testing branch so that `<username>/doc` will always be up-to-date.
+

@@ -1,4 +1,8 @@
-DOC_SUBTREE="/reports/clang/"
+#!/bin/bash -e
+
+BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source ${BUILD_DIR}/ci/common/documentation.sh
+source ${BUILD_DIR}/ci/common/html.sh
 
 generate_clang_report() {
   cd ${NEOVIM_DIR}
@@ -45,36 +49,6 @@ modify_clang_report() {
   generate_report "${title}" "${body}" "${index_file}"
 }
 
-# Helper function to extract HTML body
-# ${1}:   Path to HTML file
-# Output: HTML between opening and closing body tag
-extract_body() {
-  # 1. Extract between (and including) <body> tags
-  # 2. Remove <body> tags
-  # 3. Remove <h1> (title already in template)
-  sed -n '/<body>/,/<\/body>/p' "${1}" \
-    | sed -e '1d' -e '$d' \
-    -e '/^<h1>/d'
-}
-
-# Helper function to extract HTML title
-# ${1}:   Path to HTML file
-# Output: Title of the HTML page
-extract_title() {
-  sed -rn 's/.*<title>(.*)<\/title>/\1/p' "${1}"
-}
-
-# Helper function to extract inline JavaScript from HTML head
-# ${1}:   Path to HTML file
-# Output: Inline JavaScript
-extract_inline_script() {
-  # 1. Extract between (and including) <script> tags
-  # 2. Remove <script> tags
-  sed -n '/<script language=.*>/,/<\/script>/p' "${1}" \
-    | head -n -1 \
-    | tail -n +2
-}
-
 # Helper function to download badge from shields.io
 download_badge() {
   local all_bugs_number="$(find_all_bugs_number scan-build.out)"
@@ -111,3 +85,12 @@ get_code_quality_color() {
   blue=0
   printf "%.2x%.2x%.2x" $red $green $blue
 }
+
+(
+  DOC_SUBTREE="/reports/clang/"
+  install_dependencies
+  clone_doc
+  clone_neovim
+  generate_clang_report
+  commit_doc
+)
