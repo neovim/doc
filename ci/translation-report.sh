@@ -69,11 +69,12 @@ get_translation_report_body() {
   done
 }
 
-(
-  DOC_SUBTREE="/reports/translations/"
-  install_dependencies
-  clone_doc
-  clone_neovim
-  generate_translation_report
-  commit_doc
-)
+is_ci_build? && {
+  setup_neovim_deps
+}
+
+DOC_SUBTREE="/reports/translations/"
+clone_doc
+clone_neovim
+generate_translation_report
+commit_doc

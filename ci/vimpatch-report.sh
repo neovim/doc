@@ -54,11 +54,12 @@ get_open_pullrequests() {
   echo "</div>"
 }
 
-(
-  DOC_SUBTREE="/reports/vimpatch/"
-  install_dependencies
-  clone_doc
-  clone_neovim
-  generate_vimpatch_report
-  commit_doc
-)
+is_ci_build? && {
+  install_jq
+}
+
+DOC_SUBTREE="/reports/vimpatch/"
+clone_doc
+clone_neovim
+generate_vimpatch_report
+commit_doc

@@ -13,7 +13,7 @@ generate_clang_report() {
     --use-analyzer=$(which clang) \
     --html-title="Neovim Static Analysis Report" \
     -o build/clang-report \
-    ${MAKE_CMD} > scan-build.out
+    ${MAKE_CMD} > ${BUILD_DIR}/scan-build.out
 
   # Copy to doc repository
   rm -rf ${DOC_DIR}/reports/clang
@@ -22,9 +22,6 @@ generate_clang_report() {
 
   # Modify HTML to match Neovim's layout
   modify_clang_report
-
-  # Download badge from shields.io
-  download_badge
 }
 
 # Helper function to modify Clang report's index.html
@@ -49,9 +46,9 @@ modify_clang_report() {
   generate_report "${title}" "${body}" "${index_file}"
 }
 
-# Helper function to download badge from shields.io
-download_badge() {
-  local all_bugs_number="$(find_all_bugs_number scan-build.out)"
+# Helper function to download clang analyzer badge from shields.io
+download_clang_badge() {
+  local all_bugs_number="$(find_all_bugs_number ${BUILD_DIR}/scan-build.out)"
   local code_quality_color="$(get_code_quality_color ${all_bugs_number})"
   local badge="clang_analysis-${all_bugs_number}-${code_quality_color}"
   wget https://img.shields.io/badge/${badge}.svg \
@@ -64,7 +61,7 @@ download_badge() {
 find_all_bugs_number() {
   # 1. Extract count from line "scan-build: * bugs found".
   # 2. Substitute "No" by 0
-  sed -n 's/scan-build: \(.*\) bugs found./\1/p' scan-build.out \
+  sed -n 's/scan-build: \(.*\) bugs found./\1/p' ${1} \
     | sed 's/No/0/'
 }
 
@@ -86,11 +83,14 @@ get_code_quality_color() {
   printf "%.2x%.2x%.2x" $red $green $blue
 }
 
-(
-  DOC_SUBTREE="/reports/clang/"
-  install_dependencies
-  clone_doc
-  clone_neovim
-  generate_clang_report
-  commit_doc
-)
+is_ci_build? && {
+  install_clang
+  setup_neovim_deps
+}
+
+DOC_SUBTREE="/reports/clang/"
+clone_doc
+clone_neovim
+generate_clang_report
+download_clang_badge
+commit_doc

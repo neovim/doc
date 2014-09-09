@@ -13,11 +13,12 @@ generate_doxygen() {
   mv build/doxygen/html ${DOC_DIR}/dev
 }
 
-(
-  DOC_SUBTREE="/dev/"
-  install_dependencies
-  clone_doc
-  clone_neovim
-  generate_doxygen
-  commit_doc
-)
+is_ci_build? && {
+  install_doxygen
+}
+
+DOC_SUBTREE="/dev/"
+clone_doc
+clone_neovim
+generate_doxygen
+commit_doc

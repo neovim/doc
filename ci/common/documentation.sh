@@ -1,5 +1,18 @@
 # Common helper functions & environment variable defaults for documentation builds.
 
+# Check if currently performing CI or local build.
+# ${1}: Task that is NOT executed if building locally.
+#       Default: "installing dependencies"
+# Return 0 if CI build, 1 otherwise.
+is_ci_build?() {
+  if [[ ${CI} != true ]]; then
+    echo "Local build, skip ${1:-installing dependencies}."
+    return 1
+  else
+    return 0
+  fi
+}
+
 clone_doc() {(
   rm -rf ${DOC_DIR}
   git init ${DOC_DIR}
@@ -17,16 +30,13 @@ clone_neovim() {
   NEOVIM_COMMIT=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse HEAD)
 }
 
-commit_doc() {(
-  if [[ ${CI} != true ]]; then
-    echo "Local build, not committing."
-    return
-  fi
+commit_doc() {
+  is_ci_build? "committing to doc repo" && (
 
   if [[ -z "${GH_TOKEN}" ]]; then
     echo "GH_TOKEN not set, not committing."
     echo "To test pull requests, see instructions in README.md."
-    return
+    exit 1
   fi
 
   cd $(dirname "${DOC_DIR}${DOC_SUBTREE}")
@@ -35,13 +45,14 @@ commit_doc() {(
   git config --local user.email ${GIT_EMAIL}
 
   git add --all .
-  git commit -m "${CI_TARGET//-/ }: Automatic update." || echo "No changes for ${CI_TARGET//-/ }."
-  until (git pull --rebase origin ${DOC_BRANCH} &&
-         git push https://${GH_TOKEN}@github.com/${DOC_REPO} ${DOC_BRANCH} >/dev/null 2>&1 &&
-         echo "Pushed to ${DOC_REPO} ${DOC_BRANCH}."); do
-    echo "Retry pushing to ${DOC_REPO} ${DOC_BRANCH}."
-    sleep 1
-  done
+  git commit -m "${CI_TARGET//-/ }: Automatic update." && {
+    until (git pull --rebase origin ${DOC_BRANCH} &&
+           git push https://${GH_TOKEN}@github.com/${DOC_REPO} ${DOC_BRANCH} >/dev/null 2>&1 &&
+           echo "Pushed to ${DOC_REPO} ${DOC_BRANCH}."); do
+      echo "Retry pushing to ${DOC_REPO} ${DOC_BRANCH}."
+      sleep 1
+    done
+  } || echo "No changes for ${CI_TARGET//-/ }."
 )}
 
 if [[ -z "${BUILD_DIR}" ]]; then
