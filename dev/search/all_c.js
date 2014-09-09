@@ -89,7 +89,6 @@ var searchData=
   ['list_5finsert_5ftv',['list_insert_tv',['../eval_8c.html#a82f8e8aa3bac4496c129a20c54cc9880',1,'eval.c']]],
   ['list_5fint',['LIST_INT',['../syntax_8c.html#a8dbd58c2fab2a928da97297f3f832344',1,'syntax.c']]],
   ['list_5frem_5fwatch',['list_rem_watch',['../eval_8c.html#a8c9cbd33a28c3875520b31e866da12a6',1,'eval.c']]],
-  ['list_5fremove',['list_remove',['../eval_8c.html#aa1ec8ac43efe09afddbd0c38e752a012',1,'eval.c']]],
   ['list_5fstring',['LIST_STRING',['../syntax_8c.html#a85ad6f3d8e3a2851966deda8ed168fcb',1,'syntax.c']]],
   ['list_5ft',['list_T',['../eval__defs_8h.html#a11ffae1e2b70b0e8b9d419277639945a',1,'eval_defs.h']]],
   ['list_5funref',['list_unref',['../eval_8c.html#afc162d62647fe768e612ff347b2357cf',1,'eval.c']]],
