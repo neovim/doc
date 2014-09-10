@@ -1,7 +1,8 @@
 #!/bin/bash -e
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source ${BUILD_DIR}/ci/common/documentation.sh
+source ${BUILD_DIR}/ci/common/common.sh
+source ${BUILD_DIR}/ci/common/doc.sh
 
 DOC_INDEX_PAGE_URL=${DOC_INDEX_PAGE_URL:-http://neovim.org/doc_index}
 

@@ -1,7 +1,10 @@
 #!/bin/bash -e
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source ${BUILD_DIR}/ci/common/documentation.sh
+source ${BUILD_DIR}/ci/common/common.sh
+source ${BUILD_DIR}/ci/common/dependencies.sh
+source ${BUILD_DIR}/ci/common/doc.sh
+source ${BUILD_DIR}/ci/common/neovim.sh
 
 generate_doxygen() {
   cd ${NEOVIM_DIR}
@@ -13,7 +16,7 @@ generate_doxygen() {
   mv build/doxygen/html ${DOC_DIR}/dev
 }
 
-is_ci_build? && {
+is_ci_build && {
   install_doxygen
 }
 

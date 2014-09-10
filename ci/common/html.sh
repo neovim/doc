@@ -1,8 +1,4 @@
 # Helper functions for reading and writing HTML.
-#
-# Required environment variables:
-# ${BUILD_DIR}
-# ${NEOVIM_COMMIT}
 
 # Generate a report from the ./templates/report.sh.html template.
 # ${1}:   Report title
@@ -10,6 +6,11 @@
 # ${3}:   Path to HTML output file
 # Output: None
 generate_report() {
+  require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable CI_TARGET "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable NEOVIM_REPO "${BASH_SOURCE[0]}" ${LINENO}
+
   report_title="${1}" \
   report_body="${2}" \
   report_date=$(date -u) \
