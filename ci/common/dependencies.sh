@@ -1,7 +1,6 @@
-# Install necessary dependencies for reports on Travis CI.
-#
-# Required environment variables:
-# ${BUILD_DIR}
+# Helper functions & environment variable defaults for build dependencies on Travis.
+
+require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
 DOXYGEN_VERSION=${DOXYGEN_VERSION:-1.8.7}
 CLANG_VERSION=${CLANG_VERSION:-3.4}

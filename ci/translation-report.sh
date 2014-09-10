@@ -1,7 +1,10 @@
 #!/bin/bash -e
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source ${BUILD_DIR}/ci/common/documentation.sh
+source ${BUILD_DIR}/ci/common/common.sh
+source ${BUILD_DIR}/ci/common/dependencies.sh
+source ${BUILD_DIR}/ci/common/doc.sh
+source ${BUILD_DIR}/ci/common/neovim.sh
 source ${BUILD_DIR}/ci/common/html.sh
 
 generate_translation_report() {
@@ -69,7 +72,7 @@ get_translation_report_body() {
   done
 }
 
-is_ci_build? && {
+is_ci_build && {
   setup_neovim_deps
 }
 
