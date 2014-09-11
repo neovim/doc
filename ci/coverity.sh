@@ -6,6 +6,17 @@ source ${BUILD_DIR}/ci/common/neovim.sh
 
 COVERITY_BRANCH=${COVERITY_BRANCH:-master}
 
+# Check day of week to run Coverity only on Monday, Wednesday, Friday, and Saturday.
+is_date_ok() {
+  local current_weekday=$(date -u +'%u')
+
+  if [[ ${current_weekday} == 2 || ${current_weekday} == 4 || ${current_weekday} == 7 ]]; then
+    echo "Today is $(date -u +'%A'), not triggering Coverity."
+    echo "Next Coverity build is scheduled for $(date -u -d 'tomorrow' +'%A')."
+    return 1
+  fi
+}
+
 trigger_coverity() {
   cd ${NEOVIM_DIR}
 
@@ -19,5 +30,9 @@ trigger_coverity() {
     bash || echo "Running coverity script failed, ignoring."
 }
 
-clone_neovim
-trigger_coverity
+is_date_ok && {
+  clone_neovim
+  trigger_coverity
+}
+
+exit 0
