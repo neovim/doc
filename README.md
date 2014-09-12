@@ -23,10 +23,14 @@ neovim.org
 Building Locally
 ================
 
-To generate individual reports locally, execute `./ci/<build script>`, where `build script` is any executable shell script. Override environment variables as necessary, e.g.:
+To build locally, execute `./ci/<build script>`, where `build script` is any executable shell script. Override environment variables as necessary. For example, to rebuild 64-bit dependencies and push to a `neovim/deps` fork, execute the following:
 
 ```bash
-NEOVIM_REPO=<username>/neovim NEOVIM_BRANCH=my-branch ./ci/clang-report.sh
+NEOVIM_REPO=<username>/neovim \
+NEOVIM_BRANCH=my-neovim-branch \
+DEPS_REPO=<username>/neovim-deps \
+DEPS_BRANCH=my-deps-branch \
+./ci/rebuild-deps64.sh
 ```
 
 Testing PRs

@@ -7,8 +7,9 @@ source ${BUILD_DIR}/ci/common/neovim.sh
 COVERITY_BRANCH=${COVERITY_BRANCH:-master}
 
 trigger_coverity() {
-  cd ${NEOVIM_DIR}
+  require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
+  cd ${NEOVIM_DIR}
   wget -q -O - https://scan.coverity.com/scripts/travisci_build_coverity_scan.sh |
     TRAVIS_BRANCH="${NEOVIM_BRANCH}" \
     COVERITY_SCAN_PROJECT_NAME="${NEOVIM_REPO}" \

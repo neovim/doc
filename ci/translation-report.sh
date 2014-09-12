@@ -2,7 +2,7 @@
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source ${BUILD_DIR}/ci/common/common.sh
-source ${BUILD_DIR}/ci/common/dependencies.sh
+source ${BUILD_DIR}/ci/common/deps-repo.sh
 source ${BUILD_DIR}/ci/common/doc.sh
 source ${BUILD_DIR}/ci/common/neovim.sh
 source ${BUILD_DIR}/ci/common/html.sh
@@ -73,7 +73,7 @@ get_translation_report_body() {
 }
 
 is_ci_build && {
-  setup_neovim_deps
+  setup_deps64
 }
 
 DOC_SUBTREE="/reports/translations/"

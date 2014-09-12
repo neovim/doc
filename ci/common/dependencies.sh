@@ -4,9 +4,6 @@ require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
 DOXYGEN_VERSION=${DOXYGEN_VERSION:-1.8.7}
 CLANG_VERSION=${CLANG_VERSION:-3.4}
-NEOVIM_DEPS_REPO=${NEOVIM_DEPS_REPO:-neovim/deps}
-NEOVIM_DEPS_BRANCH=${NEOVIM_DEPS_BRANCH:-master}
-NEOVIM_DEPS_DIR=${NEOVIM_DEPS_DIR:-/opt/neovim-deps}
 
 # Define directories where dependencies are installed to
 DEPS_INSTALL_DIR=${DEPS_INSTALL_DIR:-${BUILD_DIR}/build/.deps}
@@ -47,15 +44,15 @@ install_jq() {
   ln -fs /usr/bin/jq ${DEPS_BIN_DIR}
 }
 
-setup_neovim_deps() {
+install_gcc_multilib() {
   mkdir -p ${DEPS_BIN_DIR}
 
-  echo "Setting up prebuilt dependencies from ${NEOVIM_DEPS_REPO} ${NEOVIM_DEPS_BRANCH}..."
+  echo "Installing multilib GCC/G++."
+  sudo apt-get update -qq
+  sudo apt-get install -y -q gcc-multilib g++-multilib
 
-  sudo git clone --branch ${NEOVIM_DEPS_BRANCH} --depth 1 git://github.com/${NEOVIM_DEPS_REPO} ${NEOVIM_DEPS_DIR}
-  eval $(${NEOVIM_DEPS_DIR}/bin/luarocks path)
-  export PKG_CONFIG_PATH="${NEOVIM_DEPS_DIR}/lib/pkgconfig"
-  export USE_BUNDLED_DEPS=OFF
-
-  ln -fs ${NEOVIM_DEPS_DIR}/bin/* ${DEPS_BIN_DIR}
+  ln -fs /usr/bin/gcc ${DEPS_BIN_DIR}
+  ln -fs /usr/bin/g++ ${DEPS_BIN_DIR}
+  ln -fs ${DEPS_BIN_DIR}/gcc ${DEPS_BIN_DIR}/cc
+  ln -fs ${DEPS_BIN_DIR}/g++ ${DEPS_BIN_DIR}/c++
 }
