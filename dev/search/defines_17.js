@@ -109,7 +109,6 @@ var searchData=
   ['win_5fver',['WIN_VER',['../main_8c.html#aca4698db7f9a7137e427d8a897e62897',1,'main.c']]],
   ['winbyte',['WINBYTE',['../mbyte_8c.html#afefe9f6bf90a2bde1be387659e580e36',1,'mbyte.c']]],
   ['window_5fobj',['WINDOW_OBJ',['../helpers_8h.html#a1160d3db217096276ad1338ed1f75687',1,'helpers.h']]],
-  ['windowarray_5fobj',['WINDOWARRAY_OBJ',['../helpers_8h.html#a0ef2e2640c590e3d341749a847d652d0',1,'helpers.h']]],
   ['with_5fnl',['WITH_NL',['../regexp_8c.html#a75fdad70107fb24fd42cd3abd01b9414',1,'regexp.c']]],
   ['wl_5fbri',['WL_BRI',['../screen_8c.html#aef5514037c9867df698e1373ba2b8c53',1,'screen.c']]],
   ['wl_5fcmdline',['WL_CMDLINE',['../screen_8c.html#a382cd4f8ac3a573370c611e5ad266817',1,'screen.c']]],

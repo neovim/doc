@@ -46,7 +46,6 @@ var searchData=
   ['searchc',['searchc',['../search_8c.html#a92cb5954970c27bc5b476c23d04384ae',1,'search.c']]],
   ['searchit',['searchit',['../search_8c.html#a5faf5ecb453b03e5c3697a220fc4cf02',1,'search.c']]],
   ['separate_5fnextcmd',['separate_nextcmd',['../ex__docmd_8c.html#a29e59938a706f2ec860a11dfa2ccfe37',1,'ex_docmd.c']]],
-  ['serialize_5fmetadata',['serialize_metadata',['../msgpack__rpc_8c.html#a70a59698c912b155dee40a60e19ec496',1,'msgpack_rpc.c']]],
   ['serialize_5frequest',['serialize_request',['../msgpack__rpc_8c.html#a3da8c1755e371fd2aaa9be156f423a11',1,'msgpack_rpc.c']]],
   ['serialize_5fresponse',['serialize_response',['../msgpack__rpc_8c.html#a4a3b8686db77fcc6f698b09185f05ee8',1,'msgpack_rpc.c']]],
   ['server_5fstart',['server_start',['../server_8c.html#a9c00a83fbb3c6fe9594255635092bcaf',1,'server.c']]],

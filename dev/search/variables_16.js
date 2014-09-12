@@ -112,7 +112,6 @@ var searchData=
   ['window',['window',['../structobject.html#aa1cc09bb0fafde46a6e917fe0cbd088d',1,'object']]],
   ['window_5fcount',['window_count',['../structmparm__T.html#aeac0c77dc6feba005a3c2a4cc046de2b',1,'mparm_T']]],
   ['window_5flayout',['window_layout',['../structmparm__T.html#aefacf15db06f52cb2da09092973d70bf',1,'mparm_T']]],
-  ['windowarray',['windowarray',['../structobject.html#aa28ac4d38959cc8715cf5184475ac029',1,'object']]],
   ['wl_5ffolded',['wl_folded',['../structw__line.html#a212f808f0b5aa77a99b1621f784e63a8',1,'w_line']]],
   ['wl_5flastlnum',['wl_lastlnum',['../structw__line.html#a4da08ff1f8db13652bfa55c9b6fdeada',1,'w_line']]],
   ['wl_5flnum',['wl_lnum',['../structw__line.html#aaf592061c17498ea9f1979f6b6c4c880',1,'w_line']]],

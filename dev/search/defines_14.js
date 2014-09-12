@@ -60,7 +60,6 @@ var searchData=
   ['t_5fxs',['T_XS',['../term__defs_8h.html#ab96eea81e4cc02dd71be462ff4899401',1,'term_defs.h']]],
   ['tab',['TAB',['../ascii_8h.html#ad58a1fbfc85c7e4790fc55e654f50221',1,'ascii.h']]],
   ['tabpage_5fobj',['TABPAGE_OBJ',['../helpers_8h.html#a8a6daed7b2d7e5359a29a9ee7919b0df',1,'helpers.h']]],
-  ['tabpagearray_5fobj',['TABPAGEARRAY_OBJ',['../helpers_8h.html#abbd9cb36154f6617cf2cff6b1ff66f16',1,'helpers.h']]],
   ['tag_5fcscope',['TAG_CSCOPE',['../tag_8h.html#a2dfae06c8e726b8d375b28b10cea5910',1,'tag.h']]],
   ['tag_5fhelp',['TAG_HELP',['../tag_8h.html#a53574a63bb08d5c79e7f583b0d937505',1,'tag.h']]],
   ['tag_5fins_5fcomp',['TAG_INS_COMP',['../tag_8h.html#ae6d7091ad96f5998269457722433df7f',1,'tag.h']]],
@@ -109,7 +108,5 @@ var searchData=
   ['tsf_5fdiddel',['TSF_DIDDEL',['../spell_8c.html#a10078e463bb831c3aa2c2c8bf08ab836',1,'spell.c']]],
   ['tsf_5fdidsplit',['TSF_DIDSPLIT',['../spell_8c.html#a7f45740ecc508ae57d2706bb5cf4ed04',1,'spell.c']]],
   ['tsf_5fprefixok',['TSF_PREFIXOK',['../spell_8c.html#abf69d885d47c4bfdf78952164f5603c7',1,'spell.c']]],
-  ['typed_5farray_5fimpl',['TYPED_ARRAY_IMPL',['../msgpack__rpc__helpers_8c.html#ac49f182e6b4dd00b118ad522d5837940',1,'msgpack_rpc_helpers.c']]],
-  ['typed_5farray_5fof',['TYPED_ARRAY_OF',['../defs_8h.html#a70590c959ccc3483fce27fe0707b68de',1,'defs.h']]],
   ['typelen_5finit',['TYPELEN_INIT',['../getchar_8c.html#a680c20fd7df5225194f1a2f958be8bf3',1,'getchar.c']]]
 ];

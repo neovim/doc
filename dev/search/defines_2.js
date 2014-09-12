@@ -88,7 +88,6 @@ var searchData=
   ['bufempty',['bufempty',['../macros_8h.html#a262dc06774ba50c32f44a35fe0571c11',1,'macros.h']]],
   ['buffer_5flength',['BUFFER_LENGTH',['../shell_8c.html#af7b7dc9a200cb1404c280bd500fd1551',1,'shell.c']]],
   ['buffer_5fobj',['BUFFER_OBJ',['../helpers_8h.html#adeba4b57ec37a426fa0bd27626312df9',1,'helpers.h']]],
-  ['bufferarray_5fobj',['BUFFERARRAY_OBJ',['../helpers_8h.html#af702eabcaeb607b98dac93ff50719421',1,'helpers.h']]],
   ['bufname',['BUFNAME',['../ex__cmds__defs_8h.html#ae7e908044d33fbfb457e71d67fec1aa1',1,'ex_cmds_defs.h']]],
   ['bufsize',['BUFSIZE',['../fileio_8c.html#aeca034f67218340ecb2261a22c2f3dcd',1,'fileio.c']]],
   ['bufunl',['BUFUNL',['../ex__cmds__defs_8h.html#a2ed642857db607c0e99eaa15d94eeff7',1,'ex_cmds_defs.h']]],

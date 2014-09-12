@@ -4,6 +4,7 @@ var searchData=
   ['handle_5fdecls',['HANDLE_DECLS',['../handle_8h.html#a9c8a0aa288d6fd97b86fec2e9d7f9d87',1,'handle.h']]],
   ['handle_5fimpl',['HANDLE_IMPL',['../handle_8c.html#ac43e637e8bf18a5c9cd4203b7eb315e7',1,'handle.c']]],
   ['handle_5finit',['HANDLE_INIT',['../handle_8c.html#a73291d97fb9d4f5393d02e11576bf5b6',1,'handle.c']]],
+  ['handle_5ftype_5fconversion_5fimpl',['HANDLE_TYPE_CONVERSION_IMPL',['../msgpack__rpc__helpers_8c.html#ad8516afee6157432db7953b392b715aa',1,'msgpack_rpc_helpers.c']]],
   ['has_5fbw_5fflags',['HAS_BW_FLAGS',['../fileio_8c.html#af33ba456c60236d04386ff0515271898',1,'fileio.c']]],
   ['has_5fhotkey_5flen',['HAS_HOTKEY_LEN',['../message_8c.html#a0ad819454387af187e41ca6545e05946',1,'message.c']]],
   ['has_5fswap_5fexists_5faction',['HAS_SWAP_EXISTS_ACTION',['../globals_8h.html#a434b3b75d105c3608083f5c25335001d',1,'globals.h']]],

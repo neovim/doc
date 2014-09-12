@@ -282,7 +282,6 @@ var searchData=
   ['stopped',['stopped',['../structjob.html#af2fef0cfd569cf47c36ed889e9fa17af',1,'job']]],
   ['stream',['stream',['../structrstream.html#a0889a99fa3b0dbf62cf3dba996b6c647',1,'rstream::stream()'],['../structwstream.html#adf3bc93b58fa45b0d74835c55e3c1020',1,'wstream::stream()']]],
   ['string',['string',['../structobject.html#a1e0cb4d1faa56889500279ca1d445a82',1,'object::string()'],['../structprt__dsc__comment__S.html#a49811b0901ad4d3e002b98a70c615c79',1,'prt_dsc_comment_S::string()'],['../structprt__dsc__line__S.html#a20696b46ce0a3a2ca9449c0b5d57f7f7',1,'prt_dsc_line_S::string()'],['../structoption__table__T.html#adaedf925f2853ff1f67094778169097d',1,'option_table_T::string()']]],
-  ['stringarray',['stringarray',['../structobject.html#ab17e38b0002403642a6069f53672c375',1,'object']]],
   ['strings',['strings',['../structVimMenu.html#a4063f47f615c46852cf195247c77b36c',1,'VimMenu']]],
   ['strlen',['strlen',['../structoption__table__T.html#a31ac48cd0585311ef343060c80f6fab2',1,'option_table_T']]],
   ['su_5fbadflags',['su_badflags',['../structsuginfo__S.html#a5554d6bf82c8ccaf6c0a80de0954bb14',1,'suginfo_S']]],

@@ -66,7 +66,7 @@ var searchData=
   ['fdo_5ftag',['FDO_TAG',['../option__defs_8h.html#a06462f1b0aa1f284cd86cc201c5a9dd6',1,'option_defs.h']]],
   ['fdo_5fundo',['FDO_UNDO',['../option__defs_8h.html#abf1d9c51ee448d9c85c017e379798949',1,'option_defs.h']]],
   ['fe',['FE',['../farsi_8h.html#a6d5652ed4a74a5609858f0949a4c4565',1,'farsi.h']]],
-  ['feature',['FEATURE',['../provider_8c.html#a52e85caa8b3c5209233c7e3c30d8eb83',1,'provider.c']]],
+  ['feature',['FEATURE',['../provider_8c.html#a8931e7b90e11a8c097efd3e8f82b939e',1,'provider.c']]],
   ['feature_5fcount',['FEATURE_COUNT',['../provider_8c.html#acb338bb219140dacb67b049b3b06e56b',1,'provider.c']]],
   ['ff',['FF',['../ascii_8h.html#a201a0d2d698f67adfe3f4ca209a3c7ff',1,'ascii.h']]],
   ['ff_5fdos',['FF_DOS',['../option__defs_8h.html#a593a37f5548755dacc223e857c8c541e',1,'option_defs.h']]],

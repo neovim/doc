@@ -31,6 +31,7 @@ var searchData=
   ['mb_5fptr2len',['mb_ptr2len',['../globals_8h.html#a64ba919d712e1b47360e1d30144829a2',1,'globals.h']]],
   ['mb_5fptr2len_5flen',['mb_ptr2len_len',['../globals_8h.html#a66ff31ffc5db3c9785f572b3574f1a47',1,'globals.h']]],
   ['messages',['messages',['../structvim__exception.html#a54ffd15f77b98518266bdf6cab6c8ecb',1,'vim_exception']]],
+  ['methods',['methods',['../structFeature.html#a3f30bd3ff7aaec6dbc508f2e42b87910',1,'Feature']]],
   ['mf_5fblocknr_5fmax',['mf_blocknr_max',['../structmemfile.html#aa0bbdc78a43847cb756129e7fa4d2abc',1,'memfile']]],
   ['mf_5fblocknr_5fmin',['mf_blocknr_min',['../structmemfile.html#a43ea07fa5fb0656c8e493a91407a695f',1,'memfile']]],
   ['mf_5fdirty',['mf_dirty',['../structmemfile.html#ae775b29d1b383ccb0bd8c71fc22f3771',1,'memfile']]],
@@ -107,8 +108,6 @@ var searchData=
   ['msg_5fcol',['msg_col',['../globals_8h.html#aeca5747830fc5511b00793cde06f61f5',1,'globals.h']]],
   ['msg_5frow',['msg_row',['../globals_8h.html#a376f82c59d5c5bf72c5bc753f7554128',1,'globals.h']]],
   ['msg_5fscrolled',['msg_scrolled',['../globals_8h.html#a0b03bc5fdd1ab38b00bf9264b8c7275b',1,'globals.h']]],
-  ['msgpack_5fmetadata',['msgpack_metadata',['../main_8c.html#a8b98162081c2d86840457c3a7c0fea04',1,'msgpack_metadata():&#160;main.c'],['../msgpack__rpc_8c.html#a8b98162081c2d86840457c3a7c0fea04',1,'msgpack_metadata():&#160;msgpack_rpc.c']]],
-  ['msgpack_5fmetadata_5fsize',['msgpack_metadata_size',['../main_8c.html#a2e56acad43985f86c34d2c8441d0d622',1,'msgpack_metadata_size():&#160;main.c'],['../msgpack__rpc_8c.html#a2e56acad43985f86c34d2c8441d0d622',1,'msgpack_metadata_size():&#160;msgpack_rpc.c']]],
   ['mshape',['mshape',['../structcursor__entry.html#af618354b5410e23249775766ce5f94d3',1,'cursor_entry']]],
   ['multi',['multi',['../structregsub__T.html#a434276b305e89425997c2959e2bab570',1,'regsub_T']]]
 ];

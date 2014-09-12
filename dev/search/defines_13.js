@@ -323,7 +323,6 @@ var searchData=
   ['stricmp',['STRICMP',['../vim_8h.html#aadcd31e93b60b8223d40a984ee8a5ee3',1,'vim.h']]],
   ['string_5finit',['STRING_INIT',['../defs_8h.html#ae882befd90636f6c7227f93c45e15bbe',1,'defs.h']]],
   ['string_5fobj',['STRING_OBJ',['../helpers_8h.html#a8aafec2a2811e04ea25b210d761717c9',1,'helpers.h']]],
-  ['stringarray_5fobj',['STRINGARRAY_OBJ',['../helpers_8h.html#a2529eaa785ed053988e9255b8d7811ec',1,'helpers.h']]],
   ['strlcpy',['STRLCPY',['../vim_8h.html#ad243e54058737435eb10ecbc5befb657',1,'vim.h']]],
   ['strlen',['STRLEN',['../vim_8h.html#a916ffefe1fc74532d08102cca55d8e34',1,'vim.h']]],
   ['strmove',['STRMOVE',['../vim_8h.html#a1d75ac7dfcfa7aabca75ae7b1333ac9e',1,'vim.h']]],

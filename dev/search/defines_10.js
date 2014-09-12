@@ -58,8 +58,6 @@ var searchData=
   ['pmap_5fnew',['pmap_new',['../map_8h.html#a3c758a472b01754b77bca824cbf06316',1,'map.h']]],
   ['pmap_5fput',['pmap_put',['../map_8h.html#aafc84529c821db4f667040dcf51054a9',1,'map.h']]],
   ['pop',['POP',['../regexp__nfa_8c.html#a2106695e949772f765546777ef34690e',1,'regexp_nfa.c']]],
-  ['position_5finit',['POSITION_INIT',['../defs_8h.html#a871c91ec2649d6dd021349cb2d616391',1,'defs.h']]],
-  ['position_5fobj',['POSITION_OBJ',['../helpers_8h.html#a9c5afa50a40b94a363eea9b08b173919',1,'helpers.h']]],
   ['pound',['POUND',['../ascii_8h.html#ad37a6c788f8b04228b5c9085be7f0957',1,'ascii.h']]],
   ['prcolor_5fblack',['PRCOLOR_BLACK',['../hardcopy_8c.html#a4d334013865dcef7fa4e639690b1c1f5',1,'hardcopy.c']]],
   ['prcolor_5fwhite',['PRCOLOR_WHITE',['../hardcopy_8c.html#a224a2873193ad4d4c0c6eb6b79480cc9',1,'hardcopy.c']]],

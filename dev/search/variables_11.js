@@ -34,7 +34,6 @@ var searchData=
   ['rmm_5fic',['rmm_ic',['../structregmmatch__T.html#a1b022446ab818edeeacad3ef92b07f54',1,'regmmatch_T']]],
   ['rmm_5fmaxcol',['rmm_maxcol',['../structregmmatch__T.html#a7d6d95860861cfca1f7720dd40340fbf',1,'regmmatch_T']]],
   ['room',['room',['../structfunccall__S.html#a8e2324220b100325040986686d911576',1,'funccall_S']]],
-  ['row',['row',['../structPosition.html#ae2aa480307a66c278ee4817b70ab7105',1,'Position']]],
   ['rows',['Rows',['../globals_8h.html#a1e07c6e25ef4b2666494b4549c0cb23c',1,'globals.h']]],
   ['rpos',['rpos',['../structrstream.html#a8ad4ab325621d4fb4db9fba13498c49d',1,'rstream']]],
   ['rs_5flen',['rs_len',['../structregsave__T.html#a2d7cd067656b3a4a86dc9d00130c7447',1,'regsave_T']]],

@@ -271,7 +271,6 @@ var searchData=
   ['buf',['buf',['../structmatch__T.html#afa57795a77761f19f71805f148ca6ead',1,'match_T']]],
   ['buffer',['buffer',['../structobject.html#af9946011065ba3e5963246badf6efc41',1,'object::buffer()'],['../structprt__resfile__buffer__S.html#a0bc3dcb8a118aae6907ad206c7d8df4d',1,'prt_resfile_buffer_S::buffer()'],['../structrstream.html#a3e9333a4e102bfbb7659763ba428ed62',1,'rstream::buffer()'],['../structWriteData.html#aad02c2cd5a4b8f032beefddbd7b14130',1,'WriteData::buffer()'],['../structcontext__sha256__T.html#a8723d3374d6368620530a37f14e3f27d',1,'context_sha256_T::buffer()']]],
   ['buffer_5fsize',['buffer_size',['../structrstream.html#a60de0e893632c1d3f46ea1045daa809c',1,'rstream']]],
-  ['bufferarray',['bufferarray',['../structobject.html#a48b7f95cd3c58ff7a2c5e4f792f1c657',1,'object']]],
   ['buflocal_5fnr',['buflocal_nr',['../structAutoPat.html#a8ef6b37e5024400aecd1da92e50bae9f',1,'AutoPat']]],
   ['bufs',['bufs',['../structProcessData.html#ae2b998e598635880a2dec1e9032d3857',1,'ProcessData']]],
   ['bw_5fbuf',['bw_buf',['../structbw__info.html#a630f6d1ad07316fc09dce9c9f086f1b0',1,'bw_info']]],
