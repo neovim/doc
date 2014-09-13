@@ -3,8 +3,9 @@
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source ${BUILD_DIR}/ci/common/common.sh
 source ${BUILD_DIR}/ci/common/dependencies.sh
-source ${BUILD_DIR}/ci/common/neovim.sh
+source ${BUILD_DIR}/ci/common/deps-repo.sh
 source ${BUILD_DIR}/ci/common/doc.sh
+source ${BUILD_DIR}/ci/common/neovim.sh
 source ${BUILD_DIR}/ci/common/html.sh
 
 generate_clang_report() {
@@ -88,7 +89,7 @@ get_code_quality_color() {
 
 is_ci_build && {
   install_clang
-  setup_neovim_deps
+  setup_deps64
 }
 
 DOC_SUBTREE="/reports/clang/"
