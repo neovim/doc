@@ -2,7 +2,7 @@ var searchData=
 [
   ['i',['i',['../shell_8c.html#acb559820d9ca11295b4500f179ef6392',1,'shell.c']]],
   ['iconv_5fmult',['ICONV_MULT',['../fileio_8c.html#ab4b859dffb5392c445d10516e29ab64a',1,'fileio.c']]],
-  ['id',['id',['../structmatchitem.html#a2e884d7323d270717a5bee6d2f74ca85',1,'matchitem::id()'],['../structcursor__entry.html#a8dc24386c2de14f1375e6a32dcfbe93c',1,'cursor_entry::id()'],['../structChannel.html#a598d86971786418fb94ddf33ea1d2e99',1,'Channel::id()'],['../structjob.html#a14f2a8b63b37554fd774fefa8e75608e',1,'job::id()'],['../structnfa__state.html#aa6c59194186ea1f5ab5ede6af95a5fea',1,'nfa_state::id()'],['../structnfa__list__T.html#a616c7f8b44d001e83e3195178f053cd3',1,'nfa_list_T::id()'],['../structsignlist.html#af4d28aa2fa8e4d68a8a2e72641ef285a',1,'signlist::id()'],['../structtime__entry__T.html#a552cf47cc5c585222b02c850ed256c58',1,'time_entry_T::id()'],['../structsp__syn.html#a6738fd9a418b9d42bb2af39096d21640',1,'sp_syn::id()']]],
+  ['id',['id',['../structarglist.html#af26b4de1eb776a71bb52e80006d64f12',1,'arglist::id()'],['../structmatchitem.html#a2e884d7323d270717a5bee6d2f74ca85',1,'matchitem::id()'],['../structcursor__entry.html#a8dc24386c2de14f1375e6a32dcfbe93c',1,'cursor_entry::id()'],['../structChannel.html#a598d86971786418fb94ddf33ea1d2e99',1,'Channel::id()'],['../structjob.html#a14f2a8b63b37554fd774fefa8e75608e',1,'job::id()'],['../structnfa__state.html#aa6c59194186ea1f5ab5ede6af95a5fea',1,'nfa_state::id()'],['../structnfa__list__T.html#a616c7f8b44d001e83e3195178f053cd3',1,'nfa_list_T::id()'],['../structsignlist.html#af4d28aa2fa8e4d68a8a2e72641ef285a',1,'signlist::id()'],['../structtime__entry__T.html#a552cf47cc5c585222b02c850ed256c58',1,'time_entry_T::id()'],['../structsp__syn.html#a6738fd9a418b9d42bb2af39096d21640',1,'sp_syn::id()']]],
   ['id_5flist_5fall',['ID_LIST_ALL',['../syntax_8c.html#a00b6d82b228f3d896ad75b6654edd6d3',1,'syntax.c']]],
   ['id_5flm',['id_lm',['../structcursor__entry.html#a7f73782f403cf2460af8af5a69bb9a56',1,'cursor_entry']]],
   ['ident',['IDENT',['../regexp_8c.html#a096a20e68e4e980b6845ad843ec2c3a7',1,'regexp.c']]],
@@ -117,7 +117,7 @@ var searchData=
   ['info_5fpointer',['info_pointer',['../structinfo__pointer.html',1,'']]],
   ['infoptr_5ft',['infoptr_T',['../memline__defs_8h.html#a6a6c3ed39110def50a0b6730300915db',1,'memline_defs.h']]],
   ['inindent',['inindent',['../indent_8c.html#a2705b12f4d0970023193b6d86d5d74f1',1,'indent.c']]],
-  ['init',['INIT',['../globals_8h.html#a6964dec5207b7152ab40ad9402b46727',1,'INIT():&#160;globals.h'],['../globals_8h.html#a5827e797d22e4f08f26e9b395d21b113',1,'INIT(=80):&#160;globals.h']]],
+  ['init',['INIT',['../globals_8h.html#a6964dec5207b7152ab40ad9402b46727',1,'INIT():&#160;globals.h'],['../globals_8h.html#a4f24892868138693b08decfb15ba32f7',1,'INIT(=0):&#160;globals.h']]],
   ['init_5fchartab',['init_chartab',['../charset_8c.html#a8751e2d3c8738c511e4eddc27161e18f',1,'charset.c']]],
   ['init_5fhighlight',['init_highlight',['../syntax_8c.html#a2ea133fa4b192c5bf37ecea68a3fc39b',1,'syntax.c']]],
   ['init_5fhistory',['init_history',['../ex__getln_8c.html#a3b9830ecbd98de7ce0be571922d58286',1,'ex_getln.c']]],

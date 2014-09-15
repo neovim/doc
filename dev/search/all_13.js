@@ -905,6 +905,7 @@ var searchData=
   ['stuffreadbuff',['stuffReadbuff',['../getchar_8c.html#a70c15b67079f3bc2097dfd09a3cd3026',1,'getchar.c']]],
   ['stuffreadbufflen',['stuffReadbuffLen',['../getchar_8c.html#a35198ecd632433d9818ddb4f51f0b388',1,'getchar.c']]],
   ['stuffreadbuffspec',['stuffReadbuffSpec',['../getchar_8c.html#a57b4cee38093b2cbfa97c2848210577c',1,'getchar.c']]],
+  ['stuffredoreadbuff',['stuffRedoReadbuff',['../getchar_8c.html#a310ab8124583979c1eb7f3930bb984ec',1,'getchar.c']]],
   ['style_5fbt',['STYLE_BT',['../os__unix_8c.html#a7261de1cc0c5239804bceee9298d6741',1,'os_unix.c']]],
   ['style_5fecho',['STYLE_ECHO',['../os__unix_8c.html#ad448950819cd864a1ad71592efca07dd',1,'os_unix.c']]],
   ['style_5fglob',['STYLE_GLOB',['../os__unix_8c.html#a19690d4e797037a76aa9d80e29471090',1,'os_unix.c']]],

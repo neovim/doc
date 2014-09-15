@@ -219,6 +219,7 @@ var searchData=
   ['stuffreadbuff',['stuffReadbuff',['../getchar_8c.html#a70c15b67079f3bc2097dfd09a3cd3026',1,'getchar.c']]],
   ['stuffreadbufflen',['stuffReadbuffLen',['../getchar_8c.html#a35198ecd632433d9818ddb4f51f0b388',1,'getchar.c']]],
   ['stuffreadbuffspec',['stuffReadbuffSpec',['../getchar_8c.html#a57b4cee38093b2cbfa97c2848210577c',1,'getchar.c']]],
+  ['stuffredoreadbuff',['stuffRedoReadbuff',['../getchar_8c.html#a310ab8124583979c1eb7f3930bb984ec',1,'getchar.c']]],
   ['swapchar',['swapchar',['../ops_8c.html#af575519dbfe5b34b0b60f0aef42e33a1',1,'ops.c']]],
   ['swapping_5fscreen',['swapping_screen',['../term_8c.html#a1a9d215eb3dcc88ec2fce3fca12e4834',1,'term.c']]],
   ['switch_5fbuffer',['switch_buffer',['../window_8c.html#aefa979843e5b2b4bf0c466dfaed2e7fd',1,'window.c']]],
