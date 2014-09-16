@@ -29,8 +29,6 @@ is_ci_build() {
   if [[ ${CI} != true ]]; then
     echo "Local build, skip ${1:-installing dependencies}."
     return 1
-  else
-    return 0
   fi
 }
 
