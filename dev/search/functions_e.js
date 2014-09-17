@@ -27,7 +27,7 @@ var searchData=
   ['option_5fwas_5fset',['option_was_set',['../option_8c.html#a8c73fdd78d4c90be54269772604552ce',1,'option.c']]],
   ['os_5fbreakcheck',['os_breakcheck',['../input_8c.html#a32e12278d8bc8b11669377905baa662e',1,'input.c']]],
   ['os_5fcall_5fshell',['os_call_shell',['../shell_8c.html#ae451ac3544386ddc21e85aecce698934',1,'shell.c']]],
-  ['os_5fcan_5fexe',['os_can_exe',['../fs_8c.html#af5f106d69099f02291857ab5515a0c6e',1,'fs.c']]],
+  ['os_5fcan_5fexe',['os_can_exe',['../fs_8c.html#a694f5735b20fc6043940abb4e1ac6eec',1,'fs.c']]],
   ['os_5fchar_5favail',['os_char_avail',['../input_8c.html#a1bd21dc37589da99f55f8558099ef745',1,'input.c']]],
   ['os_5fchdir',['os_chdir',['../fs_8c.html#a6af14a94be59bdbc8198fdd4838faa15',1,'fs.c']]],
   ['os_5fdelay',['os_delay',['../time_8c.html#a38ba6f7625c0f588da79ea8f334d4138',1,'time.c']]],

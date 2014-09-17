@@ -2,6 +2,7 @@ var searchData=
 [
   ['safe_5fvgetc',['safe_vgetc',['../getchar_8c.html#a4c7f9ea9ae3eb09385b2c69f5aa4cf16',1,'getchar.c']]],
   ['same_5fdirectory',['same_directory',['../path_8c.html#a7bbb60cf940e6fbc12e0ecd4e124c5c0',1,'path.c']]],
+  ['save_5fabsolute_5fpath',['save_absolute_path',['../path_8c.html#a3592920bda4aa28743dc8713dd4bc913',1,'path.c']]],
   ['save_5fcmdline_5falloc',['save_cmdline_alloc',['../ex__getln_8c.html#ac67c46f74e1c8e5011c8c914494a2624',1,'ex_getln.c']]],
   ['save_5ffile_5fff',['save_file_ff',['../option_8c.html#af3730a90c60c606e4f6289530caabdb9',1,'option.c']]],
   ['save_5ffunccal',['save_funccal',['../eval_8c.html#a4048a47e2e34f02c25540d8c2bd609d8',1,'eval.c']]],
