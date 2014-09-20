@@ -51,6 +51,7 @@ var searchData=
   ['eow',['EOW',['../regexp_8c.html#a0607177b2e6664ec30d7b50bc14672d9',1,'regexp.c']]],
   ['equalpos',['equalpos',['../macros_8h.html#ad2dbab1378f7ca142f294f4a350e20dd',1,'macros.h']]],
   ['error_5fdict',['ERROR_DICT',['../eval_8c.html#a61208edd6f5781627bfced0560df1e48',1,'eval.c']]],
+  ['error_5finit',['ERROR_INIT',['../defs_8h.html#a44f30b25078f303e66d1ebc56bc37bd7',1,'defs.h']]],
   ['error_5flog_5flevel',['ERROR_LOG_LEVEL',['../log_8h.html#a023f94f341f2300adee0891b15b364b2',1,'log.h']]],
   ['error_5fnone',['ERROR_NONE',['../eval_8c.html#abe670cc5ceed3fad3be682fc0c1bb62e',1,'eval.c']]],
   ['error_5fother',['ERROR_OTHER',['../eval_8c.html#ae6d06e8e0444954de0f75237572abf5a',1,'eval.c']]],

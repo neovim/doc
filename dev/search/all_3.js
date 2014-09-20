@@ -54,7 +54,7 @@ var searchData=
   ['channel_5ffrom_5fjob',['channel_from_job',['../channel_8c.html#ac7a37bb8167e08516ccbc4d6eb6f74af',1,'channel.c']]],
   ['channel_5ffrom_5fstream',['channel_from_stream',['../channel_8c.html#a00dd5b0e6861104502d841a702e67a07',1,'channel.c']]],
   ['channel_5fid',['channel_id',['../structFeature.html#afda35a34fb75cc391764565fcdbc1dec',1,'Feature']]],
-  ['channel_5fsend_5fcall',['channel_send_call',['../channel_8c.html#a80d37eebf79d2a4381299c2b9e540bc3',1,'channel.c']]],
+  ['channel_5fsend_5fcall',['channel_send_call',['../channel_8c.html#ad5d758ca9c0b90dab1104434afc716c5',1,'channel.c']]],
   ['channel_5fsend_5fevent',['channel_send_event',['../channel_8c.html#ad8029885e6949c6b3994f1f0a536ff5f',1,'channel.c']]],
   ['channel_5fsubscribe',['channel_subscribe',['../channel_8c.html#a4dd2834d789c8ba7d6067cbd5d47c287',1,'channel.c']]],
   ['channel_5fteardown',['channel_teardown',['../channel_8c.html#ae7f919c259bd570cfb8401932117a8f4',1,'channel.c']]],

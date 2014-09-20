@@ -28,7 +28,7 @@ var searchData=
   ['alloc_5ftypebuf',['alloc_typebuf',['../getchar_8c.html#a20a030e7581247e3a8b43460984ef360',1,'getchar.c']]],
   ['api_5ffree_5farray',['api_free_array',['../helpers_8c.html#a6663e569cbdcc873610e7fbde349c13b',1,'helpers.c']]],
   ['api_5ffree_5fdictionary',['api_free_dictionary',['../helpers_8c.html#ac7a66862181f7cf611d506d02677ad4f',1,'helpers.c']]],
-  ['api_5ffree_5fobject',['api_free_object',['../helpers_8c.html#ad35cfc145295641acc288741c1c7757a',1,'helpers.c']]],
+  ['api_5ffree_5fobject',['api_free_object',['../helpers_8c.html#ad35cfc145295641acc288741c1c7757a',1,'api_free_object(Object value):&#160;helpers.c'],['../msgpack__rpc_8c.html#aece8a4af239a70e798ad0f49633e327f',1,'api_free_object(arg):&#160;msgpack_rpc.c']]],
   ['api_5ffree_5fstring',['api_free_string',['../helpers_8c.html#a06eb4634ea1e46c2067cefa821d1f2db',1,'helpers.c']]],
   ['api_5fmetadata',['api_metadata',['../helpers_8c.html#a3e97553b8e92c0d4e940c8293a86d3d8',1,'helpers.c']]],
   ['append_5fpath',['append_path',['../path_8c.html#a8d2bc3efc811483acbbee93b18fd64e8',1,'path.c']]],

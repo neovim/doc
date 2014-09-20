@@ -184,7 +184,7 @@ var searchData=
   ['msgpack_5frpc_5ffrom_5fdictionary',['msgpack_rpc_from_dictionary',['../msgpack__rpc__helpers_8c.html#aaa3288852b46de4d803eff7c51509ab2',1,'msgpack_rpc_helpers.c']]],
   ['msgpack_5frpc_5ffrom_5ffloat',['msgpack_rpc_from_float',['../msgpack__rpc__helpers_8c.html#a9e0d02a6cad11ffb8b8986bb056ab278',1,'msgpack_rpc_helpers.c']]],
   ['msgpack_5frpc_5ffrom_5finteger',['msgpack_rpc_from_integer',['../msgpack__rpc__helpers_8c.html#a6c40a91f24dd94c89e679fdd50c5c3de',1,'msgpack_rpc_helpers.c']]],
-  ['msgpack_5frpc_5ffrom_5fobject',['msgpack_rpc_from_object',['../msgpack__rpc__helpers_8c.html#a5b7caf4b0e2ba7b5261ca8b622d1e0a7',1,'msgpack_rpc_helpers.c']]],
+  ['msgpack_5frpc_5ffrom_5fobject',['msgpack_rpc_from_object',['../msgpack__rpc_8c.html#ab87c6e62e3225f8172c4ccf0173499c6',1,'msgpack_rpc_from_object(arg,&amp;pac):&#160;msgpack_rpc.c'],['../msgpack__rpc__helpers_8c.html#a5b7caf4b0e2ba7b5261ca8b622d1e0a7',1,'msgpack_rpc_from_object(Object result, msgpack_packer *res) FUNC_ATTR_NONNULL_ARG(2):&#160;msgpack_rpc_helpers.c']]],
   ['msgpack_5frpc_5ffrom_5fstring',['msgpack_rpc_from_string',['../msgpack__rpc__helpers_8c.html#a521760f31eb2ec03484fe9d361ed6ae6',1,'msgpack_rpc_helpers.c']]],
   ['msgpack_5frpc_5fhandle_5fmissing_5fmethod',['msgpack_rpc_handle_missing_method',['../msgpack__rpc_8c.html#ac4f2bc85962209a14fb9de5218ff7fa0',1,'msgpack_rpc.c']]],
   ['msgpack_5frpc_5fhelpers_5finit',['msgpack_rpc_helpers_init',['../msgpack__rpc__helpers_8c.html#a860e6adcf50b9796273d7332230864af',1,'msgpack_rpc_helpers.c']]],
@@ -196,5 +196,6 @@ var searchData=
   ['msgpack_5frpc_5fto_5ffloat',['msgpack_rpc_to_float',['../msgpack__rpc__helpers_8c.html#a17d3591efbf8661e10e8c33f692b90cc',1,'msgpack_rpc_helpers.c']]],
   ['msgpack_5frpc_5fto_5finteger',['msgpack_rpc_to_integer',['../msgpack__rpc__helpers_8c.html#ae3745c9679393827db136fa6347d8851',1,'msgpack_rpc_helpers.c']]],
   ['msgpack_5frpc_5fto_5fobject',['msgpack_rpc_to_object',['../msgpack__rpc__helpers_8c.html#afe8dbb25e6d910aa16f41235bb0ec6bb',1,'msgpack_rpc_helpers.c']]],
-  ['msgpack_5frpc_5fto_5fstring',['msgpack_rpc_to_string',['../msgpack__rpc__helpers_8c.html#a5ef61b7c3dcb2b12f2d69107f9c89145',1,'msgpack_rpc_helpers.c']]]
+  ['msgpack_5frpc_5fto_5fstring',['msgpack_rpc_to_string',['../msgpack__rpc__helpers_8c.html#a5ef61b7c3dcb2b12f2d69107f9c89145',1,'msgpack_rpc_helpers.c']]],
+  ['msgpack_5fsbuffer_5fclear',['msgpack_sbuffer_clear',['../msgpack__rpc_8c.html#ab10bd78710f7b3edf30990eec7c2a736',1,'msgpack_rpc.c']]]
 ];

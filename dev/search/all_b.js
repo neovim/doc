@@ -276,6 +276,8 @@ var searchData=
   ['keeppatterns',['keeppatterns',['../structcmdmod__T.html#aa804e938235333bc81d564962458040a',1,'cmdmod_T']]],
   ['kequalfilenames',['kEqualFileNames',['../path_8h.html#ad979f31688a4e58ba10df1788b8a7512a88790f7e366087293e75bfced613005d',1,'path.h']]],
   ['kequalfiles',['kEqualFiles',['../path_8h.html#ad979f31688a4e58ba10df1788b8a7512acfe9691eda537124ed5e7b21d123ac0c',1,'path.h']]],
+  ['kerrortypeexception',['kErrorTypeException',['../defs_8h.html#ab0df38968e4f03a3f1f6d6df0f31f45aaa9d80f485bfd3a8b7033f48236a98f4a',1,'defs.h']]],
+  ['kerrortypevalidation',['kErrorTypeValidation',['../defs_8h.html#ab0df38968e4f03a3f1f6d6df0f31f45aa0108217d0472beb0bf44308b36436bec',1,'defs.h']]],
   ['keventjobexit',['kEventJobExit',['../event__defs_8h.html#a2628ea8d12e8b2563c32f05dc7fff6faac47664895bce4a392774b24773215f2b',1,'event_defs.h']]],
   ['keventrstreamdata',['kEventRStreamData',['../event__defs_8h.html#a2628ea8d12e8b2563c32f05dc7fff6faaf854ff48f9ea654453911bb8088a4450',1,'event_defs.h']]],
   ['keventsignal',['kEventSignal',['../event__defs_8h.html#a2628ea8d12e8b2563c32f05dc7fff6faa6dd3c9f49a6b99c6b0fe841b2544216e',1,'event_defs.h']]],

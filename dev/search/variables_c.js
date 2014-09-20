@@ -103,7 +103,7 @@ var searchData=
   ['mouse_5fcol',['mouse_col',['../globals_8h.html#a92f686072574b4d5748baee8b430f53d',1,'globals.h']]],
   ['mouse_5frow',['mouse_row',['../globals_8h.html#ac2e09843f59a705f5e1b2a83080fbf45',1,'globals.h']]],
   ['ms',['ms',['../structTimerData.html#ab991eb6facd9e2c605fada74d5e836e3',1,'TimerData']]],
-  ['msg',['msg',['../structError.html#a08201aa9c97d00ea89e8cb73c8874e71',1,'Error::msg()'],['../structmsglist.html#ac8341db39c8dc65be756be2c67b2b9fc',1,'msglist::msg()'],['../structmsg__hist.html#a22426b9b62f3448b50af0fda1ef41774',1,'msg_hist::msg()']]],
+  ['msg',['msg',['../structError.html#a012d5a13fc047cfb6da9616bbdf463f1',1,'Error::msg()'],['../structmsglist.html#ac8341db39c8dc65be756be2c67b2b9fc',1,'msglist::msg()'],['../structmsg__hist.html#a22426b9b62f3448b50af0fda1ef41774',1,'msg_hist::msg()']]],
   ['msg_5fbuf',['msg_buf',['../globals_8h.html#abf237fcb55f45d33b653f64b15f97dd1',1,'globals.h']]],
   ['msg_5fcol',['msg_col',['../globals_8h.html#aeca5747830fc5511b00793cde06f61f5',1,'globals.h']]],
   ['msg_5frow',['msg_row',['../globals_8h.html#a376f82c59d5c5bf72c5bc753f7554128',1,'globals.h']]],

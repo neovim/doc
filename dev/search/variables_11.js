@@ -44,5 +44,6 @@ var searchData=
   ['rs_5fun',['rs_un',['../structregitem__S.html#a4edf64bd88f2b8e3a27209b037aa5406',1,'regitem_S']]],
   ['rstream',['rstream',['../structEvent.html#a1c383728dade14de621ccbc84f8943c2',1,'Event::rstream()'],['../structHandleData.html#a925ce4b5e7039d6eedb5d7da9b8fb65a',1,'HandleData::rstream()']]],
   ['ru_5fcol',['ru_col',['../globals_8h.html#a52643f37faefff5ae72ca6ea328b4e5f',1,'globals.h']]],
-  ['ru_5fwid',['ru_wid',['../globals_8h.html#a15ff3a4d1261883be5090ddce9c15507',1,'globals.h']]]
+  ['ru_5fwid',['ru_wid',['../globals_8h.html#a15ff3a4d1261883be5090ddce9c15507',1,'globals.h']]],
+  ['rv',['rv',['../msgpack__rpc_8c.html#a9dbb22e3510dddb1ebb576404a972e7d',1,'msgpack_rpc.c']]]
 ];
