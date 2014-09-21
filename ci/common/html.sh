@@ -1,6 +1,6 @@
 # Helper functions for reading and writing HTML.
 
-# Generate a report from the ./templates/report.sh.html template.
+# Generate a report from the ./templates/report-*.sh.html templates.
 # ${1}:   Report title
 # ${2}:   Report body
 # ${3}:   Path to HTML output file
@@ -11,42 +11,54 @@ generate_report() {
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_REPO "${BASH_SOURCE[0]}" ${LINENO}
 
+  local head_file="${BUILD_DIR}/templates/${REPORT}/head.html"
+  local report_body="${2}"
+  local output_file="${3}"
+
+  echo "Applying Neovim layout for ${output_file}."
+
+  # Write report header
   report_title="${1}" \
-  report_body="${2}" \
-  report_date=$(date -u) \
+  report_head=$([[ -f ${head_file} ]] && cat ${head_file}) \
+  envsubst < "${BUILD_DIR}/templates/report-header.sh.html" > "${output_file}"
+
+  # Write report body
+  echo "${report_body}" >> "${output_file}"
+
+  # Write report footer
   report_commit="${NEOVIM_COMMIT}" \
   report_short_commit="${NEOVIM_COMMIT:0:7}" \
   report_repo="${NEOVIM_REPO}" \
-  report_header=$([ -f ${BUILD_DIR}/templates/${CI_TARGET}/head.html ] && cat ${BUILD_DIR}/templates/${CI_TARGET}/head.html) \
-  envsubst < "${BUILD_DIR}/templates/report.sh.html" > "${3}"
+  report_date=$(date -u) \
+  envsubst < "${BUILD_DIR}/templates/report-footer.sh.html" >> "${output_file}"
 }
 
-# Helper function to extract HTML body
+# Extract body from HTML file.
 # ${1}:   Path to HTML file
 # Output: HTML between opening and closing body tag
 extract_body() {
   # 1. Extract between (and including) <body> tags
   # 2. Remove <body> tags
   # 3. Remove <h1> (title already in template)
-  sed -n '/<body>/,/<\/body>/p' "${1}" \
+  sed -n '/<body/I,/<\/body>/Ip' "${1}" \
     | sed -e '1d' -e '$d' \
-    -e '/^<h1>/d'
+    -e '/^<h1>/Id'
 }
 
-# Helper function to extract HTML title
+# Extract page title from HTML file.
 # ${1}:   Path to HTML file
 # Output: Title of the HTML page
 extract_title() {
-  sed -rn 's/.*<title>(.*)<\/title>/\1/p' "${1}"
+  sed -rn 's/.*<title>(.*)<\/title>/\1/Ip' "${1}"
 }
 
-# Helper function to extract inline JavaScript from HTML head
+# Extract inline JavaScript from HTML file.
 # ${1}:   Path to HTML file
 # Output: Inline JavaScript
 extract_inline_script() {
   # 1. Extract between (and including) <script> tags
   # 2. Remove <script> tags
-  sed -n '/<script language=.*>/,/<\/script>/p' "${1}" \
+  sed -n '/<script language=.*>/I,/<\/script>/Ip' "${1}" \
     | head -n -1 \
     | tail -n +2
 }
