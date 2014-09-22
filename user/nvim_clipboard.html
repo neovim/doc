@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: nvim_clipboard</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <div class="site-nav">
+          <ul>
+            <li><a href="/">Neovim Home</a></li>
+          </ul>
+        </div>
+        <a href="/"><img class="logo" alt="Vim documentation: nvim_clipboard" src="/images/logo@2x.png" /></a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: nvim_clipboard</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="nvim_clipboard.txt"></A><B>nvim_clipboard.txt</B>*    For Nvim.					{Nvim}
+
+
+		 NVIM REFERENCE MANUAL    by Thiago de Arruda
+
+
+
+Clipboard integration for Nvim			       *<A NAME="nvim-clipboard"></A><B>nvim-clipboard</B>*
+
+By default, Nvim has no connection to the system <A HREF="gui.html#clipboard">clipboard</A>. Eventually that
+will be implemented by UI programs, which connect to Nvim via |<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>|.
+
+Even though externalized UIs are not available yet, there's a workaround that
+enables <A HREF="gui.html#clipboard">clipboard</A> usage through the <A HREF="if_pyth.html#python">python</A> interface(which also uses
+|<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>| and consequently can implement the <A HREF="gui.html#clipboard">clipboard</A> methods required
+by Nvim): 
+
+- Make sure you follow the setup instructions in |<A HREF="nvim_python.html#nvim-python-quickstart">nvim-python-quickstart</A>|.
+- Install the `xerox` <A HREF="if_pyth.html#python">python</A> module:
+ 
+<B>      $ pip install xerox</B>
+ 
+- Create a ~/.vim/pythonx/nvim_clipboard.py file with the following contents:
+ 
+<B>    import xerox</B>
+<B>     </B>
+<B>    class NvimClipboard(object):</B>
+<B>        def __init__(self, vim):</B>
+<B>            self.provides = ['clipboard']</B>
+<B>     </B>
+<B>        def clipboard_get(self):</B>
+<B>            return xerox.paste().split('\n')</B>
+<B>        </B>
+<B>        def clipboard_set(self, lines):</B>
+<B>            xerox.copy(u'\n'.join([line.decode('utf-8') for line in lines]))</B>
+ 
+This should enable the '<A HREF="motion.html#+">+</A>' and '*' <A HREF="change.html#registers">registers</A>. As an optional step, set the
+<A HREF="options.html#'unnamedclip'">'unnamedclip'</A> option to transparently access <A HREF="gui.html#clipboard">clipboard</A> using the unnamed
+<A HREF="sponsor.html#register">register</A>. If you use the same |<A HREF="starting.html#vimrc">vimrc</A>| for both Vim and Nvim, make sure you
+only set the option when `has('nvim')` is true:
+
+<B>    if has('nvim')</B>
+<B>      set unnamedclip</B>
+<B>    endif</B>
+ 
+
+==============================================================================
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Mon Sep 22 20:57:06 UTC 2014 from <a href="https://github.com/neovim/neovim/commit/1c84a0e09093d728408024a6baa9967df596be54"><code>1c84a0e</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>

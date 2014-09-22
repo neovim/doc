@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: job_control</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <div class="site-nav">
+          <ul>
+            <li><a href="/">Neovim Home</a></li>
+          </ul>
+        </div>
+        <a href="/"><img class="logo" alt="Vim documentation: job_control" src="/images/logo@2x.png" /></a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: job_control</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="job_control.txt"></A><B>job_control.txt</B>*    For Nvim.						 {Nvim}
+
+
+		 NVIM REFERENCE MANUAL    by Thiago de Arruda
+
+
+
+Nvim's facilities for job <A HREF="intro.html#control">control</A>				  *<A NAME="job-control"></A><B>job-control</B>*
+
+1. Introduction			|<A HREF="#job-control-intro">job-control-intro</A>|
+2. Usage			|<A HREF="#job-control-usage">job-control-usage</A>|
+
+==============================================================================
+
+1. Introduction						    *<A NAME="job-control-intro"></A><B>job-control-intro</B>*
+
+Job <A HREF="intro.html#control">control</A> is a simple way to perform multitasking in vimscript. Wikipedia
+contains a more generic/detailed description: 
+
+&quot;Job <A HREF="intro.html#control">control</A> in computing refers to the <A HREF="intro.html#control">control</A> of multiple tasks or Jobs on a
+computer system, ensuring that they each have access to adequate resources to
+perform correctly, that competition for limited resources does not cause a
+deadlock where two or more jobs are unable to complete, resolving such
+situations where they <A HREF="diff.html#do">do</A> occur, and terminating jobs that, for any reason, are
+not performing <A HREF="motion.html#as">as</A> expected.&quot;
+
+In a few words: It allows a vimscript programmer to concurrently spawn and
+<A HREF="intro.html#control">control</A> multiple processes without blocking the current Nvim instance.
+
+Nvim's job <A HREF="intro.html#control">control</A> was designed to be simple and familiar to vimscript
+programmers, instead of being very powerful but complex. Unlike Vim's
+facilities for calling with external commands, job <A HREF="intro.html#control">control</A> does not depend 
+on installed shells, calling OS <A HREF="eval.html#functions">functions</A> for process management directly.
+
+Internally, Nvim job <A HREF="intro.html#control">control</A> is powered by libuv, which has a <A HREF="todo.html#nice">nice</A>
+cross-platform API for managing processes. See https://github.com/joyent/libuv
+for details
+
+==============================================================================
+
+2. Usage						*<A NAME="job-control-usage"></A><B>job-control-usage</B>*
+
+Job <A HREF="intro.html#control">control</A> is achieved by calling a combination of the |<A HREF="eval.html#jobstart()">jobstart()</A>|,
+|<A HREF="eval.html#jobsend()">jobsend()</A>| and |<A HREF="eval.html#jobstop()">jobstop()</A>| <A HREF="eval.html#functions">functions</A>, and by listening to the |<A HREF="autocmd.html#JobActivity">JobActivity</A>|
+event. The best way to understand is with a complete example:
+
+<B>    set nocp</B>
+<B>    let job1 = jobstart('shell1', 'bash')</B>
+<B>    let job2 = jobstart('shell2', 'bash', ['-c', 'for ((i = 0; i &lt; 10; i++)); do echo -n hello $i!; sleep 2; done'])</B>
+<B>    </B>
+<B>    function JobHandler()</B>
+<B>      if v:job_data[1] == 'stdout'</B>
+<B>        let str = 'shell '. v:job_data[0].' stdout: '.v:job_data[2]</B>
+<B>      elseif v:job_data[1] == 'stderr'</B>
+<B>        let str = 'shell '.v:job_data[0].' stderr: '.v:job_data[2]</B>
+<B>      else</B>
+<B>        let str = 'shell '.v:job_data[0].' exited'</B>
+<B>      endif</B>
+<B>    </B>
+<B>      call append(line('$'), str)</B>
+<B>    endfunction</B>
+<B>    </B>
+<B>    au JobActivity shell* call JobHandler()</B>
+ 
+To test the above, copy <A HREF="motion.html#it">it</A> to the ~/jobcontrol.vim file and start with a clean
+nvim instance:
+ 
+<B>      nvim -u NONE -S ~/jobcontrol.vim</B>
+ 
+Here's what is happening:
+
+- Two bash instances are spawned by |<A HREF="eval.html#jobstart()">jobstart()</A>| and their stdin/stdout/stderr
+  are connected to nvim.
+- The first shell is idle, waiting to read commands from it's stdin
+- The second shell is passed the <A HREF="starting.html#-c">-c</A> option to execute a command and exit. In
+  our <A HREF="change.html#case">case</A>, the command is a for loop that will print numbers and exit after
+  a while.
+- The JobHandler function is called by the <A HREF="autocmd.html#JobActivity">JobActivity</A> autocommand(notice how
+  the shell* <A HREF="pattern.html#pattern">pattern</A> matches the `shell1` and `shell2` names passed to
+  |<A HREF="eval.html#jobstart()">jobstart()</A>|), and <A HREF="motion.html#it">it</A> takes care of displaying stdout/stderr received from
+  the shells.
+- The v:job_data is an array set by the <A HREF="autocmd.html#JobActivity">JobActivity</A> event. It has the
+  following elements:
+  0: The job id
+  1: The kind of activity: one of &quot;stdout&quot;, &quot;stderr&quot; or &quot;exit&quot;
+  2: When &quot;activity&quot; is &quot;stdout&quot; or &quot;stderr&quot;, this will contain the data read
+     from stdout or stderr
+
+To send data to the job's stdin, one can use the |<A HREF="eval.html#jobsend()">jobsend()</A>| function, like
+this:
+
+<B>    :call jobsend(job1, 'ls\n')</B>
+<B>    :call jobsend(job1, 'invalid-command\n')</B>
+<B>    :call jobsend(job1, 'exit\n')</B>
+ 
+A job may be killed at any time with the |<A HREF="eval.html#jobstop()">jobstop()</A>| function:
+
+<B>    :call jobstop(job1)</B>
+ 
+When |<A HREF="eval.html#jobstop()">jobstop()</A>| is called, <A HREF="motion.html#it">it</A> will send `SIGTERM` to the job. If a job
+doesn't exit after a while, `SIGKILL` will be sent.
+    
+==============================================================================
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Mon Sep 22 20:57:05 UTC 2014 from <a href="https://github.com/neovim/neovim/commit/1c84a0e09093d728408024a6baa9967df596be54"><code>1c84a0e</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>
