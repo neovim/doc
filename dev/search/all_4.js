@@ -156,7 +156,7 @@ var searchData=
   ['diff_5flnum_5fwin',['diff_lnum_win',['../diff_8c.html#adf2820da93201c99a6cafde3c0ea1081',1,'diff.c']]],
   ['diff_5fmark_5fadjust',['diff_mark_adjust',['../diff_8c.html#a996580a56cb83d982a4b775dcd6b4706',1,'diff.c']]],
   ['diff_5fmode',['diff_mode',['../structmparm__T.html#aa7983d8384e63d36814d24738917ddf4',1,'mparm_T']]],
-  ['diff_5fmode_5fbuf',['diff_mode_buf',['../diff_8c.html#acce80bf09c776f55d0f367ad1e856b72',1,'diff.c']]],
+  ['diff_5fmode_5fbuf',['diff_mode_buf',['../diff_8c.html#aa88e04c236d516a4b0d62179b43ce68d',1,'diff.c']]],
   ['diff_5fmove_5fto',['diff_move_to',['../diff_8c.html#a4ee5f18e3c4c24d76c06b701173a4b99',1,'diff.c']]],
   ['diff_5fnone',['DIFF_NONE',['../spell_8c.html#a57f2750d331e4a4df642696456c3681f',1,'spell.c']]],
   ['diff_5fset_5ftopline',['diff_set_topline',['../diff_8c.html#a6bf2e403eced221b76e79fee1bf67e42',1,'diff.c']]],

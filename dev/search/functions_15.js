@@ -2,7 +2,7 @@ var searchData=
 [
   ['v_5fexception',['v_exception',['../eval_8c.html#a8f50c1590f81ffe343796e1505fe13e3',1,'eval.c']]],
   ['v_5fthrowpoint',['v_throwpoint',['../eval_8c.html#ad83516bfbac6fa4e2bd884c85075fca7',1,'eval.c']]],
-  ['valid_5ftabpage',['valid_tabpage',['../window_8c.html#a5c15e6d6d3a78a7bd2e2851b2d6eefdf',1,'window.c']]],
+  ['valid_5ftabpage',['valid_tabpage',['../window_8c.html#ac890a7edf63a8bcb56bb2f7f002fdb63',1,'window.c']]],
   ['valid_5fyank_5freg',['valid_yank_reg',['../ops_8c.html#af73679bf07f697c770be32ea2f4b9d56',1,'ops.c']]],
   ['validate_5fbotline',['validate_botline',['../move_8c.html#a819f3c9ad1be31c96957b197adbdbf13',1,'move.c']]],
   ['validate_5fcursor',['validate_cursor',['../move_8c.html#aac657a4d8d5fe5a0bab1fd2ea5ca3b1a',1,'move.c']]],
