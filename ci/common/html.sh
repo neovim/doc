@@ -11,7 +11,7 @@ generate_report() {
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_REPO "${BASH_SOURCE[0]}" ${LINENO}
 
-  local head_file="${BUILD_DIR}/templates/${REPORT}/head.html"
+  local head_file="${BUILD_DIR}/templates/${CI_TARGET}/head.html"
   local report_body="${2}"
   local output_file="${3}"
 
