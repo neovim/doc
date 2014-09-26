@@ -6846,720 +6846,726 @@
 <tr><td class="num" id="LN6750">6750</td><td class="line">  --nesting;            <span class='comment'>/* see matching increment above */</span></td></tr>
 <tr><td class="num" id="LN6751">6751</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN6752">6752</td><td class="line">  <span class='comment'>// When stopping to execute autocommands, restore the search patterns and</span></td></tr>
-<tr><td class="num" id="LN6753">6753</td><td class="line">  <span class='comment'>// the redo buffer.  Free buffers in the au_pending_free_buf list.</span></td></tr>
-<tr><td class="num" id="LN6754">6754</td><td class="line">  <span class='keyword'>if</span> (!autocmd_busy) {</td></tr>
-<tr><td class="num" id="LN6755">6755</td><td class="line">    restore_search_patterns();</td></tr>
-<tr><td class="num" id="LN6756">6756</td><td class="line">    restoreRedobuff();</td></tr>
-<tr><td class="num" id="LN6757">6757</td><td class="line">    did_filetype = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN6758">6758</td><td class="line">    <span class='keyword'>while</span> (au_pending_free_buf != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num" id="LN6759">6759</td><td class="line">      buf_T *b = au_pending_free_buf-&gt;b_next;</td></tr>
-<tr><td class="num" id="LN6760">6760</td><td class="line">      free(au_pending_free_buf);</td></tr>
-<tr><td class="num" id="LN6761">6761</td><td class="line">      au_pending_free_buf = b;</td></tr>
-<tr><td class="num" id="LN6762">6762</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN6763">6763</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN6764">6764</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6765">6765</td><td class="line">  <span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN6766">6766</td><td class="line">   <span class='comment'>* Some events don't set or reset the Changed flag.</span></td></tr>
-<tr><td class="num" id="LN6767">6767</td><td class="line">   <span class='comment'>* Check if still in the same buffer!</span></td></tr>
-<tr><td class="num" id="LN6768">6768</td><td class="line">   <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN6769">6769</td><td class="line">  <span class='keyword'>if</span> (curbuf == old_curbuf</td></tr>
-<tr><td class="num" id="LN6770">6770</td><td class="line">      &amp;&amp; (event == EVENT_BUFREADPOST</td></tr>
-<tr><td class="num" id="LN6771">6771</td><td class="line">          || event == EVENT_BUFWRITEPOST</td></tr>
-<tr><td class="num" id="LN6772">6772</td><td class="line">          || event == EVENT_FILEAPPENDPOST</td></tr>
-<tr><td class="num" id="LN6773">6773</td><td class="line">          || event == EVENT_VIMLEAVE</td></tr>
-<tr><td class="num" id="LN6774">6774</td><td class="line">          || event == EVENT_VIMLEAVEPRE)) {</td></tr>
-<tr><td class="num" id="LN6775">6775</td><td class="line">    <span class='keyword'>if</span> (curbuf-&gt;b_changed != save_changed)</td></tr>
-<tr><td class="num" id="LN6776">6776</td><td class="line">      need_maketitle = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN6777">6777</td><td class="line">    curbuf-&gt;b_changed = save_changed;</td></tr>
-<tr><td class="num" id="LN6778">6778</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN6779">6779</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6780">6780</td><td class="line">  au_cleanup();         <span class='comment'>/* may really delete removed patterns/commands now */</span></td></tr>
-<tr><td class="num" id="LN6781">6781</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6782">6782</td><td class="line">BYPASS_AU:</td></tr>
-<tr><td class="num" id="LN6783">6783</td><td class="line">  <span class='comment'>/* When wiping out a buffer make sure all its buffer-local autocommands</span></td></tr>
-<tr><td class="num" id="LN6784">6784</td><td class="line">   <span class='comment'>* are deleted. */</span></td></tr>
-<tr><td class="num" id="LN6785">6785</td><td class="line">  <span class='keyword'>if</span> (event == EVENT_BUFWIPEOUT &amp;&amp; buf != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN6786">6786</td><td class="line">    aubuflocal_remove(buf);</td></tr>
+<tr><td class="num" id="LN6753">6753</td><td class="line">  <span class='comment'>// the redo buffer. Free any buffers in the au_pending_free_buf list and</span></td></tr>
+<tr><td class="num" id="LN6754">6754</td><td class="line">  <span class='comment'>// free any windows in the au_pending_free_win list.</span></td></tr>
+<tr><td class="num" id="LN6755">6755</td><td class="line">  <span class='keyword'>if</span> (!autocmd_busy) {</td></tr>
+<tr><td class="num" id="LN6756">6756</td><td class="line">    restore_search_patterns();</td></tr>
+<tr><td class="num" id="LN6757">6757</td><td class="line">    restoreRedobuff();</td></tr>
+<tr><td class="num" id="LN6758">6758</td><td class="line">    did_filetype = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN6759">6759</td><td class="line">    <span class='keyword'>while</span> (au_pending_free_buf != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN6760">6760</td><td class="line">      buf_T *b = au_pending_free_buf-&gt;b_next;</td></tr>
+<tr><td class="num" id="LN6761">6761</td><td class="line">      free(au_pending_free_buf);</td></tr>
+<tr><td class="num" id="LN6762">6762</td><td class="line">      au_pending_free_buf = b;</td></tr>
+<tr><td class="num" id="LN6763">6763</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN6764">6764</td><td class="line">    <span class='keyword'>while</span> (au_pending_free_win != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN6765">6765</td><td class="line">      win_T *w = au_pending_free_win-&gt;w_next;</td></tr>
+<tr><td class="num" id="LN6766">6766</td><td class="line">      free(au_pending_free_win);</td></tr>
+<tr><td class="num" id="LN6767">6767</td><td class="line">      au_pending_free_win = w;</td></tr>
+<tr><td class="num" id="LN6768">6768</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN6769">6769</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN6770">6770</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6771">6771</td><td class="line">  <span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN6772">6772</td><td class="line">   <span class='comment'>* Some events don't set or reset the Changed flag.</span></td></tr>
+<tr><td class="num" id="LN6773">6773</td><td class="line">   <span class='comment'>* Check if still in the same buffer!</span></td></tr>
+<tr><td class="num" id="LN6774">6774</td><td class="line">   <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN6775">6775</td><td class="line">  <span class='keyword'>if</span> (curbuf == old_curbuf</td></tr>
+<tr><td class="num" id="LN6776">6776</td><td class="line">      &amp;&amp; (event == EVENT_BUFREADPOST</td></tr>
+<tr><td class="num" id="LN6777">6777</td><td class="line">          || event == EVENT_BUFWRITEPOST</td></tr>
+<tr><td class="num" id="LN6778">6778</td><td class="line">          || event == EVENT_FILEAPPENDPOST</td></tr>
+<tr><td class="num" id="LN6779">6779</td><td class="line">          || event == EVENT_VIMLEAVE</td></tr>
+<tr><td class="num" id="LN6780">6780</td><td class="line">          || event == EVENT_VIMLEAVEPRE)) {</td></tr>
+<tr><td class="num" id="LN6781">6781</td><td class="line">    <span class='keyword'>if</span> (curbuf-&gt;b_changed != save_changed)</td></tr>
+<tr><td class="num" id="LN6782">6782</td><td class="line">      need_maketitle = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN6783">6783</td><td class="line">    curbuf-&gt;b_changed = save_changed;</td></tr>
+<tr><td class="num" id="LN6784">6784</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN6785">6785</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6786">6786</td><td class="line">  au_cleanup();         <span class='comment'>/* may really delete removed patterns/commands now */</span></td></tr>
 <tr><td class="num" id="LN6787">6787</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6788">6788</td><td class="line">  <span class='keyword'>return</span> retval;</td></tr>
-<tr><td class="num" id="LN6789">6789</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN6790">6790</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6791">6791</td><td class="line"><span class='keyword'>static</span> char_u   *old_termresponse = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN6792">6792</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6793">6793</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN6794">6794</td><td class="line"> <span class='comment'>* Block triggering autocommands until unblock_autocmd() is called.</span></td></tr>
-<tr><td class="num" id="LN6795">6795</td><td class="line"> <span class='comment'>* Can be used recursively, so long as it's symmetric.</span></td></tr>
-<tr><td class="num" id="LN6796">6796</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN6797">6797</td><td class="line"><span class='keyword'>void</span> block_autocmds(<span class='keyword'>void</span>)</td></tr>
-<tr><td class="num" id="LN6798">6798</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN6799">6799</td><td class="line">  <span class='comment'>/* Remember the value of v:termresponse. */</span></td></tr>
-<tr><td class="num" id="LN6800">6800</td><td class="line">  <span class='keyword'>if</span> (autocmd_blocked == 0)</td></tr>
-<tr><td class="num" id="LN6801">6801</td><td class="line">    old_termresponse = get_vim_var_str(VV_TERMRESPONSE);</td></tr>
-<tr><td class="num" id="LN6802">6802</td><td class="line">  ++autocmd_blocked;</td></tr>
-<tr><td class="num" id="LN6803">6803</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN6804">6804</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6805">6805</td><td class="line"><span class='keyword'>void</span> unblock_autocmds(<span class='keyword'>void</span>)</td></tr>
-<tr><td class="num" id="LN6806">6806</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN6807">6807</td><td class="line">  --autocmd_blocked;</td></tr>
-<tr><td class="num" id="LN6808">6808</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6809">6809</td><td class="line">  <span class='comment'>/* When v:termresponse was set while autocommands were blocked, trigger</span></td></tr>
-<tr><td class="num" id="LN6810">6810</td><td class="line">   <span class='comment'>* the autocommands now.  Esp. useful when executing a shell command</span></td></tr>
-<tr><td class="num" id="LN6811">6811</td><td class="line">   <span class='comment'>* during startup (vimdiff). */</span></td></tr>
-<tr><td class="num" id="LN6812">6812</td><td class="line">  <span class='keyword'>if</span> (autocmd_blocked == 0</td></tr>
-<tr><td class="num" id="LN6813">6813</td><td class="line">      &amp;&amp; get_vim_var_str(VV_TERMRESPONSE) != old_termresponse)</td></tr>
-<tr><td class="num" id="LN6814">6814</td><td class="line">    apply_autocmds(EVENT_TERMRESPONSE, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, <span class='macro'>FALSE<span class='expansion'>0</span></span>, curbuf);</td></tr>
-<tr><td class="num" id="LN6815">6815</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN6816">6816</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6817">6817</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN6818">6818</td><td class="line"> <span class='comment'>* Find next autocommand pattern that matches.</span></td></tr>
-<tr><td class="num" id="LN6819">6819</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN6820">6820</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> </td></tr>
-<tr><td class="num" id="LN6821">6821</td><td class="line">auto_next_pat (</td></tr>
-<tr><td class="num" id="LN6822">6822</td><td class="line">    AutoPatCmd *apc,</td></tr>
-<tr><td class="num" id="LN6823">6823</td><td class="line">    <span class='keyword'>int</span> stop_at_last                   <span class='comment'>/* stop when 'last' flag is set */</span></td></tr>
-<tr><td class="num" id="LN6824">6824</td><td class="line">)</td></tr>
-<tr><td class="num" id="LN6825">6825</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN6826">6826</td><td class="line">  AutoPat     *ap;</td></tr>
-<tr><td class="num" id="LN6827">6827</td><td class="line">  AutoCmd     *cp;</td></tr>
-<tr><td class="num" id="LN6828">6828</td><td class="line">  char_u      *name;</td></tr>
-<tr><td class="num" id="LN6829">6829</td><td class="line">  <span class='keyword'>char</span>        *s;</td></tr>
-<tr><td class="num" id="LN6830">6830</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6831">6831</td><td class="line">  free(sourcing_name);</td></tr>
-<tr><td class="num" id="LN6832">6832</td><td class="line">  sourcing_name = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN6833">6833</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6834">6834</td><td class="line">  <span class='keyword'>for</span> (ap = apc-&gt;curpat; ap != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; !got_int; ap = ap-&gt;next) {</td></tr>
-<tr><td class="num" id="LN6835">6835</td><td class="line">    apc-&gt;curpat = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6788">6788</td><td class="line">BYPASS_AU:</td></tr>
+<tr><td class="num" id="LN6789">6789</td><td class="line">  <span class='comment'>/* When wiping out a buffer make sure all its buffer-local autocommands</span></td></tr>
+<tr><td class="num" id="LN6790">6790</td><td class="line">   <span class='comment'>* are deleted. */</span></td></tr>
+<tr><td class="num" id="LN6791">6791</td><td class="line">  <span class='keyword'>if</span> (event == EVENT_BUFWIPEOUT &amp;&amp; buf != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN6792">6792</td><td class="line">    aubuflocal_remove(buf);</td></tr>
+<tr><td class="num" id="LN6793">6793</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6794">6794</td><td class="line">  <span class='keyword'>return</span> retval;</td></tr>
+<tr><td class="num" id="LN6795">6795</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN6796">6796</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6797">6797</td><td class="line"><span class='keyword'>static</span> char_u   *old_termresponse = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6798">6798</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6799">6799</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN6800">6800</td><td class="line"> <span class='comment'>* Block triggering autocommands until unblock_autocmd() is called.</span></td></tr>
+<tr><td class="num" id="LN6801">6801</td><td class="line"> <span class='comment'>* Can be used recursively, so long as it's symmetric.</span></td></tr>
+<tr><td class="num" id="LN6802">6802</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN6803">6803</td><td class="line"><span class='keyword'>void</span> block_autocmds(<span class='keyword'>void</span>)</td></tr>
+<tr><td class="num" id="LN6804">6804</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN6805">6805</td><td class="line">  <span class='comment'>/* Remember the value of v:termresponse. */</span></td></tr>
+<tr><td class="num" id="LN6806">6806</td><td class="line">  <span class='keyword'>if</span> (autocmd_blocked == 0)</td></tr>
+<tr><td class="num" id="LN6807">6807</td><td class="line">    old_termresponse = get_vim_var_str(VV_TERMRESPONSE);</td></tr>
+<tr><td class="num" id="LN6808">6808</td><td class="line">  ++autocmd_blocked;</td></tr>
+<tr><td class="num" id="LN6809">6809</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN6810">6810</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6811">6811</td><td class="line"><span class='keyword'>void</span> unblock_autocmds(<span class='keyword'>void</span>)</td></tr>
+<tr><td class="num" id="LN6812">6812</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN6813">6813</td><td class="line">  --autocmd_blocked;</td></tr>
+<tr><td class="num" id="LN6814">6814</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6815">6815</td><td class="line">  <span class='comment'>/* When v:termresponse was set while autocommands were blocked, trigger</span></td></tr>
+<tr><td class="num" id="LN6816">6816</td><td class="line">   <span class='comment'>* the autocommands now.  Esp. useful when executing a shell command</span></td></tr>
+<tr><td class="num" id="LN6817">6817</td><td class="line">   <span class='comment'>* during startup (vimdiff). */</span></td></tr>
+<tr><td class="num" id="LN6818">6818</td><td class="line">  <span class='keyword'>if</span> (autocmd_blocked == 0</td></tr>
+<tr><td class="num" id="LN6819">6819</td><td class="line">      &amp;&amp; get_vim_var_str(VV_TERMRESPONSE) != old_termresponse)</td></tr>
+<tr><td class="num" id="LN6820">6820</td><td class="line">    apply_autocmds(EVENT_TERMRESPONSE, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, <span class='macro'>FALSE<span class='expansion'>0</span></span>, curbuf);</td></tr>
+<tr><td class="num" id="LN6821">6821</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN6822">6822</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6823">6823</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN6824">6824</td><td class="line"> <span class='comment'>* Find next autocommand pattern that matches.</span></td></tr>
+<tr><td class="num" id="LN6825">6825</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN6826">6826</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> </td></tr>
+<tr><td class="num" id="LN6827">6827</td><td class="line">auto_next_pat (</td></tr>
+<tr><td class="num" id="LN6828">6828</td><td class="line">    AutoPatCmd *apc,</td></tr>
+<tr><td class="num" id="LN6829">6829</td><td class="line">    <span class='keyword'>int</span> stop_at_last                   <span class='comment'>/* stop when 'last' flag is set */</span></td></tr>
+<tr><td class="num" id="LN6830">6830</td><td class="line">)</td></tr>
+<tr><td class="num" id="LN6831">6831</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN6832">6832</td><td class="line">  AutoPat     *ap;</td></tr>
+<tr><td class="num" id="LN6833">6833</td><td class="line">  AutoCmd     *cp;</td></tr>
+<tr><td class="num" id="LN6834">6834</td><td class="line">  char_u      *name;</td></tr>
+<tr><td class="num" id="LN6835">6835</td><td class="line">  <span class='keyword'>char</span>        *s;</td></tr>
 <tr><td class="num" id="LN6836">6836</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6837">6837</td><td class="line">    <span class='comment'>/* Only use a pattern when it has not been removed, has commands and</span></td></tr>
-<tr><td class="num" id="LN6838">6838</td><td class="line">     <span class='comment'>* the group matches. For buffer-local autocommands only check the</span></td></tr>
-<tr><td class="num" id="LN6839">6839</td><td class="line">     <span class='comment'>* buffer number. */</span></td></tr>
-<tr><td class="num" id="LN6840">6840</td><td class="line">    <span class='keyword'>if</span> (ap-&gt;pat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; ap-&gt;cmds != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num" id="LN6841">6841</td><td class="line">        &amp;&amp; (apc-&gt;group == <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span> || apc-&gt;group == ap-&gt;group)) {</td></tr>
-<tr><td class="num" id="LN6842">6842</td><td class="line">      <span class='comment'>/* execution-condition */</span></td></tr>
-<tr><td class="num" id="LN6843">6843</td><td class="line">      <span class='keyword'>if</span> (ap-&gt;buflocal_nr == 0</td></tr>
-<tr><td class="num" id="LN6844">6844</td><td class="line">          ? (match_file_pat(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, ap-&gt;reg_prog, apc-&gt;fname,</td></tr>
-<tr><td class="num" id="LN6845">6845</td><td class="line">                 apc-&gt;sfname, apc-&gt;tail, ap-&gt;allow_dirs))</td></tr>
-<tr><td class="num" id="LN6846">6846</td><td class="line">          : ap-&gt;buflocal_nr == apc-&gt;arg_bufnr) {</td></tr>
-<tr><td class="num" id="LN6847">6847</td><td class="line">        name = event_nr2name(apc-&gt;event);</td></tr>
-<tr><td class="num" id="LN6848">6848</td><td class="line">        s = <span class='macro'>_(<span class='string_literal'>"%s Auto commands for \"%s\""</span>)<span class='expansion'>gettext((char *)("%s Auto commands for \"%s\""))</span></span>;</td></tr>
-<tr><td class="num" id="LN6849">6849</td><td class="line">        sourcing_name = xmalloc(<span class='macro'>STRLEN(s)<span class='expansion'>strlen((char *)(s))</span></span> + <span class='macro'>STRLEN(name)<span class='expansion'>strlen((char *)(name))</span></span> + ap-&gt;patlen + 1);</td></tr>
-<tr><td class="num" id="LN6850">6850</td><td class="line">        sprintf((<span class='keyword'>char</span> *)sourcing_name, s,</td></tr>
-<tr><td class="num" id="LN6851">6851</td><td class="line">            (<span class='keyword'>char</span> *)name, (<span class='keyword'>char</span> *)ap-&gt;pat);</td></tr>
-<tr><td class="num" id="LN6852">6852</td><td class="line">        <span class='keyword'>if</span> (p_verbose &gt;= 8) {</td></tr>
-<tr><td class="num" id="LN6853">6853</td><td class="line">          verbose_enter();</td></tr>
-<tr><td class="num" id="LN6854">6854</td><td class="line">          smsg((char_u *)<span class='macro'>_(<span class='string_literal'>"Executing %s"</span>)<span class='expansion'>gettext((char *)("Executing %s"))</span></span>, sourcing_name);</td></tr>
-<tr><td class="num" id="LN6855">6855</td><td class="line">          verbose_leave();</td></tr>
-<tr><td class="num" id="LN6856">6856</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN6857">6857</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6858">6858</td><td class="line">        apc-&gt;curpat = ap;</td></tr>
-<tr><td class="num" id="LN6859">6859</td><td class="line">        apc-&gt;nextcmd = ap-&gt;cmds;</td></tr>
-<tr><td class="num" id="LN6860">6860</td><td class="line">        <span class='comment'>/* mark last command */</span></td></tr>
-<tr><td class="num" id="LN6861">6861</td><td class="line">        <span class='keyword'>for</span> (cp = ap-&gt;cmds; cp-&gt;next != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; cp = cp-&gt;next)</td></tr>
-<tr><td class="num" id="LN6862">6862</td><td class="line">          cp-&gt;last = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN6863">6863</td><td class="line">        cp-&gt;last = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN6864">6864</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN6865">6865</td><td class="line">      line_breakcheck();</td></tr>
-<tr><td class="num" id="LN6866">6866</td><td class="line">      <span class='keyword'>if</span> (apc-&gt;curpat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)              <span class='comment'>/* found a match */</span></td></tr>
-<tr><td class="num" id="LN6867">6867</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN6868">6868</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN6869">6869</td><td class="line">    <span class='keyword'>if</span> (stop_at_last &amp;&amp; ap-&gt;last)</td></tr>
-<tr><td class="num" id="LN6870">6870</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN6871">6871</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN6872">6872</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN6873">6873</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6874">6874</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN6875">6875</td><td class="line"> <span class='comment'>* Get next autocommand command.</span></td></tr>
-<tr><td class="num" id="LN6876">6876</td><td class="line"> <span class='comment'>* Called by do_cmdline() to get the next line for ":if".</span></td></tr>
-<tr><td class="num" id="LN6877">6877</td><td class="line"> <span class='comment'>* Returns allocated string, or NULL for end of autocommands.</span></td></tr>
-<tr><td class="num" id="LN6878">6878</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN6879">6879</td><td class="line">char_u *getnextac(<span class='keyword'>int</span> c, <span class='keyword'>void</span> *cookie, <span class='keyword'>int</span> indent)</td></tr>
-<tr><td class="num" id="LN6880">6880</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN6881">6881</td><td class="line">  AutoPatCmd      *acp = (AutoPatCmd *)cookie;</td></tr>
-<tr><td class="num" id="LN6882">6882</td><td class="line">  char_u          *retval;</td></tr>
-<tr><td class="num" id="LN6883">6883</td><td class="line">  AutoCmd         *ac;</td></tr>
-<tr><td class="num" id="LN6884">6884</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6885">6885</td><td class="line">  <span class='comment'>/* Can be called again after returning the last line. */</span></td></tr>
-<tr><td class="num" id="LN6886">6886</td><td class="line">  <span class='keyword'>if</span> (acp-&gt;curpat == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN6887">6887</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN6888">6888</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6889">6889</td><td class="line">  <span class='comment'>/* repeat until we find an autocommand to execute */</span></td></tr>
-<tr><td class="num" id="LN6890">6890</td><td class="line">  <span class='keyword'>for</span> (;; ) {</td></tr>
-<tr><td class="num" id="LN6891">6891</td><td class="line">    <span class='comment'>/* skip removed commands */</span></td></tr>
-<tr><td class="num" id="LN6892">6892</td><td class="line">    <span class='keyword'>while</span> (acp-&gt;nextcmd != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; acp-&gt;nextcmd-&gt;cmd == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN6893">6893</td><td class="line">      <span class='keyword'>if</span> (acp-&gt;nextcmd-&gt;last)</td></tr>
-<tr><td class="num" id="LN6894">6894</td><td class="line">        acp-&gt;nextcmd = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN6895">6895</td><td class="line">      <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN6896">6896</td><td class="line">        acp-&gt;nextcmd = acp-&gt;nextcmd-&gt;next;</td></tr>
-<tr><td class="num" id="LN6897">6897</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6898">6898</td><td class="line">    <span class='keyword'>if</span> (acp-&gt;nextcmd != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN6899">6899</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN6900">6900</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6901">6901</td><td class="line">    <span class='comment'>/* at end of commands, find next pattern that matches */</span></td></tr>
-<tr><td class="num" id="LN6902">6902</td><td class="line">    <span class='keyword'>if</span> (acp-&gt;curpat-&gt;last)</td></tr>
-<tr><td class="num" id="LN6903">6903</td><td class="line">      acp-&gt;curpat = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN6904">6904</td><td class="line">    <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN6905">6905</td><td class="line">      acp-&gt;curpat = acp-&gt;curpat-&gt;next;</td></tr>
-<tr><td class="num" id="LN6906">6906</td><td class="line">    <span class='keyword'>if</span> (acp-&gt;curpat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN6907">6907</td><td class="line">      auto_next_pat(acp, <span class='macro'>TRUE<span class='expansion'>1</span></span>);</td></tr>
-<tr><td class="num" id="LN6908">6908</td><td class="line">    <span class='keyword'>if</span> (acp-&gt;curpat == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN6909">6909</td><td class="line">      <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN6910">6910</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN6911">6911</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6912">6912</td><td class="line">  ac = acp-&gt;nextcmd;</td></tr>
-<tr><td class="num" id="LN6913">6913</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6914">6914</td><td class="line">  <span class='keyword'>if</span> (p_verbose &gt;= 9) {</td></tr>
-<tr><td class="num" id="LN6915">6915</td><td class="line">    verbose_enter_scroll();</td></tr>
-<tr><td class="num" id="LN6916">6916</td><td class="line">    smsg((char_u *)<span class='macro'>_(<span class='string_literal'>"autocommand %s"</span>)<span class='expansion'>gettext((char *)("autocommand %s"))</span></span>, ac-&gt;cmd);</td></tr>
-<tr><td class="num" id="LN6917">6917</td><td class="line">    msg_puts((char_u *)<span class='string_literal'>"\n"</span>);       <span class='comment'>/* don't overwrite this either */</span></td></tr>
-<tr><td class="num" id="LN6918">6918</td><td class="line">    verbose_leave_scroll();</td></tr>
-<tr><td class="num" id="LN6919">6919</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN6920">6920</td><td class="line">  retval = vim_strsave(ac-&gt;cmd);</td></tr>
-<tr><td class="num" id="LN6921">6921</td><td class="line">  autocmd_nested = ac-&gt;nested;</td></tr>
-<tr><td class="num" id="LN6922">6922</td><td class="line">  current_SID = ac-&gt;scriptID;</td></tr>
-<tr><td class="num" id="LN6923">6923</td><td class="line">  <span class='keyword'>if</span> (ac-&gt;last)</td></tr>
-<tr><td class="num" id="LN6924">6924</td><td class="line">    acp-&gt;nextcmd = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN6925">6925</td><td class="line">  <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN6926">6926</td><td class="line">    acp-&gt;nextcmd = ac-&gt;next;</td></tr>
-<tr><td class="num" id="LN6927">6927</td><td class="line">  <span class='keyword'>return</span> retval;</td></tr>
-<tr><td class="num" id="LN6928">6928</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN6929">6929</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6930">6930</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN6931">6931</td><td class="line"> <span class='comment'>* Return TRUE if there is a matching autocommand for "fname".</span></td></tr>
-<tr><td class="num" id="LN6932">6932</td><td class="line"> <span class='comment'>* To account for buffer-local autocommands, function needs to know</span></td></tr>
-<tr><td class="num" id="LN6933">6933</td><td class="line"> <span class='comment'>* in which buffer the file will be opened.</span></td></tr>
-<tr><td class="num" id="LN6934">6934</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN6935">6935</td><td class="line"><span class='keyword'>int</span> has_autocmd(event_T event, char_u *sfname, buf_T *buf)</td></tr>
-<tr><td class="num" id="LN6936">6936</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN6937">6937</td><td class="line">  AutoPat     *ap;</td></tr>
-<tr><td class="num" id="LN6938">6938</td><td class="line">  char_u      *fname;</td></tr>
-<tr><td class="num" id="LN6939">6939</td><td class="line">  char_u      *tail = path_tail(sfname);</td></tr>
-<tr><td class="num" id="LN6940">6940</td><td class="line">  <span class='keyword'>int</span> retval = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN6941">6941</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6942">6942</td><td class="line">  fname = FullName_save(sfname, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
-<tr><td class="num" id="LN6943">6943</td><td class="line">  <span class='keyword'>if</span> (fname == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN6944">6944</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN6945">6945</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6946">6946</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
-<tr><td class="num" id="LN6947">6947</td><td class="line">  <span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN6948">6948</td><td class="line">   <span class='comment'>* Replace all backslashes with forward slashes.  This makes the</span></td></tr>
-<tr><td class="num" id="LN6949">6949</td><td class="line">   <span class='comment'>* autocommand patterns portable between Unix and MS-DOS.</span></td></tr>
-<tr><td class="num" id="LN6950">6950</td><td class="line">   <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN6951">6951</td><td class="line">  sfname = vim_strsave(sfname);</td></tr>
-<tr><td class="num" id="LN6952">6952</td><td class="line">  forward_slash(sfname);</td></tr>
-<tr><td class="num" id="LN6953">6953</td><td class="line">  forward_slash(fname);</td></tr>
-<tr><td class="num" id="LN6954">6954</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN6955">6955</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6956">6956</td><td class="line">  <span class='keyword'>for</span> (ap = first_autopat[(<span class='keyword'>int</span>)event]; ap != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; ap = ap-&gt;next)</td></tr>
-<tr><td class="num" id="LN6957">6957</td><td class="line">    <span class='keyword'>if</span> (ap-&gt;pat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; ap-&gt;cmds != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num" id="LN6958">6958</td><td class="line">        &amp;&amp; (ap-&gt;buflocal_nr == 0</td></tr>
-<tr><td class="num" id="LN6959">6959</td><td class="line">            ? match_file_pat(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, ap-&gt;reg_prog,</td></tr>
-<tr><td class="num" id="LN6960">6960</td><td class="line">                fname, sfname, tail, ap-&gt;allow_dirs)</td></tr>
-<tr><td class="num" id="LN6961">6961</td><td class="line">            : buf != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; ap-&gt;buflocal_nr == buf-&gt;b_fnum</td></tr>
-<tr><td class="num" id="LN6962">6962</td><td class="line">            )) {</td></tr>
-<tr><td class="num" id="LN6963">6963</td><td class="line">      retval = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN6964">6964</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN6965">6965</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN6966">6966</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6967">6967</td><td class="line">  free(fname);</td></tr>
-<tr><td class="num" id="LN6968">6968</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
-<tr><td class="num" id="LN6969">6969</td><td class="line">  free(sfname);</td></tr>
-<tr><td class="num" id="LN6970">6970</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN6971">6971</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6972">6972</td><td class="line">  <span class='keyword'>return</span> retval;</td></tr>
-<tr><td class="num" id="LN6973">6973</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN6974">6974</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6975">6975</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN6976">6976</td><td class="line"> <span class='comment'>* Function given to ExpandGeneric() to obtain the list of autocommand group</span></td></tr>
-<tr><td class="num" id="LN6977">6977</td><td class="line"> <span class='comment'>* names.</span></td></tr>
-<tr><td class="num" id="LN6978">6978</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN6979">6979</td><td class="line">char_u *get_augroup_name(expand_T *xp, <span class='keyword'>int</span> idx)</td></tr>
-<tr><td class="num" id="LN6980">6980</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN6981">6981</td><td class="line">  <span class='keyword'>if</span> (idx == augroups.ga_len)           <span class='comment'>/* add "END" add the end */</span></td></tr>
-<tr><td class="num" id="LN6982">6982</td><td class="line">    <span class='keyword'>return</span> (char_u *)<span class='string_literal'>"END"</span>;</td></tr>
-<tr><td class="num" id="LN6983">6983</td><td class="line">  <span class='keyword'>if</span> (idx &gt;= augroups.ga_len)           <span class='comment'>/* end of list */</span></td></tr>
-<tr><td class="num" id="LN6984">6984</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN6985">6985</td><td class="line">  <span class='keyword'>if</span> (<span class='macro'>AUGROUP_NAME(idx)<span class='expansion'>(((char_u **)augroups.ga_data)[idx])</span></span> == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)        <span class='comment'>/* skip deleted entries */</span></td></tr>
-<tr><td class="num" id="LN6986">6986</td><td class="line">    <span class='keyword'>return</span> (char_u *)<span class='string_literal'>""</span>;</td></tr>
-<tr><td class="num" id="LN6987">6987</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>AUGROUP_NAME(idx)<span class='expansion'>(((char_u **)augroups.ga_data)[idx])</span></span>;             <span class='comment'>/* return a name */</span></td></tr>
-<tr><td class="num" id="LN6988">6988</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN6989">6989</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6990">6990</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>int</span> include_groups = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN6991">6991</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN6992">6992</td><td class="line">char_u *</td></tr>
-<tr><td class="num" id="LN6993">6993</td><td class="line">set_context_in_autocmd (</td></tr>
-<tr><td class="num" id="LN6994">6994</td><td class="line">    expand_T *xp,</td></tr>
-<tr><td class="num" id="LN6995">6995</td><td class="line">    char_u *arg,</td></tr>
-<tr><td class="num" id="LN6996">6996</td><td class="line">    <span class='keyword'>int</span> doautocmd                  <span class='comment'>/* TRUE for :doauto*, FALSE for :autocmd */</span></td></tr>
-<tr><td class="num" id="LN6997">6997</td><td class="line">)</td></tr>
-<tr><td class="num" id="LN6998">6998</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN6999">6999</td><td class="line">  char_u      *p;</td></tr>
-<tr><td class="num" id="LN7000">7000</td><td class="line">  <span class='keyword'>int</span> group;</td></tr>
-<tr><td class="num" id="LN7001">7001</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7002">7002</td><td class="line">  <span class='comment'>/* check for a group name, skip it if present */</span></td></tr>
-<tr><td class="num" id="LN7003">7003</td><td class="line">  include_groups = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN7004">7004</td><td class="line">  p = arg;</td></tr>
-<tr><td class="num" id="LN7005">7005</td><td class="line">  group = au_get_grouparg(&amp;arg);</td></tr>
-<tr><td class="num" id="LN7006">7006</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7007">7007</td><td class="line">  <span class='comment'>/* If there only is a group name that's what we expand. */</span></td></tr>
-<tr><td class="num" id="LN7008">7008</td><td class="line">  <span class='keyword'>if</span> (*arg == <span class='macro'>NUL<span class='expansion'>'\000'</span></span> &amp;&amp; group != <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span> &amp;&amp; !<span class='macro'>vim_iswhite(arg[-1])<span class='expansion'>((arg[-1]) == ' ' || (arg[-1]) == '\t')</span></span>) {</td></tr>
-<tr><td class="num" id="LN7009">7009</td><td class="line">    arg = p;</td></tr>
-<tr><td class="num" id="LN7010">7010</td><td class="line">    group = <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span>;</td></tr>
-<tr><td class="num" id="LN7011">7011</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN6837">6837</td><td class="line">  free(sourcing_name);</td></tr>
+<tr><td class="num" id="LN6838">6838</td><td class="line">  sourcing_name = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6839">6839</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6840">6840</td><td class="line">  <span class='keyword'>for</span> (ap = apc-&gt;curpat; ap != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; !got_int; ap = ap-&gt;next) {</td></tr>
+<tr><td class="num" id="LN6841">6841</td><td class="line">    apc-&gt;curpat = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6842">6842</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6843">6843</td><td class="line">    <span class='comment'>/* Only use a pattern when it has not been removed, has commands and</span></td></tr>
+<tr><td class="num" id="LN6844">6844</td><td class="line">     <span class='comment'>* the group matches. For buffer-local autocommands only check the</span></td></tr>
+<tr><td class="num" id="LN6845">6845</td><td class="line">     <span class='comment'>* buffer number. */</span></td></tr>
+<tr><td class="num" id="LN6846">6846</td><td class="line">    <span class='keyword'>if</span> (ap-&gt;pat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; ap-&gt;cmds != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
+<tr><td class="num" id="LN6847">6847</td><td class="line">        &amp;&amp; (apc-&gt;group == <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span> || apc-&gt;group == ap-&gt;group)) {</td></tr>
+<tr><td class="num" id="LN6848">6848</td><td class="line">      <span class='comment'>/* execution-condition */</span></td></tr>
+<tr><td class="num" id="LN6849">6849</td><td class="line">      <span class='keyword'>if</span> (ap-&gt;buflocal_nr == 0</td></tr>
+<tr><td class="num" id="LN6850">6850</td><td class="line">          ? (match_file_pat(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, ap-&gt;reg_prog, apc-&gt;fname,</td></tr>
+<tr><td class="num" id="LN6851">6851</td><td class="line">                 apc-&gt;sfname, apc-&gt;tail, ap-&gt;allow_dirs))</td></tr>
+<tr><td class="num" id="LN6852">6852</td><td class="line">          : ap-&gt;buflocal_nr == apc-&gt;arg_bufnr) {</td></tr>
+<tr><td class="num" id="LN6853">6853</td><td class="line">        name = event_nr2name(apc-&gt;event);</td></tr>
+<tr><td class="num" id="LN6854">6854</td><td class="line">        s = <span class='macro'>_(<span class='string_literal'>"%s Auto commands for \"%s\""</span>)<span class='expansion'>gettext((char *)("%s Auto commands for \"%s\""))</span></span>;</td></tr>
+<tr><td class="num" id="LN6855">6855</td><td class="line">        sourcing_name = xmalloc(<span class='macro'>STRLEN(s)<span class='expansion'>strlen((char *)(s))</span></span> + <span class='macro'>STRLEN(name)<span class='expansion'>strlen((char *)(name))</span></span> + ap-&gt;patlen + 1);</td></tr>
+<tr><td class="num" id="LN6856">6856</td><td class="line">        sprintf((<span class='keyword'>char</span> *)sourcing_name, s,</td></tr>
+<tr><td class="num" id="LN6857">6857</td><td class="line">            (<span class='keyword'>char</span> *)name, (<span class='keyword'>char</span> *)ap-&gt;pat);</td></tr>
+<tr><td class="num" id="LN6858">6858</td><td class="line">        <span class='keyword'>if</span> (p_verbose &gt;= 8) {</td></tr>
+<tr><td class="num" id="LN6859">6859</td><td class="line">          verbose_enter();</td></tr>
+<tr><td class="num" id="LN6860">6860</td><td class="line">          smsg((char_u *)<span class='macro'>_(<span class='string_literal'>"Executing %s"</span>)<span class='expansion'>gettext((char *)("Executing %s"))</span></span>, sourcing_name);</td></tr>
+<tr><td class="num" id="LN6861">6861</td><td class="line">          verbose_leave();</td></tr>
+<tr><td class="num" id="LN6862">6862</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN6863">6863</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6864">6864</td><td class="line">        apc-&gt;curpat = ap;</td></tr>
+<tr><td class="num" id="LN6865">6865</td><td class="line">        apc-&gt;nextcmd = ap-&gt;cmds;</td></tr>
+<tr><td class="num" id="LN6866">6866</td><td class="line">        <span class='comment'>/* mark last command */</span></td></tr>
+<tr><td class="num" id="LN6867">6867</td><td class="line">        <span class='keyword'>for</span> (cp = ap-&gt;cmds; cp-&gt;next != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; cp = cp-&gt;next)</td></tr>
+<tr><td class="num" id="LN6868">6868</td><td class="line">          cp-&gt;last = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN6869">6869</td><td class="line">        cp-&gt;last = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN6870">6870</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN6871">6871</td><td class="line">      line_breakcheck();</td></tr>
+<tr><td class="num" id="LN6872">6872</td><td class="line">      <span class='keyword'>if</span> (apc-&gt;curpat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)              <span class='comment'>/* found a match */</span></td></tr>
+<tr><td class="num" id="LN6873">6873</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN6874">6874</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN6875">6875</td><td class="line">    <span class='keyword'>if</span> (stop_at_last &amp;&amp; ap-&gt;last)</td></tr>
+<tr><td class="num" id="LN6876">6876</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN6877">6877</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN6878">6878</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN6879">6879</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6880">6880</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN6881">6881</td><td class="line"> <span class='comment'>* Get next autocommand command.</span></td></tr>
+<tr><td class="num" id="LN6882">6882</td><td class="line"> <span class='comment'>* Called by do_cmdline() to get the next line for ":if".</span></td></tr>
+<tr><td class="num" id="LN6883">6883</td><td class="line"> <span class='comment'>* Returns allocated string, or NULL for end of autocommands.</span></td></tr>
+<tr><td class="num" id="LN6884">6884</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN6885">6885</td><td class="line">char_u *getnextac(<span class='keyword'>int</span> c, <span class='keyword'>void</span> *cookie, <span class='keyword'>int</span> indent)</td></tr>
+<tr><td class="num" id="LN6886">6886</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN6887">6887</td><td class="line">  AutoPatCmd      *acp = (AutoPatCmd *)cookie;</td></tr>
+<tr><td class="num" id="LN6888">6888</td><td class="line">  char_u          *retval;</td></tr>
+<tr><td class="num" id="LN6889">6889</td><td class="line">  AutoCmd         *ac;</td></tr>
+<tr><td class="num" id="LN6890">6890</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6891">6891</td><td class="line">  <span class='comment'>/* Can be called again after returning the last line. */</span></td></tr>
+<tr><td class="num" id="LN6892">6892</td><td class="line">  <span class='keyword'>if</span> (acp-&gt;curpat == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN6893">6893</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6894">6894</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6895">6895</td><td class="line">  <span class='comment'>/* repeat until we find an autocommand to execute */</span></td></tr>
+<tr><td class="num" id="LN6896">6896</td><td class="line">  <span class='keyword'>for</span> (;; ) {</td></tr>
+<tr><td class="num" id="LN6897">6897</td><td class="line">    <span class='comment'>/* skip removed commands */</span></td></tr>
+<tr><td class="num" id="LN6898">6898</td><td class="line">    <span class='keyword'>while</span> (acp-&gt;nextcmd != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; acp-&gt;nextcmd-&gt;cmd == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN6899">6899</td><td class="line">      <span class='keyword'>if</span> (acp-&gt;nextcmd-&gt;last)</td></tr>
+<tr><td class="num" id="LN6900">6900</td><td class="line">        acp-&gt;nextcmd = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6901">6901</td><td class="line">      <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN6902">6902</td><td class="line">        acp-&gt;nextcmd = acp-&gt;nextcmd-&gt;next;</td></tr>
+<tr><td class="num" id="LN6903">6903</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6904">6904</td><td class="line">    <span class='keyword'>if</span> (acp-&gt;nextcmd != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN6905">6905</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN6906">6906</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6907">6907</td><td class="line">    <span class='comment'>/* at end of commands, find next pattern that matches */</span></td></tr>
+<tr><td class="num" id="LN6908">6908</td><td class="line">    <span class='keyword'>if</span> (acp-&gt;curpat-&gt;last)</td></tr>
+<tr><td class="num" id="LN6909">6909</td><td class="line">      acp-&gt;curpat = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6910">6910</td><td class="line">    <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN6911">6911</td><td class="line">      acp-&gt;curpat = acp-&gt;curpat-&gt;next;</td></tr>
+<tr><td class="num" id="LN6912">6912</td><td class="line">    <span class='keyword'>if</span> (acp-&gt;curpat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN6913">6913</td><td class="line">      auto_next_pat(acp, <span class='macro'>TRUE<span class='expansion'>1</span></span>);</td></tr>
+<tr><td class="num" id="LN6914">6914</td><td class="line">    <span class='keyword'>if</span> (acp-&gt;curpat == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN6915">6915</td><td class="line">      <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6916">6916</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN6917">6917</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6918">6918</td><td class="line">  ac = acp-&gt;nextcmd;</td></tr>
+<tr><td class="num" id="LN6919">6919</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6920">6920</td><td class="line">  <span class='keyword'>if</span> (p_verbose &gt;= 9) {</td></tr>
+<tr><td class="num" id="LN6921">6921</td><td class="line">    verbose_enter_scroll();</td></tr>
+<tr><td class="num" id="LN6922">6922</td><td class="line">    smsg((char_u *)<span class='macro'>_(<span class='string_literal'>"autocommand %s"</span>)<span class='expansion'>gettext((char *)("autocommand %s"))</span></span>, ac-&gt;cmd);</td></tr>
+<tr><td class="num" id="LN6923">6923</td><td class="line">    msg_puts((char_u *)<span class='string_literal'>"\n"</span>);       <span class='comment'>/* don't overwrite this either */</span></td></tr>
+<tr><td class="num" id="LN6924">6924</td><td class="line">    verbose_leave_scroll();</td></tr>
+<tr><td class="num" id="LN6925">6925</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN6926">6926</td><td class="line">  retval = vim_strsave(ac-&gt;cmd);</td></tr>
+<tr><td class="num" id="LN6927">6927</td><td class="line">  autocmd_nested = ac-&gt;nested;</td></tr>
+<tr><td class="num" id="LN6928">6928</td><td class="line">  current_SID = ac-&gt;scriptID;</td></tr>
+<tr><td class="num" id="LN6929">6929</td><td class="line">  <span class='keyword'>if</span> (ac-&gt;last)</td></tr>
+<tr><td class="num" id="LN6930">6930</td><td class="line">    acp-&gt;nextcmd = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6931">6931</td><td class="line">  <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN6932">6932</td><td class="line">    acp-&gt;nextcmd = ac-&gt;next;</td></tr>
+<tr><td class="num" id="LN6933">6933</td><td class="line">  <span class='keyword'>return</span> retval;</td></tr>
+<tr><td class="num" id="LN6934">6934</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN6935">6935</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6936">6936</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN6937">6937</td><td class="line"> <span class='comment'>* Return TRUE if there is a matching autocommand for "fname".</span></td></tr>
+<tr><td class="num" id="LN6938">6938</td><td class="line"> <span class='comment'>* To account for buffer-local autocommands, function needs to know</span></td></tr>
+<tr><td class="num" id="LN6939">6939</td><td class="line"> <span class='comment'>* in which buffer the file will be opened.</span></td></tr>
+<tr><td class="num" id="LN6940">6940</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN6941">6941</td><td class="line"><span class='keyword'>int</span> has_autocmd(event_T event, char_u *sfname, buf_T *buf)</td></tr>
+<tr><td class="num" id="LN6942">6942</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN6943">6943</td><td class="line">  AutoPat     *ap;</td></tr>
+<tr><td class="num" id="LN6944">6944</td><td class="line">  char_u      *fname;</td></tr>
+<tr><td class="num" id="LN6945">6945</td><td class="line">  char_u      *tail = path_tail(sfname);</td></tr>
+<tr><td class="num" id="LN6946">6946</td><td class="line">  <span class='keyword'>int</span> retval = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN6947">6947</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6948">6948</td><td class="line">  fname = FullName_save(sfname, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
+<tr><td class="num" id="LN6949">6949</td><td class="line">  <span class='keyword'>if</span> (fname == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN6950">6950</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN6951">6951</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6952">6952</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
+<tr><td class="num" id="LN6953">6953</td><td class="line">  <span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN6954">6954</td><td class="line">   <span class='comment'>* Replace all backslashes with forward slashes.  This makes the</span></td></tr>
+<tr><td class="num" id="LN6955">6955</td><td class="line">   <span class='comment'>* autocommand patterns portable between Unix and MS-DOS.</span></td></tr>
+<tr><td class="num" id="LN6956">6956</td><td class="line">   <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN6957">6957</td><td class="line">  sfname = vim_strsave(sfname);</td></tr>
+<tr><td class="num" id="LN6958">6958</td><td class="line">  forward_slash(sfname);</td></tr>
+<tr><td class="num" id="LN6959">6959</td><td class="line">  forward_slash(fname);</td></tr>
+<tr><td class="num" id="LN6960">6960</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN6961">6961</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6962">6962</td><td class="line">  <span class='keyword'>for</span> (ap = first_autopat[(<span class='keyword'>int</span>)event]; ap != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; ap = ap-&gt;next)</td></tr>
+<tr><td class="num" id="LN6963">6963</td><td class="line">    <span class='keyword'>if</span> (ap-&gt;pat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; ap-&gt;cmds != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
+<tr><td class="num" id="LN6964">6964</td><td class="line">        &amp;&amp; (ap-&gt;buflocal_nr == 0</td></tr>
+<tr><td class="num" id="LN6965">6965</td><td class="line">            ? match_file_pat(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, ap-&gt;reg_prog,</td></tr>
+<tr><td class="num" id="LN6966">6966</td><td class="line">                fname, sfname, tail, ap-&gt;allow_dirs)</td></tr>
+<tr><td class="num" id="LN6967">6967</td><td class="line">            : buf != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; ap-&gt;buflocal_nr == buf-&gt;b_fnum</td></tr>
+<tr><td class="num" id="LN6968">6968</td><td class="line">            )) {</td></tr>
+<tr><td class="num" id="LN6969">6969</td><td class="line">      retval = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN6970">6970</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN6971">6971</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN6972">6972</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6973">6973</td><td class="line">  free(fname);</td></tr>
+<tr><td class="num" id="LN6974">6974</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
+<tr><td class="num" id="LN6975">6975</td><td class="line">  free(sfname);</td></tr>
+<tr><td class="num" id="LN6976">6976</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN6977">6977</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6978">6978</td><td class="line">  <span class='keyword'>return</span> retval;</td></tr>
+<tr><td class="num" id="LN6979">6979</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN6980">6980</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6981">6981</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN6982">6982</td><td class="line"> <span class='comment'>* Function given to ExpandGeneric() to obtain the list of autocommand group</span></td></tr>
+<tr><td class="num" id="LN6983">6983</td><td class="line"> <span class='comment'>* names.</span></td></tr>
+<tr><td class="num" id="LN6984">6984</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN6985">6985</td><td class="line">char_u *get_augroup_name(expand_T *xp, <span class='keyword'>int</span> idx)</td></tr>
+<tr><td class="num" id="LN6986">6986</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN6987">6987</td><td class="line">  <span class='keyword'>if</span> (idx == augroups.ga_len)           <span class='comment'>/* add "END" add the end */</span></td></tr>
+<tr><td class="num" id="LN6988">6988</td><td class="line">    <span class='keyword'>return</span> (char_u *)<span class='string_literal'>"END"</span>;</td></tr>
+<tr><td class="num" id="LN6989">6989</td><td class="line">  <span class='keyword'>if</span> (idx &gt;= augroups.ga_len)           <span class='comment'>/* end of list */</span></td></tr>
+<tr><td class="num" id="LN6990">6990</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN6991">6991</td><td class="line">  <span class='keyword'>if</span> (<span class='macro'>AUGROUP_NAME(idx)<span class='expansion'>(((char_u **)augroups.ga_data)[idx])</span></span> == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)        <span class='comment'>/* skip deleted entries */</span></td></tr>
+<tr><td class="num" id="LN6992">6992</td><td class="line">    <span class='keyword'>return</span> (char_u *)<span class='string_literal'>""</span>;</td></tr>
+<tr><td class="num" id="LN6993">6993</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>AUGROUP_NAME(idx)<span class='expansion'>(((char_u **)augroups.ga_data)[idx])</span></span>;             <span class='comment'>/* return a name */</span></td></tr>
+<tr><td class="num" id="LN6994">6994</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN6995">6995</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6996">6996</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>int</span> include_groups = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN6997">6997</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN6998">6998</td><td class="line">char_u *</td></tr>
+<tr><td class="num" id="LN6999">6999</td><td class="line">set_context_in_autocmd (</td></tr>
+<tr><td class="num" id="LN7000">7000</td><td class="line">    expand_T *xp,</td></tr>
+<tr><td class="num" id="LN7001">7001</td><td class="line">    char_u *arg,</td></tr>
+<tr><td class="num" id="LN7002">7002</td><td class="line">    <span class='keyword'>int</span> doautocmd                  <span class='comment'>/* TRUE for :doauto*, FALSE for :autocmd */</span></td></tr>
+<tr><td class="num" id="LN7003">7003</td><td class="line">)</td></tr>
+<tr><td class="num" id="LN7004">7004</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7005">7005</td><td class="line">  char_u      *p;</td></tr>
+<tr><td class="num" id="LN7006">7006</td><td class="line">  <span class='keyword'>int</span> group;</td></tr>
+<tr><td class="num" id="LN7007">7007</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7008">7008</td><td class="line">  <span class='comment'>/* check for a group name, skip it if present */</span></td></tr>
+<tr><td class="num" id="LN7009">7009</td><td class="line">  include_groups = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN7010">7010</td><td class="line">  p = arg;</td></tr>
+<tr><td class="num" id="LN7011">7011</td><td class="line">  group = au_get_grouparg(&amp;arg);</td></tr>
 <tr><td class="num" id="LN7012">7012</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7013">7013</td><td class="line">  <span class='comment'>/* skip over event name */</span></td></tr>
-<tr><td class="num" id="LN7014">7014</td><td class="line">  <span class='keyword'>for</span> (p = arg; *p != <span class='macro'>NUL<span class='expansion'>'\000'</span></span> &amp;&amp; !<span class='macro'>vim_iswhite(*p)<span class='expansion'>((*p) == ' ' || (*p) == '\t')</span></span>; ++p)</td></tr>
-<tr><td class="num" id="LN7015">7015</td><td class="line">    <span class='keyword'>if</span> (*p == ',')</td></tr>
-<tr><td class="num" id="LN7016">7016</td><td class="line">      arg = p + 1;</td></tr>
-<tr><td class="num" id="LN7017">7017</td><td class="line">  <span class='keyword'>if</span> (*p == <span class='macro'>NUL<span class='expansion'>'\000'</span></span>) {</td></tr>
-<tr><td class="num" id="LN7018">7018</td><td class="line">    <span class='keyword'>if</span> (group == <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span>)</td></tr>
-<tr><td class="num" id="LN7019">7019</td><td class="line">      include_groups = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7020">7020</td><td class="line">    xp-&gt;xp_context = EXPAND_EVENTS;         <span class='comment'>/* expand event name */</span></td></tr>
-<tr><td class="num" id="LN7021">7021</td><td class="line">    xp-&gt;xp_pattern = arg;</td></tr>
-<tr><td class="num" id="LN7022">7022</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN7023">7023</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7024">7024</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7025">7025</td><td class="line">  <span class='comment'>/* skip over pattern */</span></td></tr>
-<tr><td class="num" id="LN7026">7026</td><td class="line">  arg = skipwhite(p);</td></tr>
-<tr><td class="num" id="LN7027">7027</td><td class="line">  <span class='keyword'>while</span> (*arg &amp;&amp; (!<span class='macro'>vim_iswhite(*arg)<span class='expansion'>((*arg) == ' ' || (*arg) == '\t')</span></span> || arg[-1] == '\\'))</td></tr>
-<tr><td class="num" id="LN7028">7028</td><td class="line">    arg++;</td></tr>
-<tr><td class="num" id="LN7029">7029</td><td class="line">  <span class='keyword'>if</span> (*arg)</td></tr>
-<tr><td class="num" id="LN7030">7030</td><td class="line">    <span class='keyword'>return</span> arg;                             <span class='comment'>/* expand (next) command */</span></td></tr>
-<tr><td class="num" id="LN7031">7031</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7032">7032</td><td class="line">  <span class='keyword'>if</span> (doautocmd)</td></tr>
-<tr><td class="num" id="LN7033">7033</td><td class="line">    xp-&gt;xp_context = EXPAND_FILES;          <span class='comment'>/* expand file names */</span></td></tr>
-<tr><td class="num" id="LN7034">7034</td><td class="line">  <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN7035">7035</td><td class="line">    xp-&gt;xp_context = EXPAND_NOTHING;        <span class='comment'>/* pattern is not expanded */</span></td></tr>
-<tr><td class="num" id="LN7036">7036</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN7037">7037</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7038">7038</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7039">7039</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7040">7040</td><td class="line"> <span class='comment'>* Function given to ExpandGeneric() to obtain the list of event names.</span></td></tr>
-<tr><td class="num" id="LN7041">7041</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7042">7042</td><td class="line">char_u *get_event_name(expand_T *xp, <span class='keyword'>int</span> idx)</td></tr>
-<tr><td class="num" id="LN7043">7043</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN7044">7044</td><td class="line">  <span class='keyword'>if</span> (idx &lt; augroups.ga_len) {          <span class='comment'>/* First list group names, if wanted */</span></td></tr>
-<tr><td class="num" id="LN7045">7045</td><td class="line">    <span class='keyword'>if</span> (!include_groups || <span class='macro'>AUGROUP_NAME(idx)<span class='expansion'>(((char_u **)augroups.ga_data)[idx])</span></span> == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7046">7046</td><td class="line">      <span class='keyword'>return</span> (char_u *)<span class='string_literal'>""</span>;              <span class='comment'>/* skip deleted entries */</span></td></tr>
-<tr><td class="num" id="LN7047">7047</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>AUGROUP_NAME(idx)<span class='expansion'>(((char_u **)augroups.ga_data)[idx])</span></span>;           <span class='comment'>/* return a name */</span></td></tr>
-<tr><td class="num" id="LN7048">7048</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7049">7049</td><td class="line">  <span class='keyword'>return</span> (char_u *)event_names[idx - augroups.ga_len].name;</td></tr>
-<tr><td class="num" id="LN7050">7050</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7051">7051</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7052">7052</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7053">7053</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7054">7054</td><td class="line"> <span class='comment'>* Return TRUE if autocmd is supported.</span></td></tr>
-<tr><td class="num" id="LN7055">7055</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7056">7056</td><td class="line"><span class='keyword'>int</span> autocmd_supported(char_u *name)</td></tr>
-<tr><td class="num" id="LN7057">7057</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN7058">7058</td><td class="line">  char_u *p;</td></tr>
-<tr><td class="num" id="LN7059">7059</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7060">7060</td><td class="line">  <span class='keyword'>return</span> event_name2nr(name, &amp;p) != NUM_EVENTS;</td></tr>
-<tr><td class="num" id="LN7061">7061</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7062">7062</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7063">7063</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7064">7064</td><td class="line"> <span class='comment'>* Return TRUE if an autocommand is defined for a group, event and</span></td></tr>
-<tr><td class="num" id="LN7065">7065</td><td class="line"> <span class='comment'>* pattern:  The group can be omitted to accept any group. "event" and "pattern"</span></td></tr>
-<tr><td class="num" id="LN7066">7066</td><td class="line"> <span class='comment'>* can be NULL to accept any event and pattern. "pattern" can be NULL to accept</span></td></tr>
-<tr><td class="num" id="LN7067">7067</td><td class="line"> <span class='comment'>* any pattern. Buffer-local patterns &lt;buffer&gt; or &lt;buffer=N&gt; are accepted.</span></td></tr>
-<tr><td class="num" id="LN7068">7068</td><td class="line"> <span class='comment'>* Used for:</span></td></tr>
-<tr><td class="num" id="LN7069">7069</td><td class="line"> <span class='comment'>*	exists("#Group") or</span></td></tr>
-<tr><td class="num" id="LN7070">7070</td><td class="line"> <span class='comment'>*	exists("#Group#Event") or</span></td></tr>
-<tr><td class="num" id="LN7071">7071</td><td class="line"> <span class='comment'>*	exists("#Group#Event#pat") or</span></td></tr>
-<tr><td class="num" id="LN7072">7072</td><td class="line"> <span class='comment'>*	exists("#Event") or</span></td></tr>
-<tr><td class="num" id="LN7073">7073</td><td class="line"> <span class='comment'>*	exists("#Event#pat")</span></td></tr>
-<tr><td class="num" id="LN7074">7074</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7075">7075</td><td class="line"><span class='keyword'>int</span> au_exists(char_u *arg)</td></tr>
-<tr><td class="num" id="LN7076">7076</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN7077">7077</td><td class="line">  char_u      *arg_save;</td></tr>
-<tr><td class="num" id="LN7078">7078</td><td class="line">  char_u      *pattern = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN7079">7079</td><td class="line">  char_u      *event_name;</td></tr>
-<tr><td class="num" id="LN7080">7080</td><td class="line">  char_u      *p;</td></tr>
-<tr><td class="num" id="LN7081">7081</td><td class="line">  event_T event;</td></tr>
-<tr><td class="num" id="LN7082">7082</td><td class="line">  AutoPat     *ap;</td></tr>
-<tr><td class="num" id="LN7083">7083</td><td class="line">  buf_T       *buflocal_buf = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN7084">7084</td><td class="line">  <span class='keyword'>int</span> group;</td></tr>
-<tr><td class="num" id="LN7085">7085</td><td class="line">  <span class='keyword'>int</span> retval = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN7086">7086</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7087">7087</td><td class="line">  <span class='comment'>/* Make a copy so that we can change the '#' chars to a NUL. */</span></td></tr>
-<tr><td class="num" id="LN7088">7088</td><td class="line">  arg_save = vim_strsave(arg);</td></tr>
-<tr><td class="num" id="LN7089">7089</td><td class="line">  p = vim_strchr(arg_save, '#');</td></tr>
-<tr><td class="num" id="LN7090">7090</td><td class="line">  <span class='keyword'>if</span> (p != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7091">7091</td><td class="line">    *p++ = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;</td></tr>
+<tr><td class="num" id="LN7013">7013</td><td class="line">  <span class='comment'>/* If there only is a group name that's what we expand. */</span></td></tr>
+<tr><td class="num" id="LN7014">7014</td><td class="line">  <span class='keyword'>if</span> (*arg == <span class='macro'>NUL<span class='expansion'>'\000'</span></span> &amp;&amp; group != <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span> &amp;&amp; !<span class='macro'>vim_iswhite(arg[-1])<span class='expansion'>((arg[-1]) == ' ' || (arg[-1]) == '\t')</span></span>) {</td></tr>
+<tr><td class="num" id="LN7015">7015</td><td class="line">    arg = p;</td></tr>
+<tr><td class="num" id="LN7016">7016</td><td class="line">    group = <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span>;</td></tr>
+<tr><td class="num" id="LN7017">7017</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7018">7018</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7019">7019</td><td class="line">  <span class='comment'>/* skip over event name */</span></td></tr>
+<tr><td class="num" id="LN7020">7020</td><td class="line">  <span class='keyword'>for</span> (p = arg; *p != <span class='macro'>NUL<span class='expansion'>'\000'</span></span> &amp;&amp; !<span class='macro'>vim_iswhite(*p)<span class='expansion'>((*p) == ' ' || (*p) == '\t')</span></span>; ++p)</td></tr>
+<tr><td class="num" id="LN7021">7021</td><td class="line">    <span class='keyword'>if</span> (*p == ',')</td></tr>
+<tr><td class="num" id="LN7022">7022</td><td class="line">      arg = p + 1;</td></tr>
+<tr><td class="num" id="LN7023">7023</td><td class="line">  <span class='keyword'>if</span> (*p == <span class='macro'>NUL<span class='expansion'>'\000'</span></span>) {</td></tr>
+<tr><td class="num" id="LN7024">7024</td><td class="line">    <span class='keyword'>if</span> (group == <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span>)</td></tr>
+<tr><td class="num" id="LN7025">7025</td><td class="line">      include_groups = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7026">7026</td><td class="line">    xp-&gt;xp_context = EXPAND_EVENTS;         <span class='comment'>/* expand event name */</span></td></tr>
+<tr><td class="num" id="LN7027">7027</td><td class="line">    xp-&gt;xp_pattern = arg;</td></tr>
+<tr><td class="num" id="LN7028">7028</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN7029">7029</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7030">7030</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7031">7031</td><td class="line">  <span class='comment'>/* skip over pattern */</span></td></tr>
+<tr><td class="num" id="LN7032">7032</td><td class="line">  arg = skipwhite(p);</td></tr>
+<tr><td class="num" id="LN7033">7033</td><td class="line">  <span class='keyword'>while</span> (*arg &amp;&amp; (!<span class='macro'>vim_iswhite(*arg)<span class='expansion'>((*arg) == ' ' || (*arg) == '\t')</span></span> || arg[-1] == '\\'))</td></tr>
+<tr><td class="num" id="LN7034">7034</td><td class="line">    arg++;</td></tr>
+<tr><td class="num" id="LN7035">7035</td><td class="line">  <span class='keyword'>if</span> (*arg)</td></tr>
+<tr><td class="num" id="LN7036">7036</td><td class="line">    <span class='keyword'>return</span> arg;                             <span class='comment'>/* expand (next) command */</span></td></tr>
+<tr><td class="num" id="LN7037">7037</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7038">7038</td><td class="line">  <span class='keyword'>if</span> (doautocmd)</td></tr>
+<tr><td class="num" id="LN7039">7039</td><td class="line">    xp-&gt;xp_context = EXPAND_FILES;          <span class='comment'>/* expand file names */</span></td></tr>
+<tr><td class="num" id="LN7040">7040</td><td class="line">  <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN7041">7041</td><td class="line">    xp-&gt;xp_context = EXPAND_NOTHING;        <span class='comment'>/* pattern is not expanded */</span></td></tr>
+<tr><td class="num" id="LN7042">7042</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN7043">7043</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7044">7044</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7045">7045</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7046">7046</td><td class="line"> <span class='comment'>* Function given to ExpandGeneric() to obtain the list of event names.</span></td></tr>
+<tr><td class="num" id="LN7047">7047</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7048">7048</td><td class="line">char_u *get_event_name(expand_T *xp, <span class='keyword'>int</span> idx)</td></tr>
+<tr><td class="num" id="LN7049">7049</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7050">7050</td><td class="line">  <span class='keyword'>if</span> (idx &lt; augroups.ga_len) {          <span class='comment'>/* First list group names, if wanted */</span></td></tr>
+<tr><td class="num" id="LN7051">7051</td><td class="line">    <span class='keyword'>if</span> (!include_groups || <span class='macro'>AUGROUP_NAME(idx)<span class='expansion'>(((char_u **)augroups.ga_data)[idx])</span></span> == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7052">7052</td><td class="line">      <span class='keyword'>return</span> (char_u *)<span class='string_literal'>""</span>;              <span class='comment'>/* skip deleted entries */</span></td></tr>
+<tr><td class="num" id="LN7053">7053</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>AUGROUP_NAME(idx)<span class='expansion'>(((char_u **)augroups.ga_data)[idx])</span></span>;           <span class='comment'>/* return a name */</span></td></tr>
+<tr><td class="num" id="LN7054">7054</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7055">7055</td><td class="line">  <span class='keyword'>return</span> (char_u *)event_names[idx - augroups.ga_len].name;</td></tr>
+<tr><td class="num" id="LN7056">7056</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7057">7057</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7058">7058</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7059">7059</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7060">7060</td><td class="line"> <span class='comment'>* Return TRUE if autocmd is supported.</span></td></tr>
+<tr><td class="num" id="LN7061">7061</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7062">7062</td><td class="line"><span class='keyword'>int</span> autocmd_supported(char_u *name)</td></tr>
+<tr><td class="num" id="LN7063">7063</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7064">7064</td><td class="line">  char_u *p;</td></tr>
+<tr><td class="num" id="LN7065">7065</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7066">7066</td><td class="line">  <span class='keyword'>return</span> event_name2nr(name, &amp;p) != NUM_EVENTS;</td></tr>
+<tr><td class="num" id="LN7067">7067</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7068">7068</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7069">7069</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7070">7070</td><td class="line"> <span class='comment'>* Return TRUE if an autocommand is defined for a group, event and</span></td></tr>
+<tr><td class="num" id="LN7071">7071</td><td class="line"> <span class='comment'>* pattern:  The group can be omitted to accept any group. "event" and "pattern"</span></td></tr>
+<tr><td class="num" id="LN7072">7072</td><td class="line"> <span class='comment'>* can be NULL to accept any event and pattern. "pattern" can be NULL to accept</span></td></tr>
+<tr><td class="num" id="LN7073">7073</td><td class="line"> <span class='comment'>* any pattern. Buffer-local patterns &lt;buffer&gt; or &lt;buffer=N&gt; are accepted.</span></td></tr>
+<tr><td class="num" id="LN7074">7074</td><td class="line"> <span class='comment'>* Used for:</span></td></tr>
+<tr><td class="num" id="LN7075">7075</td><td class="line"> <span class='comment'>*	exists("#Group") or</span></td></tr>
+<tr><td class="num" id="LN7076">7076</td><td class="line"> <span class='comment'>*	exists("#Group#Event") or</span></td></tr>
+<tr><td class="num" id="LN7077">7077</td><td class="line"> <span class='comment'>*	exists("#Group#Event#pat") or</span></td></tr>
+<tr><td class="num" id="LN7078">7078</td><td class="line"> <span class='comment'>*	exists("#Event") or</span></td></tr>
+<tr><td class="num" id="LN7079">7079</td><td class="line"> <span class='comment'>*	exists("#Event#pat")</span></td></tr>
+<tr><td class="num" id="LN7080">7080</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7081">7081</td><td class="line"><span class='keyword'>int</span> au_exists(char_u *arg)</td></tr>
+<tr><td class="num" id="LN7082">7082</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7083">7083</td><td class="line">  char_u      *arg_save;</td></tr>
+<tr><td class="num" id="LN7084">7084</td><td class="line">  char_u      *pattern = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN7085">7085</td><td class="line">  char_u      *event_name;</td></tr>
+<tr><td class="num" id="LN7086">7086</td><td class="line">  char_u      *p;</td></tr>
+<tr><td class="num" id="LN7087">7087</td><td class="line">  event_T event;</td></tr>
+<tr><td class="num" id="LN7088">7088</td><td class="line">  AutoPat     *ap;</td></tr>
+<tr><td class="num" id="LN7089">7089</td><td class="line">  buf_T       *buflocal_buf = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN7090">7090</td><td class="line">  <span class='keyword'>int</span> group;</td></tr>
+<tr><td class="num" id="LN7091">7091</td><td class="line">  <span class='keyword'>int</span> retval = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
 <tr><td class="num" id="LN7092">7092</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7093">7093</td><td class="line">  <span class='comment'>/* First, look for an autocmd group name */</span></td></tr>
-<tr><td class="num" id="LN7094">7094</td><td class="line">  group = au_find_group(arg_save);</td></tr>
-<tr><td class="num" id="LN7095">7095</td><td class="line">  <span class='keyword'>if</span> (group == <span class='macro'>AUGROUP_ERROR<span class='expansion'>-2</span></span>) {</td></tr>
-<tr><td class="num" id="LN7096">7096</td><td class="line">    <span class='comment'>/* Didn't match a group name, assume the first argument is an event. */</span></td></tr>
-<tr><td class="num" id="LN7097">7097</td><td class="line">    group = <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span>;</td></tr>
-<tr><td class="num" id="LN7098">7098</td><td class="line">    event_name = arg_save;</td></tr>
-<tr><td class="num" id="LN7099">7099</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN7100">7100</td><td class="line">    <span class='keyword'>if</span> (p == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num" id="LN7101">7101</td><td class="line">      <span class='comment'>/* "Group": group name is present and it's recognized */</span></td></tr>
-<tr><td class="num" id="LN7102">7102</td><td class="line">      retval = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7103">7103</td><td class="line">      <span class='keyword'>goto</span> theend;</td></tr>
-<tr><td class="num" id="LN7104">7104</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN7105">7105</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7106">7106</td><td class="line">    <span class='comment'>/* Must be "Group#Event" or "Group#Event#pat". */</span></td></tr>
-<tr><td class="num" id="LN7107">7107</td><td class="line">    event_name = p;</td></tr>
-<tr><td class="num" id="LN7108">7108</td><td class="line">    p = vim_strchr(event_name, '#');</td></tr>
-<tr><td class="num" id="LN7109">7109</td><td class="line">    <span class='keyword'>if</span> (p != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7110">7110</td><td class="line">      *p++ = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;           <span class='comment'>/* "Group#Event#pat" */</span></td></tr>
-<tr><td class="num" id="LN7111">7111</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7112">7112</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7113">7113</td><td class="line">  pattern = p;              <span class='comment'>/* "pattern" is NULL when there is no pattern */</span></td></tr>
-<tr><td class="num" id="LN7114">7114</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7115">7115</td><td class="line">  <span class='comment'>/* find the index (enum) for the event name */</span></td></tr>
-<tr><td class="num" id="LN7116">7116</td><td class="line">  event = event_name2nr(event_name, &amp;p);</td></tr>
-<tr><td class="num" id="LN7117">7117</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7118">7118</td><td class="line">  <span class='comment'>/* return FALSE if the event name is not recognized */</span></td></tr>
-<tr><td class="num" id="LN7119">7119</td><td class="line">  <span class='keyword'>if</span> (event == NUM_EVENTS)</td></tr>
-<tr><td class="num" id="LN7120">7120</td><td class="line">    <span class='keyword'>goto</span> theend;</td></tr>
-<tr><td class="num" id="LN7121">7121</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7122">7122</td><td class="line">  <span class='comment'>/* Find the first autocommand for this event.</span></td></tr>
-<tr><td class="num" id="LN7123">7123</td><td class="line">   <span class='comment'>* If there isn't any, return FALSE;</span></td></tr>
-<tr><td class="num" id="LN7124">7124</td><td class="line">   <span class='comment'>* If there is one and no pattern given, return TRUE; */</span></td></tr>
-<tr><td class="num" id="LN7125">7125</td><td class="line">  ap = first_autopat[(<span class='keyword'>int</span>)event];</td></tr>
-<tr><td class="num" id="LN7126">7126</td><td class="line">  <span class='keyword'>if</span> (ap == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7127">7127</td><td class="line">    <span class='keyword'>goto</span> theend;</td></tr>
-<tr><td class="num" id="LN7128">7128</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7129">7129</td><td class="line">  <span class='comment'>/* if pattern is "&lt;buffer&gt;", special handling is needed which uses curbuf */</span></td></tr>
-<tr><td class="num" id="LN7130">7130</td><td class="line">  <span class='comment'>/* for pattern "&lt;buffer=N&gt;, fnamecmp() will work fine */</span></td></tr>
-<tr><td class="num" id="LN7131">7131</td><td class="line">  <span class='keyword'>if</span> (pattern != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; <span class='macro'>STRICMP(pattern, <span class='string_literal'>"&lt;buffer&gt;"</span>)<span class='expansion'>strcasecmp((char *)(pattern), (char *)("&lt;buffer&gt;"))</span></span> == 0)</td></tr>
-<tr><td class="num" id="LN7132">7132</td><td class="line">    buflocal_buf = curbuf;</td></tr>
-<tr><td class="num" id="LN7133">7133</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7134">7134</td><td class="line">  <span class='comment'>/* Check if there is an autocommand with the given pattern. */</span></td></tr>
-<tr><td class="num" id="LN7135">7135</td><td class="line">  <span class='keyword'>for</span> (; ap != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; ap = ap-&gt;next)</td></tr>
-<tr><td class="num" id="LN7136">7136</td><td class="line">    <span class='comment'>/* only use a pattern when it has not been removed and has commands. */</span></td></tr>
-<tr><td class="num" id="LN7137">7137</td><td class="line">    <span class='comment'>/* For buffer-local autocommands, fnamecmp() works fine. */</span></td></tr>
-<tr><td class="num" id="LN7138">7138</td><td class="line">    <span class='keyword'>if</span> (ap-&gt;pat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; ap-&gt;cmds != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num" id="LN7139">7139</td><td class="line">        &amp;&amp; (group == <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span> || ap-&gt;group == group)</td></tr>
-<tr><td class="num" id="LN7140">7140</td><td class="line">        &amp;&amp; (pattern == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num" id="LN7141">7141</td><td class="line">            || (buflocal_buf == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num" id="LN7142">7142</td><td class="line">                ? <span class='macro'>fnamecmp(ap-&gt;pat, pattern)<span class='expansion'>vim_fnamecmp((char_u *)(ap-&gt;pat), (char_u *)(pattern))</span></span> == 0</td></tr>
-<tr><td class="num" id="LN7143">7143</td><td class="line">                : ap-&gt;buflocal_nr == buflocal_buf-&gt;b_fnum))) {</td></tr>
-<tr><td class="num" id="LN7144">7144</td><td class="line">      retval = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7145">7145</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7146">7146</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN7147">7147</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7148">7148</td><td class="line">theend:</td></tr>
-<tr><td class="num" id="LN7149">7149</td><td class="line">  free(arg_save);</td></tr>
-<tr><td class="num" id="LN7150">7150</td><td class="line">  <span class='keyword'>return</span> retval;</td></tr>
-<tr><td class="num" id="LN7151">7151</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7152">7152</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7093">7093</td><td class="line">  <span class='comment'>/* Make a copy so that we can change the '#' chars to a NUL. */</span></td></tr>
+<tr><td class="num" id="LN7094">7094</td><td class="line">  arg_save = vim_strsave(arg);</td></tr>
+<tr><td class="num" id="LN7095">7095</td><td class="line">  p = vim_strchr(arg_save, '#');</td></tr>
+<tr><td class="num" id="LN7096">7096</td><td class="line">  <span class='keyword'>if</span> (p != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7097">7097</td><td class="line">    *p++ = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;</td></tr>
+<tr><td class="num" id="LN7098">7098</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7099">7099</td><td class="line">  <span class='comment'>/* First, look for an autocmd group name */</span></td></tr>
+<tr><td class="num" id="LN7100">7100</td><td class="line">  group = au_find_group(arg_save);</td></tr>
+<tr><td class="num" id="LN7101">7101</td><td class="line">  <span class='keyword'>if</span> (group == <span class='macro'>AUGROUP_ERROR<span class='expansion'>-2</span></span>) {</td></tr>
+<tr><td class="num" id="LN7102">7102</td><td class="line">    <span class='comment'>/* Didn't match a group name, assume the first argument is an event. */</span></td></tr>
+<tr><td class="num" id="LN7103">7103</td><td class="line">    group = <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span>;</td></tr>
+<tr><td class="num" id="LN7104">7104</td><td class="line">    event_name = arg_save;</td></tr>
+<tr><td class="num" id="LN7105">7105</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN7106">7106</td><td class="line">    <span class='keyword'>if</span> (p == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN7107">7107</td><td class="line">      <span class='comment'>/* "Group": group name is present and it's recognized */</span></td></tr>
+<tr><td class="num" id="LN7108">7108</td><td class="line">      retval = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7109">7109</td><td class="line">      <span class='keyword'>goto</span> theend;</td></tr>
+<tr><td class="num" id="LN7110">7110</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN7111">7111</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7112">7112</td><td class="line">    <span class='comment'>/* Must be "Group#Event" or "Group#Event#pat". */</span></td></tr>
+<tr><td class="num" id="LN7113">7113</td><td class="line">    event_name = p;</td></tr>
+<tr><td class="num" id="LN7114">7114</td><td class="line">    p = vim_strchr(event_name, '#');</td></tr>
+<tr><td class="num" id="LN7115">7115</td><td class="line">    <span class='keyword'>if</span> (p != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7116">7116</td><td class="line">      *p++ = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;           <span class='comment'>/* "Group#Event#pat" */</span></td></tr>
+<tr><td class="num" id="LN7117">7117</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7118">7118</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7119">7119</td><td class="line">  pattern = p;              <span class='comment'>/* "pattern" is NULL when there is no pattern */</span></td></tr>
+<tr><td class="num" id="LN7120">7120</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7121">7121</td><td class="line">  <span class='comment'>/* find the index (enum) for the event name */</span></td></tr>
+<tr><td class="num" id="LN7122">7122</td><td class="line">  event = event_name2nr(event_name, &amp;p);</td></tr>
+<tr><td class="num" id="LN7123">7123</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7124">7124</td><td class="line">  <span class='comment'>/* return FALSE if the event name is not recognized */</span></td></tr>
+<tr><td class="num" id="LN7125">7125</td><td class="line">  <span class='keyword'>if</span> (event == NUM_EVENTS)</td></tr>
+<tr><td class="num" id="LN7126">7126</td><td class="line">    <span class='keyword'>goto</span> theend;</td></tr>
+<tr><td class="num" id="LN7127">7127</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7128">7128</td><td class="line">  <span class='comment'>/* Find the first autocommand for this event.</span></td></tr>
+<tr><td class="num" id="LN7129">7129</td><td class="line">   <span class='comment'>* If there isn't any, return FALSE;</span></td></tr>
+<tr><td class="num" id="LN7130">7130</td><td class="line">   <span class='comment'>* If there is one and no pattern given, return TRUE; */</span></td></tr>
+<tr><td class="num" id="LN7131">7131</td><td class="line">  ap = first_autopat[(<span class='keyword'>int</span>)event];</td></tr>
+<tr><td class="num" id="LN7132">7132</td><td class="line">  <span class='keyword'>if</span> (ap == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7133">7133</td><td class="line">    <span class='keyword'>goto</span> theend;</td></tr>
+<tr><td class="num" id="LN7134">7134</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7135">7135</td><td class="line">  <span class='comment'>/* if pattern is "&lt;buffer&gt;", special handling is needed which uses curbuf */</span></td></tr>
+<tr><td class="num" id="LN7136">7136</td><td class="line">  <span class='comment'>/* for pattern "&lt;buffer=N&gt;, fnamecmp() will work fine */</span></td></tr>
+<tr><td class="num" id="LN7137">7137</td><td class="line">  <span class='keyword'>if</span> (pattern != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; <span class='macro'>STRICMP(pattern, <span class='string_literal'>"&lt;buffer&gt;"</span>)<span class='expansion'>strcasecmp((char *)(pattern), (char *)("&lt;buffer&gt;"))</span></span> == 0)</td></tr>
+<tr><td class="num" id="LN7138">7138</td><td class="line">    buflocal_buf = curbuf;</td></tr>
+<tr><td class="num" id="LN7139">7139</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7140">7140</td><td class="line">  <span class='comment'>/* Check if there is an autocommand with the given pattern. */</span></td></tr>
+<tr><td class="num" id="LN7141">7141</td><td class="line">  <span class='keyword'>for</span> (; ap != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; ap = ap-&gt;next)</td></tr>
+<tr><td class="num" id="LN7142">7142</td><td class="line">    <span class='comment'>/* only use a pattern when it has not been removed and has commands. */</span></td></tr>
+<tr><td class="num" id="LN7143">7143</td><td class="line">    <span class='comment'>/* For buffer-local autocommands, fnamecmp() works fine. */</span></td></tr>
+<tr><td class="num" id="LN7144">7144</td><td class="line">    <span class='keyword'>if</span> (ap-&gt;pat != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; ap-&gt;cmds != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
+<tr><td class="num" id="LN7145">7145</td><td class="line">        &amp;&amp; (group == <span class='macro'>AUGROUP_ALL<span class='expansion'>-3</span></span> || ap-&gt;group == group)</td></tr>
+<tr><td class="num" id="LN7146">7146</td><td class="line">        &amp;&amp; (pattern == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
+<tr><td class="num" id="LN7147">7147</td><td class="line">            || (buflocal_buf == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
+<tr><td class="num" id="LN7148">7148</td><td class="line">                ? <span class='macro'>fnamecmp(ap-&gt;pat, pattern)<span class='expansion'>vim_fnamecmp((char_u *)(ap-&gt;pat), (char_u *)(pattern))</span></span> == 0</td></tr>
+<tr><td class="num" id="LN7149">7149</td><td class="line">                : ap-&gt;buflocal_nr == buflocal_buf-&gt;b_fnum))) {</td></tr>
+<tr><td class="num" id="LN7150">7150</td><td class="line">      retval = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7151">7151</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7152">7152</td><td class="line">    }</td></tr>
 <tr><td class="num" id="LN7153">7153</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7154">7154</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7155">7155</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7156">7156</td><td class="line"> <span class='comment'>* Try matching a filename with a "pattern" ("prog" is NULL), or use the</span></td></tr>
-<tr><td class="num" id="LN7157">7157</td><td class="line"> <span class='comment'>* precompiled regprog "prog" ("pattern" is NULL).  That avoids calling</span></td></tr>
-<tr><td class="num" id="LN7158">7158</td><td class="line"> <span class='comment'>* vim_regcomp() often.</span></td></tr>
-<tr><td class="num" id="LN7159">7159</td><td class="line"> <span class='comment'>* Used for autocommands and 'wildignore'.</span></td></tr>
-<tr><td class="num" id="LN7160">7160</td><td class="line"> <span class='comment'>* Returns TRUE if there is a match, FALSE otherwise.</span></td></tr>
-<tr><td class="num" id="LN7161">7161</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7162">7162</td><td class="line"><span class='keyword'>int</span> </td></tr>
-<tr><td class="num" id="LN7163">7163</td><td class="line">match_file_pat (</td></tr>
-<tr><td class="num" id="LN7164">7164</td><td class="line">    char_u *pattern,                   <span class='comment'>/* pattern to match with */</span></td></tr>
-<tr><td class="num" id="LN7165">7165</td><td class="line">    regprog_T *prog,                      <span class='comment'>/* pre-compiled regprog or NULL */</span></td></tr>
-<tr><td class="num" id="LN7166">7166</td><td class="line">    char_u *fname,                     <span class='comment'>/* full path of file name */</span></td></tr>
-<tr><td class="num" id="LN7167">7167</td><td class="line">    char_u *sfname,                    <span class='comment'>/* short file name or NULL */</span></td></tr>
-<tr><td class="num" id="LN7168">7168</td><td class="line">    char_u *tail,                      <span class='comment'>/* tail of path */</span></td></tr>
-<tr><td class="num" id="LN7169">7169</td><td class="line">    <span class='keyword'>int</span> allow_dirs                         <span class='comment'>/* allow matching with dir */</span></td></tr>
-<tr><td class="num" id="LN7170">7170</td><td class="line">)</td></tr>
-<tr><td class="num" id="LN7171">7171</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN7172">7172</td><td class="line">  regmatch_T regmatch;</td></tr>
-<tr><td class="num" id="LN7173">7173</td><td class="line">  <span class='keyword'>int</span> result = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN7174">7174</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7175">7175</td><td class="line">  regmatch.rm_ic = p_fic;   <span class='comment'>/* ignore case if 'fileignorecase' is set */</span></td></tr>
-<tr><td class="num" id="LN7176">7176</td><td class="line">  {</td></tr>
-<tr><td class="num" id="LN7177">7177</td><td class="line">    <span class='keyword'>if</span> (prog != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7178">7178</td><td class="line">      regmatch.regprog = prog;</td></tr>
-<tr><td class="num" id="LN7179">7179</td><td class="line">    <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN7180">7180</td><td class="line">      regmatch.regprog = vim_regcomp(pattern, <span class='macro'>RE_MAGIC<span class='expansion'>1</span></span>);</td></tr>
-<tr><td class="num" id="LN7181">7181</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7182">7182</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7183">7183</td><td class="line">  <span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7184">7184</td><td class="line">   <span class='comment'>* Try for a match with the pattern with:</span></td></tr>
-<tr><td class="num" id="LN7185">7185</td><td class="line">   <span class='comment'>* 1. the full file name, when the pattern has a '/'.</span></td></tr>
-<tr><td class="num" id="LN7186">7186</td><td class="line">   <span class='comment'>* 2. the short file name, when the pattern has a '/'.</span></td></tr>
-<tr><td class="num" id="LN7187">7187</td><td class="line">   <span class='comment'>* 3. the tail of the file name, when the pattern has no '/'.</span></td></tr>
-<tr><td class="num" id="LN7188">7188</td><td class="line">   <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7189">7189</td><td class="line">  <span class='keyword'>if</span> (</td></tr>
-<tr><td class="num" id="LN7190">7190</td><td class="line">    (regmatch.regprog != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num" id="LN7191">7191</td><td class="line">     &amp;&amp; ((allow_dirs</td></tr>
-<tr><td class="num" id="LN7192">7192</td><td class="line">          &amp;&amp; (vim_regexec(&amp;regmatch, fname, (colnr_T)0)</td></tr>
-<tr><td class="num" id="LN7193">7193</td><td class="line">              || (sfname != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num" id="LN7194">7194</td><td class="line">                  &amp;&amp; vim_regexec(&amp;regmatch, sfname, (colnr_T)0))))</td></tr>
-<tr><td class="num" id="LN7195">7195</td><td class="line">         || (!allow_dirs &amp;&amp; vim_regexec(&amp;regmatch, tail, (colnr_T)0)))))</td></tr>
-<tr><td class="num" id="LN7196">7196</td><td class="line">    result = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7197">7197</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7198">7198</td><td class="line">  <span class='keyword'>if</span> (prog == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7199">7199</td><td class="line">    vim_regfree(regmatch.regprog);</td></tr>
-<tr><td class="num" id="LN7200">7200</td><td class="line">  <span class='keyword'>return</span> result;</td></tr>
-<tr><td class="num" id="LN7201">7201</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7202">7202</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7203">7203</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7204">7204</td><td class="line"> <span class='comment'>* Return TRUE if a file matches with a pattern in "list".</span></td></tr>
-<tr><td class="num" id="LN7205">7205</td><td class="line"> <span class='comment'>* "list" is a comma-separated list of patterns, like 'wildignore'.</span></td></tr>
-<tr><td class="num" id="LN7206">7206</td><td class="line"> <span class='comment'>* "sfname" is the short file name or NULL, "ffname" the long file name.</span></td></tr>
-<tr><td class="num" id="LN7207">7207</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7208">7208</td><td class="line"><span class='keyword'>int</span> match_file_list(char_u *list, char_u *sfname, char_u *ffname)</td></tr>
-<tr><td class="num" id="LN7209">7209</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN7210">7210</td><td class="line">  char_u buf[100];</td></tr>
-<tr><td class="num" id="LN7211">7211</td><td class="line">  char_u      *tail;</td></tr>
-<tr><td class="num" id="LN7212">7212</td><td class="line">  char_u      *regpat;</td></tr>
-<tr><td class="num" id="LN7213">7213</td><td class="line">  <span class='keyword'>char</span> allow_dirs;</td></tr>
-<tr><td class="num" id="LN7214">7214</td><td class="line">  <span class='keyword'>int</span> match;</td></tr>
-<tr><td class="num" id="LN7215">7215</td><td class="line">  char_u      *p;</td></tr>
-<tr><td class="num" id="LN7216">7216</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7217">7217</td><td class="line">  tail = path_tail(sfname);</td></tr>
-<tr><td class="num" id="LN7218">7218</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7219">7219</td><td class="line">  <span class='comment'>/* try all patterns in 'wildignore' */</span></td></tr>
-<tr><td class="num" id="LN7220">7220</td><td class="line">  p = list;</td></tr>
-<tr><td class="num" id="LN7221">7221</td><td class="line">  <span class='keyword'>while</span> (*p) {</td></tr>
-<tr><td class="num" id="LN7222">7222</td><td class="line">    copy_option_part(&amp;p, buf, 100, <span class='string_literal'>","</span>);</td></tr>
-<tr><td class="num" id="LN7223">7223</td><td class="line">    regpat = file_pat_to_reg_pat(buf, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, &amp;allow_dirs, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
-<tr><td class="num" id="LN7224">7224</td><td class="line">    <span class='keyword'>if</span> (regpat == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7225">7225</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7226">7226</td><td class="line">    match = match_file_pat(regpat, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, ffname, sfname,</td></tr>
-<tr><td class="num" id="LN7227">7227</td><td class="line">        tail, (<span class='keyword'>int</span>)allow_dirs);</td></tr>
-<tr><td class="num" id="LN7228">7228</td><td class="line">    free(regpat);</td></tr>
-<tr><td class="num" id="LN7229">7229</td><td class="line">    <span class='keyword'>if</span> (match)</td></tr>
-<tr><td class="num" id="LN7230">7230</td><td class="line">      <span class='keyword'>return</span> <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7231">7231</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7232">7232</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN7233">7233</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7234">7234</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7235">7235</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7236">7236</td><td class="line"> <span class='comment'>* Convert the given pattern "pat" which has shell style wildcards in it, into</span></td></tr>
-<tr><td class="num" id="LN7237">7237</td><td class="line"> <span class='comment'>* a regular expression, and return the result in allocated memory.  If there</span></td></tr>
-<tr><td class="num" id="LN7238">7238</td><td class="line"> <span class='comment'>* is a directory path separator to be matched, then TRUE is put in</span></td></tr>
-<tr><td class="num" id="LN7239">7239</td><td class="line"> <span class='comment'>* allow_dirs, otherwise FALSE is put there -- webb.</span></td></tr>
-<tr><td class="num" id="LN7240">7240</td><td class="line"> <span class='comment'>* Handle backslashes before special characters, like "\*" and "\ ".</span></td></tr>
-<tr><td class="num" id="LN7241">7241</td><td class="line"> <span class='comment'>*</span></td></tr>
-<tr><td class="num" id="LN7242">7242</td><td class="line"> <span class='comment'>* Returns NULL on failure.</span></td></tr>
-<tr><td class="num" id="LN7243">7243</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7244">7244</td><td class="line">char_u *</td></tr>
-<tr><td class="num" id="LN7245">7245</td><td class="line">file_pat_to_reg_pat (</td></tr>
-<tr><td class="num" id="LN7246">7246</td><td class="line">    char_u *pat,</td></tr>
-<tr><td class="num" id="LN7247">7247</td><td class="line">    char_u *pat_end,           <span class='comment'>/* first char after pattern or NULL */</span></td></tr>
-<tr><td class="num" id="LN7248">7248</td><td class="line">    <span class='keyword'>char</span> *allow_dirs,        <span class='comment'>/* Result passed back out in here */</span></td></tr>
-<tr><td class="num" id="LN7249">7249</td><td class="line">    <span class='keyword'>int</span> no_bslash             <span class='comment'>/* Don't use a backward slash as pathsep */</span></td></tr>
-<tr><td class="num" id="LN7250">7250</td><td class="line">)</td></tr>
-<tr><td class="num" id="LN7251">7251</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN7252">7252</td><td class="line">  size_t size;</td></tr>
-<tr><td class="num" id="LN7253">7253</td><td class="line">  char_u      *endp;</td></tr>
-<tr><td class="num" id="LN7254">7254</td><td class="line">  char_u      *reg_pat;</td></tr>
-<tr><td class="num" id="LN7255">7255</td><td class="line">  char_u      *p;</td></tr>
-<tr><td class="num" id="LN7256">7256</td><td class="line">  <span class='keyword'>int</span> i;</td></tr>
-<tr><td class="num" id="LN7257">7257</td><td class="line">  <span class='keyword'>int</span> nested = 0;</td></tr>
-<tr><td class="num" id="LN7258">7258</td><td class="line">  <span class='keyword'>int</span> add_dollar = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7259">7259</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7260">7260</td><td class="line">  <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7261">7261</td><td class="line">    *allow_dirs = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN7262">7262</td><td class="line">  <span class='keyword'>if</span> (pat_end == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7263">7263</td><td class="line">    pat_end = pat + <span class='macro'>STRLEN(pat)<span class='expansion'>strlen((char *)(pat))</span></span>;</td></tr>
-<tr><td class="num" id="LN7264">7264</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7265">7265</td><td class="line">  size = 2;             <span class='comment'>/* '^' at start, '$' at end */</span></td></tr>
-<tr><td class="num" id="LN7266">7266</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7267">7267</td><td class="line">  <span class='keyword'>for</span> (p = pat; p &lt; pat_end; p++) {</td></tr>
-<tr><td class="num" id="LN7268">7268</td><td class="line">    <span class='keyword'>switch</span> (*p) {</td></tr>
-<tr><td class="num" id="LN7269">7269</td><td class="line">    <span class='keyword'>case</span> '*':</td></tr>
-<tr><td class="num" id="LN7270">7270</td><td class="line">    <span class='keyword'>case</span> '.':</td></tr>
-<tr><td class="num" id="LN7271">7271</td><td class="line">    <span class='keyword'>case</span> ',':</td></tr>
-<tr><td class="num" id="LN7272">7272</td><td class="line">    <span class='keyword'>case</span> '{':</td></tr>
-<tr><td class="num" id="LN7273">7273</td><td class="line">    <span class='keyword'>case</span> '}':</td></tr>
-<tr><td class="num" id="LN7274">7274</td><td class="line">    <span class='keyword'>case</span> '~':</td></tr>
-<tr><td class="num" id="LN7275">7275</td><td class="line">      size += 2;                <span class='comment'>/* extra backslash */</span></td></tr>
-<tr><td class="num" id="LN7276">7276</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7277">7277</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
-<tr><td class="num" id="LN7278">7278</td><td class="line">    <span class='keyword'>case</span> '\\':</td></tr>
-<tr><td class="num" id="LN7279">7279</td><td class="line">    <span class='keyword'>case</span> '/':</td></tr>
-<tr><td class="num" id="LN7280">7280</td><td class="line">      size += 4;                <span class='comment'>/* could become "[\/]" */</span></td></tr>
-<tr><td class="num" id="LN7281">7281</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7282">7282</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN7283">7283</td><td class="line">    <span class='keyword'>default</span>:</td></tr>
-<tr><td class="num" id="LN7284">7284</td><td class="line">      size++;</td></tr>
-<tr><td class="num" id="LN7285">7285</td><td class="line">      <span class='keyword'>if</span> (enc_dbcs != 0 &amp;&amp; (*mb_ptr2len)(p) &gt; 1) {</td></tr>
-<tr><td class="num" id="LN7286">7286</td><td class="line">        ++p;</td></tr>
-<tr><td class="num" id="LN7287">7287</td><td class="line">        ++size;</td></tr>
-<tr><td class="num" id="LN7288">7288</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN7289">7289</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7290">7290</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN7291">7291</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7292">7292</td><td class="line">  reg_pat = xmalloc(size + 1);</td></tr>
-<tr><td class="num" id="LN7293">7293</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7294">7294</td><td class="line">  i = 0;</td></tr>
-<tr><td class="num" id="LN7295">7295</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7296">7296</td><td class="line">  <span class='keyword'>if</span> (pat[0] == '*')</td></tr>
-<tr><td class="num" id="LN7297">7297</td><td class="line">    <span class='keyword'>while</span> (pat[0] == '*' &amp;&amp; pat &lt; pat_end - 1)</td></tr>
-<tr><td class="num" id="LN7298">7298</td><td class="line">      pat++;</td></tr>
-<tr><td class="num" id="LN7299">7299</td><td class="line">  <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN7300">7300</td><td class="line">    reg_pat[i++] = '^';</td></tr>
-<tr><td class="num" id="LN7301">7301</td><td class="line">  endp = pat_end - 1;</td></tr>
-<tr><td class="num" id="LN7302">7302</td><td class="line">  <span class='keyword'>if</span> (*endp == '*') {</td></tr>
-<tr><td class="num" id="LN7303">7303</td><td class="line">    <span class='keyword'>while</span> (endp - pat &gt; 0 &amp;&amp; *endp == '*')</td></tr>
-<tr><td class="num" id="LN7304">7304</td><td class="line">      endp--;</td></tr>
-<tr><td class="num" id="LN7305">7305</td><td class="line">    add_dollar = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN7306">7306</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7307">7307</td><td class="line">  <span class='keyword'>for</span> (p = pat; *p &amp;&amp; nested &gt;= 0 &amp;&amp; p &lt;= endp; p++) {</td></tr>
-<tr><td class="num" id="LN7308">7308</td><td class="line">    <span class='keyword'>switch</span> (*p) {</td></tr>
-<tr><td class="num" id="LN7309">7309</td><td class="line">    <span class='keyword'>case</span> '*':</td></tr>
-<tr><td class="num" id="LN7310">7310</td><td class="line">      reg_pat[i++] = '.';</td></tr>
-<tr><td class="num" id="LN7311">7311</td><td class="line">      reg_pat[i++] = '*';</td></tr>
-<tr><td class="num" id="LN7312">7312</td><td class="line">      <span class='keyword'>while</span> (p[1] == '*')               <span class='comment'>/* "**" matches like "*" */</span></td></tr>
-<tr><td class="num" id="LN7313">7313</td><td class="line">        ++p;</td></tr>
-<tr><td class="num" id="LN7314">7314</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7315">7315</td><td class="line">    <span class='keyword'>case</span> '.':</td></tr>
-<tr><td class="num" id="LN7316">7316</td><td class="line">    <span class='keyword'>case</span> '~':</td></tr>
-<tr><td class="num" id="LN7317">7317</td><td class="line">      reg_pat[i++] = '\\';</td></tr>
-<tr><td class="num" id="LN7318">7318</td><td class="line">      reg_pat[i++] = *p;</td></tr>
-<tr><td class="num" id="LN7319">7319</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7320">7320</td><td class="line">    <span class='keyword'>case</span> '?':</td></tr>
-<tr><td class="num" id="LN7321">7321</td><td class="line">      reg_pat[i++] = '.';</td></tr>
-<tr><td class="num" id="LN7322">7322</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7323">7323</td><td class="line">    <span class='keyword'>case</span> '\\':</td></tr>
-<tr><td class="num" id="LN7324">7324</td><td class="line">      <span class='keyword'>if</span> (p[1] == <span class='macro'>NUL<span class='expansion'>'\000'</span></span>)</td></tr>
-<tr><td class="num" id="LN7325">7325</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7326">7326</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
-<tr><td class="num" id="LN7327">7327</td><td class="line">      <span class='keyword'>if</span> (!no_bslash) {</td></tr>
-<tr><td class="num" id="LN7328">7328</td><td class="line">        <span class='comment'>/* translate:</span></td></tr>
-<tr><td class="num" id="LN7329">7329</td><td class="line">         <span class='comment'>* "\x" to "\\x"  e.g., "dir\file"</span></td></tr>
-<tr><td class="num" id="LN7330">7330</td><td class="line">         <span class='comment'>* "\*" to "\\.*" e.g., "dir\*.c"</span></td></tr>
-<tr><td class="num" id="LN7331">7331</td><td class="line">         <span class='comment'>* "\?" to "\\."  e.g., "dir\??.c"</span></td></tr>
-<tr><td class="num" id="LN7332">7332</td><td class="line">         <span class='comment'>* "\+" to "\+"   e.g., "fileX\+.c"</span></td></tr>
-<tr><td class="num" id="LN7333">7333</td><td class="line">         <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7334">7334</td><td class="line">        <span class='keyword'>if</span> ((vim_isfilec(p[1]) || p[1] == '*' || p[1] == '?')</td></tr>
-<tr><td class="num" id="LN7335">7335</td><td class="line">            &amp;&amp; p[1] != '+') {</td></tr>
-<tr><td class="num" id="LN7336">7336</td><td class="line">          reg_pat[i++] = '[';</td></tr>
-<tr><td class="num" id="LN7337">7337</td><td class="line">          reg_pat[i++] = '\\';</td></tr>
-<tr><td class="num" id="LN7338">7338</td><td class="line">          reg_pat[i++] = '/';</td></tr>
-<tr><td class="num" id="LN7339">7339</td><td class="line">          reg_pat[i++] = ']';</td></tr>
-<tr><td class="num" id="LN7340">7340</td><td class="line">          <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7341">7341</td><td class="line">            *allow_dirs = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7342">7342</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7343">7343</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN7344">7344</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN7345">7345</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN7346">7346</td><td class="line">      <span class='comment'>/* Undo escaping from ExpandEscape():</span></td></tr>
-<tr><td class="num" id="LN7347">7347</td><td class="line">       <span class='comment'>* foo\?bar -&gt; foo?bar</span></td></tr>
-<tr><td class="num" id="LN7348">7348</td><td class="line">       <span class='comment'>* foo\%bar -&gt; foo%bar</span></td></tr>
-<tr><td class="num" id="LN7349">7349</td><td class="line">       <span class='comment'>* foo\,bar -&gt; foo,bar</span></td></tr>
-<tr><td class="num" id="LN7350">7350</td><td class="line">       <span class='comment'>* foo\ bar -&gt; foo bar</span></td></tr>
-<tr><td class="num" id="LN7351">7351</td><td class="line">       <span class='comment'>* Don't unescape \, * and others that are also special in a</span></td></tr>
-<tr><td class="num" id="LN7352">7352</td><td class="line">       <span class='comment'>* regexp.</span></td></tr>
-<tr><td class="num" id="LN7353">7353</td><td class="line">       <span class='comment'>* An escaped { must be unescaped since we use magic not</span></td></tr>
-<tr><td class="num" id="LN7354">7354</td><td class="line">       <span class='comment'>* verymagic.  Use "\\\{n,m\}"" to get "\{n,m}".</span></td></tr>
-<tr><td class="num" id="LN7355">7355</td><td class="line">       <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7356">7356</td><td class="line">      <span class='keyword'>if</span> (*++p == '?'</td></tr>
-<tr><td class="num" id="LN7357">7357</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
-<tr><td class="num" id="LN7358">7358</td><td class="line">          &amp;&amp; no_bslash</td></tr>
-<tr><td class="num" id="LN7359">7359</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN7360">7360</td><td class="line">          )</td></tr>
-<tr><td class="num" id="LN7361">7361</td><td class="line">        reg_pat[i++] = '?';</td></tr>
-<tr><td class="num" id="LN7362">7362</td><td class="line">      <span class='keyword'>else</span> <span class='keyword'>if</span> (*p == ',' || *p == '%' || *p == '#'</td></tr>
-<tr><td class="num" id="LN7363">7363</td><td class="line">               || *p == ' ' || *p == '{' || *p == '}')</td></tr>
-<tr><td class="num" id="LN7364">7364</td><td class="line">        reg_pat[i++] = *p;</td></tr>
-<tr><td class="num" id="LN7365">7365</td><td class="line">      <span class='keyword'>else</span> <span class='keyword'>if</span> (*p == '\\' &amp;&amp; p[1] == '\\' &amp;&amp; p[2] == '{') {</td></tr>
-<tr><td class="num" id="LN7366">7366</td><td class="line">        reg_pat[i++] = '\\';</td></tr>
-<tr><td class="num" id="LN7367">7367</td><td class="line">        reg_pat[i++] = '{';</td></tr>
-<tr><td class="num" id="LN7368">7368</td><td class="line">        p += 2;</td></tr>
-<tr><td class="num" id="LN7369">7369</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN7370">7370</td><td class="line">        <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; vim_ispathsep(*p)</td></tr>
-<tr><td class="num" id="LN7371">7371</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
-<tr><td class="num" id="LN7372">7372</td><td class="line">            &amp;&amp; (!no_bslash || *p != '\\')</td></tr>
-<tr><td class="num" id="LN7373">7373</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN7374">7374</td><td class="line">            )</td></tr>
-<tr><td class="num" id="LN7375">7375</td><td class="line">          *allow_dirs = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7376">7376</td><td class="line">        reg_pat[i++] = '\\';</td></tr>
-<tr><td class="num" id="LN7377">7377</td><td class="line">        reg_pat[i++] = *p;</td></tr>
-<tr><td class="num" id="LN7378">7378</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN7379">7379</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7380">7380</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
-<tr><td class="num" id="LN7381">7381</td><td class="line">    <span class='keyword'>case</span> '/':</td></tr>
-<tr><td class="num" id="LN7382">7382</td><td class="line">      reg_pat[i++] = '[';</td></tr>
-<tr><td class="num" id="LN7383">7383</td><td class="line">      reg_pat[i++] = '\\';</td></tr>
-<tr><td class="num" id="LN7384">7384</td><td class="line">      reg_pat[i++] = '/';</td></tr>
-<tr><td class="num" id="LN7385">7385</td><td class="line">      reg_pat[i++] = ']';</td></tr>
-<tr><td class="num" id="LN7386">7386</td><td class="line">      <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN7387">7387</td><td class="line">        *allow_dirs = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7388">7388</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7389">7389</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN7390">7390</td><td class="line">    <span class='keyword'>case</span> '{':</td></tr>
-<tr><td class="num" id="LN7391">7391</td><td class="line">      reg_pat[i++] = '\\';</td></tr>
-<tr><td class="num" id="LN7392">7392</td><td class="line">      reg_pat[i++] = '(';</td></tr>
-<tr><td class="num" id="LN7393">7393</td><td class="line">      nested++;</td></tr>
+<tr><td class="num" id="LN7154">7154</td><td class="line">theend:</td></tr>
+<tr><td class="num" id="LN7155">7155</td><td class="line">  free(arg_save);</td></tr>
+<tr><td class="num" id="LN7156">7156</td><td class="line">  <span class='keyword'>return</span> retval;</td></tr>
+<tr><td class="num" id="LN7157">7157</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7158">7158</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7159">7159</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7160">7160</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7161">7161</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7162">7162</td><td class="line"> <span class='comment'>* Try matching a filename with a "pattern" ("prog" is NULL), or use the</span></td></tr>
+<tr><td class="num" id="LN7163">7163</td><td class="line"> <span class='comment'>* precompiled regprog "prog" ("pattern" is NULL).  That avoids calling</span></td></tr>
+<tr><td class="num" id="LN7164">7164</td><td class="line"> <span class='comment'>* vim_regcomp() often.</span></td></tr>
+<tr><td class="num" id="LN7165">7165</td><td class="line"> <span class='comment'>* Used for autocommands and 'wildignore'.</span></td></tr>
+<tr><td class="num" id="LN7166">7166</td><td class="line"> <span class='comment'>* Returns TRUE if there is a match, FALSE otherwise.</span></td></tr>
+<tr><td class="num" id="LN7167">7167</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7168">7168</td><td class="line"><span class='keyword'>int</span> </td></tr>
+<tr><td class="num" id="LN7169">7169</td><td class="line">match_file_pat (</td></tr>
+<tr><td class="num" id="LN7170">7170</td><td class="line">    char_u *pattern,                   <span class='comment'>/* pattern to match with */</span></td></tr>
+<tr><td class="num" id="LN7171">7171</td><td class="line">    regprog_T *prog,                      <span class='comment'>/* pre-compiled regprog or NULL */</span></td></tr>
+<tr><td class="num" id="LN7172">7172</td><td class="line">    char_u *fname,                     <span class='comment'>/* full path of file name */</span></td></tr>
+<tr><td class="num" id="LN7173">7173</td><td class="line">    char_u *sfname,                    <span class='comment'>/* short file name or NULL */</span></td></tr>
+<tr><td class="num" id="LN7174">7174</td><td class="line">    char_u *tail,                      <span class='comment'>/* tail of path */</span></td></tr>
+<tr><td class="num" id="LN7175">7175</td><td class="line">    <span class='keyword'>int</span> allow_dirs                         <span class='comment'>/* allow matching with dir */</span></td></tr>
+<tr><td class="num" id="LN7176">7176</td><td class="line">)</td></tr>
+<tr><td class="num" id="LN7177">7177</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7178">7178</td><td class="line">  regmatch_T regmatch;</td></tr>
+<tr><td class="num" id="LN7179">7179</td><td class="line">  <span class='keyword'>int</span> result = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN7180">7180</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7181">7181</td><td class="line">  regmatch.rm_ic = p_fic;   <span class='comment'>/* ignore case if 'fileignorecase' is set */</span></td></tr>
+<tr><td class="num" id="LN7182">7182</td><td class="line">  {</td></tr>
+<tr><td class="num" id="LN7183">7183</td><td class="line">    <span class='keyword'>if</span> (prog != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7184">7184</td><td class="line">      regmatch.regprog = prog;</td></tr>
+<tr><td class="num" id="LN7185">7185</td><td class="line">    <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN7186">7186</td><td class="line">      regmatch.regprog = vim_regcomp(pattern, <span class='macro'>RE_MAGIC<span class='expansion'>1</span></span>);</td></tr>
+<tr><td class="num" id="LN7187">7187</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7188">7188</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7189">7189</td><td class="line">  <span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7190">7190</td><td class="line">   <span class='comment'>* Try for a match with the pattern with:</span></td></tr>
+<tr><td class="num" id="LN7191">7191</td><td class="line">   <span class='comment'>* 1. the full file name, when the pattern has a '/'.</span></td></tr>
+<tr><td class="num" id="LN7192">7192</td><td class="line">   <span class='comment'>* 2. the short file name, when the pattern has a '/'.</span></td></tr>
+<tr><td class="num" id="LN7193">7193</td><td class="line">   <span class='comment'>* 3. the tail of the file name, when the pattern has no '/'.</span></td></tr>
+<tr><td class="num" id="LN7194">7194</td><td class="line">   <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7195">7195</td><td class="line">  <span class='keyword'>if</span> (</td></tr>
+<tr><td class="num" id="LN7196">7196</td><td class="line">    (regmatch.regprog != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
+<tr><td class="num" id="LN7197">7197</td><td class="line">     &amp;&amp; ((allow_dirs</td></tr>
+<tr><td class="num" id="LN7198">7198</td><td class="line">          &amp;&amp; (vim_regexec(&amp;regmatch, fname, (colnr_T)0)</td></tr>
+<tr><td class="num" id="LN7199">7199</td><td class="line">              || (sfname != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
+<tr><td class="num" id="LN7200">7200</td><td class="line">                  &amp;&amp; vim_regexec(&amp;regmatch, sfname, (colnr_T)0))))</td></tr>
+<tr><td class="num" id="LN7201">7201</td><td class="line">         || (!allow_dirs &amp;&amp; vim_regexec(&amp;regmatch, tail, (colnr_T)0)))))</td></tr>
+<tr><td class="num" id="LN7202">7202</td><td class="line">    result = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7203">7203</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7204">7204</td><td class="line">  <span class='keyword'>if</span> (prog == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7205">7205</td><td class="line">    vim_regfree(regmatch.regprog);</td></tr>
+<tr><td class="num" id="LN7206">7206</td><td class="line">  <span class='keyword'>return</span> result;</td></tr>
+<tr><td class="num" id="LN7207">7207</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7208">7208</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7209">7209</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7210">7210</td><td class="line"> <span class='comment'>* Return TRUE if a file matches with a pattern in "list".</span></td></tr>
+<tr><td class="num" id="LN7211">7211</td><td class="line"> <span class='comment'>* "list" is a comma-separated list of patterns, like 'wildignore'.</span></td></tr>
+<tr><td class="num" id="LN7212">7212</td><td class="line"> <span class='comment'>* "sfname" is the short file name or NULL, "ffname" the long file name.</span></td></tr>
+<tr><td class="num" id="LN7213">7213</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7214">7214</td><td class="line"><span class='keyword'>int</span> match_file_list(char_u *list, char_u *sfname, char_u *ffname)</td></tr>
+<tr><td class="num" id="LN7215">7215</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7216">7216</td><td class="line">  char_u buf[100];</td></tr>
+<tr><td class="num" id="LN7217">7217</td><td class="line">  char_u      *tail;</td></tr>
+<tr><td class="num" id="LN7218">7218</td><td class="line">  char_u      *regpat;</td></tr>
+<tr><td class="num" id="LN7219">7219</td><td class="line">  <span class='keyword'>char</span> allow_dirs;</td></tr>
+<tr><td class="num" id="LN7220">7220</td><td class="line">  <span class='keyword'>int</span> match;</td></tr>
+<tr><td class="num" id="LN7221">7221</td><td class="line">  char_u      *p;</td></tr>
+<tr><td class="num" id="LN7222">7222</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7223">7223</td><td class="line">  tail = path_tail(sfname);</td></tr>
+<tr><td class="num" id="LN7224">7224</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7225">7225</td><td class="line">  <span class='comment'>/* try all patterns in 'wildignore' */</span></td></tr>
+<tr><td class="num" id="LN7226">7226</td><td class="line">  p = list;</td></tr>
+<tr><td class="num" id="LN7227">7227</td><td class="line">  <span class='keyword'>while</span> (*p) {</td></tr>
+<tr><td class="num" id="LN7228">7228</td><td class="line">    copy_option_part(&amp;p, buf, 100, <span class='string_literal'>","</span>);</td></tr>
+<tr><td class="num" id="LN7229">7229</td><td class="line">    regpat = file_pat_to_reg_pat(buf, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, &amp;allow_dirs, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
+<tr><td class="num" id="LN7230">7230</td><td class="line">    <span class='keyword'>if</span> (regpat == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7231">7231</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7232">7232</td><td class="line">    match = match_file_pat(regpat, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, ffname, sfname,</td></tr>
+<tr><td class="num" id="LN7233">7233</td><td class="line">        tail, (<span class='keyword'>int</span>)allow_dirs);</td></tr>
+<tr><td class="num" id="LN7234">7234</td><td class="line">    free(regpat);</td></tr>
+<tr><td class="num" id="LN7235">7235</td><td class="line">    <span class='keyword'>if</span> (match)</td></tr>
+<tr><td class="num" id="LN7236">7236</td><td class="line">      <span class='keyword'>return</span> <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7237">7237</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7238">7238</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN7239">7239</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7240">7240</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7241">7241</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7242">7242</td><td class="line"> <span class='comment'>* Convert the given pattern "pat" which has shell style wildcards in it, into</span></td></tr>
+<tr><td class="num" id="LN7243">7243</td><td class="line"> <span class='comment'>* a regular expression, and return the result in allocated memory.  If there</span></td></tr>
+<tr><td class="num" id="LN7244">7244</td><td class="line"> <span class='comment'>* is a directory path separator to be matched, then TRUE is put in</span></td></tr>
+<tr><td class="num" id="LN7245">7245</td><td class="line"> <span class='comment'>* allow_dirs, otherwise FALSE is put there -- webb.</span></td></tr>
+<tr><td class="num" id="LN7246">7246</td><td class="line"> <span class='comment'>* Handle backslashes before special characters, like "\*" and "\ ".</span></td></tr>
+<tr><td class="num" id="LN7247">7247</td><td class="line"> <span class='comment'>*</span></td></tr>
+<tr><td class="num" id="LN7248">7248</td><td class="line"> <span class='comment'>* Returns NULL on failure.</span></td></tr>
+<tr><td class="num" id="LN7249">7249</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7250">7250</td><td class="line">char_u *</td></tr>
+<tr><td class="num" id="LN7251">7251</td><td class="line">file_pat_to_reg_pat (</td></tr>
+<tr><td class="num" id="LN7252">7252</td><td class="line">    char_u *pat,</td></tr>
+<tr><td class="num" id="LN7253">7253</td><td class="line">    char_u *pat_end,           <span class='comment'>/* first char after pattern or NULL */</span></td></tr>
+<tr><td class="num" id="LN7254">7254</td><td class="line">    <span class='keyword'>char</span> *allow_dirs,        <span class='comment'>/* Result passed back out in here */</span></td></tr>
+<tr><td class="num" id="LN7255">7255</td><td class="line">    <span class='keyword'>int</span> no_bslash             <span class='comment'>/* Don't use a backward slash as pathsep */</span></td></tr>
+<tr><td class="num" id="LN7256">7256</td><td class="line">)</td></tr>
+<tr><td class="num" id="LN7257">7257</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7258">7258</td><td class="line">  size_t size;</td></tr>
+<tr><td class="num" id="LN7259">7259</td><td class="line">  char_u      *endp;</td></tr>
+<tr><td class="num" id="LN7260">7260</td><td class="line">  char_u      *reg_pat;</td></tr>
+<tr><td class="num" id="LN7261">7261</td><td class="line">  char_u      *p;</td></tr>
+<tr><td class="num" id="LN7262">7262</td><td class="line">  <span class='keyword'>int</span> i;</td></tr>
+<tr><td class="num" id="LN7263">7263</td><td class="line">  <span class='keyword'>int</span> nested = 0;</td></tr>
+<tr><td class="num" id="LN7264">7264</td><td class="line">  <span class='keyword'>int</span> add_dollar = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7265">7265</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7266">7266</td><td class="line">  <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7267">7267</td><td class="line">    *allow_dirs = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN7268">7268</td><td class="line">  <span class='keyword'>if</span> (pat_end == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7269">7269</td><td class="line">    pat_end = pat + <span class='macro'>STRLEN(pat)<span class='expansion'>strlen((char *)(pat))</span></span>;</td></tr>
+<tr><td class="num" id="LN7270">7270</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7271">7271</td><td class="line">  size = 2;             <span class='comment'>/* '^' at start, '$' at end */</span></td></tr>
+<tr><td class="num" id="LN7272">7272</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7273">7273</td><td class="line">  <span class='keyword'>for</span> (p = pat; p &lt; pat_end; p++) {</td></tr>
+<tr><td class="num" id="LN7274">7274</td><td class="line">    <span class='keyword'>switch</span> (*p) {</td></tr>
+<tr><td class="num" id="LN7275">7275</td><td class="line">    <span class='keyword'>case</span> '*':</td></tr>
+<tr><td class="num" id="LN7276">7276</td><td class="line">    <span class='keyword'>case</span> '.':</td></tr>
+<tr><td class="num" id="LN7277">7277</td><td class="line">    <span class='keyword'>case</span> ',':</td></tr>
+<tr><td class="num" id="LN7278">7278</td><td class="line">    <span class='keyword'>case</span> '{':</td></tr>
+<tr><td class="num" id="LN7279">7279</td><td class="line">    <span class='keyword'>case</span> '}':</td></tr>
+<tr><td class="num" id="LN7280">7280</td><td class="line">    <span class='keyword'>case</span> '~':</td></tr>
+<tr><td class="num" id="LN7281">7281</td><td class="line">      size += 2;                <span class='comment'>/* extra backslash */</span></td></tr>
+<tr><td class="num" id="LN7282">7282</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7283">7283</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
+<tr><td class="num" id="LN7284">7284</td><td class="line">    <span class='keyword'>case</span> '\\':</td></tr>
+<tr><td class="num" id="LN7285">7285</td><td class="line">    <span class='keyword'>case</span> '/':</td></tr>
+<tr><td class="num" id="LN7286">7286</td><td class="line">      size += 4;                <span class='comment'>/* could become "[\/]" */</span></td></tr>
+<tr><td class="num" id="LN7287">7287</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7288">7288</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN7289">7289</td><td class="line">    <span class='keyword'>default</span>:</td></tr>
+<tr><td class="num" id="LN7290">7290</td><td class="line">      size++;</td></tr>
+<tr><td class="num" id="LN7291">7291</td><td class="line">      <span class='keyword'>if</span> (enc_dbcs != 0 &amp;&amp; (*mb_ptr2len)(p) &gt; 1) {</td></tr>
+<tr><td class="num" id="LN7292">7292</td><td class="line">        ++p;</td></tr>
+<tr><td class="num" id="LN7293">7293</td><td class="line">        ++size;</td></tr>
+<tr><td class="num" id="LN7294">7294</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN7295">7295</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7296">7296</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN7297">7297</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7298">7298</td><td class="line">  reg_pat = xmalloc(size + 1);</td></tr>
+<tr><td class="num" id="LN7299">7299</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7300">7300</td><td class="line">  i = 0;</td></tr>
+<tr><td class="num" id="LN7301">7301</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7302">7302</td><td class="line">  <span class='keyword'>if</span> (pat[0] == '*')</td></tr>
+<tr><td class="num" id="LN7303">7303</td><td class="line">    <span class='keyword'>while</span> (pat[0] == '*' &amp;&amp; pat &lt; pat_end - 1)</td></tr>
+<tr><td class="num" id="LN7304">7304</td><td class="line">      pat++;</td></tr>
+<tr><td class="num" id="LN7305">7305</td><td class="line">  <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN7306">7306</td><td class="line">    reg_pat[i++] = '^';</td></tr>
+<tr><td class="num" id="LN7307">7307</td><td class="line">  endp = pat_end - 1;</td></tr>
+<tr><td class="num" id="LN7308">7308</td><td class="line">  <span class='keyword'>if</span> (*endp == '*') {</td></tr>
+<tr><td class="num" id="LN7309">7309</td><td class="line">    <span class='keyword'>while</span> (endp - pat &gt; 0 &amp;&amp; *endp == '*')</td></tr>
+<tr><td class="num" id="LN7310">7310</td><td class="line">      endp--;</td></tr>
+<tr><td class="num" id="LN7311">7311</td><td class="line">    add_dollar = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN7312">7312</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7313">7313</td><td class="line">  <span class='keyword'>for</span> (p = pat; *p &amp;&amp; nested &gt;= 0 &amp;&amp; p &lt;= endp; p++) {</td></tr>
+<tr><td class="num" id="LN7314">7314</td><td class="line">    <span class='keyword'>switch</span> (*p) {</td></tr>
+<tr><td class="num" id="LN7315">7315</td><td class="line">    <span class='keyword'>case</span> '*':</td></tr>
+<tr><td class="num" id="LN7316">7316</td><td class="line">      reg_pat[i++] = '.';</td></tr>
+<tr><td class="num" id="LN7317">7317</td><td class="line">      reg_pat[i++] = '*';</td></tr>
+<tr><td class="num" id="LN7318">7318</td><td class="line">      <span class='keyword'>while</span> (p[1] == '*')               <span class='comment'>/* "**" matches like "*" */</span></td></tr>
+<tr><td class="num" id="LN7319">7319</td><td class="line">        ++p;</td></tr>
+<tr><td class="num" id="LN7320">7320</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7321">7321</td><td class="line">    <span class='keyword'>case</span> '.':</td></tr>
+<tr><td class="num" id="LN7322">7322</td><td class="line">    <span class='keyword'>case</span> '~':</td></tr>
+<tr><td class="num" id="LN7323">7323</td><td class="line">      reg_pat[i++] = '\\';</td></tr>
+<tr><td class="num" id="LN7324">7324</td><td class="line">      reg_pat[i++] = *p;</td></tr>
+<tr><td class="num" id="LN7325">7325</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7326">7326</td><td class="line">    <span class='keyword'>case</span> '?':</td></tr>
+<tr><td class="num" id="LN7327">7327</td><td class="line">      reg_pat[i++] = '.';</td></tr>
+<tr><td class="num" id="LN7328">7328</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7329">7329</td><td class="line">    <span class='keyword'>case</span> '\\':</td></tr>
+<tr><td class="num" id="LN7330">7330</td><td class="line">      <span class='keyword'>if</span> (p[1] == <span class='macro'>NUL<span class='expansion'>'\000'</span></span>)</td></tr>
+<tr><td class="num" id="LN7331">7331</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7332">7332</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
+<tr><td class="num" id="LN7333">7333</td><td class="line">      <span class='keyword'>if</span> (!no_bslash) {</td></tr>
+<tr><td class="num" id="LN7334">7334</td><td class="line">        <span class='comment'>/* translate:</span></td></tr>
+<tr><td class="num" id="LN7335">7335</td><td class="line">         <span class='comment'>* "\x" to "\\x"  e.g., "dir\file"</span></td></tr>
+<tr><td class="num" id="LN7336">7336</td><td class="line">         <span class='comment'>* "\*" to "\\.*" e.g., "dir\*.c"</span></td></tr>
+<tr><td class="num" id="LN7337">7337</td><td class="line">         <span class='comment'>* "\?" to "\\."  e.g., "dir\??.c"</span></td></tr>
+<tr><td class="num" id="LN7338">7338</td><td class="line">         <span class='comment'>* "\+" to "\+"   e.g., "fileX\+.c"</span></td></tr>
+<tr><td class="num" id="LN7339">7339</td><td class="line">         <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7340">7340</td><td class="line">        <span class='keyword'>if</span> ((vim_isfilec(p[1]) || p[1] == '*' || p[1] == '?')</td></tr>
+<tr><td class="num" id="LN7341">7341</td><td class="line">            &amp;&amp; p[1] != '+') {</td></tr>
+<tr><td class="num" id="LN7342">7342</td><td class="line">          reg_pat[i++] = '[';</td></tr>
+<tr><td class="num" id="LN7343">7343</td><td class="line">          reg_pat[i++] = '\\';</td></tr>
+<tr><td class="num" id="LN7344">7344</td><td class="line">          reg_pat[i++] = '/';</td></tr>
+<tr><td class="num" id="LN7345">7345</td><td class="line">          reg_pat[i++] = ']';</td></tr>
+<tr><td class="num" id="LN7346">7346</td><td class="line">          <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7347">7347</td><td class="line">            *allow_dirs = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7348">7348</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7349">7349</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN7350">7350</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN7351">7351</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN7352">7352</td><td class="line">      <span class='comment'>/* Undo escaping from ExpandEscape():</span></td></tr>
+<tr><td class="num" id="LN7353">7353</td><td class="line">       <span class='comment'>* foo\?bar -&gt; foo?bar</span></td></tr>
+<tr><td class="num" id="LN7354">7354</td><td class="line">       <span class='comment'>* foo\%bar -&gt; foo%bar</span></td></tr>
+<tr><td class="num" id="LN7355">7355</td><td class="line">       <span class='comment'>* foo\,bar -&gt; foo,bar</span></td></tr>
+<tr><td class="num" id="LN7356">7356</td><td class="line">       <span class='comment'>* foo\ bar -&gt; foo bar</span></td></tr>
+<tr><td class="num" id="LN7357">7357</td><td class="line">       <span class='comment'>* Don't unescape \, * and others that are also special in a</span></td></tr>
+<tr><td class="num" id="LN7358">7358</td><td class="line">       <span class='comment'>* regexp.</span></td></tr>
+<tr><td class="num" id="LN7359">7359</td><td class="line">       <span class='comment'>* An escaped { must be unescaped since we use magic not</span></td></tr>
+<tr><td class="num" id="LN7360">7360</td><td class="line">       <span class='comment'>* verymagic.  Use "\\\{n,m\}"" to get "\{n,m}".</span></td></tr>
+<tr><td class="num" id="LN7361">7361</td><td class="line">       <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7362">7362</td><td class="line">      <span class='keyword'>if</span> (*++p == '?'</td></tr>
+<tr><td class="num" id="LN7363">7363</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
+<tr><td class="num" id="LN7364">7364</td><td class="line">          &amp;&amp; no_bslash</td></tr>
+<tr><td class="num" id="LN7365">7365</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN7366">7366</td><td class="line">          )</td></tr>
+<tr><td class="num" id="LN7367">7367</td><td class="line">        reg_pat[i++] = '?';</td></tr>
+<tr><td class="num" id="LN7368">7368</td><td class="line">      <span class='keyword'>else</span> <span class='keyword'>if</span> (*p == ',' || *p == '%' || *p == '#'</td></tr>
+<tr><td class="num" id="LN7369">7369</td><td class="line">               || *p == ' ' || *p == '{' || *p == '}')</td></tr>
+<tr><td class="num" id="LN7370">7370</td><td class="line">        reg_pat[i++] = *p;</td></tr>
+<tr><td class="num" id="LN7371">7371</td><td class="line">      <span class='keyword'>else</span> <span class='keyword'>if</span> (*p == '\\' &amp;&amp; p[1] == '\\' &amp;&amp; p[2] == '{') {</td></tr>
+<tr><td class="num" id="LN7372">7372</td><td class="line">        reg_pat[i++] = '\\';</td></tr>
+<tr><td class="num" id="LN7373">7373</td><td class="line">        reg_pat[i++] = '{';</td></tr>
+<tr><td class="num" id="LN7374">7374</td><td class="line">        p += 2;</td></tr>
+<tr><td class="num" id="LN7375">7375</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN7376">7376</td><td class="line">        <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; vim_ispathsep(*p)</td></tr>
+<tr><td class="num" id="LN7377">7377</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
+<tr><td class="num" id="LN7378">7378</td><td class="line">            &amp;&amp; (!no_bslash || *p != '\\')</td></tr>
+<tr><td class="num" id="LN7379">7379</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN7380">7380</td><td class="line">            )</td></tr>
+<tr><td class="num" id="LN7381">7381</td><td class="line">          *allow_dirs = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7382">7382</td><td class="line">        reg_pat[i++] = '\\';</td></tr>
+<tr><td class="num" id="LN7383">7383</td><td class="line">        reg_pat[i++] = *p;</td></tr>
+<tr><td class="num" id="LN7384">7384</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN7385">7385</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7386">7386</td><td class="line"><span class='directive'>#ifdef BACKSLASH_IN_FILENAME</span></td></tr>
+<tr><td class="num" id="LN7387">7387</td><td class="line">    <span class='keyword'>case</span> '/':</td></tr>
+<tr><td class="num" id="LN7388">7388</td><td class="line">      reg_pat[i++] = '[';</td></tr>
+<tr><td class="num" id="LN7389">7389</td><td class="line">      reg_pat[i++] = '\\';</td></tr>
+<tr><td class="num" id="LN7390">7390</td><td class="line">      reg_pat[i++] = '/';</td></tr>
+<tr><td class="num" id="LN7391">7391</td><td class="line">      reg_pat[i++] = ']';</td></tr>
+<tr><td class="num" id="LN7392">7392</td><td class="line">      <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN7393">7393</td><td class="line">        *allow_dirs = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
 <tr><td class="num" id="LN7394">7394</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7395">7395</td><td class="line">    <span class='keyword'>case</span> '}':</td></tr>
-<tr><td class="num" id="LN7396">7396</td><td class="line">      reg_pat[i++] = '\\';</td></tr>
-<tr><td class="num" id="LN7397">7397</td><td class="line">      reg_pat[i++] = ')';</td></tr>
-<tr><td class="num" id="LN7398">7398</td><td class="line">      --nested;</td></tr>
-<tr><td class="num" id="LN7399">7399</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7400">7400</td><td class="line">    <span class='keyword'>case</span> ',':</td></tr>
-<tr><td class="num" id="LN7401">7401</td><td class="line">      <span class='keyword'>if</span> (nested) {</td></tr>
-<tr><td class="num" id="LN7402">7402</td><td class="line">        reg_pat[i++] = '\\';</td></tr>
-<tr><td class="num" id="LN7403">7403</td><td class="line">        reg_pat[i++] = '|';</td></tr>
-<tr><td class="num" id="LN7404">7404</td><td class="line">      } <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN7405">7405</td><td class="line">        reg_pat[i++] = ',';</td></tr>
-<tr><td class="num" id="LN7406">7406</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7407">7407</td><td class="line">    <span class='keyword'>default</span>:</td></tr>
-<tr><td class="num" id="LN7408">7408</td><td class="line">      <span class='keyword'>if</span> (enc_dbcs != 0 &amp;&amp; (*mb_ptr2len)(p) &gt; 1)</td></tr>
-<tr><td class="num" id="LN7409">7409</td><td class="line">        reg_pat[i++] = *p++;</td></tr>
-<tr><td class="num" id="LN7410">7410</td><td class="line">      <span class='keyword'>else</span> <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; vim_ispathsep(*p))</td></tr>
-<tr><td class="num" id="LN7411">7411</td><td class="line">        *allow_dirs = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN7412">7412</td><td class="line">      reg_pat[i++] = *p;</td></tr>
-<tr><td class="num" id="LN7413">7413</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7414">7414</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN7415">7415</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7416">7416</td><td class="line">  <span class='keyword'>if</span> (add_dollar)</td></tr>
-<tr><td class="num" id="LN7417">7417</td><td class="line">    reg_pat[i++] = '$';</td></tr>
-<tr><td class="num" id="LN7418">7418</td><td class="line">  reg_pat[i] = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;</td></tr>
-<tr><td class="num" id="LN7419">7419</td><td class="line">  <span class='keyword'>if</span> (nested != 0) {</td></tr>
-<tr><td class="num" id="LN7420">7420</td><td class="line">    <span class='keyword'>if</span> (nested &lt; 0)</td></tr>
-<tr><td class="num" id="LN7421">7421</td><td class="line">      <span class='macro'>EMSG(_(<span class='string_literal'>"E219: Missing {."</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("E219: Missing {."))))</span></span>;</td></tr>
-<tr><td class="num" id="LN7422">7422</td><td class="line">    <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN7423">7423</td><td class="line">      <span class='macro'>EMSG(_(<span class='string_literal'>"E220: Missing }."</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("E220: Missing }."))))</span></span>;</td></tr>
-<tr><td class="num" id="LN7424">7424</td><td class="line">    free(reg_pat);</td></tr>
-<tr><td class="num" id="LN7425">7425</td><td class="line">    reg_pat = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN7426">7426</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7427">7427</td><td class="line">  <span class='keyword'>return</span> reg_pat;</td></tr>
-<tr><td class="num" id="LN7428">7428</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7429">7429</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7430">7430</td><td class="line"><span class='directive'>#if defined(<span class='macro'>EINTR<span class='expansion'>4</span></span>) || defined(PROTO)</span></td></tr>
-<tr><td class="num" id="LN7431">7431</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7432">7432</td><td class="line"> <span class='comment'>* Version of read() that retries when interrupted by EINTR (possibly</span></td></tr>
-<tr><td class="num" id="LN7433">7433</td><td class="line"> <span class='comment'>* by a SIGWINCH).</span></td></tr>
-<tr><td class="num" id="LN7434">7434</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7435">7435</td><td class="line"><span class='keyword'>long</span> read_eintr(<span class='keyword'>int</span> fd, <span class='keyword'>void</span> *buf, size_t bufsize)</td></tr>
-<tr><td class="num" id="LN7436">7436</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN7437">7437</td><td class="line">  <span class='keyword'>long</span> ret;</td></tr>
-<tr><td class="num" id="LN7438">7438</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7439">7439</td><td class="line">  <span class='keyword'>for</span> (;; ) {</td></tr>
-<tr><td class="num" id="LN7440">7440</td><td class="line">    ret = <span class='macro'>vim_read(fd, buf, bufsize)<span class='expansion'>read((fd), (char *)(buf), (size_t) (bufsize))</span></span>;</td></tr>
-<tr><td class="num" id="LN7441">7441</td><td class="line">    <span class='keyword'>if</span> (ret &gt;= 0 || <span class='macro'>errno<span class='expansion'>(*__errno_location ())</span></span> != <span class='macro'>EINTR<span class='expansion'>4</span></span>)</td></tr>
-<tr><td class="num" id="LN7442">7442</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7443">7443</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7444">7444</td><td class="line">  <span class='keyword'>return</span> ret;</td></tr>
-<tr><td class="num" id="LN7445">7445</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7446">7446</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7447">7447</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN7448">7448</td><td class="line"> <span class='comment'>* Version of write() that retries when interrupted by EINTR (possibly</span></td></tr>
-<tr><td class="num" id="LN7449">7449</td><td class="line"> <span class='comment'>* by a SIGWINCH).</span></td></tr>
-<tr><td class="num" id="LN7450">7450</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN7451">7451</td><td class="line"><span class='keyword'>long</span> write_eintr(<span class='keyword'>int</span> fd, <span class='keyword'>void</span> *buf, size_t bufsize)</td></tr>
-<tr><td class="num" id="LN7452">7452</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN7453">7453</td><td class="line">  <span class='keyword'>long</span> ret = 0;</td></tr>
-<tr><td class="num" id="LN7454">7454</td><td class="line">  <span class='keyword'>long</span> wlen;</td></tr>
-<tr><td class="num" id="LN7455">7455</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN7456">7456</td><td class="line">  <span class='comment'>/* Repeat the write() so long it didn't fail, other than being interrupted</span></td></tr>
-<tr><td class="num" id="LN7457">7457</td><td class="line">   <span class='comment'>* by a signal. */</span></td></tr>
-<tr><td class="num" id="LN7458">7458</td><td class="line">  <span class='keyword'>while</span> (ret &lt; (<span class='keyword'>long</span>)bufsize) {</td></tr>
-<tr><td class="num" id="LN7459">7459</td><td class="line">    wlen = <span class='macro'>vim_write(fd, (<span class='keyword'>char</span> *)buf + ret, bufsize - ret)<span class='expansion'>write((fd), (char *)((char *)buf + ret), (size_t) (bufsize - ret<br>))</span></span>;</td></tr>
-<tr><td class="num" id="LN7460">7460</td><td class="line">    <span class='keyword'>if</span> (wlen &lt; 0) {</td></tr>
-<tr><td class="num" id="LN7461">7461</td><td class="line">      <span class='keyword'>if</span> (<span class='macro'>errno<span class='expansion'>(*__errno_location ())</span></span> != <span class='macro'>EINTR<span class='expansion'>4</span></span>)</td></tr>
-<tr><td class="num" id="LN7462">7462</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN7463">7463</td><td class="line">    } <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN7464">7464</td><td class="line">      ret += wlen;</td></tr>
-<tr><td class="num" id="LN7465">7465</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN7466">7466</td><td class="line">  <span class='keyword'>return</span> ret;</td></tr>
-<tr><td class="num" id="LN7467">7467</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN7468">7468</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN7395">7395</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN7396">7396</td><td class="line">    <span class='keyword'>case</span> '{':</td></tr>
+<tr><td class="num" id="LN7397">7397</td><td class="line">      reg_pat[i++] = '\\';</td></tr>
+<tr><td class="num" id="LN7398">7398</td><td class="line">      reg_pat[i++] = '(';</td></tr>
+<tr><td class="num" id="LN7399">7399</td><td class="line">      nested++;</td></tr>
+<tr><td class="num" id="LN7400">7400</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7401">7401</td><td class="line">    <span class='keyword'>case</span> '}':</td></tr>
+<tr><td class="num" id="LN7402">7402</td><td class="line">      reg_pat[i++] = '\\';</td></tr>
+<tr><td class="num" id="LN7403">7403</td><td class="line">      reg_pat[i++] = ')';</td></tr>
+<tr><td class="num" id="LN7404">7404</td><td class="line">      --nested;</td></tr>
+<tr><td class="num" id="LN7405">7405</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7406">7406</td><td class="line">    <span class='keyword'>case</span> ',':</td></tr>
+<tr><td class="num" id="LN7407">7407</td><td class="line">      <span class='keyword'>if</span> (nested) {</td></tr>
+<tr><td class="num" id="LN7408">7408</td><td class="line">        reg_pat[i++] = '\\';</td></tr>
+<tr><td class="num" id="LN7409">7409</td><td class="line">        reg_pat[i++] = '|';</td></tr>
+<tr><td class="num" id="LN7410">7410</td><td class="line">      } <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN7411">7411</td><td class="line">        reg_pat[i++] = ',';</td></tr>
+<tr><td class="num" id="LN7412">7412</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7413">7413</td><td class="line">    <span class='keyword'>default</span>:</td></tr>
+<tr><td class="num" id="LN7414">7414</td><td class="line">      <span class='keyword'>if</span> (enc_dbcs != 0 &amp;&amp; (*mb_ptr2len)(p) &gt; 1)</td></tr>
+<tr><td class="num" id="LN7415">7415</td><td class="line">        reg_pat[i++] = *p++;</td></tr>
+<tr><td class="num" id="LN7416">7416</td><td class="line">      <span class='keyword'>else</span> <span class='keyword'>if</span> (allow_dirs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; vim_ispathsep(*p))</td></tr>
+<tr><td class="num" id="LN7417">7417</td><td class="line">        *allow_dirs = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN7418">7418</td><td class="line">      reg_pat[i++] = *p;</td></tr>
+<tr><td class="num" id="LN7419">7419</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7420">7420</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN7421">7421</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7422">7422</td><td class="line">  <span class='keyword'>if</span> (add_dollar)</td></tr>
+<tr><td class="num" id="LN7423">7423</td><td class="line">    reg_pat[i++] = '$';</td></tr>
+<tr><td class="num" id="LN7424">7424</td><td class="line">  reg_pat[i] = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;</td></tr>
+<tr><td class="num" id="LN7425">7425</td><td class="line">  <span class='keyword'>if</span> (nested != 0) {</td></tr>
+<tr><td class="num" id="LN7426">7426</td><td class="line">    <span class='keyword'>if</span> (nested &lt; 0)</td></tr>
+<tr><td class="num" id="LN7427">7427</td><td class="line">      <span class='macro'>EMSG(_(<span class='string_literal'>"E219: Missing {."</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("E219: Missing {."))))</span></span>;</td></tr>
+<tr><td class="num" id="LN7428">7428</td><td class="line">    <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN7429">7429</td><td class="line">      <span class='macro'>EMSG(_(<span class='string_literal'>"E220: Missing }."</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("E220: Missing }."))))</span></span>;</td></tr>
+<tr><td class="num" id="LN7430">7430</td><td class="line">    free(reg_pat);</td></tr>
+<tr><td class="num" id="LN7431">7431</td><td class="line">    reg_pat = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN7432">7432</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7433">7433</td><td class="line">  <span class='keyword'>return</span> reg_pat;</td></tr>
+<tr><td class="num" id="LN7434">7434</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7435">7435</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7436">7436</td><td class="line"><span class='directive'>#if defined(<span class='macro'>EINTR<span class='expansion'>4</span></span>) || defined(PROTO)</span></td></tr>
+<tr><td class="num" id="LN7437">7437</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7438">7438</td><td class="line"> <span class='comment'>* Version of read() that retries when interrupted by EINTR (possibly</span></td></tr>
+<tr><td class="num" id="LN7439">7439</td><td class="line"> <span class='comment'>* by a SIGWINCH).</span></td></tr>
+<tr><td class="num" id="LN7440">7440</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7441">7441</td><td class="line"><span class='keyword'>long</span> read_eintr(<span class='keyword'>int</span> fd, <span class='keyword'>void</span> *buf, size_t bufsize)</td></tr>
+<tr><td class="num" id="LN7442">7442</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7443">7443</td><td class="line">  <span class='keyword'>long</span> ret;</td></tr>
+<tr><td class="num" id="LN7444">7444</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7445">7445</td><td class="line">  <span class='keyword'>for</span> (;; ) {</td></tr>
+<tr><td class="num" id="LN7446">7446</td><td class="line">    ret = <span class='macro'>vim_read(fd, buf, bufsize)<span class='expansion'>read((fd), (char *)(buf), (size_t) (bufsize))</span></span>;</td></tr>
+<tr><td class="num" id="LN7447">7447</td><td class="line">    <span class='keyword'>if</span> (ret &gt;= 0 || <span class='macro'>errno<span class='expansion'>(*__errno_location ())</span></span> != <span class='macro'>EINTR<span class='expansion'>4</span></span>)</td></tr>
+<tr><td class="num" id="LN7448">7448</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7449">7449</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7450">7450</td><td class="line">  <span class='keyword'>return</span> ret;</td></tr>
+<tr><td class="num" id="LN7451">7451</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7452">7452</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7453">7453</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN7454">7454</td><td class="line"> <span class='comment'>* Version of write() that retries when interrupted by EINTR (possibly</span></td></tr>
+<tr><td class="num" id="LN7455">7455</td><td class="line"> <span class='comment'>* by a SIGWINCH).</span></td></tr>
+<tr><td class="num" id="LN7456">7456</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN7457">7457</td><td class="line"><span class='keyword'>long</span> write_eintr(<span class='keyword'>int</span> fd, <span class='keyword'>void</span> *buf, size_t bufsize)</td></tr>
+<tr><td class="num" id="LN7458">7458</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN7459">7459</td><td class="line">  <span class='keyword'>long</span> ret = 0;</td></tr>
+<tr><td class="num" id="LN7460">7460</td><td class="line">  <span class='keyword'>long</span> wlen;</td></tr>
+<tr><td class="num" id="LN7461">7461</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7462">7462</td><td class="line">  <span class='comment'>/* Repeat the write() so long it didn't fail, other than being interrupted</span></td></tr>
+<tr><td class="num" id="LN7463">7463</td><td class="line">   <span class='comment'>* by a signal. */</span></td></tr>
+<tr><td class="num" id="LN7464">7464</td><td class="line">  <span class='keyword'>while</span> (ret &lt; (<span class='keyword'>long</span>)bufsize) {</td></tr>
+<tr><td class="num" id="LN7465">7465</td><td class="line">    wlen = <span class='macro'>vim_write(fd, (<span class='keyword'>char</span> *)buf + ret, bufsize - ret)<span class='expansion'>write((fd), (char *)((char *)buf + ret), (size_t) (bufsize - ret<br>))</span></span>;</td></tr>
+<tr><td class="num" id="LN7466">7466</td><td class="line">    <span class='keyword'>if</span> (wlen &lt; 0) {</td></tr>
+<tr><td class="num" id="LN7467">7467</td><td class="line">      <span class='keyword'>if</span> (<span class='macro'>errno<span class='expansion'>(*__errno_location ())</span></span> != <span class='macro'>EINTR<span class='expansion'>4</span></span>)</td></tr>
+<tr><td class="num" id="LN7468">7468</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN7469">7469</td><td class="line">    } <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN7470">7470</td><td class="line">      ret += wlen;</td></tr>
+<tr><td class="num" id="LN7471">7471</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN7472">7472</td><td class="line">  <span class='keyword'>return</span> ret;</td></tr>
+<tr><td class="num" id="LN7473">7473</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN7474">7474</td><td class="line"><span class='directive'>#endif</span></td></tr>
 </table></body></html>
