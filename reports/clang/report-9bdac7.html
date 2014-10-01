@@ -66,7 +66,7 @@
 
 <!-- FUNCTIONNAME vim_vsnprintf -->
 
-<!-- BUGLINE 3588 -->
+<!-- BUGLINE 3587 -->
 
 <!-- BUGCOLUMN 15 -->
 
@@ -77,7 +77,7 @@
 <h3>Bug Summary</h3>
 <table class="simpletable">
 <tr><td class="rowname">File:</td><td>message.c</td></tr>
-<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 3588, column 15</a></td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 3587, column 15</a></td></tr>
 <tr><td class="rowname">Description:</td><td>Value stored to 'precision_specified' is never read</td></tr>
 </table>
 <!-- REPORTSUMMARYEXTRA -->
@@ -3258,677 +3258,676 @@
 <tr><td class="num" id="LN3173">3173</td><td class="line">    p = <span class='string_literal'>""</span>;</td></tr>
 <tr><td class="num" id="LN3174">3174</td><td class="line">  <span class='keyword'>while</span> (*p != <span class='macro'>NUL<span class='expansion'>'\000'</span></span>) {</td></tr>
 <tr><td class="num" id="LN3175">3175</td><td class="line">    <span class='keyword'>if</span> (*p != '%') {</td></tr>
-<tr><td class="num" id="LN3176">3176</td><td class="line">      <span class='keyword'>char</span>    *q = strchr(p + 1, '%');</td></tr>
-<tr><td class="num" id="LN3177">3177</td><td class="line">      size_t n = (q == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) ? <span class='macro'>STRLEN(p)<span class='expansion'>strlen((char *)(p))</span></span> : (size_t)(q - p);</td></tr>
-<tr><td class="num" id="LN3178">3178</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3179">3179</td><td class="line">      <span class='comment'>/* Copy up to the next '%' or NUL without any changes. */</span></td></tr>
-<tr><td class="num" id="LN3180">3180</td><td class="line">      <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
-<tr><td class="num" id="LN3181">3181</td><td class="line">        size_t avail = str_m - str_l;</td></tr>
-<tr><td class="num" id="LN3182">3182</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3183">3183</td><td class="line">        memmove(str + str_l, p, n &gt; avail ? avail : n);</td></tr>
-<tr><td class="num" id="LN3184">3184</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3185">3185</td><td class="line">      p += n;</td></tr>
-<tr><td class="num" id="LN3186">3186</td><td class="line">      str_l += n;</td></tr>
-<tr><td class="num" id="LN3187">3187</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3188">3188</td><td class="line">      size_t min_field_width = 0, precision = 0;</td></tr>
-<tr><td class="num" id="LN3189">3189</td><td class="line">      <span class='keyword'>int</span> zero_padding = 0, precision_specified = 0, justify_left = 0;</td></tr>
-<tr><td class="num" id="LN3190">3190</td><td class="line">      <span class='keyword'>int</span> alternate_form = 0, force_sign = 0;</td></tr>
-<tr><td class="num" id="LN3191">3191</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3192">3192</td><td class="line">      <span class='comment'>/* If both the ' ' and '+' flags appear, the ' ' flag should be</span></td></tr>
-<tr><td class="num" id="LN3193">3193</td><td class="line">       <span class='comment'>* ignored. */</span></td></tr>
-<tr><td class="num" id="LN3194">3194</td><td class="line">      <span class='keyword'>int</span> space_for_positive = 1;</td></tr>
-<tr><td class="num" id="LN3195">3195</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3196">3196</td><td class="line">      <span class='comment'>/* allowed values: \0, h, l, L */</span></td></tr>
-<tr><td class="num" id="LN3197">3197</td><td class="line">      <span class='keyword'>char</span> length_modifier = '\0';</td></tr>
-<tr><td class="num" id="LN3198">3198</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3199">3199</td><td class="line">      <span class='comment'>/* temporary buffer for simple numeric-&gt;string conversion */</span></td></tr>
-<tr><td class="num" id="LN3200">3200</td><td class="line"><span class='directive'># define <span class='macro'>TMP_LEN<span class='expansion'>350</span></span> 350    /* On my system 1e308 is the biggest number possible.</span></td></tr>
-<tr><td class="num" id="LN3201">3201</td><td class="line">                         <span class='directive'>* That sounds reasonable to use as the maximum</span></td></tr>
-<tr><td class="num" id="LN3202">3202</td><td class="line">                         <span class='directive'>* printable. */</span></td></tr>
-<tr><td class="num" id="LN3203">3203</td><td class="line">      <span class='keyword'>char</span> tmp[<span class='macro'>TMP_LEN<span class='expansion'>350</span></span>];</td></tr>
-<tr><td class="num" id="LN3204">3204</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3205">3205</td><td class="line">      <span class='comment'>/* string address in case of string argument */</span></td></tr>
-<tr><td class="num" id="LN3206">3206</td><td class="line">      <span class='keyword'>char</span>    *str_arg;</td></tr>
-<tr><td class="num" id="LN3207">3207</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3208">3208</td><td class="line">      <span class='comment'>/* natural field width of arg without padding and sign */</span></td></tr>
-<tr><td class="num" id="LN3209">3209</td><td class="line">      size_t str_arg_l;</td></tr>
-<tr><td class="num" id="LN3210">3210</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3211">3211</td><td class="line">      <span class='comment'>/* unsigned char argument value - only defined for c conversion.</span></td></tr>
-<tr><td class="num" id="LN3212">3212</td><td class="line">       <span class='comment'>* N.B. standard explicitly states the char argument for the c</span></td></tr>
-<tr><td class="num" id="LN3213">3213</td><td class="line">       <span class='comment'>* conversion is unsigned */</span></td></tr>
-<tr><td class="num" id="LN3214">3214</td><td class="line">      <span class='keyword'>unsigned</span> <span class='keyword'>char</span> uchar_arg;</td></tr>
-<tr><td class="num" id="LN3215">3215</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3216">3216</td><td class="line">      <span class='comment'>/* number of zeros to be inserted for numeric conversions as</span></td></tr>
-<tr><td class="num" id="LN3217">3217</td><td class="line">       <span class='comment'>* required by the precision or minimal field width */</span></td></tr>
-<tr><td class="num" id="LN3218">3218</td><td class="line">      size_t number_of_zeros_to_pad = 0;</td></tr>
-<tr><td class="num" id="LN3219">3219</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3220">3220</td><td class="line">      <span class='comment'>/* index into tmp where zero padding is to be inserted */</span></td></tr>
-<tr><td class="num" id="LN3221">3221</td><td class="line">      size_t zero_padding_insertion_ind = 0;</td></tr>
-<tr><td class="num" id="LN3222">3222</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3223">3223</td><td class="line">      <span class='comment'>/* current conversion specifier character */</span></td></tr>
-<tr><td class="num" id="LN3224">3224</td><td class="line">      <span class='keyword'>char</span> fmt_spec = '\0';</td></tr>
-<tr><td class="num" id="LN3225">3225</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3226">3226</td><td class="line">      str_arg = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN3227">3227</td><td class="line">      p++;        <span class='comment'>/* skip '%' */</span></td></tr>
-<tr><td class="num" id="LN3228">3228</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3229">3229</td><td class="line">      <span class='comment'>/* parse flags */</span></td></tr>
-<tr><td class="num" id="LN3230">3230</td><td class="line">      <span class='keyword'>while</span> (*p == '0' || *p == '-' || *p == '+' || *p == ' '</td></tr>
-<tr><td class="num" id="LN3231">3231</td><td class="line">             || *p == '#' || *p == '\'') {</td></tr>
-<tr><td class="num" id="LN3232">3232</td><td class="line">        <span class='keyword'>switch</span> (*p) {</td></tr>
-<tr><td class="num" id="LN3233">3233</td><td class="line">        <span class='keyword'>case</span> '0': zero_padding = 1; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3234">3234</td><td class="line">        <span class='keyword'>case</span> '-': justify_left = 1; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3235">3235</td><td class="line">        <span class='keyword'>case</span> '+': force_sign = 1; space_for_positive = 0; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3236">3236</td><td class="line">        <span class='keyword'>case</span> ' ': force_sign = 1;</td></tr>
-<tr><td class="num" id="LN3237">3237</td><td class="line">          <span class='comment'>/* If both the ' ' and '+' flags appear, the ' '</span></td></tr>
-<tr><td class="num" id="LN3238">3238</td><td class="line">           <span class='comment'>* flag should be ignored */</span></td></tr>
-<tr><td class="num" id="LN3239">3239</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3240">3240</td><td class="line">        <span class='keyword'>case</span> '#': alternate_form = 1; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3241">3241</td><td class="line">        <span class='keyword'>case</span> '\'': <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3242">3242</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3243">3243</td><td class="line">        p++;</td></tr>
-<tr><td class="num" id="LN3244">3244</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3245">3245</td><td class="line">      <span class='comment'>/* If the '0' and '-' flags both appear, the '0' flag should be</span></td></tr>
-<tr><td class="num" id="LN3246">3246</td><td class="line">       <span class='comment'>* ignored. */</span></td></tr>
-<tr><td class="num" id="LN3247">3247</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3248">3248</td><td class="line">      <span class='comment'>/* parse field width */</span></td></tr>
-<tr><td class="num" id="LN3249">3249</td><td class="line">      <span class='keyword'>if</span> (*p == '*') {</td></tr>
-<tr><td class="num" id="LN3250">3250</td><td class="line">        <span class='keyword'>int</span> j;</td></tr>
-<tr><td class="num" id="LN3251">3251</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3252">3252</td><td class="line">        p++;</td></tr>
-<tr><td class="num" id="LN3253">3253</td><td class="line">        j = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3254">3254</td><td class="line">        <span class='keyword'>if</span> (j &gt;= 0)</td></tr>
-<tr><td class="num" id="LN3255">3255</td><td class="line">          min_field_width = j;</td></tr>
-<tr><td class="num" id="LN3256">3256</td><td class="line">        <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3257">3257</td><td class="line">          min_field_width = -j;</td></tr>
-<tr><td class="num" id="LN3258">3258</td><td class="line">          justify_left = 1;</td></tr>
-<tr><td class="num" id="LN3259">3259</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3260">3260</td><td class="line">      } <span class='keyword'>else</span> <span class='keyword'>if</span> (<span class='macro'>VIM_ISDIGIT((<span class='keyword'>int</span>)(*p))<span class='expansion'>((unsigned)((int)(*p)) - '0' &lt; 10)</span></span>) {</td></tr>
-<tr><td class="num" id="LN3261">3261</td><td class="line">        <span class='comment'>/* size_t could be wider than unsigned int; make sure we treat</span></td></tr>
-<tr><td class="num" id="LN3262">3262</td><td class="line">         <span class='comment'>* argument like common implementations do */</span></td></tr>
-<tr><td class="num" id="LN3263">3263</td><td class="line">        <span class='keyword'>unsigned</span> <span class='keyword'>int</span> uj = *p++ - '0';</td></tr>
-<tr><td class="num" id="LN3264">3264</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3265">3265</td><td class="line">        <span class='keyword'>while</span> (<span class='macro'>VIM_ISDIGIT((<span class='keyword'>int</span>)(*p))<span class='expansion'>((unsigned)((int)(*p)) - '0' &lt; 10)</span></span>)</td></tr>
-<tr><td class="num" id="LN3266">3266</td><td class="line">          uj = 10 * uj + (<span class='keyword'>unsigned</span> <span class='keyword'>int</span>)(*p++ - '0');</td></tr>
-<tr><td class="num" id="LN3267">3267</td><td class="line">        min_field_width = uj;</td></tr>
-<tr><td class="num" id="LN3268">3268</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3269">3269</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3270">3270</td><td class="line">      <span class='comment'>/* parse precision */</span></td></tr>
-<tr><td class="num" id="LN3271">3271</td><td class="line">      <span class='keyword'>if</span> (*p == '.') {</td></tr>
-<tr><td class="num" id="LN3272">3272</td><td class="line">        p++;</td></tr>
-<tr><td class="num" id="LN3273">3273</td><td class="line">        precision_specified = 1;</td></tr>
-<tr><td class="num" id="LN3274">3274</td><td class="line">        <span class='keyword'>if</span> (*p == '*') {</td></tr>
-<tr><td class="num" id="LN3275">3275</td><td class="line">          <span class='keyword'>int</span> j;</td></tr>
-<tr><td class="num" id="LN3276">3276</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3277">3277</td><td class="line">          j = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3278">3278</td><td class="line">          p++;</td></tr>
-<tr><td class="num" id="LN3279">3279</td><td class="line">          <span class='keyword'>if</span> (j &gt;= 0)</td></tr>
-<tr><td class="num" id="LN3280">3280</td><td class="line">            precision = j;</td></tr>
-<tr><td class="num" id="LN3281">3281</td><td class="line">          <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3282">3282</td><td class="line">            precision_specified = 0;</td></tr>
-<tr><td class="num" id="LN3283">3283</td><td class="line">            precision = 0;</td></tr>
-<tr><td class="num" id="LN3284">3284</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3285">3285</td><td class="line">        } <span class='keyword'>else</span> <span class='keyword'>if</span> (<span class='macro'>VIM_ISDIGIT((<span class='keyword'>int</span>)(*p))<span class='expansion'>((unsigned)((int)(*p)) - '0' &lt; 10)</span></span>) {</td></tr>
-<tr><td class="num" id="LN3286">3286</td><td class="line">          <span class='comment'>/* size_t could be wider than unsigned int; make sure we</span></td></tr>
-<tr><td class="num" id="LN3287">3287</td><td class="line">           <span class='comment'>* treat argument like common implementations do */</span></td></tr>
-<tr><td class="num" id="LN3288">3288</td><td class="line">          <span class='keyword'>unsigned</span> <span class='keyword'>int</span> uj = *p++ - '0';</td></tr>
-<tr><td class="num" id="LN3289">3289</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3290">3290</td><td class="line">          <span class='keyword'>while</span> (<span class='macro'>VIM_ISDIGIT((<span class='keyword'>int</span>)(*p))<span class='expansion'>((unsigned)((int)(*p)) - '0' &lt; 10)</span></span>)</td></tr>
-<tr><td class="num" id="LN3291">3291</td><td class="line">            uj = 10 * uj + (<span class='keyword'>unsigned</span> <span class='keyword'>int</span>)(*p++ - '0');</td></tr>
-<tr><td class="num" id="LN3292">3292</td><td class="line">          precision = uj;</td></tr>
-<tr><td class="num" id="LN3293">3293</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3294">3294</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3295">3295</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3296">3296</td><td class="line">      <span class='comment'>/* parse 'h', 'l' and 'll' length modifiers */</span></td></tr>
-<tr><td class="num" id="LN3297">3297</td><td class="line">      <span class='keyword'>if</span> (*p == 'h' || *p == 'l') {</td></tr>
-<tr><td class="num" id="LN3298">3298</td><td class="line">        length_modifier = *p;</td></tr>
-<tr><td class="num" id="LN3299">3299</td><td class="line">        p++;</td></tr>
-<tr><td class="num" id="LN3300">3300</td><td class="line">        <span class='keyword'>if</span> (length_modifier == 'l' &amp;&amp; *p == 'l') { <span class='comment'>/* double l = long long */</span></td></tr>
-<tr><td class="num" id="LN3301">3301</td><td class="line">          length_modifier = '2';                   <span class='comment'>/* double l encoded as '2' */</span></td></tr>
-<tr><td class="num" id="LN3302">3302</td><td class="line">          p++;</td></tr>
-<tr><td class="num" id="LN3303">3303</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3304">3304</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3305">3305</td><td class="line">      fmt_spec = *p;</td></tr>
-<tr><td class="num" id="LN3306">3306</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3307">3307</td><td class="line">      <span class='comment'>/* common synonyms: */</span></td></tr>
-<tr><td class="num" id="LN3308">3308</td><td class="line">      <span class='keyword'>switch</span> (fmt_spec) {</td></tr>
-<tr><td class="num" id="LN3309">3309</td><td class="line">      <span class='keyword'>case</span> 'i': fmt_spec = 'd'; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3310">3310</td><td class="line">      <span class='keyword'>case</span> 'D': fmt_spec = 'd'; length_modifier = 'l'; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3311">3311</td><td class="line">      <span class='keyword'>case</span> 'U': fmt_spec = 'u'; length_modifier = 'l'; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3312">3312</td><td class="line">      <span class='keyword'>case</span> 'O': fmt_spec = 'o'; length_modifier = 'l'; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3313">3313</td><td class="line">      <span class='keyword'>case</span> 'F': fmt_spec = 'f'; <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3314">3314</td><td class="line">      <span class='keyword'>default</span>: <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3315">3315</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3316">3316</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3317">3317</td><td class="line">      <span class='comment'>/* get parameter value, do initial processing */</span></td></tr>
-<tr><td class="num" id="LN3318">3318</td><td class="line">      <span class='keyword'>switch</span> (fmt_spec) {</td></tr>
-<tr><td class="num" id="LN3319">3319</td><td class="line">      <span class='comment'>/* '%' and 'c' behave similar to 's' regarding flags and field widths */</span></td></tr>
-<tr><td class="num" id="LN3320">3320</td><td class="line">      <span class='keyword'>case</span> '%':</td></tr>
-<tr><td class="num" id="LN3321">3321</td><td class="line">      <span class='keyword'>case</span> 'c':</td></tr>
-<tr><td class="num" id="LN3322">3322</td><td class="line">      <span class='keyword'>case</span> 's':</td></tr>
-<tr><td class="num" id="LN3323">3323</td><td class="line">      <span class='keyword'>case</span> 'S':</td></tr>
-<tr><td class="num" id="LN3324">3324</td><td class="line">        length_modifier = '\0';</td></tr>
-<tr><td class="num" id="LN3325">3325</td><td class="line">        str_arg_l = 1;</td></tr>
-<tr><td class="num" id="LN3326">3326</td><td class="line">        <span class='keyword'>switch</span> (fmt_spec) {</td></tr>
-<tr><td class="num" id="LN3327">3327</td><td class="line">        <span class='keyword'>case</span> '%':</td></tr>
-<tr><td class="num" id="LN3328">3328</td><td class="line">          str_arg = p;</td></tr>
-<tr><td class="num" id="LN3329">3329</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3330">3330</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3331">3331</td><td class="line">        <span class='keyword'>case</span> 'c':</td></tr>
-<tr><td class="num" id="LN3332">3332</td><td class="line">        {</td></tr>
-<tr><td class="num" id="LN3333">3333</td><td class="line">          <span class='keyword'>int</span> j;</td></tr>
-<tr><td class="num" id="LN3334">3334</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3335">3335</td><td class="line">          j = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3336">3336</td><td class="line">          <span class='comment'>/* standard demands unsigned char */</span></td></tr>
-<tr><td class="num" id="LN3337">3337</td><td class="line">          uchar_arg = (<span class='keyword'>unsigned</span> <span class='keyword'>char</span>)j;</td></tr>
-<tr><td class="num" id="LN3338">3338</td><td class="line">          str_arg = (<span class='keyword'>char</span> *)&amp;uchar_arg;</td></tr>
-<tr><td class="num" id="LN3339">3339</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3340">3340</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3341">3341</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3342">3342</td><td class="line">        <span class='keyword'>case</span> 's':</td></tr>
-<tr><td class="num" id="LN3343">3343</td><td class="line">        <span class='keyword'>case</span> 'S':</td></tr>
-<tr><td class="num" id="LN3344">3344</td><td class="line">          str_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_str(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>char</span> *)<span class='expansion'>__builtin_va_arg(ap, char *)</span></span>;</td></tr>
-<tr><td class="num" id="LN3345">3345</td><td class="line">          <span class='keyword'>if</span> (str_arg == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num" id="LN3346">3346</td><td class="line">            str_arg = <span class='string_literal'>"[NULL]"</span>;</td></tr>
-<tr><td class="num" id="LN3347">3347</td><td class="line">            str_arg_l = 6;</td></tr>
-<tr><td class="num" id="LN3348">3348</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3349">3349</td><td class="line">          <span class='comment'>/* make sure not to address string beyond the specified</span></td></tr>
-<tr><td class="num" id="LN3350">3350</td><td class="line">           <span class='comment'>* precision !!! */</span></td></tr>
-<tr><td class="num" id="LN3351">3351</td><td class="line">          <span class='keyword'>else</span> <span class='keyword'>if</span> (!precision_specified)</td></tr>
-<tr><td class="num" id="LN3352">3352</td><td class="line">            str_arg_l = strlen(str_arg);</td></tr>
-<tr><td class="num" id="LN3353">3353</td><td class="line">          <span class='comment'>/* truncate string if necessary as requested by precision */</span></td></tr>
-<tr><td class="num" id="LN3354">3354</td><td class="line">          <span class='keyword'>else</span> <span class='keyword'>if</span> (precision == 0)</td></tr>
-<tr><td class="num" id="LN3355">3355</td><td class="line">            str_arg_l = 0;</td></tr>
-<tr><td class="num" id="LN3356">3356</td><td class="line">          <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3357">3357</td><td class="line">            <span class='comment'>/* Don't put the #if inside memchr(), it can be a</span></td></tr>
-<tr><td class="num" id="LN3358">3358</td><td class="line">             <span class='comment'>* macro. */</span></td></tr>
-<tr><td class="num" id="LN3359">3359</td><td class="line">            <span class='comment'>/* memchr on HP does not like n &gt; 2^31  !!! */</span></td></tr>
-<tr><td class="num" id="LN3360">3360</td><td class="line">            <span class='keyword'>char</span> *q = memchr(str_arg, '\0',</td></tr>
-<tr><td class="num" id="LN3361">3361</td><td class="line">                precision &lt;= (size_t)0x7fffffffL ? precision</td></tr>
-<tr><td class="num" id="LN3362">3362</td><td class="line">                : (size_t)0x7fffffffL);</td></tr>
-<tr><td class="num" id="LN3363">3363</td><td class="line">            str_arg_l = (q == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) ? precision</td></tr>
-<tr><td class="num" id="LN3364">3364</td><td class="line">                        : (size_t)(q - str_arg);</td></tr>
-<tr><td class="num" id="LN3365">3365</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3366">3366</td><td class="line">          <span class='keyword'>if</span> (fmt_spec == 'S') {</td></tr>
-<tr><td class="num" id="LN3367">3367</td><td class="line">            <span class='keyword'>if</span> (min_field_width != 0)</td></tr>
-<tr><td class="num" id="LN3368">3368</td><td class="line">              min_field_width += <span class='macro'>STRLEN(str_arg)<span class='expansion'>strlen((char *)(str_arg))</span></span></td></tr>
-<tr><td class="num" id="LN3369">3369</td><td class="line">                                 - mb_string2cells((char_u *) str_arg);</td></tr>
-<tr><td class="num" id="LN3370">3370</td><td class="line">            <span class='keyword'>if</span> (precision) {</td></tr>
-<tr><td class="num" id="LN3371">3371</td><td class="line">              char_u *p1 = (char_u *)str_arg;</td></tr>
-<tr><td class="num" id="LN3372">3372</td><td class="line">              size_t i;</td></tr>
-<tr><td class="num" id="LN3373">3373</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3374">3374</td><td class="line">              <span class='keyword'>for</span> (i = 0; i &lt; precision &amp;&amp; *p1; i++)</td></tr>
-<tr><td class="num" id="LN3375">3375</td><td class="line">                p1 += mb_ptr2len(p1);</td></tr>
-<tr><td class="num" id="LN3376">3376</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3377">3377</td><td class="line">              str_arg_l = precision = p1 - (char_u *)str_arg;</td></tr>
-<tr><td class="num" id="LN3378">3378</td><td class="line">            }</td></tr>
-<tr><td class="num" id="LN3379">3379</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3380">3380</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3381">3381</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3382">3382</td><td class="line">        <span class='keyword'>default</span>:</td></tr>
-<tr><td class="num" id="LN3383">3383</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3384">3384</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3385">3385</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3386">3386</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3387">3387</td><td class="line">      <span class='keyword'>case</span> 'd': <span class='keyword'>case</span> 'u': <span class='keyword'>case</span> 'o': <span class='keyword'>case</span> 'x': <span class='keyword'>case</span> 'X': <span class='keyword'>case</span> 'p':</td></tr>
-<tr><td class="num" id="LN3388">3388</td><td class="line">      {</td></tr>
-<tr><td class="num" id="LN3389">3389</td><td class="line">        <span class='comment'>/* NOTE: the u, o, x, X and p conversion specifiers</span></td></tr>
-<tr><td class="num" id="LN3390">3390</td><td class="line">         <span class='comment'>* imply the value is unsigned;  d implies a signed</span></td></tr>
-<tr><td class="num" id="LN3391">3391</td><td class="line">         <span class='comment'>* value */</span></td></tr>
-<tr><td class="num" id="LN3392">3392</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3393">3393</td><td class="line">        <span class='comment'>/* 0 if numeric argument is zero (or if pointer is</span></td></tr>
-<tr><td class="num" id="LN3394">3394</td><td class="line">         <span class='comment'>* NULL for 'p'), +1 if greater than zero (or nonzero</span></td></tr>
-<tr><td class="num" id="LN3395">3395</td><td class="line">         <span class='comment'>* for unsigned arguments), -1 if negative (unsigned</span></td></tr>
-<tr><td class="num" id="LN3396">3396</td><td class="line">         <span class='comment'>* argument is never negative) */</span></td></tr>
-<tr><td class="num" id="LN3397">3397</td><td class="line">        <span class='keyword'>int</span> arg_sign = 0;</td></tr>
-<tr><td class="num" id="LN3398">3398</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3399">3399</td><td class="line">        <span class='comment'>/* only defined for length modifier h, or for no</span></td></tr>
-<tr><td class="num" id="LN3400">3400</td><td class="line">         <span class='comment'>* length modifiers */</span></td></tr>
-<tr><td class="num" id="LN3401">3401</td><td class="line">        <span class='keyword'>int</span> int_arg = 0;</td></tr>
-<tr><td class="num" id="LN3402">3402</td><td class="line">        <span class='keyword'>unsigned</span> <span class='keyword'>int</span> uint_arg = 0;</td></tr>
-<tr><td class="num" id="LN3403">3403</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3404">3404</td><td class="line">        <span class='comment'>/* only defined for length modifier l */</span></td></tr>
-<tr><td class="num" id="LN3405">3405</td><td class="line">        <span class='keyword'>long</span> <span class='keyword'>int</span> long_arg = 0;</td></tr>
-<tr><td class="num" id="LN3406">3406</td><td class="line">        <span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>int</span> ulong_arg = 0;</td></tr>
-<tr><td class="num" id="LN3407">3407</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3408">3408</td><td class="line">        <span class='comment'>/* only defined for length modifier ll */</span></td></tr>
-<tr><td class="num" id="LN3409">3409</td><td class="line">        <span class='keyword'>long</span> <span class='keyword'>long</span> <span class='keyword'>int</span> long_long_arg = 0;</td></tr>
-<tr><td class="num" id="LN3410">3410</td><td class="line">        <span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>long</span> <span class='keyword'>int</span> ulong_long_arg = 0;</td></tr>
-<tr><td class="num" id="LN3411">3411</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3412">3412</td><td class="line">        <span class='comment'>/* pointer argument value -only defined for p</span></td></tr>
-<tr><td class="num" id="LN3413">3413</td><td class="line">         <span class='comment'>* conversion */</span></td></tr>
-<tr><td class="num" id="LN3414">3414</td><td class="line">        <span class='keyword'>void</span> *ptr_arg = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN3415">3415</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3416">3416</td><td class="line">        <span class='keyword'>if</span> (fmt_spec == 'p') {</td></tr>
-<tr><td class="num" id="LN3417">3417</td><td class="line">          length_modifier = '\0';</td></tr>
-<tr><td class="num" id="LN3418">3418</td><td class="line">          ptr_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? (<span class='keyword'>void</span> *)tv_str(tvs, &amp;arg_idx)</td></tr>
-<tr><td class="num" id="LN3419">3419</td><td class="line">                                : <span class='macro'>va_arg(ap, <span class='keyword'>void</span> *)<span class='expansion'>__builtin_va_arg(ap, void *)</span></span>;</td></tr>
-<tr><td class="num" id="LN3420">3420</td><td class="line">          <span class='keyword'>if</span> (ptr_arg != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN3421">3421</td><td class="line">            arg_sign = 1;</td></tr>
-<tr><td class="num" id="LN3422">3422</td><td class="line">        } <span class='keyword'>else</span> <span class='keyword'>if</span> (fmt_spec == 'd') {</td></tr>
-<tr><td class="num" id="LN3423">3423</td><td class="line">          <span class='comment'>/* signed */</span></td></tr>
-<tr><td class="num" id="LN3424">3424</td><td class="line">          <span class='keyword'>switch</span> (length_modifier) {</td></tr>
-<tr><td class="num" id="LN3425">3425</td><td class="line">          <span class='keyword'>case</span> '\0':</td></tr>
-<tr><td class="num" id="LN3426">3426</td><td class="line">          <span class='keyword'>case</span> 'h':</td></tr>
-<tr><td class="num" id="LN3427">3427</td><td class="line">            <span class='comment'>/* char and short arguments are passed as int. */</span></td></tr>
-<tr><td class="num" id="LN3428">3428</td><td class="line">            int_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3429">3429</td><td class="line">            <span class='keyword'>if</span> (int_arg &gt; 0)</td></tr>
-<tr><td class="num" id="LN3430">3430</td><td class="line">              arg_sign =  1;</td></tr>
-<tr><td class="num" id="LN3431">3431</td><td class="line">            <span class='keyword'>else</span> <span class='keyword'>if</span> (int_arg &lt; 0)</td></tr>
-<tr><td class="num" id="LN3432">3432</td><td class="line">              arg_sign = -1;</td></tr>
-<tr><td class="num" id="LN3433">3433</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3434">3434</td><td class="line">          <span class='keyword'>case</span> 'l':</td></tr>
-<tr><td class="num" id="LN3435">3435</td><td class="line">            long_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx)</td></tr>
-<tr><td class="num" id="LN3436">3436</td><td class="line">                                   : <span class='macro'>va_arg(ap, <span class='keyword'>long</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, long int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3437">3437</td><td class="line">            <span class='keyword'>if</span> (long_arg &gt; 0)</td></tr>
-<tr><td class="num" id="LN3438">3438</td><td class="line">              arg_sign =  1;</td></tr>
-<tr><td class="num" id="LN3439">3439</td><td class="line">            <span class='keyword'>else</span> <span class='keyword'>if</span> (long_arg &lt; 0)</td></tr>
-<tr><td class="num" id="LN3440">3440</td><td class="line">              arg_sign = -1;</td></tr>
-<tr><td class="num" id="LN3441">3441</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3442">3442</td><td class="line">          <span class='keyword'>case</span> '2':</td></tr>
-<tr><td class="num" id="LN3443">3443</td><td class="line">            long_long_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx)</td></tr>
-<tr><td class="num" id="LN3444">3444</td><td class="line">                                        : <span class='macro'>va_arg(ap, <span class='keyword'>long</span> <span class='keyword'>long</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, long long int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3445">3445</td><td class="line">            <span class='keyword'>if</span> (long_long_arg &gt; 0)</td></tr>
-<tr><td class="num" id="LN3446">3446</td><td class="line">              arg_sign =  1;</td></tr>
-<tr><td class="num" id="LN3447">3447</td><td class="line">            <span class='keyword'>else</span> <span class='keyword'>if</span> (long_long_arg &lt; 0)</td></tr>
-<tr><td class="num" id="LN3448">3448</td><td class="line">              arg_sign = -1;</td></tr>
-<tr><td class="num" id="LN3449">3449</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3450">3450</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3451">3451</td><td class="line">        } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3452">3452</td><td class="line">          <span class='comment'>/* unsigned */</span></td></tr>
-<tr><td class="num" id="LN3453">3453</td><td class="line">          <span class='keyword'>switch</span> (length_modifier) {</td></tr>
-<tr><td class="num" id="LN3454">3454</td><td class="line">          <span class='keyword'>case</span> '\0':</td></tr>
-<tr><td class="num" id="LN3455">3455</td><td class="line">          <span class='keyword'>case</span> 'h':</td></tr>
-<tr><td class="num" id="LN3456">3456</td><td class="line">            uint_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? (<span class='keyword'>unsigned</span>)tv_nr(tvs, &amp;arg_idx)</td></tr>
-<tr><td class="num" id="LN3457">3457</td><td class="line">                                   : <span class='macro'>va_arg(ap, <span class='keyword'>unsigned</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, unsigned int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3458">3458</td><td class="line">            <span class='keyword'>if</span> (uint_arg != 0)</td></tr>
-<tr><td class="num" id="LN3459">3459</td><td class="line">              arg_sign = 1;</td></tr>
-<tr><td class="num" id="LN3460">3460</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3461">3461</td><td class="line">          <span class='keyword'>case</span> 'l':</td></tr>
-<tr><td class="num" id="LN3462">3462</td><td class="line">            ulong_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? (<span class='keyword'>unsigned</span> <span class='keyword'>long</span>)tv_nr(tvs, &amp;arg_idx)</td></tr>
-<tr><td class="num" id="LN3463">3463</td><td class="line">                                    : <span class='macro'>va_arg(ap, <span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, unsigned long int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3464">3464</td><td class="line">            <span class='keyword'>if</span> (ulong_arg != 0)</td></tr>
-<tr><td class="num" id="LN3465">3465</td><td class="line">              arg_sign = 1;</td></tr>
-<tr><td class="num" id="LN3466">3466</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3467">3467</td><td class="line">          <span class='keyword'>case</span> '2':</td></tr>
-<tr><td class="num" id="LN3468">3468</td><td class="line">            ulong_long_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ?</td></tr>
-<tr><td class="num" id="LN3469">3469</td><td class="line">              (<span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>long</span>)tv_nr(tvs, &amp;arg_idx) :</td></tr>
-<tr><td class="num" id="LN3470">3470</td><td class="line">              <span class='macro'>va_arg(ap, <span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>long</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, unsigned long long int)</span></span>;</td></tr>
-<tr><td class="num" id="LN3471">3471</td><td class="line">            <span class='keyword'>if</span> (ulong_long_arg) arg_sign = 1;</td></tr>
-<tr><td class="num" id="LN3472">3472</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3473">3473</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3474">3474</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3475">3475</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3476">3476</td><td class="line">        str_arg = tmp;</td></tr>
-<tr><td class="num" id="LN3477">3477</td><td class="line">        str_arg_l = 0;</td></tr>
-<tr><td class="num" id="LN3478">3478</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3479">3479</td><td class="line">        <span class='comment'>/* NOTE:</span></td></tr>
-<tr><td class="num" id="LN3480">3480</td><td class="line">         <span class='comment'>*   For d, i, u, o, x, and X conversions, if precision is</span></td></tr>
-<tr><td class="num" id="LN3481">3481</td><td class="line">         <span class='comment'>*   specified, the '0' flag should be ignored. This is so</span></td></tr>
-<tr><td class="num" id="LN3482">3482</td><td class="line">         <span class='comment'>*   with Solaris 2.6, Digital UNIX 4.0, HPUX 10, Linux,</span></td></tr>
-<tr><td class="num" id="LN3483">3483</td><td class="line">         <span class='comment'>*   FreeBSD, NetBSD; but not with Perl.</span></td></tr>
-<tr><td class="num" id="LN3484">3484</td><td class="line">         <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN3485">3485</td><td class="line">        <span class='keyword'>if</span> (precision_specified)</td></tr>
-<tr><td class="num" id="LN3486">3486</td><td class="line">          zero_padding = 0;</td></tr>
-<tr><td class="num" id="LN3487">3487</td><td class="line">        <span class='keyword'>if</span> (fmt_spec == 'd') {</td></tr>
-<tr><td class="num" id="LN3488">3488</td><td class="line">          <span class='keyword'>if</span> (force_sign &amp;&amp; arg_sign &gt;= 0)</td></tr>
-<tr><td class="num" id="LN3489">3489</td><td class="line">            tmp[str_arg_l++] = space_for_positive ? ' ' : '+';</td></tr>
-<tr><td class="num" id="LN3490">3490</td><td class="line">          <span class='comment'>/* leave negative numbers for sprintf to handle, to</span></td></tr>
-<tr><td class="num" id="LN3491">3491</td><td class="line">           <span class='comment'>* avoid handling tricky cases like (short int)-32768 */</span></td></tr>
-<tr><td class="num" id="LN3492">3492</td><td class="line">        } <span class='keyword'>else</span> <span class='keyword'>if</span> (alternate_form) {</td></tr>
-<tr><td class="num" id="LN3493">3493</td><td class="line">          <span class='keyword'>if</span> (arg_sign != 0</td></tr>
-<tr><td class="num" id="LN3494">3494</td><td class="line">              &amp;&amp; (fmt_spec == 'x' || fmt_spec == 'X') ) {</td></tr>
-<tr><td class="num" id="LN3495">3495</td><td class="line">            tmp[str_arg_l++] = '0';</td></tr>
-<tr><td class="num" id="LN3496">3496</td><td class="line">            tmp[str_arg_l++] = fmt_spec;</td></tr>
-<tr><td class="num" id="LN3497">3497</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3498">3498</td><td class="line">          <span class='comment'>/* alternate form should have no effect for p</span></td></tr>
-<tr><td class="num" id="LN3499">3499</td><td class="line">           <span class='comment'>* conversion, but ... */</span></td></tr>
-<tr><td class="num" id="LN3500">3500</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3501">3501</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3502">3502</td><td class="line">        zero_padding_insertion_ind = str_arg_l;</td></tr>
-<tr><td class="num" id="LN3503">3503</td><td class="line">        <span class='keyword'>if</span> (!precision_specified)</td></tr>
-<tr><td class="num" id="LN3504">3504</td><td class="line">          precision = 1;                 <span class='comment'>/* default precision is 1 */</span></td></tr>
-<tr><td class="num" id="LN3505">3505</td><td class="line">        <span class='keyword'>if</span> (precision == 0 &amp;&amp; arg_sign == 0) {</td></tr>
-<tr><td class="num" id="LN3506">3506</td><td class="line">          <span class='comment'>/* When zero value is formatted with an explicit</span></td></tr>
-<tr><td class="num" id="LN3507">3507</td><td class="line">           <span class='comment'>* precision 0, the resulting formatted string is</span></td></tr>
-<tr><td class="num" id="LN3508">3508</td><td class="line">           <span class='comment'>* empty (d, i, u, o, x, X, p).   */</span></td></tr>
-<tr><td class="num" id="LN3509">3509</td><td class="line">        } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3510">3510</td><td class="line">          <span class='keyword'>char</span> f[5];</td></tr>
-<tr><td class="num" id="LN3511">3511</td><td class="line">          <span class='keyword'>int</span> f_l = 0;</td></tr>
-<tr><td class="num" id="LN3512">3512</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3513">3513</td><td class="line">          <span class='comment'>/* construct a simple format string for sprintf */</span></td></tr>
-<tr><td class="num" id="LN3514">3514</td><td class="line">          f[f_l++] = '%';</td></tr>
-<tr><td class="num" id="LN3515">3515</td><td class="line">          <span class='keyword'>if</span> (!length_modifier)</td></tr>
-<tr><td class="num" id="LN3516">3516</td><td class="line">            ;</td></tr>
-<tr><td class="num" id="LN3517">3517</td><td class="line">          <span class='keyword'>else</span> <span class='keyword'>if</span> (length_modifier == '2') {</td></tr>
+<tr><td class="num" id="LN3176">3176</td><td class="line">      size_t n = xstrchrnul(p + 1, '%') - p;</td></tr>
+<tr><td class="num" id="LN3177">3177</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3178">3178</td><td class="line">      <span class='comment'>/* Copy up to the next '%' or NUL without any changes. */</span></td></tr>
+<tr><td class="num" id="LN3179">3179</td><td class="line">      <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
+<tr><td class="num" id="LN3180">3180</td><td class="line">        size_t avail = str_m - str_l;</td></tr>
+<tr><td class="num" id="LN3181">3181</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3182">3182</td><td class="line">        memmove(str + str_l, p, n &gt; avail ? avail : n);</td></tr>
+<tr><td class="num" id="LN3183">3183</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3184">3184</td><td class="line">      p += n;</td></tr>
+<tr><td class="num" id="LN3185">3185</td><td class="line">      str_l += n;</td></tr>
+<tr><td class="num" id="LN3186">3186</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3187">3187</td><td class="line">      size_t min_field_width = 0, precision = 0;</td></tr>
+<tr><td class="num" id="LN3188">3188</td><td class="line">      <span class='keyword'>int</span> zero_padding = 0, precision_specified = 0, justify_left = 0;</td></tr>
+<tr><td class="num" id="LN3189">3189</td><td class="line">      <span class='keyword'>int</span> alternate_form = 0, force_sign = 0;</td></tr>
+<tr><td class="num" id="LN3190">3190</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3191">3191</td><td class="line">      <span class='comment'>/* If both the ' ' and '+' flags appear, the ' ' flag should be</span></td></tr>
+<tr><td class="num" id="LN3192">3192</td><td class="line">       <span class='comment'>* ignored. */</span></td></tr>
+<tr><td class="num" id="LN3193">3193</td><td class="line">      <span class='keyword'>int</span> space_for_positive = 1;</td></tr>
+<tr><td class="num" id="LN3194">3194</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3195">3195</td><td class="line">      <span class='comment'>/* allowed values: \0, h, l, L */</span></td></tr>
+<tr><td class="num" id="LN3196">3196</td><td class="line">      <span class='keyword'>char</span> length_modifier = '\0';</td></tr>
+<tr><td class="num" id="LN3197">3197</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3198">3198</td><td class="line">      <span class='comment'>/* temporary buffer for simple numeric-&gt;string conversion */</span></td></tr>
+<tr><td class="num" id="LN3199">3199</td><td class="line"><span class='directive'># define <span class='macro'>TMP_LEN<span class='expansion'>350</span></span> 350    /* On my system 1e308 is the biggest number possible.</span></td></tr>
+<tr><td class="num" id="LN3200">3200</td><td class="line">                         <span class='directive'>* That sounds reasonable to use as the maximum</span></td></tr>
+<tr><td class="num" id="LN3201">3201</td><td class="line">                         <span class='directive'>* printable. */</span></td></tr>
+<tr><td class="num" id="LN3202">3202</td><td class="line">      <span class='keyword'>char</span> tmp[<span class='macro'>TMP_LEN<span class='expansion'>350</span></span>];</td></tr>
+<tr><td class="num" id="LN3203">3203</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3204">3204</td><td class="line">      <span class='comment'>/* string address in case of string argument */</span></td></tr>
+<tr><td class="num" id="LN3205">3205</td><td class="line">      <span class='keyword'>char</span>    *str_arg;</td></tr>
+<tr><td class="num" id="LN3206">3206</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3207">3207</td><td class="line">      <span class='comment'>/* natural field width of arg without padding and sign */</span></td></tr>
+<tr><td class="num" id="LN3208">3208</td><td class="line">      size_t str_arg_l;</td></tr>
+<tr><td class="num" id="LN3209">3209</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3210">3210</td><td class="line">      <span class='comment'>/* unsigned char argument value - only defined for c conversion.</span></td></tr>
+<tr><td class="num" id="LN3211">3211</td><td class="line">       <span class='comment'>* N.B. standard explicitly states the char argument for the c</span></td></tr>
+<tr><td class="num" id="LN3212">3212</td><td class="line">       <span class='comment'>* conversion is unsigned */</span></td></tr>
+<tr><td class="num" id="LN3213">3213</td><td class="line">      <span class='keyword'>unsigned</span> <span class='keyword'>char</span> uchar_arg;</td></tr>
+<tr><td class="num" id="LN3214">3214</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3215">3215</td><td class="line">      <span class='comment'>/* number of zeros to be inserted for numeric conversions as</span></td></tr>
+<tr><td class="num" id="LN3216">3216</td><td class="line">       <span class='comment'>* required by the precision or minimal field width */</span></td></tr>
+<tr><td class="num" id="LN3217">3217</td><td class="line">      size_t number_of_zeros_to_pad = 0;</td></tr>
+<tr><td class="num" id="LN3218">3218</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3219">3219</td><td class="line">      <span class='comment'>/* index into tmp where zero padding is to be inserted */</span></td></tr>
+<tr><td class="num" id="LN3220">3220</td><td class="line">      size_t zero_padding_insertion_ind = 0;</td></tr>
+<tr><td class="num" id="LN3221">3221</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3222">3222</td><td class="line">      <span class='comment'>/* current conversion specifier character */</span></td></tr>
+<tr><td class="num" id="LN3223">3223</td><td class="line">      <span class='keyword'>char</span> fmt_spec = '\0';</td></tr>
+<tr><td class="num" id="LN3224">3224</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3225">3225</td><td class="line">      str_arg = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN3226">3226</td><td class="line">      p++;        <span class='comment'>/* skip '%' */</span></td></tr>
+<tr><td class="num" id="LN3227">3227</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3228">3228</td><td class="line">      <span class='comment'>/* parse flags */</span></td></tr>
+<tr><td class="num" id="LN3229">3229</td><td class="line">      <span class='keyword'>while</span> (*p == '0' || *p == '-' || *p == '+' || *p == ' '</td></tr>
+<tr><td class="num" id="LN3230">3230</td><td class="line">             || *p == '#' || *p == '\'') {</td></tr>
+<tr><td class="num" id="LN3231">3231</td><td class="line">        <span class='keyword'>switch</span> (*p) {</td></tr>
+<tr><td class="num" id="LN3232">3232</td><td class="line">        <span class='keyword'>case</span> '0': zero_padding = 1; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3233">3233</td><td class="line">        <span class='keyword'>case</span> '-': justify_left = 1; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3234">3234</td><td class="line">        <span class='keyword'>case</span> '+': force_sign = 1; space_for_positive = 0; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3235">3235</td><td class="line">        <span class='keyword'>case</span> ' ': force_sign = 1;</td></tr>
+<tr><td class="num" id="LN3236">3236</td><td class="line">          <span class='comment'>/* If both the ' ' and '+' flags appear, the ' '</span></td></tr>
+<tr><td class="num" id="LN3237">3237</td><td class="line">           <span class='comment'>* flag should be ignored */</span></td></tr>
+<tr><td class="num" id="LN3238">3238</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3239">3239</td><td class="line">        <span class='keyword'>case</span> '#': alternate_form = 1; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3240">3240</td><td class="line">        <span class='keyword'>case</span> '\'': <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3241">3241</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3242">3242</td><td class="line">        p++;</td></tr>
+<tr><td class="num" id="LN3243">3243</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3244">3244</td><td class="line">      <span class='comment'>/* If the '0' and '-' flags both appear, the '0' flag should be</span></td></tr>
+<tr><td class="num" id="LN3245">3245</td><td class="line">       <span class='comment'>* ignored. */</span></td></tr>
+<tr><td class="num" id="LN3246">3246</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3247">3247</td><td class="line">      <span class='comment'>/* parse field width */</span></td></tr>
+<tr><td class="num" id="LN3248">3248</td><td class="line">      <span class='keyword'>if</span> (*p == '*') {</td></tr>
+<tr><td class="num" id="LN3249">3249</td><td class="line">        <span class='keyword'>int</span> j;</td></tr>
+<tr><td class="num" id="LN3250">3250</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3251">3251</td><td class="line">        p++;</td></tr>
+<tr><td class="num" id="LN3252">3252</td><td class="line">        j = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3253">3253</td><td class="line">        <span class='keyword'>if</span> (j &gt;= 0)</td></tr>
+<tr><td class="num" id="LN3254">3254</td><td class="line">          min_field_width = j;</td></tr>
+<tr><td class="num" id="LN3255">3255</td><td class="line">        <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3256">3256</td><td class="line">          min_field_width = -j;</td></tr>
+<tr><td class="num" id="LN3257">3257</td><td class="line">          justify_left = 1;</td></tr>
+<tr><td class="num" id="LN3258">3258</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3259">3259</td><td class="line">      } <span class='keyword'>else</span> <span class='keyword'>if</span> (<span class='macro'>VIM_ISDIGIT((<span class='keyword'>int</span>)(*p))<span class='expansion'>((unsigned)((int)(*p)) - '0' &lt; 10)</span></span>) {</td></tr>
+<tr><td class="num" id="LN3260">3260</td><td class="line">        <span class='comment'>/* size_t could be wider than unsigned int; make sure we treat</span></td></tr>
+<tr><td class="num" id="LN3261">3261</td><td class="line">         <span class='comment'>* argument like common implementations do */</span></td></tr>
+<tr><td class="num" id="LN3262">3262</td><td class="line">        <span class='keyword'>unsigned</span> <span class='keyword'>int</span> uj = *p++ - '0';</td></tr>
+<tr><td class="num" id="LN3263">3263</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3264">3264</td><td class="line">        <span class='keyword'>while</span> (<span class='macro'>VIM_ISDIGIT((<span class='keyword'>int</span>)(*p))<span class='expansion'>((unsigned)((int)(*p)) - '0' &lt; 10)</span></span>)</td></tr>
+<tr><td class="num" id="LN3265">3265</td><td class="line">          uj = 10 * uj + (<span class='keyword'>unsigned</span> <span class='keyword'>int</span>)(*p++ - '0');</td></tr>
+<tr><td class="num" id="LN3266">3266</td><td class="line">        min_field_width = uj;</td></tr>
+<tr><td class="num" id="LN3267">3267</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3268">3268</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3269">3269</td><td class="line">      <span class='comment'>/* parse precision */</span></td></tr>
+<tr><td class="num" id="LN3270">3270</td><td class="line">      <span class='keyword'>if</span> (*p == '.') {</td></tr>
+<tr><td class="num" id="LN3271">3271</td><td class="line">        p++;</td></tr>
+<tr><td class="num" id="LN3272">3272</td><td class="line">        precision_specified = 1;</td></tr>
+<tr><td class="num" id="LN3273">3273</td><td class="line">        <span class='keyword'>if</span> (*p == '*') {</td></tr>
+<tr><td class="num" id="LN3274">3274</td><td class="line">          <span class='keyword'>int</span> j;</td></tr>
+<tr><td class="num" id="LN3275">3275</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3276">3276</td><td class="line">          j = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3277">3277</td><td class="line">          p++;</td></tr>
+<tr><td class="num" id="LN3278">3278</td><td class="line">          <span class='keyword'>if</span> (j &gt;= 0)</td></tr>
+<tr><td class="num" id="LN3279">3279</td><td class="line">            precision = j;</td></tr>
+<tr><td class="num" id="LN3280">3280</td><td class="line">          <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3281">3281</td><td class="line">            precision_specified = 0;</td></tr>
+<tr><td class="num" id="LN3282">3282</td><td class="line">            precision = 0;</td></tr>
+<tr><td class="num" id="LN3283">3283</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3284">3284</td><td class="line">        } <span class='keyword'>else</span> <span class='keyword'>if</span> (<span class='macro'>VIM_ISDIGIT((<span class='keyword'>int</span>)(*p))<span class='expansion'>((unsigned)((int)(*p)) - '0' &lt; 10)</span></span>) {</td></tr>
+<tr><td class="num" id="LN3285">3285</td><td class="line">          <span class='comment'>/* size_t could be wider than unsigned int; make sure we</span></td></tr>
+<tr><td class="num" id="LN3286">3286</td><td class="line">           <span class='comment'>* treat argument like common implementations do */</span></td></tr>
+<tr><td class="num" id="LN3287">3287</td><td class="line">          <span class='keyword'>unsigned</span> <span class='keyword'>int</span> uj = *p++ - '0';</td></tr>
+<tr><td class="num" id="LN3288">3288</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3289">3289</td><td class="line">          <span class='keyword'>while</span> (<span class='macro'>VIM_ISDIGIT((<span class='keyword'>int</span>)(*p))<span class='expansion'>((unsigned)((int)(*p)) - '0' &lt; 10)</span></span>)</td></tr>
+<tr><td class="num" id="LN3290">3290</td><td class="line">            uj = 10 * uj + (<span class='keyword'>unsigned</span> <span class='keyword'>int</span>)(*p++ - '0');</td></tr>
+<tr><td class="num" id="LN3291">3291</td><td class="line">          precision = uj;</td></tr>
+<tr><td class="num" id="LN3292">3292</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3293">3293</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3294">3294</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3295">3295</td><td class="line">      <span class='comment'>/* parse 'h', 'l' and 'll' length modifiers */</span></td></tr>
+<tr><td class="num" id="LN3296">3296</td><td class="line">      <span class='keyword'>if</span> (*p == 'h' || *p == 'l') {</td></tr>
+<tr><td class="num" id="LN3297">3297</td><td class="line">        length_modifier = *p;</td></tr>
+<tr><td class="num" id="LN3298">3298</td><td class="line">        p++;</td></tr>
+<tr><td class="num" id="LN3299">3299</td><td class="line">        <span class='keyword'>if</span> (length_modifier == 'l' &amp;&amp; *p == 'l') { <span class='comment'>/* double l = long long */</span></td></tr>
+<tr><td class="num" id="LN3300">3300</td><td class="line">          length_modifier = '2';                   <span class='comment'>/* double l encoded as '2' */</span></td></tr>
+<tr><td class="num" id="LN3301">3301</td><td class="line">          p++;</td></tr>
+<tr><td class="num" id="LN3302">3302</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3303">3303</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3304">3304</td><td class="line">      fmt_spec = *p;</td></tr>
+<tr><td class="num" id="LN3305">3305</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3306">3306</td><td class="line">      <span class='comment'>/* common synonyms: */</span></td></tr>
+<tr><td class="num" id="LN3307">3307</td><td class="line">      <span class='keyword'>switch</span> (fmt_spec) {</td></tr>
+<tr><td class="num" id="LN3308">3308</td><td class="line">      <span class='keyword'>case</span> 'i': fmt_spec = 'd'; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3309">3309</td><td class="line">      <span class='keyword'>case</span> 'D': fmt_spec = 'd'; length_modifier = 'l'; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3310">3310</td><td class="line">      <span class='keyword'>case</span> 'U': fmt_spec = 'u'; length_modifier = 'l'; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3311">3311</td><td class="line">      <span class='keyword'>case</span> 'O': fmt_spec = 'o'; length_modifier = 'l'; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3312">3312</td><td class="line">      <span class='keyword'>case</span> 'F': fmt_spec = 'f'; <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3313">3313</td><td class="line">      <span class='keyword'>default</span>: <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3314">3314</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3315">3315</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3316">3316</td><td class="line">      <span class='comment'>/* get parameter value, do initial processing */</span></td></tr>
+<tr><td class="num" id="LN3317">3317</td><td class="line">      <span class='keyword'>switch</span> (fmt_spec) {</td></tr>
+<tr><td class="num" id="LN3318">3318</td><td class="line">      <span class='comment'>/* '%' and 'c' behave similar to 's' regarding flags and field widths */</span></td></tr>
+<tr><td class="num" id="LN3319">3319</td><td class="line">      <span class='keyword'>case</span> '%':</td></tr>
+<tr><td class="num" id="LN3320">3320</td><td class="line">      <span class='keyword'>case</span> 'c':</td></tr>
+<tr><td class="num" id="LN3321">3321</td><td class="line">      <span class='keyword'>case</span> 's':</td></tr>
+<tr><td class="num" id="LN3322">3322</td><td class="line">      <span class='keyword'>case</span> 'S':</td></tr>
+<tr><td class="num" id="LN3323">3323</td><td class="line">        length_modifier = '\0';</td></tr>
+<tr><td class="num" id="LN3324">3324</td><td class="line">        str_arg_l = 1;</td></tr>
+<tr><td class="num" id="LN3325">3325</td><td class="line">        <span class='keyword'>switch</span> (fmt_spec) {</td></tr>
+<tr><td class="num" id="LN3326">3326</td><td class="line">        <span class='keyword'>case</span> '%':</td></tr>
+<tr><td class="num" id="LN3327">3327</td><td class="line">          str_arg = p;</td></tr>
+<tr><td class="num" id="LN3328">3328</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3329">3329</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3330">3330</td><td class="line">        <span class='keyword'>case</span> 'c':</td></tr>
+<tr><td class="num" id="LN3331">3331</td><td class="line">        {</td></tr>
+<tr><td class="num" id="LN3332">3332</td><td class="line">          <span class='keyword'>int</span> j;</td></tr>
+<tr><td class="num" id="LN3333">3333</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3334">3334</td><td class="line">          j = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3335">3335</td><td class="line">          <span class='comment'>/* standard demands unsigned char */</span></td></tr>
+<tr><td class="num" id="LN3336">3336</td><td class="line">          uchar_arg = (<span class='keyword'>unsigned</span> <span class='keyword'>char</span>)j;</td></tr>
+<tr><td class="num" id="LN3337">3337</td><td class="line">          str_arg = (<span class='keyword'>char</span> *)&amp;uchar_arg;</td></tr>
+<tr><td class="num" id="LN3338">3338</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3339">3339</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3340">3340</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3341">3341</td><td class="line">        <span class='keyword'>case</span> 's':</td></tr>
+<tr><td class="num" id="LN3342">3342</td><td class="line">        <span class='keyword'>case</span> 'S':</td></tr>
+<tr><td class="num" id="LN3343">3343</td><td class="line">          str_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_str(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>char</span> *)<span class='expansion'>__builtin_va_arg(ap, char *)</span></span>;</td></tr>
+<tr><td class="num" id="LN3344">3344</td><td class="line">          <span class='keyword'>if</span> (str_arg == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN3345">3345</td><td class="line">            str_arg = <span class='string_literal'>"[NULL]"</span>;</td></tr>
+<tr><td class="num" id="LN3346">3346</td><td class="line">            str_arg_l = 6;</td></tr>
+<tr><td class="num" id="LN3347">3347</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3348">3348</td><td class="line">          <span class='comment'>/* make sure not to address string beyond the specified</span></td></tr>
+<tr><td class="num" id="LN3349">3349</td><td class="line">           <span class='comment'>* precision !!! */</span></td></tr>
+<tr><td class="num" id="LN3350">3350</td><td class="line">          <span class='keyword'>else</span> <span class='keyword'>if</span> (!precision_specified)</td></tr>
+<tr><td class="num" id="LN3351">3351</td><td class="line">            str_arg_l = strlen(str_arg);</td></tr>
+<tr><td class="num" id="LN3352">3352</td><td class="line">          <span class='comment'>/* truncate string if necessary as requested by precision */</span></td></tr>
+<tr><td class="num" id="LN3353">3353</td><td class="line">          <span class='keyword'>else</span> <span class='keyword'>if</span> (precision == 0)</td></tr>
+<tr><td class="num" id="LN3354">3354</td><td class="line">            str_arg_l = 0;</td></tr>
+<tr><td class="num" id="LN3355">3355</td><td class="line">          <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3356">3356</td><td class="line">            <span class='comment'>/* Don't put the #if inside memchr(), it can be a</span></td></tr>
+<tr><td class="num" id="LN3357">3357</td><td class="line">             <span class='comment'>* macro. */</span></td></tr>
+<tr><td class="num" id="LN3358">3358</td><td class="line">            <span class='comment'>/* memchr on HP does not like n &gt; 2^31  !!! */</span></td></tr>
+<tr><td class="num" id="LN3359">3359</td><td class="line">            <span class='keyword'>char</span> *q = memchr(str_arg, '\0',</td></tr>
+<tr><td class="num" id="LN3360">3360</td><td class="line">                precision &lt;= (size_t)0x7fffffffL ? precision</td></tr>
+<tr><td class="num" id="LN3361">3361</td><td class="line">                : (size_t)0x7fffffffL);</td></tr>
+<tr><td class="num" id="LN3362">3362</td><td class="line">            str_arg_l = (q == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) ? precision</td></tr>
+<tr><td class="num" id="LN3363">3363</td><td class="line">                        : (size_t)(q - str_arg);</td></tr>
+<tr><td class="num" id="LN3364">3364</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3365">3365</td><td class="line">          <span class='keyword'>if</span> (fmt_spec == 'S') {</td></tr>
+<tr><td class="num" id="LN3366">3366</td><td class="line">            <span class='keyword'>if</span> (min_field_width != 0)</td></tr>
+<tr><td class="num" id="LN3367">3367</td><td class="line">              min_field_width += <span class='macro'>STRLEN(str_arg)<span class='expansion'>strlen((char *)(str_arg))</span></span></td></tr>
+<tr><td class="num" id="LN3368">3368</td><td class="line">                                 - mb_string2cells((char_u *) str_arg);</td></tr>
+<tr><td class="num" id="LN3369">3369</td><td class="line">            <span class='keyword'>if</span> (precision) {</td></tr>
+<tr><td class="num" id="LN3370">3370</td><td class="line">              char_u *p1 = (char_u *)str_arg;</td></tr>
+<tr><td class="num" id="LN3371">3371</td><td class="line">              size_t i;</td></tr>
+<tr><td class="num" id="LN3372">3372</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3373">3373</td><td class="line">              <span class='keyword'>for</span> (i = 0; i &lt; precision &amp;&amp; *p1; i++)</td></tr>
+<tr><td class="num" id="LN3374">3374</td><td class="line">                p1 += mb_ptr2len(p1);</td></tr>
+<tr><td class="num" id="LN3375">3375</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3376">3376</td><td class="line">              str_arg_l = precision = p1 - (char_u *)str_arg;</td></tr>
+<tr><td class="num" id="LN3377">3377</td><td class="line">            }</td></tr>
+<tr><td class="num" id="LN3378">3378</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3379">3379</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3380">3380</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3381">3381</td><td class="line">        <span class='keyword'>default</span>:</td></tr>
+<tr><td class="num" id="LN3382">3382</td><td class="line">          <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3383">3383</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3384">3384</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3385">3385</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3386">3386</td><td class="line">      <span class='keyword'>case</span> 'd': <span class='keyword'>case</span> 'u': <span class='keyword'>case</span> 'o': <span class='keyword'>case</span> 'x': <span class='keyword'>case</span> 'X': <span class='keyword'>case</span> 'p':</td></tr>
+<tr><td class="num" id="LN3387">3387</td><td class="line">      {</td></tr>
+<tr><td class="num" id="LN3388">3388</td><td class="line">        <span class='comment'>/* NOTE: the u, o, x, X and p conversion specifiers</span></td></tr>
+<tr><td class="num" id="LN3389">3389</td><td class="line">         <span class='comment'>* imply the value is unsigned;  d implies a signed</span></td></tr>
+<tr><td class="num" id="LN3390">3390</td><td class="line">         <span class='comment'>* value */</span></td></tr>
+<tr><td class="num" id="LN3391">3391</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3392">3392</td><td class="line">        <span class='comment'>/* 0 if numeric argument is zero (or if pointer is</span></td></tr>
+<tr><td class="num" id="LN3393">3393</td><td class="line">         <span class='comment'>* NULL for 'p'), +1 if greater than zero (or nonzero</span></td></tr>
+<tr><td class="num" id="LN3394">3394</td><td class="line">         <span class='comment'>* for unsigned arguments), -1 if negative (unsigned</span></td></tr>
+<tr><td class="num" id="LN3395">3395</td><td class="line">         <span class='comment'>* argument is never negative) */</span></td></tr>
+<tr><td class="num" id="LN3396">3396</td><td class="line">        <span class='keyword'>int</span> arg_sign = 0;</td></tr>
+<tr><td class="num" id="LN3397">3397</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3398">3398</td><td class="line">        <span class='comment'>/* only defined for length modifier h, or for no</span></td></tr>
+<tr><td class="num" id="LN3399">3399</td><td class="line">         <span class='comment'>* length modifiers */</span></td></tr>
+<tr><td class="num" id="LN3400">3400</td><td class="line">        <span class='keyword'>int</span> int_arg = 0;</td></tr>
+<tr><td class="num" id="LN3401">3401</td><td class="line">        <span class='keyword'>unsigned</span> <span class='keyword'>int</span> uint_arg = 0;</td></tr>
+<tr><td class="num" id="LN3402">3402</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3403">3403</td><td class="line">        <span class='comment'>/* only defined for length modifier l */</span></td></tr>
+<tr><td class="num" id="LN3404">3404</td><td class="line">        <span class='keyword'>long</span> <span class='keyword'>int</span> long_arg = 0;</td></tr>
+<tr><td class="num" id="LN3405">3405</td><td class="line">        <span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>int</span> ulong_arg = 0;</td></tr>
+<tr><td class="num" id="LN3406">3406</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3407">3407</td><td class="line">        <span class='comment'>/* only defined for length modifier ll */</span></td></tr>
+<tr><td class="num" id="LN3408">3408</td><td class="line">        <span class='keyword'>long</span> <span class='keyword'>long</span> <span class='keyword'>int</span> long_long_arg = 0;</td></tr>
+<tr><td class="num" id="LN3409">3409</td><td class="line">        <span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>long</span> <span class='keyword'>int</span> ulong_long_arg = 0;</td></tr>
+<tr><td class="num" id="LN3410">3410</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3411">3411</td><td class="line">        <span class='comment'>/* pointer argument value -only defined for p</span></td></tr>
+<tr><td class="num" id="LN3412">3412</td><td class="line">         <span class='comment'>* conversion */</span></td></tr>
+<tr><td class="num" id="LN3413">3413</td><td class="line">        <span class='keyword'>void</span> *ptr_arg = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN3414">3414</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3415">3415</td><td class="line">        <span class='keyword'>if</span> (fmt_spec == 'p') {</td></tr>
+<tr><td class="num" id="LN3416">3416</td><td class="line">          length_modifier = '\0';</td></tr>
+<tr><td class="num" id="LN3417">3417</td><td class="line">          ptr_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? (<span class='keyword'>void</span> *)tv_str(tvs, &amp;arg_idx)</td></tr>
+<tr><td class="num" id="LN3418">3418</td><td class="line">                                : <span class='macro'>va_arg(ap, <span class='keyword'>void</span> *)<span class='expansion'>__builtin_va_arg(ap, void *)</span></span>;</td></tr>
+<tr><td class="num" id="LN3419">3419</td><td class="line">          <span class='keyword'>if</span> (ptr_arg != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN3420">3420</td><td class="line">            arg_sign = 1;</td></tr>
+<tr><td class="num" id="LN3421">3421</td><td class="line">        } <span class='keyword'>else</span> <span class='keyword'>if</span> (fmt_spec == 'd') {</td></tr>
+<tr><td class="num" id="LN3422">3422</td><td class="line">          <span class='comment'>/* signed */</span></td></tr>
+<tr><td class="num" id="LN3423">3423</td><td class="line">          <span class='keyword'>switch</span> (length_modifier) {</td></tr>
+<tr><td class="num" id="LN3424">3424</td><td class="line">          <span class='keyword'>case</span> '\0':</td></tr>
+<tr><td class="num" id="LN3425">3425</td><td class="line">          <span class='keyword'>case</span> 'h':</td></tr>
+<tr><td class="num" id="LN3426">3426</td><td class="line">            <span class='comment'>/* char and short arguments are passed as int. */</span></td></tr>
+<tr><td class="num" id="LN3427">3427</td><td class="line">            int_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3428">3428</td><td class="line">            <span class='keyword'>if</span> (int_arg &gt; 0)</td></tr>
+<tr><td class="num" id="LN3429">3429</td><td class="line">              arg_sign =  1;</td></tr>
+<tr><td class="num" id="LN3430">3430</td><td class="line">            <span class='keyword'>else</span> <span class='keyword'>if</span> (int_arg &lt; 0)</td></tr>
+<tr><td class="num" id="LN3431">3431</td><td class="line">              arg_sign = -1;</td></tr>
+<tr><td class="num" id="LN3432">3432</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3433">3433</td><td class="line">          <span class='keyword'>case</span> 'l':</td></tr>
+<tr><td class="num" id="LN3434">3434</td><td class="line">            long_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx)</td></tr>
+<tr><td class="num" id="LN3435">3435</td><td class="line">                                   : <span class='macro'>va_arg(ap, <span class='keyword'>long</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, long int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3436">3436</td><td class="line">            <span class='keyword'>if</span> (long_arg &gt; 0)</td></tr>
+<tr><td class="num" id="LN3437">3437</td><td class="line">              arg_sign =  1;</td></tr>
+<tr><td class="num" id="LN3438">3438</td><td class="line">            <span class='keyword'>else</span> <span class='keyword'>if</span> (long_arg &lt; 0)</td></tr>
+<tr><td class="num" id="LN3439">3439</td><td class="line">              arg_sign = -1;</td></tr>
+<tr><td class="num" id="LN3440">3440</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3441">3441</td><td class="line">          <span class='keyword'>case</span> '2':</td></tr>
+<tr><td class="num" id="LN3442">3442</td><td class="line">            long_long_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_nr(tvs, &amp;arg_idx)</td></tr>
+<tr><td class="num" id="LN3443">3443</td><td class="line">                                        : <span class='macro'>va_arg(ap, <span class='keyword'>long</span> <span class='keyword'>long</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, long long int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3444">3444</td><td class="line">            <span class='keyword'>if</span> (long_long_arg &gt; 0)</td></tr>
+<tr><td class="num" id="LN3445">3445</td><td class="line">              arg_sign =  1;</td></tr>
+<tr><td class="num" id="LN3446">3446</td><td class="line">            <span class='keyword'>else</span> <span class='keyword'>if</span> (long_long_arg &lt; 0)</td></tr>
+<tr><td class="num" id="LN3447">3447</td><td class="line">              arg_sign = -1;</td></tr>
+<tr><td class="num" id="LN3448">3448</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3449">3449</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3450">3450</td><td class="line">        } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3451">3451</td><td class="line">          <span class='comment'>/* unsigned */</span></td></tr>
+<tr><td class="num" id="LN3452">3452</td><td class="line">          <span class='keyword'>switch</span> (length_modifier) {</td></tr>
+<tr><td class="num" id="LN3453">3453</td><td class="line">          <span class='keyword'>case</span> '\0':</td></tr>
+<tr><td class="num" id="LN3454">3454</td><td class="line">          <span class='keyword'>case</span> 'h':</td></tr>
+<tr><td class="num" id="LN3455">3455</td><td class="line">            uint_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? (<span class='keyword'>unsigned</span>)tv_nr(tvs, &amp;arg_idx)</td></tr>
+<tr><td class="num" id="LN3456">3456</td><td class="line">                                   : <span class='macro'>va_arg(ap, <span class='keyword'>unsigned</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, unsigned int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3457">3457</td><td class="line">            <span class='keyword'>if</span> (uint_arg != 0)</td></tr>
+<tr><td class="num" id="LN3458">3458</td><td class="line">              arg_sign = 1;</td></tr>
+<tr><td class="num" id="LN3459">3459</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3460">3460</td><td class="line">          <span class='keyword'>case</span> 'l':</td></tr>
+<tr><td class="num" id="LN3461">3461</td><td class="line">            ulong_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? (<span class='keyword'>unsigned</span> <span class='keyword'>long</span>)tv_nr(tvs, &amp;arg_idx)</td></tr>
+<tr><td class="num" id="LN3462">3462</td><td class="line">                                    : <span class='macro'>va_arg(ap, <span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, unsigned long int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3463">3463</td><td class="line">            <span class='keyword'>if</span> (ulong_arg != 0)</td></tr>
+<tr><td class="num" id="LN3464">3464</td><td class="line">              arg_sign = 1;</td></tr>
+<tr><td class="num" id="LN3465">3465</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3466">3466</td><td class="line">          <span class='keyword'>case</span> '2':</td></tr>
+<tr><td class="num" id="LN3467">3467</td><td class="line">            ulong_long_arg = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ?</td></tr>
+<tr><td class="num" id="LN3468">3468</td><td class="line">              (<span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>long</span>)tv_nr(tvs, &amp;arg_idx) :</td></tr>
+<tr><td class="num" id="LN3469">3469</td><td class="line">              <span class='macro'>va_arg(ap, <span class='keyword'>unsigned</span> <span class='keyword'>long</span> <span class='keyword'>long</span> <span class='keyword'>int</span>)<span class='expansion'>__builtin_va_arg(ap, unsigned long long int)</span></span>;</td></tr>
+<tr><td class="num" id="LN3470">3470</td><td class="line">            <span class='keyword'>if</span> (ulong_long_arg) arg_sign = 1;</td></tr>
+<tr><td class="num" id="LN3471">3471</td><td class="line">            <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3472">3472</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3473">3473</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3474">3474</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3475">3475</td><td class="line">        str_arg = tmp;</td></tr>
+<tr><td class="num" id="LN3476">3476</td><td class="line">        str_arg_l = 0;</td></tr>
+<tr><td class="num" id="LN3477">3477</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3478">3478</td><td class="line">        <span class='comment'>/* NOTE:</span></td></tr>
+<tr><td class="num" id="LN3479">3479</td><td class="line">         <span class='comment'>*   For d, i, u, o, x, and X conversions, if precision is</span></td></tr>
+<tr><td class="num" id="LN3480">3480</td><td class="line">         <span class='comment'>*   specified, the '0' flag should be ignored. This is so</span></td></tr>
+<tr><td class="num" id="LN3481">3481</td><td class="line">         <span class='comment'>*   with Solaris 2.6, Digital UNIX 4.0, HPUX 10, Linux,</span></td></tr>
+<tr><td class="num" id="LN3482">3482</td><td class="line">         <span class='comment'>*   FreeBSD, NetBSD; but not with Perl.</span></td></tr>
+<tr><td class="num" id="LN3483">3483</td><td class="line">         <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN3484">3484</td><td class="line">        <span class='keyword'>if</span> (precision_specified)</td></tr>
+<tr><td class="num" id="LN3485">3485</td><td class="line">          zero_padding = 0;</td></tr>
+<tr><td class="num" id="LN3486">3486</td><td class="line">        <span class='keyword'>if</span> (fmt_spec == 'd') {</td></tr>
+<tr><td class="num" id="LN3487">3487</td><td class="line">          <span class='keyword'>if</span> (force_sign &amp;&amp; arg_sign &gt;= 0)</td></tr>
+<tr><td class="num" id="LN3488">3488</td><td class="line">            tmp[str_arg_l++] = space_for_positive ? ' ' : '+';</td></tr>
+<tr><td class="num" id="LN3489">3489</td><td class="line">          <span class='comment'>/* leave negative numbers for sprintf to handle, to</span></td></tr>
+<tr><td class="num" id="LN3490">3490</td><td class="line">           <span class='comment'>* avoid handling tricky cases like (short int)-32768 */</span></td></tr>
+<tr><td class="num" id="LN3491">3491</td><td class="line">        } <span class='keyword'>else</span> <span class='keyword'>if</span> (alternate_form) {</td></tr>
+<tr><td class="num" id="LN3492">3492</td><td class="line">          <span class='keyword'>if</span> (arg_sign != 0</td></tr>
+<tr><td class="num" id="LN3493">3493</td><td class="line">              &amp;&amp; (fmt_spec == 'x' || fmt_spec == 'X') ) {</td></tr>
+<tr><td class="num" id="LN3494">3494</td><td class="line">            tmp[str_arg_l++] = '0';</td></tr>
+<tr><td class="num" id="LN3495">3495</td><td class="line">            tmp[str_arg_l++] = fmt_spec;</td></tr>
+<tr><td class="num" id="LN3496">3496</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3497">3497</td><td class="line">          <span class='comment'>/* alternate form should have no effect for p</span></td></tr>
+<tr><td class="num" id="LN3498">3498</td><td class="line">           <span class='comment'>* conversion, but ... */</span></td></tr>
+<tr><td class="num" id="LN3499">3499</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3500">3500</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3501">3501</td><td class="line">        zero_padding_insertion_ind = str_arg_l;</td></tr>
+<tr><td class="num" id="LN3502">3502</td><td class="line">        <span class='keyword'>if</span> (!precision_specified)</td></tr>
+<tr><td class="num" id="LN3503">3503</td><td class="line">          precision = 1;                 <span class='comment'>/* default precision is 1 */</span></td></tr>
+<tr><td class="num" id="LN3504">3504</td><td class="line">        <span class='keyword'>if</span> (precision == 0 &amp;&amp; arg_sign == 0) {</td></tr>
+<tr><td class="num" id="LN3505">3505</td><td class="line">          <span class='comment'>/* When zero value is formatted with an explicit</span></td></tr>
+<tr><td class="num" id="LN3506">3506</td><td class="line">           <span class='comment'>* precision 0, the resulting formatted string is</span></td></tr>
+<tr><td class="num" id="LN3507">3507</td><td class="line">           <span class='comment'>* empty (d, i, u, o, x, X, p).   */</span></td></tr>
+<tr><td class="num" id="LN3508">3508</td><td class="line">        } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3509">3509</td><td class="line">          <span class='keyword'>char</span> f[5];</td></tr>
+<tr><td class="num" id="LN3510">3510</td><td class="line">          <span class='keyword'>int</span> f_l = 0;</td></tr>
+<tr><td class="num" id="LN3511">3511</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3512">3512</td><td class="line">          <span class='comment'>/* construct a simple format string for sprintf */</span></td></tr>
+<tr><td class="num" id="LN3513">3513</td><td class="line">          f[f_l++] = '%';</td></tr>
+<tr><td class="num" id="LN3514">3514</td><td class="line">          <span class='keyword'>if</span> (!length_modifier)</td></tr>
+<tr><td class="num" id="LN3515">3515</td><td class="line">            ;</td></tr>
+<tr><td class="num" id="LN3516">3516</td><td class="line">          <span class='keyword'>else</span> <span class='keyword'>if</span> (length_modifier == '2') {</td></tr>
+<tr><td class="num" id="LN3517">3517</td><td class="line">            f[f_l++] = 'l';</td></tr>
 <tr><td class="num" id="LN3518">3518</td><td class="line">            f[f_l++] = 'l';</td></tr>
-<tr><td class="num" id="LN3519">3519</td><td class="line">            f[f_l++] = 'l';</td></tr>
-<tr><td class="num" id="LN3520">3520</td><td class="line">          } <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN3521">3521</td><td class="line">            f[f_l++] = length_modifier;</td></tr>
-<tr><td class="num" id="LN3522">3522</td><td class="line">          f[f_l++] = fmt_spec;</td></tr>
-<tr><td class="num" id="LN3523">3523</td><td class="line">          f[f_l++] = '\0';</td></tr>
-<tr><td class="num" id="LN3524">3524</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3525">3525</td><td class="line">          <span class='keyword'>if</span> (fmt_spec == 'p')</td></tr>
-<tr><td class="num" id="LN3526">3526</td><td class="line">            str_arg_l += sprintf(tmp + str_arg_l, f, ptr_arg);</td></tr>
-<tr><td class="num" id="LN3527">3527</td><td class="line">          <span class='keyword'>else</span> <span class='keyword'>if</span> (fmt_spec == 'd') {</td></tr>
-<tr><td class="num" id="LN3528">3528</td><td class="line">            <span class='comment'>/* signed */</span></td></tr>
-<tr><td class="num" id="LN3529">3529</td><td class="line">            <span class='keyword'>switch</span> (length_modifier) {</td></tr>
-<tr><td class="num" id="LN3530">3530</td><td class="line">            <span class='keyword'>case</span> '\0':</td></tr>
-<tr><td class="num" id="LN3531">3531</td><td class="line">            <span class='keyword'>case</span> 'h': str_arg_l += sprintf(</td></tr>
-<tr><td class="num" id="LN3532">3532</td><td class="line">                  tmp + str_arg_l, f, int_arg);</td></tr>
-<tr><td class="num" id="LN3533">3533</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3534">3534</td><td class="line">            <span class='keyword'>case</span> 'l': str_arg_l += sprintf(</td></tr>
-<tr><td class="num" id="LN3535">3535</td><td class="line">                  tmp + str_arg_l, f, long_arg);</td></tr>
-<tr><td class="num" id="LN3536">3536</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3537">3537</td><td class="line">            <span class='keyword'>case</span> '2': str_arg_l += sprintf(</td></tr>
-<tr><td class="num" id="LN3538">3538</td><td class="line">                  tmp + str_arg_l, f, long_long_arg);</td></tr>
-<tr><td class="num" id="LN3539">3539</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3540">3540</td><td class="line">            }</td></tr>
-<tr><td class="num" id="LN3541">3541</td><td class="line">          } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3542">3542</td><td class="line">            <span class='comment'>/* unsigned */</span></td></tr>
-<tr><td class="num" id="LN3543">3543</td><td class="line">            <span class='keyword'>switch</span> (length_modifier) {</td></tr>
-<tr><td class="num" id="LN3544">3544</td><td class="line">            <span class='keyword'>case</span> '\0':</td></tr>
-<tr><td class="num" id="LN3545">3545</td><td class="line">            <span class='keyword'>case</span> 'h': str_arg_l += sprintf(</td></tr>
-<tr><td class="num" id="LN3546">3546</td><td class="line">                  tmp + str_arg_l, f, uint_arg);</td></tr>
-<tr><td class="num" id="LN3547">3547</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3548">3548</td><td class="line">            <span class='keyword'>case</span> 'l': str_arg_l += sprintf(</td></tr>
-<tr><td class="num" id="LN3549">3549</td><td class="line">                  tmp + str_arg_l, f, ulong_arg);</td></tr>
-<tr><td class="num" id="LN3550">3550</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3551">3551</td><td class="line">            <span class='keyword'>case</span> '2': str_arg_l += sprintf(</td></tr>
-<tr><td class="num" id="LN3552">3552</td><td class="line">                  tmp + str_arg_l, f, ulong_long_arg);</td></tr>
-<tr><td class="num" id="LN3553">3553</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3554">3554</td><td class="line">            }</td></tr>
-<tr><td class="num" id="LN3555">3555</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3556">3556</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3557">3557</td><td class="line">          <span class='comment'>/* include the optional minus sign and possible</span></td></tr>
-<tr><td class="num" id="LN3558">3558</td><td class="line">           <span class='comment'>* "0x" in the region before the zero padding</span></td></tr>
-<tr><td class="num" id="LN3559">3559</td><td class="line">           <span class='comment'>* insertion point */</span></td></tr>
-<tr><td class="num" id="LN3560">3560</td><td class="line">          <span class='keyword'>if</span> (zero_padding_insertion_ind &lt; str_arg_l</td></tr>
-<tr><td class="num" id="LN3561">3561</td><td class="line">              &amp;&amp; tmp[zero_padding_insertion_ind] == '-')</td></tr>
-<tr><td class="num" id="LN3562">3562</td><td class="line">            zero_padding_insertion_ind++;</td></tr>
-<tr><td class="num" id="LN3563">3563</td><td class="line">          <span class='keyword'>if</span> (zero_padding_insertion_ind + 1 &lt; str_arg_l</td></tr>
-<tr><td class="num" id="LN3564">3564</td><td class="line">              &amp;&amp; tmp[zero_padding_insertion_ind]   == '0'</td></tr>
-<tr><td class="num" id="LN3565">3565</td><td class="line">              &amp;&amp; (tmp[zero_padding_insertion_ind + 1] == 'x'</td></tr>
-<tr><td class="num" id="LN3566">3566</td><td class="line">                  || tmp[zero_padding_insertion_ind + 1] == 'X'))</td></tr>
-<tr><td class="num" id="LN3567">3567</td><td class="line">            zero_padding_insertion_ind += 2;</td></tr>
-<tr><td class="num" id="LN3568">3568</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3569">3569</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3570">3570</td><td class="line">        {</td></tr>
-<tr><td class="num" id="LN3571">3571</td><td class="line">          size_t num_of_digits = str_arg_l</td></tr>
-<tr><td class="num" id="LN3572">3572</td><td class="line">                                 - zero_padding_insertion_ind;</td></tr>
-<tr><td class="num" id="LN3573">3573</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3574">3574</td><td class="line">          <span class='keyword'>if</span> (alternate_form &amp;&amp; fmt_spec == 'o'</td></tr>
-<tr><td class="num" id="LN3575">3575</td><td class="line">              <span class='comment'>/* unless zero is already the first</span></td></tr>
-<tr><td class="num" id="LN3576">3576</td><td class="line">               <span class='comment'>* character */</span></td></tr>
-<tr><td class="num" id="LN3577">3577</td><td class="line">              &amp;&amp; !(zero_padding_insertion_ind &lt; str_arg_l</td></tr>
-<tr><td class="num" id="LN3578">3578</td><td class="line">                   &amp;&amp; tmp[zero_padding_insertion_ind] == '0')) {</td></tr>
-<tr><td class="num" id="LN3579">3579</td><td class="line">            <span class='comment'>/* assure leading zero for alternate-form</span></td></tr>
-<tr><td class="num" id="LN3580">3580</td><td class="line">             <span class='comment'>* octal numbers */</span></td></tr>
-<tr><td class="num" id="LN3581">3581</td><td class="line">            <span class='keyword'>if</span> (!precision_specified</td></tr>
-<tr><td class="num" id="LN3582">3582</td><td class="line">                || precision &lt; num_of_digits + 1) {</td></tr>
-<tr><td class="num" id="LN3583">3583</td><td class="line">              <span class='comment'>/* precision is increased to force the</span></td></tr>
-<tr><td class="num" id="LN3584">3584</td><td class="line">               <span class='comment'>* first character to be zero, except if a</span></td></tr>
-<tr><td class="num" id="LN3585">3585</td><td class="line">               <span class='comment'>* zero value is formatted with an</span></td></tr>
-<tr><td class="num" id="LN3586">3586</td><td class="line">               <span class='comment'>* explicit precision of zero */</span></td></tr>
-<tr><td class="num" id="LN3587">3587</td><td class="line">              precision = num_of_digits + 1;</td></tr>
-<tr><td class="num" id="LN3588">3588</td><td class="line">              precision_specified = <span class="mrange">1</span>;</td></tr>
+<tr><td class="num" id="LN3519">3519</td><td class="line">          } <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN3520">3520</td><td class="line">            f[f_l++] = length_modifier;</td></tr>
+<tr><td class="num" id="LN3521">3521</td><td class="line">          f[f_l++] = fmt_spec;</td></tr>
+<tr><td class="num" id="LN3522">3522</td><td class="line">          f[f_l++] = '\0';</td></tr>
+<tr><td class="num" id="LN3523">3523</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3524">3524</td><td class="line">          <span class='keyword'>if</span> (fmt_spec == 'p')</td></tr>
+<tr><td class="num" id="LN3525">3525</td><td class="line">            str_arg_l += sprintf(tmp + str_arg_l, f, ptr_arg);</td></tr>
+<tr><td class="num" id="LN3526">3526</td><td class="line">          <span class='keyword'>else</span> <span class='keyword'>if</span> (fmt_spec == 'd') {</td></tr>
+<tr><td class="num" id="LN3527">3527</td><td class="line">            <span class='comment'>/* signed */</span></td></tr>
+<tr><td class="num" id="LN3528">3528</td><td class="line">            <span class='keyword'>switch</span> (length_modifier) {</td></tr>
+<tr><td class="num" id="LN3529">3529</td><td class="line">            <span class='keyword'>case</span> '\0':</td></tr>
+<tr><td class="num" id="LN3530">3530</td><td class="line">            <span class='keyword'>case</span> 'h': str_arg_l += sprintf(</td></tr>
+<tr><td class="num" id="LN3531">3531</td><td class="line">                  tmp + str_arg_l, f, int_arg);</td></tr>
+<tr><td class="num" id="LN3532">3532</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3533">3533</td><td class="line">            <span class='keyword'>case</span> 'l': str_arg_l += sprintf(</td></tr>
+<tr><td class="num" id="LN3534">3534</td><td class="line">                  tmp + str_arg_l, f, long_arg);</td></tr>
+<tr><td class="num" id="LN3535">3535</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3536">3536</td><td class="line">            <span class='keyword'>case</span> '2': str_arg_l += sprintf(</td></tr>
+<tr><td class="num" id="LN3537">3537</td><td class="line">                  tmp + str_arg_l, f, long_long_arg);</td></tr>
+<tr><td class="num" id="LN3538">3538</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3539">3539</td><td class="line">            }</td></tr>
+<tr><td class="num" id="LN3540">3540</td><td class="line">          } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3541">3541</td><td class="line">            <span class='comment'>/* unsigned */</span></td></tr>
+<tr><td class="num" id="LN3542">3542</td><td class="line">            <span class='keyword'>switch</span> (length_modifier) {</td></tr>
+<tr><td class="num" id="LN3543">3543</td><td class="line">            <span class='keyword'>case</span> '\0':</td></tr>
+<tr><td class="num" id="LN3544">3544</td><td class="line">            <span class='keyword'>case</span> 'h': str_arg_l += sprintf(</td></tr>
+<tr><td class="num" id="LN3545">3545</td><td class="line">                  tmp + str_arg_l, f, uint_arg);</td></tr>
+<tr><td class="num" id="LN3546">3546</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3547">3547</td><td class="line">            <span class='keyword'>case</span> 'l': str_arg_l += sprintf(</td></tr>
+<tr><td class="num" id="LN3548">3548</td><td class="line">                  tmp + str_arg_l, f, ulong_arg);</td></tr>
+<tr><td class="num" id="LN3549">3549</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3550">3550</td><td class="line">            <span class='keyword'>case</span> '2': str_arg_l += sprintf(</td></tr>
+<tr><td class="num" id="LN3551">3551</td><td class="line">                  tmp + str_arg_l, f, ulong_long_arg);</td></tr>
+<tr><td class="num" id="LN3552">3552</td><td class="line">              <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3553">3553</td><td class="line">            }</td></tr>
+<tr><td class="num" id="LN3554">3554</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3555">3555</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3556">3556</td><td class="line">          <span class='comment'>/* include the optional minus sign and possible</span></td></tr>
+<tr><td class="num" id="LN3557">3557</td><td class="line">           <span class='comment'>* "0x" in the region before the zero padding</span></td></tr>
+<tr><td class="num" id="LN3558">3558</td><td class="line">           <span class='comment'>* insertion point */</span></td></tr>
+<tr><td class="num" id="LN3559">3559</td><td class="line">          <span class='keyword'>if</span> (zero_padding_insertion_ind &lt; str_arg_l</td></tr>
+<tr><td class="num" id="LN3560">3560</td><td class="line">              &amp;&amp; tmp[zero_padding_insertion_ind] == '-')</td></tr>
+<tr><td class="num" id="LN3561">3561</td><td class="line">            zero_padding_insertion_ind++;</td></tr>
+<tr><td class="num" id="LN3562">3562</td><td class="line">          <span class='keyword'>if</span> (zero_padding_insertion_ind + 1 &lt; str_arg_l</td></tr>
+<tr><td class="num" id="LN3563">3563</td><td class="line">              &amp;&amp; tmp[zero_padding_insertion_ind]   == '0'</td></tr>
+<tr><td class="num" id="LN3564">3564</td><td class="line">              &amp;&amp; (tmp[zero_padding_insertion_ind + 1] == 'x'</td></tr>
+<tr><td class="num" id="LN3565">3565</td><td class="line">                  || tmp[zero_padding_insertion_ind + 1] == 'X'))</td></tr>
+<tr><td class="num" id="LN3566">3566</td><td class="line">            zero_padding_insertion_ind += 2;</td></tr>
+<tr><td class="num" id="LN3567">3567</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3568">3568</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3569">3569</td><td class="line">        {</td></tr>
+<tr><td class="num" id="LN3570">3570</td><td class="line">          size_t num_of_digits = str_arg_l</td></tr>
+<tr><td class="num" id="LN3571">3571</td><td class="line">                                 - zero_padding_insertion_ind;</td></tr>
+<tr><td class="num" id="LN3572">3572</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3573">3573</td><td class="line">          <span class='keyword'>if</span> (alternate_form &amp;&amp; fmt_spec == 'o'</td></tr>
+<tr><td class="num" id="LN3574">3574</td><td class="line">              <span class='comment'>/* unless zero is already the first</span></td></tr>
+<tr><td class="num" id="LN3575">3575</td><td class="line">               <span class='comment'>* character */</span></td></tr>
+<tr><td class="num" id="LN3576">3576</td><td class="line">              &amp;&amp; !(zero_padding_insertion_ind &lt; str_arg_l</td></tr>
+<tr><td class="num" id="LN3577">3577</td><td class="line">                   &amp;&amp; tmp[zero_padding_insertion_ind] == '0')) {</td></tr>
+<tr><td class="num" id="LN3578">3578</td><td class="line">            <span class='comment'>/* assure leading zero for alternate-form</span></td></tr>
+<tr><td class="num" id="LN3579">3579</td><td class="line">             <span class='comment'>* octal numbers */</span></td></tr>
+<tr><td class="num" id="LN3580">3580</td><td class="line">            <span class='keyword'>if</span> (!precision_specified</td></tr>
+<tr><td class="num" id="LN3581">3581</td><td class="line">                || precision &lt; num_of_digits + 1) {</td></tr>
+<tr><td class="num" id="LN3582">3582</td><td class="line">              <span class='comment'>/* precision is increased to force the</span></td></tr>
+<tr><td class="num" id="LN3583">3583</td><td class="line">               <span class='comment'>* first character to be zero, except if a</span></td></tr>
+<tr><td class="num" id="LN3584">3584</td><td class="line">               <span class='comment'>* zero value is formatted with an</span></td></tr>
+<tr><td class="num" id="LN3585">3585</td><td class="line">               <span class='comment'>* explicit precision of zero */</span></td></tr>
+<tr><td class="num" id="LN3586">3586</td><td class="line">              precision = num_of_digits + 1;</td></tr>
+<tr><td class="num" id="LN3587">3587</td><td class="line">              precision_specified = <span class="mrange">1</span>;</td></tr>
 <tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:15ex">Value stored to 'precision_specified' is never read</div></td></tr>
-<tr><td class="num" id="LN3589">3589</td><td class="line">            }</td></tr>
-<tr><td class="num" id="LN3590">3590</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3591">3591</td><td class="line">          <span class='comment'>/* zero padding to specified precision? */</span></td></tr>
-<tr><td class="num" id="LN3592">3592</td><td class="line">          <span class='keyword'>if</span> (num_of_digits &lt; precision)</td></tr>
-<tr><td class="num" id="LN3593">3593</td><td class="line">            number_of_zeros_to_pad = precision - num_of_digits;</td></tr>
-<tr><td class="num" id="LN3594">3594</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3595">3595</td><td class="line">        <span class='comment'>/* zero padding to specified minimal field width? */</span></td></tr>
-<tr><td class="num" id="LN3596">3596</td><td class="line">        <span class='keyword'>if</span> (!justify_left &amp;&amp; zero_padding) {</td></tr>
-<tr><td class="num" id="LN3597">3597</td><td class="line">          <span class='keyword'>int</span> n = (<span class='keyword'>int</span>)(min_field_width - (str_arg_l</td></tr>
-<tr><td class="num" id="LN3598">3598</td><td class="line">                                           + number_of_zeros_to_pad));</td></tr>
-<tr><td class="num" id="LN3599">3599</td><td class="line">          <span class='keyword'>if</span> (n &gt; 0)</td></tr>
-<tr><td class="num" id="LN3600">3600</td><td class="line">            number_of_zeros_to_pad += n;</td></tr>
-<tr><td class="num" id="LN3601">3601</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3602">3602</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3603">3603</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3604">3604</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3605">3605</td><td class="line">      <span class='keyword'>case</span> 'f':</td></tr>
-<tr><td class="num" id="LN3606">3606</td><td class="line">      <span class='keyword'>case</span> 'e':</td></tr>
-<tr><td class="num" id="LN3607">3607</td><td class="line">      <span class='keyword'>case</span> 'E':</td></tr>
-<tr><td class="num" id="LN3608">3608</td><td class="line">      <span class='keyword'>case</span> 'g':</td></tr>
-<tr><td class="num" id="LN3609">3609</td><td class="line">      <span class='keyword'>case</span> 'G':</td></tr>
-<tr><td class="num" id="LN3610">3610</td><td class="line">      {</td></tr>
-<tr><td class="num" id="LN3611">3611</td><td class="line">        <span class='comment'>/* Floating point. */</span></td></tr>
-<tr><td class="num" id="LN3612">3612</td><td class="line">        <span class='keyword'>double</span> f;</td></tr>
-<tr><td class="num" id="LN3613">3613</td><td class="line">        <span class='keyword'>double</span> abs_f;</td></tr>
-<tr><td class="num" id="LN3614">3614</td><td class="line">        <span class='keyword'>char</span> format[40];</td></tr>
-<tr><td class="num" id="LN3615">3615</td><td class="line">        <span class='keyword'>int</span> l;</td></tr>
-<tr><td class="num" id="LN3616">3616</td><td class="line">        <span class='keyword'>int</span> remove_trailing_zeroes = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN3617">3617</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3618">3618</td><td class="line">        f = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_float(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>double</span>)<span class='expansion'>__builtin_va_arg(ap, double)</span></span>;</td></tr>
-<tr><td class="num" id="LN3619">3619</td><td class="line">        abs_f = f &lt; 0 ? -f : f;</td></tr>
-<tr><td class="num" id="LN3620">3620</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3621">3621</td><td class="line">        <span class='keyword'>if</span> (fmt_spec == 'g' || fmt_spec == 'G') {</td></tr>
-<tr><td class="num" id="LN3622">3622</td><td class="line">          <span class='comment'>/* Would be nice to use %g directly, but it prints</span></td></tr>
-<tr><td class="num" id="LN3623">3623</td><td class="line">           <span class='comment'>* "1.0" as "1", we don't want that. */</span></td></tr>
-<tr><td class="num" id="LN3624">3624</td><td class="line">          <span class='keyword'>if</span> ((abs_f &gt;= 0.001 &amp;&amp; abs_f &lt; 10000000.0)</td></tr>
-<tr><td class="num" id="LN3625">3625</td><td class="line">              || abs_f == 0.0)</td></tr>
-<tr><td class="num" id="LN3626">3626</td><td class="line">            fmt_spec = 'f';</td></tr>
-<tr><td class="num" id="LN3627">3627</td><td class="line">          <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN3628">3628</td><td class="line">            fmt_spec = fmt_spec == 'g' ? 'e' : 'E';</td></tr>
-<tr><td class="num" id="LN3629">3629</td><td class="line">          remove_trailing_zeroes = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN3630">3630</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3631">3631</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3632">3632</td><td class="line">        <span class='keyword'>if</span> (fmt_spec == 'f' &amp;&amp;</td></tr>
-<tr><td class="num" id="LN3633">3633</td><td class="line"><span class='directive'>#ifdef VAX</span></td></tr>
-<tr><td class="num" id="LN3634">3634</td><td class="line">            abs_f &gt; 1.0e38</td></tr>
-<tr><td class="num" id="LN3635">3635</td><td class="line"><span class='directive'>#else</span></td></tr>
-<tr><td class="num" id="LN3636">3636</td><td class="line">            abs_f &gt; 1.0e307</td></tr>
-<tr><td class="num" id="LN3637">3637</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN3638">3638</td><td class="line">            ) {</td></tr>
-<tr><td class="num" id="LN3639">3639</td><td class="line">          <span class='comment'>/* Avoid a buffer overflow */</span></td></tr>
-<tr><td class="num" id="LN3640">3640</td><td class="line">          strcpy(tmp, <span class='string_literal'>"inf"</span>);</td></tr>
-<tr><td class="num" id="LN3641">3641</td><td class="line">          str_arg_l = 3;</td></tr>
-<tr><td class="num" id="LN3642">3642</td><td class="line">        } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3643">3643</td><td class="line">          format[0] = '%';</td></tr>
-<tr><td class="num" id="LN3644">3644</td><td class="line">          l = 1;</td></tr>
-<tr><td class="num" id="LN3645">3645</td><td class="line">          <span class='keyword'>if</span> (precision_specified) {</td></tr>
-<tr><td class="num" id="LN3646">3646</td><td class="line">            size_t max_prec = <span class='macro'>TMP_LEN<span class='expansion'>350</span></span> - 10;</td></tr>
-<tr><td class="num" id="LN3647">3647</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3648">3648</td><td class="line">            <span class='comment'>/* Make sure we don't get more digits than we</span></td></tr>
-<tr><td class="num" id="LN3649">3649</td><td class="line">             <span class='comment'>* have room for. */</span></td></tr>
-<tr><td class="num" id="LN3650">3650</td><td class="line">            <span class='keyword'>if</span> (fmt_spec == 'f' &amp;&amp; abs_f &gt; 1.0)</td></tr>
-<tr><td class="num" id="LN3651">3651</td><td class="line">              max_prec -= (size_t)log10(abs_f);</td></tr>
-<tr><td class="num" id="LN3652">3652</td><td class="line">            <span class='keyword'>if</span> (precision &gt; max_prec)</td></tr>
-<tr><td class="num" id="LN3653">3653</td><td class="line">              precision = max_prec;</td></tr>
-<tr><td class="num" id="LN3654">3654</td><td class="line">            l += sprintf(format + 1, <span class='string_literal'>".%d"</span>, (<span class='keyword'>int</span>)precision);</td></tr>
-<tr><td class="num" id="LN3655">3655</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3656">3656</td><td class="line">          format[l] = fmt_spec;</td></tr>
-<tr><td class="num" id="LN3657">3657</td><td class="line">          format[l + 1] = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;</td></tr>
-<tr><td class="num" id="LN3658">3658</td><td class="line">          str_arg_l = sprintf(tmp, format, f);</td></tr>
-<tr><td class="num" id="LN3659">3659</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3660">3660</td><td class="line">          <span class='keyword'>if</span> (remove_trailing_zeroes) {</td></tr>
-<tr><td class="num" id="LN3661">3661</td><td class="line">            <span class='keyword'>int</span> i;</td></tr>
-<tr><td class="num" id="LN3662">3662</td><td class="line">            <span class='keyword'>char</span> *tp;</td></tr>
-<tr><td class="num" id="LN3663">3663</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3664">3664</td><td class="line">            <span class='comment'>/* Using %g or %G: remove superfluous zeroes. */</span></td></tr>
-<tr><td class="num" id="LN3665">3665</td><td class="line">            <span class='keyword'>if</span> (fmt_spec == 'f')</td></tr>
-<tr><td class="num" id="LN3666">3666</td><td class="line">              tp = tmp + str_arg_l - 1;</td></tr>
-<tr><td class="num" id="LN3667">3667</td><td class="line">            <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3668">3668</td><td class="line">              tp = (<span class='keyword'>char</span> *)vim_strchr((char_u *)tmp,</td></tr>
-<tr><td class="num" id="LN3669">3669</td><td class="line">                  fmt_spec == 'e' ? 'e' : 'E');</td></tr>
-<tr><td class="num" id="LN3670">3670</td><td class="line">              <span class='keyword'>if</span> (tp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num" id="LN3671">3671</td><td class="line">                <span class='comment'>/* Remove superfluous '+' and leading</span></td></tr>
-<tr><td class="num" id="LN3672">3672</td><td class="line">                 <span class='comment'>* zeroes from the exponent. */</span></td></tr>
-<tr><td class="num" id="LN3673">3673</td><td class="line">                <span class='keyword'>if</span> (tp[1] == '+') {</td></tr>
-<tr><td class="num" id="LN3674">3674</td><td class="line">                  <span class='comment'>/* Change "1.0e+07" to "1.0e07" */</span></td></tr>
-<tr><td class="num" id="LN3675">3675</td><td class="line">                  <span class='macro'>STRMOVE(tp + 1, tp + 2)<span class='expansion'>memmove((tp + 1), (tp + 2), strlen((char *)(tp + 2)) + 1)</span></span>;</td></tr>
-<tr><td class="num" id="LN3676">3676</td><td class="line">                  --str_arg_l;</td></tr>
-<tr><td class="num" id="LN3677">3677</td><td class="line">                }</td></tr>
-<tr><td class="num" id="LN3678">3678</td><td class="line">                i = (tp[1] == '-') ? 2 : 1;</td></tr>
-<tr><td class="num" id="LN3679">3679</td><td class="line">                <span class='keyword'>while</span> (tp[i] == '0') {</td></tr>
-<tr><td class="num" id="LN3680">3680</td><td class="line">                  <span class='comment'>/* Change "1.0e07" to "1.0e7" */</span></td></tr>
-<tr><td class="num" id="LN3681">3681</td><td class="line">                  <span class='macro'>STRMOVE(tp + i, tp + i + 1)<span class='expansion'>memmove((tp + i), (tp + i + 1), strlen((char *)(tp + i + 1)) +<br> 1)</span></span>;</td></tr>
-<tr><td class="num" id="LN3682">3682</td><td class="line">                  --str_arg_l;</td></tr>
-<tr><td class="num" id="LN3683">3683</td><td class="line">                }</td></tr>
-<tr><td class="num" id="LN3684">3684</td><td class="line">                --tp;</td></tr>
-<tr><td class="num" id="LN3685">3685</td><td class="line">              }</td></tr>
-<tr><td class="num" id="LN3686">3686</td><td class="line">            }</td></tr>
-<tr><td class="num" id="LN3687">3687</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3688">3688</td><td class="line">            <span class='keyword'>if</span> (tp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; !precision_specified)</td></tr>
-<tr><td class="num" id="LN3689">3689</td><td class="line">              <span class='comment'>/* Remove trailing zeroes, but keep the one</span></td></tr>
-<tr><td class="num" id="LN3690">3690</td><td class="line">               <span class='comment'>* just after a dot. */</span></td></tr>
-<tr><td class="num" id="LN3691">3691</td><td class="line">              <span class='keyword'>while</span> (tp &gt; tmp + 2 &amp;&amp; *tp == '0'</td></tr>
-<tr><td class="num" id="LN3692">3692</td><td class="line">                     &amp;&amp; tp[-1] != '.') {</td></tr>
-<tr><td class="num" id="LN3693">3693</td><td class="line">                <span class='macro'>STRMOVE(tp, tp + 1)<span class='expansion'>memmove((tp), (tp + 1), strlen((char *)(tp + 1)) + 1)</span></span>;</td></tr>
-<tr><td class="num" id="LN3694">3694</td><td class="line">                --tp;</td></tr>
-<tr><td class="num" id="LN3695">3695</td><td class="line">                --str_arg_l;</td></tr>
-<tr><td class="num" id="LN3696">3696</td><td class="line">              }</td></tr>
-<tr><td class="num" id="LN3697">3697</td><td class="line">          } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3698">3698</td><td class="line">            <span class='keyword'>char</span> *tp;</td></tr>
-<tr><td class="num" id="LN3699">3699</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3700">3700</td><td class="line">            <span class='comment'>/* Be consistent: some printf("%e") use 1.0e+12</span></td></tr>
-<tr><td class="num" id="LN3701">3701</td><td class="line">             <span class='comment'>* and some 1.0e+012.  Remove one zero in the last</span></td></tr>
-<tr><td class="num" id="LN3702">3702</td><td class="line">             <span class='comment'>* case. */</span></td></tr>
-<tr><td class="num" id="LN3703">3703</td><td class="line">            tp = (<span class='keyword'>char</span> *)vim_strchr((char_u *)tmp,</td></tr>
-<tr><td class="num" id="LN3704">3704</td><td class="line">                fmt_spec == 'e' ? 'e' : 'E');</td></tr>
-<tr><td class="num" id="LN3705">3705</td><td class="line">            <span class='keyword'>if</span> (tp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; (tp[1] == '+' || tp[1] == '-')</td></tr>
-<tr><td class="num" id="LN3706">3706</td><td class="line">                &amp;&amp; tp[2] == '0'</td></tr>
-<tr><td class="num" id="LN3707">3707</td><td class="line">                &amp;&amp; vim_isdigit(tp[3])</td></tr>
-<tr><td class="num" id="LN3708">3708</td><td class="line">                &amp;&amp; vim_isdigit(tp[4])) {</td></tr>
-<tr><td class="num" id="LN3709">3709</td><td class="line">              <span class='macro'>STRMOVE(tp + 2, tp + 3)<span class='expansion'>memmove((tp + 2), (tp + 3), strlen((char *)(tp + 3)) + 1)</span></span>;</td></tr>
-<tr><td class="num" id="LN3710">3710</td><td class="line">              --str_arg_l;</td></tr>
-<tr><td class="num" id="LN3711">3711</td><td class="line">            }</td></tr>
-<tr><td class="num" id="LN3712">3712</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3713">3713</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3714">3714</td><td class="line">        str_arg = tmp;</td></tr>
-<tr><td class="num" id="LN3715">3715</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3716">3716</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3717">3717</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3718">3718</td><td class="line">      <span class='keyword'>default</span>:</td></tr>
-<tr><td class="num" id="LN3719">3719</td><td class="line">        <span class='comment'>/* unrecognized conversion specifier, keep format string</span></td></tr>
-<tr><td class="num" id="LN3720">3720</td><td class="line">         <span class='comment'>* as-is */</span></td></tr>
-<tr><td class="num" id="LN3721">3721</td><td class="line">        zero_padding = 0;          <span class='comment'>/* turn zero padding off for non-numeric</span></td></tr>
-<tr><td class="num" id="LN3722">3722</td><td class="line">                                      <span class='comment'>conversion */</span></td></tr>
-<tr><td class="num" id="LN3723">3723</td><td class="line">        justify_left = 1;</td></tr>
-<tr><td class="num" id="LN3724">3724</td><td class="line">        min_field_width = 0;                        <span class='comment'>/* reset flags */</span></td></tr>
-<tr><td class="num" id="LN3725">3725</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3726">3726</td><td class="line">        <span class='comment'>/* discard the unrecognized conversion, just keep *</span></td></tr>
-<tr><td class="num" id="LN3727">3727</td><td class="line">         <span class='comment'>* the unrecognized conversion character	  */</span></td></tr>
-<tr><td class="num" id="LN3728">3728</td><td class="line">        str_arg = p;</td></tr>
-<tr><td class="num" id="LN3729">3729</td><td class="line">        str_arg_l = 0;</td></tr>
-<tr><td class="num" id="LN3730">3730</td><td class="line">        <span class='keyword'>if</span> (*p != <span class='macro'>NUL<span class='expansion'>'\000'</span></span>)</td></tr>
-<tr><td class="num" id="LN3731">3731</td><td class="line">          str_arg_l++;            <span class='comment'>/* include invalid conversion specifier</span></td></tr>
-<tr><td class="num" id="LN3732">3732</td><td class="line">                                     <span class='comment'>unchanged if not at end-of-string */</span></td></tr>
-<tr><td class="num" id="LN3733">3733</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN3734">3734</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3735">3735</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3736">3736</td><td class="line">      <span class='keyword'>if</span> (*p != <span class='macro'>NUL<span class='expansion'>'\000'</span></span>)</td></tr>
-<tr><td class="num" id="LN3737">3737</td><td class="line">        p++;             <span class='comment'>/* step over the just processed conversion specifier */</span></td></tr>
-<tr><td class="num" id="LN3738">3738</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3739">3739</td><td class="line">      <span class='comment'>/* insert padding to the left as requested by min_field_width;</span></td></tr>
-<tr><td class="num" id="LN3740">3740</td><td class="line">       <span class='comment'>* this does not include the zero padding in case of numerical</span></td></tr>
-<tr><td class="num" id="LN3741">3741</td><td class="line">       <span class='comment'>* conversions*/</span></td></tr>
-<tr><td class="num" id="LN3742">3742</td><td class="line">      <span class='keyword'>if</span> (!justify_left) {</td></tr>
-<tr><td class="num" id="LN3743">3743</td><td class="line">        <span class='comment'>/* left padding with blank or zero */</span></td></tr>
-<tr><td class="num" id="LN3744">3744</td><td class="line">        <span class='keyword'>int</span> pn = (<span class='keyword'>int</span>)(min_field_width - (str_arg_l + number_of_zeros_to_pad));</td></tr>
-<tr><td class="num" id="LN3745">3745</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3746">3746</td><td class="line">        <span class='keyword'>if</span> (pn &gt; 0) {</td></tr>
-<tr><td class="num" id="LN3747">3747</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
-<tr><td class="num" id="LN3748">3748</td><td class="line">            size_t avail = str_m - str_l;</td></tr>
-<tr><td class="num" id="LN3749">3749</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3750">3750</td><td class="line">            memset(str + str_l, zero_padding ? '0' : ' ',</td></tr>
-<tr><td class="num" id="LN3751">3751</td><td class="line">                (size_t)pn &gt; avail ? avail</td></tr>
-<tr><td class="num" id="LN3752">3752</td><td class="line">                : (size_t)pn);</td></tr>
-<tr><td class="num" id="LN3753">3753</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3754">3754</td><td class="line">          str_l += pn;</td></tr>
-<tr><td class="num" id="LN3755">3755</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3756">3756</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3757">3757</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3758">3758</td><td class="line">      <span class='comment'>/* zero padding as requested by the precision or by the minimal</span></td></tr>
-<tr><td class="num" id="LN3759">3759</td><td class="line">       <span class='comment'>* field width for numeric conversions required? */</span></td></tr>
-<tr><td class="num" id="LN3760">3760</td><td class="line">      <span class='keyword'>if</span> (number_of_zeros_to_pad == 0) {</td></tr>
-<tr><td class="num" id="LN3761">3761</td><td class="line">        <span class='comment'>/* will not copy first part of numeric right now, *</span></td></tr>
-<tr><td class="num" id="LN3762">3762</td><td class="line">        <span class='comment'>* force it to be copied later in its entirety    */</span></td></tr>
-<tr><td class="num" id="LN3763">3763</td><td class="line">        zero_padding_insertion_ind = 0;</td></tr>
-<tr><td class="num" id="LN3764">3764</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN3765">3765</td><td class="line">        <span class='comment'>/* insert first part of numerics (sign or '0x') before zero</span></td></tr>
-<tr><td class="num" id="LN3766">3766</td><td class="line">         <span class='comment'>* padding */</span></td></tr>
-<tr><td class="num" id="LN3767">3767</td><td class="line">        <span class='keyword'>int</span> zn = (<span class='keyword'>int</span>)zero_padding_insertion_ind;</td></tr>
-<tr><td class="num" id="LN3768">3768</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3769">3769</td><td class="line">        <span class='keyword'>if</span> (zn &gt; 0) {</td></tr>
-<tr><td class="num" id="LN3770">3770</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
-<tr><td class="num" id="LN3771">3771</td><td class="line">            size_t avail = str_m - str_l;</td></tr>
-<tr><td class="num" id="LN3772">3772</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3773">3773</td><td class="line">            memmove(str + str_l, str_arg,</td></tr>
-<tr><td class="num" id="LN3774">3774</td><td class="line">                (size_t)zn &gt; avail ? avail</td></tr>
-<tr><td class="num" id="LN3775">3775</td><td class="line">                : (size_t)zn);</td></tr>
-<tr><td class="num" id="LN3776">3776</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3777">3777</td><td class="line">          str_l += zn;</td></tr>
-<tr><td class="num" id="LN3778">3778</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3779">3779</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3780">3780</td><td class="line">        <span class='comment'>/* insert zero padding as requested by the precision or min</span></td></tr>
-<tr><td class="num" id="LN3781">3781</td><td class="line">         <span class='comment'>* field width */</span></td></tr>
-<tr><td class="num" id="LN3782">3782</td><td class="line">        zn = (<span class='keyword'>int</span>)number_of_zeros_to_pad;</td></tr>
-<tr><td class="num" id="LN3783">3783</td><td class="line">        <span class='keyword'>if</span> (zn &gt; 0) {</td></tr>
-<tr><td class="num" id="LN3784">3784</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
-<tr><td class="num" id="LN3785">3785</td><td class="line">            size_t avail = str_m-str_l;</td></tr>
-<tr><td class="num" id="LN3786">3786</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3787">3787</td><td class="line">            memset(str + str_l, '0',</td></tr>
-<tr><td class="num" id="LN3788">3788</td><td class="line">                (size_t)zn &gt; avail ? avail</td></tr>
-<tr><td class="num" id="LN3789">3789</td><td class="line">                : (size_t)zn);</td></tr>
-<tr><td class="num" id="LN3790">3790</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3791">3791</td><td class="line">          str_l += zn;</td></tr>
-<tr><td class="num" id="LN3792">3792</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3793">3793</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3794">3794</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3795">3795</td><td class="line">      <span class='comment'>/* insert formatted string</span></td></tr>
-<tr><td class="num" id="LN3796">3796</td><td class="line">       <span class='comment'>* (or as-is conversion specifier for unknown conversions) */</span></td></tr>
-<tr><td class="num" id="LN3797">3797</td><td class="line">      {</td></tr>
-<tr><td class="num" id="LN3798">3798</td><td class="line">        <span class='keyword'>int</span> sn = (<span class='keyword'>int</span>)(str_arg_l - zero_padding_insertion_ind);</td></tr>
-<tr><td class="num" id="LN3799">3799</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3800">3800</td><td class="line">        <span class='keyword'>if</span> (sn &gt; 0) {</td></tr>
-<tr><td class="num" id="LN3801">3801</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
-<tr><td class="num" id="LN3802">3802</td><td class="line">            size_t avail = str_m - str_l;</td></tr>
-<tr><td class="num" id="LN3803">3803</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3804">3804</td><td class="line">            memmove(str + str_l,</td></tr>
-<tr><td class="num" id="LN3805">3805</td><td class="line">                str_arg + zero_padding_insertion_ind,</td></tr>
-<tr><td class="num" id="LN3806">3806</td><td class="line">                (size_t)sn &gt; avail ? avail : (size_t)sn);</td></tr>
-<tr><td class="num" id="LN3807">3807</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3808">3808</td><td class="line">          str_l += sn;</td></tr>
-<tr><td class="num" id="LN3809">3809</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3810">3810</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3811">3811</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3812">3812</td><td class="line">      <span class='comment'>/* insert right padding */</span></td></tr>
-<tr><td class="num" id="LN3813">3813</td><td class="line">      <span class='keyword'>if</span> (justify_left) {</td></tr>
-<tr><td class="num" id="LN3814">3814</td><td class="line">        <span class='comment'>/* right blank padding to the field width */</span></td></tr>
-<tr><td class="num" id="LN3815">3815</td><td class="line">        <span class='keyword'>int</span> pn = (<span class='keyword'>int</span>)(min_field_width</td></tr>
-<tr><td class="num" id="LN3816">3816</td><td class="line">                       - (str_arg_l + number_of_zeros_to_pad));</td></tr>
-<tr><td class="num" id="LN3817">3817</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3818">3818</td><td class="line">        <span class='keyword'>if</span> (pn &gt; 0) {</td></tr>
-<tr><td class="num" id="LN3819">3819</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
-<tr><td class="num" id="LN3820">3820</td><td class="line">            size_t avail = str_m - str_l;</td></tr>
-<tr><td class="num" id="LN3821">3821</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3822">3822</td><td class="line">            memset(str + str_l, ' ',</td></tr>
-<tr><td class="num" id="LN3823">3823</td><td class="line">                (size_t)pn &gt; avail ? avail</td></tr>
-<tr><td class="num" id="LN3824">3824</td><td class="line">                : (size_t)pn);</td></tr>
-<tr><td class="num" id="LN3825">3825</td><td class="line">          }</td></tr>
-<tr><td class="num" id="LN3826">3826</td><td class="line">          str_l += pn;</td></tr>
-<tr><td class="num" id="LN3827">3827</td><td class="line">        }</td></tr>
-<tr><td class="num" id="LN3828">3828</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN3829">3829</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN3830">3830</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN3831">3831</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3832">3832</td><td class="line">  <span class='keyword'>if</span> (str_m &gt; 0) {</td></tr>
-<tr><td class="num" id="LN3833">3833</td><td class="line">    <span class='comment'>/* make sure the string is nul-terminated even at the expense of</span></td></tr>
-<tr><td class="num" id="LN3834">3834</td><td class="line">     <span class='comment'>* overwriting the last character (shouldn't happen, but just in case)</span></td></tr>
-<tr><td class="num" id="LN3835">3835</td><td class="line">     <span class='comment'>* */</span></td></tr>
-<tr><td class="num" id="LN3836">3836</td><td class="line">    str[str_l &lt;= str_m - 1 ? str_l : str_m - 1] = '\0';</td></tr>
-<tr><td class="num" id="LN3837">3837</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN3838">3838</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3839">3839</td><td class="line">  <span class='keyword'>if</span> (tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; tvs[arg_idx - 1].v_type != <span class='macro'>VAR_UNKNOWN<span class='expansion'>0</span></span>)</td></tr>
-<tr><td class="num" id="LN3840">3840</td><td class="line">    <span class='macro'>EMSG(_(<span class='string_literal'>"E767: Too many arguments to printf()"</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("E767: Too many arguments to printf()"<br>))))</span></span>;</td></tr>
-<tr><td class="num" id="LN3841">3841</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN3842">3842</td><td class="line">  <span class='comment'>/* Return the number of characters formatted (excluding trailing nul</span></td></tr>
-<tr><td class="num" id="LN3843">3843</td><td class="line">   <span class='comment'>* character), that is, the number of characters that would have been</span></td></tr>
-<tr><td class="num" id="LN3844">3844</td><td class="line">   <span class='comment'>* written to the buffer if it were large enough. */</span></td></tr>
-<tr><td class="num" id="LN3845">3845</td><td class="line">  <span class='keyword'>return</span> (<span class='keyword'>int</span>)str_l;</td></tr>
-<tr><td class="num" id="LN3846">3846</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN3847">3847</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3588">3588</td><td class="line">            }</td></tr>
+<tr><td class="num" id="LN3589">3589</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3590">3590</td><td class="line">          <span class='comment'>/* zero padding to specified precision? */</span></td></tr>
+<tr><td class="num" id="LN3591">3591</td><td class="line">          <span class='keyword'>if</span> (num_of_digits &lt; precision)</td></tr>
+<tr><td class="num" id="LN3592">3592</td><td class="line">            number_of_zeros_to_pad = precision - num_of_digits;</td></tr>
+<tr><td class="num" id="LN3593">3593</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3594">3594</td><td class="line">        <span class='comment'>/* zero padding to specified minimal field width? */</span></td></tr>
+<tr><td class="num" id="LN3595">3595</td><td class="line">        <span class='keyword'>if</span> (!justify_left &amp;&amp; zero_padding) {</td></tr>
+<tr><td class="num" id="LN3596">3596</td><td class="line">          <span class='keyword'>int</span> n = (<span class='keyword'>int</span>)(min_field_width - (str_arg_l</td></tr>
+<tr><td class="num" id="LN3597">3597</td><td class="line">                                           + number_of_zeros_to_pad));</td></tr>
+<tr><td class="num" id="LN3598">3598</td><td class="line">          <span class='keyword'>if</span> (n &gt; 0)</td></tr>
+<tr><td class="num" id="LN3599">3599</td><td class="line">            number_of_zeros_to_pad += n;</td></tr>
+<tr><td class="num" id="LN3600">3600</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3601">3601</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3602">3602</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3603">3603</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3604">3604</td><td class="line">      <span class='keyword'>case</span> 'f':</td></tr>
+<tr><td class="num" id="LN3605">3605</td><td class="line">      <span class='keyword'>case</span> 'e':</td></tr>
+<tr><td class="num" id="LN3606">3606</td><td class="line">      <span class='keyword'>case</span> 'E':</td></tr>
+<tr><td class="num" id="LN3607">3607</td><td class="line">      <span class='keyword'>case</span> 'g':</td></tr>
+<tr><td class="num" id="LN3608">3608</td><td class="line">      <span class='keyword'>case</span> 'G':</td></tr>
+<tr><td class="num" id="LN3609">3609</td><td class="line">      {</td></tr>
+<tr><td class="num" id="LN3610">3610</td><td class="line">        <span class='comment'>/* Floating point. */</span></td></tr>
+<tr><td class="num" id="LN3611">3611</td><td class="line">        <span class='keyword'>double</span> f;</td></tr>
+<tr><td class="num" id="LN3612">3612</td><td class="line">        <span class='keyword'>double</span> abs_f;</td></tr>
+<tr><td class="num" id="LN3613">3613</td><td class="line">        <span class='keyword'>char</span> format[40];</td></tr>
+<tr><td class="num" id="LN3614">3614</td><td class="line">        <span class='keyword'>int</span> l;</td></tr>
+<tr><td class="num" id="LN3615">3615</td><td class="line">        <span class='keyword'>int</span> remove_trailing_zeroes = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN3616">3616</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3617">3617</td><td class="line">        f = tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> ? tv_float(tvs, &amp;arg_idx) : <span class='macro'>va_arg(ap, <span class='keyword'>double</span>)<span class='expansion'>__builtin_va_arg(ap, double)</span></span>;</td></tr>
+<tr><td class="num" id="LN3618">3618</td><td class="line">        abs_f = f &lt; 0 ? -f : f;</td></tr>
+<tr><td class="num" id="LN3619">3619</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3620">3620</td><td class="line">        <span class='keyword'>if</span> (fmt_spec == 'g' || fmt_spec == 'G') {</td></tr>
+<tr><td class="num" id="LN3621">3621</td><td class="line">          <span class='comment'>/* Would be nice to use %g directly, but it prints</span></td></tr>
+<tr><td class="num" id="LN3622">3622</td><td class="line">           <span class='comment'>* "1.0" as "1", we don't want that. */</span></td></tr>
+<tr><td class="num" id="LN3623">3623</td><td class="line">          <span class='keyword'>if</span> ((abs_f &gt;= 0.001 &amp;&amp; abs_f &lt; 10000000.0)</td></tr>
+<tr><td class="num" id="LN3624">3624</td><td class="line">              || abs_f == 0.0)</td></tr>
+<tr><td class="num" id="LN3625">3625</td><td class="line">            fmt_spec = 'f';</td></tr>
+<tr><td class="num" id="LN3626">3626</td><td class="line">          <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN3627">3627</td><td class="line">            fmt_spec = fmt_spec == 'g' ? 'e' : 'E';</td></tr>
+<tr><td class="num" id="LN3628">3628</td><td class="line">          remove_trailing_zeroes = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN3629">3629</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3630">3630</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3631">3631</td><td class="line">        <span class='keyword'>if</span> (fmt_spec == 'f' &amp;&amp;</td></tr>
+<tr><td class="num" id="LN3632">3632</td><td class="line"><span class='directive'>#ifdef VAX</span></td></tr>
+<tr><td class="num" id="LN3633">3633</td><td class="line">            abs_f &gt; 1.0e38</td></tr>
+<tr><td class="num" id="LN3634">3634</td><td class="line"><span class='directive'>#else</span></td></tr>
+<tr><td class="num" id="LN3635">3635</td><td class="line">            abs_f &gt; 1.0e307</td></tr>
+<tr><td class="num" id="LN3636">3636</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN3637">3637</td><td class="line">            ) {</td></tr>
+<tr><td class="num" id="LN3638">3638</td><td class="line">          <span class='comment'>/* Avoid a buffer overflow */</span></td></tr>
+<tr><td class="num" id="LN3639">3639</td><td class="line">          strcpy(tmp, <span class='string_literal'>"inf"</span>);</td></tr>
+<tr><td class="num" id="LN3640">3640</td><td class="line">          str_arg_l = 3;</td></tr>
+<tr><td class="num" id="LN3641">3641</td><td class="line">        } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3642">3642</td><td class="line">          format[0] = '%';</td></tr>
+<tr><td class="num" id="LN3643">3643</td><td class="line">          l = 1;</td></tr>
+<tr><td class="num" id="LN3644">3644</td><td class="line">          <span class='keyword'>if</span> (precision_specified) {</td></tr>
+<tr><td class="num" id="LN3645">3645</td><td class="line">            size_t max_prec = <span class='macro'>TMP_LEN<span class='expansion'>350</span></span> - 10;</td></tr>
+<tr><td class="num" id="LN3646">3646</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3647">3647</td><td class="line">            <span class='comment'>/* Make sure we don't get more digits than we</span></td></tr>
+<tr><td class="num" id="LN3648">3648</td><td class="line">             <span class='comment'>* have room for. */</span></td></tr>
+<tr><td class="num" id="LN3649">3649</td><td class="line">            <span class='keyword'>if</span> (fmt_spec == 'f' &amp;&amp; abs_f &gt; 1.0)</td></tr>
+<tr><td class="num" id="LN3650">3650</td><td class="line">              max_prec -= (size_t)log10(abs_f);</td></tr>
+<tr><td class="num" id="LN3651">3651</td><td class="line">            <span class='keyword'>if</span> (precision &gt; max_prec)</td></tr>
+<tr><td class="num" id="LN3652">3652</td><td class="line">              precision = max_prec;</td></tr>
+<tr><td class="num" id="LN3653">3653</td><td class="line">            l += sprintf(format + 1, <span class='string_literal'>".%d"</span>, (<span class='keyword'>int</span>)precision);</td></tr>
+<tr><td class="num" id="LN3654">3654</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3655">3655</td><td class="line">          format[l] = fmt_spec;</td></tr>
+<tr><td class="num" id="LN3656">3656</td><td class="line">          format[l + 1] = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;</td></tr>
+<tr><td class="num" id="LN3657">3657</td><td class="line">          str_arg_l = sprintf(tmp, format, f);</td></tr>
+<tr><td class="num" id="LN3658">3658</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3659">3659</td><td class="line">          <span class='keyword'>if</span> (remove_trailing_zeroes) {</td></tr>
+<tr><td class="num" id="LN3660">3660</td><td class="line">            <span class='keyword'>int</span> i;</td></tr>
+<tr><td class="num" id="LN3661">3661</td><td class="line">            <span class='keyword'>char</span> *tp;</td></tr>
+<tr><td class="num" id="LN3662">3662</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3663">3663</td><td class="line">            <span class='comment'>/* Using %g or %G: remove superfluous zeroes. */</span></td></tr>
+<tr><td class="num" id="LN3664">3664</td><td class="line">            <span class='keyword'>if</span> (fmt_spec == 'f')</td></tr>
+<tr><td class="num" id="LN3665">3665</td><td class="line">              tp = tmp + str_arg_l - 1;</td></tr>
+<tr><td class="num" id="LN3666">3666</td><td class="line">            <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3667">3667</td><td class="line">              tp = (<span class='keyword'>char</span> *)vim_strchr((char_u *)tmp,</td></tr>
+<tr><td class="num" id="LN3668">3668</td><td class="line">                  fmt_spec == 'e' ? 'e' : 'E');</td></tr>
+<tr><td class="num" id="LN3669">3669</td><td class="line">              <span class='keyword'>if</span> (tp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN3670">3670</td><td class="line">                <span class='comment'>/* Remove superfluous '+' and leading</span></td></tr>
+<tr><td class="num" id="LN3671">3671</td><td class="line">                 <span class='comment'>* zeroes from the exponent. */</span></td></tr>
+<tr><td class="num" id="LN3672">3672</td><td class="line">                <span class='keyword'>if</span> (tp[1] == '+') {</td></tr>
+<tr><td class="num" id="LN3673">3673</td><td class="line">                  <span class='comment'>/* Change "1.0e+07" to "1.0e07" */</span></td></tr>
+<tr><td class="num" id="LN3674">3674</td><td class="line">                  <span class='macro'>STRMOVE(tp + 1, tp + 2)<span class='expansion'>memmove((tp + 1), (tp + 2), strlen((char *)(tp + 2)) + 1)</span></span>;</td></tr>
+<tr><td class="num" id="LN3675">3675</td><td class="line">                  --str_arg_l;</td></tr>
+<tr><td class="num" id="LN3676">3676</td><td class="line">                }</td></tr>
+<tr><td class="num" id="LN3677">3677</td><td class="line">                i = (tp[1] == '-') ? 2 : 1;</td></tr>
+<tr><td class="num" id="LN3678">3678</td><td class="line">                <span class='keyword'>while</span> (tp[i] == '0') {</td></tr>
+<tr><td class="num" id="LN3679">3679</td><td class="line">                  <span class='comment'>/* Change "1.0e07" to "1.0e7" */</span></td></tr>
+<tr><td class="num" id="LN3680">3680</td><td class="line">                  <span class='macro'>STRMOVE(tp + i, tp + i + 1)<span class='expansion'>memmove((tp + i), (tp + i + 1), strlen((char *)(tp + i + 1)) +<br> 1)</span></span>;</td></tr>
+<tr><td class="num" id="LN3681">3681</td><td class="line">                  --str_arg_l;</td></tr>
+<tr><td class="num" id="LN3682">3682</td><td class="line">                }</td></tr>
+<tr><td class="num" id="LN3683">3683</td><td class="line">                --tp;</td></tr>
+<tr><td class="num" id="LN3684">3684</td><td class="line">              }</td></tr>
+<tr><td class="num" id="LN3685">3685</td><td class="line">            }</td></tr>
+<tr><td class="num" id="LN3686">3686</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3687">3687</td><td class="line">            <span class='keyword'>if</span> (tp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; !precision_specified)</td></tr>
+<tr><td class="num" id="LN3688">3688</td><td class="line">              <span class='comment'>/* Remove trailing zeroes, but keep the one</span></td></tr>
+<tr><td class="num" id="LN3689">3689</td><td class="line">               <span class='comment'>* just after a dot. */</span></td></tr>
+<tr><td class="num" id="LN3690">3690</td><td class="line">              <span class='keyword'>while</span> (tp &gt; tmp + 2 &amp;&amp; *tp == '0'</td></tr>
+<tr><td class="num" id="LN3691">3691</td><td class="line">                     &amp;&amp; tp[-1] != '.') {</td></tr>
+<tr><td class="num" id="LN3692">3692</td><td class="line">                <span class='macro'>STRMOVE(tp, tp + 1)<span class='expansion'>memmove((tp), (tp + 1), strlen((char *)(tp + 1)) + 1)</span></span>;</td></tr>
+<tr><td class="num" id="LN3693">3693</td><td class="line">                --tp;</td></tr>
+<tr><td class="num" id="LN3694">3694</td><td class="line">                --str_arg_l;</td></tr>
+<tr><td class="num" id="LN3695">3695</td><td class="line">              }</td></tr>
+<tr><td class="num" id="LN3696">3696</td><td class="line">          } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3697">3697</td><td class="line">            <span class='keyword'>char</span> *tp;</td></tr>
+<tr><td class="num" id="LN3698">3698</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3699">3699</td><td class="line">            <span class='comment'>/* Be consistent: some printf("%e") use 1.0e+12</span></td></tr>
+<tr><td class="num" id="LN3700">3700</td><td class="line">             <span class='comment'>* and some 1.0e+012.  Remove one zero in the last</span></td></tr>
+<tr><td class="num" id="LN3701">3701</td><td class="line">             <span class='comment'>* case. */</span></td></tr>
+<tr><td class="num" id="LN3702">3702</td><td class="line">            tp = (<span class='keyword'>char</span> *)vim_strchr((char_u *)tmp,</td></tr>
+<tr><td class="num" id="LN3703">3703</td><td class="line">                fmt_spec == 'e' ? 'e' : 'E');</td></tr>
+<tr><td class="num" id="LN3704">3704</td><td class="line">            <span class='keyword'>if</span> (tp != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; (tp[1] == '+' || tp[1] == '-')</td></tr>
+<tr><td class="num" id="LN3705">3705</td><td class="line">                &amp;&amp; tp[2] == '0'</td></tr>
+<tr><td class="num" id="LN3706">3706</td><td class="line">                &amp;&amp; vim_isdigit(tp[3])</td></tr>
+<tr><td class="num" id="LN3707">3707</td><td class="line">                &amp;&amp; vim_isdigit(tp[4])) {</td></tr>
+<tr><td class="num" id="LN3708">3708</td><td class="line">              <span class='macro'>STRMOVE(tp + 2, tp + 3)<span class='expansion'>memmove((tp + 2), (tp + 3), strlen((char *)(tp + 3)) + 1)</span></span>;</td></tr>
+<tr><td class="num" id="LN3709">3709</td><td class="line">              --str_arg_l;</td></tr>
+<tr><td class="num" id="LN3710">3710</td><td class="line">            }</td></tr>
+<tr><td class="num" id="LN3711">3711</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3712">3712</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3713">3713</td><td class="line">        str_arg = tmp;</td></tr>
+<tr><td class="num" id="LN3714">3714</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3715">3715</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3716">3716</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3717">3717</td><td class="line">      <span class='keyword'>default</span>:</td></tr>
+<tr><td class="num" id="LN3718">3718</td><td class="line">        <span class='comment'>/* unrecognized conversion specifier, keep format string</span></td></tr>
+<tr><td class="num" id="LN3719">3719</td><td class="line">         <span class='comment'>* as-is */</span></td></tr>
+<tr><td class="num" id="LN3720">3720</td><td class="line">        zero_padding = 0;          <span class='comment'>/* turn zero padding off for non-numeric</span></td></tr>
+<tr><td class="num" id="LN3721">3721</td><td class="line">                                      <span class='comment'>conversion */</span></td></tr>
+<tr><td class="num" id="LN3722">3722</td><td class="line">        justify_left = 1;</td></tr>
+<tr><td class="num" id="LN3723">3723</td><td class="line">        min_field_width = 0;                        <span class='comment'>/* reset flags */</span></td></tr>
+<tr><td class="num" id="LN3724">3724</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3725">3725</td><td class="line">        <span class='comment'>/* discard the unrecognized conversion, just keep *</span></td></tr>
+<tr><td class="num" id="LN3726">3726</td><td class="line">         <span class='comment'>* the unrecognized conversion character	  */</span></td></tr>
+<tr><td class="num" id="LN3727">3727</td><td class="line">        str_arg = p;</td></tr>
+<tr><td class="num" id="LN3728">3728</td><td class="line">        str_arg_l = 0;</td></tr>
+<tr><td class="num" id="LN3729">3729</td><td class="line">        <span class='keyword'>if</span> (*p != <span class='macro'>NUL<span class='expansion'>'\000'</span></span>)</td></tr>
+<tr><td class="num" id="LN3730">3730</td><td class="line">          str_arg_l++;            <span class='comment'>/* include invalid conversion specifier</span></td></tr>
+<tr><td class="num" id="LN3731">3731</td><td class="line">                                     <span class='comment'>unchanged if not at end-of-string */</span></td></tr>
+<tr><td class="num" id="LN3732">3732</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN3733">3733</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3734">3734</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3735">3735</td><td class="line">      <span class='keyword'>if</span> (*p != <span class='macro'>NUL<span class='expansion'>'\000'</span></span>)</td></tr>
+<tr><td class="num" id="LN3736">3736</td><td class="line">        p++;             <span class='comment'>/* step over the just processed conversion specifier */</span></td></tr>
+<tr><td class="num" id="LN3737">3737</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3738">3738</td><td class="line">      <span class='comment'>/* insert padding to the left as requested by min_field_width;</span></td></tr>
+<tr><td class="num" id="LN3739">3739</td><td class="line">       <span class='comment'>* this does not include the zero padding in case of numerical</span></td></tr>
+<tr><td class="num" id="LN3740">3740</td><td class="line">       <span class='comment'>* conversions*/</span></td></tr>
+<tr><td class="num" id="LN3741">3741</td><td class="line">      <span class='keyword'>if</span> (!justify_left) {</td></tr>
+<tr><td class="num" id="LN3742">3742</td><td class="line">        <span class='comment'>/* left padding with blank or zero */</span></td></tr>
+<tr><td class="num" id="LN3743">3743</td><td class="line">        <span class='keyword'>int</span> pn = (<span class='keyword'>int</span>)(min_field_width - (str_arg_l + number_of_zeros_to_pad));</td></tr>
+<tr><td class="num" id="LN3744">3744</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3745">3745</td><td class="line">        <span class='keyword'>if</span> (pn &gt; 0) {</td></tr>
+<tr><td class="num" id="LN3746">3746</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
+<tr><td class="num" id="LN3747">3747</td><td class="line">            size_t avail = str_m - str_l;</td></tr>
+<tr><td class="num" id="LN3748">3748</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3749">3749</td><td class="line">            memset(str + str_l, zero_padding ? '0' : ' ',</td></tr>
+<tr><td class="num" id="LN3750">3750</td><td class="line">                (size_t)pn &gt; avail ? avail</td></tr>
+<tr><td class="num" id="LN3751">3751</td><td class="line">                : (size_t)pn);</td></tr>
+<tr><td class="num" id="LN3752">3752</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3753">3753</td><td class="line">          str_l += pn;</td></tr>
+<tr><td class="num" id="LN3754">3754</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3755">3755</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3756">3756</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3757">3757</td><td class="line">      <span class='comment'>/* zero padding as requested by the precision or by the minimal</span></td></tr>
+<tr><td class="num" id="LN3758">3758</td><td class="line">       <span class='comment'>* field width for numeric conversions required? */</span></td></tr>
+<tr><td class="num" id="LN3759">3759</td><td class="line">      <span class='keyword'>if</span> (number_of_zeros_to_pad == 0) {</td></tr>
+<tr><td class="num" id="LN3760">3760</td><td class="line">        <span class='comment'>/* will not copy first part of numeric right now, *</span></td></tr>
+<tr><td class="num" id="LN3761">3761</td><td class="line">        <span class='comment'>* force it to be copied later in its entirety    */</span></td></tr>
+<tr><td class="num" id="LN3762">3762</td><td class="line">        zero_padding_insertion_ind = 0;</td></tr>
+<tr><td class="num" id="LN3763">3763</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN3764">3764</td><td class="line">        <span class='comment'>/* insert first part of numerics (sign or '0x') before zero</span></td></tr>
+<tr><td class="num" id="LN3765">3765</td><td class="line">         <span class='comment'>* padding */</span></td></tr>
+<tr><td class="num" id="LN3766">3766</td><td class="line">        <span class='keyword'>int</span> zn = (<span class='keyword'>int</span>)zero_padding_insertion_ind;</td></tr>
+<tr><td class="num" id="LN3767">3767</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3768">3768</td><td class="line">        <span class='keyword'>if</span> (zn &gt; 0) {</td></tr>
+<tr><td class="num" id="LN3769">3769</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
+<tr><td class="num" id="LN3770">3770</td><td class="line">            size_t avail = str_m - str_l;</td></tr>
+<tr><td class="num" id="LN3771">3771</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3772">3772</td><td class="line">            memmove(str + str_l, str_arg,</td></tr>
+<tr><td class="num" id="LN3773">3773</td><td class="line">                (size_t)zn &gt; avail ? avail</td></tr>
+<tr><td class="num" id="LN3774">3774</td><td class="line">                : (size_t)zn);</td></tr>
+<tr><td class="num" id="LN3775">3775</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3776">3776</td><td class="line">          str_l += zn;</td></tr>
+<tr><td class="num" id="LN3777">3777</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3778">3778</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3779">3779</td><td class="line">        <span class='comment'>/* insert zero padding as requested by the precision or min</span></td></tr>
+<tr><td class="num" id="LN3780">3780</td><td class="line">         <span class='comment'>* field width */</span></td></tr>
+<tr><td class="num" id="LN3781">3781</td><td class="line">        zn = (<span class='keyword'>int</span>)number_of_zeros_to_pad;</td></tr>
+<tr><td class="num" id="LN3782">3782</td><td class="line">        <span class='keyword'>if</span> (zn &gt; 0) {</td></tr>
+<tr><td class="num" id="LN3783">3783</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
+<tr><td class="num" id="LN3784">3784</td><td class="line">            size_t avail = str_m-str_l;</td></tr>
+<tr><td class="num" id="LN3785">3785</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3786">3786</td><td class="line">            memset(str + str_l, '0',</td></tr>
+<tr><td class="num" id="LN3787">3787</td><td class="line">                (size_t)zn &gt; avail ? avail</td></tr>
+<tr><td class="num" id="LN3788">3788</td><td class="line">                : (size_t)zn);</td></tr>
+<tr><td class="num" id="LN3789">3789</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3790">3790</td><td class="line">          str_l += zn;</td></tr>
+<tr><td class="num" id="LN3791">3791</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3792">3792</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3793">3793</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3794">3794</td><td class="line">      <span class='comment'>/* insert formatted string</span></td></tr>
+<tr><td class="num" id="LN3795">3795</td><td class="line">       <span class='comment'>* (or as-is conversion specifier for unknown conversions) */</span></td></tr>
+<tr><td class="num" id="LN3796">3796</td><td class="line">      {</td></tr>
+<tr><td class="num" id="LN3797">3797</td><td class="line">        <span class='keyword'>int</span> sn = (<span class='keyword'>int</span>)(str_arg_l - zero_padding_insertion_ind);</td></tr>
+<tr><td class="num" id="LN3798">3798</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3799">3799</td><td class="line">        <span class='keyword'>if</span> (sn &gt; 0) {</td></tr>
+<tr><td class="num" id="LN3800">3800</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
+<tr><td class="num" id="LN3801">3801</td><td class="line">            size_t avail = str_m - str_l;</td></tr>
+<tr><td class="num" id="LN3802">3802</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3803">3803</td><td class="line">            memmove(str + str_l,</td></tr>
+<tr><td class="num" id="LN3804">3804</td><td class="line">                str_arg + zero_padding_insertion_ind,</td></tr>
+<tr><td class="num" id="LN3805">3805</td><td class="line">                (size_t)sn &gt; avail ? avail : (size_t)sn);</td></tr>
+<tr><td class="num" id="LN3806">3806</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3807">3807</td><td class="line">          str_l += sn;</td></tr>
+<tr><td class="num" id="LN3808">3808</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3809">3809</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3810">3810</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3811">3811</td><td class="line">      <span class='comment'>/* insert right padding */</span></td></tr>
+<tr><td class="num" id="LN3812">3812</td><td class="line">      <span class='keyword'>if</span> (justify_left) {</td></tr>
+<tr><td class="num" id="LN3813">3813</td><td class="line">        <span class='comment'>/* right blank padding to the field width */</span></td></tr>
+<tr><td class="num" id="LN3814">3814</td><td class="line">        <span class='keyword'>int</span> pn = (<span class='keyword'>int</span>)(min_field_width</td></tr>
+<tr><td class="num" id="LN3815">3815</td><td class="line">                       - (str_arg_l + number_of_zeros_to_pad));</td></tr>
+<tr><td class="num" id="LN3816">3816</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3817">3817</td><td class="line">        <span class='keyword'>if</span> (pn &gt; 0) {</td></tr>
+<tr><td class="num" id="LN3818">3818</td><td class="line">          <span class='keyword'>if</span> (str_l &lt; str_m) {</td></tr>
+<tr><td class="num" id="LN3819">3819</td><td class="line">            size_t avail = str_m - str_l;</td></tr>
+<tr><td class="num" id="LN3820">3820</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3821">3821</td><td class="line">            memset(str + str_l, ' ',</td></tr>
+<tr><td class="num" id="LN3822">3822</td><td class="line">                (size_t)pn &gt; avail ? avail</td></tr>
+<tr><td class="num" id="LN3823">3823</td><td class="line">                : (size_t)pn);</td></tr>
+<tr><td class="num" id="LN3824">3824</td><td class="line">          }</td></tr>
+<tr><td class="num" id="LN3825">3825</td><td class="line">          str_l += pn;</td></tr>
+<tr><td class="num" id="LN3826">3826</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN3827">3827</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN3828">3828</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN3829">3829</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN3830">3830</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3831">3831</td><td class="line">  <span class='keyword'>if</span> (str_m &gt; 0) {</td></tr>
+<tr><td class="num" id="LN3832">3832</td><td class="line">    <span class='comment'>/* make sure the string is nul-terminated even at the expense of</span></td></tr>
+<tr><td class="num" id="LN3833">3833</td><td class="line">     <span class='comment'>* overwriting the last character (shouldn't happen, but just in case)</span></td></tr>
+<tr><td class="num" id="LN3834">3834</td><td class="line">     <span class='comment'>* */</span></td></tr>
+<tr><td class="num" id="LN3835">3835</td><td class="line">    str[str_l &lt;= str_m - 1 ? str_l : str_m - 1] = '\0';</td></tr>
+<tr><td class="num" id="LN3836">3836</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN3837">3837</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3838">3838</td><td class="line">  <span class='keyword'>if</span> (tvs != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; tvs[arg_idx - 1].v_type != <span class='macro'>VAR_UNKNOWN<span class='expansion'>0</span></span>)</td></tr>
+<tr><td class="num" id="LN3839">3839</td><td class="line">    <span class='macro'>EMSG(_(<span class='string_literal'>"E767: Too many arguments to printf()"</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("E767: Too many arguments to printf()"<br>))))</span></span>;</td></tr>
+<tr><td class="num" id="LN3840">3840</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN3841">3841</td><td class="line">  <span class='comment'>/* Return the number of characters formatted (excluding trailing nul</span></td></tr>
+<tr><td class="num" id="LN3842">3842</td><td class="line">   <span class='comment'>* character), that is, the number of characters that would have been</span></td></tr>
+<tr><td class="num" id="LN3843">3843</td><td class="line">   <span class='comment'>* written to the buffer if it were large enough. */</span></td></tr>
+<tr><td class="num" id="LN3844">3844</td><td class="line">  <span class='keyword'>return</span> (<span class='keyword'>int</span>)str_l;</td></tr>
+<tr><td class="num" id="LN3845">3845</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN3846">3846</td><td class="line"> </td></tr>
 </table></body></html>
