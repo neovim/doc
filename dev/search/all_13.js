@@ -879,6 +879,7 @@ var searchData=
   ['str_5fptr',['STR_PTR',['../charset_8c.html#af88dd3f3de54ea19fed8f4adfe36b1c2',1,'charset.c']]],
   ['str_5fstr_5ffn',['str_str_fn',['../dl_8c.html#a1e8c6d6bc348687b28f37e18a24e0e99',1,'dl.c']]],
   ['strcat',['STRCAT',['../vim_8h.html#ada443375305fc60b73f44a59a2bf3f3b',1,'vim.h']]],
+  ['strchrsub',['strchrsub',['../memory_8c.html#a76467bc2bc18e489937e1b3c92790da5',1,'memory.c']]],
   ['strcmp',['STRCMP',['../vim_8h.html#a75fb5fb9d785a71f9d82f4d008a48278',1,'vim.h']]],
   ['strcpy',['STRCPY',['../vim_8h.html#aa9cea5fcb1483307770f365fb24aa08d',1,'vim.h']]],
   ['stream',['stream',['../structrstream.html#a0889a99fa3b0dbf62cf3dba996b6c647',1,'rstream::stream()'],['../structwstream.html#adf3bc93b58fa45b0d74835c55e3c1020',1,'wstream::stream()']]],

@@ -210,6 +210,7 @@ var searchData=
   ['str2special_5fsave',['str2special_save',['../message_8c.html#ac5e524dc8fd47f9735f21d2f0c9ceaa1',1,'message.c']]],
   ['str2specialbuf',['str2specialbuf',['../message_8c.html#a74a1376897780b3421b372743ed5b2de',1,'message.c']]],
   ['str_5ffoldcase',['str_foldcase',['../charset_8c.html#a141b9cfe73e71b8de7979ce7fc00aa57',1,'charset.c']]],
+  ['strchrsub',['strchrsub',['../memory_8c.html#a76467bc2bc18e489937e1b3c92790da5',1,'memory.c']]],
   ['string_5fconvert',['string_convert',['../mbyte_8c.html#a83661a5d9f6e99842ed7d5b318daa6c3',1,'mbyte.c']]],
   ['string_5fconvert_5fext',['string_convert_ext',['../mbyte_8c.html#a40a167a06e5839b125fb4680c76198e1',1,'mbyte.c']]],
   ['strup_5fsave',['strup_save',['../strings_8c.html#a0c1365d32ba4839fd00c8058cbc19ab1',1,'strings.c']]],

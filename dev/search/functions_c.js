@@ -80,6 +80,7 @@ var searchData=
   ['mch_5fsettmode',['mch_settmode',['../os__unix_8c.html#ae34a8c7eb69894b74275b9b0fced98c8',1,'os_unix.c']]],
   ['mch_5fsuspend',['mch_suspend',['../os__unix_8c.html#a3a9f79619ecf75e94c21f67331a8675f',1,'os_unix.c']]],
   ['mch_5fwrite',['mch_write',['../os__unix_8c.html#ad512e8dc8639fb9c3cf455134b793821',1,'os_unix.c']]],
+  ['memchrsub',['memchrsub',['../memory_8c.html#a91dd511f07a58386489566b92a81bd14',1,'memory.c']]],
   ['menu_5fis_5fmenubar',['menu_is_menubar',['../menu_8c.html#acb5ff3e927a80c942fe99c777370b006',1,'menu.c']]],
   ['menu_5fis_5fpopup',['menu_is_popup',['../menu_8c.html#a9680092d119a0103721d4557fd8a1ffd',1,'menu.c']]],
   ['menu_5fis_5fseparator',['menu_is_separator',['../menu_8c.html#a3a95450fb1f7cb8b566b4cd5a7a6e919',1,'menu.c']]],
