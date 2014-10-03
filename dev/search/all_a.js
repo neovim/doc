@@ -8,7 +8,7 @@ var searchData=
   ['job_2ec',['job.c',['../job_8c.html',1,'']]],
   ['job_2eh',['job.h',['../job_8h.html',1,'']]],
   ['job_5fbuffer_5fsize',['JOB_BUFFER_SIZE',['../job_8c.html#aa7d6546bf102d75051de9be765322317',1,'job.c']]],
-  ['job_5fclose_5fin',['job_close_in',['../job_8c.html#a78235c1fe6ab6cc021804a1172e986b6',1,'job.c']]],
+  ['job_5fclose_5fin',['job_close_in',['../job_8c.html#a78235c1fe6ab6cc021804a1172e986b6',1,'job_close_in(Job *job) FUNC_ATTR_NONNULL_ALL:&#160;job.c'],['../shell_8c.html#a3a250346cc8625189ecf4e0bb14454ab',1,'job_close_in(job):&#160;shell.c']]],
   ['job_5fdata',['job_data',['../job_8c.html#a7cdb7e799d14aceaccffeff3f66bc9ab',1,'job.c']]],
   ['job_5fdefs_2eh',['job_defs.h',['../job__defs_8h.html',1,'']]],
   ['job_5fevent_5fsource',['job_event_source',['../job_8c.html#a3011bba997009e01e2e5ab198963bc1c',1,'job.c']]],

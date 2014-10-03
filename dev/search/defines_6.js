@@ -141,7 +141,6 @@ var searchData=
   ['for_5fall_5fbuffers',['FOR_ALL_BUFFERS',['../globals_8h.html#ab2dfc04411a40f8bcaf0f45b0d16f482',1,'globals.h']]],
   ['for_5fall_5ftab_5fwindows',['FOR_ALL_TAB_WINDOWS',['../globals_8h.html#a7ec3ef1eaaad38a0f6b3b1965c6d1624',1,'globals.h']]],
   ['for_5fall_5ftabs',['FOR_ALL_TABS',['../globals_8h.html#a87576879e89a11905d64d1a9c687ab0f',1,'globals.h']]],
-  ['for_5fall_5fwindows',['FOR_ALL_WINDOWS',['../globals_8h.html#ace47feb394b092f7e9f5e736b86ae91b',1,'globals.h']]],
   ['for_5fall_5fwindows_5fin_5ftab',['FOR_ALL_WINDOWS_IN_TAB',['../globals_8h.html#a6a25cb8adde99ce4585242491447c404',1,'globals.h']]],
   ['force_5fbin',['FORCE_BIN',['../ex__cmds__defs_8h.html#adade35874286a0d3adf67ddd3bf8c4bc',1,'ex_cmds_defs.h']]],
   ['force_5fnobin',['FORCE_NOBIN',['../ex__cmds__defs_8h.html#a0c3a0b0c5323f8880858f0e5d844b9cf',1,'ex_cmds_defs.h']]],
