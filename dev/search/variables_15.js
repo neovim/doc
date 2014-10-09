@@ -15,6 +15,7 @@ var searchData=
   ['vc_5ftype',['vc_type',['../structvimconv__T.html#ad26808b3f5bcac2cdee6b8a0a38151de',1,'vimconv_T']]],
   ['ve_5fflags',['ve_flags',['../option__defs_8h.html#a471aec3dcaec6c3857ac65fbc2aeee2e',1,'option_defs.h']]],
   ['version',['version',['../structprt__ps__resource__S.html#a6e2f799221b7dcb865edd439500d4da2',1,'prt_ps_resource_S::version()'],['../globals_8h.html#abc057f42fdaf5e63835a8272aefe278e',1,'Version():&#160;version.c'],['../version_8c.html#abc057f42fdaf5e63835a8272aefe278e',1,'Version():&#160;version.c']]],
+  ['version_5fcommit',['version_commit',['../version_8c.html#a707a4874b40b63c5f8712223792b5670',1,'version.c']]],
   ['vi_5fcurswant',['vi_curswant',['../structvisualinfo__T.html#a07a910e53e6b8021454eff37df93edc4',1,'visualinfo_T']]],
   ['vi_5fend',['vi_end',['../structvisualinfo__T.html#af6a2127cf026ab398a8c3d99d7cdbadb',1,'visualinfo_T']]],
   ['vi_5fmode',['vi_mode',['../structvisualinfo__T.html#a7498558a57234716e93b69e7038b38b5',1,'visualinfo_T']]],

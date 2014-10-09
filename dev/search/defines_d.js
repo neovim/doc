@@ -142,7 +142,6 @@ var searchData=
   ['mod_5fmask_5fmeta',['MOD_MASK_META',['../keymap_8h.html#a79128fd1f0fc41fb6b90789818921ffd',1,'keymap.h']]],
   ['mod_5fmask_5fmulti_5fclick',['MOD_MASK_MULTI_CLICK',['../keymap_8h.html#a7065e3978ddc1728db2450710f309630',1,'keymap.h']]],
   ['mod_5fmask_5fshift',['MOD_MASK_SHIFT',['../keymap_8h.html#a8c531de493f2bfda014843956e354ad7',1,'keymap.h']]],
-  ['modified_5fby',['MODIFIED_BY',['../version__defs_8h.html#abe53486d789d2c2af39e9a3e3118dc66',1,'version_defs.h']]],
   ['modify',['MODIFY',['../ex__cmds__defs_8h.html#a56bda2bdd8bf16c41b6bfc2a97da9789',1,'ex_cmds_defs.h']]],
   ['mopen',['MOPEN',['../regexp_8c.html#a008c64d7ff144db080f27c61afaa4f42',1,'regexp.c']]],
   ['mouse_5f4',['MOUSE_4',['../term_8h.html#a62d592703ef7abce7145a526f103bf24',1,'term.h']]],

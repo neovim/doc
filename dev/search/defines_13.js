@@ -314,6 +314,8 @@ var searchData=
   ['stl_5fvim_5fexpr',['STL_VIM_EXPR',['../option__defs_8h.html#a6c487388768fce9d00e2e78a9c3b385d',1,'option_defs.h']]],
   ['stl_5fvirtcol',['STL_VIRTCOL',['../option__defs_8h.html#aa27cb83872cd7d877bf4b85f7a75d8fc',1,'option_defs.h']]],
   ['stl_5fvirtcol_5falt',['STL_VIRTCOL_ALT',['../option__defs_8h.html#a7597ebdb4521f5788b7589a69ec779c5',1,'option_defs.h']]],
+  ['str',['STR',['../version__defs_8h.html#a18d295a837ac71add5578860b55e5502',1,'version_defs.h']]],
+  ['str_5f',['STR_',['../version__defs_8h.html#a0f86942485f6b615baa815a07e9819f1',1,'version_defs.h']]],
   ['str_5fchar',['STR_CHAR',['../charset_8c.html#af794b6eb741f80bf97f7e4858e2b3d5d',1,'charset.c']]],
   ['str_5fptr',['STR_PTR',['../charset_8c.html#af88dd3f3de54ea19fed8f4adfe36b1c2',1,'charset.c']]],
   ['strcat',['STRCAT',['../vim_8h.html#ada443375305fc60b73f44a59a2bf3f3b',1,'vim.h']]],
