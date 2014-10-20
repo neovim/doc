@@ -88,6 +88,7 @@ var searchData=
   ['init_5fpos_5ft',['INIT_POS_T',['../pos_8h.html#ad3aa329e09b00bea4fb5a256461e476f',1,'pos.h']]],
   ['initializer',['INITIALIZER',['../map_8c.html#aa2bffdb71a5868e5d31b6318d68da954',1,'map.c']]],
   ['initializer_5fdeclare',['INITIALIZER_DECLARE',['../map_8c.html#a581b637f07268b211945deecf5089e47',1,'map.c']]],
+  ['input_5fbuffer_5fsize',['INPUT_BUFFER_SIZE',['../input_8c.html#aa9b8dcc02cea15aab8e3d0b7860327a7',1,'input.c']]],
   ['input_5fbuflen',['INPUT_BUFLEN',['../edit_8c.html#a08138f717a55fe7b906e95ce821ca478',1,'edit.c']]],
   ['inschar_5fcom_5flist',['INSCHAR_COM_LIST',['../edit_8h.html#a00ab90d61cfe147932ec5bb9372380aa',1,'edit.h']]],
   ['inschar_5fctrlv',['INSCHAR_CTRLV',['../edit_8h.html#a779d4d2e8b16e725830dfd7abed6431f',1,'edit.h']]],

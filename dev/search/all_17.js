@@ -376,7 +376,7 @@ var searchData=
   ['workingstatus',['WorkingStatus',['../globals_8h.html#a4ec64f8310e1f754ab829ff0b95ce86a',1,'globals.h']]],
   ['worst',['WORST',['../regexp_8c.html#a5567557927b3d58aca1534ac914cea85',1,'regexp.c']]],
   ['wp',['wp',['../structfline__T.html#ac1f9d9bfaaf34a8c762e1c6c635f41a1',1,'fline_T']]],
-  ['wpos',['wpos',['../structrstream.html#a2fc3f54339cf55a5990a7153d86d34a0',1,'rstream']]],
+  ['wpos',['wpos',['../structrbuffer.html#a3d92871f1394f0b4e774860fe08a7a95',1,'rbuffer']]],
   ['write_5feintr',['write_eintr',['../vim_8h.html#af53204ea972d83a77e8a1cb486c0708f',1,'vim.h']]],
   ['write_5flnum_5fadjust',['write_lnum_adjust',['../fileio_8c.html#a1c2c6267b3e75feb4150f5b7bb98921c',1,'fileio.c']]],
   ['write_5freg_5fcontents',['write_reg_contents',['../ops_8c.html#a9c25481bd4537bea97bc89df2473d5cf',1,'ops.c']]],

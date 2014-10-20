@@ -119,7 +119,6 @@ var searchData=
   ['conceal_5fcursor_5fline',['conceal_cursor_line',['../screen_8c.html#a904ed9b70868b604d5268ffab28528aa',1,'screen.c']]],
   ['conv_5fto_5fpstd',['conv_to_pstd',['../farsi_8c.html#aa9b0937b0d3d74aaa43b917aeb2ba434',1,'farsi.c']]],
   ['conv_5fto_5fpvim',['conv_to_pvim',['../farsi_8c.html#aec36ca84aef99b073591d096741331d0',1,'farsi.c']]],
-  ['convert_5finput_5fsafe',['convert_input_safe',['../mbyte_8c.html#a6701f8b532d10dfe6b771318f2db553e',1,'mbyte.c']]],
   ['convert_5fsetup',['convert_setup',['../mbyte_8c.html#a71f312b0794a51fed97ae37b14ebc9fa',1,'mbyte.c']]],
   ['convert_5fsetup_5fext',['convert_setup_ext',['../mbyte_8c.html#a7ef243298ba53b8397955a04042b2a44',1,'mbyte.c']]],
   ['copy_5fchars',['copy_chars',['../strings_8c.html#ac803459bf930db6deb03b201bde65234',1,'strings.c']]],

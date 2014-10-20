@@ -7,6 +7,7 @@ var searchData=
   ['save_5fcurwin',['save_curwin',['../structaco__save__T.html#a5eb3719f3fd31af6d186eddf9f50adc7',1,'aco_save_T']]],
   ['save_5fei',['save_ei',['../structcmdmod__T.html#afd0f35dbd30650e0fe68091761f9f5c7',1,'cmdmod_T']]],
   ['save_5fend',['save_end',['../structregbehind__S.html#a7e2a2b6c7081dc288aa417da6fdf0ea5',1,'regbehind_S']]],
+  ['save_5finputbuf',['save_inputbuf',['../structtasave__T.html#a5795994a48e67ec069ecc4af3da27728',1,'tasave_T']]],
   ['save_5fneed_5fclear_5fsubexpr',['save_need_clear_subexpr',['../structregbehind__S.html#a98fbfb32479934a9d2219d25b8505cd3',1,'regbehind_S']]],
   ['save_5freadbuf1',['save_readbuf1',['../structtasave__T.html#a7d83c38c4c0f1e978b41ab28ef4c8ac0',1,'tasave_T']]],
   ['save_5freadbuf2',['save_readbuf2',['../structtasave__T.html#a61176adb74d99cb4ced9c0a5801754b2',1,'tasave_T']]],

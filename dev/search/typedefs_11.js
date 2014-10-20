@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['rbuffer',['RBuffer',['../rstream__defs_8h.html#a3b95c32c3360fb410b8b9ec50bbd825a',1,'rstream_defs.h']]],
   ['regbehind_5ft',['regbehind_T',['../regexp_8c.html#a4ca29f1671c56cff831e94da817527c5',1,'regexp.c']]],
   ['regengine_5ft',['regengine_T',['../regexp__defs_8h.html#a172c326df2bc4c437ffe1a03be8ce946',1,'regexp_defs.h']]],
   ['regitem_5ft',['regitem_T',['../regexp_8c.html#ad55dbe552d8fa4cb5c6338496d28fc2b',1,'regexp.c']]],

@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['rbuffer',['rbuffer',['../structrbuffer.html',1,'']]],
   ['reg_5fextmatch_5ft',['reg_extmatch_T',['../structreg__extmatch__T.html',1,'']]],
   ['regbehind_5fs',['regbehind_S',['../structregbehind__S.html',1,'']]],
   ['regengine',['regengine',['../structregengine.html',1,'']]],
