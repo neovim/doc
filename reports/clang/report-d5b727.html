@@ -54,9 +54,9 @@
 </style>
 </head>
 <body>
-<!-- BUGDESC Access to field 'li_next' results in a dereference of a null pointer (loaded from field 'll_li') -->
+<!-- BUGDESC String copy function overflows destination buffer -->
 
-<!-- BUGTYPE Dereference of null pointer -->
+<!-- BUGTYPE Out-of-bound array access -->
 
 <!-- BUGCATEGORY Logic error -->
 
@@ -64,21 +64,21 @@
 
 <!-- FILENAME eval.c -->
 
-<!-- FUNCTIONNAME set_var_lval -->
+<!-- FUNCTIONNAME add_nr_var -->
 
-<!-- BUGLINE 2240 -->
+<!-- BUGLINE 18671 -->
 
-<!-- BUGCOLUMN 11 -->
+<!-- BUGCOLUMN 3 -->
 
-<!-- BUGPATHLENGTH 18 -->
+<!-- BUGPATHLENGTH 6 -->
 
 <!-- BUGMETAEND -->
 <!-- REPORTHEADER -->
 <h3>Bug Summary</h3>
 <table class="simpletable">
 <tr><td class="rowname">File:</td><td>eval.c</td></tr>
-<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 2240, column 11</a></td></tr>
-<tr><td class="rowname">Description:</td><td>Access to field 'li_next' results in a dereference of a null pointer (loaded from field 'll_li')</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 18671, column 3</a></td></tr>
+<tr><td class="rowname">Description:</td><td>String copy function overflows destination buffer</td></tr>
 </table>
 <!-- REPORTSUMMARYEXTRA -->
 <h3>Annotated Source Code</h3>
@@ -2287,7 +2287,6 @@
 <tr><td class="num" id="LN2202">2202</td><td class="line">  dictitem_T  *di;</td></tr>
 <tr><td class="num" id="LN2203">2203</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN2204">2204</td><td class="line">  <span class='keyword'>if</span> (lp-&gt;ll_tv == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">1</div></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2205">2205</td><td class="line">    <span class='keyword'>if</span> (!check_changedtick(lp-&gt;ll_name)) {</td></tr>
 <tr><td class="num" id="LN2206">2206</td><td class="line">      cc = *endp;</td></tr>
 <tr><td class="num" id="LN2207">2207</td><td class="line">      *endp = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;</td></tr>
@@ -2306,45 +2305,28 @@
 <tr><td class="num" id="LN2220">2220</td><td class="line">      *endp = cc;</td></tr>
 <tr><td class="num" id="LN2221">2221</td><td class="line">    }</td></tr>
 <tr><td class="num" id="LN2222">2222</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (tv_check_lock(lp-&gt;ll_newkey == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgControl" style="margin-left:28ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>'?' condition is false</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgControl" style="margin-left:10ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path4" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2223">2223</td><td class="line">                 ? lp-&gt;ll_tv-&gt;v_lock</td></tr>
 <tr><td class="num" id="LN2224">2224</td><td class="line">                 : lp-&gt;ll_tv-&gt;vval.v_dict-&gt;dv_lock, lp-&gt;ll_name))</td></tr>
 <tr><td class="num" id="LN2225">2225</td><td class="line">    ;</td></tr>
 <tr><td class="num" id="LN2226">2226</td><td class="line">  <span class='keyword'>else</span> <span class='keyword'>if</span> (lp-&gt;ll_range) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path4" class="msg msgControl" style="margin-left:8ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path5" title="Next event (5)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2227">2227</td><td class="line">    <span class='comment'>/*</span></td></tr>
 <tr><td class="num" id="LN2228">2228</td><td class="line">     <span class='comment'>* Assign the List values to the list items.</span></td></tr>
 <tr><td class="num" id="LN2229">2229</td><td class="line">     <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN2230">2230</td><td class="line">    <span class='keyword'>for</span> (ri = rettv-&gt;vval.v_list-&gt;lv_first; <span class="mrange">ri != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>; ) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path5" class="msg msgEvent" style="margin-left:45ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">5</div></td><td><div class="PathNav"><a href="#Path4" title="Previous event (4)">&#x2190;</a></div></td></td><td>Assuming 'ri' is not equal to null</td><td><div class="PathNav"><a href="#Path6" title="Next event (6)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Loop condition is true.  Entering loop body</td><td><div class="PathNav"><a href="#Path7" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path10" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">10</div></td><td><div class="PathNav"><a href="#Path9" title="Previous event (9)">&#x2190;</a></div></td></td><td>Loop condition is true.  Entering loop body</td><td><div class="PathNav"><a href="#Path11" title="Next event (11)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path16" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">16</div></td><td><div class="PathNav"><a href="#Path15" title="Previous event (15)">&#x2190;</a></div></td></td><td>Loop condition is true.  Entering loop body</td><td><div class="PathNav"><a href="#Path17" title="Next event (17)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num" id="LN2231">2231</td><td class="line">      <span class='keyword'>if</span> (<span class="mrange">op != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span> &amp;&amp; *op != '=')</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path7" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Assuming 'op' is equal to null</td><td><div class="PathNav"><a href="#Path8" title="Next event (8)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2230">2230</td><td class="line">    <span class='keyword'>for</span> (ri = rettv-&gt;vval.v_list-&gt;lv_first; ri != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; ) {</td></tr>
+<tr><td class="num" id="LN2231">2231</td><td class="line">      <span class='keyword'>if</span> (op != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; *op != '=')</td></tr>
 <tr><td class="num" id="LN2232">2232</td><td class="line">        tv_op(&amp;lp-&gt;ll_li-&gt;li_tv, &amp;ri-&gt;li_tv, op);</td></tr>
 <tr><td class="num" id="LN2233">2233</td><td class="line">      <span class='keyword'>else</span> {</td></tr>
 <tr><td class="num" id="LN2234">2234</td><td class="line">        clear_tv(&amp;lp-&gt;ll_li-&gt;li_tv);</td></tr>
-<tr><td class="num" id="LN2235">2235</td><td class="line">        <span class="mrange">copy_tv(&amp;ri-&gt;li_tv, &amp;lp-&gt;ll_li-&gt;li_tv)</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path11" class="msg msgEvent" style="margin-left:9ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">11</div></td><td><div class="PathNav"><a href="#Path10" title="Previous event (10)">&#x2190;</a></div></td></td><td>Value assigned to field 'li_next'</td><td><div class="PathNav"><a href="#Path12" title="Next event (12)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2235">2235</td><td class="line">        copy_tv(&amp;ri-&gt;li_tv, &amp;lp-&gt;ll_li-&gt;li_tv);</td></tr>
 <tr><td class="num" id="LN2236">2236</td><td class="line">      }</td></tr>
 <tr><td class="num" id="LN2237">2237</td><td class="line">      ri = ri-&gt;li_next;</td></tr>
-<tr><td class="num" id="LN2238">2238</td><td class="line">      <span class='keyword'>if</span> (<span class="mrange"><span class="mrange"><span class="mrange">ri == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span></span></span> || (!lp-&gt;ll_empty2 &amp;&amp; lp-&gt;ll_n2 == lp-&gt;ll_n1))</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path8" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">8</div></td><td><div class="PathNav"><a href="#Path7" title="Previous event (7)">&#x2190;</a></div></td></td><td>Assuming 'ri' is not equal to null</td><td><div class="PathNav"><a href="#Path9" title="Next event (9)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path12" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">12</div></td><td><div class="PathNav"><a href="#Path11" title="Previous event (11)">&#x2190;</a></div></td></td><td>Assuming 'ri' is not equal to null</td><td><div class="PathNav"><a href="#Path13" title="Next event (13)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path17" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">17</div></td><td><div class="PathNav"><a href="#Path16" title="Previous event (16)">&#x2190;</a></div></td></td><td>Assuming 'ri' is not equal to null</td><td><div class="PathNav"><a href="#EndPath" title="Next event (18)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2238">2238</td><td class="line">      <span class='keyword'>if</span> (ri == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> || (!lp-&gt;ll_empty2 &amp;&amp; lp-&gt;ll_n2 == lp-&gt;ll_n1))</td></tr>
 <tr><td class="num" id="LN2239">2239</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN2240">2240</td><td class="line">      <span class='keyword'>if</span> (<span class="mrange">lp-&gt;<span class="mrange">ll_li</span>-&gt;li_next == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path9" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">9</div></td><td><div class="PathNav"><a href="#Path8" title="Previous event (8)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path10" title="Next event (10)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path13" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">13</div></td><td><div class="PathNav"><a href="#Path12" title="Previous event (12)">&#x2190;</a></div></td></td><td>Assuming pointer value is null</td><td><div class="PathNav"><a href="#Path14" title="Next event (14)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path14" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">14</div></td><td><div class="PathNav"><a href="#Path13" title="Previous event (13)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path15" title="Next event (15)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">18</div></td><td><div class="PathNav"><a href="#Path17" title="Previous event (17)">&#x2190;</a></div></td></td><td>Access to field 'li_next' results in a dereference of a null pointer (loaded from field 'll_li')</td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2240">2240</td><td class="line">      <span class='keyword'>if</span> (lp-&gt;ll_li-&gt;li_next == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
 <tr><td class="num" id="LN2241">2241</td><td class="line">        <span class='comment'>/* Need to add an empty item. */</span></td></tr>
 <tr><td class="num" id="LN2242">2242</td><td class="line">        list_append_number(lp-&gt;ll_list, 0);</td></tr>
 <tr><td class="num" id="LN2243">2243</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN2244">2244</td><td class="line">      <span class="mrange">lp-&gt;ll_li = lp-&gt;ll_li-&gt;li_next</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path15" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">15</div></td><td><div class="PathNav"><a href="#Path14" title="Previous event (14)">&#x2190;</a></div></td></td><td>Null pointer value stored to field 'll_li'</td><td><div class="PathNav"><a href="#Path16" title="Next event (16)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2244">2244</td><td class="line">      lp-&gt;ll_li = lp-&gt;ll_li-&gt;li_next;</td></tr>
 <tr><td class="num" id="LN2245">2245</td><td class="line">      ++lp-&gt;ll_n1;</td></tr>
 <tr><td class="num" id="LN2246">2246</td><td class="line">    }</td></tr>
 <tr><td class="num" id="LN2247">2247</td><td class="line">    <span class='keyword'>if</span> (ri != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
@@ -18432,7 +18414,9 @@
 <tr><td class="num" id="LN18323">18323</td><td class="line">  proftime_T call_start;</td></tr>
 <tr><td class="num" id="LN18324">18324</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN18325">18325</td><td class="line">  <span class='comment'>/* If depth of calling is getting too high, don't execute the function */</span></td></tr>
-<tr><td class="num" id="LN18326">18326</td><td class="line">  <span class='keyword'>if</span> (depth &gt;= p_mfd) {</td></tr>
+<tr><td class="num" id="LN18326">18326</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">depth &gt;= p_mfd</span>) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>Assuming 'depth' is &lt; 'p_mfd'</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18327">18327</td><td class="line">    <span class='macro'>EMSG(_(<span class='string_literal'>"E132: Function call depth is higher than 'maxfuncdepth'"</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("E132: Function call depth is higher than 'maxfuncdepth'"<br>))))</span></span>;</td></tr>
 <tr><td class="num" id="LN18328">18328</td><td class="line">    rettv-&gt;v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
 <tr><td class="num" id="LN18329">18329</td><td class="line">    rettv-&gt;vval.v_number = -1;</td></tr>
@@ -18464,7 +18448,9 @@
 <tr><td class="num" id="LN18355">18355</td><td class="line">   <span class='comment'>* Init l: variables.</span></td></tr>
 <tr><td class="num" id="LN18356">18356</td><td class="line">   <span class='comment'>*/</span></td></tr>
 <tr><td class="num" id="LN18357">18357</td><td class="line">  init_var_dict(&amp;fc-&gt;l_vars, &amp;fc-&gt;l_vars_var, <span class='macro'>VAR_DEF_SCOPE<span class='expansion'>2</span></span>);</td></tr>
-<tr><td class="num" id="LN18358">18358</td><td class="line">  <span class='keyword'>if</span> (selfdict != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN18358">18358</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">selfdict != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Assuming 'selfdict' is equal to null</td><td><div class="PathNav"><a href="#Path4" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path4" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path5" title="Next event (5)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18359">18359</td><td class="line">    <span class='comment'>/* Set l:self to "selfdict".  Use "name" to avoid a warning from</span></td></tr>
 <tr><td class="num" id="LN18360">18360</td><td class="line">     <span class='comment'>* some compiler that checks the destination size. */</span></td></tr>
 <tr><td class="num" id="LN18361">18361</td><td class="line">    v = &amp;fc-&gt;fixvar[fixvar_idx++].var;</td></tr>
@@ -18484,8 +18470,9 @@
 <tr><td class="num" id="LN18375">18375</td><td class="line">   <span class='comment'>* Set a:000 to a list with room for the "..." arguments.</span></td></tr>
 <tr><td class="num" id="LN18376">18376</td><td class="line">   <span class='comment'>*/</span></td></tr>
 <tr><td class="num" id="LN18377">18377</td><td class="line">  init_var_dict(&amp;fc-&gt;l_avars, &amp;fc-&gt;l_avars_var, <span class='macro'>VAR_SCOPE<span class='expansion'>1</span></span>);</td></tr>
-<tr><td class="num" id="LN18378">18378</td><td class="line">  add_nr_var(&amp;fc-&gt;l_avars, &amp;fc-&gt;fixvar[fixvar_idx++].var, <span class='string_literal'>"0"</span>,</td></tr>
-<tr><td class="num" id="LN18379">18379</td><td class="line">      (varnumber_T)(argcount - fp-&gt;uf_args.ga_len));</td></tr>
+<tr><td class="num" id="LN18378">18378</td><td class="line">  <span class="mrange">add_nr_var(&amp;fc-&gt;l_avars, &amp;fc-&gt;fixvar[fixvar_idx++].var, <span class='string_literal'>"0"</span>,</td></tr></span>
+<tr><td class="num"></td><td class="line"><div id="Path5" class="msg msgEvent" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">5</div></td><td><div class="PathNav"><a href="#Path4" title="Previous event (4)">&#x2190;</a></div></td></td><td>Calling 'add_nr_var'</td><td><div class="PathNav"><a href="#EndPath" title="Next event (6)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN18379">18379</td><td class="line">      <span class="mrange">(varnumber_T)(argcount - fp-&gt;uf_args.ga_len))</span>;</td></tr>
 <tr><td class="num" id="LN18380">18380</td><td class="line">  <span class='comment'>/* Use "name" to avoid a warning from some compiler that checks the</span></td></tr>
 <tr><td class="num" id="LN18381">18381</td><td class="line">   <span class='comment'>* destination size. */</span></td></tr>
 <tr><td class="num" id="LN18382">18382</td><td class="line">  v = &amp;fc-&gt;fixvar[fixvar_idx++].var;</td></tr>
@@ -18778,6 +18765,9 @@
 <tr><td class="num" id="LN18669">18669</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> add_nr_var(dict_T *dp, dictitem_T *v, <span class='keyword'>char</span> *name, varnumber_T nr)</td></tr>
 <tr><td class="num" id="LN18670">18670</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN18671">18671</td><td class="line">  <span class='macro'>STRCPY(v-&gt;di_key, name)<span class='expansion'>strcpy((char *)(v-&gt;di_key), (char *)(name))</span></span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgControl" style="margin-left:3ex; max-width:100em"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Within the expansion of the macro 'STRCPY':
+</td></tr></table><div class="msg msgEvent" style="width:94%; margin-left:5px"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">a</div></td><td valign="top">String copy function overflows destination buffer</td></tr></table></div>
+</div></td></tr>
 <tr><td class="num" id="LN18672">18672</td><td class="line">  v-&gt;di_flags = <span class='macro'>DI_FLAGS_RO<span class='expansion'>1</span></span> | <span class='macro'>DI_FLAGS_FIX<span class='expansion'>4</span></span>;</td></tr>
 <tr><td class="num" id="LN18673">18673</td><td class="line">  hash_add(&amp;dp-&gt;dv_hashtab, <span class='macro'>DI2HIKEY(v)<span class='expansion'>((v)-&gt;di_key)</span></span>);</td></tr>
 <tr><td class="num" id="LN18674">18674</td><td class="line">  v-&gt;di_tv.v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
@@ -19640,7 +19630,7 @@
 <tr><td class="num" id="LN19531">19531</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_data(RStream *rstream, <span class='keyword'>void</span> *data, <span class='macro'>bool<span class='expansion'>_Bool</span></span> eof, <span class='keyword'>char</span> *type)</td></tr>
 <tr><td class="num" id="LN19532">19532</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN19533">19533</td><td class="line">  Job *job = data;</td></tr>
-<tr><td class="num" id="LN19534">19534</td><td class="line">  uint32_t read_count = rstream_available(rstream);</td></tr>
+<tr><td class="num" id="LN19534">19534</td><td class="line">  uint32_t read_count = rstream_pending(rstream);</td></tr>
 <tr><td class="num" id="LN19535">19535</td><td class="line">  <span class='keyword'>char</span> *str = xmalloc(read_count + 1);</td></tr>
 <tr><td class="num" id="LN19536">19536</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19537">19537</td><td class="line">  rstream_read(rstream, str, read_count);</td></tr>

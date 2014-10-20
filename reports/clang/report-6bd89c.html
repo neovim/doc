@@ -54,9 +54,9 @@
 </style>
 </head>
 <body>
-<!-- BUGDESC String copy function overflows destination buffer -->
+<!-- BUGDESC Access to field 'v_type' results in a dereference of a null pointer (loaded from field 'rettv') -->
 
-<!-- BUGTYPE Out-of-bound array access -->
+<!-- BUGTYPE Dereference of null pointer -->
 
 <!-- BUGCATEGORY Logic error -->
 
@@ -64,21 +64,21 @@
 
 <!-- FILENAME eval.c -->
 
-<!-- FUNCTIONNAME dictitem_alloc -->
+<!-- FUNCTIONNAME do_return -->
 
-<!-- BUGLINE 5693 -->
+<!-- BUGLINE 18775 -->
 
-<!-- BUGCOLUMN 3 -->
+<!-- BUGCOLUMN 40 -->
 
-<!-- BUGPATHLENGTH 3 -->
+<!-- BUGPATHLENGTH 10 -->
 
 <!-- BUGMETAEND -->
 <!-- REPORTHEADER -->
 <h3>Bug Summary</h3>
 <table class="simpletable">
 <tr><td class="rowname">File:</td><td>eval.c</td></tr>
-<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 5693, column 3</a></td></tr>
-<tr><td class="rowname">Description:</td><td>String copy function overflows destination buffer</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 18775, column 40</a></td></tr>
+<tr><td class="rowname">Description:</td><td>Access to field 'v_type' results in a dereference of a null pointer (loaded from field 'rettv')</td></tr>
 </table>
 <!-- REPORTSUMMARYEXTRA -->
 <h3>Annotated Source Code</h3>
@@ -5776,9 +5776,6 @@
 <tr><td class="num" id="LN5691">5691</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN5692">5692</td><td class="line">  dictitem_T *di = xmalloc(<span class='keyword'>sizeof</span>(dictitem_T) + <span class='macro'>STRLEN(key)<span class='expansion'>strlen((char *)(key))</span></span>);</td></tr>
 <tr><td class="num" id="LN5693">5693</td><td class="line">  <span class='macro'>STRCPY(di-&gt;di_key, key)<span class='expansion'>strcpy((char *)(di-&gt;di_key), (char *)(key))</span></span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgControl" style="margin-left:3ex; max-width:100em"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Within the expansion of the macro 'STRCPY':
-</td></tr></table><div class="msg msgEvent" style="width:94%; margin-left:5px"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">a</div></td><td valign="top">String copy function overflows destination buffer</td></tr></table></div>
-</div></td></tr>
 <tr><td class="num" id="LN5694">5694</td><td class="line">  di-&gt;di_flags = 0;</td></tr>
 <tr><td class="num" id="LN5695">5695</td><td class="line">  <span class='keyword'>return</span> di;</td></tr>
 <tr><td class="num" id="LN5696">5696</td><td class="line">}</td></tr>
@@ -5891,8 +5888,7 @@
 <tr><td class="num" id="LN5803">5803</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN5804">5804</td><td class="line">  dictitem_T  *item;</td></tr>
 <tr><td class="num" id="LN5805">5805</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5806">5806</td><td class="line">  item = <span class="mrange">dictitem_alloc((char_u *)key)</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgEvent" style="margin-left:10ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>Calling 'dictitem_alloc'</td><td><div class="PathNav"><a href="#EndPath" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN5806">5806</td><td class="line">  item = dictitem_alloc((char_u *)key);</td></tr>
 <tr><td class="num" id="LN5807">5807</td><td class="line">  item-&gt;di_tv.v_lock = 0;</td></tr>
 <tr><td class="num" id="LN5808">5808</td><td class="line">  <span class='keyword'>if</span> (str == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
 <tr><td class="num" id="LN5809">5809</td><td class="line">    item-&gt;di_tv.v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
@@ -15181,8 +15177,7 @@
 <tr><td class="num" id="LN15086">15086</td><td class="line">  rettv_dict_alloc(rettv);</td></tr>
 <tr><td class="num" id="LN15087">15087</td><td class="line">  dict = rettv-&gt;vval.v_dict;</td></tr>
 <tr><td class="num" id="LN15088">15088</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN15089">15089</td><td class="line">  <span class="mrange">dict_add_nr_str(dict, <span class='string_literal'>"lnum"</span>, (<span class='keyword'>long</span>)curwin-&gt;w_cursor.lnum, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>Calling 'dict_add_nr_str'</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN15089">15089</td><td class="line">  dict_add_nr_str(dict, <span class='string_literal'>"lnum"</span>, (<span class='keyword'>long</span>)curwin-&gt;w_cursor.lnum, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
 <tr><td class="num" id="LN15090">15090</td><td class="line">  dict_add_nr_str(dict, <span class='string_literal'>"col"</span>, (<span class='keyword'>long</span>)curwin-&gt;w_cursor.col, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
 <tr><td class="num" id="LN15091">15091</td><td class="line">  dict_add_nr_str(dict, <span class='string_literal'>"coladd"</span>, (<span class='keyword'>long</span>)curwin-&gt;w_cursor.coladd, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
 <tr><td class="num" id="LN15092">15092</td><td class="line">  update_curswant();</td></tr>
@@ -18832,7 +18827,9 @@
 <tr><td class="num" id="LN18736">18736</td><td class="line">  <span class='keyword'>int</span> idx;</td></tr>
 <tr><td class="num" id="LN18737">18737</td><td class="line">  <span class='keyword'>struct</span> condstack *cstack = eap-&gt;cstack;</td></tr>
 <tr><td class="num" id="LN18738">18738</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN18739">18739</td><td class="line">  <span class='keyword'>if</span> (reanimate)</td></tr>
+<tr><td class="num" id="LN18739">18739</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">reanimate</span>)</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>Assuming 'reanimate' is not equal to 0</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18740">18740</td><td class="line">    <span class='comment'>/* Undo the return. */</span></td></tr>
 <tr><td class="num" id="LN18741">18741</td><td class="line">    current_funccal-&gt;returned = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
 <tr><td class="num" id="LN18742">18742</td><td class="line"> </td></tr>
@@ -18843,10 +18840,13 @@
 <tr><td class="num" id="LN18747">18747</td><td class="line">   <span class='comment'>* Otherwise, return normally.</span></td></tr>
 <tr><td class="num" id="LN18748">18748</td><td class="line">   <span class='comment'>*/</span></td></tr>
 <tr><td class="num" id="LN18749">18749</td><td class="line">  idx = cleanup_conditionals(eap-&gt;cstack, 0, <span class='macro'>TRUE<span class='expansion'>1</span></span>);</td></tr>
-<tr><td class="num" id="LN18750">18750</td><td class="line">  <span class='keyword'>if</span> (idx &gt;= 0) {</td></tr>
+<tr><td class="num" id="LN18750">18750</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">idx &gt;= 0</span>) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Assuming 'idx' is &gt;= 0</td><td><div class="PathNav"><a href="#Path4" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path4" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path5" title="Next event (5)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18751">18751</td><td class="line">    cstack-&gt;cs_pending[idx] = <span class='macro'>CSTP_RETURN<span class='expansion'>24</span></span>;</td></tr>
 <tr><td class="num" id="LN18752">18752</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN18753">18753</td><td class="line">    <span class='keyword'>if</span> (!is_cmd &amp;&amp; !reanimate)</td></tr>
+<tr><td class="num" id="LN18753">18753</td><td class="line">    <span class='keyword'>if</span> (<span class="mrange">!is_cmd</span> &amp;&amp; !reanimate)</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path5" class="msg msgEvent" style="margin-left:9ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">5</div></td><td><div class="PathNav"><a href="#Path4" title="Previous event (4)">&#x2190;</a></div></td></td><td>Assuming 'is_cmd' is not equal to 0</td><td><div class="PathNav"><a href="#Path6" title="Next event (6)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18754">18754</td><td class="line">      <span class='comment'>/* A pending return again gets pending.  "rettv" points to an</span></td></tr>
 <tr><td class="num" id="LN18755">18755</td><td class="line">       <span class='comment'>* allocated variable with the rettv of the original ":return"'s</span></td></tr>
 <tr><td class="num" id="LN18756">18756</td><td class="line">       <span class='comment'>* argument if present or is NULL else. */</span></td></tr>
@@ -18855,9 +18855,12 @@
 <tr><td class="num" id="LN18759">18759</td><td class="line">      <span class='comment'>/* When undoing a return in order to make it pending, get the stored</span></td></tr>
 <tr><td class="num" id="LN18760">18760</td><td class="line">       <span class='comment'>* return rettv. */</span></td></tr>
 <tr><td class="num" id="LN18761">18761</td><td class="line">      <span class='keyword'>if</span> (reanimate)</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path7" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18762">18762</td><td class="line">        rettv = current_funccal-&gt;rettv;</td></tr>
 <tr><td class="num" id="LN18763">18763</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN18764">18764</td><td class="line">      <span class='keyword'>if</span> (rettv != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN18764">18764</td><td class="line">      <span class='keyword'>if</span> (<span class="mrange">rettv != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path7" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Assuming 'rettv' is equal to null</td><td><div class="PathNav"><a href="#Path8" title="Next event (8)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path8" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">8</div></td><td><div class="PathNav"><a href="#Path7" title="Previous event (7)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path9" title="Next event (9)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18765">18765</td><td class="line">        <span class='comment'>/* Store the value of the pending return. */</span></td></tr>
 <tr><td class="num" id="LN18766">18766</td><td class="line">        cstack-&gt;<span class='macro'>cs_rettv<span class='expansion'>cs_pend.csp_rv</span></span>[idx] = xcalloc(1, <span class='keyword'>sizeof</span>(typval_T));</td></tr>
 <tr><td class="num" id="LN18767">18767</td><td class="line">        *(typval_T *)cstack-&gt;<span class='macro'>cs_rettv<span class='expansion'>cs_pend.csp_rv</span></span>[idx] = *(typval_T *)rettv;</td></tr>
@@ -18865,10 +18868,12 @@
 <tr><td class="num" id="LN18769">18769</td><td class="line">        cstack-&gt;<span class='macro'>cs_rettv<span class='expansion'>cs_pend.csp_rv</span></span>[idx] = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
 <tr><td class="num" id="LN18770">18770</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN18771">18771</td><td class="line">      <span class='keyword'>if</span> (reanimate) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path9" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">9</div></td><td><div class="PathNav"><a href="#Path8" title="Previous event (8)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#EndPath" title="Next event (10)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18772">18772</td><td class="line">        <span class='comment'>/* The pending return value could be overwritten by a ":return"</span></td></tr>
 <tr><td class="num" id="LN18773">18773</td><td class="line">         <span class='comment'>* without argument in a finally clause; reset the default</span></td></tr>
 <tr><td class="num" id="LN18774">18774</td><td class="line">         <span class='comment'>* return value. */</span></td></tr>
-<tr><td class="num" id="LN18775">18775</td><td class="line">        current_funccal-&gt;rettv-&gt;v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN18775">18775</td><td class="line">        current_funccal-&gt;<span class="mrange">rettv</span>-&gt;v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:40ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">10</div></td><td><div class="PathNav"><a href="#Path9" title="Previous event (9)">&#x2190;</a></div></td></td><td>Access to field 'v_type' results in a dereference of a null pointer (loaded from field 'rettv')</td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18776">18776</td><td class="line">        current_funccal-&gt;rettv-&gt;vval.v_number = 0;</td></tr>
 <tr><td class="num" id="LN18777">18777</td><td class="line">      }</td></tr>
 <tr><td class="num" id="LN18778">18778</td><td class="line">    }</td></tr>
@@ -19627,7 +19632,7 @@
 <tr><td class="num" id="LN19531">19531</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_data(RStream *rstream, <span class='keyword'>void</span> *data, <span class='macro'>bool<span class='expansion'>_Bool</span></span> eof, <span class='keyword'>char</span> *type)</td></tr>
 <tr><td class="num" id="LN19532">19532</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN19533">19533</td><td class="line">  Job *job = data;</td></tr>
-<tr><td class="num" id="LN19534">19534</td><td class="line">  uint32_t read_count = rstream_available(rstream);</td></tr>
+<tr><td class="num" id="LN19534">19534</td><td class="line">  uint32_t read_count = rstream_pending(rstream);</td></tr>
 <tr><td class="num" id="LN19535">19535</td><td class="line">  <span class='keyword'>char</span> *str = xmalloc(read_count + 1);</td></tr>
 <tr><td class="num" id="LN19536">19536</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19537">19537</td><td class="line">  rstream_read(rstream, str, read_count);</td></tr>
