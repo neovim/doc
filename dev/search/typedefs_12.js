@@ -8,7 +8,6 @@ var searchData=
   ['scid_5ft',['scid_T',['../buffer__defs_8h.html#a02a5ed8479635618fa379378a5f8d6d5',1,'buffer_defs.h']]],
   ['scriptitem_5ft',['scriptitem_T',['../ex__cmds2_8c.html#acb1d485a414b0b4d84ec8b20c526acad',1,'ex_cmds2.c']]],
   ['searchedfile',['SearchedFile',['../search_8c.html#a2fcd96a0beb2d947171bcf8ebffb87a4',1,'search.c']]],
-  ['server',['Server',['../server__defs_8h.html#acb0b91c45f34e1d83499697a5768390f',1,'server_defs.h']]],
   ['sign_5ft',['sign_T',['../ex__cmds_8c.html#af0c910ae834bec37338dae02ac4c7589',1,'ex_cmds.c']]],
   ['signlist_5ft',['signlist_T',['../sign__defs_8h.html#a89a3f2e87cf98ea581d6b3ce13d1eee3',1,'sign_defs.h']]],
   ['slang_5ft',['slang_T',['../spell_8c.html#ab2faeac90ba2995685daafe62cfadedd',1,'spell.c']]],

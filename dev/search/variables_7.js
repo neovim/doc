@@ -2,6 +2,7 @@ var searchData=
 [
   ['had_5fend',['had_end',['../structfline__T.html#aedb89fcc1de49ae6951f7136e2707cb2',1,'fline_T']]],
   ['handle',['handle',['../structfile__buffer.html#afb27b9e42e832e9261136eebc0d96b31',1,'file_buffer::handle()'],['../structtabpage__S.html#ad51bd9e4c068a73d392ea47a501cc928',1,'tabpage_S::handle()'],['../structwindow__S.html#af82c489d14dea5e4a45e39e0c5128249',1,'window_S::handle()'],['../structServer.html#a4842ef0487cb93581dc4ac53125fc624',1,'Server::handle()'],['../structServer.html#a5433c287c6b85d21218118807214bdfe',1,'Server::handle()']]],
+  ['handler',['handler',['../structRequestEvent.html#a51d1a50e19b9cd4a52403451aeb491c3',1,'RequestEvent::handler()'],['../structevent.html#a681e506fa1d9f3ba1397cf8f09bd5c9f',1,'event::handler()']]],
   ['has_5fbackref',['has_backref',['../structnfa__regprog__T.html#a0a286f0ebd43d8c581b55710387299a5',1,'nfa_regprog_T']]],
   ['has_5fcharset',['has_charset',['../structprt__ps__charset__S.html#a96b9c011831053cbb754148c88b7d326',1,'prt_ps_charset_S']]],
   ['has_5fcolor',['has_color',['../structprt__settings__T.html#a801a0dc76a2b76cd58cd5c3d8cce7ccc',1,'prt_settings_T']]],

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['object_5fto_5fvim',['object_to_vim',['../helpers_8c.html#abe64b4c0b101d1f795c66782546b5c1a',1,'helpers.c']]],
+  ['object_5fto_5fvim',['object_to_vim',['../api_2private_2helpers_8c.html#abe64b4c0b101d1f795c66782546b5c1a',1,'helpers.c']]],
   ['one_5fwindow',['one_window',['../window_8c.html#ae1af7f7c24e42c149874641778077839',1,'window.c']]],
   ['oneleft',['oneleft',['../edit_8c.html#a1b3dae7ee76c31f0525930c421487f90',1,'edit.c']]],
   ['onepage',['onepage',['../move_8c.html#a56f6d7a5ad408f32065c6a12abc6f4a1',1,'move.c']]],
@@ -60,7 +60,7 @@ var searchData=
   ['os_5fgetenvname_5fat_5findex',['os_getenvname_at_index',['../env_8c.html#abddd3176c180dbdaff431800c9200217',1,'env.c']]],
   ['os_5fgetperm',['os_getperm',['../fs_8c.html#ab38ea953f604e136244dbc8f3dc59a1f',1,'fs.c']]],
   ['os_5fhrtime',['os_hrtime',['../time_8c.html#a5dc0d405646057bf57777bda3603fd91',1,'time.c']]],
-  ['os_5finchar',['os_inchar',['../input_8c.html#a79a2894105dace6c66b203c4dc1907c1',1,'input.c']]],
+  ['os_5finchar',['os_inchar',['../input_8c.html#a7fb3e7139bad17693930f4806f591e76',1,'input.c']]],
   ['os_5fisatty',['os_isatty',['../input_8c.html#ac6af798928664831c1bf6714bca71363',1,'input.c']]],
   ['os_5fisdir',['os_isdir',['../fs_8c.html#a9c3eecae1739d5b55de57a5dc29479ca',1,'fs.c']]],
   ['os_5flibcall',['os_libcall',['../dl_8c.html#a0a9bca0f32738e8f7c04a0f0837f0dcf',1,'dl.c']]],

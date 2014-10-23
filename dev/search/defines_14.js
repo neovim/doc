@@ -59,7 +59,7 @@ var searchData=
   ['t_5fvs',['T_VS',['../term__defs_8h.html#a873395b66c5ef9cea84b025f901a0a88',1,'term_defs.h']]],
   ['t_5fxs',['T_XS',['../term__defs_8h.html#ab96eea81e4cc02dd71be462ff4899401',1,'term_defs.h']]],
   ['tab',['TAB',['../ascii_8h.html#ad58a1fbfc85c7e4790fc55e654f50221',1,'ascii.h']]],
-  ['tabpage_5fobj',['TABPAGE_OBJ',['../helpers_8h.html#a8a6daed7b2d7e5359a29a9ee7919b0df',1,'helpers.h']]],
+  ['tabpage_5fobj',['TABPAGE_OBJ',['../api_2private_2helpers_8h.html#a8a6daed7b2d7e5359a29a9ee7919b0df',1,'helpers.h']]],
   ['tag_5fcscope',['TAG_CSCOPE',['../tag_8h.html#a2dfae06c8e726b8d375b28b10cea5910',1,'tag.h']]],
   ['tag_5fhelp',['TAG_HELP',['../tag_8h.html#a53574a63bb08d5c79e7f583b0d937505',1,'tag.h']]],
   ['tag_5fins_5fcomp',['TAG_INS_COMP',['../tag_8h.html#ae6d7091ad96f5998269457722433df7f',1,'tag.h']]],

@@ -96,7 +96,7 @@ var searchData=
   ['inschar_5fformat',['INSCHAR_FORMAT',['../edit_8h.html#ada6f5a726ec52d465cc694910bc36334',1,'edit.h']]],
   ['inschar_5fno_5ffex',['INSCHAR_NO_FEX',['../edit_8h.html#a29598f1912a9b189d023515ec114950a',1,'edit.h']]],
   ['insert',['INSERT',['../vim_8h.html#a9cec4693931a816d4ad374c3a00e0dae',1,'vim.h']]],
-  ['integer_5fobj',['INTEGER_OBJ',['../helpers_8h.html#ab744c3793bd5c8ef48c1893ac48e1f8b',1,'helpers.h']]],
+  ['integer_5fobj',['INTEGER_OBJ',['../api_2private_2helpers_8h.html#ab744c3793bd5c8ef48c1893ac48e1f8b',1,'helpers.h']]],
   ['invalid_5fstate',['INVALID_STATE',['../syntax_8c.html#aee822b60cf29df9b013487aacc409897',1,'syntax.c']]],
   ['inverted',['INVERTED',['../screen_8h.html#ab05995eec69c22f9170313d727c35788',1,'screen.h']]],
   ['inverted_5fall',['INVERTED_ALL',['../screen_8h.html#aa529a8f28d6bea4f6d0efb6d27ad7097',1,'screen.h']]],

@@ -18,7 +18,7 @@ var searchData=
   ['nfa_5fpim_5funused',['NFA_PIM_UNUSED',['../regexp__nfa_8c.html#a1aae1c5ea429062c94f1f792ead7a3c4',1,'regexp_nfa.c']]],
   ['nhead',['NHEAD',['../regexp_8c.html#aa72954cb3acd1a50163440e792139edb',1,'regexp.c']]],
   ['nhex',['NHEX',['../regexp_8c.html#a8aee802d2acc7eeb8d23f5e84a6d7a70',1,'regexp.c']]],
-  ['nil',['NIL',['../helpers_8h.html#a263efce0e5cda1d387a1a43f94715445',1,'helpers.h']]],
+  ['nil',['NIL',['../api_2private_2helpers_8h.html#a263efce0e5cda1d387a1a43f94715445',1,'helpers.h']]],
   ['nl',['NL',['../ascii_8h.html#a4fc34b120ed3bd1120c1eb36abbcd6af',1,'ascii.h']]],
   ['nl_5fstr',['NL_STR',['../ascii_8h.html#a59fb4e32d297f7a8fea023375f143330',1,'ascii.h']]],
   ['nlower',['NLOWER',['../regexp_8c.html#af31c375f11fe6faec21b75e638fad7bc',1,'regexp.c']]],

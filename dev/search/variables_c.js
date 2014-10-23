@@ -102,12 +102,12 @@ var searchData=
   ['motion_5ftype',['motion_type',['../structoparg__S.html#a297a5162c8e7897949199f11ef7e4573',1,'oparg_S']]],
   ['mouse_5fcol',['mouse_col',['../globals_8h.html#a92f686072574b4d5748baee8b430f53d',1,'globals.h']]],
   ['mouse_5frow',['mouse_row',['../globals_8h.html#ac2e09843f59a705f5e1b2a83080fbf45',1,'globals.h']]],
-  ['ms',['ms',['../structTimerData.html#ab991eb6facd9e2c605fada74d5e836e3',1,'TimerData']]],
+  ['ms',['ms',['../structTimerData.html#a8761efeeb4f565abd3a637bb1f8f0dbf',1,'TimerData']]],
   ['msg',['msg',['../structError.html#a012d5a13fc047cfb6da9616bbdf463f1',1,'Error::msg()'],['../structmsglist.html#ac8341db39c8dc65be756be2c67b2b9fc',1,'msglist::msg()'],['../structmsg__hist.html#a22426b9b62f3448b50af0fda1ef41774',1,'msg_hist::msg()']]],
   ['msg_5fbuf',['msg_buf',['../globals_8h.html#abf237fcb55f45d33b653f64b15f97dd1',1,'globals.h']]],
   ['msg_5fcol',['msg_col',['../globals_8h.html#aeca5747830fc5511b00793cde06f61f5',1,'globals.h']]],
   ['msg_5frow',['msg_row',['../globals_8h.html#a376f82c59d5c5bf72c5bc753f7554128',1,'globals.h']]],
   ['msg_5fscrolled',['msg_scrolled',['../globals_8h.html#a0b03bc5fdd1ab38b00bf9264b8c7275b',1,'globals.h']]],
   ['mshape',['mshape',['../structcursor__entry.html#af618354b5410e23249775766ce5f94d3',1,'cursor_entry']]],
-  ['multi',['multi',['../structregsub__T.html#a434276b305e89425997c2959e2bab570',1,'regsub_T']]]
+  ['multi',['multi',['../structregsub__T.html#a97fff15a7acefaf5b93f46681f547b42',1,'regsub_T']]]
 ];

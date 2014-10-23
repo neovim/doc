@@ -12,5 +12,6 @@ var searchData=
   ['regstar_5fs',['regstar_S',['../structregstar__S.html',1,'']]],
   ['regsub_5ft',['regsub_T',['../structregsub__T.html',1,'']]],
   ['regsubs_5ft',['regsubs_T',['../structregsubs__T.html',1,'']]],
+  ['requestevent',['RequestEvent',['../structRequestEvent.html',1,'']]],
   ['rstream',['rstream',['../structrstream.html',1,'']]]
 ];

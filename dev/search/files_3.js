@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['defs_2eh',['defs.h',['../defs_8h.html',1,'']]],
+  ['defs_2eh',['defs.h',['../api_2private_2defs_8h.html',1,'']]],
+  ['defs_2eh',['defs.h',['../msgpack__rpc_2defs_8h.html',1,'']]],
   ['diff_2ec',['diff.c',['../diff_8c.html',1,'']]],
   ['diff_2eh',['diff.h',['../diff_8h.html',1,'']]],
   ['digraph_2ec',['digraph.c',['../digraph_8c.html',1,'']]],

@@ -85,7 +85,7 @@ var searchData=
   ['get_5fnumber_5findent',['get_number_indent',['../indent_8c.html#aa88fccc085dcb79b0619af2ec6565d51',1,'indent.c']]],
   ['get_5fop_5fchar',['get_op_char',['../ops_8c.html#a042ef94ac98878cd714e05374107d2b3',1,'ops.c']]],
   ['get_5fop_5ftype',['get_op_type',['../ops_8c.html#afc81bbd720ef36f0116b532ca8f02fd8',1,'ops.c']]],
-  ['get_5foption_5ffrom',['get_option_from',['../helpers_8c.html#a9412f213e6650e28f331360e4c71aec8',1,'helpers.c']]],
+  ['get_5foption_5ffrom',['get_option_from',['../api_2private_2helpers_8c.html#a9412f213e6650e28f331360e4c71aec8',1,'helpers.c']]],
   ['get_5foption_5fvalue',['get_option_value',['../option_8c.html#ab2d5c983e65f84faa64a27e09377f6cc',1,'option.c']]],
   ['get_5foption_5fvalue_5fstrict',['get_option_value_strict',['../option_8c.html#ac03f19d93786f76478cec3657390d0a6',1,'option.c']]],
   ['get_5fpast_5fhead',['get_past_head',['../path_8c.html#a722fc44c1b4c4f00e0a92cd2f50969a4',1,'path.c']]],

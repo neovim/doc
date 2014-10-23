@@ -13,5 +13,6 @@ var searchData=
   ['mparm_5ft',['mparm_T',['../structmparm__T.html',1,'']]],
   ['msg_5fhist',['msg_hist',['../structmsg__hist.html',1,'']]],
   ['msgchunk_5fs',['msgchunk_S',['../structmsgchunk__S.html',1,'']]],
-  ['msglist',['msglist',['../structmsglist.html',1,'']]]
+  ['msglist',['msglist',['../structmsglist.html',1,'']]],
+  ['msgpackrpcrequesthandler',['MsgpackRpcRequestHandler',['../structMsgpackRpcRequestHandler.html',1,'']]]
 ];

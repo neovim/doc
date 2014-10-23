@@ -29,9 +29,5 @@ var searchData=
   ['misc2_2ec',['misc2.c',['../misc2_8c.html',1,'']]],
   ['misc2_2eh',['misc2.h',['../misc2_8h.html',1,'']]],
   ['move_2ec',['move.c',['../move_8c.html',1,'']]],
-  ['move_2eh',['move.h',['../move_8h.html',1,'']]],
-  ['msgpack_5frpc_2ec',['msgpack_rpc.c',['../msgpack__rpc_8c.html',1,'']]],
-  ['msgpack_5frpc_2eh',['msgpack_rpc.h',['../msgpack__rpc_8h.html',1,'']]],
-  ['msgpack_5frpc_5fhelpers_2ec',['msgpack_rpc_helpers.c',['../msgpack__rpc__helpers_8c.html',1,'']]],
-  ['msgpack_5frpc_5fhelpers_2eh',['msgpack_rpc_helpers.h',['../msgpack__rpc__helpers_8h.html',1,'']]]
+  ['move_2eh',['move.h',['../move_8h.html',1,'']]]
 ];

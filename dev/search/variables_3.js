@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['data',['data',['../structString.html#aac3cd44be218d486e9fe9ecb08662752',1,'String::data()'],['../structobject.html#a4f7540178c8343c0c89a1fcf399b5292',1,'object::data()'],['../structChannel.html#a111fee74ec428fb52eb580d7d722848d',1,'Channel::data()'],['../structEvent.html#af78d46fb50f785a5deb89c9fce35de80',1,'Event::data()'],['../structjob.html#a23916c5141ae6ff4d34281f3d0d334bf',1,'job::data()'],['../structrbuffer.html#a10341d501eedbece575464827104e519',1,'rbuffer::data()'],['../structrstream.html#a812c0b0f25665a469257fada652897fb',1,'rstream::data()'],['../structdyn__buffer__t.html#a469440d1943c09bb8b1ec72b1d759a45',1,'dyn_buffer_t::data()'],['../structwstream.html#a8368548ec85277ca76a628f6ffcfe9cd',1,'wstream::data()'],['../structwbuffer.html#a38d305068d35e90c926112dde6f4d86a',1,'wbuffer::data()']]],
+  ['data',['data',['../structString.html#aac3cd44be218d486e9fe9ecb08662752',1,'String::data()'],['../structobject.html#a4f7540178c8343c0c89a1fcf399b5292',1,'object::data()'],['../structChannel.html#a111fee74ec428fb52eb580d7d722848d',1,'Channel::data()'],['../structevent.html#a675355462c32d49a652673799ca24209',1,'event::data()'],['../structjob.html#a23916c5141ae6ff4d34281f3d0d334bf',1,'job::data()'],['../structrbuffer.html#a10341d501eedbece575464827104e519',1,'rbuffer::data()'],['../structrstream.html#a812c0b0f25665a469257fada652897fb',1,'rstream::data()'],['../structdyn__buffer__t.html#a469440d1943c09bb8b1ec72b1d759a45',1,'dyn_buffer_t::data()'],['../structwstream.html#a8368548ec85277ca76a628f6ffcfe9cd',1,'wstream::data()'],['../structwbuffer.html#a38d305068d35e90c926112dde6f4d86a',1,'wbuffer::data()']]],
   ['db_5ffree',['db_free',['../structdata__block.html#a6cd7e5186f74ae199fe547bc905b2815',1,'data_block']]],
   ['db_5fid',['db_id',['../structdata__block.html#a596a9c11151f8e17fe90e529d49c4ab5',1,'data_block']]],
   ['db_5findex',['db_index',['../structdata__block.html#adabe377b570a28633cdd9b9ce5e77cab',1,'data_block']]],
@@ -16,6 +16,7 @@ var searchData=
   ['dbg_5ftype',['dbg_type',['../structdebuggy.html#aa4bc8475c49604edc3da0b1bdd7cb626',1,'debuggy']]],
   ['def_5fval',['def_val',['../structvimoption.html#a02080f31d3828e1dc17c7c302f530ae3',1,'vimoption']]],
   ['defcs',['defcs',['../structprt__ps__mbfont__S.html#ad77571933a5b85451fc7e170ae234fee',1,'prt_ps_mbfont_S']]],
+  ['defer',['defer',['../structMsgpackRpcRequestHandler.html#a87047a4a6c5adab7dce7ce2c430506a4',1,'MsgpackRpcRequestHandler']]],
   ['df_5fcount',['df_count',['../structdiffblock__S.html#a6938c69f7e8e19010a770057e65d0435',1,'diffblock_S']]],
   ['df_5flnum',['df_lnum',['../structdiffblock__S.html#a82f970d5ad78238ad763c9d8a4383626',1,'diffblock_S']]],
   ['df_5fnext',['df_next',['../structdiffblock__S.html#aefdb1f7cdeacf248226030fc73acf504',1,'diffblock_S']]],

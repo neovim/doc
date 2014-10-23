@@ -23,11 +23,11 @@ var searchData=
   ['regsave',['regsave',['../structregitem__S.html#a0a10c7b2a44c67f4831a9c13960a1412',1,'regitem_S']]],
   ['regstart',['regstart',['../structbt__regprog__T.html#aaf52833a86c2b509bef79d8b404cd64e',1,'bt_regprog_T::regstart()'],['../structnfa__regprog__T.html#a874dbbd58182a4060862ca5122faf309',1,'nfa_regprog_T::regstart()']]],
   ['repeating',['repeating',['../structloop__cookie.html#a1be7e25dac4cdf92f8f79a13c89ba646',1,'loop_cookie']]],
-  ['request_5fid',['request_id',['../structChannelCallFrame.html#aa2bbc079f2d900a9c2cd54279a9d2e11',1,'ChannelCallFrame']]],
+  ['request_5fid',['request_id',['../structChannelCallFrame.html#aa2bbc079f2d900a9c2cd54279a9d2e11',1,'ChannelCallFrame::request_id()'],['../structRequestEvent.html#a1cfc1b2a81dd3c152ac7a3c0a6acce79',1,'RequestEvent::request_id()']]],
   ['result',['result',['../structdigraph.html#a1e6bb77cc1aafbc93ddcb132a277b30e',1,'digraph::result()'],['../structChannelCallFrame.html#a7cc6ce39205fa2ec49cda8db9c894a49',1,'ChannelCallFrame::result()'],['../structnfa__pim__S.html#a2c8eed5764c867230eb9dff062fbb460',1,'nfa_pim_S::result()']]],
   ['ret',['ret',['../memory_8c.html#a339672ff94e6199019102f50d317c3d7',1,'memory.c']]],
   ['rettv',['rettv',['../structfunccall__S.html#a9fb20a0b0dbcddd5f93d7be7e19d67b8',1,'funccall_S']]],
-  ['returned',['returned',['../structfunccall__S.html#acd1553758ad1dc65721cccdb29c1ad24',1,'funccall_S']]],
+  ['returned',['returned',['../structfunccall__S.html#acd1553758ad1dc65721cccdb29c1ad24',1,'funccall_S::returned()'],['../structChannelCallFrame.html#a7327f557b0e29ef298f1e4e40b8c422e',1,'ChannelCallFrame::returned()']]],
   ['retval',['retval',['../structcmdarg__S.html#a17a9d4e34d1059f4839dc9ddf80cae47',1,'cmdarg_S']]],
   ['rm',['rm',['../structmatch__T.html#a01b62c468976bcb633439de76fe11596',1,'match_T']]],
   ['rm_5fic',['rm_ic',['../structregmatch__T.html#afbc416ec7a624c1328c2ff29d8522764',1,'regmatch_T']]],
@@ -40,10 +40,10 @@ var searchData=
   ['rs_5fno',['rs_no',['../structregitem__S.html#aac8d53873b83742d43607298e7eb858b',1,'regitem_S']]],
   ['rs_5fscan',['rs_scan',['../structregitem__S.html#a38046a147ce25f4387bdb3e38b2514ef',1,'regitem_S']]],
   ['rs_5fstate',['rs_state',['../structregitem__S.html#ab28a5071e21a12f26ba1c9bc917b9604',1,'regitem_S']]],
-  ['rs_5fu',['rs_u',['../structregsave__T.html#a713f919ee5b5d494e55dd33722bee674',1,'regsave_T']]],
-  ['rs_5fun',['rs_un',['../structregitem__S.html#a4edf64bd88f2b8e3a27209b037aa5406',1,'regitem_S']]],
-  ['rstream',['rstream',['../structEvent.html#a1c383728dade14de621ccbc84f8943c2',1,'Event::rstream()'],['../structrbuffer.html#af2074f4f0c3cf36a044e8d08bb645d18',1,'rbuffer::rstream()'],['../structHandleData.html#a925ce4b5e7039d6eedb5d7da9b8fb65a',1,'HandleData::rstream()']]],
+  ['rs_5fu',['rs_u',['../structregsave__T.html#a60b632b44c29b78bf3508c63bb42c17d',1,'regsave_T']]],
+  ['rs_5fun',['rs_un',['../structregitem__S.html#a024f78cc7f421cffe1d2b03c72d194b8',1,'regitem_S']]],
+  ['rstream',['rstream',['../structJobEvent.html#a2972fea1b10c2e508cff0fc1ac31749a',1,'JobEvent::rstream()'],['../structrbuffer.html#af2074f4f0c3cf36a044e8d08bb645d18',1,'rbuffer::rstream()'],['../structHandleData.html#a925ce4b5e7039d6eedb5d7da9b8fb65a',1,'HandleData::rstream()']]],
   ['ru_5fcol',['ru_col',['../globals_8h.html#a52643f37faefff5ae72ca6ea328b4e5f',1,'globals.h']]],
   ['ru_5fwid',['ru_wid',['../globals_8h.html#a15ff3a4d1261883be5090ddce9c15507',1,'globals.h']]],
-  ['rv',['rv',['../msgpack__rpc_8c.html#a9dbb22e3510dddb1ebb576404a972e7d',1,'msgpack_rpc.c']]]
+  ['rv',['rv',['../msgpack__rpc_2helpers_8c.html#a9dbb22e3510dddb1ebb576404a972e7d',1,'helpers.c']]]
 ];

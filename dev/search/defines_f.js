@@ -2,8 +2,8 @@ var searchData=
 [
   ['o_5fnofollow',['O_NOFOLLOW',['../vim_8h.html#a82d4d551b214905742c9e045185d352a',1,'vim.h']]],
   ['o_5fnonblock',['O_NONBLOCK',['../eval_8c.html#a39d33ce33804efd4d52606d59071c6d8',1,'eval.c']]],
-  ['object_5finit',['OBJECT_INIT',['../defs_8h.html#adb292545e8d39ad1892f3b4c622935da',1,'defs.h']]],
-  ['object_5fobj',['OBJECT_OBJ',['../helpers_8h.html#a15ead2c26c4b19e7067e41b8e93942b2',1,'helpers.h']]],
+  ['object_5finit',['OBJECT_INIT',['../api_2private_2defs_8h.html#adb292545e8d39ad1892f3b4c622935da',1,'defs.h']]],
+  ['object_5fobj',['OBJECT_OBJ',['../api_2private_2helpers_8h.html#a15ead2c26c4b19e7067e41b8e93942b2',1,'helpers.h']]],
   ['octal',['OCTAL',['../regexp_8c.html#a5cd8b22af5187daa3d34709d3b516851',1,'regexp.c']]],
   ['ok',['OK',['../vim_8h.html#aba51915c87d64af47fb1cc59348961c9',1,'vim.h']]],
   ['one_5fadjust',['one_adjust',['../mark_8c.html#a505f2bd74454d227f19492588b5dd7ea',1,'mark.c']]],

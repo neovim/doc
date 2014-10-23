@@ -51,7 +51,7 @@ var searchData=
   ['dict_5fexact',['DICT_EXACT',['../edit_8c.html#af9229af3764f129992c9739f05f9492b',1,'edit.c']]],
   ['dict_5ffirst',['DICT_FIRST',['../edit_8c.html#a6a6ecacdbec3357a64a4bf7b4635da0d',1,'edit.c']]],
   ['dict_5fmaxnest',['DICT_MAXNEST',['../eval_8c.html#a6f2af55844aa386ba2670a3904c914f4',1,'eval.c']]],
-  ['dictionary_5fobj',['DICTIONARY_OBJ',['../helpers_8h.html#a8d3b7c599fd9bf7cd6fd053d3a26af6b',1,'helpers.h']]],
+  ['dictionary_5fobj',['DICTIONARY_OBJ',['../api_2private_2helpers_8h.html#a8d3b7c599fd9bf7cd6fd053d3a26af6b',1,'helpers.h']]],
   ['did_5ffold',['DID_FOLD',['../screen_8c.html#a49eef5a04eede6f6aa3be60f2075fcd8',1,'screen.c']]],
   ['did_5fline',['DID_LINE',['../screen_8c.html#a877598731e0fd114456c9e9cd9219992',1,'screen.c']]],
   ['did_5fnone',['DID_NONE',['../screen_8c.html#a86d1e5fe50bee5f144f2303f5f454026',1,'screen.c']]],
