@@ -8,8 +8,8 @@ require_environment_variable() {
   local variable_name="${1}"
   local variable_content="${!variable_name}"
   if [[ -z "${variable_content}" ]]; then
-    echo "${variable_name} not set at ${2}:${3}, cannot continue!"
-    echo "Maybe you need to source a script from ci/common."
+    >&2 echo "${variable_name} not set at ${2}:${3}, cannot continue!"
+    >&2 echo "Maybe you need to source a script from ci/common."
     exit 1
   fi
 }
