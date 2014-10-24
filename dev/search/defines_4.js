@@ -70,6 +70,7 @@ var searchData=
   ['dlg_5fbutton_5fsep',['DLG_BUTTON_SEP',['../message_8c.html#a1bc11dc0c0f87725aca8124169d055b7',1,'message.c']]],
   ['dlg_5fhotkey_5fchar',['DLG_HOTKEY_CHAR',['../message_8c.html#a67c03f89a81ebc93ee889736ca2f7c57',1,'message.c']]],
   ['dlog',['DLOG',['../log_8h.html#a87fe05eb8767a6b1abf71eea0bdcfcac',1,'log.h']]],
+  ['dlogn',['DLOGN',['../log_8h.html#a6c02857379d5dea6c2a034560525f83e',1,'log.h']]],
   ['do_5fnot_5ffree_5fcnt',['DO_NOT_FREE_CNT',['../eval_8c.html#aa1d8dd268f8a1c4ad4e614fd4faeed24',1,'eval.c']]],
   ['docmd_5fexcreset',['DOCMD_EXCRESET',['../ex__docmd_8h.html#a8358a46ed07c87872526939958064f37',1,'ex_docmd.h']]],
   ['docmd_5fkeepline',['DOCMD_KEEPLINE',['../ex__docmd_8h.html#a648ff4240ab6432d0d8e1f7c9a055077',1,'ex_docmd.h']]],

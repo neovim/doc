@@ -118,6 +118,7 @@ var searchData=
   ['wl_5fsign',['WL_SIGN',['../screen_8c.html#a9d2d0d04ab5e2b0db25697c0d7add1a3',1,'screen.c']]],
   ['wl_5fstart',['WL_START',['../screen_8c.html#a995214c1aab6918316425e2879e9e5b0',1,'screen.c']]],
   ['wlog',['WLOG',['../log_8h.html#a32648fc31390d09eaa0cc2ef0afeb02a',1,'WLOG():&#160;log.h'],['../log_8h.html#a32648fc31390d09eaa0cc2ef0afeb02a',1,'WLOG():&#160;log.h']]],
+  ['wlogn',['WLOGN',['../log_8h.html#a58fcf4ecd935a84d38c3f9ab35d1ceef',1,'WLOGN():&#160;log.h'],['../log_8h.html#a58fcf4ecd935a84d38c3f9ab35d1ceef',1,'WLOGN():&#160;log.h']]],
   ['wm_5fscrolled',['WM_SCROLLED',['../globals_8h.html#a2a311119e2d848806a3ad2f17feba266',1,'globals.h']]],
   ['wm_5fshown',['WM_SHOWN',['../globals_8h.html#a40172278fa59caa141401d2963b33627',1,'globals.h']]],
   ['wn_5fmask',['WN_MASK',['../spell_8c.html#a061df505ab059b1509934315033183fa',1,'spell.c']]],

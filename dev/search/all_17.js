@@ -310,6 +310,7 @@ var searchData=
   ['wl_5fvalid',['wl_valid',['../structw__line.html#ae61dd5597172f65f7e968506b3ac7c69',1,'w_line']]],
   ['wline_5ft',['wline_T',['../buffer__defs_8h.html#a09f14e54278aae2c075bbe94edaf03c5',1,'buffer_defs.h']]],
   ['wlog',['WLOG',['../log_8h.html#a32648fc31390d09eaa0cc2ef0afeb02a',1,'WLOG():&#160;log.h'],['../log_8h.html#a32648fc31390d09eaa0cc2ef0afeb02a',1,'WLOG():&#160;log.h']]],
+  ['wlogn',['WLOGN',['../log_8h.html#a58fcf4ecd935a84d38c3f9ab35d1ceef',1,'WLOGN():&#160;log.h'],['../log_8h.html#a58fcf4ecd935a84d38c3f9ab35d1ceef',1,'WLOGN():&#160;log.h']]],
   ['wm_5fscrolled',['WM_SCROLLED',['../globals_8h.html#a2a311119e2d848806a3ad2f17feba266',1,'globals.h']]],
   ['wm_5fshown',['WM_SHOWN',['../globals_8h.html#a40172278fa59caa141401d2963b33627',1,'globals.h']]],
   ['wn_5faffixid',['wn_affixID',['../structwordnode__S.html#ad3b4bed2db1c851c872447cb89630d8a',1,'wordnode_S']]],

@@ -15,6 +15,7 @@ var searchData=
   ['edit_5ftag',['EDIT_TAG',['../main_8c.html#ad39a27da051531238f13cf493c871d71',1,'main.c']]],
   ['editcmd',['EDITCMD',['../ex__cmds__defs_8h.html#a8099eb550a086735a84394a371a0f865',1,'ex_cmds_defs.h']]],
   ['elog',['ELOG',['../log_8h.html#a16e6a53bea50271aa28355f071f7df6b',1,'ELOG():&#160;log.h'],['../log_8h.html#a16e6a53bea50271aa28355f071f7df6b',1,'ELOG():&#160;log.h']]],
+  ['elogn',['ELOGN',['../log_8h.html#ab746e1658cc7fbecadd1690828a67ccb',1,'ELOGN():&#160;log.h'],['../log_8h.html#ab746e1658cc7fbecadd1690828a67ccb',1,'ELOGN():&#160;log.h']]],
   ['emit',['EMIT',['../regexp__nfa_8c.html#a12df4a05b25f0180775f178287b12a38',1,'regexp_nfa.c']]],
   ['emit2',['EMIT2',['../regexp__nfa_8c.html#a6bad37dfc0bf9f0e7bb133511145154c',1,'regexp_nfa.c']]],
   ['emitmbc',['EMITMBC',['../regexp__nfa_8c.html#a08c9f837f4463c021648c3559ecaae20',1,'regexp_nfa.c']]],

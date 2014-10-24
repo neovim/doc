@@ -39,6 +39,7 @@ var searchData=
   ['normal',['NORMAL',['../vim_8h.html#a1291f416b069313021b519eea62d5bf1',1,'vim.h']]],
   ['normal_5fbusy',['NORMAL_BUSY',['../vim_8h.html#ade5f59912a398a1654d2552aae4ae904',1,'vim.h']]],
   ['nospc',['NOSPC',['../ex__cmds__defs_8h.html#ad4d2c524e943e893c89a4c15a0f8ae73',1,'ex_cmds_defs.h']]],
+  ['not',['NOT',['../channel_8c.html#ad3e9fe0ec59d2dbb3982ababa042720c',1,'channel.c']]],
   ['not_5fmulti',['NOT_MULTI',['../regexp_8c.html#a2e0ab48b2dae9064b2d9a43786e53f13',1,'regexp.c']]],
   ['not_5fvalid',['NOT_VALID',['../screen_8h.html#a72695d31382ba5334881ad3407393642',1,'screen.h']]],
   ['notadr',['NOTADR',['../ex__cmds__defs_8h.html#ae4f31d453b1d6aeb3d479d94c3500288',1,'ex_cmds_defs.h']]],

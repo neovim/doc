@@ -47,8 +47,6 @@ var searchData=
   ['searchc',['searchc',['../search_8c.html#a92cb5954970c27bc5b476c23d04384ae',1,'search.c']]],
   ['searchit',['searchit',['../search_8c.html#a5faf5ecb453b03e5c3697a220fc4cf02',1,'search.c']]],
   ['separate_5fnextcmd',['separate_nextcmd',['../ex__docmd_8c.html#a29e59938a706f2ec860a11dfa2ccfe37',1,'ex_docmd.c']]],
-  ['serialize_5frequest',['serialize_request',['../msgpack__rpc_2helpers_8c.html#a3da8c1755e371fd2aaa9be156f423a11',1,'helpers.c']]],
-  ['serialize_5fresponse',['serialize_response',['../msgpack__rpc_2helpers_8c.html#a00cbe91d01991feb2c2dc1f49881c1ac',1,'helpers.c']]],
   ['server_5fstart',['server_start',['../server_8c.html#ab5360341724b9a1bbd4c723ad0d8e858',1,'server.c']]],
   ['server_5fstop',['server_stop',['../server_8c.html#ac6df478c3d9de74432a5be29d5e575ce',1,'server.c']]],
   ['server_5fteardown',['server_teardown',['../server_8c.html#a44b32b6967c04c49bdd07c799f7837af',1,'server.c']]],

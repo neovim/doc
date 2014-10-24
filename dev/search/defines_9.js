@@ -68,6 +68,7 @@ var searchData=
   ['ie_5f',['IE_',['../farsi_8h.html#ad203d0ef5ab2f636857e3024e4c0860f',1,'farsi.h']]],
   ['if_5fsyn_5ftime',['IF_SYN_TIME',['../syntax_8c.html#a131bb41e4bb4c87839065cad9457990f',1,'syntax.c']]],
   ['ilog',['ILOG',['../log_8h.html#a0c221110c77b993968e98cb53c0d652e',1,'ILOG():&#160;log.h'],['../log_8h.html#a0c221110c77b993968e98cb53c0d652e',1,'ILOG():&#160;log.h']]],
+  ['ilogn',['ILOGN',['../log_8h.html#ac875cd002a0945c5a7575b354f19360e',1,'ILOGN():&#160;log.h'],['../log_8h.html#ac875cd002a0945c5a7575b354f19360e',1,'ILOGN():&#160;log.h']]],
   ['in_5fbuffer',['IN_BUFFER',['../ui_8h.html#a1c3fc56ae80b0e77b16b64d1b805dbd1',1,'ui.h']]],
   ['in_5foption_5fc',['IN_OPTION_C',['../option_8c.html#a184fac40da434cfb4b4d073ad90e370b',1,'option.c']]],
   ['in_5fother_5fwin',['IN_OTHER_WIN',['../ui_8h.html#a050915e5f01a375060f41f531daafeeb',1,'ui.h']]],

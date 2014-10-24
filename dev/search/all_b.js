@@ -294,7 +294,7 @@ var searchData=
   ['keylen_5fremoved',['KEYLEN_REMOVED',['../getchar_8h.html#a7f27fe042d783a3d79e484f2659e6bd9',1,'getchar.h']]],
   ['keymap_2ec',['keymap.c',['../keymap_8c.html',1,'']]],
   ['keymap_2eh',['keymap.h',['../keymap_8h.html',1,'']]],
-  ['keymap_5finit',['keymap_init',['../digraph_8c.html#ae49721a5eb7343d9ee5c1355f4bd6beb',1,'keymap_init(void):&#160;digraph.c'],['../buffer__defs_8h.html#aa3ec9260b46dd9f0da7d71c59b8fd4ee',1,'KEYMAP_INIT():&#160;buffer_defs.h']]],
+  ['keymap_5finit',['KEYMAP_INIT',['../buffer__defs_8h.html#aa3ec9260b46dd9f0da7d71c59b8fd4ee',1,'KEYMAP_INIT():&#160;buffer_defs.h'],['../digraph_8c.html#ae49721a5eb7343d9ee5c1355f4bd6beb',1,'keymap_init(void):&#160;digraph.c']]],
   ['keymap_5floaded',['KEYMAP_LOADED',['../buffer__defs_8h.html#a77956f13750842a2f79d86eda881a458',1,'buffer_defs.h']]],
   ['keystuffed',['KeyStuffed',['../globals_8h.html#a2196e3707ffe960808b0361e057f681f',1,'globals.h']]],
   ['keytyped',['KeyTyped',['../globals_8h.html#a537eb7aafa1faccc7d5a9385bc981731',1,'globals.h']]],

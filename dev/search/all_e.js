@@ -251,6 +251,7 @@ var searchData=
   ['normal_5fcmd',['normal_cmd',['../normal_8c.html#a94e1d60ae0bae3d3896bc2a982e85cee',1,'normal.c']]],
   ['nospc',['NOSPC',['../ex__cmds__defs_8h.html#ad4d2c524e943e893c89a4c15a0f8ae73',1,'ex_cmds_defs.h']]],
   ['noswapfile',['noswapfile',['../structcmdmod__T.html#a60ba129ef0cdc2694342a37ba1e72438',1,'cmdmod_T']]],
+  ['not',['NOT',['../channel_8c.html#ad3e9fe0ec59d2dbb3982ababa042720c',1,'channel.c']]],
   ['not_5fexiting',['not_exiting',['../ex__docmd_8c.html#a08c3f557376be97916064edf56d27dd0',1,'ex_docmd.c']]],
   ['not_5fmulti',['NOT_MULTI',['../regexp_8c.html#a2e0ab48b2dae9064b2d9a43786e53f13',1,'regexp.c']]],
   ['not_5fvalid',['NOT_VALID',['../screen_8h.html#a72695d31382ba5334881ad3407393642',1,'screen.h']]],

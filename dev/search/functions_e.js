@@ -20,6 +20,7 @@ var searchData=
   ['open_5fbuffer',['open_buffer',['../buffer_8c.html#a1fcbd564641925e50627240e85a1d80a',1,'buffer.c']]],
   ['open_5fexfile',['open_exfile',['../ex__docmd_8c.html#a931b09fde9e60ba99633592b7339e309',1,'ex_docmd.c']]],
   ['open_5fline',['open_line',['../misc1_8c.html#a5374895d3b6e91494504be5219ba7942',1,'misc1.c']]],
+  ['open_5flog_5ffile',['open_log_file',['../log_8c.html#a89f45e4bd00a3752e4b39ab2d745d64d',1,'log.c']]],
   ['openfold',['openFold',['../fold_8c.html#ac7a98ef7e2d7c62c27c216e037b8b200',1,'fold.c']]],
   ['openfoldrecurse',['openFoldRecurse',['../fold_8c.html#a1fa750844aa3cbd31c25656cfc9459a6',1,'fold.c']]],
   ['openscript',['openscript',['../getchar_8c.html#a5592db424003b15b696d193c025b90e8',1,'getchar.c']]],
