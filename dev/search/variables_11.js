@@ -5,6 +5,7 @@ var searchData=
   ['rbuffer',['rbuffer',['../structProcessData.html#a5dc80922bfd704b93fdfc0003c4dfa15',1,'ProcessData']]],
   ['read_5fedit',['read_edit',['../structexarg.html#a890d17f4aaf19e596b75ab4db4a152c6',1,'exarg']]],
   ['reading',['reading',['../structProcessData.html#abbb1879d52fbec04d0a6702ae7ba445e',1,'ProcessData']]],
+  ['received',['received',['../structJobEvent.html#afc773cc4e0b9f569f8b276e31ede6b24',1,'JobEvent']]],
   ['refcnt',['refcnt',['../structreg__extmatch__T.html#abb0946f16ec7489b59022c64f7ecc22e',1,'reg_extmatch_T']]],
   ['refcount',['refcount',['../structjob.html#afc155f9a485e5de882b2091bdbeb3c5e',1,'job::refcount()'],['../structwbuffer.html#a106eeb826a586037de17e77cd18527b1',1,'wbuffer::refcount()']]],
   ['reg_5fprog',['reg_prog',['../structAutoPat.html#a2c46743cf6036ab5ec84eb1c82cf243b',1,'AutoPat']]],
@@ -42,7 +43,7 @@ var searchData=
   ['rs_5fstate',['rs_state',['../structregitem__S.html#ab28a5071e21a12f26ba1c9bc917b9604',1,'regitem_S']]],
   ['rs_5fu',['rs_u',['../structregsave__T.html#a60b632b44c29b78bf3508c63bb42c17d',1,'regsave_T']]],
   ['rs_5fun',['rs_un',['../structregitem__S.html#a024f78cc7f421cffe1d2b03c72d194b8',1,'regitem_S']]],
-  ['rstream',['rstream',['../structJobEvent.html#a2972fea1b10c2e508cff0fc1ac31749a',1,'JobEvent::rstream()'],['../structrbuffer.html#af2074f4f0c3cf36a044e8d08bb645d18',1,'rbuffer::rstream()'],['../structHandleData.html#a925ce4b5e7039d6eedb5d7da9b8fb65a',1,'HandleData::rstream()']]],
+  ['rstream',['rstream',['../structrbuffer.html#af2074f4f0c3cf36a044e8d08bb645d18',1,'rbuffer::rstream()'],['../structHandleData.html#a925ce4b5e7039d6eedb5d7da9b8fb65a',1,'HandleData::rstream()']]],
   ['ru_5fcol',['ru_col',['../globals_8h.html#a52643f37faefff5ae72ca6ea328b4e5f',1,'globals.h']]],
   ['ru_5fwid',['ru_wid',['../globals_8h.html#a15ff3a4d1261883be5090ddce9c15507',1,'globals.h']]]
 ];
