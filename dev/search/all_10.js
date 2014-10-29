@@ -513,7 +513,7 @@ var searchData=
   ['put_5fescstr',['put_escstr',['../getchar_8c.html#a6a56f2edf98b827e99dbab7dc921f73f',1,'getchar.c']]],
   ['put_5ffixindent',['PUT_FIXINDENT',['../ops_8h.html#a4fd6be46f3d60dc39abb7418f19ef57c',1,'ops.h']]],
   ['put_5ffolds',['put_folds',['../fold_8c.html#a83b9f7de1d1cc014702808bd3327c174',1,'fold.c']]],
-  ['put_5fline',['PUT_LINE',['../ops_8h.html#ad297d9eca143aadf0422a064f9c8f5ac',1,'PUT_LINE():&#160;ops.h'],['../ex__docmd_8c.html#aeb90db96aedc6a9d30927b9846e079fd',1,'put_line(FILE *fd, char *s):&#160;ex_docmd.c']]],
+  ['put_5fline',['put_line',['../ex__docmd_8c.html#aeb90db96aedc6a9d30927b9846e079fd',1,'put_line(FILE *fd, char *s):&#160;ex_docmd.c'],['../ops_8h.html#ad297d9eca143aadf0422a064f9c8f5ac',1,'PUT_LINE():&#160;ops.h']]],
   ['put_5fline_5fforward',['PUT_LINE_FORWARD',['../ops_8h.html#ac09dbd4e466bbf2fec0119904b881786',1,'ops.h']]],
   ['put_5fline_5fsplit',['PUT_LINE_SPLIT',['../ops_8h.html#a034f5a05ce4f02b2e17093070696eebc',1,'ops.h']]],
   ['put_5fon_5fcmdline',['put_on_cmdline',['../ex__getln_8c.html#aa5c40fe8650c84c11489d53a8d81d4b7',1,'ex_getln.c']]],

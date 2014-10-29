@@ -27,6 +27,7 @@ var searchData=
   ['vim_5fchdir',['vim_chdir',['../misc2_8c.html#a05bda11d595c6dd11d5d91b2fa795fe6',1,'misc2.c']]],
   ['vim_5fchdirfile',['vim_chdirfile',['../misc2_8c.html#a5ed23ebe9710b0c7c928cd18de872161',1,'misc2.c']]],
   ['vim_5fcommand',['vim_command',['../vim_8c.html#a235685dbc573df8e9339b579f1718ee2',1,'vim.c']]],
+  ['vim_5fcommand_5foutput',['vim_command_output',['../vim_8c.html#a1ca2f6f0f16d8c7fdadaf80f1f0f052d',1,'vim.c']]],
   ['vim_5fdel_5fcurrent_5fline',['vim_del_current_line',['../vim_8c.html#a72350e6bb1277d0b08d53cdf4e388393',1,'vim.c']]],
   ['vim_5fdeltempdir',['vim_deltempdir',['../tempfile_8c.html#adbd2cc40a552e5484d7daa73eca17088',1,'tempfile.c']]],
   ['vim_5fdialog_5fyesno',['vim_dialog_yesno',['../message_8c.html#a3500f69094f4332ddf9dee18f7de3078',1,'message.c']]],
