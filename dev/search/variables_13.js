@@ -20,6 +20,7 @@ var searchData=
   ['tb_5fsilent',['tb_silent',['../structtypebuf__T.html#a840a56b81309bbb4eca3ae28fb2a3221',1,'typebuf_T']]],
   ['tcp',['tcp',['../structServer.html#abeb883de3650b836fe1b127f6803511c',1,'Server']]],
   ['term',['term',['../structmparm__T.html#a597ce2f7b3376b944d01b181b8111103',1,'mparm_T::term()'],['../structattr__entry.html#a1f07bac6db09530c0ff5a598907b4c76',1,'attr_entry::term()']]],
+  ['term_5fsent',['term_sent',['../structjob.html#a9afacb35a5b47a85bcf222e72f77c857',1,'job']]],
   ['term_5fstrings',['term_strings',['../term_8c.html#ad4755acac6a5a183ac996f1389832094',1,'term_strings():&#160;term.c'],['../term__defs_8h.html#abb17c8229480af73bbf2f93c36007d0b',1,'term_strings():&#160;term.c']]],
   ['textcol',['textcol',['../structblock__def.html#acdd5806baff7ac8397b43fc103fd9c85',1,'block_def']]],
   ['textlen',['textlen',['../structblock__def.html#a5f46d128a1f723c8f83b798dca0df51f',1,'block_def']]],

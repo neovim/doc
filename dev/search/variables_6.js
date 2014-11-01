@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['ga',['ga',['../structProcessData.html#a202ce606c5b2a1f13991774d03217420',1,'ProcessData']]],
   ['ga_5fdata',['ga_data',['../structgrowarray.html#a6737d3d6fada8215cbd56aed057848e9',1,'growarray']]],
   ['ga_5fgrowsize',['ga_growsize',['../structgrowarray.html#a280ec25e819c8180f46b192a20626128',1,'growarray']]],
   ['ga_5fitemsize',['ga_itemsize',['../structgrowarray.html#a60462e3856dac7e6db392e69f13cfc02',1,'growarray']]],

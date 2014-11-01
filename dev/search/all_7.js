@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['ga',['ga',['../structProcessData.html#a202ce606c5b2a1f13991774d03217420',1,'ProcessData']]],
   ['ga_5fappend',['ga_append',['../garray_8c.html#a0dc0d7602d3948d8649713bbf4baeb32',1,'ga_append(garray_T *gap, char c):&#160;garray.c'],['../garray_8h.html#aea3ec97569590fefae0ec717d111def8',1,'GA_APPEND():&#160;garray.h']]],
   ['ga_5fappend_5fvia_5fptr',['GA_APPEND_VIA_PTR',['../garray_8h.html#a01e15f392e49be69ab4bf16cc586fe52',1,'garray.h']]],
   ['ga_5fchar',['GA_CHAR',['../charset_8c.html#a5a0d42a20052977b926e8c1fcaa3cdd0',1,'charset.c']]],

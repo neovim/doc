@@ -16,7 +16,7 @@ var searchData=
   ['cancelredo',['CancelRedo',['../getchar_8c.html#ae033a689727702c570a1653f781b0322',1,'getchar.c']]],
   ['canon',['canon',['../mbyte_8c.html#a0e818a02b04731f1bff94e983f2b0b23',1,'mbyte.c']]],
   ['cansplit',['cansplit',['../structcscmd__T.html#a428006c1563c89e982e671f90e1caa89',1,'cscmd_T']]],
-  ['cap',['cap',['../structdyn__buffer__t.html#a516e8c3bb52ea1b5ef86df4a509e2e9e',1,'dyn_buffer_t']]],
+  ['cap',['cap',['../structDynamicBuffer.html#abe7373c0cd18dfe0345c4c2bf808e67a',1,'DynamicBuffer']]],
   ['capacity',['capacity',['../structArray.html#aed247f79ae1409cd0c85203e9c47ef9f',1,'Array::capacity()'],['../structDictionary.html#a9a3a7481be7f915e73b2165707cbb216',1,'Dictionary::capacity()'],['../structrbuffer.html#a50cc110f5fc3dc36793a468239cabbae',1,'rbuffer::capacity()']]],
   ['car',['CAR',['../ascii_8h.html#a1ff500177d91664413d59db9f49ecbaf',1,'ascii.h']]],
   ['casembc',['CASEMBC',['../regexp_8c.html#aaa000dab5469360dd707c88d19528637',1,'regexp.c']]],

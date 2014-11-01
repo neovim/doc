@@ -97,7 +97,6 @@ var searchData=
   ['exflag_5fnr',['EXFLAG_NR',['../ex__cmds__defs_8h.html#aca39eb4a64698483342a05d579f7dcc0',1,'ex_cmds_defs.h']]],
   ['exflag_5fprint',['EXFLAG_PRINT',['../ex__cmds__defs_8h.html#ab5c6495c0f7dfcb1ded6e1d2dcf1dbcf',1,'ex_cmds_defs.h']]],
   ['exflags',['EXFLAGS',['../ex__cmds__defs_8h.html#aa1cec13bb419bc53e2c9f36048d942d9',1,'ex_cmds_defs.h']]],
-  ['exit_5ftimeout',['EXIT_TIMEOUT',['../job_8c.html#aa0bfdbc2d6b63a50fc492c64551df328',1,'job.c']]],
   ['exmode_5fnormal',['EXMODE_NORMAL',['../ex__docmd_8h.html#ad7948b7ac59c79e409e8d0e6d4ff7884',1,'ex_docmd.h']]],
   ['exmode_5fvim',['EXMODE_VIM',['../ex__docmd_8h.html#a0136e4beeb40e50aab767f8d0c7ad1d4',1,'ex_docmd.h']]],
   ['exrc_5ffile',['EXRC_FILE',['../os__unix__defs_8h.html#a832080ca216663539fa7feabb1441aaf',1,'os_unix_defs.h']]],

@@ -151,7 +151,7 @@ var searchData=
   ['was_5fset_5finsecurely',['was_set_insecurely',['../option_8c.html#a28ac3153d8dfbd8e2ea9499cfe9c1784',1,'option.c']]],
   ['waw',['WAW',['../farsi_8h.html#a262a02e786d745d81b4dd473f349d698',1,'farsi.h']]],
   ['waw_5fh',['WAW_H',['../farsi_8h.html#a673799895870f871ccf38bc583ba1122',1,'farsi.h']]],
-  ['wbuffer',['wbuffer',['../structwbuffer.html',1,'wbuffer'],['../structProcessData.html#acdd18f7c6d6357a376351c0fa9f6c57e',1,'ProcessData::wbuffer()'],['../wstream__defs_8h.html#a1d10d5b56fe7b72af3c9a5fec1993701',1,'WBuffer():&#160;wstream_defs.h']]],
+  ['wbuffer',['wbuffer',['../structwbuffer.html',1,'wbuffer'],['../wstream__defs_8h.html#a1d10d5b56fe7b72af3c9a5fec1993701',1,'WBuffer():&#160;wstream_defs.h']]],
   ['wbuffer_5fdata_5ffinalizer',['wbuffer_data_finalizer',['../wstream__defs_8h.html#a6d852fb633ee3082646a83cd6b8ede9a',1,'wstream_defs.h']]],
   ['wc_5fcount',['wc_count',['../structwordcount__S.html#aff5d9e063df43beebd8ef0614a79ea5e',1,'wordcount_S']]],
   ['wc_5fkey_5foff',['WC_KEY_OFF',['../spell_8c.html#a3e7fe01bada89e54f8ab828d5f9dcc6a',1,'spell.c']]],

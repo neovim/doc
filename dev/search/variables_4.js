@@ -2,7 +2,7 @@ var searchData=
 [
   ['edit_5fsubmode_5fhighl',['edit_submode_highl',['../globals_8h.html#a10f4fdf51c11909f54d675d3606b186e',1,'globals.h']]],
   ['edit_5ftype',['edit_type',['../structmparm__T.html#a2f55dd99ef0b0767ce33701a81b781fa',1,'mparm_T']]],
-  ['else',['else',['../msgpack__rpc_2helpers_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;helpers.c'],['../shell_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;shell.c']]],
+  ['else',['else',['../msgpack__rpc_2helpers_8c.html#a0544c3fe466e421738dae463968b70ba',1,'helpers.c']]],
   ['empty',['empty',['../structoparg__S.html#a0dfb9f09bab18ed29c606c2fa29ba341',1,'oparg_S']]],
   ['en_5fdname',['en_dname',['../structVimMenu.html#add54620a2f0f00c05bc1d63960643a3a',1,'VimMenu']]],
   ['en_5fname',['en_name',['../structVimMenu.html#a7f0fddaa5405a6d04bcb84bf05f74f54',1,'VimMenu']]],
@@ -26,9 +26,6 @@ var searchData=
   ['evim_5fmode',['evim_mode',['../structmparm__T.html#a81db356897fbd8cdb0f854bd21fef344',1,'mparm_T']]],
   ['exception',['exception',['../structcleanup__stuff.html#a01ab8b7d3ce077d33535804542eb8adb',1,'cleanup_stuff']]],
   ['exit_5fcb',['exit_cb',['../structjob.html#abe6bc12ec790022113a50cc6a5bd2452',1,'job']]],
-  ['exit_5fstatus',['exit_status',['../structProcessData.html#aff91e17a1100199b856eac16a0969660',1,'ProcessData']]],
-  ['exit_5ftimeout',['exit_timeout',['../structjob.html#a036ccbb773be8687f0f3be2cb13e9f6e',1,'job']]],
-  ['exited',['exited',['../structProcessData.html#a63747a20d3ccf7e48acc16a0c0b32da4',1,'ProcessData']]],
   ['expand',['expand',['../ex__docmd_8c.html#a4fd89930cfa1006f152d636b9a0c7ab9',1,'ex_docmd.c']]],
   ['extra_5fchar',['extra_char',['../structcmdarg__S.html#a2a40234a723a0bc67a687982eb51d9bf',1,'cmdarg_S']]]
 ];

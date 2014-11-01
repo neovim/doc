@@ -95,7 +95,6 @@ var searchData=
   ['w_5fwinvar',['w_winvar',['../structwindow__S.html#a9ad50b1122781649dac00e65a2e102d2',1,'window_S']]],
   ['w_5fwrow',['w_wrow',['../structwindow__S.html#adb75982365749276dfb859fa42a93587',1,'window_S']]],
   ['want_5ffull_5fscreen',['want_full_screen',['../structmparm__T.html#a88361008f64963f091c217b6f90f4059',1,'mparm_T']]],
-  ['wbuffer',['wbuffer',['../structProcessData.html#acdd18f7c6d6357a376351c0fa9f6c57e',1,'ProcessData']]],
   ['wc_5fcount',['wc_count',['../structwordcount__S.html#aff5d9e063df43beebd8ef0614a79ea5e',1,'wordcount_S']]],
   ['wc_5fword',['wc_word',['../structwordcount__S.html#a25e74c229805c7be025560d81f62f673',1,'wordcount_S']]],
   ['where_5fpaste_5fstarted',['where_paste_started',['../globals_8h.html#a4ec4650f2f1c2af7bf75607189599187',1,'globals.h']]],

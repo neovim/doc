@@ -77,6 +77,7 @@ var searchData=
   ['reverse_5ftext',['reverse_text',['../search_8c.html#a3297192e0587a54283079de0de0995dc',1,'search.c']]],
   ['rewind_5fconditionals',['rewind_conditionals',['../ex__eval_8c.html#a070b68fbf13a6cd1366a184507048019',1,'ex_eval.c']]],
   ['rl_5fmirror',['rl_mirror',['../screen_8c.html#aa9bd143450271431de376bc3aa28bcb8',1,'screen.c']]],
+  ['rstream_5fbuffer',['rstream_buffer',['../rstream_8c.html#a25077cebe9ef75b05765dfd638a40f8d',1,'rstream.c']]],
   ['rstream_5ffree',['rstream_free',['../rstream_8c.html#aa0e9a458f7bc9986413e4798bb2decbe',1,'rstream.c']]],
   ['rstream_5fis_5fregular_5ffile',['rstream_is_regular_file',['../rstream_8c.html#a6418e849125034bd35b30747929eb6c6',1,'rstream.c']]],
   ['rstream_5fnew',['rstream_new',['../rstream_8c.html#ad253475bb214df6e41fb454eb5c5dc3a',1,'rstream.c']]],

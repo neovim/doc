@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['i',['i',['../shell_8c.html#acb559820d9ca11295b4500f179ef6392',1,'shell.c']]],
   ['iconv_5fmult',['ICONV_MULT',['../fileio_8c.html#ab4b859dffb5392c445d10516e29ab64a',1,'fileio.c']]],
   ['id',['id',['../structarglist.html#af26b4de1eb776a71bb52e80006d64f12',1,'arglist::id()'],['../structmatchitem.html#a2e884d7323d270717a5bee6d2f74ca85',1,'matchitem::id()'],['../structcursor__entry.html#a8dc24386c2de14f1375e6a32dcfbe93c',1,'cursor_entry::id()'],['../structJobEvent.html#af5131bfe06cb34e814fafb95bb3350ff',1,'JobEvent::id()'],['../structChannel.html#a598d86971786418fb94ddf33ea1d2e99',1,'Channel::id()'],['../structjob.html#a14f2a8b63b37554fd774fefa8e75608e',1,'job::id()'],['../structnfa__state.html#aa6c59194186ea1f5ab5ede6af95a5fea',1,'nfa_state::id()'],['../structnfa__list__T.html#a616c7f8b44d001e83e3195178f053cd3',1,'nfa_list_T::id()'],['../structsignlist.html#af4d28aa2fa8e4d68a8a2e72641ef285a',1,'signlist::id()'],['../structtime__entry__T.html#a552cf47cc5c585222b02c850ed256c58',1,'time_entry_T::id()'],['../structsp__syn.html#a6738fd9a418b9d42bb2af39096d21640',1,'sp_syn::id()']]],
   ['id_5flist_5fall',['ID_LIST_ALL',['../syntax_8c.html#a00b6d82b228f3d896ad75b6654edd6d3',1,'syntax.c']]],
@@ -72,7 +71,7 @@ var searchData=
   ['idx_5futf8',['IDX_UTF8',['../mbyte_8c.html#ae2601dc61bb3c9399e8c4d46240f4b6e',1,'mbyte.c']]],
   ['ie',['IE',['../farsi_8h.html#ac4d73397b6a181409fa4b2b104e97273',1,'farsi.h']]],
   ['ie_5f',['IE_',['../farsi_8h.html#ad203d0ef5ab2f636857e3024e4c0860f',1,'farsi.h']]],
-  ['if',['if',['../memory_8c.html#a966ffa31eafe026e5aa2abf4c33b1c05',1,'if(!ret &amp;&amp;!count||!size):&#160;memory.c'],['../msgpack__rpc_2helpers_8c.html#a2ed0e4c31f4ded58f96949cfa77b9387',1,'if(err-&gt;set):&#160;helpers.c'],['../shell_8c.html#a95c401819f3bbc7584514f74678b8228',1,'if(i&lt;=0):&#160;shell.c'],['../shell_8c.html#a0070e39776cdab71d8db36ab95b71073',1,'if(input):&#160;shell.c'],['../shell_8c.html#ab1caf8275f7e41ce577a145804bc388a',1,'if(buf.len==0):&#160;shell.c'],['../shell_8c.html#a89ee1c7c9d970bb9227202ebbac7e755',1,'if(nread):&#160;shell.c']]],
+  ['if',['if',['../memory_8c.html#a966ffa31eafe026e5aa2abf4c33b1c05',1,'if(!ret &amp;&amp;!count||!size):&#160;memory.c'],['../msgpack__rpc_2helpers_8c.html#a2ed0e4c31f4ded58f96949cfa77b9387',1,'if(err-&gt;set):&#160;helpers.c']]],
   ['if_5fcscope_2ec',['if_cscope.c',['../if__cscope_8c.html',1,'']]],
   ['if_5fcscope_2eh',['if_cscope.h',['../if__cscope_8h.html',1,'']]],
   ['if_5fcscope_5fdefs_2eh',['if_cscope_defs.h',['../if__cscope__defs_8h.html',1,'']]],
@@ -138,6 +137,7 @@ var searchData=
   ['input_5fbuffer_5fsize',['INPUT_BUFFER_SIZE',['../input_8c.html#aa9b8dcc02cea15aab8e3d0b7860327a7',1,'input.c']]],
   ['input_5fbuflen',['INPUT_BUFLEN',['../edit_8c.html#a08138f717a55fe7b906e95ce821ca478',1,'edit.c']]],
   ['input_5fconv',['input_conv',['../globals_8h.html#a4cca7f97f4efce3b64574cba798c49aa',1,'globals.h']]],
+  ['input_5fenqueue',['input_enqueue',['../input_8c.html#a93f7c4f284c88b611de43b2ed8206086',1,'input.c']]],
   ['input_5ffn',['input_fn',['../structcmdline__info.html#a3aaf6465bbb9adf60b98ac198d81481d',1,'cmdline_info']]],
   ['input_5finit',['input_init',['../input_8c.html#a002df33f6298c53d5ab3892e473bcbde',1,'input.c']]],
   ['input_5fstart',['input_start',['../input_8c.html#aaf2760309d056289daf7341a1fe40839',1,'input.c']]],
