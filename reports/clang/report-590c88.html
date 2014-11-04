@@ -54,9 +54,9 @@
 </style>
 </head>
 <body>
-<!-- BUGDESC Access to field 'hi_key' results in a dereference of a null pointer (loaded from variable 'hi') -->
+<!-- BUGDESC String copy function overflows destination buffer -->
 
-<!-- BUGTYPE Dereference of null pointer -->
+<!-- BUGTYPE Out-of-bound array access -->
 
 <!-- BUGCATEGORY Logic error -->
 
@@ -64,11 +64,11 @@
 
 <!-- FILENAME eval.c -->
 
-<!-- FUNCTIONNAME get_user_func_name -->
+<!-- FUNCTIONNAME add_nr_var -->
 
-<!-- BUGLINE 18165 -->
+<!-- BUGLINE 18686 -->
 
-<!-- BUGCOLUMN 12 -->
+<!-- BUGCOLUMN 3 -->
 
 <!-- BUGPATHLENGTH 6 -->
 
@@ -77,8 +77,8 @@
 <h3>Bug Summary</h3>
 <table class="simpletable">
 <tr><td class="rowname">File:</td><td>eval.c</td></tr>
-<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 18165, column 12</a></td></tr>
-<tr><td class="rowname">Description:</td><td>Access to field 'hi_key' results in a dereference of a null pointer (loaded from variable 'hi')</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 18686, column 3</a></td></tr>
+<tr><td class="rowname">Description:</td><td>String copy function overflows destination buffer</td></tr>
 </table>
 <!-- REPORTSUMMARYEXTRA -->
 <h3>Annotated Source Code</h3>
@@ -18243,25 +18243,17 @@
 <tr><td class="num" id="LN18152">18152</td><td class="line">char_u *get_user_func_name(expand_T *xp, <span class='keyword'>int</span> idx)</td></tr>
 <tr><td class="num" id="LN18153">18153</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN18154">18154</td><td class="line">  <span class='keyword'>static</span> long_u done;</td></tr>
-<tr><td class="num" id="LN18155">18155</td><td class="line">  <span class="mrange"><span class='keyword'>static</span> hashitem_T   *hi</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>'hi' initialized to a null pointer value</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN18155">18155</td><td class="line">  <span class='keyword'>static</span> hashitem_T   *hi;</td></tr>
 <tr><td class="num" id="LN18156">18156</td><td class="line">  ufunc_T             *fp;</td></tr>
 <tr><td class="num" id="LN18157">18157</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN18158">18158</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">idx == 0</span>) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>Assuming 'idx' is not equal to 0</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path4" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN18158">18158</td><td class="line">  <span class='keyword'>if</span> (idx == 0) {</td></tr>
 <tr><td class="num" id="LN18159">18159</td><td class="line">    done = 0;</td></tr>
 <tr><td class="num" id="LN18160">18160</td><td class="line">    hi = func_hashtab.ht_array;</td></tr>
 <tr><td class="num" id="LN18161">18161</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN18162">18162</td><td class="line">  <span class='keyword'>if</span> (done &lt; func_hashtab.ht_used) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path4" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path5" title="Next event (5)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18163">18163</td><td class="line">    <span class='keyword'>if</span> (done++ &gt; 0)</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path5" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">5</div></td><td><div class="PathNav"><a href="#Path4" title="Previous event (4)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#EndPath" title="Next event (6)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18164">18164</td><td class="line">      ++hi;</td></tr>
 <tr><td class="num" id="LN18165">18165</td><td class="line">    <span class='keyword'>while</span> (<span class='macro'>HASHITEM_EMPTY(hi)<span class='expansion'>((hi)-&gt;hi_key == ((void*)0) || (hi)-&gt;hi_key == &amp;hash_removed<br>)</span></span>)</td></tr>
-<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgControl" style="margin-left:12ex; max-width:100em"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Within the expansion of the macro 'HASHITEM_EMPTY':
-</td></tr></table><div class="msg msgEvent" style="width:94%; margin-left:5px"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">a</div></td><td valign="top">Access to field 'hi_key' results in a dereference of a null pointer (loaded from variable 'hi')</td></tr></table></div>
-</div></td></tr>
 <tr><td class="num" id="LN18166">18166</td><td class="line">      ++hi;</td></tr>
 <tr><td class="num" id="LN18167">18167</td><td class="line">    fp = <span class='macro'>HI2UF(hi)<span class='expansion'>((ufunc_T *)((hi)-&gt;hi_key - (dumuf.uf_name - (char_u *)&amp;<br>dumuf)))</span></span>;</td></tr>
 <tr><td class="num" id="LN18168">18168</td><td class="line"> </td></tr>
@@ -18437,7 +18429,9 @@
 <tr><td class="num" id="LN18338">18338</td><td class="line">  proftime_T call_start;</td></tr>
 <tr><td class="num" id="LN18339">18339</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN18340">18340</td><td class="line">  <span class='comment'>/* If depth of calling is getting too high, don't execute the function */</span></td></tr>
-<tr><td class="num" id="LN18341">18341</td><td class="line">  <span class='keyword'>if</span> (depth &gt;= p_mfd) {</td></tr>
+<tr><td class="num" id="LN18341">18341</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">depth &gt;= p_mfd</span>) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>Assuming 'depth' is &lt; 'p_mfd'</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18342">18342</td><td class="line">    <span class='macro'>EMSG(_(<span class='string_literal'>"E132: Function call depth is higher than 'maxfuncdepth'"</span>))<span class='expansion'>emsg((char_u *)(gettext((char *)("E132: Function call depth is higher than 'maxfuncdepth'"<br>))))</span></span>;</td></tr>
 <tr><td class="num" id="LN18343">18343</td><td class="line">    rettv-&gt;v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
 <tr><td class="num" id="LN18344">18344</td><td class="line">    rettv-&gt;vval.v_number = -1;</td></tr>
@@ -18469,7 +18463,9 @@
 <tr><td class="num" id="LN18370">18370</td><td class="line">   <span class='comment'>* Init l: variables.</span></td></tr>
 <tr><td class="num" id="LN18371">18371</td><td class="line">   <span class='comment'>*/</span></td></tr>
 <tr><td class="num" id="LN18372">18372</td><td class="line">  init_var_dict(&amp;fc-&gt;l_vars, &amp;fc-&gt;l_vars_var, <span class='macro'>VAR_DEF_SCOPE<span class='expansion'>2</span></span>);</td></tr>
-<tr><td class="num" id="LN18373">18373</td><td class="line">  <span class='keyword'>if</span> (selfdict != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN18373">18373</td><td class="line">  <span class='keyword'>if</span> (<span class="mrange">selfdict != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Assuming 'selfdict' is equal to null</td><td><div class="PathNav"><a href="#Path4" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path4" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path5" title="Next event (5)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN18374">18374</td><td class="line">    <span class='comment'>/* Set l:self to "selfdict".  Use "name" to avoid a warning from</span></td></tr>
 <tr><td class="num" id="LN18375">18375</td><td class="line">     <span class='comment'>* some compiler that checks the destination size. */</span></td></tr>
 <tr><td class="num" id="LN18376">18376</td><td class="line">    v = &amp;fc-&gt;fixvar[fixvar_idx++].var;</td></tr>
@@ -18489,8 +18485,9 @@
 <tr><td class="num" id="LN18390">18390</td><td class="line">   <span class='comment'>* Set a:000 to a list with room for the "..." arguments.</span></td></tr>
 <tr><td class="num" id="LN18391">18391</td><td class="line">   <span class='comment'>*/</span></td></tr>
 <tr><td class="num" id="LN18392">18392</td><td class="line">  init_var_dict(&amp;fc-&gt;l_avars, &amp;fc-&gt;l_avars_var, <span class='macro'>VAR_SCOPE<span class='expansion'>1</span></span>);</td></tr>
-<tr><td class="num" id="LN18393">18393</td><td class="line">  add_nr_var(&amp;fc-&gt;l_avars, &amp;fc-&gt;fixvar[fixvar_idx++].var, <span class='string_literal'>"0"</span>,</td></tr>
-<tr><td class="num" id="LN18394">18394</td><td class="line">      (varnumber_T)(argcount - fp-&gt;uf_args.ga_len));</td></tr>
+<tr><td class="num" id="LN18393">18393</td><td class="line">  <span class="mrange">add_nr_var(&amp;fc-&gt;l_avars, &amp;fc-&gt;fixvar[fixvar_idx++].var, <span class='string_literal'>"0"</span>,</td></tr></span>
+<tr><td class="num"></td><td class="line"><div id="Path5" class="msg msgEvent" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">5</div></td><td><div class="PathNav"><a href="#Path4" title="Previous event (4)">&#x2190;</a></div></td></td><td>Calling 'add_nr_var'</td><td><div class="PathNav"><a href="#EndPath" title="Next event (6)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN18394">18394</td><td class="line">      <span class="mrange">(varnumber_T)(argcount - fp-&gt;uf_args.ga_len))</span>;</td></tr>
 <tr><td class="num" id="LN18395">18395</td><td class="line">  <span class='comment'>/* Use "name" to avoid a warning from some compiler that checks the</span></td></tr>
 <tr><td class="num" id="LN18396">18396</td><td class="line">   <span class='comment'>* destination size. */</span></td></tr>
 <tr><td class="num" id="LN18397">18397</td><td class="line">  v = &amp;fc-&gt;fixvar[fixvar_idx++].var;</td></tr>
@@ -18783,6 +18780,9 @@
 <tr><td class="num" id="LN18684">18684</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> add_nr_var(dict_T *dp, dictitem_T *v, <span class='keyword'>char</span> *name, varnumber_T nr)</td></tr>
 <tr><td class="num" id="LN18685">18685</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN18686">18686</td><td class="line">  <span class='macro'>STRCPY(v-&gt;di_key, name)<span class='expansion'>strcpy((char *)(v-&gt;di_key), (char *)(name))</span></span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgControl" style="margin-left:3ex; max-width:100em"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Within the expansion of the macro 'STRCPY':
+</td></tr></table><div class="msg msgEvent" style="width:94%; margin-left:5px"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">a</div></td><td valign="top">String copy function overflows destination buffer</td></tr></table></div>
+</div></td></tr>
 <tr><td class="num" id="LN18687">18687</td><td class="line">  v-&gt;di_flags = <span class='macro'>DI_FLAGS_RO<span class='expansion'>1</span></span> | <span class='macro'>DI_FLAGS_FIX<span class='expansion'>4</span></span>;</td></tr>
 <tr><td class="num" id="LN18688">18688</td><td class="line">  hash_add(&amp;dp-&gt;dv_hashtab, <span class='macro'>DI2HIKEY(v)<span class='expansion'>((v)-&gt;di_key)</span></span>);</td></tr>
 <tr><td class="num" id="LN18689">18689</td><td class="line">  v-&gt;di_tv.v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
@@ -19624,7 +19624,7 @@
 <tr><td class="num" id="LN19525">19525</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19526">19526</td><td class="line"><span class='comment'>// JobActivity autocommands will execute vimscript code, so it must be executed</span></td></tr>
 <tr><td class="num" id="LN19527">19527</td><td class="line"><span class='comment'>// on Nvim main loop</span></td></tr>
-<tr><td class="num" id="LN19528">19528</td><td class="line"><span class='directive'>#define <span class='macro'>push_job_event(j, r, t)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (r) { size_t read_count<br> = rstream_pending(r); event_data-&gt;received = xmalloc(read_count<br> + 1); rstream_read(r, event_data-&gt;received, read_count); event_data<br>-&gt;received[read_count] = '\000'; } event_data-&gt;id = job_id<br>(j); event_data-&gt;name = job_data(j); event_data-&gt;type =<br> t; event_push((Event) { .handler = on_job_event, .data = event_data<br> }); } while(0)</span></span>                                      \</span></td></tr>
+<tr><td class="num" id="LN19528">19528</td><td class="line"><span class='directive'>#define <span class='macro'>push_job_event(j, r, t)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (r) { size_t read_count<br> = rstream_pending(r); event_data-&gt;received = xmalloc(read_count<br> + 1); rstream_read(r, event_data-&gt;received, read_count); event_data<br>-&gt;received[read_count] = '\000'; } event_data-&gt;id = job_id<br>(j); event_data-&gt;name = job_data(j); event_data-&gt;type =<br> t; event_push((Event) { .handler = on_job_event, .data = event_data<br> }, 1); } while(0)</span></span>                                      \</span></td></tr>
 <tr><td class="num" id="LN19529">19529</td><td class="line">  <span class='directive'>do {                                                               \</span></td></tr>
 <tr><td class="num" id="LN19530">19530</td><td class="line">    <span class='directive'>JobEvent *event_data = <span class='macro'>kmp_alloc(JobEventPool, job_event_pool)<span class='expansion'>kmp_alloc_JobEventPool(job_event_pool)</span></span>;  \</span></td></tr>
 <tr><td class="num" id="LN19531">19531</td><td class="line">    <span class='directive'>event_data-&gt;received = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;                                     \</span></td></tr>
@@ -19640,26 +19640,26 @@
 <tr><td class="num" id="LN19541">19541</td><td class="line">    <span class='directive'>event_push((Event) {                                             \</span></td></tr>
 <tr><td class="num" id="LN19542">19542</td><td class="line">      <span class='directive'>.handler = on_job_event,                                       \</span></td></tr>
 <tr><td class="num" id="LN19543">19543</td><td class="line">      <span class='directive'>.data = event_data                                             \</span></td></tr>
-<tr><td class="num" id="LN19544">19544</td><td class="line">    <span class='directive'>});                                                              \</span></td></tr>
+<tr><td class="num" id="LN19544">19544</td><td class="line">    <span class='directive'>}, <span class='macro'>true<span class='expansion'>1</span></span>);                                                        \</span></td></tr>
 <tr><td class="num" id="LN19545">19545</td><td class="line">  <span class='directive'>} while(0)</span></td></tr>
 <tr><td class="num" id="LN19546">19546</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19547">19547</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_stdout(RStream *rstream, <span class='keyword'>void</span> *data, <span class='macro'>bool<span class='expansion'>_Bool</span></span> eof)</td></tr>
 <tr><td class="num" id="LN19548">19548</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN19549">19549</td><td class="line">  <span class='keyword'>if</span> (!eof) {</td></tr>
-<tr><td class="num" id="LN19550">19550</td><td class="line">    <span class='macro'>push_job_event(data, rstream, <span class='string_literal'>"stdout"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (rstream) { size_t<br> read_count = rstream_pending(rstream); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(rstream, event_data-&gt;<br>received, read_count); event_data-&gt;received[read_count] = '\000'<br>; } event_data-&gt;id = job_id(data); event_data-&gt;name = job_data<br>(data); event_data-&gt;type = "stdout"; event_push((Event) { .<br>handler = on_job_event, .data = event_data }); } while(0)</span></span>;</td></tr>
+<tr><td class="num" id="LN19550">19550</td><td class="line">    <span class='macro'>push_job_event(data, rstream, <span class='string_literal'>"stdout"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (rstream) { size_t<br> read_count = rstream_pending(rstream); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(rstream, event_data-&gt;<br>received, read_count); event_data-&gt;received[read_count] = '\000'<br>; } event_data-&gt;id = job_id(data); event_data-&gt;name = job_data<br>(data); event_data-&gt;type = "stdout"; event_push((Event) { .<br>handler = on_job_event, .data = event_data }, 1); } while(0)</span></span>;</td></tr>
 <tr><td class="num" id="LN19551">19551</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN19552">19552</td><td class="line">}</td></tr>
 <tr><td class="num" id="LN19553">19553</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19554">19554</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_stderr(RStream *rstream, <span class='keyword'>void</span> *data, <span class='macro'>bool<span class='expansion'>_Bool</span></span> eof)</td></tr>
 <tr><td class="num" id="LN19555">19555</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN19556">19556</td><td class="line">  <span class='keyword'>if</span> (!eof) {</td></tr>
-<tr><td class="num" id="LN19557">19557</td><td class="line">    <span class='macro'>push_job_event(data, rstream, <span class='string_literal'>"stderr"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (rstream) { size_t<br> read_count = rstream_pending(rstream); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(rstream, event_data-&gt;<br>received, read_count); event_data-&gt;received[read_count] = '\000'<br>; } event_data-&gt;id = job_id(data); event_data-&gt;name = job_data<br>(data); event_data-&gt;type = "stderr"; event_push((Event) { .<br>handler = on_job_event, .data = event_data }); } while(0)</span></span>;</td></tr>
+<tr><td class="num" id="LN19557">19557</td><td class="line">    <span class='macro'>push_job_event(data, rstream, <span class='string_literal'>"stderr"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (rstream) { size_t<br> read_count = rstream_pending(rstream); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(rstream, event_data-&gt;<br>received, read_count); event_data-&gt;received[read_count] = '\000'<br>; } event_data-&gt;id = job_id(data); event_data-&gt;name = job_data<br>(data); event_data-&gt;type = "stderr"; event_push((Event) { .<br>handler = on_job_event, .data = event_data }, 1); } while(0)</span></span>;</td></tr>
 <tr><td class="num" id="LN19558">19558</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN19559">19559</td><td class="line">}</td></tr>
 <tr><td class="num" id="LN19560">19560</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19561">19561</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_exit(Job *job, <span class='keyword'>void</span> *data)</td></tr>
 <tr><td class="num" id="LN19562">19562</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN19563">19563</td><td class="line">  <span class='macro'>push_job_event(job, NULL, <span class='string_literal'>"exit"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (((void*)0)) { size_t<br> read_count = rstream_pending(((void*)0)); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(((void*)0), event_data<br>-&gt;received, read_count); event_data-&gt;received[read_count<br>] = '\000'; } event_data-&gt;id = job_id(job); event_data-&gt;<br>name = job_data(job); event_data-&gt;type = "exit"; event_push<br>((Event) { .handler = on_job_event, .data = event_data }); } while<br>(0)</span></span>;</td></tr>
+<tr><td class="num" id="LN19563">19563</td><td class="line">  <span class='macro'>push_job_event(job, NULL, <span class='string_literal'>"exit"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (((void*)0)) { size_t<br> read_count = rstream_pending(((void*)0)); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(((void*)0), event_data<br>-&gt;received, read_count); event_data-&gt;received[read_count<br>] = '\000'; } event_data-&gt;id = job_id(job); event_data-&gt;<br>name = job_data(job); event_data-&gt;type = "exit"; event_push<br>((Event) { .handler = on_job_event, .data = event_data }, 1);<br> } while(0)</span></span>;</td></tr>
 <tr><td class="num" id="LN19564">19564</td><td class="line">}</td></tr>
 <tr><td class="num" id="LN19565">19565</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19566">19566</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_event(Event event)</td></tr>

@@ -54,9 +54,9 @@
 </style>
 </head>
 <body>
-<!-- BUGDESC Access to field 'li_next' results in a dereference of a null pointer (loaded from field 'll_li') -->
+<!-- BUGDESC String copy function overflows destination buffer -->
 
-<!-- BUGTYPE Dereference of null pointer -->
+<!-- BUGTYPE Out-of-bound array access -->
 
 <!-- BUGCATEGORY Logic error -->
 
@@ -64,21 +64,21 @@
 
 <!-- FILENAME eval.c -->
 
-<!-- FUNCTIONNAME set_var_lval -->
+<!-- FUNCTIONNAME dictitem_alloc -->
 
-<!-- BUGLINE 2254 -->
+<!-- BUGLINE 5707 -->
 
-<!-- BUGCOLUMN 11 -->
+<!-- BUGCOLUMN 3 -->
 
-<!-- BUGPATHLENGTH 18 -->
+<!-- BUGPATHLENGTH 3 -->
 
 <!-- BUGMETAEND -->
 <!-- REPORTHEADER -->
 <h3>Bug Summary</h3>
 <table class="simpletable">
 <tr><td class="rowname">File:</td><td>eval.c</td></tr>
-<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 2254, column 11</a></td></tr>
-<tr><td class="rowname">Description:</td><td>Access to field 'li_next' results in a dereference of a null pointer (loaded from field 'll_li')</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 5707, column 3</a></td></tr>
+<tr><td class="rowname">Description:</td><td>String copy function overflows destination buffer</td></tr>
 </table>
 <!-- REPORTSUMMARYEXTRA -->
 <h3>Annotated Source Code</h3>
@@ -2301,7 +2301,6 @@
 <tr><td class="num" id="LN2216">2216</td><td class="line">  dictitem_T  *di;</td></tr>
 <tr><td class="num" id="LN2217">2217</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN2218">2218</td><td class="line">  <span class='keyword'>if</span> (lp-&gt;ll_tv == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">1</div></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2219">2219</td><td class="line">    <span class='keyword'>if</span> (!check_changedtick(lp-&gt;ll_name)) {</td></tr>
 <tr><td class="num" id="LN2220">2220</td><td class="line">      cc = *endp;</td></tr>
 <tr><td class="num" id="LN2221">2221</td><td class="line">      *endp = <span class='macro'>NUL<span class='expansion'>'\000'</span></span>;</td></tr>
@@ -2320,45 +2319,28 @@
 <tr><td class="num" id="LN2234">2234</td><td class="line">      *endp = cc;</td></tr>
 <tr><td class="num" id="LN2235">2235</td><td class="line">    }</td></tr>
 <tr><td class="num" id="LN2236">2236</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (tv_check_lock(lp-&gt;ll_newkey == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgControl" style="margin-left:28ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>'?' condition is false</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgControl" style="margin-left:10ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path4" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2237">2237</td><td class="line">                 ? lp-&gt;ll_tv-&gt;v_lock</td></tr>
 <tr><td class="num" id="LN2238">2238</td><td class="line">                 : lp-&gt;ll_tv-&gt;vval.v_dict-&gt;dv_lock, lp-&gt;ll_name))</td></tr>
 <tr><td class="num" id="LN2239">2239</td><td class="line">    ;</td></tr>
 <tr><td class="num" id="LN2240">2240</td><td class="line">  <span class='keyword'>else</span> <span class='keyword'>if</span> (lp-&gt;ll_range) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path4" class="msg msgControl" style="margin-left:8ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path5" title="Next event (5)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN2241">2241</td><td class="line">    <span class='comment'>/*</span></td></tr>
 <tr><td class="num" id="LN2242">2242</td><td class="line">     <span class='comment'>* Assign the List values to the list items.</span></td></tr>
 <tr><td class="num" id="LN2243">2243</td><td class="line">     <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN2244">2244</td><td class="line">    <span class='keyword'>for</span> (ri = rettv-&gt;vval.v_list-&gt;lv_first; <span class="mrange">ri != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>; ) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path5" class="msg msgEvent" style="margin-left:45ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">5</div></td><td><div class="PathNav"><a href="#Path4" title="Previous event (4)">&#x2190;</a></div></td></td><td>Assuming 'ri' is not equal to null</td><td><div class="PathNav"><a href="#Path6" title="Next event (6)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path6" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">6</div></td><td><div class="PathNav"><a href="#Path5" title="Previous event (5)">&#x2190;</a></div></td></td><td>Loop condition is true.  Entering loop body</td><td><div class="PathNav"><a href="#Path7" title="Next event (7)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path10" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">10</div></td><td><div class="PathNav"><a href="#Path9" title="Previous event (9)">&#x2190;</a></div></td></td><td>Loop condition is true.  Entering loop body</td><td><div class="PathNav"><a href="#Path11" title="Next event (11)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path16" class="msg msgControl" style="margin-left:5ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">16</div></td><td><div class="PathNav"><a href="#Path15" title="Previous event (15)">&#x2190;</a></div></td></td><td>Loop condition is true.  Entering loop body</td><td><div class="PathNav"><a href="#Path17" title="Next event (17)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num" id="LN2245">2245</td><td class="line">      <span class='keyword'>if</span> (<span class="mrange">op != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span> &amp;&amp; *op != '=')</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path7" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">7</div></td><td><div class="PathNav"><a href="#Path6" title="Previous event (6)">&#x2190;</a></div></td></td><td>Assuming 'op' is equal to null</td><td><div class="PathNav"><a href="#Path8" title="Next event (8)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2244">2244</td><td class="line">    <span class='keyword'>for</span> (ri = rettv-&gt;vval.v_list-&gt;lv_first; ri != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; ) {</td></tr>
+<tr><td class="num" id="LN2245">2245</td><td class="line">      <span class='keyword'>if</span> (op != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; *op != '=')</td></tr>
 <tr><td class="num" id="LN2246">2246</td><td class="line">        tv_op(&amp;lp-&gt;ll_li-&gt;li_tv, &amp;ri-&gt;li_tv, op);</td></tr>
 <tr><td class="num" id="LN2247">2247</td><td class="line">      <span class='keyword'>else</span> {</td></tr>
 <tr><td class="num" id="LN2248">2248</td><td class="line">        clear_tv(&amp;lp-&gt;ll_li-&gt;li_tv);</td></tr>
-<tr><td class="num" id="LN2249">2249</td><td class="line">        <span class="mrange">copy_tv(&amp;ri-&gt;li_tv, &amp;lp-&gt;ll_li-&gt;li_tv)</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path11" class="msg msgEvent" style="margin-left:9ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">11</div></td><td><div class="PathNav"><a href="#Path10" title="Previous event (10)">&#x2190;</a></div></td></td><td>Value assigned to field 'li_next'</td><td><div class="PathNav"><a href="#Path12" title="Next event (12)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2249">2249</td><td class="line">        copy_tv(&amp;ri-&gt;li_tv, &amp;lp-&gt;ll_li-&gt;li_tv);</td></tr>
 <tr><td class="num" id="LN2250">2250</td><td class="line">      }</td></tr>
 <tr><td class="num" id="LN2251">2251</td><td class="line">      ri = ri-&gt;li_next;</td></tr>
-<tr><td class="num" id="LN2252">2252</td><td class="line">      <span class='keyword'>if</span> (<span class="mrange"><span class="mrange"><span class="mrange">ri == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span></span></span> || (!lp-&gt;ll_empty2 &amp;&amp; lp-&gt;ll_n2 == lp-&gt;ll_n1))</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path8" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">8</div></td><td><div class="PathNav"><a href="#Path7" title="Previous event (7)">&#x2190;</a></div></td></td><td>Assuming 'ri' is not equal to null</td><td><div class="PathNav"><a href="#Path9" title="Next event (9)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path12" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">12</div></td><td><div class="PathNav"><a href="#Path11" title="Previous event (11)">&#x2190;</a></div></td></td><td>Assuming 'ri' is not equal to null</td><td><div class="PathNav"><a href="#Path13" title="Next event (13)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path17" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">17</div></td><td><div class="PathNav"><a href="#Path16" title="Previous event (16)">&#x2190;</a></div></td></td><td>Assuming 'ri' is not equal to null</td><td><div class="PathNav"><a href="#EndPath" title="Next event (18)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2252">2252</td><td class="line">      <span class='keyword'>if</span> (ri == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> || (!lp-&gt;ll_empty2 &amp;&amp; lp-&gt;ll_n2 == lp-&gt;ll_n1))</td></tr>
 <tr><td class="num" id="LN2253">2253</td><td class="line">        <span class='keyword'>break</span>;</td></tr>
-<tr><td class="num" id="LN2254">2254</td><td class="line">      <span class='keyword'>if</span> (<span class="mrange">lp-&gt;<span class="mrange">ll_li</span>-&gt;li_next == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span></span>) {</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path9" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">9</div></td><td><div class="PathNav"><a href="#Path8" title="Previous event (8)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path10" title="Next event (10)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path13" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">13</div></td><td><div class="PathNav"><a href="#Path12" title="Previous event (12)">&#x2190;</a></div></td></td><td>Assuming pointer value is null</td><td><div class="PathNav"><a href="#Path14" title="Next event (14)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path14" class="msg msgControl" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">14</div></td><td><div class="PathNav"><a href="#Path13" title="Previous event (13)">&#x2190;</a></div></td></td><td>Taking true branch</td><td><div class="PathNav"><a href="#Path15" title="Next event (15)">&#x2192;</a></div></td></tr></table></div></td></tr>
-<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:11ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">18</div></td><td><div class="PathNav"><a href="#Path17" title="Previous event (17)">&#x2190;</a></div></td></td><td>Access to field 'li_next' results in a dereference of a null pointer (loaded from field 'll_li')</td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2254">2254</td><td class="line">      <span class='keyword'>if</span> (lp-&gt;ll_li-&gt;li_next == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
 <tr><td class="num" id="LN2255">2255</td><td class="line">        <span class='comment'>/* Need to add an empty item. */</span></td></tr>
 <tr><td class="num" id="LN2256">2256</td><td class="line">        list_append_number(lp-&gt;ll_list, 0);</td></tr>
 <tr><td class="num" id="LN2257">2257</td><td class="line">      }</td></tr>
-<tr><td class="num" id="LN2258">2258</td><td class="line">      <span class="mrange">lp-&gt;ll_li = lp-&gt;ll_li-&gt;li_next</span>;</td></tr>
-<tr><td class="num"></td><td class="line"><div id="Path15" class="msg msgEvent" style="margin-left:7ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">15</div></td><td><div class="PathNav"><a href="#Path14" title="Previous event (14)">&#x2190;</a></div></td></td><td>Null pointer value stored to field 'll_li'</td><td><div class="PathNav"><a href="#Path16" title="Next event (16)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN2258">2258</td><td class="line">      lp-&gt;ll_li = lp-&gt;ll_li-&gt;li_next;</td></tr>
 <tr><td class="num" id="LN2259">2259</td><td class="line">      ++lp-&gt;ll_n1;</td></tr>
 <tr><td class="num" id="LN2260">2260</td><td class="line">    }</td></tr>
 <tr><td class="num" id="LN2261">2261</td><td class="line">    <span class='keyword'>if</span> (ri != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
@@ -5808,6 +5790,9 @@
 <tr><td class="num" id="LN5705">5705</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN5706">5706</td><td class="line">  dictitem_T *di = xmalloc(<span class='keyword'>sizeof</span>(dictitem_T) + <span class='macro'>STRLEN(key)<span class='expansion'>strlen((char *)(key))</span></span>);</td></tr>
 <tr><td class="num" id="LN5707">5707</td><td class="line">  <span class='macro'>STRCPY(di-&gt;di_key, key)<span class='expansion'>strcpy((char *)(di-&gt;di_key), (char *)(key))</span></span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgControl" style="margin-left:3ex; max-width:100em"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Within the expansion of the macro 'STRCPY':
+</td></tr></table><div class="msg msgEvent" style="width:94%; margin-left:5px"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">a</div></td><td valign="top">String copy function overflows destination buffer</td></tr></table></div>
+</div></td></tr>
 <tr><td class="num" id="LN5708">5708</td><td class="line">  di-&gt;di_flags = 0;</td></tr>
 <tr><td class="num" id="LN5709">5709</td><td class="line">  <span class='keyword'>return</span> di;</td></tr>
 <tr><td class="num" id="LN5710">5710</td><td class="line">}</td></tr>
@@ -5920,7 +5905,8 @@
 <tr><td class="num" id="LN5817">5817</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN5818">5818</td><td class="line">  dictitem_T  *item;</td></tr>
 <tr><td class="num" id="LN5819">5819</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN5820">5820</td><td class="line">  item = dictitem_alloc((char_u *)key);</td></tr>
+<tr><td class="num" id="LN5820">5820</td><td class="line">  item = <span class="mrange">dictitem_alloc((char_u *)key)</span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgEvent" style="margin-left:10ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>Calling 'dictitem_alloc'</td><td><div class="PathNav"><a href="#EndPath" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN5821">5821</td><td class="line">  item-&gt;di_tv.v_lock = 0;</td></tr>
 <tr><td class="num" id="LN5822">5822</td><td class="line">  <span class='keyword'>if</span> (str == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
 <tr><td class="num" id="LN5823">5823</td><td class="line">    item-&gt;di_tv.v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
@@ -15210,7 +15196,8 @@
 <tr><td class="num" id="LN15101">15101</td><td class="line">  rettv_dict_alloc(rettv);</td></tr>
 <tr><td class="num" id="LN15102">15102</td><td class="line">  dict = rettv-&gt;vval.v_dict;</td></tr>
 <tr><td class="num" id="LN15103">15103</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN15104">15104</td><td class="line">  dict_add_nr_str(dict, <span class='string_literal'>"lnum"</span>, (<span class='keyword'>long</span>)curwin-&gt;w_cursor.lnum, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN15104">15104</td><td class="line">  <span class="mrange">dict_add_nr_str(dict, <span class='string_literal'>"lnum"</span>, (<span class='keyword'>long</span>)curwin-&gt;w_cursor.lnum, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>Calling 'dict_add_nr_str'</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
 <tr><td class="num" id="LN15105">15105</td><td class="line">  dict_add_nr_str(dict, <span class='string_literal'>"col"</span>, (<span class='keyword'>long</span>)curwin-&gt;w_cursor.col, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
 <tr><td class="num" id="LN15106">15106</td><td class="line">  dict_add_nr_str(dict, <span class='string_literal'>"coladd"</span>, (<span class='keyword'>long</span>)curwin-&gt;w_cursor.coladd, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
 <tr><td class="num" id="LN15107">15107</td><td class="line">  update_curswant();</td></tr>
@@ -19634,7 +19621,7 @@
 <tr><td class="num" id="LN19525">19525</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19526">19526</td><td class="line"><span class='comment'>// JobActivity autocommands will execute vimscript code, so it must be executed</span></td></tr>
 <tr><td class="num" id="LN19527">19527</td><td class="line"><span class='comment'>// on Nvim main loop</span></td></tr>
-<tr><td class="num" id="LN19528">19528</td><td class="line"><span class='directive'>#define <span class='macro'>push_job_event(j, r, t)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (r) { size_t read_count<br> = rstream_pending(r); event_data-&gt;received = xmalloc(read_count<br> + 1); rstream_read(r, event_data-&gt;received, read_count); event_data<br>-&gt;received[read_count] = '\000'; } event_data-&gt;id = job_id<br>(j); event_data-&gt;name = job_data(j); event_data-&gt;type =<br> t; event_push((Event) { .handler = on_job_event, .data = event_data<br> }); } while(0)</span></span>                                      \</span></td></tr>
+<tr><td class="num" id="LN19528">19528</td><td class="line"><span class='directive'>#define <span class='macro'>push_job_event(j, r, t)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (r) { size_t read_count<br> = rstream_pending(r); event_data-&gt;received = xmalloc(read_count<br> + 1); rstream_read(r, event_data-&gt;received, read_count); event_data<br>-&gt;received[read_count] = '\000'; } event_data-&gt;id = job_id<br>(j); event_data-&gt;name = job_data(j); event_data-&gt;type =<br> t; event_push((Event) { .handler = on_job_event, .data = event_data<br> }, 1); } while(0)</span></span>                                      \</span></td></tr>
 <tr><td class="num" id="LN19529">19529</td><td class="line">  <span class='directive'>do {                                                               \</span></td></tr>
 <tr><td class="num" id="LN19530">19530</td><td class="line">    <span class='directive'>JobEvent *event_data = <span class='macro'>kmp_alloc(JobEventPool, job_event_pool)<span class='expansion'>kmp_alloc_JobEventPool(job_event_pool)</span></span>;  \</span></td></tr>
 <tr><td class="num" id="LN19531">19531</td><td class="line">    <span class='directive'>event_data-&gt;received = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;                                     \</span></td></tr>
@@ -19650,26 +19637,26 @@
 <tr><td class="num" id="LN19541">19541</td><td class="line">    <span class='directive'>event_push((Event) {                                             \</span></td></tr>
 <tr><td class="num" id="LN19542">19542</td><td class="line">      <span class='directive'>.handler = on_job_event,                                       \</span></td></tr>
 <tr><td class="num" id="LN19543">19543</td><td class="line">      <span class='directive'>.data = event_data                                             \</span></td></tr>
-<tr><td class="num" id="LN19544">19544</td><td class="line">    <span class='directive'>});                                                              \</span></td></tr>
+<tr><td class="num" id="LN19544">19544</td><td class="line">    <span class='directive'>}, <span class='macro'>true<span class='expansion'>1</span></span>);                                                        \</span></td></tr>
 <tr><td class="num" id="LN19545">19545</td><td class="line">  <span class='directive'>} while(0)</span></td></tr>
 <tr><td class="num" id="LN19546">19546</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19547">19547</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_stdout(RStream *rstream, <span class='keyword'>void</span> *data, <span class='macro'>bool<span class='expansion'>_Bool</span></span> eof)</td></tr>
 <tr><td class="num" id="LN19548">19548</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN19549">19549</td><td class="line">  <span class='keyword'>if</span> (!eof) {</td></tr>
-<tr><td class="num" id="LN19550">19550</td><td class="line">    <span class='macro'>push_job_event(data, rstream, <span class='string_literal'>"stdout"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (rstream) { size_t<br> read_count = rstream_pending(rstream); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(rstream, event_data-&gt;<br>received, read_count); event_data-&gt;received[read_count] = '\000'<br>; } event_data-&gt;id = job_id(data); event_data-&gt;name = job_data<br>(data); event_data-&gt;type = "stdout"; event_push((Event) { .<br>handler = on_job_event, .data = event_data }); } while(0)</span></span>;</td></tr>
+<tr><td class="num" id="LN19550">19550</td><td class="line">    <span class='macro'>push_job_event(data, rstream, <span class='string_literal'>"stdout"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (rstream) { size_t<br> read_count = rstream_pending(rstream); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(rstream, event_data-&gt;<br>received, read_count); event_data-&gt;received[read_count] = '\000'<br>; } event_data-&gt;id = job_id(data); event_data-&gt;name = job_data<br>(data); event_data-&gt;type = "stdout"; event_push((Event) { .<br>handler = on_job_event, .data = event_data }, 1); } while(0)</span></span>;</td></tr>
 <tr><td class="num" id="LN19551">19551</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN19552">19552</td><td class="line">}</td></tr>
 <tr><td class="num" id="LN19553">19553</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19554">19554</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_stderr(RStream *rstream, <span class='keyword'>void</span> *data, <span class='macro'>bool<span class='expansion'>_Bool</span></span> eof)</td></tr>
 <tr><td class="num" id="LN19555">19555</td><td class="line">{</td></tr>
 <tr><td class="num" id="LN19556">19556</td><td class="line">  <span class='keyword'>if</span> (!eof) {</td></tr>
-<tr><td class="num" id="LN19557">19557</td><td class="line">    <span class='macro'>push_job_event(data, rstream, <span class='string_literal'>"stderr"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (rstream) { size_t<br> read_count = rstream_pending(rstream); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(rstream, event_data-&gt;<br>received, read_count); event_data-&gt;received[read_count] = '\000'<br>; } event_data-&gt;id = job_id(data); event_data-&gt;name = job_data<br>(data); event_data-&gt;type = "stderr"; event_push((Event) { .<br>handler = on_job_event, .data = event_data }); } while(0)</span></span>;</td></tr>
+<tr><td class="num" id="LN19557">19557</td><td class="line">    <span class='macro'>push_job_event(data, rstream, <span class='string_literal'>"stderr"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (rstream) { size_t<br> read_count = rstream_pending(rstream); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(rstream, event_data-&gt;<br>received, read_count); event_data-&gt;received[read_count] = '\000'<br>; } event_data-&gt;id = job_id(data); event_data-&gt;name = job_data<br>(data); event_data-&gt;type = "stderr"; event_push((Event) { .<br>handler = on_job_event, .data = event_data }, 1); } while(0)</span></span>;</td></tr>
 <tr><td class="num" id="LN19558">19558</td><td class="line">  }</td></tr>
 <tr><td class="num" id="LN19559">19559</td><td class="line">}</td></tr>
 <tr><td class="num" id="LN19560">19560</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19561">19561</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_exit(Job *job, <span class='keyword'>void</span> *data)</td></tr>
 <tr><td class="num" id="LN19562">19562</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN19563">19563</td><td class="line">  <span class='macro'>push_job_event(job, NULL, <span class='string_literal'>"exit"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (((void*)0)) { size_t<br> read_count = rstream_pending(((void*)0)); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(((void*)0), event_data<br>-&gt;received, read_count); event_data-&gt;received[read_count<br>] = '\000'; } event_data-&gt;id = job_id(job); event_data-&gt;<br>name = job_data(job); event_data-&gt;type = "exit"; event_push<br>((Event) { .handler = on_job_event, .data = event_data }); } while<br>(0)</span></span>;</td></tr>
+<tr><td class="num" id="LN19563">19563</td><td class="line">  <span class='macro'>push_job_event(job, NULL, <span class='string_literal'>"exit"</span>)<span class='expansion'>do { JobEvent *event_data = kmp_alloc_JobEventPool(job_event_pool<br>); event_data-&gt;received = ((void*)0); if (((void*)0)) { size_t<br> read_count = rstream_pending(((void*)0)); event_data-&gt;received<br> = xmalloc(read_count + 1); rstream_read(((void*)0), event_data<br>-&gt;received, read_count); event_data-&gt;received[read_count<br>] = '\000'; } event_data-&gt;id = job_id(job); event_data-&gt;<br>name = job_data(job); event_data-&gt;type = "exit"; event_push<br>((Event) { .handler = on_job_event, .data = event_data }, 1);<br> } while(0)</span></span>;</td></tr>
 <tr><td class="num" id="LN19564">19564</td><td class="line">}</td></tr>
 <tr><td class="num" id="LN19565">19565</td><td class="line"> </td></tr>
 <tr><td class="num" id="LN19566">19566</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_event(Event event)</td></tr>
