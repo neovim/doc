@@ -50,6 +50,7 @@ var searchData=
   ['update_5ftopline',['update_topline',['../move_8c.html#aca0ef19be99af636ff3ef6cfdb1ded0a',1,'move.c']]],
   ['update_5ftopline_5fcursor',['update_topline_cursor',['../ex__docmd_8c.html#ae5d49705c96f05d2a6e8fc61ed37bf44',1,'ex_docmd.c']]],
   ['update_5ftopline_5fredraw',['update_topline_redraw',['../move_8c.html#acf14a437f96953ccd978a72bbf06b465',1,'move.c']]],
+  ['update_5ftopline_5fwin',['update_topline_win',['../move_8c.html#a2ac11883117fd0354fafe1377142c289',1,'move.c']]],
   ['updatescript',['updatescript',['../getchar_8c.html#acf84f93c4c5245fb12e3721cdd69606f',1,'getchar.c']]],
   ['use_5fxterm_5flike_5fmouse',['use_xterm_like_mouse',['../os__unix_8c.html#a759cf7f71e886c052815514a8b8629f1',1,'os_unix.c']]],
   ['use_5fxterm_5fmouse',['use_xterm_mouse',['../os__unix_8c.html#a201515cfaf386c64b7634e5d7e6f596b',1,'os_unix.c']]],

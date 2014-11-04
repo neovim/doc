@@ -146,6 +146,7 @@ var searchData=
   ['sign_5ficon',['SIGN_ICON',['../sign__defs_8h.html#ab23b0cbf73e1f8d5641d69c94b4258fd',1,'sign_defs.h']]],
   ['sign_5flinehl',['SIGN_LINEHL',['../sign__defs_8h.html#a686565295f2633d526262075a95bda6e',1,'sign_defs.h']]],
   ['sign_5ftext',['SIGN_TEXT',['../sign__defs_8h.html#ab54126753f052a394a4cdea566f098a2',1,'sign_defs.h']]],
+  ['signaleventfreer',['SignalEventFreer',['../signal_8c.html#abc5bb87cdf0188ebca8a06011ec5f0a4',1,'signal.c']]],
   ['signcmd_5fdefine',['SIGNCMD_DEFINE',['../ex__cmds_8c.html#a7ce1c10067ba2593d29102f0c12a2b2f',1,'ex_cmds.c']]],
   ['signcmd_5fjump',['SIGNCMD_JUMP',['../ex__cmds_8c.html#ad502a3a55d874f42b5f7202b3acb95e8',1,'ex_cmds.c']]],
   ['signcmd_5flast',['SIGNCMD_LAST',['../ex__cmds_8c.html#a9ad50ce193cc6661fb6da79ea7d4bb8c',1,'ex_cmds.c']]],
