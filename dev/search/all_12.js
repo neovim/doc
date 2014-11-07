@@ -163,7 +163,6 @@ var searchData=
   ['req',['REQ',['../channel_8c.html#ae24ba935f9a0dfd36edd0603b66feed2',1,'channel.c']]],
   ['request_5fid',['request_id',['../structChannelCallFrame.html#aa2bbc079f2d900a9c2cd54279a9d2e11',1,'ChannelCallFrame::request_id()'],['../structRequestEvent.html#a1cfc1b2a81dd3c152ac7a3c0a6acce79',1,'RequestEvent::request_id()']]],
   ['requestevent',['RequestEvent',['../structRequestEvent.html',1,'']]],
-  ['requesteventfreer',['RequestEventFreer',['../channel_8c.html#a6c2c6ef9bedf74e4c29b61d8ce5a7f3a',1,'channel.c']]],
   ['res',['RES',['../channel_8c.html#a65b26605d90a0bcd0e13e05db54f551f',1,'channel.c']]],
   ['rescore',['RESCORE',['../spell_8c.html#ab70c40eefd996fe477e5b2f1dc8bf83a',1,'spell.c']]],
   ['reset',['Reset',['../if__cscope__defs_8h.html#a4749f14dd57f1e60c59d120789a81738a92793663441ced378f4676b8a6524385',1,'if_cscope_defs.h']]],

@@ -30,8 +30,8 @@ var searchData=
   ['noswapfile',['noswapfile',['../structcmdmod__T.html#a60ba129ef0cdc2694342a37ba1e72438',1,'cmdmod_T']]],
   ['nstate',['nstate',['../structnfa__regprog__T.html#a4f7f811289169fca844a6d35a5ae3db4',1,'nfa_regprog_T']]],
   ['nsubexp',['nsubexp',['../structnfa__regprog__T.html#a93a089e399a51725b89e2054003db430',1,'nfa_regprog_T']]],
-  ['nt_5fhashitem',['nt_hashitem',['../structnr__trans.html#a51a2307011981b48b9549dcd0ec0b32e',1,'nr_trans']]],
-  ['nt_5fnew_5fbnum',['nt_new_bnum',['../structnr__trans.html#a38a14ddbb95b454b4a1739cc291ed5ca',1,'nr_trans']]],
+  ['nt_5fhashitem',['nt_hashitem',['../structmf__blocknr__trans__item.html#a39f82297a3c829835e5e70437e8b246a',1,'mf_blocknr_trans_item']]],
+  ['nt_5fnew_5fbnum',['nt_new_bnum',['../structmf__blocknr__trans__item.html#aa9b068fa0c51782d216a09ce745d4d96',1,'mf_blocknr_trans_item']]],
   ['num_5fcharsets',['num_charsets',['../structprt__ps__mbfont__S.html#ab2c55ceaf25e322e3300d6cc6b360c1a',1,'prt_ps_mbfont_S']]],
   ['num_5fencodings',['num_encodings',['../structprt__ps__mbfont__S.html#a8dacff23d13ca6258e96bf51d2d35041',1,'prt_ps_mbfont_S']]],
   ['number',['number',['../structprt__settings__T.html#a21095a0e7eed29ff2be781ee9f87fe1f',1,'prt_settings_T::number()'],['../structoption__table__T.html#a2e51d6b7ebace6b38c7e4d711b78fd4d',1,'option_table_T::number()']]]

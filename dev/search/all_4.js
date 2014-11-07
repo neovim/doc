@@ -71,6 +71,7 @@ var searchData=
   ['del_5ftermcode',['del_termcode',['../term_8c.html#a23beab6adcd942369662088265792361',1,'term.c']]],
   ['del_5ftrailing_5fspaces',['del_trailing_spaces',['../strings_8c.html#a8b571a17f90598378a04a593323b28d9',1,'strings.c']]],
   ['del_5ftypebuf',['del_typebuf',['../getchar_8c.html#a3fd3b11860db7a0a9d863585465c25da',1,'getchar.c']]],
+  ['delayednotification',['DelayedNotification',['../structDelayedNotification.html',1,'']]],
   ['delete_5ffirst_5fmsg',['delete_first_msg',['../message_8c.html#aa4126a2c3996cddd65da5621ebd3df4c',1,'message.c']]],
   ['deleted_5flines',['deleted_lines',['../misc1_8c.html#a27dadabe44d461913b091e10980f35ba',1,'misc1.c']]],
   ['deleted_5flines_5fmark',['deleted_lines_mark',['../misc1_8c.html#a3d93e91e21dfae9934eac20bc6402b62',1,'misc1.c']]],

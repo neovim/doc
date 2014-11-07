@@ -45,7 +45,7 @@ var searchData=
   ['changed_5flines',['changed_lines',['../misc1_8c.html#a0ccf64366d2ce5dbe51dfe1078f9c0e5',1,'misc1.c']]],
   ['changed_5fwindow_5fsetting',['changed_window_setting',['../move_8c.html#a26c84fa73c4dabab7cfdbc7183bcb35a',1,'move.c']]],
   ['changed_5fwindow_5fsetting_5fwin',['changed_window_setting_win',['../move_8c.html#af484f413aa65305bdedc03314afa1fd7',1,'move.c']]],
-  ['channel',['Channel',['../structChannel.html',1,'Channel'],['../structRequestEvent.html#afe4578e4be8f543cd881aa38978e5553',1,'RequestEvent::channel()']]],
+  ['channel',['Channel',['../structChannel.html',1,'Channel'],['../structRequestEvent.html#afe4578e4be8f543cd881aa38978e5553',1,'RequestEvent::channel()'],['../structDelayedNotification.html#ac20045d2f8fc125d8c78d2ae047dcfc1',1,'DelayedNotification::channel()']]],
   ['channel_2ec',['channel.c',['../channel_8c.html',1,'']]],
   ['channel_2eh',['channel.h',['../channel_8h.html',1,'']]],
   ['channel_5fbuffer_5fsize',['CHANNEL_BUFFER_SIZE',['../channel_8c.html#af29b65459670533eee2cfe975af7e114',1,'channel.c']]],

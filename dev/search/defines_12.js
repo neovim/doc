@@ -65,7 +65,6 @@ var searchData=
   ['replace_5fflag',['REPLACE_FLAG',['../vim_8h.html#a75fe78e8f15eaf5cde6e079f7d3b2eb3',1,'vim.h']]],
   ['replace_5fnormal',['REPLACE_NORMAL',['../macros_8h.html#acf16916271d9e8f551864fcd84c90d76',1,'macros.h']]],
   ['req',['REQ',['../channel_8c.html#ae24ba935f9a0dfd36edd0603b66feed2',1,'channel.c']]],
-  ['requesteventfreer',['RequestEventFreer',['../channel_8c.html#a6c2c6ef9bedf74e4c29b61d8ce5a7f3a',1,'channel.c']]],
   ['res',['RES',['../channel_8c.html#a65b26605d90a0bcd0e13e05db54f551f',1,'channel.c']]],
   ['rescore',['RESCORE',['../spell_8c.html#ab70c40eefd996fe477e5b2f1dc8bf83a',1,'spell.c']]],
   ['reset_5fbinding',['RESET_BINDING',['../macros_8h.html#a216659a73fed4cc1e894a9ca3f4deb7f',1,'macros.h']]],
