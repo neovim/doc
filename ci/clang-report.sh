@@ -17,7 +17,8 @@ generate_clang_report() {
     --use-analyzer=$(which clang) \
     --html-title="Neovim Static Analysis Report" \
     -o build/clang-report \
-    ${MAKE_CMD} > ${BUILD_DIR}/scan-build.out
+    ${MAKE_CMD} \
+    | tee ${BUILD_DIR}/scan-build.out
 
   # Copy to doc repository
   rm -rf ${DOC_DIR}/reports/clang
