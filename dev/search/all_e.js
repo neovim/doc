@@ -293,6 +293,8 @@ var searchData=
   ['nv_5fsss',['NV_SSS',['../normal_8c.html#ab0a0ab7f6e6fc7379ed91717c0198688',1,'normal.c']]],
   ['nv_5fsts',['NV_STS',['../normal_8c.html#ab21df0e441f00f996a8be425a4c974e2',1,'normal.c']]],
   ['nvim_5fversion_5fbuild',['NVIM_VERSION_BUILD',['../version__defs_8h.html#ac33d21d40b65e4a14f85935a2371f354',1,'version_defs.h']]],
+  ['nvim_5fversion_5fbuild_5ftype',['NVIM_VERSION_BUILD_TYPE',['../version__defs_8h.html#a43c6ca23a24f1679ad1d6589191d899a',1,'version_defs.h']]],
+  ['nvim_5fversion_5fcflags',['NVIM_VERSION_CFLAGS',['../version__defs_8h.html#a610b0a794b5171e7bcfc57dc1f2f766f',1,'version_defs.h']]],
   ['nvim_5fversion_5fcommit',['NVIM_VERSION_COMMIT',['../version__defs_8h.html#adc701258e37b37f25d00018af955161c',1,'version_defs.h']]],
   ['nvim_5fversion_5flong',['NVIM_VERSION_LONG',['../version__defs_8h.html#a3d79d39fd30e8721ac418bf268d469f0',1,'version_defs.h']]],
   ['nvim_5fversion_5fmajor',['NVIM_VERSION_MAJOR',['../version__defs_8h.html#a55554376e40ebee1faff19e007144c31',1,'version_defs.h']]],
