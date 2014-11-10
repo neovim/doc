@@ -479,190 +479,209 @@
 <tr><td class="num" id="LN389">389</td><td class="line">  <span class='keyword'>return</span> ret;</td></tr>
 <tr><td class="num" id="LN390">390</td><td class="line">}</td></tr>
 <tr><td class="num" id="LN391">391</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN392">392</td><td class="line"><span class='comment'>/// strndup() wrapper</span></td></tr>
+<tr><td class="num" id="LN392">392</td><td class="line"><span class='comment'>/// A version of memchr that starts the search at `src + len`.</span></td></tr>
 <tr><td class="num" id="LN393">393</td><td class="line"><span class='comment'>///</span></td></tr>
-<tr><td class="num" id="LN394">394</td><td class="line"><span class='comment'>/// @see {xmalloc}</span></td></tr>
-<tr><td class="num" id="LN395">395</td><td class="line"><span class='comment'>/// @param str 0-terminated string that will be copied</span></td></tr>
-<tr><td class="num" id="LN396">396</td><td class="line"><span class='comment'>/// @return pointer to a copy of the string</span></td></tr>
-<tr><td class="num" id="LN397">397</td><td class="line"><span class='keyword'>char</span> *xstrndup(<span class='keyword'>const</span> <span class='keyword'>char</span> *str, size_t len)</td></tr>
-<tr><td class="num" id="LN398">398</td><td class="line">  FUNC_ATTR_MALLOC FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_RET</td></tr>
-<tr><td class="num" id="LN399">399</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN400">400</td><td class="line">  <span class='keyword'>char</span> *p = memchr(str, '\0', len);</td></tr>
-<tr><td class="num" id="LN401">401</td><td class="line">  <span class='keyword'>return</span> xmemdupz(str, p ? (size_t)(p - str) : len);</td></tr>
-<tr><td class="num" id="LN402">402</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN403">403</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN404">404</td><td class="line"><span class='comment'>/// Duplicates a chunk of memory using xmalloc</span></td></tr>
-<tr><td class="num" id="LN405">405</td><td class="line"><span class='comment'>///</span></td></tr>
-<tr><td class="num" id="LN406">406</td><td class="line"><span class='comment'>/// @see {xmalloc}</span></td></tr>
-<tr><td class="num" id="LN407">407</td><td class="line"><span class='comment'>/// @param data pointer to the chunk</span></td></tr>
-<tr><td class="num" id="LN408">408</td><td class="line"><span class='comment'>/// @param len size of the chunk</span></td></tr>
-<tr><td class="num" id="LN409">409</td><td class="line"><span class='comment'>/// @return a pointer</span></td></tr>
-<tr><td class="num" id="LN410">410</td><td class="line"><span class='keyword'>void</span> *xmemdup(<span class='keyword'>const</span> <span class='keyword'>void</span> *data, size_t len)</td></tr>
-<tr><td class="num" id="LN411">411</td><td class="line">  FUNC_ATTR_MALLOC FUNC_ATTR_ALLOC_SIZE(2) FUNC_ATTR_NONNULL_RET</td></tr>
-<tr><td class="num" id="LN412">412</td><td class="line">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ALL</td></tr>
-<tr><td class="num" id="LN413">413</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN414">414</td><td class="line">  <span class='keyword'>return</span> memcpy(xmalloc(len), data, len);</td></tr>
-<tr><td class="num" id="LN415">415</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN416">416</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN417">417</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN418">418</td><td class="line"> <span class='comment'>* Avoid repeating the error message many times (they take 1 second each).</span></td></tr>
-<tr><td class="num" id="LN419">419</td><td class="line"> <span class='comment'>* Did_outofmem_msg is reset when a character is read.</span></td></tr>
-<tr><td class="num" id="LN420">420</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN421">421</td><td class="line"><span class='keyword'>void</span> do_outofmem_msg(size_t size)</td></tr>
-<tr><td class="num" id="LN422">422</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN423">423</td><td class="line">  <span class='keyword'>if</span> (!did_outofmem_msg) {</td></tr>
-<tr><td class="num" id="LN424">424</td><td class="line">    <span class='comment'>/* Don't hide this message */</span></td></tr>
-<tr><td class="num" id="LN425">425</td><td class="line">    emsg_silent = 0;</td></tr>
-<tr><td class="num" id="LN426">426</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN427">427</td><td class="line">    <span class='comment'>/* Must come first to avoid coming back here when printing the error</span></td></tr>
-<tr><td class="num" id="LN428">428</td><td class="line">     <span class='comment'>* message fails, e.g. when setting v:errmsg. */</span></td></tr>
-<tr><td class="num" id="LN429">429</td><td class="line">    did_outofmem_msg = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN430">430</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN431">431</td><td class="line">    <span class='macro'>EMSGU(_(<span class='string_literal'>"E342: Out of memory!  (allocating %"</span> PRIu64 <span class='string_literal'>" bytes)"</span>), size)<span class='expansion'>emsgu((char_u *)(gettext((char *)("E342: Out of memory!  (allocating %"<br> "l" "u" " bytes)"))), (uint64_t)(size))</span></span>;</td></tr>
-<tr><td class="num" id="LN432">432</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN433">433</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN434">434</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN435">435</td><td class="line"><span class='directive'>#if defined(EXITFREE) || defined(PROTO)</span></td></tr>
-<tr><td class="num" id="LN436">436</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN437">437</td><td class="line"><span class='comment'>/*</span></td></tr>
-<tr><td class="num" id="LN438">438</td><td class="line"> <span class='comment'>* Free everything that we allocated.</span></td></tr>
-<tr><td class="num" id="LN439">439</td><td class="line"> <span class='comment'>* Can be used to detect memory leaks, e.g., with ccmalloc.</span></td></tr>
-<tr><td class="num" id="LN440">440</td><td class="line"> <span class='comment'>* NOTE: This is tricky!  Things are freed that functions depend on.  Don't be</span></td></tr>
-<tr><td class="num" id="LN441">441</td><td class="line"> <span class='comment'>* surprised if Vim crashes...</span></td></tr>
-<tr><td class="num" id="LN442">442</td><td class="line"> <span class='comment'>* Some things can't be freed, esp. things local to a library function.</span></td></tr>
-<tr><td class="num" id="LN443">443</td><td class="line"> <span class='comment'>*/</span></td></tr>
-<tr><td class="num" id="LN444">444</td><td class="line"><span class='keyword'>void</span> free_all_mem(<span class='keyword'>void</span>)</td></tr>
-<tr><td class="num" id="LN445">445</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN446">446</td><td class="line">  buf_T       *buf, *nextbuf;</td></tr>
-<tr><td class="num" id="LN447">447</td><td class="line">  <span class='keyword'>static</span> <span class='macro'>bool<span class='expansion'>_Bool</span></span> entered = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN448">448</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN449">449</td><td class="line">  <span class='comment'>/* When we cause a crash here it is caught and Vim tries to exit cleanly.</span></td></tr>
-<tr><td class="num" id="LN450">450</td><td class="line">   <span class='comment'>* Don't try freeing everything again. */</span></td></tr>
-<tr><td class="num" id="LN451">451</td><td class="line">  <span class='keyword'>if</span> (entered)</td></tr>
-<tr><td class="num" id="LN452">452</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
-<tr><td class="num" id="LN453">453</td><td class="line">  entered = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN454">454</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN455">455</td><td class="line">  block_autocmds();         <span class='comment'>/* don't want to trigger autocommands here */</span></td></tr>
-<tr><td class="num" id="LN456">456</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN457">457</td><td class="line">  <span class='comment'>/* Close all tabs and windows.  Reset 'equalalways' to avoid redraws. */</span></td></tr>
-<tr><td class="num" id="LN458">458</td><td class="line">  p_ea = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN459">459</td><td class="line">  <span class='keyword'>if</span> (first_tabpage-&gt;tp_next != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
-<tr><td class="num" id="LN460">460</td><td class="line">    do_cmdline_cmd((char_u *)<span class='string_literal'>"tabonly!"</span>);</td></tr>
-<tr><td class="num" id="LN461">461</td><td class="line">  <span class='keyword'>if</span> (firstwin != lastwin)</td></tr>
-<tr><td class="num" id="LN462">462</td><td class="line">    do_cmdline_cmd((char_u *)<span class='string_literal'>"only!"</span>);</td></tr>
-<tr><td class="num" id="LN463">463</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN464">464</td><td class="line">  <span class='comment'>/* Free all spell info. */</span></td></tr>
-<tr><td class="num" id="LN465">465</td><td class="line">  spell_free_all();</td></tr>
-<tr><td class="num" id="LN466">466</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN467">467</td><td class="line">  <span class='comment'>/* Clear user commands (before deleting buffers). */</span></td></tr>
-<tr><td class="num" id="LN468">468</td><td class="line">  ex_comclear(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
-<tr><td class="num" id="LN469">469</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN470">470</td><td class="line">  <span class='comment'>/* Clear menus. */</span></td></tr>
-<tr><td class="num" id="LN471">471</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"aunmenu *"</span>);</td></tr>
-<tr><td class="num" id="LN472">472</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"menutranslate clear"</span>);</td></tr>
+<tr><td class="num" id="LN394">394</td><td class="line"><span class='comment'>/// Based on glibc's memrchr.</span></td></tr>
+<tr><td class="num" id="LN395">395</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN396">396</td><td class="line"><span class='comment'>/// @param src The source memory object.</span></td></tr>
+<tr><td class="num" id="LN397">397</td><td class="line"><span class='comment'>/// @param c   The byte to search for.</span></td></tr>
+<tr><td class="num" id="LN398">398</td><td class="line"><span class='comment'>/// @param len The length of the memory object.</span></td></tr>
+<tr><td class="num" id="LN399">399</td><td class="line"><span class='comment'>/// @returns a pointer to the found byte in src[len], or NULL.</span></td></tr>
+<tr><td class="num" id="LN400">400</td><td class="line"><span class='keyword'>void</span> *xmemrchr(<span class='keyword'>void</span> *src, uint8_t c, size_t len)</td></tr>
+<tr><td class="num" id="LN401">401</td><td class="line">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_PURE</td></tr>
+<tr><td class="num" id="LN402">402</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN403">403</td><td class="line">  <span class='keyword'>while</span> (len--) {</td></tr>
+<tr><td class="num" id="LN404">404</td><td class="line">    <span class='keyword'>if</span> (((uint8_t *)src)[len] == c) {</td></tr>
+<tr><td class="num" id="LN405">405</td><td class="line">      <span class='keyword'>return</span> (uint8_t *) src + len;</td></tr>
+<tr><td class="num" id="LN406">406</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN407">407</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN408">408</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN409">409</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN410">410</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN411">411</td><td class="line"><span class='comment'>/// strndup() wrapper</span></td></tr>
+<tr><td class="num" id="LN412">412</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN413">413</td><td class="line"><span class='comment'>/// @see {xmalloc}</span></td></tr>
+<tr><td class="num" id="LN414">414</td><td class="line"><span class='comment'>/// @param str 0-terminated string that will be copied</span></td></tr>
+<tr><td class="num" id="LN415">415</td><td class="line"><span class='comment'>/// @return pointer to a copy of the string</span></td></tr>
+<tr><td class="num" id="LN416">416</td><td class="line"><span class='keyword'>char</span> *xstrndup(<span class='keyword'>const</span> <span class='keyword'>char</span> *str, size_t len)</td></tr>
+<tr><td class="num" id="LN417">417</td><td class="line">  FUNC_ATTR_MALLOC FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_RET</td></tr>
+<tr><td class="num" id="LN418">418</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN419">419</td><td class="line">  <span class='keyword'>char</span> *p = memchr(str, '\0', len);</td></tr>
+<tr><td class="num" id="LN420">420</td><td class="line">  <span class='keyword'>return</span> xmemdupz(str, p ? (size_t)(p - str) : len);</td></tr>
+<tr><td class="num" id="LN421">421</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN422">422</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN423">423</td><td class="line"><span class='comment'>/// Duplicates a chunk of memory using xmalloc</span></td></tr>
+<tr><td class="num" id="LN424">424</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN425">425</td><td class="line"><span class='comment'>/// @see {xmalloc}</span></td></tr>
+<tr><td class="num" id="LN426">426</td><td class="line"><span class='comment'>/// @param data pointer to the chunk</span></td></tr>
+<tr><td class="num" id="LN427">427</td><td class="line"><span class='comment'>/// @param len size of the chunk</span></td></tr>
+<tr><td class="num" id="LN428">428</td><td class="line"><span class='comment'>/// @return a pointer</span></td></tr>
+<tr><td class="num" id="LN429">429</td><td class="line"><span class='keyword'>void</span> *xmemdup(<span class='keyword'>const</span> <span class='keyword'>void</span> *data, size_t len)</td></tr>
+<tr><td class="num" id="LN430">430</td><td class="line">  FUNC_ATTR_MALLOC FUNC_ATTR_ALLOC_SIZE(2) FUNC_ATTR_NONNULL_RET</td></tr>
+<tr><td class="num" id="LN431">431</td><td class="line">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN432">432</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN433">433</td><td class="line">  <span class='keyword'>return</span> memcpy(xmalloc(len), data, len);</td></tr>
+<tr><td class="num" id="LN434">434</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN435">435</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN436">436</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN437">437</td><td class="line"> <span class='comment'>* Avoid repeating the error message many times (they take 1 second each).</span></td></tr>
+<tr><td class="num" id="LN438">438</td><td class="line"> <span class='comment'>* Did_outofmem_msg is reset when a character is read.</span></td></tr>
+<tr><td class="num" id="LN439">439</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN440">440</td><td class="line"><span class='keyword'>void</span> do_outofmem_msg(size_t size)</td></tr>
+<tr><td class="num" id="LN441">441</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN442">442</td><td class="line">  <span class='keyword'>if</span> (!did_outofmem_msg) {</td></tr>
+<tr><td class="num" id="LN443">443</td><td class="line">    <span class='comment'>/* Don't hide this message */</span></td></tr>
+<tr><td class="num" id="LN444">444</td><td class="line">    emsg_silent = 0;</td></tr>
+<tr><td class="num" id="LN445">445</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN446">446</td><td class="line">    <span class='comment'>/* Must come first to avoid coming back here when printing the error</span></td></tr>
+<tr><td class="num" id="LN447">447</td><td class="line">     <span class='comment'>* message fails, e.g. when setting v:errmsg. */</span></td></tr>
+<tr><td class="num" id="LN448">448</td><td class="line">    did_outofmem_msg = <span class='macro'>TRUE<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN449">449</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN450">450</td><td class="line">    <span class='macro'>EMSGU(_(<span class='string_literal'>"E342: Out of memory!  (allocating %"</span> PRIu64 <span class='string_literal'>" bytes)"</span>), size)<span class='expansion'>emsgu((char_u *)(gettext((char *)("E342: Out of memory!  (allocating %"<br> "l" "u" " bytes)"))), (uint64_t)(size))</span></span>;</td></tr>
+<tr><td class="num" id="LN451">451</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN452">452</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN453">453</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN454">454</td><td class="line"><span class='directive'>#if defined(EXITFREE) || defined(PROTO)</span></td></tr>
+<tr><td class="num" id="LN455">455</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN456">456</td><td class="line"><span class='comment'>/*</span></td></tr>
+<tr><td class="num" id="LN457">457</td><td class="line"> <span class='comment'>* Free everything that we allocated.</span></td></tr>
+<tr><td class="num" id="LN458">458</td><td class="line"> <span class='comment'>* Can be used to detect memory leaks, e.g., with ccmalloc.</span></td></tr>
+<tr><td class="num" id="LN459">459</td><td class="line"> <span class='comment'>* NOTE: This is tricky!  Things are freed that functions depend on.  Don't be</span></td></tr>
+<tr><td class="num" id="LN460">460</td><td class="line"> <span class='comment'>* surprised if Vim crashes...</span></td></tr>
+<tr><td class="num" id="LN461">461</td><td class="line"> <span class='comment'>* Some things can't be freed, esp. things local to a library function.</span></td></tr>
+<tr><td class="num" id="LN462">462</td><td class="line"> <span class='comment'>*/</span></td></tr>
+<tr><td class="num" id="LN463">463</td><td class="line"><span class='keyword'>void</span> free_all_mem(<span class='keyword'>void</span>)</td></tr>
+<tr><td class="num" id="LN464">464</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN465">465</td><td class="line">  buf_T       *buf, *nextbuf;</td></tr>
+<tr><td class="num" id="LN466">466</td><td class="line">  <span class='keyword'>static</span> <span class='macro'>bool<span class='expansion'>_Bool</span></span> entered = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN467">467</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN468">468</td><td class="line">  <span class='comment'>/* When we cause a crash here it is caught and Vim tries to exit cleanly.</span></td></tr>
+<tr><td class="num" id="LN469">469</td><td class="line">   <span class='comment'>* Don't try freeing everything again. */</span></td></tr>
+<tr><td class="num" id="LN470">470</td><td class="line">  <span class='keyword'>if</span> (entered)</td></tr>
+<tr><td class="num" id="LN471">471</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN472">472</td><td class="line">  entered = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
 <tr><td class="num" id="LN473">473</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN474">474</td><td class="line">  <span class='comment'>/* Clear mappings, abbreviations, breakpoints. */</span></td></tr>
-<tr><td class="num" id="LN475">475</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"lmapclear"</span>);</td></tr>
-<tr><td class="num" id="LN476">476</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"xmapclear"</span>);</td></tr>
-<tr><td class="num" id="LN477">477</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"mapclear"</span>);</td></tr>
-<tr><td class="num" id="LN478">478</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"mapclear!"</span>);</td></tr>
-<tr><td class="num" id="LN479">479</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"abclear"</span>);</td></tr>
-<tr><td class="num" id="LN480">480</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"breakdel *"</span>);</td></tr>
-<tr><td class="num" id="LN481">481</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"profdel *"</span>);</td></tr>
-<tr><td class="num" id="LN482">482</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"set keymap="</span>);</td></tr>
-<tr><td class="num" id="LN483">483</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN484">484</td><td class="line">  free_titles();</td></tr>
-<tr><td class="num" id="LN485">485</td><td class="line">  free_findfile();</td></tr>
-<tr><td class="num" id="LN486">486</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN487">487</td><td class="line">  <span class='comment'>/* Obviously named calls. */</span></td></tr>
-<tr><td class="num" id="LN488">488</td><td class="line">  free_all_autocmds();</td></tr>
-<tr><td class="num" id="LN489">489</td><td class="line">  clear_termcodes();</td></tr>
-<tr><td class="num" id="LN490">490</td><td class="line">  free_all_options();</td></tr>
-<tr><td class="num" id="LN491">491</td><td class="line">  free_all_marks();</td></tr>
-<tr><td class="num" id="LN492">492</td><td class="line">  alist_clear(&amp;global_alist);</td></tr>
-<tr><td class="num" id="LN493">493</td><td class="line">  free_homedir();</td></tr>
-<tr><td class="num" id="LN494">494</td><td class="line">  free_users();</td></tr>
-<tr><td class="num" id="LN495">495</td><td class="line">  free_search_patterns();</td></tr>
-<tr><td class="num" id="LN496">496</td><td class="line">  free_old_sub();</td></tr>
-<tr><td class="num" id="LN497">497</td><td class="line">  free_last_insert();</td></tr>
-<tr><td class="num" id="LN498">498</td><td class="line">  free_prev_shellcmd();</td></tr>
-<tr><td class="num" id="LN499">499</td><td class="line">  free_regexp_stuff();</td></tr>
-<tr><td class="num" id="LN500">500</td><td class="line">  free_tag_stuff();</td></tr>
-<tr><td class="num" id="LN501">501</td><td class="line">  free_cd_dir();</td></tr>
-<tr><td class="num" id="LN502">502</td><td class="line">  free_signs();</td></tr>
-<tr><td class="num" id="LN503">503</td><td class="line">  set_expr_line(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
-<tr><td class="num" id="LN504">504</td><td class="line">  diff_clear(curtab);</td></tr>
-<tr><td class="num" id="LN505">505</td><td class="line">  clear_sb_text();            <span class='comment'>/* free any scrollback text */</span></td></tr>
-<tr><td class="num" id="LN506">506</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN507">507</td><td class="line">  <span class='comment'>/* Free some global vars. */</span></td></tr>
-<tr><td class="num" id="LN508">508</td><td class="line">  free(last_cmdline);</td></tr>
-<tr><td class="num" id="LN509">509</td><td class="line">  free(new_last_cmdline);</td></tr>
-<tr><td class="num" id="LN510">510</td><td class="line">  set_keep_msg(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, 0);</td></tr>
-<tr><td class="num" id="LN511">511</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN512">512</td><td class="line">  <span class='comment'>/* Clear cmdline history. */</span></td></tr>
-<tr><td class="num" id="LN513">513</td><td class="line">  p_hi = 0;</td></tr>
-<tr><td class="num" id="LN514">514</td><td class="line">  init_history();</td></tr>
-<tr><td class="num" id="LN515">515</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN516">516</td><td class="line">  qf_free_all(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
-<tr><td class="num" id="LN517">517</td><td class="line">  <span class='comment'>/* Free all location lists */</span></td></tr>
-<tr><td class="num" id="LN518">518</td><td class="line">  <span class='macro'>FOR_ALL_TAB_WINDOWS(tab, win)<span class='expansion'>for (tabpage_T *tab = first_tabpage; tab != ((void*)0); tab =<br> tab-&gt;tp_next) for (win_T *win = ((tab) == curtab) ? firstwin<br> : (tab)-&gt;tp_firstwin; win != ((void*)0); win = win-&gt;w_next<br>)</span></span> {</td></tr>
-<tr><td class="num" id="LN519">519</td><td class="line">    qf_free_all(win);</td></tr>
-<tr><td class="num" id="LN520">520</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN521">521</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN522">522</td><td class="line">  <span class='comment'>/* Close all script inputs. */</span></td></tr>
-<tr><td class="num" id="LN523">523</td><td class="line">  close_all_scripts();</td></tr>
-<tr><td class="num" id="LN524">524</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN525">525</td><td class="line">  <span class='comment'>/* Destroy all windows.  Must come before freeing buffers. */</span></td></tr>
-<tr><td class="num" id="LN526">526</td><td class="line">  win_free_all();</td></tr>
-<tr><td class="num" id="LN527">527</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN528">528</td><td class="line">  <span class='comment'>/* Free all buffers.  Reset 'autochdir' to avoid accessing things that</span></td></tr>
-<tr><td class="num" id="LN529">529</td><td class="line">   <span class='comment'>* were freed already. */</span></td></tr>
-<tr><td class="num" id="LN530">530</td><td class="line">  p_acd = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN531">531</td><td class="line">  <span class='keyword'>for</span> (buf = firstbuf; buf != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; ) {</td></tr>
-<tr><td class="num" id="LN532">532</td><td class="line">    nextbuf = buf-&gt;b_next;</td></tr>
-<tr><td class="num" id="LN533">533</td><td class="line">    close_buffer(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, buf, DOBUF_WIPE, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
-<tr><td class="num" id="LN534">534</td><td class="line">    <span class='keyword'>if</span> (buf_valid(buf))</td></tr>
-<tr><td class="num" id="LN535">535</td><td class="line">      buf = nextbuf;            <span class='comment'>/* didn't work, try next one */</span></td></tr>
-<tr><td class="num" id="LN536">536</td><td class="line">    <span class='keyword'>else</span></td></tr>
-<tr><td class="num" id="LN537">537</td><td class="line">      buf = firstbuf;</td></tr>
-<tr><td class="num" id="LN538">538</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN539">539</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN540">540</td><td class="line">  free_cmdline_buf();</td></tr>
-<tr><td class="num" id="LN541">541</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN542">542</td><td class="line">  <span class='comment'>/* Clear registers. */</span></td></tr>
-<tr><td class="num" id="LN543">543</td><td class="line">  clear_registers();</td></tr>
-<tr><td class="num" id="LN544">544</td><td class="line">  ResetRedobuff();</td></tr>
-<tr><td class="num" id="LN545">545</td><td class="line">  ResetRedobuff();</td></tr>
+<tr><td class="num" id="LN474">474</td><td class="line">  block_autocmds();         <span class='comment'>/* don't want to trigger autocommands here */</span></td></tr>
+<tr><td class="num" id="LN475">475</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN476">476</td><td class="line">  <span class='comment'>/* Close all tabs and windows.  Reset 'equalalways' to avoid redraws. */</span></td></tr>
+<tr><td class="num" id="LN477">477</td><td class="line">  p_ea = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN478">478</td><td class="line">  <span class='keyword'>if</span> (first_tabpage-&gt;tp_next != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>)</td></tr>
+<tr><td class="num" id="LN479">479</td><td class="line">    do_cmdline_cmd((char_u *)<span class='string_literal'>"tabonly!"</span>);</td></tr>
+<tr><td class="num" id="LN480">480</td><td class="line">  <span class='keyword'>if</span> (firstwin != lastwin)</td></tr>
+<tr><td class="num" id="LN481">481</td><td class="line">    do_cmdline_cmd((char_u *)<span class='string_literal'>"only!"</span>);</td></tr>
+<tr><td class="num" id="LN482">482</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN483">483</td><td class="line">  <span class='comment'>/* Free all spell info. */</span></td></tr>
+<tr><td class="num" id="LN484">484</td><td class="line">  spell_free_all();</td></tr>
+<tr><td class="num" id="LN485">485</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN486">486</td><td class="line">  <span class='comment'>/* Clear user commands (before deleting buffers). */</span></td></tr>
+<tr><td class="num" id="LN487">487</td><td class="line">  ex_comclear(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN488">488</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN489">489</td><td class="line">  <span class='comment'>/* Clear menus. */</span></td></tr>
+<tr><td class="num" id="LN490">490</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"aunmenu *"</span>);</td></tr>
+<tr><td class="num" id="LN491">491</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"menutranslate clear"</span>);</td></tr>
+<tr><td class="num" id="LN492">492</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN493">493</td><td class="line">  <span class='comment'>/* Clear mappings, abbreviations, breakpoints. */</span></td></tr>
+<tr><td class="num" id="LN494">494</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"lmapclear"</span>);</td></tr>
+<tr><td class="num" id="LN495">495</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"xmapclear"</span>);</td></tr>
+<tr><td class="num" id="LN496">496</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"mapclear"</span>);</td></tr>
+<tr><td class="num" id="LN497">497</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"mapclear!"</span>);</td></tr>
+<tr><td class="num" id="LN498">498</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"abclear"</span>);</td></tr>
+<tr><td class="num" id="LN499">499</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"breakdel *"</span>);</td></tr>
+<tr><td class="num" id="LN500">500</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"profdel *"</span>);</td></tr>
+<tr><td class="num" id="LN501">501</td><td class="line">  do_cmdline_cmd((char_u *)<span class='string_literal'>"set keymap="</span>);</td></tr>
+<tr><td class="num" id="LN502">502</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN503">503</td><td class="line">  free_titles();</td></tr>
+<tr><td class="num" id="LN504">504</td><td class="line">  free_findfile();</td></tr>
+<tr><td class="num" id="LN505">505</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN506">506</td><td class="line">  <span class='comment'>/* Obviously named calls. */</span></td></tr>
+<tr><td class="num" id="LN507">507</td><td class="line">  free_all_autocmds();</td></tr>
+<tr><td class="num" id="LN508">508</td><td class="line">  clear_termcodes();</td></tr>
+<tr><td class="num" id="LN509">509</td><td class="line">  free_all_options();</td></tr>
+<tr><td class="num" id="LN510">510</td><td class="line">  free_all_marks();</td></tr>
+<tr><td class="num" id="LN511">511</td><td class="line">  alist_clear(&amp;global_alist);</td></tr>
+<tr><td class="num" id="LN512">512</td><td class="line">  free_homedir();</td></tr>
+<tr><td class="num" id="LN513">513</td><td class="line">  free_users();</td></tr>
+<tr><td class="num" id="LN514">514</td><td class="line">  free_search_patterns();</td></tr>
+<tr><td class="num" id="LN515">515</td><td class="line">  free_old_sub();</td></tr>
+<tr><td class="num" id="LN516">516</td><td class="line">  free_last_insert();</td></tr>
+<tr><td class="num" id="LN517">517</td><td class="line">  free_prev_shellcmd();</td></tr>
+<tr><td class="num" id="LN518">518</td><td class="line">  free_regexp_stuff();</td></tr>
+<tr><td class="num" id="LN519">519</td><td class="line">  free_tag_stuff();</td></tr>
+<tr><td class="num" id="LN520">520</td><td class="line">  free_cd_dir();</td></tr>
+<tr><td class="num" id="LN521">521</td><td class="line">  free_signs();</td></tr>
+<tr><td class="num" id="LN522">522</td><td class="line">  set_expr_line(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN523">523</td><td class="line">  diff_clear(curtab);</td></tr>
+<tr><td class="num" id="LN524">524</td><td class="line">  clear_sb_text();            <span class='comment'>/* free any scrollback text */</span></td></tr>
+<tr><td class="num" id="LN525">525</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN526">526</td><td class="line">  <span class='comment'>/* Free some global vars. */</span></td></tr>
+<tr><td class="num" id="LN527">527</td><td class="line">  free(last_cmdline);</td></tr>
+<tr><td class="num" id="LN528">528</td><td class="line">  free(new_last_cmdline);</td></tr>
+<tr><td class="num" id="LN529">529</td><td class="line">  set_keep_msg(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, 0);</td></tr>
+<tr><td class="num" id="LN530">530</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN531">531</td><td class="line">  <span class='comment'>/* Clear cmdline history. */</span></td></tr>
+<tr><td class="num" id="LN532">532</td><td class="line">  p_hi = 0;</td></tr>
+<tr><td class="num" id="LN533">533</td><td class="line">  init_history();</td></tr>
+<tr><td class="num" id="LN534">534</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN535">535</td><td class="line">  qf_free_all(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN536">536</td><td class="line">  <span class='comment'>/* Free all location lists */</span></td></tr>
+<tr><td class="num" id="LN537">537</td><td class="line">  <span class='macro'>FOR_ALL_TAB_WINDOWS(tab, win)<span class='expansion'>for (tabpage_T *tab = first_tabpage; tab != ((void*)0); tab =<br> tab-&gt;tp_next) for (win_T *win = ((tab) == curtab) ? firstwin<br> : (tab)-&gt;tp_firstwin; win != ((void*)0); win = win-&gt;w_next<br>)</span></span> {</td></tr>
+<tr><td class="num" id="LN538">538</td><td class="line">    qf_free_all(win);</td></tr>
+<tr><td class="num" id="LN539">539</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN540">540</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN541">541</td><td class="line">  <span class='comment'>/* Close all script inputs. */</span></td></tr>
+<tr><td class="num" id="LN542">542</td><td class="line">  close_all_scripts();</td></tr>
+<tr><td class="num" id="LN543">543</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN544">544</td><td class="line">  <span class='comment'>/* Destroy all windows.  Must come before freeing buffers. */</span></td></tr>
+<tr><td class="num" id="LN545">545</td><td class="line">  win_free_all();</td></tr>
 <tr><td class="num" id="LN546">546</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN547">547</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN548">548</td><td class="line">  <span class='comment'>/* highlight info */</span></td></tr>
-<tr><td class="num" id="LN549">549</td><td class="line">  free_highlight();</td></tr>
-<tr><td class="num" id="LN550">550</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN551">551</td><td class="line">  reset_last_sourcing();</td></tr>
-<tr><td class="num" id="LN552">552</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN553">553</td><td class="line">  free_tabpage(first_tabpage);</td></tr>
-<tr><td class="num" id="LN554">554</td><td class="line">  first_tabpage = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN555">555</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN556">556</td><td class="line"><span class='directive'># ifdef UNIX</span></td></tr>
-<tr><td class="num" id="LN557">557</td><td class="line">  <span class='comment'>/* Machine-specific free. */</span></td></tr>
-<tr><td class="num" id="LN558">558</td><td class="line">  mch_free_mem();</td></tr>
-<tr><td class="num" id="LN559">559</td><td class="line"><span class='directive'># endif</span></td></tr>
+<tr><td class="num" id="LN547">547</td><td class="line">  <span class='comment'>/* Free all buffers.  Reset 'autochdir' to avoid accessing things that</span></td></tr>
+<tr><td class="num" id="LN548">548</td><td class="line">   <span class='comment'>* were freed already. */</span></td></tr>
+<tr><td class="num" id="LN549">549</td><td class="line">  p_acd = <span class='macro'>FALSE<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN550">550</td><td class="line">  <span class='keyword'>for</span> (buf = firstbuf; buf != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>; ) {</td></tr>
+<tr><td class="num" id="LN551">551</td><td class="line">    nextbuf = buf-&gt;b_next;</td></tr>
+<tr><td class="num" id="LN552">552</td><td class="line">    close_buffer(<span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, buf, DOBUF_WIPE, <span class='macro'>FALSE<span class='expansion'>0</span></span>);</td></tr>
+<tr><td class="num" id="LN553">553</td><td class="line">    <span class='keyword'>if</span> (buf_valid(buf))</td></tr>
+<tr><td class="num" id="LN554">554</td><td class="line">      buf = nextbuf;            <span class='comment'>/* didn't work, try next one */</span></td></tr>
+<tr><td class="num" id="LN555">555</td><td class="line">    <span class='keyword'>else</span></td></tr>
+<tr><td class="num" id="LN556">556</td><td class="line">      buf = firstbuf;</td></tr>
+<tr><td class="num" id="LN557">557</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN558">558</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN559">559</td><td class="line">  free_cmdline_buf();</td></tr>
 <tr><td class="num" id="LN560">560</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN561">561</td><td class="line">  <span class='comment'>/* message history */</span></td></tr>
-<tr><td class="num" id="LN562">562</td><td class="line">  <span class='keyword'>for</span> (;; )</td></tr>
-<tr><td class="num" id="LN563">563</td><td class="line">    <span class='keyword'>if</span> (delete_first_msg() == <span class='macro'>FAIL<span class='expansion'>0</span></span>)</td></tr>
-<tr><td class="num" id="LN564">564</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN561">561</td><td class="line">  <span class='comment'>/* Clear registers. */</span></td></tr>
+<tr><td class="num" id="LN562">562</td><td class="line">  clear_registers();</td></tr>
+<tr><td class="num" id="LN563">563</td><td class="line">  ResetRedobuff();</td></tr>
+<tr><td class="num" id="LN564">564</td><td class="line">  ResetRedobuff();</td></tr>
 <tr><td class="num" id="LN565">565</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN566">566</td><td class="line">  eval_clear();</td></tr>
-<tr><td class="num" id="LN567">567</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN568">568</td><td class="line">  free_termoptions();</td></tr>
+<tr><td class="num" id="LN566">566</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN567">567</td><td class="line">  <span class='comment'>/* highlight info */</span></td></tr>
+<tr><td class="num" id="LN568">568</td><td class="line">  free_highlight();</td></tr>
 <tr><td class="num" id="LN569">569</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN570">570</td><td class="line">  <span class='comment'>/* screenlines (can't display anything now!) */</span></td></tr>
-<tr><td class="num" id="LN571">571</td><td class="line">  free_screenlines();</td></tr>
-<tr><td class="num" id="LN572">572</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN573">573</td><td class="line">  clear_hl_tables();</td></tr>
-<tr><td class="num" id="LN574">574</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN575">575</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN576">576</td><td class="line"><span class='directive'>#endif</span></td></tr>
-<tr><td class="num" id="LN577">577</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN570">570</td><td class="line">  reset_last_sourcing();</td></tr>
+<tr><td class="num" id="LN571">571</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN572">572</td><td class="line">  free_tabpage(first_tabpage);</td></tr>
+<tr><td class="num" id="LN573">573</td><td class="line">  first_tabpage = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN574">574</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN575">575</td><td class="line"><span class='directive'># ifdef UNIX</span></td></tr>
+<tr><td class="num" id="LN576">576</td><td class="line">  <span class='comment'>/* Machine-specific free. */</span></td></tr>
+<tr><td class="num" id="LN577">577</td><td class="line">  mch_free_mem();</td></tr>
+<tr><td class="num" id="LN578">578</td><td class="line"><span class='directive'># endif</span></td></tr>
+<tr><td class="num" id="LN579">579</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN580">580</td><td class="line">  <span class='comment'>/* message history */</span></td></tr>
+<tr><td class="num" id="LN581">581</td><td class="line">  <span class='keyword'>for</span> (;; )</td></tr>
+<tr><td class="num" id="LN582">582</td><td class="line">    <span class='keyword'>if</span> (delete_first_msg() == <span class='macro'>FAIL<span class='expansion'>0</span></span>)</td></tr>
+<tr><td class="num" id="LN583">583</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN584">584</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN585">585</td><td class="line">  eval_clear();</td></tr>
+<tr><td class="num" id="LN586">586</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN587">587</td><td class="line">  free_termoptions();</td></tr>
+<tr><td class="num" id="LN588">588</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN589">589</td><td class="line">  <span class='comment'>/* screenlines (can't display anything now!) */</span></td></tr>
+<tr><td class="num" id="LN590">590</td><td class="line">  free_screenlines();</td></tr>
+<tr><td class="num" id="LN591">591</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN592">592</td><td class="line">  clear_hl_tables();</td></tr>
+<tr><td class="num" id="LN593">593</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN594">594</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN595">595</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN596">596</td><td class="line"> </td></tr>
 </table></body></html>
