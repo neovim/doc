@@ -8,7 +8,7 @@ var searchData=
   ['in',['in',['../structjob.html#aebe929a08f346596f3d173ef4f90927c',1,'job']]],
   ['in_5fuse',['in_use',['../structregsub__T.html#a27725d0c17dd3a4c391817b2cec117e3',1,'regsub_T']]],
   ['inc_5ftag',['inc_tag',['../structsp__syn.html#aafe1a57ad126381ea16c4079c87b92ae',1,'sp_syn']]],
-  ['inclusive',['inclusive',['../structoparg__S.html#af33d24f1e2717d824df387c6ba5daae6',1,'oparg_S']]],
+  ['inclusive',['inclusive',['../structoparg__S.html#ab8a80dadbe9eb371caa8501963545e32',1,'oparg_S']]],
   ['index',['index',['../structwordnode__S.html#ac3b5fb91aee2175b7897109f22517696',1,'wordnode_S']]],
   ['indir',['indir',['../structvimoption.html#aaf8b7e899b3ddfe028f9d91567d024c7',1,'vimoption']]],
   ['input_5fconv',['input_conv',['../globals_8h.html#a4cca7f97f4efce3b64574cba798c49aa',1,'globals.h']]],
@@ -24,7 +24,7 @@ var searchData=
   ['is_5fmax',['is_MAX',['../structblock__def.html#a74e3129c23a35b120d745b7668d67a99',1,'block_def']]],
   ['is_5fonechar',['is_oneChar',['../structblock__def.html#a38004b8aeec4dc9aff73dbe994dfe9a8',1,'block_def']]],
   ['is_5fshort',['is_short',['../structblock__def.html#a2c5b9b7a2bd14823cd58fc94e20d59b1',1,'block_def']]],
-  ['is_5fvisual',['is_VIsual',['../structoparg__S.html#a6a51efccaebadb08f184341a3255ba08',1,'oparg_S']]],
+  ['is_5fvisual',['is_VIsual',['../structoparg__S.html#a0bfdee9aacb2a3f44395f910ed560a4e',1,'oparg_S']]],
   ['italic',['italic',['../structprt__text__attr__T.html#aacdac715511f322d0e4c5d4c6560ce0d',1,'prt_text_attr_T']]],
   ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T']]],
   ['items',['items',['../structArray.html#a0e3f4c859e2f1e144bb27247a51a3721',1,'Array::items()'],['../structDictionary.html#afe6bfe0dd9c276eb86f2280f81ef26a3',1,'Dictionary::items()']]]

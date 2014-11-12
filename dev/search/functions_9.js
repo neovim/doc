@@ -11,5 +11,5 @@ var searchData=
   ['job_5fwait',['job_wait',['../job_8c.html#ac913f688b5fa12827c5901f75a5725b8',1,'job.c']]],
   ['job_5fwrite',['job_write',['../job_8c.html#afa521ccffb2aa7a5eaa53848671d9509',1,'job.c']]],
   ['job_5fwrite_5fcb',['job_write_cb',['../job_8c.html#aa9a0fd0841614315f019b17aa874b9a2',1,'job.c']]],
-  ['jump_5fto_5fmouse',['jump_to_mouse',['../ui_8c.html#a7d7e6e9851150c5e1bf73e1e60240355',1,'ui.c']]]
+  ['jump_5fto_5fmouse',['jump_to_mouse',['../ui_8c.html#ae107dd87fd862e0bbae785fb3d32b781',1,'ui.c']]]
 ];

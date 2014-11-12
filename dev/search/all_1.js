@@ -229,7 +229,7 @@ var searchData=
   ['add_5ftermcap_5fentry',['add_termcap_entry',['../term_8c.html#a2d7a4dadd0fd88c1065fe2fb60900795',1,'term.c']]],
   ['add_5ftermcode',['add_termcode',['../term_8c.html#a69899a5ae8b3b9585afa7e8b916ef270',1,'term.c']]],
   ['add_5fto_5fhistory',['add_to_history',['../ex__getln_8c.html#a3cc7abb0d15331bfab116bd13144691c',1,'ex_getln.c']]],
-  ['add_5fto_5fshowcmd',['add_to_showcmd',['../normal_8c.html#a825cd0508141cd5e1b96e18db61afa7c',1,'normal.c']]],
+  ['add_5fto_5fshowcmd',['add_to_showcmd',['../normal_8c.html#ab783a6e2277ad86bf223e96bcd7895a4',1,'normal.c']]],
   ['add_5fto_5fshowcmd_5fc',['add_to_showcmd_c',['../normal_8c.html#a9c0b881f5543eea98e58740e4bc31f0e',1,'normal.c']]],
   ['addfile',['addfile',['../path_8c.html#a3ba68e1f14551ad40298eb34ed42a4da',1,'path.c']]],
   ['addr',['addr',['../structServer.html#a3a55959924ea0a6912d3fe6530c89a46',1,'Server::addr()'],['../structServer.html#ab6e364431e9ea5b60824ce8e79020d81',1,'Server::addr()'],['../structefm__S.html#af25df0937902ab8951fc01937fbfa479',1,'efm_S::addr()']]],

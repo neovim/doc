@@ -19,6 +19,7 @@ var searchData=
   ['event_5fbufwritecmd',['EVENT_BUFWRITECMD',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aa728b5ee2dcab9f3bd37dfa048e1353c3',1,'fileio.h']]],
   ['event_5fbufwritepost',['EVENT_BUFWRITEPOST',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aa91f58bb83c5607d78cf0ebcbccb9505f',1,'fileio.h']]],
   ['event_5fbufwritepre',['EVENT_BUFWRITEPRE',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aaa542b91e6d1b40317009dcd01bdae329',1,'fileio.h']]],
+  ['event_5fcmdundefined',['EVENT_CMDUNDEFINED',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aaaa67cf16608016f8c0d278e00623791c',1,'fileio.h']]],
   ['event_5fcmdwinenter',['EVENT_CMDWINENTER',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aafaab659aed444fdce867193c1034a022',1,'fileio.h']]],
   ['event_5fcmdwinleave',['EVENT_CMDWINLEAVE',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aae07412185b98828df2747a3a5daec612',1,'fileio.h']]],
   ['event_5fcolorscheme',['EVENT_COLORSCHEME',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aad4dec83e7d9decdd7e69a32b5f36f39e',1,'fileio.h']]],

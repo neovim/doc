@@ -248,7 +248,7 @@ var searchData=
   ['normal_2ec',['normal.c',['../normal_8c.html',1,'']]],
   ['normal_2eh',['normal.h',['../normal_8h.html',1,'']]],
   ['normal_5fbusy',['NORMAL_BUSY',['../vim_8h.html#ade5f59912a398a1654d2552aae4ae904',1,'vim.h']]],
-  ['normal_5fcmd',['normal_cmd',['../normal_8c.html#a94e1d60ae0bae3d3896bc2a982e85cee',1,'normal.c']]],
+  ['normal_5fcmd',['normal_cmd',['../normal_8c.html#ae6c11c514a49a9f1c7cb3467b0a32cc5',1,'normal.c']]],
   ['nospc',['NOSPC',['../ex__cmds__defs_8h.html#ad4d2c524e943e893c89a4c15a0f8ae73',1,'ex_cmds_defs.h']]],
   ['noswapfile',['noswapfile',['../structcmdmod__T.html#a60ba129ef0cdc2694342a37ba1e72438',1,'cmdmod_T']]],
   ['not',['NOT',['../channel_8c.html#ad3e9fe0ec59d2dbb3982ababa042720c',1,'channel.c']]],
