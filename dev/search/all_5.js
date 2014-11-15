@@ -74,7 +74,7 @@ var searchData=
   ['endcol',['endcol',['../structmatch__T.html#a1d032e65b0edfc97391c23aaec49be94',1,'match_T']]],
   ['endp',['endp',['../structregmatch__T.html#a08f025a2796a267c5a9ffae4e4f5553b',1,'regmatch_T']]],
   ['endpos',['endpos',['../structregmmatch__T.html#a4ed865acdfb2bc1973fef6a66a49a049',1,'regmmatch_T']]],
-  ['ends_5fexcmd',['ends_excmd',['../ex__docmd_8c.html#ad40af41d7f94551522fc4715a140dcee',1,'ex_docmd.c']]],
+  ['ends_5fexcmd',['ends_excmd',['../ex__docmd_8c.html#a5f2b00d2fc3b7225ddce914f6d10cc37',1,'ex_docmd.c']]],
   ['endspaces',['endspaces',['../structblock__def.html#ab5bcc7fa3bebee72b7d7d872ef7d44ba',1,'block_def']]],
   ['engine',['engine',['../structregprog.html#a17b35a10bf140540d03cd127c8c68a9d',1,'regprog::engine()'],['../structbt__regprog__T.html#a6607596028b18bddae6834c40fb8ff4d',1,'bt_regprog_T::engine()'],['../structnfa__regprog__T.html#a26ab276d8a2883f4a1ef45480da0bdd6',1,'nfa_regprog_T::engine()']]],
   ['enter_5fbuffer',['enter_buffer',['../buffer_8c.html#a8657d61226755aef8223d9bd10704f32',1,'buffer.c']]],
