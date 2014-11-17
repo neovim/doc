@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['f_5fisalpha',['F_isalpha',['../farsi_8c.html#a61ded6fc75c29f61663e0c534d223bcf',1,'farsi.c']]],
-  ['f_5fischar',['F_ischar',['../farsi_8c.html#a5f13fa390bcb9ba96044a13cbd77865b',1,'farsi.c']]],
-  ['f_5fisdigit',['F_isdigit',['../farsi_8c.html#a5955fba0945be62a9e4175577a517ada',1,'farsi.c']]],
+  ['f_5fisalpha',['F_isalpha',['../farsi_8c.html#ab17bd9ec36128d760d174d71aabb1222',1,'farsi.c']]],
+  ['f_5fischar',['F_ischar',['../farsi_8c.html#a020f4dc1cd2d42e6550a550675b8a0be',1,'farsi.c']]],
+  ['f_5fisdigit',['F_isdigit',['../farsi_8c.html#a7afd798426d5fe20d4b7db9238ae6575',1,'farsi.c']]],
   ['farsi_5ffkey',['farsi_fkey',['../farsi_8c.html#ae3291f3fdd408faac1e85fb8d6186565',1,'farsi.c']]],
   ['fast_5fbreakcheck',['fast_breakcheck',['../misc1_8c.html#ab76e97b0e4c8694e5ecae285d0231b22',1,'misc1.c']]],
   ['fex_5fformat',['fex_format',['../ops_8c.html#ac3aff3ec937c36b9b9571ed47cfcda2a',1,'ops.c']]],
