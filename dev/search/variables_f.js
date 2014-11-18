@@ -274,6 +274,7 @@ var searchData=
   ['prog',['prog',['../structefm__S.html#a95a3ac8b48482a08ac991f9aece9081f',1,'efm_S']]],
   ['program',['program',['../structbt__regprog__T.html#a68d32f491ccb15e3ece0d036a0f42cdf',1,'bt_regprog_T']]],
   ['prop',['prop',['../mbyte_8c.html#a4a8f6c91eefb9c6bf448592aac44153d',1,'mbyte.c']]],
+  ['provider_5fcaller_5fscope',['provider_caller_scope',['../globals_8h.html#a66c41f67457dcbe8ebaba9705347853c',1,'globals.h']]],
   ['ps_5ffontname',['ps_fontname',['../structprt__ps__font__S.html#aa9af39a717f2debc30d4b95d9d26eb63',1,'prt_ps_font_S']]],
   ['ptr',['ptr',['../structregsave__T.html#a7c7d0899db2da921e33aaca1a5f3a320',1,'regsave_T::ptr()'],['../structsave__se__T.html#a9f4951984f2783985dbb176d2f8aef77',1,'save_se_T::ptr()'],['../structnfa__pim__S.html#a1e831d5bb6b3b69fd5325eb1d403ff6d',1,'nfa_pim_S::ptr()'],['../structu__header.html#a76b7139f57496d4cddde200b63d47776',1,'u_header::ptr()']]],
   ['pum_5fextra',['pum_extra',['../structpumitem__T.html#a6eff95dd03db4971ecef4d929b643838',1,'pumitem_T']]],

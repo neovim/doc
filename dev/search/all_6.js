@@ -87,8 +87,6 @@ var searchData=
   ['fdo_5ftag',['FDO_TAG',['../option__defs_8h.html#a06462f1b0aa1f284cd86cc201c5a9dd6',1,'option_defs.h']]],
   ['fdo_5fundo',['FDO_UNDO',['../option__defs_8h.html#abf1d9c51ee448d9c85c017e379798949',1,'option_defs.h']]],
   ['fe',['FE',['../farsi_8h.html#a6d5652ed4a74a5609858f0949a4c4565',1,'farsi.h']]],
-  ['feature',['Feature',['../structFeature.html',1,'Feature'],['../provider_8c.html#a8931e7b90e11a8c097efd3e8f82b939e',1,'FEATURE():&#160;provider.c']]],
-  ['feature_5fcount',['FEATURE_COUNT',['../provider_8c.html#acb338bb219140dacb67b049b3b06e56b',1,'provider.c']]],
   ['fex_5fformat',['fex_format',['../ops_8c.html#ac3aff3ec937c36b9b9571ed47cfcda2a',1,'ops.c']]],
   ['ff',['ff',['../structprt__pos__T.html#a2938e87a0bba6f37eda4f9ddd39d4ae0',1,'prt_pos_T::ff()'],['../ascii_8h.html#a201a0d2d698f67adfe3f4ca209a3c7ff',1,'FF():&#160;ascii.h']]],
   ['ff_5fdos',['FF_DOS',['../option__defs_8h.html#a593a37f5548755dacc223e857c8c541e',1,'option_defs.h']]],
@@ -406,6 +404,7 @@ var searchData=
   ['funcarg',['FUNCARG',['../eval_8c.html#a54d1ae1fe9626de10e655ae7709a9699',1,'eval.c']]],
   ['funccall_5fs',['funccall_S',['../structfunccall__S.html',1,'']]],
   ['funccall_5ft',['funccall_T',['../eval_8c.html#a5330b8e8e9b8bf37f1f4d6024e242429',1,'eval.c']]],
+  ['funccalp',['funccalp',['../structcaller__scope.html#a00166300f81ce3da855326615b08283d',1,'caller_scope']]],
   ['funcdict_5ft',['funcdict_T',['../structfuncdict__T.html',1,'']]],
   ['funcline',['FUNCLINE',['../eval_8c.html#aa335e6720113ef4e875f4ad015438d6f',1,'eval.c']]],
   ['fwd_5fword',['fwd_word',['../search_8c.html#ab08dd4937256741d1b10a5120722f120',1,'search.c']]]

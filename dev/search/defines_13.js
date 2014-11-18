@@ -191,6 +191,7 @@ var searchData=
   ['sopt_5fstring',['SOPT_STRING',['../option__defs_8h.html#a33bc9130f71ecc5cad9b729cdb8e6c95',1,'option_defs.h']]],
   ['sopt_5funset',['SOPT_UNSET',['../option__defs_8h.html#a97dfb854d3413fcc33686ca09308f2f4',1,'option_defs.h']]],
   ['sopt_5fwin',['SOPT_WIN',['../option__defs_8h.html#a940ceea18b9c2d8add5afa5db51dc6be',1,'option_defs.h']]],
+  ['source_5fprovider',['source_provider',['../eval_8c.html#a2814e032d680869c842365560a7ca11b',1,'eval.c']]],
   ['sp_5fbad',['SP_BAD',['../spell_8c.html#a15e8219070c53d2bafba4e0b992aa19d',1,'spell.c']]],
   ['sp_5fbanned',['SP_BANNED',['../spell_8c.html#a7cf98794ed374d6fbf31899340a71bff',1,'spell.c']]],
   ['sp_5fend',['SP_END',['../eval_8c.html#a9d34146bed060a124e2423a89bcd16d7',1,'eval.c']]],

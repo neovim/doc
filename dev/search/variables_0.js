@@ -56,6 +56,9 @@ var searchData=
   ['attr',['attr',['../structmatch__T.html#a25ecbc7eca1bd08699dd7af78f4976f1',1,'match_T::attr()'],['../structmsg__hist.html#a9e107db862b3316b5dc837de5e93d434',1,'msg_hist::attr()']]],
   ['attr_5fcur',['attr_cur',['../structmatch__T.html#a48c8b630473565118164792bf3f43a78',1,'match_T']]],
   ['aucmd_5fwin',['aucmd_win',['../globals_8h.html#a478853839c95802b7313065fe4c5fe9e',1,'globals.h']]],
-  ['autocmd_5ffname_5ffull',['autocmd_fname_full',['../globals_8h.html#adc9df713d70547ae5f655c0dba744616',1,'globals.h']]],
+  ['autocmd_5fbufnr',['autocmd_bufnr',['../structcaller__scope.html#a3deb4e5da91574f6359d798fb524fcfa',1,'caller_scope']]],
+  ['autocmd_5ffname',['autocmd_fname',['../structcaller__scope.html#a0588c0592c6bc1963cc255fea5a5726c',1,'caller_scope']]],
+  ['autocmd_5ffname_5ffull',['autocmd_fname_full',['../structcaller__scope.html#a48b541e28bf5c2660f5ee3835f203014',1,'caller_scope::autocmd_fname_full()'],['../globals_8h.html#adc9df713d70547ae5f655c0dba744616',1,'autocmd_fname_full():&#160;globals.h']]],
+  ['autocmd_5fmatch',['autocmd_match',['../structcaller__scope.html#a4aeaeb0c81875ff7bebe93e1391a22d9',1,'caller_scope']]],
   ['average',['average',['../structtime__entry__T.html#ae2144ef1e6f4f94f5c940692ce5ce7e6',1,'time_entry_T']]]
 ];

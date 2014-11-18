@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['feature',['Feature',['../structFeature.html',1,'']]],
   ['ff_5fsearch_5fctx_5ft',['ff_search_ctx_T',['../structff__search__ctx__T.html',1,'']]],
   ['ff_5fstack',['ff_stack',['../structff__stack.html',1,'']]],
   ['ff_5fvisited',['ff_visited',['../structff__visited.html',1,'']]],
