@@ -20,6 +20,9 @@ generate_clang_report() {
     ${MAKE_CMD} \
     | tee ${BUILD_DIR}/scan-build.out
 
+  # Remove report output directory if it's empty
+  rmdir --ignore-fail-on-non-empty build/clang-report
+
   # Copy to doc repository
   rm -rf ${DOC_DIR}/reports/clang
   mkdir -p ${DOC_DIR}/reports/clang
