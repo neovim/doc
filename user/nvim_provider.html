@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: nvim_provider</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <div class="site-nav">
+          <ul>
+            <li><a href="/">Neovim Home</a></li>
+          </ul>
+        </div>
+        <a href="/"><img class="logo" alt="Vim documentation: nvim_provider" src="/images/logo@2x.png" /></a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: nvim_provider</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="nvim_provider.txt"></A><B>nvim_provider.txt</B>*    For Nvim.					{Nvim}
+
+
+		 NVIM REFERENCE MANUAL    by Thiago de Arruda
+
+
+
+Nvim provider infrastructure			       *<A NAME="nvim-provider"></A><B>nvim-provider</B>*
+
+First of all, this document is meant to be read by developers interested in
+contributing to the refactoring effort. If you are a normal user or <A HREF="usr_05.html#plugin">plugin</A>
+developer looking to learn about Nvim |<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>| infrastructure for
+implementing plugins in other programming languages, see |<A HREF="external_plugin.html#external-plugin">external-plugin</A>|.
+For instructions on how to enable python plugins, see |<A HREF="nvim_python.html#nvim-python">nvim-python</A>|. For
+clipboard, see |<A HREF="nvim_clipboard.html#nvim-clipboard">nvim-clipboard</A>|.
+
+Instead of doing everything by itself, Nvim aims to simplify it's own
+maintenance by delegating <A HREF="motion.html#as">as</A> much work <A HREF="motion.html#as">as</A> possible to external systems. But
+some Vim components are too tightly coupled and in some cases the refactoring
+work necessary to swap in-house implementations by code that integrates to
+other systems is too great. Nvim provider infrastructure is a facility that
+aims to make this task simpler.
+
+To understand why the provider infrastructure is useful, let us consider two
+examples of integration with external systems that are implemented in Vim and
+are now decoupled from Nvim core <A HREF="motion.html#as">as</A> providers:
+
+The first example is <A HREF="gui.html#clipboard">clipboard</A> integration: On the original Vim source code,
+<A HREF="gui.html#clipboard">clipboard</A> <A HREF="eval.html#functions">functions</A> account for more than 1k lines of C source code(and that
+is just on ui.c). All to peform two tasks that are now accomplished with
+simple shell commands such <A HREF="motion.html#as">as</A> xclip or pbcopy/pbpaste.
+
+The other example is <A HREF="if_pyth.html#python">python</A> scripting support: Vim has three files dedicated
+to embed the <A HREF="if_pyth.html#python">python</A> interpreter: if_python.c, if_python3.c and if_py_both.h.
+Together these files sum about 9.5k lines of C source code. On Nvim, <A HREF="if_pyth.html#python">python</A>
+scripting is performed by an external host process that is running 2k sloc
+<A HREF="if_pyth.html#python">python</A> program.
+
+In a perfect world, we would implement <A HREF="if_pyth.html#python">python</A> and <A HREF="gui.html#clipboard">clipboard</A> integration in
+pure vimscript and without touching the C code. Unfortunately we can't achieve
+these goals without severly compromising backwards compatibility with Vim.
+Thats where providers comes to rescue.
+
+In essence, this infrastructure a simple framework that simplifies the task of
+calling vimscript from C code, making <A HREF="motion.html#it">it</A> simpler to rewrite C <A HREF="eval.html#functions">functions</A> that
+interact with external systems in pure vimscript. It is composed of two
+<A HREF="eval.html#functions">functions</A> in eval.c:
+
+- eval_call_provider(name, method, arguments): Call a provider(name) method
+  with arguments
+- eval_has_provider(name): Checks if a provider is implemented
+
+What these <A HREF="eval.html#functions">functions</A> <A HREF="diff.html#do">do</A> is simple:
+
+- eval_call_provider will call the provider#(name)#Call function passing in
+  the method and arguments.
+- eval_has_provider will return true if the provider#(name)#Call function is
+  implemented, and is called by the &quot;has&quot; vimscript function to check if
+  features are available.
+
+The basic idea is that the provider#(name)#Call function should implement 
+integration with an external system, because calling shell commands and
+|<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>| clients(Nvim only) is easier to <A HREF="diff.html#do">do</A> in vimscript.
+
+Now, back to the <A HREF="if_pyth.html#python">python</A> example. Instead of modifying vimscript to allow the
+definition of <A HREF="change.html#lowercase">lowercase</A> <A HREF="eval.html#functions">functions</A> and commands(for the |<A HREF="if_pyth.html#:python">:python</A>|, |<A HREF="if_pyth.html#:pyfile">:pyfile</A>|
+and |<A HREF="if_pyth.html#:pydo">:pydo</A>| commands, and the |<A HREF="eval.html#pyeval()">pyeval()</A>| function), which would break
+backwards compatibility with Vim, we implemented the
+autoload/provider/python.vim <A HREF="usr_41.html#script">script</A> and the provider#python#Call function
+that is only defined if an external <A HREF="if_pyth.html#python">python</A> host is started successfully.
+
+That works well with the has('python') <A HREF="eval.html#expression">expression</A> (normally used by <A HREF="if_pyth.html#python">python</A>
+plugins) because if the <A HREF="if_pyth.html#python">python</A> host isn't installed then the <A HREF="usr_05.html#plugin">plugin</A> will
+&quot;think&quot; <A HREF="motion.html#it">it</A> is running in a Vim compiled without <A HREF="various.html#+python">+python</A> feature.
+
+
+==============================================================================
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Thu Nov 20 20:46:18 UTC 2014 from <a href="https://github.com/neovim/neovim/commit/2f02f6c53571869e07d175b518d7222093dbb31a"><code>2f02f6c</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>

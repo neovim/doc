@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: external_plugin</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="/css/normalize.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <div class="site-nav">
+          <ul>
+            <li><a href="/">Neovim Home</a></li>
+          </ul>
+        </div>
+        <a href="/"><img class="logo" alt="Vim documentation: external_plugin" src="/images/logo@2x.png" /></a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: external_plugin</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="external_plugin.txt"></A><B>external_plugin.txt</B>*    For Nvim.					 {Nvim}
+
+
+		 NVIM REFERENCE MANUAL    by Thiago de Arruda
+
+
+
+Nvim support for external plugins 		  *<A NAME="external-plugin"></A><B>external-plugin</B>*
+
+1. Introduction			|<A HREF="#external-plugin-intro">external-plugin-intro</A>|
+2. Plugin hosts			|<A HREF="#external-plugin-hosts">external-plugin-hosts</A>|
+3. Example			|<A HREF="#external-plugin-example">external-plugin-example</A>|
+4. Plugin manifest		|<A HREF="#external-plugin-manifest">external-plugin-manifest</A>|
+
+==============================================================================
+
+1. Introduction					    *<A NAME="external-plugin-intro"></A><B>external-plugin-intro</B>*
+
+A big Nvim goal is to allow extensibility in arbitrary programming languages
+without requiring direct support from the editor. This is achieved with
+external plugins, coprocesses that have a direct communication channel(via
+|<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>|) with the Nvim process.
+
+Even though these plugins are running in separate processes, they can call, be
+called, and receive events just <A HREF="motion.html#as">as</A> if the code was being executed in the main
+process.
+
+==============================================================================
+
+2. Plugin hosts					    *<A NAME="external-plugin-hosts"></A><B>external-plugin-hosts</B>*
+
+While plugins can be implemented <A HREF="motion.html#as">as</A> arbitrary programs that communicate
+directly with Nvim API and are called via |<A HREF="eval.html#rpcrequest()">rpcrequest()</A>| and |<A HREF="eval.html#rpcnotify()">rpcnotify()</A>|,
+that is not the best approach available. Instead, developers should first
+check if a <A HREF="usr_05.html#plugin">plugin</A> host implementation is available for their favorite
+programming language.
+
+Plugin hosts are programs that provide a high level environment for plugins,
+and also take care of most boilerplate involved in defining commands, autocmds
+and <A HREF="eval.html#functions">functions</A> that are implemented over <A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A> connections. They are
+loaded the first time one of its registered plugins are required, keeping
+Nvim <A HREF="starting.html#startup">startup</A> <A HREF="motion.html#as">as</A> fast a possible despite the number of installed plugins/hosts.
+
+==============================================================================
+
+3. Example					    *<A NAME="external-plugin-example"></A><B>external-plugin-example</B>*
+
+The best way to learn about external plugins is with an example, so let's see
+how a very useless <A HREF="if_pyth.html#python">python</A> <A HREF="usr_05.html#plugin">plugin</A> looks like. This <A HREF="usr_05.html#plugin">plugin</A> exports a command, a
+function and an autocmd. The <A HREF="usr_05.html#plugin">plugin</A> is called 'Limit', and all <A HREF="motion.html#it">it</A> does is
+limit the number of requests made to <A HREF="motion.html#it">it</A>. Here's the <A HREF="usr_05.html#plugin">plugin</A> source code:
+
+<B>    import neovim</B>
+
+<B>    @neovim.plugin</B>
+<B>    class Limit(object):</B>
+<B>        def __init__(self, vim):</B>
+<B>            self.vim = vim</B>
+<B>            self.calls = 0</B>
+<B>    </B>
+<B>        @neovim.command('Cmd', range='', nargs='*', sync=True)</B>
+<B>        def command_handler(self, args, range):</B>
+<B>            self._increment_calls()</B>
+<B>            self.vim.current.line = (</B>
+<B>                'Command: Called %d times, args: %s, range: %s' % (self.calls,</B>
+<B>                                                                   args,</B>
+<B>                                                                   range))</B>
+<B>    </B>
+<B>        @neovim.autocmd('BufEnter', pattern='*.py', eval='expand("&lt;afile&gt;")',</B>
+<B>                        sync=True)</B>
+<B>        def autocmd_handler(self, filename):</B>
+<B>            self._increment_calls()</B>
+<B>            self.vim.current.line = (</B>
+<B>                'Autocmd: Called %s times, file: %s' % (self.calls, filename))</B>
+<B>    </B>
+<B>        @neovim.function('Func')</B>
+<B>        def function_handler(self, args):</B>
+<B>            self._increment_calls()</B>
+<B>            self.vim.current.line = (</B>
+<B>                'Function: Called %d times, args: %s' % (self.calls, args))</B>
+<B>    </B>
+<B>        def _increment_calls(self):</B>
+<B>            if self.calls == 5:</B>
+<B>                raise Exception('Too many calls!')</B>
+<B>            self.calls += 1</B>
+ 
+
+As can be seen, the <A HREF="usr_05.html#plugin">plugin</A> is implemented using pure <A HREF="if_pyth.html#python">python</A> idioms(classes,
+methods and decorators), the translation between these language-specific
+idioms to vimscript occurs while the <A HREF="usr_05.html#plugin">plugin</A> manifest is being generated(see
+below).
+
+Notice that the exported command and autocmd are defined with the &quot;sync&quot; flag,
+which affects how Nvim calls the <A HREF="usr_05.html#plugin">plugin</A>: with &quot;sync&quot; the |<A HREF="eval.html#rpcrequest()">rpcrequest()</A>|
+function is used, which will block Nvim until the handler function returns a
+value. Without the &quot;sync&quot; flag, the call is made using a fire and forget
+approach with |rpcnotify()|(return values or exceptions raised in the handler
+function are ignored)
+
+To test the above <A HREF="usr_05.html#plugin">plugin</A>, <A HREF="motion.html#it">it</A> must be saved in &quot;external-plugin/python&quot; in a
+<A HREF="options.html#'runtimepath'">'runtimepath'</A> directory(~/.nvim/external-plugin/python/limit.py for example).
+Then, the external <A HREF="usr_05.html#plugin">plugin</A> manifest must be generated with
+`:UpdateExternalPlugins`. 
+
+==============================================================================
+
+4. External <A HREF="usr_05.html#plugin">plugin</A> manifest			    *<A NAME="external-plugin-manifest"></A><B>external-plugin-manifest</B>*
+
+Just installing external plugins to &quot;external-plugin/{host}&quot; isn't enough to
+load them at <A HREF="starting.html#startup">startup</A>. The `:UpdateExternalPlugins`  command must be executed
+every time an external <A HREF="usr_05.html#plugin">plugin</A> is installed, updated, or deleted.
+
+`:UpdateExternalPlugins` will generate the external <A HREF="usr_05.html#plugin">plugin</A> manifest, a special
+vimscript file containing declarations for all vimscript entities
+(commands/autocommands/functions) defined by all external plugins, with each
+entity associated with the host and <A HREF="usr_05.html#plugin">plugin</A> path. The manifest can be seen <A HREF="motion.html#as">as</A> a
+generated extension to the user's vimrc(it even has the <A HREF="starting.html#vimrc">vimrc</A> filename
+prepended).
+
+The manifest declarations are nothing but calls to the rpc#host#RegisterPlugin
+function, which will take care of bootstrapping the host <A HREF="motion.html#as">as</A> soon <A HREF="motion.html#as">as</A> the
+declared command, <A HREF="autocmd.html#autocommand">autocommand</A> or function is used for the first time.
+
+The manifest generation step is necessary to keep editor <A HREF="starting.html#startup">startup</A> fast in
+situations where a user has external plugins with different hosts. For
+example, imagine a user that has three plugins, for <A HREF="if_pyth.html#python">python</A>, java and .NET
+hosts respectively, if we were to load all three plugins at <A HREF="starting.html#startup">startup</A>, then
+three language runtimes would also be spawned which could take seconds!
+
+With the manifest, each host will only be loaded when required. Continuing
+with the example, imagine the java <A HREF="usr_05.html#plugin">plugin</A> is a semantic completion engine for
+java files, if <A HREF="motion.html#it">it</A> defines an <A HREF="autocmd.html#BufEnter">BufEnter</A> *.java <A HREF="autocmd.html#autocommand">autocommand</A> then the java host
+will only be spawned when java source files are loaded. 
+
+If the explicit call to `:UpdateExternalPlugins` seems incovenient, try
+to see <A HREF="motion.html#it">it</A> like this: Its a way to give IDE-like capabilities to <A HREF="nvim_intro.html#nvim">nvim</A> while
+still keeping <A HREF="motion.html#it">it</A> a fast/lightweight editor for general use. It can also be
+seen <A HREF="motion.html#as">as</A> an analogous to the |<A HREF="helphelp.html#:helptags">:helptags</A>| facility.
+
+==============================================================================
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Thu Nov 20 20:46:17 UTC 2014 from <a href="https://github.com/neovim/neovim/commit/2f02f6c53571869e07d175b518d7222093dbb31a"><code>2f02f6c</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>
