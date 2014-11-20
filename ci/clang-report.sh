@@ -14,7 +14,6 @@ generate_clang_report() {
   # Generate static analysis report
   mkdir -p build/clang-report
   scan-build \
-    --keep-empty \
     --use-analyzer=$(which clang) \
     --html-title="Neovim Static Analysis Report" \
     -o build/clang-report \
@@ -24,10 +23,19 @@ generate_clang_report() {
   # Copy to doc repository
   rm -rf ${DOC_DIR}/reports/clang
   mkdir -p ${DOC_DIR}/reports/clang
-  cp -r build/clang-report/*/* ${DOC_DIR}/reports/clang
 
-  # Modify HTML to match Neovim's layout
-  modify_clang_report
+  # If clang reported warnings, copy report pages.
+  # Otherwise use a blank page.
+  if [[ -d build/clang-report ]]; then
+    cp -r build/clang-report/*/* ${DOC_DIR}/reports/clang
+
+    # Modify HTML to match Neovim's layout
+    modify_clang_report
+  else
+    generate_report "Neovim Static Analysis Report" \
+      "$(< ${BUILD_DIR}/templates/clang-report/no-warnings.html)" \
+      ${DOC_DIR}/reports/clang/index.html
+  fi
 }
 
 # Helper function to modify Clang report's index.html
