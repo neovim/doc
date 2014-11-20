@@ -14,6 +14,7 @@ generate_clang_report() {
   # Generate static analysis report
   mkdir -p build/clang-report
   scan-build \
+    --keep-empty \
     --use-analyzer=$(which clang) \
     --html-title="Neovim Static Analysis Report" \
     -o build/clang-report \
