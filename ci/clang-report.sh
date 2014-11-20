@@ -33,7 +33,7 @@ generate_clang_report() {
 
   # If clang reported warnings, copy report pages.
   # Otherwise use a blank page.
-  if [[ "$scan_build_result" == "warnings"]]; then
+  if [[ "$scan_build_result" == "warnings" ]]; then
     cp -r build/clang-report/*/* ${DOC_DIR}/reports/clang
 
     # Modify HTML to match Neovim's layout
@@ -90,7 +90,7 @@ find_all_bugs_number() {
 # ${1}:   Number of all found bugs
 # Output: The name of the color
 get_code_quality_color() {
-  max_bugs=100
+  max_bugs=20
   yellow_threshold=$(($max_bugs / 2))
   bugs=$(($1 < $max_bugs ? $1 : $max_bugs))
   if [[ $bugs -ge $yellow_threshold ]]; then
