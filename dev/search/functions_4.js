@@ -36,6 +36,8 @@ var searchData=
   ['eval_5fto_5fstring_5fsafe',['eval_to_string_safe',['../eval_8c.html#a3135a5345df88e772530d5a297947251',1,'eval.c']]],
   ['eval_5fto_5fstring_5fskip',['eval_to_string_skip',['../eval_8c.html#a87b4a42e053eceb48fce2f4d927a8376',1,'eval.c']]],
   ['eval_5fvars',['eval_vars',['../ex__docmd_8c.html#adcdc3589823bf6e7818991dadd911e06',1,'ex_docmd.c']]],
+  ['event_5fdisable_5fdeferred',['event_disable_deferred',['../event_8c.html#a13e5fff02fd115e1e28ce08fcb55ca50',1,'event.c']]],
+  ['event_5fenable_5fdeferred',['event_enable_deferred',['../event_8c.html#a315c7ed987cf7f4e7b70a29c8afdcff1',1,'event.c']]],
   ['event_5fhas_5fdeferred',['event_has_deferred',['../event_8c.html#af6bf0bb4b4c37cc8dae301000158fde6',1,'event.c']]],
   ['event_5fpoll',['event_poll',['../event_8c.html#ab000eb4c6cc1bfe2a54dc734694e4b41',1,'event.c']]],
   ['event_5fprocess',['event_process',['../event_8c.html#a268849943156b3c71849fafba9ff5024',1,'event.c']]],
