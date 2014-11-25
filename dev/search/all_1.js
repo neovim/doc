@@ -311,6 +311,7 @@ var searchData=
   ['alist_5funlink',['alist_unlink',['../ex__docmd_8c.html#a57995870c6dbb5b30271f9e129753f2c',1,'ex_docmd.c']]],
   ['allbuf_5flocked',['allbuf_locked',['../ex__getln_8c.html#ad878e417857fa7189e8d9584e59427ea',1,'ex_getln.c']]],
   ['alloc_5ftypebuf',['alloc_typebuf',['../getchar_8c.html#a20a030e7581247e3a8b43460984ef360',1,'getchar.c']]],
+  ['allocated_5fsize',['allocated_size',['../memory_8c.html#af31444d597c4a2dfb5e543712cb57d3d',1,'memory.c']]],
   ['allow_5fdirs',['allow_dirs',['../structAutoPat.html#af0fba23e108129b46e59ccfd46e6046a',1,'AutoPat']]],
   ['alpha',['ALPHA',['../regexp_8c.html#af5abd28c44c29b7397c84f1fec4b1d84',1,'regexp.c']]],
   ['amount',['amount',['../structexarg.html#a7e7dc0f18f093975cc871ab38e6104e4',1,'exarg']]],
