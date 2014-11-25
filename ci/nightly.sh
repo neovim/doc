@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+set -e
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source ${BUILD_DIR}/ci/common/common.sh
@@ -17,12 +18,12 @@ build_nightly() {(
 
   cd ${NEOVIM_DIR}
   make CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH="
-  make DESTDIR="${NIGHTLY_DIR}/neovim-linux64" install
+  make DESTDIR="${NIGHTLY_DIR}/neovim-${CI_OS}64" install
 )}
 
 create_nightly_tarball() {(
   cd ${NIGHTLY_DIR}
-  tar cfz ${NIGHTLY_FILE} neovim-linux64
+  tar cfz ${NIGHTLY_FILE} neovim-${CI_OS}64
 )}
 
 get_release_body() {
@@ -33,7 +34,7 @@ get_release_body() {
   echo 'If you are a developer, see the [`bot-ci` README](https://github.com/neovim/bot-ci/blob/master/README.md#nightly-builds) to learn if the nightly build can be useful for you.'
   echo
   echo '```'
-  ${NIGHTLY_DIR}/neovim-linux64/bin/nvim --version
+  ${NIGHTLY_DIR}/neovim-${CI_OS}64/bin/nvim --version
   echo '```'
 }
 
@@ -81,7 +82,7 @@ upload_nightly() {
     > /dev/null
 
   echo 'Uploading nightly tarball.'
-  upload_release_asset ${NIGHTLY_FILE} "neovim-linux64.tar.gz" \
+  upload_release_asset ${NIGHTLY_FILE} "neovim-${CI_OS}64.tar.gz" \
     ${NEOVIM_REPO} ${release_id} \
     > /dev/null
 }

@@ -35,12 +35,12 @@ NEOVIM_REPO=<username>/neovim \
 NEOVIM_BRANCH=my-neovim-branch \
 DEPS_REPO=<username>/neovim-deps \
 DEPS_BRANCH=my-deps-branch \
-./ci/rebuild-deps64.sh
+./ci/deps64.sh
 ```
 
 # Testing PRs
 
-Building of PRs is disabled for this repository, because that would change the contents of `neovim/doc`. To test your PRs using Travis CI, follow these steps:
+Building of PRs is disabled for this repository; builds would always fail because of [Travis's security restrictions](http://docs.travis-ci.com/user/pull-requests/#Security-Restrictions-when-testing-Pull-Requests). You can test your changes in a different way, though. Here's an example on how to test `neovim/doc`-related changes using Travis CI:
 
  * Fork the `neovim/doc` repository to `<username>/doc`.
  * Using your `neovim/bot-ci` fork:
@@ -61,6 +61,8 @@ env:
 ```
 
 After committing and pushing these changes to your PR testing branch, Travis will perform the build and push the results to `<username>/doc`. If you make changes to your PR, don't forget to rebase and push your PR testing branch so that `<username>/doc` will always be up-to-date.
+
+The above steps can be performed analogously for other repositories a `bot-ci` script pushes to, e.g. `neovim/deps` for `ci/deps64.sh`.
 
 # Nightly builds
 

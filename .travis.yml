@@ -1,4 +1,6 @@
 language: c
+os:
+  - linux
 env:
   global:
     # Encrypted environment variables, see
@@ -15,14 +17,22 @@ env:
     - CI_TARGET=doc-index
     - CI_TARGET=doxygen
     - CI_TARGET=nightly
-    - CI_TARGET=rebuild-deps32
-    - CI_TARGET=rebuild-deps64
+    - CI_TARGET=deps32
+    - CI_TARGET=deps64
     - CI_TARGET=translation-report
     - CI_TARGET=user-docu
     - CI_TARGET=vimpatch-report
 matrix:
+  include:
+    - os: osx
+      env: CI_TARGET=deps64
+      compiler: gcc-4.9
   allow_failures:
     - env: CI_TARGET=coverity
+install:
+  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+      brew install bash;
+    fi
 script:
   - ./ci/${CI_TARGET}.sh
 notifications:
