@@ -28,7 +28,7 @@ trigger_coverity() {
     COVERITY_SCAN_BRANCH_PATTERN="${COVERITY_BRANCH}" \
     COVERITY_SCAN_BUILD_COMMAND_PREPEND="${MAKE_CMD} deps" \
     COVERITY_SCAN_BUILD_COMMAND="${MAKE_CMD} nvim" \
-    bash || echo "Running coverity script failed, ignoring."
+    bash
 }
 
 is_date_ok && {
