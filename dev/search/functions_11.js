@@ -11,7 +11,6 @@ var searchData=
   ['rbuffer_5fwrite',['rbuffer_write',['../rstream_8c.html#a7e9730a7884e42a8cf5d8b9b373bf6f3',1,'rstream.c']]],
   ['rbuffer_5fwrite_5fptr',['rbuffer_write_ptr',['../rstream_8c.html#a61861d79c145dbc2df574eb8c9100b05',1,'rstream.c']]],
   ['re_5fmultiline',['re_multiline',['../regexp_8c.html#ab9e61b1216aafbd3d353948cb8f5c6e4',1,'regexp.c']]],
-  ['read_5ferror_5fexit',['read_error_exit',['../ui_8c.html#af98f17ed0d8d0ea87f904404171c2559',1,'ui.c']]],
   ['read_5fstring',['read_string',['../misc2_8c.html#afd6b1e01f309a8c00257d4c8a20a75dd',1,'misc2.c']]],
   ['read_5fviminfo',['read_viminfo',['../ex__cmds_8c.html#aa7e2b1049ef47715861834303d0da8bf',1,'ex_cmds.c']]],
   ['read_5fviminfo_5fbufferlist',['read_viminfo_bufferlist',['../buffer_8c.html#a64325ead0381dc971a6133b7b9969833',1,'buffer.c']]],

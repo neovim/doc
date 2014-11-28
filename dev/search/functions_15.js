@@ -35,7 +35,7 @@ var searchData=
   ['vim_5fdialog_5fyesnocancel',['vim_dialog_yesnocancel',['../message_8c.html#a1e3d7c12907e6602d3f271f45f779878',1,'message.c']]],
   ['vim_5ferr_5fwrite',['vim_err_write',['../vim_8c.html#ae330d391d13eefed3398ef328475e719',1,'vim.c']]],
   ['vim_5feval',['vim_eval',['../vim_8c.html#ae2095f2a9e2989255e6eb73bcad4f89b',1,'vim.c']]],
-  ['vim_5ffeedkeys',['vim_feedkeys',['../vim_8c.html#a3c13825df9bed2b36eff1780165a7f03',1,'vim.c']]],
+  ['vim_5ffeedkeys',['vim_feedkeys',['../vim_8c.html#a2b5dfe7c27b80e517ab8466d823e1531',1,'vim.c']]],
   ['vim_5ffgets',['vim_fgets',['../fileio_8c.html#a5db19ca608e2af8356b6808c8e355bbb',1,'fileio.c']]],
   ['vim_5ffindfile',['vim_findfile',['../file__search_8c.html#af95864d052ae99e73ba971678025053a',1,'file_search.c']]],
   ['vim_5ffindfile_5fcleanup',['vim_findfile_cleanup',['../file__search_8c.html#a191b4c74df03558af4c7cd7926d5dda6',1,'file_search.c']]],

@@ -40,7 +40,7 @@ var searchData=
   ['find_5fword_5fend',['find_word_end',['../edit_8c.html#aec3e3b60904ce51842f0957ea59ae6b7',1,'edit.c']]],
   ['find_5fword_5fstart',['find_word_start',['../edit_8c.html#a179dfa42d2c742100cc4a48d4fc25753',1,'edit.c']]],
   ['findmatch',['findmatch',['../search_8c.html#aece5be3e7ece5ea0b70c13d720ae8b58',1,'search.c']]],
-  ['findmatchlimit',['findmatchlimit',['../search_8c.html#ae0701615fdd52462fb554fd6d05d6e3b',1,'search.c']]],
+  ['findmatchlimit',['findmatchlimit',['../search_8c.html#a7c472053ee7249e102cea7bdd6252fa4',1,'search.c']]],
   ['findpar',['findpar',['../search_8c.html#a966de2d8603765f5fdd062d3a6488923',1,'search.c']]],
   ['findsent',['findsent',['../search_8c.html#a4766817ca6845c6fb4a2c175f862fe2a',1,'search.c']]],
   ['finish_5fviminfo_5fhistory',['finish_viminfo_history',['../ex__getln_8c.html#a2ed8810d25e268cecc50ac50d22e538f',1,'ex_getln.c']]],

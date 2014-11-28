@@ -304,5 +304,5 @@ var searchData=
   ['cur_5fstate',['CUR_STATE',['../syntax_8c.html#a670baa85116a684a429ec90d45bb97e6',1,'syntax.c']]],
   ['cursor',['CURSOR',['../regexp_8c.html#ae67dffdc8e496c16aff7e8903a3f2117',1,'regexp.c']]],
   ['cursor_5fbar_5fright',['CURSOR_BAR_RIGHT',['../macros_8h.html#a2d7b717cc8f01428e26b6e8850664d7e',1,'macros.h']]],
-  ['cursor_5fmoved',['CURSOR_MOVED',['../ui_8h.html#abeb07d4ceb42c3fe036f1033e05fcf6f',1,'ui.h']]]
+  ['cursor_5fmoved',['CURSOR_MOVED',['../mouse_8h.html#abeb07d4ceb42c3fe036f1033e05fcf6f',1,'mouse.h']]]
 ];
