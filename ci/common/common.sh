@@ -14,9 +14,21 @@ require_environment_variable() {
   fi
 }
 
+# Output the current OS.
+# Possible values are "osx" and "linux".
+get_os() {
+  local os="$(uname -s)"
+  if [[ "${os}" == "Darwin" ]]; then
+    echo "osx"
+  else
+    echo "linux"
+  fi
+}
+
 require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
 CI_TARGET=${CI_TARGET:-$(basename ${0%.sh})}
+CI_OS=${TRAVIS_OS_NAME:-$(get_os)}
 MAKE_CMD=${MAKE_CMD:-"make -j2"}
 GIT_NAME=${GIT_NAME:-marvim}
 GIT_EMAIL=${GIT_EMAIL:-marvim@users.noreply.github.com}

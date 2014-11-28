@@ -2,30 +2,33 @@
 
 require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
-DEPS64_REPO=${DEPS64_REPO:-${DEPS_REPO:-neovim/deps}}
-DEPS64_BRANCH=${DEPS64_BRANCH:-${DEPS_BRANCH:-master}}
-DEPS64_DIR=${DEPS64_DIR:-${DEPS_DIR:-/opt/neovim-deps}}
-DEPS64_SUBTREE=${DEPS64_SUBTREE:-/64/}
-DEPS32_REPO=${DEPS32_REPO:-${DEPS_REPO:-neovim/deps}}
-DEPS32_BRANCH=${DEPS32_BRANCH:-${DEPS_BRANCH:-master}}
-DEPS32_DIR=${DEPS32_DIR:-${DEPS_DIR:-/opt/neovim-deps}}
-DEPS32_SUBTREE=${DEPS32_SUBTREE:-/32/}
+# Linux
+DEPS_LINUX64_REPO=${DEPS_LINUX64_REPO:-${DEPS_REPO:-neovim/deps}}
+DEPS_LINUX64_BRANCH=${DEPS_LINUX64_BRANCH:-${DEPS_BRANCH:-master}}
+DEPS_LINUX64_DIR=${DEPS_LINUX64_DIR:-${DEPS_DIR:-/opt/neovim-deps}}
+DEPS_LINUX64_SUBTREE=${DEPS_LINUX64_SUBTREE:-/linux-x64/}
+DEPS_LINUX32_REPO=${DEPS_LINUX32_REPO:-${DEPS_REPO:-neovim/deps}}
+DEPS_LINUX32_BRANCH=${DEPS_LINUX32_BRANCH:-${DEPS_BRANCH:-master}}
+DEPS_LINUX32_DIR=${DEPS_LINUX32_DIR:-${DEPS_DIR:-/opt/neovim-deps}}
+DEPS_LINUX32_SUBTREE=${DEPS_LINUX32_SUBTREE:-/linux-x86/}
+
+# OS X
+DEPS_OSX64_REPO=${DEPS_OSX64_REPO:-${DEPS_REPO:-neovim/deps}}
+DEPS_OSX64_BRANCH=${DEPS_OSX64_BRANCH:-${DEPS_BRANCH:-master}}
+DEPS_OSX64_DIR=${DEPS_OSX64_DIR:-${DEPS_DIR:-/opt/neovim-deps}}
+DEPS_OSX64_SUBTREE=${DEPS_OSX64_SUBTREE:-/osx-x64/}
 
 # Set up prebuilt 64-bit Neovim dependencies.
 setup_deps64() {
-  echo "Setting up prebuilt dependencies from ${DEPS64_REPO} ${DEPS64_BRANCH}..."
+  local deps_dir="${DEPS_${CI_OS^^}64_DIR}${DEPS_${CI_OS^^}64_SUBTREE}"
 
-  sudo git clone --branch ${DEPS64_BRANCH} --depth 1 git://github.com/${DEPS64_REPO} ${DEPS64_DIR}
-  local depsdir="${DEPS64_DIR}${DEPS64_SUBTREE}"
-  depsdir=${depsdir%/*}
-  eval $(${depsdir}/usr/bin/luarocks path)
-  export PKG_CONFIG_PATH="${depsdir}/usr/lib/pkgconfig"
-  export USE_BUNDLED_DEPS=OFF
-  export PATH="${depsdir}/usr/bin:${PATH}"
+  NVIM_DEPS_REPO="${DEPS_${CI_OS^^}64_REPO}" \
+  NVIM_DEPS_BRANCH="${DEPS_${CI_OS^^}64_BRANCH}" \
+  eval "$(< ${BUILD_DIR}/scripts/travis-setup.sh)" _setup_deps ${deps_dir}
 }
 
 # Build Neovim dependencies in an output directory.
-# ${1}: Variable prefix (DEPS64/DEPS32).
+# ${1}: Variable prefix (DEPS_<OS>64/DEPS_<OS>32).
 # ${2}: Additional CMake flags (optional).
 build_deps() {
   local prefix="${1}"
@@ -45,7 +48,7 @@ build_deps() {
 }
 
 # Clone Neovim deps repo.
-# ${1}: Variable prefix (DEPS64/DEPS32).
+# ${1}: Variable prefix (DEPS_<OS>64/DEPS_<OS>32).
 clone_deps() {
   local prefix="${1}"
   local dir="${prefix}_DIR"
@@ -63,5 +66,5 @@ clone_deps() {
       sudo chown ${USER} "${!dir}"
     }
   fi
-  prompt_key_local "Warning: continuing will reset branch ${!branch} to ${!repo} ${!branch} in ${!dir}." && clone_subtree ${prefix}
+  prompt_key_local "Warning: continuing will reset branch ${!branch} to ${!repo}:${!branch} in ${!dir}." && clone_subtree ${prefix}
 }
