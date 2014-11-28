@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['early_5finit',['early_init',['../main_8c.html#a91ed9bbd9fbee12277c1f6c507ea2b44',1,'main.c']]],
   ['ecmd_5faddbuf',['ECMD_ADDBUF',['../ex__cmds_8h.html#a83cf6649b5a3ce676567470dca32da80',1,'ex_cmds.h']]],
   ['ecmd_5fforceit',['ECMD_FORCEIT',['../ex__cmds_8h.html#a194a0da5f35a3020200245e524e9afe4',1,'ex_cmds.h']]],
   ['ecmd_5fhide',['ECMD_HIDE',['../ex__cmds_8h.html#a18a76866fb466bad54f5bc54ff8ca301',1,'ex_cmds.h']]],
@@ -449,7 +450,7 @@ var searchData=
   ['expand_5fsyntax',['EXPAND_SYNTAX',['../vim_8h.html#a4caf8d8f829279fba122163d961608a4a610002e6d209d87414a0ad3c62f0fd95',1,'vim.h']]],
   ['expand_5fsyntime',['EXPAND_SYNTIME',['../vim_8h.html#a4caf8d8f829279fba122163d961608a4af66e571d1f1bc72ddf643187adafdfb8',1,'vim.h']]],
   ['expand_5ft',['expand_T',['../ex__cmds__defs_8h.html#a95559045580eeca1c2921f776e7271cd',1,'ex_cmds_defs.h']]],
-  ['expand_5ftags',['expand_tags',['../tag_8c.html#a64eb08ad12ac695d149f6b79738639fe',1,'expand_tags(int tagnames, char_u *pat, int *num_file, char_u ***file):&#160;tag.c'],['../vim_8h.html#a4caf8d8f829279fba122163d961608a4ac70e92aa41d21ebb25ed4e87b8dfa83c',1,'EXPAND_TAGS():&#160;vim.h']]],
+  ['expand_5ftags',['EXPAND_TAGS',['../vim_8h.html#a4caf8d8f829279fba122163d961608a4ac70e92aa41d21ebb25ed4e87b8dfa83c',1,'EXPAND_TAGS():&#160;vim.h'],['../tag_8c.html#a64eb08ad12ac695d149f6b79738639fe',1,'expand_tags(int tagnames, char_u *pat, int *num_file, char_u ***file):&#160;tag.c']]],
   ['expand_5ftags_5flistfiles',['EXPAND_TAGS_LISTFILES',['../vim_8h.html#a4caf8d8f829279fba122163d961608a4aae4fff6fccc6880a8db4abbbdaf83f27',1,'vim.h']]],
   ['expand_5funsuccessful',['EXPAND_UNSUCCESSFUL',['../vim_8h.html#a4caf8d8f829279fba122163d961608a4a5e06876de4189e6edc8a0f7b4773dead',1,'vim.h']]],
   ['expand_5fuser',['EXPAND_USER',['../vim_8h.html#a4caf8d8f829279fba122163d961608a4aa7ac27a921c9c689251a06964e1438ec',1,'vim.h']]],

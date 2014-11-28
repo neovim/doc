@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['early_5finit',['early_init',['../main_8c.html#a91ed9bbd9fbee12277c1f6c507ea2b44',1,'main.c']]],
   ['edit',['edit',['../edit_8c.html#af1d3349b9c831286998667e1feefb539',1,'edit.c']]],
   ['edit_5fputchar',['edit_putchar',['../edit_8c.html#a18b720340653da0a5e44873005af33e0',1,'edit.c']]],
   ['edit_5funputchar',['edit_unputchar',['../edit_8c.html#a647f43935bb3ea606be45dd756cefd45',1,'edit.c']]],
