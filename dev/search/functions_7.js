@@ -18,7 +18,7 @@ var searchData=
   ['has_5ffuncundefined',['has_funcundefined',['../fileio_8c.html#a153652c795f503093c40bba4bf400eb4',1,'fileio.c']]],
   ['has_5finsertcharpre',['has_insertcharpre',['../fileio_8c.html#a30540f10c02cbde7ccb16628093dd632',1,'fileio.c']]],
   ['has_5floop_5fcmd',['has_loop_cmd',['../ex__eval_8c.html#a62db8d272386297c0ec64a7613fd9d1d',1,'ex_eval.c']]],
-  ['has_5fnon_5fascii',['has_non_ascii',['../strings_8c.html#ab863ef025c90b3cafaa12dade0a46bc7',1,'strings.c']]],
+  ['has_5fnon_5fascii',['has_non_ascii',['../strings_8c.html#abe724c6ce23df5148170738f89a8adf0',1,'strings.c']]],
   ['has_5fpatch',['has_patch',['../version_8c.html#a876f0fd40b88cd44ab5bff41a05c7464',1,'version.c']]],
   ['has_5fprofiling',['has_profiling',['../ex__cmds2_8c.html#ac8bc71017a79c3c00f9631a63f251555',1,'ex_cmds2.c']]],
   ['has_5ftextchanged',['has_textchanged',['../fileio_8c.html#a50213829a48311931176ced04abe0f6a',1,'fileio.c']]],

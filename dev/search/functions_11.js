@@ -40,7 +40,7 @@ var searchData=
   ['reg_5fsubmatch',['reg_submatch',['../regexp_8c.html#a4d9084b540c67fcc909adf621080c812',1,'regexp.c']]],
   ['reg_5fsubmatch_5flist',['reg_submatch_list',['../regexp_8c.html#a7e80ece29119108e08c7626cd573beaf',1,'regexp.c']]],
   ['regtilde',['regtilde',['../regexp_8c.html#a80efb6fd97eb3e63e7e3ccb7b63832a5',1,'regexp.c']]],
-  ['rem_5fbackslash',['rem_backslash',['../charset_8c.html#a1a4479e2e0f93fc599ebadeaa09e0992',1,'charset.c']]],
+  ['rem_5fbackslash',['rem_backslash',['../charset_8c.html#acbbe19f33f1e7c4f19a0ac36f8b97697',1,'charset.c']]],
   ['remote_5ftype',['REMOTE_TYPE',['../api_2private_2defs_8h.html#af73c7df3b77c0c955771d34299dc5a15',1,'REMOTE_TYPE(Buffer):&#160;defs.h'],['../api_2private_2defs_8h.html#aa2f5ae6f6d6e21022b20e5652ade7b05',1,'REMOTE_TYPE(Window):&#160;defs.h'],['../api_2private_2defs_8h.html#a3bb34984edf6ee6e8afd6d71d1512612',1,'REMOTE_TYPE(Tabpage):&#160;defs.h']]],
   ['removable',['removable',['../mark_8c.html#a3b314c9b3023ccf577a0d5debbef7e4f',1,'mark.c']]],
   ['remove_5fbom',['remove_bom',['../mbyte_8c.html#a7c4ee2f66d29916123fe2bfdb8562107',1,'mbyte.c']]],

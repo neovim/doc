@@ -35,7 +35,7 @@ var searchData=
   ['mb_5fadjustpos',['mb_adjustpos',['../mbyte_8c.html#afe8fcbdfcaddddd5f651cfc59ee009eb',1,'mbyte.c']]],
   ['mb_5fcharlen',['mb_charlen',['../mbyte_8c.html#ad3c8d651a4e07b99b8ba3b5dc2e142c3',1,'mbyte.c']]],
   ['mb_5fcharlen_5flen',['mb_charlen_len',['../mbyte_8c.html#af4fd93341dfee74a31e5ae79955679b2',1,'mbyte.c']]],
-  ['mb_5fcopy_5fchar',['mb_copy_char',['../mbyte_8c.html#aef853ac45973fd97ae530983d651ba82',1,'mbyte.c']]],
+  ['mb_5fcopy_5fchar',['mb_copy_char',['../mbyte_8c.html#a6dfcfc6c6a416d25b3ff32b6ad73c07a',1,'mbyte.c']]],
   ['mb_5fcptr2char_5fadv',['mb_cptr2char_adv',['../mbyte_8c.html#aea8ab0ab68edf3b74f7a14472bdab2d6',1,'mbyte.c']]],
   ['mb_5ffix_5fcol',['mb_fix_col',['../mbyte_8c.html#a2abf8eba6c471f94862451c442a779f6',1,'mbyte.c']]],
   ['mb_5fget_5fclass',['mb_get_class',['../mbyte_8c.html#aef3124f933c11b8d29f9a422304df7a2',1,'mbyte.c']]],

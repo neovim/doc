@@ -209,7 +209,7 @@ var searchData=
   ['strchrsub',['strchrsub',['../memory_8c.html#a76467bc2bc18e489937e1b3c92790da5',1,'memory.c']]],
   ['string_5fconvert',['string_convert',['../mbyte_8c.html#a83661a5d9f6e99842ed7d5b318daa6c3',1,'mbyte.c']]],
   ['string_5fconvert_5fext',['string_convert_ext',['../mbyte_8c.html#a40a167a06e5839b125fb4680c76198e1',1,'mbyte.c']]],
-  ['strup_5fsave',['strup_save',['../strings_8c.html#a0c1365d32ba4839fd00c8058cbc19ab1',1,'strings.c']]],
+  ['strup_5fsave',['strup_save',['../strings_8c.html#a9c71bae9bc001a0819c21de4547fdda5',1,'strings.c']]],
   ['stuff_5fempty',['stuff_empty',['../getchar_8c.html#a6d7c0f02af260bd837793bdedd8ee299',1,'getchar.c']]],
   ['stuff_5finserted',['stuff_inserted',['../edit_8c.html#ae407180d15cdea12323e5a7a03683c6d',1,'edit.c']]],
   ['stuffcharreadbuff',['stuffcharReadbuff',['../getchar_8c.html#a4ab52927528d5a4d7d3d4fa5a6c0c7e8',1,'getchar.c']]],

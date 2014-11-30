@@ -21,7 +21,7 @@ var searchData=
   ['del_5flines',['del_lines',['../misc1_8c.html#a836f33365fc64037209e4691b35e56fa',1,'misc1.c']]],
   ['del_5fmenutrans_5fvars',['del_menutrans_vars',['../eval_8c.html#a5960a0e56b8c555ec534393b6d6896cf',1,'eval.c']]],
   ['del_5ftermcode',['del_termcode',['../term_8c.html#a23beab6adcd942369662088265792361',1,'term.c']]],
-  ['del_5ftrailing_5fspaces',['del_trailing_spaces',['../strings_8c.html#a8b571a17f90598378a04a593323b28d9',1,'strings.c']]],
+  ['del_5ftrailing_5fspaces',['del_trailing_spaces',['../strings_8c.html#a5eeed1cf0f172d76f720b329e6d09989',1,'strings.c']]],
   ['del_5ftypebuf',['del_typebuf',['../getchar_8c.html#a3fd3b11860db7a0a9d863585465c25da',1,'getchar.c']]],
   ['delete_5ffirst_5fmsg',['delete_first_msg',['../message_8c.html#aa4126a2c3996cddd65da5621ebd3df4c',1,'message.c']]],
   ['deleted_5flines',['deleted_lines',['../misc1_8c.html#a27dadabe44d461913b091e10980f35ba',1,'misc1.c']]],

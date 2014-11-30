@@ -36,7 +36,7 @@ var searchData=
   ['has_5fhotkey_5flen',['HAS_HOTKEY_LEN',['../message_8c.html#a0ad819454387af187e41ca6545e05946',1,'message.c']]],
   ['has_5finsertcharpre',['has_insertcharpre',['../fileio_8c.html#a30540f10c02cbde7ccb16628093dd632',1,'fileio.c']]],
   ['has_5floop_5fcmd',['has_loop_cmd',['../ex__eval_8c.html#a62db8d272386297c0ec64a7613fd9d1d',1,'ex_eval.c']]],
-  ['has_5fnon_5fascii',['has_non_ascii',['../strings_8c.html#ab863ef025c90b3cafaa12dade0a46bc7',1,'strings.c']]],
+  ['has_5fnon_5fascii',['has_non_ascii',['../strings_8c.html#abe724c6ce23df5148170738f89a8adf0',1,'strings.c']]],
   ['has_5fpatch',['has_patch',['../version_8c.html#a876f0fd40b88cd44ab5bff41a05c7464',1,'version.c']]],
   ['has_5fpim',['has_pim',['../structnfa__list__T.html#a2b5d4f96b540b161c256c4cc671f171d',1,'nfa_list_T']]],
   ['has_5fprofiling',['has_profiling',['../ex__cmds2_8c.html#ac8bc71017a79c3c00f9631a63f251555',1,'ex_cmds2.c']]],

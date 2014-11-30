@@ -9,7 +9,7 @@ var searchData=
   ['xmallocz',['xmallocz',['../memory_8c.html#a219302c1a427e6037a2c88fb06536470',1,'memory.c']]],
   ['xmemdup',['xmemdup',['../memory_8c.html#a40f83fec2046a44aa9c75ddb259a551d',1,'memory.c']]],
   ['xmemdupz',['xmemdupz',['../memory_8c.html#ad68263aaeffc8a0b6e63d406eb3e916d',1,'memory.c']]],
-  ['xmemrchr',['xmemrchr',['../memory_8c.html#aa921696d4e8e4a82b41048f8f97c1c45',1,'memory.c']]],
+  ['xmemrchr',['xmemrchr',['../memory_8c.html#a1b42e810815ee012d5de8190cfbcf08d',1,'memory.c']]],
   ['xmemscan',['xmemscan',['../memory_8c.html#aa052b8b010b05e632098e18f459bbd54',1,'memory.c']]],
   ['xp_5farg',['xp_arg',['../structexpand.html#a20a292f83bb49ca6f4370db5062719ca',1,'expand::xp_arg()'],['../structcmdline__info.html#a9c6dbcdf5120784a03cd26945f5e8fea',1,'cmdline_info::xp_arg()']]],
   ['xp_5fbackslash',['xp_backslash',['../structexpand.html#a3934ec9de8fd2fa12ad32d3e6d1b5f16',1,'expand']]],
@@ -31,7 +31,7 @@ var searchData=
   ['xstpncpy',['xstpncpy',['../memory_8c.html#af94a19db7a2295e3160e847225c053d4',1,'memory.c']]],
   ['xstrchrnul',['xstrchrnul',['../memory_8c.html#a231b15058955dc0e308d923cc4c97df7',1,'memory.c']]],
   ['xstrdup',['xstrdup',['../memory_8c.html#af948034a6fa9841282c17be0fdbce605',1,'memory.c']]],
-  ['xstrlcpy',['xstrlcpy',['../memory_8c.html#aafa5bf956388dbb7f89b1b8415ef5170',1,'memory.c']]],
+  ['xstrlcpy',['xstrlcpy',['../memory_8c.html#aae10fc1bb9aac1f327f95a605c7e7c08',1,'memory.c']]],
   ['xstrndup',['xstrndup',['../memory_8c.html#a6a2f013f490b1da3661b74c77eba5f9a',1,'memory.c']]],
   ['xt_5flen',['XT_LEN',['../term_8c.html#aa7b9e807ca6c3a91bf5bddc4b8f9e872',1,'term.c']]]
 ];

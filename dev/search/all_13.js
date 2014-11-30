@@ -899,7 +899,7 @@ var searchData=
   ['strncmp',['STRNCMP',['../vim_8h.html#a5f1ef744c34be69aec1531f1fe604a9b',1,'vim.h']]],
   ['strncpy',['STRNCPY',['../vim_8h.html#a469cffaa64ff8028edfb64ba4cd7deae',1,'vim.h']]],
   ['strnicmp',['STRNICMP',['../vim_8h.html#a30a049fe4d0d13f9c4c5296b8b0ecc34',1,'vim.h']]],
-  ['strup_5fsave',['strup_save',['../strings_8c.html#a0c1365d32ba4839fd00c8058cbc19ab1',1,'strings.c']]],
+  ['strup_5fsave',['strup_save',['../strings_8c.html#a9c71bae9bc001a0819c21de4547fdda5',1,'strings.c']]],
   ['stuff_5fempty',['stuff_empty',['../getchar_8c.html#a6d7c0f02af260bd837793bdedd8ee299',1,'getchar.c']]],
   ['stuff_5finserted',['stuff_inserted',['../edit_8c.html#ae407180d15cdea12323e5a7a03683c6d',1,'edit.c']]],
   ['stuffcharreadbuff',['stuffcharReadbuff',['../getchar_8c.html#a4ab52927528d5a4d7d3d4fa5a6c0c7e8',1,'getchar.c']]],
