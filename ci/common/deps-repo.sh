@@ -20,11 +20,17 @@ DEPS_OSX64_SUBTREE=${DEPS_OSX64_SUBTREE:-/osx-x64/}
 
 # Set up prebuilt 64-bit Neovim dependencies.
 setup_deps64() {
-  local deps_dir="${DEPS_${CI_OS^^}64_DIR}${DEPS_${CI_OS^^}64_SUBTREE}"
+  local deps_dir="DEPS_${CI_OS^^}64_DIR"
+  local deps_subtree="DEPS_${CI_OS^^}64_SUBTREE"
+  local deps_repo="DEPS_${CI_OS^^}64_REPO"
+  local deps_branch="DEPS_${CI_OS^^}64_BRANCH"
 
-  NVIM_DEPS_REPO="${DEPS_${CI_OS^^}64_REPO}" \
-  NVIM_DEPS_BRANCH="${DEPS_${CI_OS^^}64_BRANCH}" \
-  eval "$(< ${BUILD_DIR}/scripts/travis-setup.sh)" _setup_deps ${deps_dir}
+  local deps_path="${!deps_dir}${!deps_subtree}"
+
+  NVIM_DEPS_REPO="${!deps_repo}" \
+  NVIM_DEPS_BRANCH="${!deps_branch}" \
+  source "${BUILD_DIR}/scripts/travis-setup.sh" && \
+  _setup_deps "${deps_path}"
 }
 
 # Build Neovim dependencies in an output directory.
