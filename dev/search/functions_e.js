@@ -66,7 +66,7 @@ var searchData=
   ['os_5fisdir',['os_isdir',['../fs_8c.html#a3f245be34c582b94dee41d393a50d503',1,'fs.c']]],
   ['os_5flibcall',['os_libcall',['../dl_8c.html#a0a9bca0f32738e8f7c04a0f0837f0dcf',1,'dl.c']]],
   ['os_5flocaltime_5fr',['os_localtime_r',['../time_8c.html#ab8cff4f6a19fd0fa5f62d6655f7f538f',1,'time.c']]],
-  ['os_5fmicrodelay',['os_microdelay',['../time_8c.html#ac37d9228618f328240bd173f70e55b8d',1,'time.c']]],
+  ['os_5fmicrodelay',['os_microdelay',['../time_8c.html#aaa177a6c2a2c7be9738c24392a31095d',1,'time.c']]],
   ['os_5fmkdir',['os_mkdir',['../fs_8c.html#acf057cc3c02baf87c5221269239dc051',1,'fs.c']]],
   ['os_5fmkdtemp',['os_mkdtemp',['../fs_8c.html#ab210820f2d5f3315c9a91a9c2b07cac9',1,'fs.c']]],
   ['os_5fopen',['os_open',['../fs_8c.html#a7e97601d22c41d71e231e5a7cb7f9b6e',1,'fs.c']]],

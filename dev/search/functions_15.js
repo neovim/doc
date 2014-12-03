@@ -110,7 +110,7 @@ var searchData=
   ['vim_5fstrnsave',['vim_strnsave',['../strings_8c.html#afcf99dbab0f6a5bff0a0227d6dd34bcc',1,'strings.c']]],
   ['vim_5fstrnsave_5fup',['vim_strnsave_up',['../strings_8c.html#a8e8f06f7f671607f167f87aeb082fb1f',1,'strings.c']]],
   ['vim_5fstrnsize',['vim_strnsize',['../charset_8c.html#ac58f2b235192879e481787179b74cf00',1,'charset.c']]],
-  ['vim_5fstrrchr',['vim_strrchr',['../strings_8c.html#ad6b6d3c2c84ff7fbf41987942163358f',1,'strings.c']]],
+  ['vim_5fstrrchr',['vim_strrchr',['../strings_8c.html#a11089e68ba5e29ecf8b91c4ec6915f67',1,'strings.c']]],
   ['vim_5fstrsave',['vim_strsave',['../strings_8c.html#ad3b3fc1130d0a2e605c72f89d72a22f9',1,'strings.c']]],
   ['vim_5fstrsave_5fescape_5fcsi',['vim_strsave_escape_csi',['../getchar_8c.html#a76e5d283776ba86dbbaa8af7a7157122',1,'getchar.c']]],
   ['vim_5fstrsave_5fescaped',['vim_strsave_escaped',['../strings_8c.html#a676fa511ff90faffce97464e751b87b1',1,'strings.c']]],
