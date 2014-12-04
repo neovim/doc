@@ -631,10 +631,6 @@ Before editing binary, executable or Vim <A HREF="usr_41.html#script">script</A>
 option.  This will avoid the use of <A HREF="options.html#'fileformat'">'fileformat'</A>.  Without this you risk that
 single <A HREF="motion.html#&lt;NL&gt;">&lt;NL&gt;</A> characters are unexpectedly replaced with &lt;CR&gt;&lt;NL&gt;.
 
-You can encrypt files that are written by setting the <A HREF="options.html#'key'">'key'</A> option.  This
-provides some security against others reading your files. |<A HREF="#encryption">encryption</A>|
-
-
 ==============================================================================
 
 3. The argument <A HREF="eval.html#list">list</A>				*<A NAME="argument-list"></A><B>argument-list</B>* *<A NAME="arglist"></A><B>arglist</B>*
@@ -1507,124 +1503,13 @@ There are a few things to remember when editing binary files:
 
 9. Encryption						*<A NAME="encryption"></A><B>encryption</B>*
 
-Vim is able to write files encrypted, and read them back.  The encrypted text
-cannot be read without the right key.
 
-{only available when compiled with the |<A HREF="various.html#+cryptv">+cryptv</A>| feature}  *<A NAME="E833"></A><B>E833</B>*
+					                *<A NAME=":X"></A><B>:X</B>* *<A NAME="E817"></A><B>E817</B>* *<A NAME="E818"></A><B>E818</B>* *<A NAME="E819"></A><B>E819</B>* *<A NAME="E820"></A><B>E820</B>*
+Support for editing encrypted files has been removed, but may be added back in
+the future.  See the following discussions for more information:
 
-
-The text in the swap file and the <A HREF="undo.html#undo">undo</A> file is also encrypted.  *<A NAME="E843"></A><B>E843</B>*
-However, this is done block-by-block and may reduce the time needed to crack a
-password.  You can disable the swap file, but then a crash will cause you to
-lose your work.  The <A HREF="undo.html#undo">undo</A> file can be disabled without much disadvantage.
-<B>	:set noundofile</B>
-<B>	:noswapfile edit secrets</B>
-
-Note: The text in memory is not encrypted.  A system administrator may be able
-to see your text while you are editing <A HREF="motion.html#it">it</A>.  When filtering text with
-&quot;:!filter&quot; or using &quot;<A HREF="#:w">:w</A> !command&quot; the text is not encrypted, this may reveal
-<A HREF="motion.html#it">it</A> to others.  The <A HREF="options.html#'viminfo'">'viminfo'</A> file is not encrypted.
-
-WARNING: If you make a typo when entering the key and then write the file and
-exit, the text will be lost!
-
-The normal way to work with <A HREF="#encryption">encryption</A>, is to use the &quot;<A HREF="#:X">:X</A>&quot; command, which will
-ask you to enter a key.  A following write command will use that key to
-encrypt the file.  If you later edit the same file, Vim will ask you to enter
-a key.  If you type the same key <A HREF="motion.html#as">as</A> that was used for <A HREF="#writing">writing</A>, the text will
-be readable again.  If you use a wrong key, <A HREF="motion.html#it">it</A> will be a mess.
-
-
-							*<A NAME=":X"></A><B>:X</B>*
-<A HREF="#:X">:X</A>	Prompt for an <A HREF="#encryption">encryption</A> key.  The typing is done without showing the
-	actual text, so that someone looking at the display won't see <A HREF="motion.html#it">it</A>.
-	The typed key is stored in the <A HREF="options.html#'key'">'key'</A> option, which is used to encrypt
-	the file when <A HREF="motion.html#it">it</A> is written.  The file will remain unchanged until you
-	write <A HREF="motion.html#it">it</A>.  See also |<A HREF="starting.html#-x">-x</A>|.
-
-The value of the <A HREF="options.html#'key'">'key'</A> <A HREF="options.html#options">options</A> is used when text is written.  When the option
-is not empty, the written file will be encrypted, using the value <A HREF="motion.html#as">as</A> the
-<A HREF="#encryption">encryption</A> key.  A magic number is prepended, so that Vim can recognize that
-the file is encrypted.
-
-To disable the <A HREF="#encryption">encryption</A>, reset the <A HREF="options.html#'key'">'key'</A> option to an empty value:
-<B>	:set key=</B>
-
-You can use the <A HREF="options.html#'cryptmethod'">'cryptmethod'</A> option to select the type of <A HREF="#encryption">encryption</A>, use one
-of these two:
-<B>	:setlocal cm=zip       " weak method, backwards compatible</B>
-<B>	:setlocal cm=blowfish  " strong method</B>
-Do this before <A HREF="#writing">writing</A> the file.  When reading an encrypted file <A HREF="motion.html#it">it</A> will be
-set automatically to the method used when that file was written.  You can
-change <A HREF="options.html#'cryptmethod'">'cryptmethod'</A> before <A HREF="#writing">writing</A> that file to change the method.
-To set the default method, used for new files, use one of these in your
-|<A HREF="starting.html#vimrc">vimrc</A>| file:
-<B>	set cm=zip</B>
-<B>	set cm=blowfish</B>
-The message given for reading and <A HREF="#writing">writing</A> a file will show &quot;[crypted]&quot; when
-using <A HREF="pi_zip.html#zip">zip</A>, &quot;[blowfish]&quot; when using <A HREF="options.html#blowfish">blowfish</A>.
-
-When <A HREF="#writing">writing</A> an <A HREF="undo.html#undo">undo</A> file, the same key and method will be used for the text
-in the undo file. |<A HREF="undo.html#persistent-undo">persistent-undo</A>|.
-
-
-						*<A NAME="E817"></A><B>E817</B>* *<A NAME="E818"></A><B>E818</B>* *<A NAME="E819"></A><B>E819</B>* *<A NAME="E820"></A><B>E820</B>*
-When <A HREF="#encryption">encryption</A> does not work properly, you would be able to write your text
-to a file and never be able to read <A HREF="motion.html#it">it</A> back.  Therefore a test is performed to
-check if the <A HREF="#encryption">encryption</A> works <A HREF="motion.html#as">as</A> expected.  If you get one of these <A HREF="message.html#errors">errors</A>
-don't write the file encrypted!  You need to rebuild the Vim binary to fix
-this.
-
-
-*<A NAME="E831"></A><B>E831</B>* This is an internal error, &quot;cannot happen&quot;.  If you can reproduce <A HREF="motion.html#it">it</A>,
-please report to the developers.
-
-When reading a file that has been encrypted and the <A HREF="options.html#'key'">'key'</A> option is not empty,
-<A HREF="motion.html#it">it</A> will be used for decryption.  If the value is empty, you will be prompted
-to enter the key.  If you don't enter a key, or you enter the wrong key, the
-file is edited without being decrypted.  There is no warning about using the
-wrong key (this makes brute force methods to find the key more difficult).
-
-If want to start reading a file that uses a different key, set the <A HREF="options.html#'key'">'key'</A>
-option to an empty <A HREF="eval.html#string">string</A>, so that Vim will prompt for a new one.  Don't use
-the &quot;<A HREF="options.html#:set">:set</A>&quot; command to enter the value, other people can read the command over
-your shoulder.
-
-Since the value of the <A HREF="options.html#'key'">'key'</A> option is supposed to be a secret, its value can
-never be viewed.  You should not set this option in a <A HREF="starting.html#vimrc">vimrc</A> file.
-
-An encrypted file can be recognized by the &quot;file&quot; command, if you add these
-lines to &quot;/etc/magic&quot;, &quot;/usr/share/misc/magic&quot; or wherever your system has the
-&quot;magic&quot; file:
-<B>     0	string	VimCrypt~	Vim encrypted file</B>
-<B>     &gt;9	string	01	- "zip" cryptmethod</B>
-<B>     &gt;9	string	02	- "blowfish" cryptmethod</B>
-
-
-Notes:
-- Encryption is not possible when doing conversion with <A HREF="options.html#'charconvert'">'charconvert'</A>.
-- Text you copy or delete goes to the numbered <A HREF="change.html#registers">registers</A>.  The <A HREF="change.html#registers">registers</A> can
-  be saved in the .viminfo file, where they could be read.  Change your
-  <A HREF="options.html#'viminfo'">'viminfo'</A> option to be safe.
-- Someone can type commands in Vim when you walk away for a moment, he should
-  not be able to get the key.
-- If you make a typing mistake when entering the key, you might not be able to
-  get your text back!
-- If you type the key with a &quot;<A HREF="options.html#:set">:set</A> <A HREF="options.html#'key'">key</A>=value&quot; command, <A HREF="motion.html#it">it</A> can be kept in the
-  <A HREF="cmdline.html#history">history</A>, showing the <A HREF="options.html#'key'">'key'</A> value in a <A HREF="starting.html#viminfo">viminfo</A> file.
-- There is never 100&#37; safety.  The <A HREF="#encryption">encryption</A> in Vim has not been tested for
-  robustness.
-- The algorithm used for <A HREF="options.html#'cryptmethod'">'cryptmethod'</A> &quot;<A HREF="pi_zip.html#zip">zip</A>&quot; is breakable.  A 4 character key
-  in about one hour, a 6 character key in one day (on a Pentium 133 PC).  This
-  requires that you know some text that must appear in the file.  An expert
-  can break <A HREF="motion.html#it">it</A> for any key.  When the text has been decrypted, this also means
-  that the key can be revealed, and other files encrypted with the same key
-  can be decrypted.
-- Pkzip uses the same <A HREF="#encryption">encryption</A> <A HREF="motion.html#as">as</A> <A HREF="options.html#'cryptmethod'">'cryptmethod'</A> &quot;<A HREF="pi_zip.html#zip">zip</A>&quot;, and US Govt has no
-  objection to its export.  Pkzip's public file APPNOTE.TXT describes this
-  algorithm in detail.
-- Vim originates from the Netherlands.  That is where the sources come from.
-  Thus the <A HREF="#encryption">encryption</A> code is not exported from the USA.
+	https://github.com/neovim/neovim/issues/694
+	https://github.com/neovim/neovim/issues/701
 
 ==============================================================================
 
@@ -1829,7 +1714,7 @@ There are three different types of searching:
 
     <footer>
       <div class="container">
-        Generated Wed Dec  3 09:19:40 UTC 2014 from <a href="https://github.com/neovim/neovim/commit/279c519e33ec7f2b7e12cbd9a3b6c184427c881a"><code>279c519</code></a>.
+        Generated Thu Dec  4 09:23:29 UTC 2014 from <a href="https://github.com/neovim/neovim/commit/81530e581615528bc4f57348ed92c46ca49a4657"><code>81530e5</code></a>.
       </div>
     </footer>
   </body>
