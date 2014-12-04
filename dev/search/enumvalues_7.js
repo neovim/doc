@@ -179,7 +179,6 @@ var searchData=
   ['ks_5fxs',['KS_XS',['../term__defs_8h.html#af73903edfc3728d3b9b4d7e50dfb15aea0f244aeb0dfff8281d25f7095ef2aec9',1,'term_defs.h']]],
   ['kservertypepipe',['kServerTypePipe',['../server_8c.html#a41c33b4ffaf72c197b6cf85a599944cea73befc027246a87b24ad215b23693b54',1,'server.c']]],
   ['kservertypetcp',['kServerTypeTcp',['../server_8c.html#a41c33b4ffaf72c197b6cf85a599944ceaa6fb43843adc0fa88e92bbc3365a4859',1,'server.c']]],
-  ['kshelloptcooked',['kShellOptCooked',['../shell_8h.html#a342adb1a4b3f14a94dccedb3f26d9f3aaff46c77277a6898c0eb28aa9e10391e4',1,'shell.h']]],
   ['kshelloptdoout',['kShellOptDoOut',['../shell_8h.html#a342adb1a4b3f14a94dccedb3f26d9f3aa0b433e417f4aa0d31ee92aa39205129d',1,'shell.h']]],
   ['kshelloptexpand',['kShellOptExpand',['../shell_8h.html#a342adb1a4b3f14a94dccedb3f26d9f3aa232902bcb511a93ad5408c121f09a11e',1,'shell.h']]],
   ['kshelloptfilter',['kShellOptFilter',['../shell_8h.html#a342adb1a4b3f14a94dccedb3f26d9f3aa6724864400c471ab53526d8f755e8bc5',1,'shell.h']]],
