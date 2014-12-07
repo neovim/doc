@@ -160,7 +160,7 @@ var searchData=
   ['getviscol2',['getviscol2',['../cursor_8c.html#a15eb562b09906bad8a17d8162b055eea',1,'cursor.c']]],
   ['getvpos',['getvpos',['../cursor_8c.html#af3dfebe9bac25d8a62005e2250aea4f7',1,'cursor.c']]],
   ['getvvcol',['getvvcol',['../charset_8c.html#a39333219c8243783a64d89c25aecc2c0',1,'charset.c']]],
-  ['give_5fwarning',['give_warning',['../message_8c.html#a69455efcd82056490bd08ae8bceceaa0',1,'message.c']]],
+  ['give_5fwarning',['give_warning',['../message_8c.html#a04c5de4137b524d2195c8ae5a8582fc1',1,'message.c']]],
   ['global_5fexe',['global_exe',['../ex__cmds_8c.html#af5c1bd486735bb3a20cd9b04acbdc15c',1,'ex_cmds.c']]],
   ['globpath',['globpath',['../ex__getln_8c.html#aec8e65c3bbff6b7c5003d94481fe137e',1,'ex_getln.c']]],
   ['goto_5fbuffer',['goto_buffer',['../buffer_8c.html#ab054e54d7861f08302047229e474389a',1,'buffer.c']]],

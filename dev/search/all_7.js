@@ -192,7 +192,7 @@ var searchData=
   ['ghaf',['GHAF',['../farsi_8h.html#a4e8fbe14e2cd0c6302f7af9206c814e0',1,'farsi.h']]],
   ['ghayn',['GHAYN',['../farsi_8h.html#aaac774c94f9ba7f13cb3d1f3b6404805',1,'farsi.h']]],
   ['ghayn_5f',['GHAYN_',['../farsi_8h.html#a8b41b0d604f3e06d2e8c6200bc86740f',1,'farsi.h']]],
-  ['give_5fwarning',['give_warning',['../message_8c.html#a69455efcd82056490bd08ae8bceceaa0',1,'message.c']]],
+  ['give_5fwarning',['give_warning',['../message_8c.html#a04c5de4137b524d2195c8ae5a8582fc1',1,'message.c']]],
   ['global_5falist',['global_alist',['../globals_8h.html#a5ad902bd6d0455a0473c1d8490369979',1,'globals.h']]],
   ['global_5fexe',['global_exe',['../ex__cmds_8c.html#af5c1bd486735bb3a20cd9b04acbdc15c',1,'ex_cmds.c']]],
   ['global_5fwo',['GLOBAL_WO',['../buffer__defs_8h.html#a3a494d9abbb64e276b40da3a0e9f22bf',1,'buffer_defs.h']]],
