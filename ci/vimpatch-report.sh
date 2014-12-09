@@ -50,10 +50,6 @@ get_open_pullrequests() {
   sed 's/\\"/"/g'
 }
 
-is_ci_build && {
-  install_jq
-}
-
 DOC_SUBTREE="/reports/vimpatch/"
 clone_doc
 clone_neovim
