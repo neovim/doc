@@ -90,8 +90,4 @@ assign_labels() {
   done
 }
 
-is_ci_build && {
-  install_jq
-}
-
 assign_labels

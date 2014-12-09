@@ -102,10 +102,6 @@ has_current_nightly() {
   echo "${NIGHTLY_TAG} tag already points to ${NEOVIM_COMMIT}, exiting."
 }
 
-is_ci_build && {
-  install_jq
-}
-
 clone_neovim
 
 has_current_nightly || {

@@ -34,17 +34,6 @@ install_clang() {
   ln -fs /usr/bin/scan-build-${CLANG_VERSION} ${DEPS_BIN_DIR}/scan-build
 }
 
-# For info on jq, see https://stedolan.github.io/jq
-install_jq() {
-  mkdir -p ${DEPS_BIN_DIR}
-
-  echo "Installing latest jq..."
-  mkdir -p ${DEPS_INSTALL_DIR}
-  wget -q -O ${DEPS_INSTALL_DIR}/jq https://stedolan.github.io/jq/download/linux64/jq
-  chmod a+x ${DEPS_INSTALL_DIR}/jq
-  ln -fs ${DEPS_INSTALL_DIR}/jq ${DEPS_BIN_DIR}
-}
-
 install_gcc_multilib() {
   mkdir -p ${DEPS_BIN_DIR}
 
