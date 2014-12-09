@@ -28,6 +28,7 @@ var searchData=
   ['vir_5ffd',['vir_fd',['../structvir__T.html#a6f4d5a75f044c9423e517bdd96049412',1,'vir_T']]],
   ['vir_5fline',['vir_line',['../structvir__T.html#a2e340c0b9d1544938d136ef69745e9c4',1,'vir_T']]],
   ['visual',['VIsual',['../globals_8h.html#acf84ebbba1c7b96312e1e8af22a3bf9a',1,'globals.h']]],
+  ['visual_5fbell',['visual_bell',['../structui__t.html#a154aa74b68bb3a9049838771f270f4f9',1,'ui_t']]],
   ['visual_5freselect',['VIsual_reselect',['../globals_8h.html#a94f6632f8b7b88cf8fe53e560eeaf6d8',1,'globals.h']]],
   ['vop_5fflags',['vop_flags',['../option__defs_8h.html#a5afe80ed8c1e22b7ec18d6d1d71ee371',1,'option_defs.h']]],
   ['vv_5fexception',['vv_exception',['../structdbg__stuff.html#ae214d0d3eb51e908d88eff000eee7240',1,'dbg_stuff']]],

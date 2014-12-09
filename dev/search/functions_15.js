@@ -79,6 +79,7 @@ var searchData=
   ['vim_5fisxdigit',['vim_isxdigit',['../charset_8c.html#a269e1797f0d8a95bd4cc2258588f8a63',1,'charset.c']]],
   ['vim_5flist_5fremove',['vim_list_remove',['../eval_8c.html#add7dbe33e790bbe4d921b38e8ab11d0e',1,'eval.c']]],
   ['vim_5fmkdir_5femsg',['vim_mkdir_emsg',['../ex__docmd_8c.html#a875333d68f57c44f2c3281d492061dea',1,'ex_docmd.c']]],
+  ['vim_5fname_5fto_5fcolor',['vim_name_to_color',['../vim_8c.html#a096b2af534d16470104ffab865670f27',1,'vim.c']]],
   ['vim_5fout_5fwrite',['vim_out_write',['../vim_8c.html#a87519cb1257e310f09a3618984afaad8',1,'vim.c']]],
   ['vim_5fregcomp',['vim_regcomp',['../regexp_8c.html#a47f217c8bc0fd2544f365dc9c38b6803',1,'regexp.c']]],
   ['vim_5fregcomp_5fhad_5feol',['vim_regcomp_had_eol',['../regexp_8c.html#a69474206fa0e4853be20e16c79fa2c1c',1,'regexp.c']]],

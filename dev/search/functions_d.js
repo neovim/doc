@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['name_5fto_5fcolor',['name_to_color',['../syntax_8c.html#a23085295a9032e8f1701664e1db149a4',1,'syntax.c']]],
   ['name_5fto_5fmod_5fmask',['name_to_mod_mask',['../keymap_8c.html#a90f0a5240dd783da269a13260640e1bd',1,'keymap.c']]],
   ['new_5fscript_5fvars',['new_script_vars',['../eval_8c.html#a2b22fc5f41ac9ec101640a921606425c',1,'eval.c']]],
   ['newfoldlevel',['newFoldLevel',['../fold_8c.html#adf649223de7112834ced20486baa6e94',1,'fold.c']]],

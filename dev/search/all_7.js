@@ -240,6 +240,5 @@ var searchData=
   ['group',['group',['../structAutoPat.html#a4b89d6bc14de915e0c086588173051d3',1,'AutoPat::group()'],['../structAutoPatCmd.html#a81c67de2173f15310a11f199f523ab8c',1,'AutoPatCmd::group()']]],
   ['growarray',['growarray',['../structgrowarray.html',1,'']]],
   ['gui_5fmch_5ffind_5fdialog',['gui_mch_find_dialog',['../ex__docmd_8c.html#a6acc443ef144f9d8e908f04e0cffd500',1,'ex_docmd.c']]],
-  ['gui_5fmch_5freplace_5fdialog',['gui_mch_replace_dialog',['../ex__docmd_8c.html#a28239f5e92ea9d7569b84052d40e2a5c',1,'ex_docmd.c']]],
-  ['guicolor_5ft',['guicolor_T',['../syntax_8h.html#abe322bdd6731c73fc0895a291752471b',1,'syntax.h']]]
+  ['gui_5fmch_5freplace_5fdialog',['gui_mch_replace_dialog',['../ex__docmd_8c.html#a28239f5e92ea9d7569b84052d40e2a5c',1,'ex_docmd.c']]]
 ];

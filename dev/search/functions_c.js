@@ -175,6 +175,7 @@ var searchData=
   ['msgmore',['msgmore',['../misc1_8c.html#a07336b24975dcbc20b23943d675638e4',1,'misc1.c']]],
   ['msgpack_5fpack_5fint',['msgpack_pack_int',['../msgpack__rpc_2helpers_8c.html#a10d8a48d1c0a4328d70f6c2f4bcfdd64',1,'helpers.c']]],
   ['msgpack_5fpack_5fuint64',['msgpack_pack_uint64',['../msgpack__rpc_2helpers_8c.html#ad466f269d844657d93853578d57db142',1,'helpers.c']]],
+  ['msgpack_5frpc_5fadd_5fmethod_5fhandler',['msgpack_rpc_add_method_handler',['../msgpack__rpc_2defs_8h.html#ab2c30a89b22818e2860cd220110c8b0b',1,'defs.h']]],
   ['msgpack_5frpc_5fdispatch',['msgpack_rpc_dispatch',['../msgpack__rpc_2defs_8h.html#a6f549d960ce0de18b4ea64244a269533',1,'defs.h']]],
   ['msgpack_5frpc_5ferror',['msgpack_rpc_error',['../msgpack__rpc_2helpers_8c.html#a96638d91078cbb7aadf666ce6241bf5f',1,'helpers.c']]],
   ['msgpack_5frpc_5ffrom_5farray',['msgpack_rpc_from_array',['../msgpack__rpc_2helpers_8c.html#a6515fc3bbf1c8715b8358e2812d964df',1,'helpers.c']]],

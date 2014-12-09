@@ -70,7 +70,7 @@ var searchData=
   ['cmdwin',['CMDWIN',['../ex__cmds__defs_8h.html#a393d467a1515e4213d0ee44109c3091d',1,'ex_cmds_defs.h']]],
   ['cmp_5finternal',['CMP_INTERNAL',['../option__defs_8h.html#a347b7fd28c2b606320785b6889831849',1,'option_defs.h']]],
   ['cmp_5fkeepascii',['CMP_KEEPASCII',['../option__defs_8h.html#a31855c08f3f4999c6687b9d1bd1ac137',1,'option_defs.h']]],
-  ['cnt',['CNT',['../spell_8c.html#a6f8a425c31b4fc437e0b00d338ae9e61',1,'spell.c']]],
+  ['cnt',['CNT',['../spell_8c.html#a6f8a425c31b4fc437e0b00d338ae9e61',1,'CNT():&#160;spell.c'],['../ui_8c.html#a5a6464eba9442bcfb4b8c77f7d7bd00b',1,'CNT():&#160;ui.c']]],
   ['cocu_5fall',['COCU_ALL',['../option__defs_8h.html#ac6ec7369760e5a8910de192d36d094c4',1,'option_defs.h']]],
   ['col_5fadjust',['col_adjust',['../mark_8c.html#af1843c9e7dc6363038071e93d9b09dc4',1,'mark.c']]],
   ['col_5fruler',['COL_RULER',['../option_8c.html#a9dc32be63c89a7635c7046ef56f74251',1,'option.c']]],

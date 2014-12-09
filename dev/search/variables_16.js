@@ -106,7 +106,7 @@ var searchData=
   ['wi_5foptset',['wi_optset',['../structwininfo__S.html#a5475038b9a4f535cc43e123cc9087b07',1,'wininfo_S']]],
   ['wi_5fprev',['wi_prev',['../structwininfo__S.html#a07351120390ec0eb7629bfc440c0d9b7',1,'wininfo_S']]],
   ['wi_5fwin',['wi_win',['../structwininfo__S.html#ac07c601107373406e15d1a54de2db7ba',1,'wininfo_S']]],
-  ['width',['width',['../structprt__mediasize__S.html#a80c67e9c0710fdf29d44cc29bfac0875',1,'prt_mediasize_S']]],
+  ['width',['width',['../structprt__mediasize__S.html#a80c67e9c0710fdf29d44cc29bfac0875',1,'prt_mediasize_S::width()'],['../structui__t.html#a8f33fdfd1262721bf757842411a89298',1,'ui_t::width()']]],
   ['wim_5fflags',['wim_flags',['../globals_8h.html#ac7c650bec1a58b93a10e67d8acacf6a4',1,'globals.h']]],
   ['window',['window',['../structobject.html#aa1cc09bb0fafde46a6e917fe0cbd088d',1,'object']]],
   ['window_5fcount',['window_count',['../structmparm__T.html#aeac0c77dc6feba005a3c2a4cc046de2b',1,'mparm_T']]],

@@ -19,6 +19,7 @@ var searchData=
   ['endpos',['endpos',['../structregmmatch__T.html#a4ed865acdfb2bc1973fef6a66a49a049',1,'regmmatch_T']]],
   ['endspaces',['endspaces',['../structblock__def.html#ab5bcc7fa3bebee72b7d7d872ef7d44ba',1,'block_def']]],
   ['engine',['engine',['../structregprog.html#a17b35a10bf140540d03cd127c8c68a9d',1,'regprog::engine()'],['../structbt__regprog__T.html#a6607596028b18bddae6834c40fb8ff4d',1,'bt_regprog_T::engine()'],['../structnfa__regprog__T.html#a26ab276d8a2883f4a1ef45480da0bdd6',1,'nfa_regprog_T::engine()']]],
+  ['eol_5fclear',['eol_clear',['../structui__t.html#a448c71609ee85ab9bb642f9aec3ec70d',1,'ui_t']]],
   ['err',['err',['../structjob.html#ac1e41a03af4eee15ddf5ae9fd3f9a2fd',1,'job']]],
   ['errmsg',['errmsg',['../structexarg.html#ac0914c147d7728c439edc77c88b1099c',1,'exarg']]],
   ['errored',['errored',['../structChannelCallFrame.html#aa6da91330b585ef5bbf54c199d1cf781',1,'ChannelCallFrame']]],

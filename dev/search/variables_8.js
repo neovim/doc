@@ -13,6 +13,7 @@ var searchData=
   ['indir',['indir',['../structvimoption.html#aaf8b7e899b3ddfe028f9d91567d024c7',1,'vimoption']]],
   ['input_5fconv',['input_conv',['../globals_8h.html#a4cca7f97f4efce3b64574cba798c49aa',1,'globals.h']]],
   ['input_5ffn',['input_fn',['../structcmdline__info.html#a3aaf6465bbb9adf60b98ac198d81481d',1,'cmdline_info']]],
+  ['insert_5fmode',['insert_mode',['../structui__t.html#af317571b74cdab8fdc2320db577615b2',1,'ui_t']]],
   ['insstart',['Insstart',['../globals_8h.html#a3833f856ca654d49a2fae21f7d814e0e',1,'globals.h']]],
   ['insstart_5forig',['Insstart_orig',['../globals_8h.html#a71c34c049c60f7e11fc86677291ccfba',1,'globals.h']]],
   ['integer',['integer',['../structobject.html#af3e1eeadb97a3cc2fd898457cdc78032',1,'object']]],
@@ -25,7 +26,7 @@ var searchData=
   ['is_5fonechar',['is_oneChar',['../structblock__def.html#a38004b8aeec4dc9aff73dbe994dfe9a8',1,'block_def']]],
   ['is_5fshort',['is_short',['../structblock__def.html#a2c5b9b7a2bd14823cd58fc94e20d59b1',1,'block_def']]],
   ['is_5fvisual',['is_VIsual',['../structoparg__S.html#a0bfdee9aacb2a3f44395f910ed560a4e',1,'oparg_S']]],
-  ['italic',['italic',['../structprt__text__attr__T.html#aacdac715511f322d0e4c5d4c6560ce0d',1,'prt_text_attr_T']]],
+  ['italic',['italic',['../structprt__text__attr__T.html#aacdac715511f322d0e4c5d4c6560ce0d',1,'prt_text_attr_T::italic()'],['../structHlAttrs.html#a022bc22cfeeb5a410482507b89ffa900',1,'HlAttrs::italic()']]],
   ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T']]],
   ['items',['items',['../structArray.html#a0e3f4c859e2f1e144bb27247a51a3721',1,'Array::items()'],['../structDictionary.html#afe6bfe0dd9c276eb86f2280f81ef26a3',1,'Dictionary::items()']]]
 ];

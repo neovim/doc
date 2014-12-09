@@ -37,6 +37,7 @@ var searchData=
   ['max_5fswap_5fpage_5fsize',['MAX_SWAP_PAGE_SIZE',['../vim_8h.html#abbfe8ed4898615c9b8da6bbbb5308ec1',1,'vim.h']]],
   ['max_5fsyn_5finc_5ftag',['MAX_SYN_INC_TAG',['../syntax_8c.html#a06e3b581d695a24f0234fb70be355139',1,'syntax.c']]],
   ['max_5ftypenr',['MAX_TYPENR',['../vim_8h.html#afea0c39d33add624f5ec11db81e099a3',1,'vim.h']]],
+  ['max_5fui_5fcount',['MAX_UI_COUNT',['../ui_8c.html#a7745bc74f2f586fbc7f2b0c34cf932ea',1,'ui.c']]],
   ['maxcol',['MAXCOL',['../pos_8h.html#aef214bee44b8ea3707359a56c8c921c6',1,'pos.h']]],
   ['maxitemcnt',['MAXITEMCNT',['../spell_8c.html#a6489fbd4d5e8d15c747b0824a60c6be9',1,'spell.c']]],
   ['maxkeywlen',['MAXKEYWLEN',['../syntax_8c.html#a2703ef15c3580347dc8aab07c53924d0',1,'syntax.c']]],
