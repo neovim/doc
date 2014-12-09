@@ -12,7 +12,6 @@ var searchData=
   ['add_5fto_5fshowcmd_5fc',['add_to_showcmd_c',['../normal_8c.html#a9c0b881f5543eea98e58740e4bc31f0e',1,'normal.c']]],
   ['addfile',['addfile',['../path_8c.html#a3ba68e1f14551ad40298eb34ed42a4da',1,'path.c']]],
   ['addstar',['addstar',['../ex__getln_8c.html#ada0f88e2b53b4e72a88d3151865725b5',1,'ex_getln.c']]],
-  ['adjust_5fclipboard_5fregister',['adjust_clipboard_register',['../ops_8c.html#a35afcf910290a8cb7a748afe6c5044e5',1,'ops.c']]],
   ['adjust_5fcursor_5fcol',['adjust_cursor_col',['../cursor_8c.html#a71b7fc389176d29f92a112a4c457f1d3',1,'cursor.c']]],
   ['adjust_5fcursor_5feol',['adjust_cursor_eol',['../ops_8c.html#a2cc9206626a4aad7c186bf40d4b7993f',1,'ops.c']]],
   ['after_5fpathsep',['after_pathsep',['../path_8c.html#abdfcdf88256313698f6b7329ba22c5f3',1,'path.c']]],

@@ -236,7 +236,6 @@ var searchData=
   ['addr_5fcount',['addr_count',['../structexarg.html#a6df745abf04de31377b3beb6282c29c6',1,'exarg']]],
   ['address_5fmax_5fsize',['ADDRESS_MAX_SIZE',['../server_8c.html#ae8b7400e2f7f9d2a73365ebe2b7f0935',1,'server.c']]],
   ['addstar',['addstar',['../ex__getln_8c.html#ada0f88e2b53b4e72a88d3151865725b5',1,'ex_getln.c']]],
-  ['adjust_5fclipboard_5fregister',['adjust_clipboard_register',['../ops_8c.html#a35afcf910290a8cb7a748afe6c5044e5',1,'ops.c']]],
   ['adjust_5fcursor_5fcol',['adjust_cursor_col',['../cursor_8c.html#a71b7fc389176d29f92a112a4c457f1d3',1,'cursor.c']]],
   ['adjust_5fcursor_5feol',['adjust_cursor_eol',['../ops_8c.html#a2cc9206626a4aad7c186bf40d4b7993f',1,'ops.c']]],
   ['advance_5freginput',['ADVANCE_REGINPUT',['../regexp_8c.html#aaffcb5d87bf2e79f8e5947c8e3425d1d',1,'regexp.c']]],

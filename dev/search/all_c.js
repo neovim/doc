@@ -79,6 +79,7 @@ var searchData=
   ['list_5falloc',['list_alloc',['../eval_8c.html#aa256fec511705ecf729a14faa62030ae',1,'eval.c']]],
   ['list_5fappend',['list_append',['../eval_8c.html#a75152e92000b66c81eff7e15f7b492f6',1,'eval.c']]],
   ['list_5fappend_5fdict',['list_append_dict',['../eval_8c.html#a09fa9ba2abab2a742104548ba5c45cf1',1,'eval.c']]],
+  ['list_5fappend_5flist',['list_append_list',['../eval_8c.html#a5f6bdcc4d23a349a7cdc493c652d5ce6',1,'eval.c']]],
   ['list_5fappend_5fnumber',['list_append_number',['../eval_8c.html#aa950f46569b7154f6b61a894b420166c',1,'eval.c']]],
   ['list_5fappend_5fstring',['list_append_string',['../eval_8c.html#a0d0d3baaaf23f29b7395a7f8cef202ff',1,'eval.c']]],
   ['list_5fappend_5ftv',['list_append_tv',['../eval_8c.html#a770bf8af8e96c3746d8dea82a37e8178',1,'eval.c']]],
