@@ -165,7 +165,7 @@ var searchData=
   ['time_2eh',['time.h',['../time_8h.html',1,'']]],
   ['time_5fentry_5ft',['time_entry_T',['../structtime__entry__T.html',1,'']]],
   ['time_5finit',['time_init',['../time_8c.html#acf5c8bb89727a653a3320edfa8fc4e69',1,'time.c']]],
-  ['time_5fmsg',['time_msg',['../profile_8c.html#a64b9658eb65f35b0ed54e4757a56d4d9',1,'time_msg(const char *mesg, const proftime_T *start):&#160;profile.c'],['../profile_8h.html#a7943eee4b80ae1da9db26037223c15f4',1,'TIME_MSG():&#160;profile.h']]],
+  ['time_5fmsg',['TIME_MSG',['../profile_8h.html#a7943eee4b80ae1da9db26037223c15f4',1,'TIME_MSG():&#160;profile.h'],['../profile_8c.html#a64b9658eb65f35b0ed54e4757a56d4d9',1,'time_msg(const char *mesg, const proftime_T *start):&#160;profile.c']]],
   ['time_5fpop',['time_pop',['../profile_8c.html#acac28106b129b30d7860c34ea18d7c24',1,'profile.c']]],
   ['time_5fpush',['time_push',['../profile_8c.html#aa8e89a00c993e56258413fa809ed9226',1,'profile.c']]],
   ['time_5fstart',['time_start',['../profile_8c.html#af3af083732578ca8cf6ad68a9bfdf891',1,'profile.c']]],
