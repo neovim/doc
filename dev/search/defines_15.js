@@ -27,6 +27,8 @@ var searchData=
   ['uint64_5ft_5fhash',['uint64_t_hash',['../map_8c.html#a1ee354cce8249e76fc44b4c6faed4eee',1,'map.c']]],
   ['un_5fmagic',['un_Magic',['../regexp_8c.html#acc98f25a4f94e6bc0113fad8a44d5308',1,'regexp.c']]],
   ['undo_5fhash_5fsize',['UNDO_HASH_SIZE',['../vim_8h.html#a5996531431e7f6cb912e7dbc9671c6c3',1,'vim.h']]],
+  ['unref_5fbufstate_5fextmatch',['UNREF_BUFSTATE_EXTMATCH',['../syntax_8c.html#ac41adffcb53764b734bc4d7188c978d1',1,'syntax.c']]],
+  ['unref_5fstateitem_5fextmatch',['UNREF_STATEITEM_EXTMATCH',['../syntax_8c.html#aa4bb608e05b1af26c8909526360c65cd',1,'syntax.c']]],
   ['upper',['UPPER',['../regexp_8c.html#ab7a309e1cb06fb6bcbd4314371443416',1,'regexp.c']]],
   ['url_5fbackslash',['URL_BACKSLASH',['../path_8c.html#a518635ea1856293589fe429c6ab28096',1,'path.c']]],
   ['url_5fslash',['URL_SLASH',['../path_8c.html#aa8157b6eae49b3baa2fee4a65289ffff',1,'path.c']]],

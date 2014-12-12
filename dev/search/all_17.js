@@ -385,6 +385,7 @@ var searchData=
   ['write_5flnum_5fadjust',['write_lnum_adjust',['../fileio_8c.html#a1c2c6267b3e75feb4150f5b7bb98921c',1,'fileio.c']]],
   ['write_5freg_5fcontents',['write_reg_contents',['../ops_8c.html#a9c25481bd4537bea97bc89df2473d5cf',1,'ops.c']]],
   ['write_5freg_5fcontents_5fex',['write_reg_contents_ex',['../ops_8c.html#a4f656da76ca285e87e2d8f0a2ab4cf3d',1,'ops.c']]],
+  ['write_5freg_5fcontents_5flst',['write_reg_contents_lst',['../ops_8c.html#a1a19a054f22f46f0739831fa37e5077e',1,'ops.c']]],
   ['write_5fviminfo',['write_viminfo',['../ex__cmds_8c.html#af961112d3740bd713ccb0383b58d783d',1,'ex_cmds.c']]],
   ['write_5fviminfo_5fbufferlist',['write_viminfo_bufferlist',['../buffer_8c.html#a790ab875c20ed58e940ba44db9302a48',1,'buffer.c']]],
   ['write_5fviminfo_5ffilemarks',['write_viminfo_filemarks',['../mark_8c.html#a377c8cd082d19db678d15725d81ece09',1,'mark.c']]],

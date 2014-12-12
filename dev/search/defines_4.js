@@ -25,6 +25,7 @@ var searchData=
   ['default_5fterm',['DEFAULT_TERM',['../term_8c.html#a8f97baea443b2adf76de92088d5b9a1e',1,'term.c']]],
   ['del',['DEL',['../ascii_8h.html#ad1e508e805e4ddbc05119be4bb260985',1,'ascii.h']]],
   ['del_5fstr',['DEL_STR',['../ascii_8h.html#ace7a3df2689fdc10f9e697c8552cd3c9',1,'ascii.h']]],
+  ['delete_5ffold_5fnested',['DELETE_FOLD_NESTED',['../fold_8c.html#a7659f348504f79eefdf704a75c4e7253',1,'fold.c']]],
   ['deletion_5fregister',['DELETION_REGISTER',['../ops_8c.html#a77b4080ddd57b32b0ee26fc9ba1f912c',1,'ops.c']]],
   ['dflall',['DFLALL',['../ex__cmds__defs_8h.html#a73f7baa58394f2e3244e5104b40567b5',1,'ex_cmds_defs.h']]],
   ['dflt_5fbdir',['DFLT_BDIR',['../os__unix__defs_8h.html#a26ed9dad586c03e3640bd1fc67bc6a73',1,'os_unix_defs.h']]],
