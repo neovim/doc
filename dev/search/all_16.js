@@ -229,7 +229,7 @@ var searchData=
   ['viminfo_5ferror',['viminfo_error',['../ex__cmds_8c.html#a47ff2d135b61b8d3f854bdc35266646d',1,'ex_cmds.c']]],
   ['viminfo_5ffile',['VIMINFO_FILE',['../os__unix__defs_8h.html#a5f1e166990bb1afa0ffaf55ebe3d7904',1,'os_unix_defs.h']]],
   ['viminfo_5freadline',['viminfo_readline',['../ex__cmds_8c.html#a6e004746cc5f854d5046bcf5c7154e3a',1,'ex_cmds.c']]],
-  ['viminfo_5freadstring',['viminfo_readstring',['../ex__cmds_8c.html#a92a5f1a0aac7226a95f8ee1f1e414b4a',1,'ex_cmds.c']]],
+  ['viminfo_5freadstring',['viminfo_readstring',['../ex__cmds_8c.html#a33421959d825dc84dbaa51f7ab9d729d',1,'ex_cmds.c']]],
   ['viminfo_5fwritestring',['viminfo_writestring',['../ex__cmds_8c.html#a706979039d5794de937495533b6f259c',1,'ex_cmds.c']]],
   ['vimmenu',['VimMenu',['../structVimMenu.html',1,'']]],
   ['vimmenu_5ft',['vimmenu_T',['../menu_8h.html#af2db550fad6f1957463ce6686abdaf1b',1,'menu.h']]],

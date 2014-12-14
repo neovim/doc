@@ -132,7 +132,7 @@ var searchData=
   ['vim_5fvsnprintf',['vim_vsnprintf',['../message_8c.html#a8850f9c6c6a575dfdbc073ba5c2dd362',1,'message.c']]],
   ['viminfo_5ferror',['viminfo_error',['../ex__cmds_8c.html#a47ff2d135b61b8d3f854bdc35266646d',1,'ex_cmds.c']]],
   ['viminfo_5freadline',['viminfo_readline',['../ex__cmds_8c.html#a6e004746cc5f854d5046bcf5c7154e3a',1,'ex_cmds.c']]],
-  ['viminfo_5freadstring',['viminfo_readstring',['../ex__cmds_8c.html#a92a5f1a0aac7226a95f8ee1f1e414b4a',1,'ex_cmds.c']]],
+  ['viminfo_5freadstring',['viminfo_readstring',['../ex__cmds_8c.html#a33421959d825dc84dbaa51f7ab9d729d',1,'ex_cmds.c']]],
   ['viminfo_5fwritestring',['viminfo_writestring',['../ex__cmds_8c.html#a706979039d5794de937495533b6f259c',1,'ex_cmds.c']]],
   ['vimrc_5ffound',['vimrc_found',['../option_8c.html#a52e14916d0e3a8e08f7d48ccddc9b854',1,'option.c']]],
   ['virtual_5factive',['virtual_active',['../misc2_8c.html#ad53fe5f53eda7f02128d6cd0b10a3b10',1,'misc2.c']]],

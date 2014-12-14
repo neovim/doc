@@ -471,7 +471,7 @@ var searchData=
   ['msg_5fadd_5ffname',['msg_add_fname',['../fileio_8c.html#a3bc351e25dce2039e7adde862696580b',1,'fileio.c']]],
   ['msg_5fadd_5flines',['msg_add_lines',['../fileio_8c.html#ae5d954144e0ed7fd8e7c0b43e0b68513',1,'fileio.c']]],
   ['msg_5fadvance',['msg_advance',['../message_8c.html#a1be7dcccb8daf25bba3e78479802251e',1,'message.c']]],
-  ['msg_5fattr',['msg_attr',['../message_8c.html#a42325dd717773b6cfbf330fa63ccec2c',1,'msg_attr(char_u *s, int attr) FUNC_ATTR_NONNULL_ARG(1):&#160;message.c'],['../vim_8h.html#a868e4f477a532da9218b300981a4844c',1,'MSG_ATTR():&#160;vim.h']]],
+  ['msg_5fattr',['MSG_ATTR',['../vim_8h.html#a868e4f477a532da9218b300981a4844c',1,'MSG_ATTR():&#160;vim.h'],['../message_8c.html#a42325dd717773b6cfbf330fa63ccec2c',1,'msg_attr(char_u *s, int attr) FUNC_ATTR_NONNULL_ARG(1):&#160;message.c']]],
   ['msg_5fattr_5fkeep',['msg_attr_keep',['../message_8c.html#a370e18c0a152bdd6c8968f93414b7fbe',1,'message.c']]],
   ['msg_5fbuf',['msg_buf',['../globals_8h.html#abf237fcb55f45d33b653f64b15f97dd1',1,'globals.h']]],
   ['msg_5fbuf_5fclen',['MSG_BUF_CLEN',['../globals_8h.html#a68dd990e14c5899a6d6b04485852592e',1,'globals.h']]],
