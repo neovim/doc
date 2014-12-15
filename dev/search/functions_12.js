@@ -6,6 +6,7 @@ var searchData=
   ['save_5fcmdline_5falloc',['save_cmdline_alloc',['../ex__getln_8c.html#ac67c46f74e1c8e5011c8c914494a2624',1,'ex_getln.c']]],
   ['save_5ffile_5fff',['save_file_ff',['../option_8c.html#af3730a90c60c606e4f6289530caabdb9',1,'option.c']]],
   ['save_5ffunccal',['save_funccal',['../eval_8c.html#a4048a47e2e34f02c25540d8c2bd609d8',1,'eval.c']]],
+  ['save_5fre_5fpat',['save_re_pat',['../search_8c.html#a1594c1e41792d8e9429b274eddf3a097',1,'search.c']]],
   ['save_5fsearch_5fpatterns',['save_search_patterns',['../search_8c.html#a4aa9e6e7337f708b750e2ded5cab78bc',1,'search.c']]],
   ['save_5ftypeahead',['save_typeahead',['../getchar_8c.html#a27014cd8194a4a4351a5a3385177a3a1',1,'getchar.c']]],
   ['save_5ftypebuf',['save_typebuf',['../getchar_8c.html#a7efe4ed1a421d6ddf21f97307d37bc9d',1,'getchar.c']]],

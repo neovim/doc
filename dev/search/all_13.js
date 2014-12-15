@@ -27,6 +27,7 @@ var searchData=
   ['save_5ffunccal',['save_funccal',['../eval_8c.html#a4048a47e2e34f02c25540d8c2bd609d8',1,'eval.c']]],
   ['save_5finputbuf',['save_inputbuf',['../structtasave__T.html#a5795994a48e67ec069ecc4af3da27728',1,'tasave_T']]],
   ['save_5fneed_5fclear_5fsubexpr',['save_need_clear_subexpr',['../structregbehind__S.html#a98fbfb32479934a9d2219d25b8505cd3',1,'regbehind_S']]],
+  ['save_5fre_5fpat',['save_re_pat',['../search_8c.html#a1594c1e41792d8e9429b274eddf3a097',1,'search.c']]],
   ['save_5freadbuf1',['save_readbuf1',['../structtasave__T.html#a7d83c38c4c0f1e978b41ab28ef4c8ac0',1,'tasave_T']]],
   ['save_5freadbuf2',['save_readbuf2',['../structtasave__T.html#a61176adb74d99cb4ced9c0a5801754b2',1,'tasave_T']]],
   ['save_5fse',['save_se',['../regexp_8c.html#ac3379d374c97a9d00fa4b05ffb7e81cb',1,'regexp.c']]],
