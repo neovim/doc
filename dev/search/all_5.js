@@ -50,7 +50,7 @@ var searchData=
   ['enc_5f2word',['ENC_2WORD',['../mbyte_8h.html#acf0d34fea5993174819d098297016bb1',1,'mbyte.h']]],
   ['enc_5f4byte',['ENC_4BYTE',['../mbyte_8h.html#a0f05a812f6e927b3c4e21fb860829006',1,'mbyte.h']]],
   ['enc_5f8bit',['ENC_8BIT',['../mbyte_8h.html#ab11d44317b4479882b3dcdc91a8e7bfc',1,'mbyte.h']]],
-  ['enc_5fcanon_5fprops',['enc_canon_props',['../mbyte_8c.html#a3cf848d25a7dd0d71116fdaa7b643186',1,'mbyte.c']]],
+  ['enc_5fcanon_5fprops',['enc_canon_props',['../mbyte_8c.html#a77f1c24057739b911a06976ea402ea74',1,'mbyte.c']]],
   ['enc_5fcanonize',['enc_canonize',['../mbyte_8c.html#a0db6c6f37363f27417fdcb3ba68d1ff6',1,'mbyte.c']]],
   ['enc_5fdbcs',['ENC_DBCS',['../mbyte_8h.html#a3da680f5fecb69f6217557dcde8bb2c1',1,'mbyte.h']]],
   ['enc_5fdflt',['ENC_DFLT',['../option__defs_8h.html#affb763a54bba7516775e69c58c029c06',1,'option_defs.h']]],
