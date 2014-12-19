@@ -87,6 +87,7 @@ var searchData=
   ['ex_5fdiffupdate',['ex_diffupdate',['../diff_8c.html#a7c2909fb44d3db4683a8dac3fae40f72',1,'diff.c']]],
   ['ex_5fdisplay',['ex_display',['../ops_8c.html#a17822068313ed927c34464c5e5590b96',1,'ops.c']]],
   ['ex_5fdoautoall',['ex_doautoall',['../fileio_8c.html#a58d6bd7c17eb6bde95d15960f526d561',1,'fileio.c']]],
+  ['ex_5fdrop',['ex_drop',['../ex__cmds2_8c.html#ab3ea061d215b416003f1769980fbf800',1,'ex_cmds2.c']]],
   ['ex_5fecho',['ex_echo',['../eval_8c.html#a319546b599718767d13249f8d34cbd7c',1,'eval.c']]],
   ['ex_5fechohl',['ex_echohl',['../eval_8c.html#aec24beb76bead0f7a9f7341b41aef8d2',1,'eval.c']]],
   ['ex_5felse',['ex_else',['../ex__eval_8c.html#ad81309bf2529634fd9dcf9f64387deb9',1,'ex_eval.c']]],

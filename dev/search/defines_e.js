@@ -52,7 +52,6 @@ var searchData=
   ['nsubexp',['NSUBEXP',['../regexp__defs_8h.html#aac46a27dfcb1ea4aa6254cf4ec48c4c2',1,'regexp_defs.h']]],
   ['nt_5fold_5fbnum',['nt_old_bnum',['../memfile__defs_8h.html#ab92990050e32ae3547789c209c810c52',1,'memfile_defs.h']]],
   ['nul',['NUL',['../ascii_8h.html#af19d48b9f61047a668649a2f9dc317ff',1,'ascii.h']]],
-  ['num_5felements',['NUM_ELEMENTS',['../hardcopy_8c.html#aea4d9a65fa8362fdcbf7c7780544f5fc',1,'hardcopy.c']]],
   ['num_5fmouse_5fclicks',['NUM_MOUSE_CLICKS',['../term_8h.html#ae298256f38b891ae6536b4b7bb3cf095',1,'term.h']]],
   ['num_5fregisters',['NUM_REGISTERS',['../ops_8c.html#a5efff3a4a48efbf589e3a2320997d9b9',1,'ops.c']]],
   ['numbuflen',['NUMBUFLEN',['../vim_8h.html#ad75d86d19ee3c309a6db13026d35e357',1,'vim.h']]],

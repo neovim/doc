@@ -371,6 +371,7 @@ var searchData=
   ['array',['Array',['../structArray.html',1,'Array'],['../structobject.html#ab308a4da42b72f7ae00cf5b0b895404b',1,'object::array()']]],
   ['array_5fdict_5finit',['ARRAY_DICT_INIT',['../api_2private_2defs_8h.html#a6e24fc7033ddfccfbbe3da2b9d3ec9fe',1,'defs.h']]],
   ['array_5fobj',['ARRAY_OBJ',['../api_2private_2helpers_8h.html#a8fe988689ac455197a2cba850f51ef20',1,'helpers.h']]],
+  ['array_5fsize',['ARRAY_SIZE',['../macros_8h.html#a3c7c6a69f690fc8d2abf0e385280a532',1,'macros.h']]],
   ['arrayof',['ArrayOf',['../api_2buffer_8c.html#a910f20ac8647adbd7087107157eff91d',1,'ArrayOf(String):&#160;buffer.c'],['../api_2buffer_8c.html#a2a0cecba9d1a9c6a0975001e304b4d37',1,'ArrayOf(Integer, 2):&#160;buffer.c'],['../tabpage_8c.html#acb87e9838a9289b47210384ea76f7772',1,'ArrayOf(Window):&#160;tabpage.c'],['../vim_8c.html#a910f20ac8647adbd7087107157eff91d',1,'ArrayOf(String):&#160;vim.c'],['../vim_8c.html#a73e8c79bf9755ce9fa997e668c874aa2',1,'ArrayOf(Buffer):&#160;vim.c'],['../vim_8c.html#acb87e9838a9289b47210384ea76f7772',1,'ArrayOf(Window):&#160;vim.c'],['../vim_8c.html#a2a2d59483f74c31e1b80c84fe4abd420',1,'ArrayOf(Tabpage):&#160;vim.c'],['../api_2window_8c.html#a2a0cecba9d1a9c6a0975001e304b4d37',1,'ArrayOf(Integer, 2):&#160;window.c']]],
   ['arrow_5fused',['arrow_used',['../globals_8h.html#a18b112bbeef55bff257f080bfc26bd12',1,'globals.h']]],
   ['ascii_2eh',['ascii.h',['../ascii_8h.html',1,'']]],

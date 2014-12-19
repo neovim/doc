@@ -263,6 +263,7 @@ var searchData=
   ['argopt',['ARGOPT',['../ex__cmds__defs_8h.html#aa6dc20120775f2c83c87456d248e2c2c',1,'ex_cmds_defs.h']]],
   ['array_5fdict_5finit',['ARRAY_DICT_INIT',['../api_2private_2defs_8h.html#a6e24fc7033ddfccfbbe3da2b9d3ec9fe',1,'defs.h']]],
   ['array_5fobj',['ARRAY_OBJ',['../api_2private_2helpers_8h.html#a8fe988689ac455197a2cba850f51ef20',1,'helpers.h']]],
+  ['array_5fsize',['ARRAY_SIZE',['../macros_8h.html#a3c7c6a69f690fc8d2abf0e385280a532',1,'macros.h']]],
   ['ascii_5fisalnum',['ASCII_ISALNUM',['../macros_8h.html#a2b4fb8de04317d3bccf5557e1fa72fc3',1,'macros.h']]],
   ['ascii_5fisalpha',['ASCII_ISALPHA',['../macros_8h.html#a91d2733ae4d7b126d9d545ff5315b50e',1,'macros.h']]],
   ['ascii_5fislower',['ASCII_ISLOWER',['../macros_8h.html#a234af9eb59f8491b0f96b958373670d0',1,'macros.h']]],
