@@ -136,6 +136,8 @@ var searchData=
   ['lookfor_5fenum_5for_5finit',['LOOKFOR_ENUM_OR_INIT',['../indent__c_8c.html#aaa1ab4c5e338b18a9e9d0eddfc7a0908',1,'indent_c.c']]],
   ['lookfor_5fif',['LOOKFOR_IF',['../indent__c_8c.html#ad1f5277e0ca4cd30cf2994ca9c70f42e',1,'indent_c.c']]],
   ['lookfor_5finitial',['LOOKFOR_INITIAL',['../indent__c_8c.html#a9c5440c0a185277a30dbbfe5c2ee8179',1,'indent_c.c']]],
+  ['lookfor_5fjs_5fkey',['LOOKFOR_JS_KEY',['../indent__c_8c.html#a852d9e10cc5af05d7ab58019d5263ae9',1,'indent_c.c']]],
+  ['lookfor_5fno_5fcomma',['LOOKFOR_NO_COMMA',['../indent__c_8c.html#aba9e244e05acad8ee380febffbb1a1de',1,'indent_c.c']]],
   ['lookfor_5fnobreak',['LOOKFOR_NOBREAK',['../indent__c_8c.html#a3b8816677dbec930fe09745bf477c419',1,'indent_c.c']]],
   ['lookfor_5fscopedecl',['LOOKFOR_SCOPEDECL',['../indent__c_8c.html#a724b59cdf0b873c546fcca02e2629dbf',1,'indent_c.c']]],
   ['lookfor_5fterm',['LOOKFOR_TERM',['../indent__c_8c.html#ab35478434ba8d729b4cf568d67216f8b',1,'indent_c.c']]],

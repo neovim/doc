@@ -33,7 +33,6 @@ var searchData=
   ['idx_5fcp949',['IDX_CP949',['../mbyte_8c.html#a43110788ead9bb268f93c50439fec442',1,'mbyte.c']]],
   ['idx_5fcp950',['IDX_CP950',['../mbyte_8c.html#afb74d689dfbdbaf569fd619462499897',1,'mbyte.c']]],
   ['idx_5fdebug',['IDX_DEBUG',['../mbyte_8c.html#a947b2661a73470a91276a8dd38b1bc8c',1,'mbyte.c']]],
-  ['idx_5fdecmcs',['IDX_DECMCS',['../mbyte_8c.html#aa7eb873fe29fad66cd3931156f0992ba',1,'mbyte.c']]],
   ['idx_5feuc_5fcn',['IDX_EUC_CN',['../mbyte_8c.html#a69a1660d668e8094146fdd6cff929070',1,'mbyte.c']]],
   ['idx_5feuc_5fjp',['IDX_EUC_JP',['../mbyte_8c.html#abcc73dd4379e41bd81164fd3672169e3',1,'mbyte.c']]],
   ['idx_5feuc_5fkr',['IDX_EUC_KR',['../mbyte_8c.html#a1f044872ee51a74ceba953ef2591fc96',1,'mbyte.c']]],
