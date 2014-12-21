@@ -33,7 +33,7 @@ var searchData=
   ['reverse',['reverse',['../structHlAttrs.html#a98d467d2ef24cdccd6e060560eed64f2',1,'HlAttrs']]],
   ['right',['right',['../ui_8c.html#a2f54f8b71f0d765e2b7dbd9a8b9774ff',1,'ui.c']]],
   ['rm',['rm',['../structmatch__T.html#a01b62c468976bcb633439de76fe11596',1,'match_T']]],
-  ['rm_5fic',['rm_ic',['../structregmatch__T.html#afbc416ec7a624c1328c2ff29d8522764',1,'regmatch_T']]],
+  ['rm_5fic',['rm_ic',['../structregmatch__T.html#ae8c5098020ede85e6e3fd11803f8196a',1,'regmatch_T']]],
   ['rmm_5fic',['rmm_ic',['../structregmmatch__T.html#a1b022446ab818edeeacad3ef92b07f54',1,'regmmatch_T']]],
   ['rmm_5fmaxcol',['rmm_maxcol',['../structregmmatch__T.html#a7d6d95860861cfca1f7720dd40340fbf',1,'regmmatch_T']]],
   ['room',['room',['../structfunccall__S.html#a8e2324220b100325040986686d911576',1,'funccall_S']]],

@@ -229,7 +229,7 @@ var searchData=
   ['rladdsubfix',['RLADDSUBFIX',['../ops_8c.html#a36a977422a6aedad1fbd2f7705654202',1,'ops.c']]],
   ['rm',['rm',['../structmatch__T.html#a01b62c468976bcb633439de76fe11596',1,'match_T']]],
   ['rm_5fabbr',['RM_ABBR',['../getchar_8c.html#af1775cf48ccf9fe41d636dc83e720e13',1,'getchar.c']]],
-  ['rm_5fic',['rm_ic',['../structregmatch__T.html#afbc416ec7a624c1328c2ff29d8522764',1,'regmatch_T']]],
+  ['rm_5fic',['rm_ic',['../structregmatch__T.html#ae8c5098020ede85e6e3fd11803f8196a',1,'regmatch_T']]],
   ['rm_5fnone',['RM_NONE',['../getchar_8c.html#a2dce09ccc928fc96376d5d5ed3f1bf0f',1,'getchar.c']]],
   ['rm_5fscript',['RM_SCRIPT',['../getchar_8c.html#a509f013cf4ba6961775ed8b5301d6fb8',1,'getchar.c']]],
   ['rm_5fyes',['RM_YES',['../getchar_8c.html#aee80330450c51abc4d44a382452376d1',1,'getchar.c']]],
