@@ -43,6 +43,7 @@ var searchData=
   ['get_5farglist_5fexp',['get_arglist_exp',['../ex__cmds2_8c.html#a3d418c18fba640e0644c790821e63897',1,'ex_cmds2.c']]],
   ['get_5faugroup_5fname',['get_augroup_name',['../fileio_8c.html#adab70131b08563747ee94baaee476628',1,'fileio.c']]],
   ['get_5fbehave_5farg',['get_behave_arg',['../ex__docmd_8c.html#ab4d3182964517bd3a9c66219e32d817a',1,'ex_docmd.c']]],
+  ['get_5fbkc_5fvalue',['get_bkc_value',['../option_8c.html#a94dea4c02d334f78a27feedc06fb5bb4',1,'option.c']]],
   ['get_5fbreakindent_5fwin',['get_breakindent_win',['../indent_8c.html#aca24a48840c36a6a7fb938a60d6f861e',1,'indent.c']]],
   ['get_5fc_5findent',['get_c_indent',['../indent__c_8c.html#a4a8e74a273c505566c21fe2840992982',1,'indent_c.c']]],
   ['get_5fchartab',['GET_CHARTAB',['../charset_8c.html#ae5a7ac3d74d578aec18355c0a35f3479',1,'charset.c']]],

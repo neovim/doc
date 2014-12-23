@@ -129,6 +129,7 @@ var searchData=
   ['pv_5farab',['PV_ARAB',['../option_8c.html#a8ef7fe115414d4dabe51ee52ea6999f2',1,'option.c']]],
   ['pv_5fbh',['PV_BH',['../option_8c.html#ad4688b7b88e89edebcab7d999a964022',1,'option.c']]],
   ['pv_5fbin',['PV_BIN',['../option_8c.html#a957b51255bf73811741dc21cafa2cc3e',1,'option.c']]],
+  ['pv_5fbkc',['PV_BKC',['../option_8c.html#a722ab4dca437c9b2da853f51a7b91ab1',1,'option.c']]],
   ['pv_5fbl',['PV_BL',['../option_8c.html#a356732e2d808f6e9905487b4a01e47ed',1,'option.c']]],
   ['pv_5fbomb',['PV_BOMB',['../option_8c.html#a500e99e22d4d7f445ba707cf4a143f4d',1,'option.c']]],
   ['pv_5fboth',['PV_BOTH',['../option_8c.html#a803539cbf53b2bee1cdfe8ae34a16d3f',1,'option.c']]],

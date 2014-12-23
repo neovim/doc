@@ -11,6 +11,7 @@ var searchData=
   ['bv_5fbexpr',['BV_BEXPR',['../option__defs_8h.html#a16af7b253440dadd46a80a4b9fddba4daf7a6c2976032bb1ad085a1c6ad71890e',1,'option_defs.h']]],
   ['bv_5fbh',['BV_BH',['../option__defs_8h.html#a16af7b253440dadd46a80a4b9fddba4da3f2d9faf8fdd1104b14d2d7bf7a75c58',1,'option_defs.h']]],
   ['bv_5fbin',['BV_BIN',['../option__defs_8h.html#a16af7b253440dadd46a80a4b9fddba4daff2f7887c77f232725230a009f846291',1,'option_defs.h']]],
+  ['bv_5fbkc',['BV_BKC',['../option__defs_8h.html#a16af7b253440dadd46a80a4b9fddba4dadaa80a85b5ed1c53ba010f19a7b8ba92',1,'option_defs.h']]],
   ['bv_5fbl',['BV_BL',['../option__defs_8h.html#a16af7b253440dadd46a80a4b9fddba4dab37d7bae3b9ea4c499f9dec288cf8d82',1,'option_defs.h']]],
   ['bv_5fbomb',['BV_BOMB',['../option__defs_8h.html#a16af7b253440dadd46a80a4b9fddba4dadc9f7b24225629637919873a5f7be040',1,'option_defs.h']]],
   ['bv_5fbt',['BV_BT',['../option__defs_8h.html#a16af7b253440dadd46a80a4b9fddba4dad8c7b9c340173c0660215b243d89d85b',1,'option_defs.h']]],

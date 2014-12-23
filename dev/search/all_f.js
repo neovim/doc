@@ -179,7 +179,7 @@ var searchData=
   ['out_5fflush_5fcheck',['out_flush_check',['../term_8c.html#a9a457d65e68cdb6766c5aa3d86e40956',1,'term.c']]],
   ['out_5fsize',['OUT_SIZE',['../term_8c.html#aec519627f2530d1859791b7f99300a3d',1,'term.c']]],
   ['out_5fstr',['out_str',['../term_8c.html#ae54b28f970b6fed3f509b48e15d80b56',1,'out_str(char_u *s):&#160;term.c'],['../vim_8h.html#a14fbed0d0794f553388498bffb71bec4',1,'OUT_STR():&#160;vim.h']]],
-  ['out_5fstr_5fnf',['OUT_STR_NF',['../vim_8h.html#ae1f9e2ae33cccf61215e81802d315225',1,'OUT_STR_NF():&#160;vim.h'],['../term_8c.html#ae04925eb070ccc19a3e6131c3b8f9286',1,'out_str_nf(char_u *s):&#160;term.c']]],
+  ['out_5fstr_5fnf',['out_str_nf',['../term_8c.html#ae04925eb070ccc19a3e6131c3b8f9286',1,'out_str_nf(char_u *s):&#160;term.c'],['../vim_8h.html#ae1f9e2ae33cccf61215e81802d315225',1,'OUT_STR_NF():&#160;vim.h']]],
   ['outfile',['outfile',['../structprt__settings__T.html#ab26e4b46eb152abd13d282cea9c44d3b',1,'prt_settings_T']]],
   ['output_5fconv',['output_conv',['../globals_8h.html#aaa63b8c11c468f8c6f7c265538b36d51',1,'globals.h']]],
   ['overstrike',['overstrike',['../structcmdline__info.html#abf1e5be4d11b1905f47bd8ff82039740',1,'cmdline_info']]],
