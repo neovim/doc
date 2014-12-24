@@ -49,7 +49,7 @@ build_deps() {
   depsdir=${depsdir%/*}
   rm -rf ${depsdir}
   cd ${NEOVIM_DIR}
-  make deps DEPS_CMAKE_FLAGS="-DDEPS_DIR=${depsdir} ${2}"
+  make deps DEPS_CMAKE_FLAGS="-DDEPS_PREFIX=${depsdir} ${2}"
   rm -rf ${depsdir}/build
 }
 
