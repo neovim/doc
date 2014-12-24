@@ -56,7 +56,7 @@ build_deps() {
   cmake ${NEOVIM_DIR}/third-party/
   make DEPS_CMAKE_FLAGS="-DDEPS_PREFIX=${depsdir} ${2}"
 
-  rm -rf ${depsdir}/{build,CMakeFiles,CMakeCache.txt,cmake_install.cmake,Makefile}
+  rm -rf ${depsdir}/{build,CMakeFiles,CMakeCache.txt,cmake_install.cmake,Makefile,.third-party}
 }
 
 # Clone Neovim deps repo.
