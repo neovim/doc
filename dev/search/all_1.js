@@ -260,6 +260,7 @@ var searchData=
   ['af_5fcomproot',['af_comproot',['../structafffile__S.html#a647144bdc8277644b41911ef8c782fae',1,'afffile_S']]],
   ['af_5fenc',['af_enc',['../structafffile__S.html#a6fb983fd4d1e094e6edfe3d5c2a597b6',1,'afffile_S']]],
   ['af_5fflagtype',['af_flagtype',['../structafffile__S.html#a3f937a39eee232aea10b98df6a3606a0',1,'afffile_S']]],
+  ['af_5fignoreextra',['af_ignoreextra',['../structafffile__S.html#a1af811d1f2e57ee8c61bda79369db962',1,'afffile_S']]],
   ['af_5fkeepcase',['af_keepcase',['../structafffile__S.html#a49dc930d19d4e455887857250536e47d',1,'afffile_S']]],
   ['af_5fneedaffix',['af_needaffix',['../structafffile__S.html#a45c85c39965ffc46106f8ab4c79aae83',1,'afffile_S']]],
   ['af_5fneedcomp',['af_needcomp',['../structafffile__S.html#a1438cfa257bee1dc05e20b251dfbcb60',1,'afffile_S']]],

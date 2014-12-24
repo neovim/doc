@@ -319,6 +319,7 @@ var searchData=
   ['ex_5fgui',['ex_gui',['../ex__docmd_8c.html#a377cd6ad1ecbe8d0ceb214f4fdcb3089',1,'ex_docmd.c']]],
   ['ex_5fhardcopy',['ex_hardcopy',['../hardcopy_8c.html#a259240b4cbadcc6623c81b9b6f11530a',1,'hardcopy.c']]],
   ['ex_5fhelp',['ex_help',['../ex__cmds_8c.html#ad0b60b9e181bb42362f364918542bb18',1,'ex_cmds.c']]],
+  ['ex_5fhelpclose',['ex_helpclose',['../ex__cmds_8c.html#a5a724634eab0b49d599e58e4b38abb30',1,'ex_cmds.c']]],
   ['ex_5fhelpfind',['ex_helpfind',['../ex__docmd_8c.html#aaaf3d80a5f9ebff419c94c35a062c170',1,'ex_docmd.c']]],
   ['ex_5fhelpgrep',['ex_helpgrep',['../quickfix_8c.html#a365375a873015b61635445fd64b1471d',1,'quickfix.c']]],
   ['ex_5fhelptags',['ex_helptags',['../ex__cmds_8c.html#a17c08a6c31c85f95926face3a5410307',1,'ex_cmds.c']]],

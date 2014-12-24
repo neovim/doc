@@ -202,7 +202,7 @@ var searchData=
   ['utf_5fchar2cells',['utf_char2cells',['../mbyte_8c.html#ac38b8ec71563a4bd534a6e45504dac29',1,'mbyte.c']]],
   ['utf_5fchar2len',['utf_char2len',['../mbyte_8c.html#a460801e73032b9f0efbcfe4881d63f07',1,'mbyte.c']]],
   ['utf_5fclass',['utf_class',['../mbyte_8c.html#a4d7fb58aae46f9d8535ca1a260974be7',1,'mbyte.c']]],
-  ['utf_5fcomposinglike',['UTF_COMPOSINGLIKE',['../macros_8h.html#a795b63afecd79354a4e78680765cab84',1,'UTF_COMPOSINGLIKE():&#160;macros.h'],['../mbyte_8c.html#ab014018c7371c9516e1761882225a3db',1,'utf_composinglike(const char_u *p1, const char_u *p2):&#160;mbyte.c']]],
+  ['utf_5fcomposinglike',['utf_composinglike',['../mbyte_8c.html#ab014018c7371c9516e1761882225a3db',1,'utf_composinglike(const char_u *p1, const char_u *p2):&#160;mbyte.c'],['../macros_8h.html#a795b63afecd79354a4e78680765cab84',1,'UTF_COMPOSINGLIKE():&#160;macros.h']]],
   ['utf_5ffind_5fillegal',['utf_find_illegal',['../mbyte_8c.html#a540579fa0da296af14920fca91b3e67d',1,'mbyte.c']]],
   ['utf_5ffold',['utf_fold',['../mbyte_8c.html#ae1a4569df11b81f0d22bec5d04822e46',1,'mbyte.c']]],
   ['utf_5fhead_5foff',['utf_head_off',['../mbyte_8c.html#a0127c7235a0051e188c1119f7f3f777f',1,'mbyte.c']]],

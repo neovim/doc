@@ -105,6 +105,7 @@ var searchData=
   ['ex_5fglobal',['ex_global',['../ex__cmds_8c.html#a3ed72e9bc4c881bca4f25d4edbfc5905',1,'ex_cmds.c']]],
   ['ex_5fhardcopy',['ex_hardcopy',['../hardcopy_8c.html#a259240b4cbadcc6623c81b9b6f11530a',1,'hardcopy.c']]],
   ['ex_5fhelp',['ex_help',['../ex__cmds_8c.html#ad0b60b9e181bb42362f364918542bb18',1,'ex_cmds.c']]],
+  ['ex_5fhelpclose',['ex_helpclose',['../ex__cmds_8c.html#a5a724634eab0b49d599e58e4b38abb30',1,'ex_cmds.c']]],
   ['ex_5fhelpgrep',['ex_helpgrep',['../quickfix_8c.html#a365375a873015b61635445fd64b1471d',1,'quickfix.c']]],
   ['ex_5fhelptags',['ex_helptags',['../ex__cmds_8c.html#a17c08a6c31c85f95926face3a5410307',1,'ex_cmds.c']]],
   ['ex_5fhistory',['ex_history',['../ex__getln_8c.html#acebc1d905069fb995715f5a37fe76a88',1,'ex_getln.c']]],
