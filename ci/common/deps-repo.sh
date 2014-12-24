@@ -48,9 +48,15 @@ build_deps() {
   local depsdir="${!dir}${!subtree}"
   depsdir=${depsdir%/*}
   rm -rf ${depsdir}
-  cd ${NEOVIM_DIR}
-  make deps DEPS_CMAKE_FLAGS="-DDEPS_PREFIX=${depsdir} ${2}"
-  rm -rf ${depsdir}/build
+  mkdir -p ${depsdir}
+
+  #build deps in non-default location...
+  #  https://github.com/neovim/neovim/pull/1588#issuecomment-66778849
+  cd ${depsdir}
+  cmake ${NEOVIM_DIR}/third-party/
+  make DEPS_CMAKE_FLAGS="-DDEPS_PREFIX=${depsdir} ${2}"
+
+  rm -rf ${depsdir}/{build,CMakeFiles,CMakeCache.txt,cmake_install.cmake,Makefile}
 }
 
 # Clone Neovim deps repo.
