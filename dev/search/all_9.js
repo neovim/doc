@@ -195,6 +195,7 @@ var searchData=
   ['is_5fshort',['is_short',['../structblock__def.html#a2c5b9b7a2bd14823cd58fc94e20d59b1',1,'block_def']]],
   ['is_5fspecial',['IS_SPECIAL',['../keymap_8h.html#a0402c3b19f22bc2978ca7e9068d9db4b',1,'keymap.h']]],
   ['is_5ftooltip_5fgroup',['is_tooltip_group',['../syntax_8c.html#aa708339a396aeead49c477c89e11a7ca',1,'syntax.c']]],
+  ['is_5fuser_5fcmdidx',['IS_USER_CMDIDX',['../ex__docmd_8c.html#aa5eb250e3a3b52d55bb5d089b91871ba',1,'ex_docmd.c']]],
   ['is_5fvisual',['is_VIsual',['../structoparg__S.html#a0bfdee9aacb2a3f44395f910ed560a4e',1,'oparg_S']]],
   ['isk_5flatin1',['ISK_LATIN1',['../option_8c.html#abf8a240aaedf7dc1021ed46e07540aad',1,'option.c']]],
   ['isp_5flatin1',['ISP_LATIN1',['../option_8c.html#a4d2212ff953890fbec08b348c9528062',1,'option.c']]],
