@@ -15,7 +15,6 @@ var searchData=
   ['have_5facl',['HAVE_ACL',['../os__unix__defs_8h.html#a6e99bbc6eb8f6c240cee333475ff1075',1,'os_unix_defs.h']]],
   ['have_5fbuflist_5fmatch',['HAVE_BUFLIST_MATCH',['../buffer_8c.html#a36638dc0918f744bf2aa73ebad7a5308',1,'buffer.c']]],
   ['have_5fdup',['HAVE_DUP',['../os__unix__defs_8h.html#a1b56a762290412383bb3793de48da434',1,'os_unix_defs.h']]],
-  ['have_5fex_5fscript_5fni',['HAVE_EX_SCRIPT_NI',['../ex__docmd_8c.html#a1a2f53649f47dc2429a930fab6012530',1,'ex_docmd.c']]],
   ['have_5fsandbox',['HAVE_SANDBOX',['../globals_8h.html#a5eb4ad50b4f6f3786841977feb01ada1',1,'globals.h']]],
   ['he_5fj',['HE_J',['../farsi_8h.html#a52ef3f5cbb930aaf1ec448a8003efe75',1,'farsi.h']]],
   ['head',['HEAD',['../regexp_8c.html#a110f3b6cdacd45daee818b3e5965f6da',1,'regexp.c']]],
