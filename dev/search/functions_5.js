@@ -31,7 +31,7 @@ var searchData=
   ['find_5ftab_5fby_5fhandle',['find_tab_by_handle',['../api_2private_2helpers_8c.html#ad0f45f9fd3791d1cc27235085f181d81',1,'helpers.c']]],
   ['find_5ftabpage',['find_tabpage',['../window_8c.html#a01e96cd91da2e9552bb628b4df2416a7',1,'window.c']]],
   ['find_5ftags',['find_tags',['../tag_8c.html#afbf5e1c9b0f5354ac3366b4fb521e51a',1,'tag.c']]],
-  ['find_5fterm_5fbykeys',['find_term_bykeys',['../term_8c.html#ab41e318e8c917150f293c8ebe477bec6',1,'term.c']]],
+  ['find_5fterm_5fbykeys',['find_term_bykeys',['../term_8c.html#a678ba924b0f5f8eb8bc0b4f058c5f34e',1,'term.c']]],
   ['find_5ftermcode',['find_termcode',['../term_8c.html#a09155a23354b4462b5100293dc86c56d',1,'term.c']]],
   ['find_5fviminfo_5fparameter',['find_viminfo_parameter',['../option_8c.html#a22170e23531bc2b473892f6c04fa597b',1,'option.c']]],
   ['find_5fwin_5ffor_5fbuf',['find_win_for_buf',['../buffer_8c.html#aa952bd64e3bd3023242b3f74f0cc8e55',1,'buffer.c']]],

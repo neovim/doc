@@ -89,7 +89,7 @@ var searchData=
   ['set_5flast_5fcursor',['set_last_cursor',['../mark_8c.html#ae6f319db00132154bab9b0302b57f12b',1,'mark.c']]],
   ['set_5flast_5finsert',['set_last_insert',['../edit_8c.html#af3387b0d841d3e68c37d327653dbe7ba',1,'edit.c']]],
   ['set_5flast_5fsearch_5fpat',['set_last_search_pat',['../search_8c.html#aac3a9004e9311d2a0b835b7e1df6f342',1,'search.c']]],
-  ['set_5fmouse_5ftermcode',['set_mouse_termcode',['../term_8c.html#a8f49dfedae2170dada0f9a1f08473649',1,'term.c']]],
+  ['set_5fmouse_5ftermcode',['set_mouse_termcode',['../term_8c.html#a288ee80888144d5bc09644904d9a9661',1,'term.c']]],
   ['set_5fmouse_5ftopline',['set_mouse_topline',['../term_8c.html#a3d0a79a40511076bb13c8328ff90f618',1,'term.c']]],
   ['set_5fnumber_5fdefault',['set_number_default',['../option_8c.html#ac5ea2aa6dd98f6175f3a6d59f31627b1',1,'option.c']]],
   ['set_5fone_5fcmd_5fcontext',['set_one_cmd_context',['../ex__docmd_8c.html#affc65ec9ac2f43790685d5edae5bf5e5',1,'ex_docmd.c']]],

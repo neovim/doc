@@ -174,7 +174,7 @@ var searchData=
   ['otherfile',['otherfile',['../buffer_8c.html#aac13c3cf91629ec59eb1dda6748c8ea1',1,'buffer.c']]],
   ['out',['out',['../structjob.html#a9027344776fcc73aa165d4eeef168210',1,'job::out()'],['../structnfa__state.html#a5f6af7a656c2d7f366164db6c349780f',1,'nfa_state::out()'],['../structFrag.html#a857b78b327224ffc647fe2c828b2f347',1,'Frag::out()']]],
   ['out1',['out1',['../structnfa__state.html#a6b5efbc7503e9540cdce968e55f6c62a',1,'nfa_state']]],
-  ['out_5fchar',['out_char',['../term_8c.html#a21e6735866ee176008eb91fb8ab07e39',1,'term.c']]],
+  ['out_5fchar',['out_char',['../term_8c.html#a69a6ffe109230d086d95217b27d3d1ec',1,'term.c']]],
   ['out_5fflush',['out_flush',['../term_8c.html#a696dc856975fd30035140f53329ba0ef',1,'term.c']]],
   ['out_5fflush_5fcheck',['out_flush_check',['../term_8c.html#a9a457d65e68cdb6766c5aa3d86e40956',1,'term.c']]],
   ['out_5fsize',['OUT_SIZE',['../term_8c.html#aec519627f2530d1859791b7f99300a3d',1,'term.c']]],
