@@ -275,7 +275,7 @@ var searchData=
   ['num_5fevents',['NUM_EVENTS',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aa375c9117363fc3a2454e271606f3e111',1,'fileio.h']]],
   ['num_5fmouse_5fclicks',['NUM_MOUSE_CLICKS',['../term_8h.html#ae298256f38b891ae6536b4b7bb3cf095',1,'term.h']]],
   ['num_5fregisters',['NUM_REGISTERS',['../ops_8c.html#a5efff3a4a48efbf589e3a2320997d9b9',1,'ops.c']]],
-  ['number',['number',['../structprt__settings__T.html#a21095a0e7eed29ff2be781ee9f87fe1f',1,'prt_settings_T::number()'],['../structoption__table__T.html#a2e51d6b7ebace6b38c7e4d711b78fd4d',1,'option_table_T::number()']]],
+  ['number',['number',['../structprt__settings__T.html#a21095a0e7eed29ff2be781ee9f87fe1f',1,'prt_settings_T::number()'],['../structoption__table__T.html#acbec49bb9294ee3b5557657d8baa8cf8',1,'option_table_T::number()']]],
   ['number_5fwidth',['number_width',['../screen_8c.html#a9c404f9aed34a4bdceb3df25c2d80d33',1,'screen.c']]],
   ['numbuflen',['NUMBUFLEN',['../vim_8h.html#ad75d86d19ee3c309a6db13026d35e357',1,'vim.h']]],
   ['nupper',['NUPPER',['../regexp_8c.html#a8d01ace080cbaf498a5adeb8894a3ecd',1,'regexp.c']]],
