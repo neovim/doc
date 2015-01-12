@@ -51,7 +51,7 @@ Nvim's facilities for job <A HREF="intro.html#control">control</A>				  *<A NAME
 1. Introduction						    *<A NAME="job-control-intro"></A><B>job-control-intro</B>*
 
 Job <A HREF="intro.html#control">control</A> is a simple way to perform multitasking in vimscript. Wikipedia
-contains a more generic/detailed description: 
+contains a more generic/detailed description:
 
 &quot;Job <A HREF="intro.html#control">control</A> in computing refers to the <A HREF="intro.html#control">control</A> of multiple tasks or Jobs on a
 computer system, ensuring that they each have access to adequate resources to
@@ -65,8 +65,8 @@ In a few words: It allows a vimscript programmer to concurrently spawn and
 
 Nvim's job <A HREF="intro.html#control">control</A> was designed to be simple and familiar to vimscript
 programmers, instead of being very powerful but complex. Unlike Vim's
-facilities for calling with external commands, job <A HREF="intro.html#control">control</A> does not depend 
-on installed shells, calling OS <A HREF="eval.html#functions">functions</A> for process management directly.
+facilities for calling with external commands, job <A HREF="intro.html#control">control</A> does not depend on
+available shells, instead relying on OS functionality for process management.
 
 Internally, Nvim job <A HREF="intro.html#control">control</A> is powered by libuv, which has a <A HREF="todo.html#nice">nice</A>
 cross-platform API for managing processes. See https://github.com/libuv/libuv
@@ -82,8 +82,8 @@ event. The best way to understand is with a complete example:
 
 <B>    set nocp</B>
 <B>    let job1 = jobstart('shell1', 'bash')</B>
-<B>    let job2 = jobstart('shell2', 'bash', ['-c', 'for ((i = 0; i &lt; 10; i++)); do echo -n hello $i!; sleep 2; done'])</B>
-<B>    </B>
+<B>    let job2 = jobstart('shell2', 'bash', ['-c', 'for ((i = 0; i &lt; 10; i++)); do echo hello $i!; sleep 1; done'])</B>
+
 <B>    function JobHandler()</B>
 <B>      if v:job_data[1] == 'stdout'</B>
 <B>        let str = 'shell '. v:job_data[0].' stdout: '.join(v:job_data[2])</B>
@@ -92,27 +92,27 @@ event. The best way to understand is with a complete example:
 <B>      else</B>
 <B>        let str = 'shell '.v:job_data[0].' exited'</B>
 <B>      endif</B>
-<B>    </B>
+
 <B>      call append(line('$'), str)</B>
 <B>    endfunction</B>
-<B>    </B>
+
 <B>    au JobActivity shell* call JobHandler()</B>
  
-To test the above, copy <A HREF="motion.html#it">it</A> to the ~/jobcontrol.vim file and start with a clean
+To test the above, copy <A HREF="motion.html#it">it</A> to the file ~/jobcontrol.vim and start with a clean
 <A HREF="nvim_intro.html#nvim">nvim</A> instance:
- 
-<B>      nvim -u NONE -S ~/jobcontrol.vim</B>
+
+<B>    nvim -u NONE -S ~/jobcontrol.vim</B>
  
 Here's what is happening:
 
-- Two bash instances are spawned by |<A HREF="eval.html#jobstart()">jobstart()</A>| and their stdin/stdout/stderr
-  are connected to <A HREF="nvim_intro.html#nvim">nvim</A>.
-- The first shell is idle, waiting to read commands from it's stdin
-- The second shell is passed the <A HREF="starting.html#-c">-c</A> option to execute a command and exit. In
-  our <A HREF="change.html#case">case</A>, the command is a for loop that will print numbers and exit after
-  a while.
-- The JobHandler function is called by the <A HREF="autocmd.html#JobActivity">JobActivity</A> autocommand(notice how
-  the shell* <A HREF="pattern.html#pattern">pattern</A> matches the `shell1` and `shell2` names passed to
+- Two bash instances are spawned by |<A HREF="eval.html#jobstart()">jobstart()</A>| with their stdin/stdout/stderr
+  connected to <A HREF="nvim_intro.html#nvim">nvim</A>.
+- The first shell is idle, waiting to read commands from its stdin.
+- The second shell is started with the <A HREF="starting.html#-c">-c</A> argument, causing <A HREF="motion.html#it">it</A> to execute a
+  command then exit. In this <A HREF="change.html#case">case</A>, the command is a for loop that will print 0
+  through 9 then exit.
+- The |<A HREF="intro.html#JobHandler()">JobHandler()</A>| function is called by the `JobActivity` <A HREF="autocmd.html#autocommand">autocommand</A> (notice
+  how the shell* <A HREF="pattern.html#pattern">pattern</A> matches the names `shell1` and `shell2` passed to
   |<A HREF="eval.html#jobstart()">jobstart()</A>|), and <A HREF="motion.html#it">it</A> takes care of displaying stdout/stderr received from
   the shells.
 - The v:job_data is an array set by the <A HREF="autocmd.html#JobActivity">JobActivity</A> event. It has the
@@ -125,17 +125,17 @@ Here's what is happening:
 To send data to the job's stdin, one can use the |<A HREF="eval.html#jobsend()">jobsend()</A>| function, like
 this:
 
-<B>    :call jobsend(job1, 'ls\n')</B>
-<B>    :call jobsend(job1, 'invalid-command\n')</B>
-<B>    :call jobsend(job1, 'exit\n')</B>
+<B>    :call jobsend(job1, "ls\n")</B>
+<B>    :call jobsend(job1, "invalid-command\n")</B>
+<B>    :call jobsend(job1, "exit\n")</B>
  
 A job may be killed at any time with the |<A HREF="eval.html#jobstop()">jobstop()</A>| function:
 
 <B>    :call jobstop(job1)</B>
  
-When |<A HREF="eval.html#jobstop()">jobstop()</A>| is called, <A HREF="motion.html#it">it</A> will send `SIGTERM` to the job. If a job
-doesn't exit after a while, `SIGKILL` will be sent.
-    
+When |<A HREF="eval.html#jobstop()">jobstop()</A>| is called, `SIGTERM` will be sent to the job. If a job does
+not exit after 2 seconds, `SIGKILL` will be sent.
+
 ==============================================================================
 <A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
 </PRE>
@@ -143,7 +143,7 @@ doesn't exit after a while, `SIGKILL` will be sent.
 
     <footer>
       <div class="container">
-        Generated Sun Jan 11 09:19:49 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/a684cc175a6c1ca2cfc3bff2d68383d32008cb3b"><code>a684cc1</code></a>.
+        Generated Mon Jan 12 09:21:53 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/c53852a244fd78bcf11e37ddc94e8a847e80062a"><code>c53852a</code></a>.
       </div>
     </footer>
   </body>
