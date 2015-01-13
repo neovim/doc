@@ -49,7 +49,7 @@ var searchData=
   ['op_5fon_5flines',['op_on_lines',['../ops_8c.html#ac2618f7084311696d38fa8206b66e494',1,'ops.c']]],
   ['op_5fpending',['OP_PENDING',['../vim_8h.html#a495a0a463d2403303bd8c1966ac1439d',1,'vim.h']]],
   ['op_5freindent',['op_reindent',['../ops_8c.html#a4c3acd9a512e877e65b26a267a4de117',1,'ops.c']]],
-  ['op_5freplace',['OP_REPLACE',['../ops_8h.html#a1c9f7fa8adab4bfb91c97d58f3d6990d',1,'OP_REPLACE():&#160;ops.h'],['../ops_8c.html#a55959d0f9b541b76ac64e03e13c3b4d8',1,'op_replace(oparg_T *oap, int c):&#160;ops.c']]],
+  ['op_5freplace',['op_replace',['../ops_8c.html#a55959d0f9b541b76ac64e03e13c3b4d8',1,'op_replace(oparg_T *oap, int c):&#160;ops.c'],['../ops_8h.html#a1c9f7fa8adab4bfb91c97d58f3d6990d',1,'OP_REPLACE():&#160;ops.h']]],
   ['op_5frot13',['OP_ROT13',['../ops_8h.html#a321c70edb1501e75553e914580db697d',1,'ops.h']]],
   ['op_5frshift',['OP_RSHIFT',['../ops_8h.html#a1ad284d8a779cb7a688bc5d42734b84d',1,'ops.h']]],
   ['op_5fshift',['op_shift',['../ops_8c.html#aa25d03dd468935d47f2090236878a1f1',1,'ops.c']]],

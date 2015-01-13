@@ -209,7 +209,6 @@ var searchData=
   ['hmt_5fdec',['HMT_DEC',['../term_8c.html#afaebaa47fac9e316a7a3c1921ec3353d',1,'term.c']]],
   ['hmt_5fnetterm',['HMT_NETTERM',['../term_8c.html#a88bcc99d8f0583650c7008ab6d019238',1,'term.c']]],
   ['hmt_5fnormal',['HMT_NORMAL',['../term_8c.html#abe9e44fa446dc1a343489e78723d7b35',1,'term.c']]],
-  ['hmt_5fpterm',['HMT_PTERM',['../term_8c.html#a46d34c2fbaddb191c3e94e037850e3be',1,'term.c']]],
   ['hmt_5fsgr',['HMT_SGR',['../term_8c.html#aeda20a77ff58817da977938a4387ddf3',1,'term.c']]],
   ['hmt_5furxvt',['HMT_URXVT',['../term_8c.html#adbf5f51a2d1dccd19b322d96b5721ad9',1,'term.c']]],
   ['home_5freplace',['home_replace',['../misc1_8c.html#ab7f12f206c15cee62718c8ca7fa40695',1,'misc1.c']]],
