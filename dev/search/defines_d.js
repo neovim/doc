@@ -98,7 +98,6 @@ var searchData=
   ['menu_5ftip_5fmode',['MENU_TIP_MODE',['../menu_8h.html#a5651b99016a2f7898a8b8c6372472c81',1,'menu.h']]],
   ['menu_5fvisual_5fmode',['MENU_VISUAL_MODE',['../menu_8h.html#a2c9c69a9b15d51f6b071669bd03604cb',1,'menu.h']]],
   ['menudepth',['MENUDEPTH',['../menu_8c.html#a92d26899c03c5e429c2e07389611831b',1,'menu.c']]],
-  ['message_5ffile',['MESSAGE_FILE',['../message_8c.html#a69c0d452eb8cec0700a1345581d5b59b',1,'message.c']]],
   ['meta',['Meta',['../ascii_8h.html#ab34fe012583896dad11906d8edc7fc97',1,'ascii.h']]],
   ['method_5fmaxlen',['METHOD_MAXLEN',['../channel_8h.html#a26678ea3ae80abdf365d09490b13542e',1,'channel.h']]],
   ['mfs_5fall',['MFS_ALL',['../memfile_8h.html#a7250711b9595001492c8b4742920acb6',1,'memfile.h']]],

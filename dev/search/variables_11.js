@@ -31,6 +31,7 @@ var searchData=
   ['returned',['returned',['../structfunccall__S.html#acd1553758ad1dc65721cccdb29c1ad24',1,'funccall_S::returned()'],['../structChannelCallFrame.html#a7327f557b0e29ef298f1e4e40b8c422e',1,'ChannelCallFrame::returned()']]],
   ['retval',['retval',['../structcmdarg__S.html#a17a9d4e34d1059f4839dc9ddf80cae47',1,'cmdarg_S']]],
   ['reverse',['reverse',['../structHlAttrs.html#a98d467d2ef24cdccd6e060560eed64f2',1,'HlAttrs']]],
+  ['rgb',['rgb',['../structui__t.html#ae85bf36bc854eec59d27f56f4eb0c8ab',1,'ui_t']]],
   ['right',['right',['../ui_8c.html#a2f54f8b71f0d765e2b7dbd9a8b9774ff',1,'ui.c']]],
   ['rm',['rm',['../structmatch__T.html#a01b62c468976bcb633439de76fe11596',1,'match_T']]],
   ['rm_5fic',['rm_ic',['../structregmatch__T.html#ae8c5098020ede85e6e3fd11803f8196a',1,'regmatch_T']]],

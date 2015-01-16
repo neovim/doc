@@ -111,7 +111,6 @@ var searchData=
   ['copyid_5finc',['COPYID_INC',['../eval_8c.html#acb52ff00970ee5e3d0d646c97e36f717',1,'eval.c']]],
   ['copyid_5fmask',['COPYID_MASK',['../eval_8c.html#a102e13f0cdad5e2e74d30d30d576def6',1,'eval.c']]],
   ['count',['COUNT',['../ex__cmds__defs_8h.html#a698c124f1c293f98840449d6c5b9d984',1,'ex_cmds_defs.h']]],
-  ['cp_5futf8',['CP_UTF8',['../mbyte_8c.html#aadb80d30a31c113f6fe45511d44f9922',1,'mbyte.c']]],
   ['cpo_5fall',['CPO_ALL',['../option__defs_8h.html#a4cdb152867f7e631d018764eaa546c17',1,'option_defs.h']]],
   ['cpo_5faltread',['CPO_ALTREAD',['../option__defs_8h.html#a3b14b666fc9043894867e721e6acda11',1,'option_defs.h']]],
   ['cpo_5faltwrite',['CPO_ALTWRITE',['../option__defs_8h.html#ab4a7f7a53d043d77dcb25e794fdf8729',1,'option_defs.h']]],

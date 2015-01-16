@@ -248,6 +248,7 @@ var searchData=
   ['pe_5fpage_5fcount',['pe_page_count',['../structpointer__entry.html#aa5194eaf0768453f33b9d2ff66508040',1,'pointer_entry']]],
   ['pending',['pending',['../structcleanup__stuff.html#ac3cc31c47479b0ae443c562f680d5bcd',1,'cleanup_stuff']]],
   ['pending_5freqs',['pending_reqs',['../structwstream.html#aec2160e07360ed433c31036868271b95',1,'wstream']]],
+  ['pending_5frequests',['pending_requests',['../structChannel.html#afcb5764f0cb5299e64fccee5eb7da8c7',1,'Channel']]],
   ['percentage',['percentage',['../structcursor__entry.html#acab43e60c124829b8f099bca54701720',1,'cursor_entry']]],
   ['pim',['pim',['../structnfa__thread__T.html#ab0c4c4df9239a802b99be7bb2b315843',1,'nfa_thread_T']]],
   ['pipe',['pipe',['../structServer.html#ae2c92e8479af10a8eacee9aa490c59a1',1,'Server']]],

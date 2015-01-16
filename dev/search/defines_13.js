@@ -352,7 +352,6 @@ var searchData=
   ['sy_5fmaxlen',['SY_MAXLEN',['../spell_8c.html#ae2c3417666c4eb575875c84411aa0432',1,'spell.c']]],
   ['syn_5fclstr',['SYN_CLSTR',['../syntax_8c.html#a76796d29327e8a26a17c5f4ca37724cd',1,'syntax.c']]],
   ['syn_5fitems',['SYN_ITEMS',['../syntax_8c.html#a3981b10bad2a8bbdf9b57a6a640da814',1,'syntax.c']]],
-  ['syn_5fnamelen',['SYN_NAMELEN',['../syntax_8c.html#af1f0447b2dc8bba1bc3fa6b847c355a5',1,'syntax.c']]],
   ['syn_5fstate_5fp',['SYN_STATE_P',['../syntax_8c.html#a8b5aa47656565df463f5ede33205fb72',1,'syntax.c']]],
   ['synid_5fallbut',['SYNID_ALLBUT',['../syntax_8c.html#a8342d053ff568583567178b8c7ff38db',1,'syntax.c']]],
   ['synid_5fcluster',['SYNID_CLUSTER',['../syntax_8c.html#aa85a353ec7608c12d421378d40e275cd',1,'syntax.c']]],

@@ -77,6 +77,7 @@ var searchData=
   ['os_5fsetperm',['os_setperm',['../fs_8c.html#a49953c1ffb81c31d749173f685753818',1,'fs.c']]],
   ['os_5fsystem',['os_system',['../shell_8c.html#a48e93529e1f83f4b13ed2b912e9ec7d9',1,'shell.c']]],
   ['otherfile',['otherfile',['../buffer_8c.html#aac13c3cf91629ec59eb1dda6748c8ea1',1,'buffer.c']]],
+  ['out_5fbuf_5fclear',['out_buf_clear',['../term_8c.html#a83998b5f9ab6e4295997101c594b8e27',1,'term.c']]],
   ['out_5fchar',['out_char',['../term_8c.html#a69a6ffe109230d086d95217b27d3d1ec',1,'term.c']]],
   ['out_5fflush',['out_flush',['../term_8c.html#a696dc856975fd30035140f53329ba0ef',1,'term.c']]],
   ['out_5fflush_5fcheck',['out_flush_check',['../term_8c.html#a9a457d65e68cdb6766c5aa3d86e40956',1,'term.c']]],

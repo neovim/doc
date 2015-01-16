@@ -107,7 +107,6 @@ var searchData=
   ['win_5fhor',['WIN_HOR',['../main_8c.html#a8ae8c3109681cf2f8e5af813bddc230b',1,'main.c']]],
   ['win_5ftabs',['WIN_TABS',['../main_8c.html#a2f2d3be7f72620012950485346776cab',1,'main.c']]],
   ['win_5fver',['WIN_VER',['../main_8c.html#aca4698db7f9a7137e427d8a897e62897',1,'main.c']]],
-  ['winbyte',['WINBYTE',['../mbyte_8c.html#afefe9f6bf90a2bde1be387659e580e36',1,'mbyte.c']]],
   ['window_5fobj',['WINDOW_OBJ',['../api_2private_2helpers_8h.html#a1160d3db217096276ad1338ed1f75687',1,'helpers.h']]],
   ['with_5fnl',['WITH_NL',['../regexp_8c.html#a75fdad70107fb24fd42cd3abd01b9414',1,'regexp.c']]],
   ['wl_5fbri',['WL_BRI',['../screen_8c.html#aef5514037c9867df698e1373ba2b8c53',1,'screen.c']]],

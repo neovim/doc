@@ -53,6 +53,8 @@ var searchData=
   ['uline_5fwidth',['uline_width',['../structprt__ps__font__S.html#a952ec343a09b56d3d0bcb474eea05a78',1,'prt_ps_font_S']]],
   ['undercurl',['undercurl',['../structprt__text__attr__T.html#a125bdf5280175b381c4b99f3f6c86bb1',1,'prt_text_attr_T::undercurl()'],['../structHlAttrs.html#ab3a64e2adcf47e59d4668a0fe237aa6c',1,'HlAttrs::undercurl()']]],
   ['underline',['underline',['../structprt__text__attr__T.html#a634e9c7f3be5ab7d46188d0211134a6c',1,'prt_text_attr_T::underline()'],['../structHlAttrs.html#aab317c1060499e14a417c4edc376a51f',1,'HlAttrs::underline()']]],
+  ['update_5fbg',['update_bg',['../structui__t.html#a13da8a533920abc0e4ddaf168f94db0c',1,'ui_t']]],
+  ['update_5ffg',['update_fg',['../structui__t.html#afc47dbc2cb4923e7223d0808e768a51d',1,'ui_t']]],
   ['usage',['usage',['../structcscmd__T.html#a90918df3d469fe836cb9412b2e580dc6',1,'cscmd_T']]],
   ['use_5faucmd_5fwin',['use_aucmd_win',['../structaco__save__T.html#a26bd9a638bbcbd0f8c28443f3c3dabd1',1,'aco_save_T']]],
   ['use_5fdebug_5fbreak_5flevel',['use_debug_break_level',['../structmparm__T.html#a3e2eaace0f2a42ab80fd5b9ce709a5b6',1,'mparm_T']]],

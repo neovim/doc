@@ -331,7 +331,6 @@ var searchData=
   ['cp_5fprev',['cp_prev',['../structcompl__S.html#addd1cb0303fdab9da0a2d43f36b79cc2',1,'compl_S']]],
   ['cp_5fstr',['cp_str',['../structcompl__S.html#a0601baff5b9e6783cddd4dcc03ee0657',1,'compl_S']]],
   ['cp_5ftext',['cp_text',['../structcompl__S.html#af316eaf2f8319808f7b1b6f2e4de0272',1,'compl_S']]],
-  ['cp_5futf8',['CP_UTF8',['../mbyte_8c.html#aadb80d30a31c113f6fe45511d44f9922',1,'mbyte.c']]],
   ['cpo_5fall',['CPO_ALL',['../option__defs_8h.html#a4cdb152867f7e631d018764eaa546c17',1,'option_defs.h']]],
   ['cpo_5faltread',['CPO_ALTREAD',['../option__defs_8h.html#a3b14b666fc9043894867e721e6acda11',1,'option_defs.h']]],
   ['cpo_5faltwrite',['CPO_ALTWRITE',['../option__defs_8h.html#ab4a7f7a53d043d77dcb25e794fdf8729',1,'option_defs.h']]],

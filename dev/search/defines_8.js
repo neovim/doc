@@ -7,7 +7,6 @@ var searchData=
   ['handle_5ftype_5fconversion_5fimpl',['HANDLE_TYPE_CONVERSION_IMPL',['../msgpack__rpc_2helpers_8c.html#ad8516afee6157432db7953b392b715aa',1,'helpers.c']]],
   ['has_5fbw_5fflags',['HAS_BW_FLAGS',['../fileio_8c.html#af33ba456c60236d04386ff0515271898',1,'fileio.c']]],
   ['has_5fhotkey_5flen',['HAS_HOTKEY_LEN',['../message_8c.html#a0ad819454387af187e41ca6545e05946',1,'message.c']]],
-  ['has_5fswap_5fexists_5faction',['HAS_SWAP_EXISTS_ACTION',['../globals_8h.html#a434b3b75d105c3608083f5c25335001d',1,'globals.h']]],
   ['hashitem_5fempty',['HASHITEM_EMPTY',['../hashtab_8h.html#a6daf8b4e03c36362fcadf86a894e0528',1,'hashtab.h']]],
   ['haslookbh',['HASLOOKBH',['../regexp_8c.html#a5a24ddea7289cedd6b0466ffe583ab08',1,'regexp.c']]],
   ['hasnl',['HASNL',['../regexp_8c.html#a8117cf37b9a2d3f12bf76116a0f6d499',1,'regexp.c']]],
