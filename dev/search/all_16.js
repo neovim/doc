@@ -234,6 +234,7 @@ var searchData=
   ['vimmenu',['VimMenu',['../structVimMenu.html',1,'']]],
   ['vimmenu_5ft',['vimmenu_T',['../menu_8h.html#af2db550fad6f1957463ce6686abdaf1b',1,'menu.h']]],
   ['vimoption',['vimoption',['../structvimoption.html',1,'']]],
+  ['vimoption_5ft',['vimoption_T',['../option_8c.html#a759eab6e300ba5c90ff2c256fe3aaa6e',1,'option.c']]],
   ['vimpackage',['VIMPACKAGE',['../vim_8h.html#acf9ae7c8ef93a3f73d53585e1ecd84b3',1,'vim.h']]],
   ['vimrc_5ffile',['VIMRC_FILE',['../os__unix__defs_8h.html#a3e6951b8ad5d2c4158eaaa57f2544443',1,'os_unix_defs.h']]],
   ['vimrc_5ffound',['vimrc_found',['../option_8c.html#a52e14916d0e3a8e08f7d48ccddc9b854',1,'option.c']]],

@@ -29,7 +29,7 @@ var searchData=
   ['u_5fwrite_5fundo',['u_write_undo',['../undo_8c.html#aa185e41207644a80db11e767e4f21430',1,'undo.c']]],
   ['ub_5ffname',['UB_FNAME',['../memline_8c.html#aeb2a08db86a3f3c959cc50de278339edae07039e8880c427cedb331eac7444095',1,'memline.c']]],
   ['ub_5fsame_5fdir',['UB_SAME_DIR',['../memline_8c.html#aeb2a08db86a3f3c959cc50de278339eda3e3c35facf7ed67537393dd40196c797',1,'memline.c']]],
-  ['uc_5fargt',['uc_argt',['../structucmd.html#a4c5522ef9a85edc80bb7edf8efc32a40',1,'ucmd']]],
+  ['uc_5fargt',['uc_argt',['../structucmd.html#aaf8ed02f98ae2f5e35f6b152c163a5ec',1,'ucmd']]],
   ['uc_5fbuffer',['UC_BUFFER',['../ex__docmd_8c.html#a5bbae841d67a67455c7a62163ab8d1a9',1,'ex_docmd.c']]],
   ['uc_5fclear',['uc_clear',['../ex__docmd_8c.html#a6cbc01a78882824e877a82f0ba21081f',1,'ex_docmd.c']]],
   ['uc_5fcompl',['uc_compl',['../structucmd.html#ab3088bbb1a6d2bd2dedd8ab26769cd30',1,'ucmd']]],

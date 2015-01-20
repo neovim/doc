@@ -46,7 +46,7 @@ var searchData=
   ['read_5fkeep_5fundo',['READ_KEEP_UNDO',['../fileio_8h.html#a62d5f772bcfabf7e8366be9eb6de507d',1,'fileio.h']]],
   ['read_5fnew',['READ_NEW',['../fileio_8h.html#a4da9786c337d9d735a7428591c751035',1,'fileio.h']]],
   ['read_5fstdin',['READ_STDIN',['../fileio_8h.html#a3ae230a26a56f1a76ab6dd69ae42bba1',1,'fileio.h']]],
-  ['read_5fstring',['READ_STRING',['../misc2_8h.html#a455e597a113c314633358e16125e7c24',1,'READ_STRING():&#160;misc2.h'],['../misc2_8c.html#afd6b1e01f309a8c00257d4c8a20a75dd',1,'read_string(FILE *fd, size_t cnt):&#160;misc2.c']]],
+  ['read_5fstring',['read_string',['../misc2_8c.html#afd6b1e01f309a8c00257d4c8a20a75dd',1,'read_string(FILE *fd, size_t cnt):&#160;misc2.c'],['../misc2_8h.html#a455e597a113c314633358e16125e7c24',1,'READ_STRING():&#160;misc2.h']]],
   ['read_5fviminfo',['read_viminfo',['../ex__cmds_8c.html#aa7e2b1049ef47715861834303d0da8bf',1,'ex_cmds.c']]],
   ['read_5fviminfo_5fbufferlist',['read_viminfo_bufferlist',['../buffer_8c.html#a64325ead0381dc971a6133b7b9969833',1,'buffer.c']]],
   ['read_5fviminfo_5ffilemark',['read_viminfo_filemark',['../mark_8c.html#a70185c874e0a9a09096d913ad63257fc',1,'mark.c']]],

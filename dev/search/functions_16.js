@@ -26,7 +26,7 @@ var searchData=
   ['win_5finit_5fsize',['win_init_size',['../window_8c.html#ab2da33e07717293d0f3dc79e17d7c815',1,'window.c']]],
   ['win_5fins_5flines',['win_ins_lines',['../screen_8c.html#acdb7ee0a4db4f545fe4ab46a99c8ed16',1,'screen.c']]],
   ['win_5flbr_5fchartabsize',['win_lbr_chartabsize',['../charset_8c.html#aca84f225d3aeaec397124e42c758ecf4',1,'charset.c']]],
-  ['win_5flinetabsize',['win_linetabsize',['../charset_8c.html#a4b79b924d5ef76cedc50dc43ecdcef1b',1,'charset.c']]],
+  ['win_5flinetabsize',['win_linetabsize',['../charset_8c.html#a6827ea8a756fc03ce0ea342cd9846caa',1,'charset.c']]],
   ['win_5fmove_5fafter',['win_move_after',['../window_8c.html#a095ba5a7b154045ba4f6ceed42eacbbb',1,'window.c']]],
   ['win_5fnew_5fheight',['win_new_height',['../window_8c.html#a2ccec05494db23b3726b2ccab8f6e298',1,'window.c']]],
   ['win_5fnew_5fshellsize',['win_new_shellsize',['../term_8c.html#ab95157ea7f89bca9ec40650978b8de60',1,'term.c']]],

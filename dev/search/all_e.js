@@ -280,7 +280,7 @@ var searchData=
   ['numbuflen',['NUMBUFLEN',['../vim_8h.html#ad75d86d19ee3c309a6db13026d35e357',1,'vim.h']]],
   ['nupper',['NUPPER',['../regexp_8c.html#a8d01ace080cbaf498a5adeb8894a3ecd',1,'regexp.c']]],
   ['nv_5fcmds_5fsize',['NV_CMDS_SIZE',['../normal_8c.html#ad1048508eb62abc4ee64429e57a61fc8',1,'normal.c']]],
-  ['nv_5fdiffgetput',['nv_diffgetput',['../diff_8c.html#af3cf5131536a663d347f8f999c6cfe8b',1,'diff.c']]],
+  ['nv_5fdiffgetput',['nv_diffgetput',['../diff_8c.html#a10a822a5fe93a598867f59ea4b682e5c',1,'diff.c']]],
   ['nv_5ffunc_5ft',['nv_func_T',['../normal_8c.html#a874f726e1caf777357cfd83886e80356',1,'normal.c']]],
   ['nv_5fkeepreg',['NV_KEEPREG',['../normal_8c.html#a202354c7a246f72d5ac6d799705047b8',1,'normal.c']]],
   ['nv_5flang',['NV_LANG',['../normal_8c.html#a87074e03631b8f274c2225dce55eeb62',1,'normal.c']]],

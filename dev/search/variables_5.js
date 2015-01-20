@@ -64,7 +64,7 @@ var searchData=
   ['firstwin',['firstwin',['../globals_8h.html#a9f906679f9a65d9fb5defe869512e36e',1,'globals.h']]],
   ['fixvar',['fixvar',['../structfunccall__S.html#a6c03cb2741dd1c8286d7a548bad6dc09',1,'funccall_S']]],
   ['flag',['flag',['../structname__list.html#ae5c3483b856f867391e1a46ddab930fe',1,'name_list']]],
-  ['flags',['flags',['../structexarg.html#a04c99608604c5da1aeaadd058c1478a7',1,'exarg::flags()'],['../structcsi.html#a3a08bd2f0ec4479996dc61886afb5da9',1,'csi::flags()'],['../structvimoption.html#afcaa3abf13ade10e0ed3bb87d8593896',1,'vimoption::flags()'],['../structefm__S.html#a605ebcf346ce957bf8a2327717e35edb',1,'efm_S::flags()'],['../structsyn__opt__arg__T.html#a27f8e3131dfdc5d3ff3a47635e99e349',1,'syn_opt_arg_T::flags()'],['../structkeyentry.html#ada0e50c1e4a8f181b3362a9e8ba7c1f1',1,'keyentry::flags()']]],
+  ['flags',['flags',['../structexarg.html#a04c99608604c5da1aeaadd058c1478a7',1,'exarg::flags()'],['../structcsi.html#a3a08bd2f0ec4479996dc61886afb5da9',1,'csi::flags()'],['../structvimoption.html#a6ffc9775b3d24737546e13b5afaed99a',1,'vimoption::flags()'],['../structefm__S.html#a605ebcf346ce957bf8a2327717e35edb',1,'efm_S::flags()'],['../structsyn__opt__arg__T.html#a27f8e3131dfdc5d3ff3a47635e99e349',1,'syn_opt_arg_T::flags()'],['../structkeyentry.html#ada0e50c1e4a8f181b3362a9e8ba7c1f1',1,'keyentry::flags()']]],
   ['floating',['floating',['../structobject.html#a0e0678eb8c9e4ee175d26a6991a389c0',1,'object']]],
   ['flush',['flush',['../structui__t.html#aabba6da1d837b1047e6ce8a9e2446783',1,'ui_t']]],
   ['fmark',['fmark',['../structtaggy.html#a07df8ada047b471abef50dd151153b2b',1,'taggy::fmark()'],['../structxfilemark.html#a9d6bd8bb41945f39000aa056a7c20689',1,'xfilemark::fmark()']]],

@@ -9,5 +9,5 @@ var searchData=
   ['not_5fexiting',['not_exiting',['../ex__docmd_8c.html#a08c3f557376be97916064edf56d27dd0',1,'ex_docmd.c']]],
   ['not_5fwriting',['not_writing',['../ex__cmds_8c.html#ac4a1bf4814b50fdf26269252e07fa3c4',1,'ex_cmds.c']]],
   ['number_5fwidth',['number_width',['../screen_8c.html#a9c404f9aed34a4bdceb3df25c2d80d33',1,'screen.c']]],
-  ['nv_5fdiffgetput',['nv_diffgetput',['../diff_8c.html#af3cf5131536a663d347f8f999c6cfe8b',1,'diff.c']]]
+  ['nv_5fdiffgetput',['nv_diffgetput',['../diff_8c.html#a10a822a5fe93a598867f59ea4b682e5c',1,'diff.c']]]
 ];

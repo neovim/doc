@@ -127,7 +127,6 @@ var searchData=
   ['lockmarks',['lockmarks',['../structcmdmod__T.html#ab78263dde1751c230262b84fa76e2547',1,'cmdmod_T']]],
   ['log_2ec',['log.c',['../log_8c.html',1,'']]],
   ['log_2eh',['log.h',['../log_8h.html',1,'']]],
-  ['long_5fu',['long_u',['../types_8h.html#ad8bab5fd29d506bdbcb023cdd4d3b32e',1,'types.h']]],
   ['longversion',['longVersion',['../globals_8h.html#affa69dca4fb1b33f5e8c3ca27f0f087d',1,'longVersion():&#160;version.c'],['../version_8c.html#affa69dca4fb1b33f5e8c3ca27f0f087d',1,'longVersion():&#160;version.c']]],
   ['lookfor_5fany',['LOOKFOR_ANY',['../indent__c_8c.html#a80c72cb0ff1406fc6c7af23fe2c06ae6',1,'indent_c.c']]],
   ['lookfor_5fcase',['LOOKFOR_CASE',['../indent__c_8c.html#aaf6ab358b42fa83314dd5065878a6c26',1,'indent_c.c']]],
