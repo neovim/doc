@@ -24,7 +24,6 @@ var searchData=
   ['errmsg',['errmsg',['../structexarg.html#ac0914c147d7728c439edc77c88b1099c',1,'exarg']]],
   ['errored',['errored',['../structChannelCallFrame.html#aa6da91330b585ef5bbf54c199d1cf781',1,'ChannelCallFrame']]],
   ['event',['event',['../structAutoPatCmd.html#a5b57f801dcf26ae979df8e63db32e31f',1,'AutoPatCmd']]],
-  ['evim_5fmode',['evim_mode',['../structmparm__T.html#a81db356897fbd8cdb0f854bd21fef344',1,'mparm_T']]],
   ['exception',['exception',['../structcleanup__stuff.html#a01ab8b7d3ce077d33535804542eb8adb',1,'cleanup_stuff']]],
   ['exit_5fcb',['exit_cb',['../structjob.html#abe6bc12ec790022113a50cc6a5bd2452',1,'job']]],
   ['expand',['expand',['../ex__docmd_8c.html#a4fd89930cfa1006f152d636b9a0c7ab9',1,'ex_docmd.c']]],

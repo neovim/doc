@@ -231,8 +231,6 @@ var searchData=
   ['event_5fvimresized',['EVENT_VIMRESIZED',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aa976d21fbdbbd651f32fda0a2babf3aa2',1,'fileio.h']]],
   ['event_5fwinenter',['EVENT_WINENTER',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aaa089b8087d076d72ce6ac23a7ad1cb3b',1,'fileio.h']]],
   ['event_5fwinleave',['EVENT_WINLEAVE',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aaf3161d0493b51575a3945cce089efafc',1,'fileio.h']]],
-  ['evim_5ffile',['EVIM_FILE',['../os__unix__defs_8h.html#a07c26ae6f3ba9799979edf036a53619e',1,'os_unix_defs.h']]],
-  ['evim_5fmode',['evim_mode',['../structmparm__T.html#a81db356897fbd8cdb0f854bd21fef344',1,'mparm_T']]],
   ['ew_5faddslash',['EW_ADDSLASH',['../path_8h.html#a4e1bfb7673109c5c7ac197d496f08b41',1,'path.h']]],
   ['ew_5fdir',['EW_DIR',['../path_8h.html#abe0224d3c1e7766623f8b9a1c3728b7d',1,'path.h']]],
   ['ew_5fexec',['EW_EXEC',['../path_8h.html#ad7df52712403033a595fa4d53cbbe8b1',1,'path.h']]],

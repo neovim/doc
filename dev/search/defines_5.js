@@ -68,7 +68,6 @@ var searchData=
   ['et_5finterrupt',['ET_INTERRUPT',['../ex__eval_8h.html#a4caceff12b4cf3308b4eb273ae9b82c4',1,'ex_eval.h']]],
   ['et_5fuser',['ET_USER',['../ex__eval_8h.html#a16ee87f07fa8ab3ebec2a25e2e401300',1,'ex_eval.h']]],
   ['event_5fpoll_5funtil',['event_poll_until',['../event_8h.html#a3a628da4a869f6b309b9cac999e62f00',1,'event.h']]],
-  ['evim_5ffile',['EVIM_FILE',['../os__unix__defs_8h.html#a07c26ae6f3ba9799979edf036a53619e',1,'os_unix_defs.h']]],
   ['ew_5faddslash',['EW_ADDSLASH',['../path_8h.html#a4e1bfb7673109c5c7ac197d496f08b41',1,'path.h']]],
   ['ew_5fdir',['EW_DIR',['../path_8h.html#abe0224d3c1e7766623f8b9a1c3728b7d',1,'path.h']]],
   ['ew_5fexec',['EW_EXEC',['../path_8h.html#ad7df52712403033a595fa4d53cbbe8b1',1,'path.h']]],
