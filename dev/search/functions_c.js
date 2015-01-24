@@ -2,7 +2,6 @@ var searchData=
 [
   ['main',['main',['../main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;main.c'],['../sjiscorr_8c.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;sjiscorr.c']]],
   ['main_5floop',['main_loop',['../main_8c.html#acb339d29f1748013074d16159e34c1d5',1,'main.c']]],
-  ['mainerr_5farg_5fmissing',['mainerr_arg_missing',['../main_8c.html#a8e389de0d3bc4590b3757fcd5c92a72d',1,'main.c']]],
   ['make_5ffilter_5fcmd',['make_filter_cmd',['../ex__cmds_8c.html#a91661d83fbdd72cac139ed87968831d4',1,'ex_cmds.c']]],
   ['make_5fsnapshot',['make_snapshot',['../window_8c.html#a0c511b861fea677cd8a7a3fd37d527d4',1,'window.c']]],
   ['make_5ftabpages',['make_tabpages',['../window_8c.html#a1c24c21d0f3b9a9a31975064d499b332',1,'window.c']]],
