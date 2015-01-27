@@ -235,7 +235,7 @@ var searchData=
   ['addr',['addr',['../structServer.html#a3a55959924ea0a6912d3fe6530c89a46',1,'Server::addr()'],['../structServer.html#ab6e364431e9ea5b60824ce8e79020d81',1,'Server::addr()'],['../structefm__S.html#af25df0937902ab8951fc01937fbfa479',1,'efm_S::addr()']]],
   ['addr_5fcount',['addr_count',['../structexarg.html#a6df745abf04de31377b3beb6282c29c6',1,'exarg']]],
   ['address_5fmax_5fsize',['ADDRESS_MAX_SIZE',['../server_8c.html#ae8b7400e2f7f9d2a73365ebe2b7f0935',1,'server.c']]],
-  ['addstar',['addstar',['../ex__getln_8c.html#ada0f88e2b53b4e72a88d3151865725b5',1,'ex_getln.c']]],
+  ['addstar',['addstar',['../ex__getln_8c.html#afdb3d74137af422c90c63d4b5c9c68ca',1,'ex_getln.c']]],
   ['adjust_5fcursor_5fcol',['adjust_cursor_col',['../cursor_8c.html#a71b7fc389176d29f92a112a4c457f1d3',1,'cursor.c']]],
   ['adjust_5fcursor_5feol',['adjust_cursor_eol',['../ops_8c.html#a2cc9206626a4aad7c186bf40d4b7993f',1,'ops.c']]],
   ['advance_5freginput',['ADVANCE_REGINPUT',['../regexp_8c.html#aaffcb5d87bf2e79f8e5947c8e3425d1d',1,'regexp.c']]],
