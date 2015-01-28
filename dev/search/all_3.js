@@ -26,6 +26,7 @@ var searchData=
   ['cause_5ferrthrow',['cause_errthrow',['../ex__eval_8c.html#a2d67f4c6119ad646c4ebb8a6ecc57cc1',1,'ex_eval.c']]],
   ['cb',['cb',['../structrstream.html#ac60fbd647f75d47cc0fa153b4c3e807c',1,'rstream::cb()'],['../structwstream.html#a478f5e424b3a48ff54955064de57b5b2',1,'wstream::cb()'],['../structwbuffer.html#a4a9884a48112c54a133e9934fc5f3655',1,'wbuffer::cb()']]],
   ['cb_5fflags',['cb_flags',['../option__defs_8h.html#a8f1aadd0ad3e7200b91cb68dfc859882',1,'option_defs.h']]],
+  ['cb_5flatest',['CB_LATEST',['../ops_8c.html#a370bbebd8b105ed99abb18c89d31d100',1,'ops.c']]],
   ['cb_5funnamed',['CB_UNNAMED',['../option__defs_8h.html#ae17edd4efe808f80dea3bb2224725456',1,'option_defs.h']]],
   ['cb_5funnamedmask',['CB_UNNAMEDMASK',['../ops_8c.html#a14ca760295c3809120120bdee5d048fe',1,'ops.c']]],
   ['cb_5funnamedplus',['CB_UNNAMEDPLUS',['../option__defs_8h.html#afcf1fa9be88d64aec3c89b785ca5f7f8',1,'option_defs.h']]],

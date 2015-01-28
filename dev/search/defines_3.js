@@ -4,6 +4,7 @@ var searchData=
   ['ca_5fno_5fadj_5fop_5fend',['CA_NO_ADJ_OP_END',['../normal_8h.html#a6076843766d3c1a6208c4d5cd619e6a2',1,'normal.h']]],
   ['car',['CAR',['../ascii_8h.html#a1ff500177d91664413d59db9f49ecbaf',1,'ascii.h']]],
   ['casembc',['CASEMBC',['../regexp_8c.html#aaa000dab5469360dd707c88d19528637',1,'regexp.c']]],
+  ['cb_5flatest',['CB_LATEST',['../ops_8c.html#a370bbebd8b105ed99abb18c89d31d100',1,'ops.c']]],
   ['cb_5funnamed',['CB_UNNAMED',['../option__defs_8h.html#ae17edd4efe808f80dea3bb2224725456',1,'option_defs.h']]],
   ['cb_5funnamedmask',['CB_UNNAMEDMASK',['../ops_8c.html#a14ca760295c3809120120bdee5d048fe',1,'ops.c']]],
   ['cb_5funnamedplus',['CB_UNNAMEDPLUS',['../option__defs_8h.html#afcf1fa9be88d64aec3c89b785ca5f7f8',1,'option_defs.h']]],
