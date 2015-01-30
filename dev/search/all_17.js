@@ -196,7 +196,7 @@ var searchData=
   ['wi_5foptset',['wi_optset',['../structwininfo__S.html#a5475038b9a4f535cc43e123cc9087b07',1,'wininfo_S']]],
   ['wi_5fprev',['wi_prev',['../structwininfo__S.html#a07351120390ec0eb7629bfc440c0d9b7',1,'wininfo_S']]],
   ['wi_5fwin',['wi_win',['../structwininfo__S.html#ac07c601107373406e15d1a54de2db7ba',1,'wininfo_S']]],
-  ['width',['width',['../structprt__mediasize__S.html#a80c67e9c0710fdf29d44cc29bfac0875',1,'prt_mediasize_S::width()'],['../structui__t.html#a8f33fdfd1262721bf757842411a89298',1,'ui_t::width()']]],
+  ['width',['width',['../structprt__mediasize__S.html#a9717207f662cba945bf4b99c1a1646be',1,'prt_mediasize_S::width()'],['../structui__t.html#a8f33fdfd1262721bf757842411a89298',1,'ui_t::width()']]],
   ['wild_5fadd_5fslash',['WILD_ADD_SLASH',['../ex__getln_8h.html#a01c19bb4197e1bf88dc3988ffd8b0233',1,'ex_getln.h']]],
   ['wild_5fall',['WILD_ALL',['../ex__getln_8h.html#af1adfbbdebbe2cd658c30526eba90ed8',1,'ex_getln.h']]],
   ['wild_5fall_5fkeep',['WILD_ALL_KEEP',['../ex__getln_8h.html#a7e888f1f1b21b11e41ad483537e304a1',1,'ex_getln.h']]],
