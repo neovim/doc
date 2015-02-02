@@ -46,6 +46,7 @@ var searchData=
   ['vim_5ffnamencmp',['vim_fnamencmp',['../path_8c.html#a4d1e35a7b2354a14f8a368244c26cb55',1,'path.c']]],
   ['vim_5ffullname',['vim_FullName',['../path_8c.html#a52fbff29815a2232d884304f4dce5fef',1,'path.c']]],
   ['vim_5fget_5fapi_5finfo',['vim_get_api_info',['../vim_8c.html#a211c43b8ff7c5e263cf4ee62074b09eb',1,'vim.c']]],
+  ['vim_5fget_5fcolor_5fmap',['vim_get_color_map',['../vim_8c.html#a5f801fcfc14145cb8e8adb5ad330ae31',1,'vim.c']]],
   ['vim_5fget_5fcurrent_5fbuffer',['vim_get_current_buffer',['../vim_8c.html#a87ffb09cb1843df8b3adbd11912a3ceb',1,'vim.c']]],
   ['vim_5fget_5fcurrent_5fline',['vim_get_current_line',['../vim_8c.html#a97096b481ab58da823af636e93aeeedf',1,'vim.c']]],
   ['vim_5fget_5fcurrent_5ftabpage',['vim_get_current_tabpage',['../vim_8c.html#a2b30e9bc64999f408beaf8c5e45ff870',1,'vim.c']]],

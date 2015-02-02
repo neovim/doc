@@ -8,6 +8,7 @@ var searchData=
   ['cmdline_5finfo',['cmdline_info',['../structcmdline__info.html',1,'']]],
   ['cmdmod_5ft',['cmdmod_T',['../structcmdmod__T.html',1,'']]],
   ['cmdname',['cmdname',['../structcmdname.html',1,'']]],
+  ['color_5fname_5ftable_5ft',['color_name_table_T',['../structcolor__name__table__T.html',1,'']]],
   ['compitem_5fs',['compitem_S',['../structcompitem__S.html',1,'']]],
   ['compl_5fs',['compl_S',['../structcompl__S.html',1,'']]],
   ['condstack',['condstack',['../structcondstack.html',1,'']]],
