@@ -177,6 +177,7 @@ var searchData=
   ['hlf_5fd',['HLF_D',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60aa10ca40aac6633144c2f10fbb3bc9451',1,'globals.h']]],
   ['hlf_5fded',['HLF_DED',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60aec26caf24af5ba33d6144a39398e2b18',1,'globals.h']]],
   ['hlf_5fe',['HLF_E',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60af020795535ec4b31fb1605eb8f457bbd',1,'globals.h']]],
+  ['hlf_5feob',['HLF_EOB',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a1a4a1564a0e360c781c6e062731a13cb',1,'globals.h']]],
   ['hlf_5ffc',['HLF_FC',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a2e17b7b736bb0c6d6f5711f6e22797ee',1,'globals.h']]],
   ['hlf_5ffl',['HLF_FL',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a55bce34a93fb5025ea66362f5f7e7c3f',1,'globals.h']]],
   ['hlf_5fi',['HLF_I',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a2c56ebb0f9051a87943f99a1e03251a3',1,'globals.h']]],
