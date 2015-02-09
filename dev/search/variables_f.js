@@ -184,7 +184,6 @@ var searchData=
   ['p_5ftbs',['p_tbs',['../option__defs_8h.html#ae1a3f3be49e4e1b9552c5539d56c682e',1,'option_defs.h']]],
   ['p_5ftenc',['p_tenc',['../option__defs_8h.html#a6876b7581e8661a0d261840f618d6778',1,'option_defs.h']]],
   ['p_5fterse',['p_terse',['../option__defs_8h.html#a29f02eb79388592568a67d37901c8c70',1,'option_defs.h']]],
-  ['p_5ftf',['p_tf',['../option__defs_8h.html#afda22d0463c8d372cb0436c64f11fdfd',1,'option_defs.h']]],
   ['p_5ftgst',['p_tgst',['../option__defs_8h.html#a04d3480a5f43d0a46629e6e6c43b1daf',1,'option_defs.h']]],
   ['p_5ftimeout',['p_timeout',['../option__defs_8h.html#a849e2ad1772d19e98764ee4838781d5d',1,'option_defs.h']]],
   ['p_5ftitle',['p_title',['../option__defs_8h.html#ab952df660bff80564dbb3e55d04557ee',1,'option_defs.h']]],
