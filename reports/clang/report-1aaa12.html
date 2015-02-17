@@ -1,0 +1,842 @@
+<!doctype html>
+<html>
+<head>
+<title>/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/tui/tui.c</title>
+<style type="text/css">
+ body { color:#000000; background-color:#ffffff }
+ body { font-family:Helvetica, sans-serif; font-size:10pt }
+ h1 { font-size:14pt }
+ .code { border-collapse:collapse; width:100%; }
+ .code { font-family: "Monospace", monospace; font-size:10pt }
+ .code { line-height: 1.2em }
+ .comment { color: green; font-style: oblique }
+ .keyword { color: blue }
+ .string_literal { color: red }
+ .directive { color: darkmagenta }
+ .expansion { display: none; }
+ .macro:hover .expansion { display: block; border: 2px solid #FF0000; padding: 2px; background-color:#FFF0F0; font-weight: normal;   -webkit-border-radius:5px;  -webkit-box-shadow:1px 1px 7px #000; position: absolute; top: -1em; left:10em; z-index: 1 } 
+ .macro { color: darkmagenta; background-color:LemonChiffon; position: relative }
+ .num { width:2.5em; padding-right:2ex; background-color:#eeeeee }
+ .num { text-align:right; font-size:8pt }
+ .num { color:#444444 }
+ .line { padding-left: 1ex; border-left: 3px solid #ccc }
+ .line { white-space: pre }
+ .msg { -webkit-box-shadow:1px 1px 7px #000 }
+ .msg { -webkit-border-radius:5px }
+ .msg { font-family:Helvetica, sans-serif; font-size:8pt }
+ .msg { float:left }
+ .msg { padding:0.25em 1ex 0.25em 1ex }
+ .msg { margin-top:10px; margin-bottom:10px }
+ .msg { font-weight:bold }
+ .msg { max-width:60em; word-wrap: break-word; white-space: pre-wrap }
+ .msgT { padding:0x; spacing:0x }
+ .msgEvent { background-color:#fff8b4; color:#000000 }
+ .msgControl { background-color:#bbbbbb; color:#000000 }
+ .mrange { background-color:#dfddf3 }
+ .mrange { border-bottom:1px solid #6F9DBE }
+ .PathIndex { font-weight: bold; padding:0px 5px; margin-right:5px; }
+ .PathIndex { -webkit-border-radius:8px }
+ .PathIndexEvent { background-color:#bfba87 }
+ .PathIndexControl { background-color:#8c8c8c }
+ .PathNav a { text-decoration:none; font-size: larger }
+ .CodeInsertionHint { font-weight: bold; background-color: #10dd10 }
+ .CodeRemovalHint { background-color:#de1010 }
+ .CodeRemovalHint { border-bottom:1px solid #6F9DBE }
+ table.simpletable {
+   padding: 5px;
+   font-size:12pt;
+   margin:20px;
+   border-collapse: collapse; border-spacing: 0px;
+ }
+ td.rowname {
+   text-align:right; font-weight:bold; color:#444444;
+   padding-right:2ex; }
+</style>
+</head>
+<body>
+<!-- BUGDESC Use of memory after it is freed -->
+
+<!-- BUGTYPE Use-after-free -->
+
+<!-- BUGCATEGORY Memory Error -->
+
+<!-- BUGFILE /home/travis/build/neovim/bot-ci/build/neovim/src/nvim/tui/tui.c -->
+
+<!-- FILENAME tui.c -->
+
+<!-- FUNCTIONNAME tui_stop -->
+
+<!-- BUGLINE 181 -->
+
+<!-- BUGCOLUMN 3 -->
+
+<!-- BUGPATHLENGTH 4 -->
+
+<!-- BUGMETAEND -->
+<!-- REPORTHEADER -->
+<h3>Bug Summary</h3>
+<table class="simpletable">
+<tr><td class="rowname">File:</td><td>tui/tui.c</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 181, column 3</a></td></tr>
+<tr><td class="rowname">Description:</td><td>Use of memory after it is freed</td></tr>
+</table>
+<!-- REPORTSUMMARYEXTRA -->
+<h3>Annotated Source Code</h3>
+<table class="code">
+<tr><td class="num" id="LN1">1</td><td class="line"><span class='directive'>#include &lt;assert.h&gt;</span></td></tr>
+<tr><td class="num" id="LN2">2</td><td class="line"><span class='directive'>#include &lt;stdbool.h&gt;</span></td></tr>
+<tr><td class="num" id="LN3">3</td><td class="line"><span class='directive'>#include &lt;stdio.h&gt;</span></td></tr>
+<tr><td class="num" id="LN4">4</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN5">5</td><td class="line"><span class='directive'>#include &lt;uv.h&gt;</span></td></tr>
+<tr><td class="num" id="LN6">6</td><td class="line"><span class='directive'>#include &lt;unibilium.h&gt;</span></td></tr>
+<tr><td class="num" id="LN7">7</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN8">8</td><td class="line"><span class='directive'>#include "nvim/lib/kvec.h"</span></td></tr>
+<tr><td class="num" id="LN9">9</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN10">10</td><td class="line"><span class='directive'>#include "nvim/vim.h"</span></td></tr>
+<tr><td class="num" id="LN11">11</td><td class="line"><span class='directive'>#include "nvim/ui.h"</span></td></tr>
+<tr><td class="num" id="LN12">12</td><td class="line"><span class='directive'>#include "nvim/map.h"</span></td></tr>
+<tr><td class="num" id="LN13">13</td><td class="line"><span class='directive'>#include "nvim/memory.h"</span></td></tr>
+<tr><td class="num" id="LN14">14</td><td class="line"><span class='directive'>#include "nvim/api/vim.h"</span></td></tr>
+<tr><td class="num" id="LN15">15</td><td class="line"><span class='directive'>#include "nvim/api/private/helpers.h"</span></td></tr>
+<tr><td class="num" id="LN16">16</td><td class="line"><span class='directive'>#include "nvim/os/event.h"</span></td></tr>
+<tr><td class="num" id="LN17">17</td><td class="line"><span class='directive'>#include "nvim/tui/tui.h"</span></td></tr>
+<tr><td class="num" id="LN18">18</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN19">19</td><td class="line"><span class='keyword'>typedef</span> <span class='keyword'>struct</span> term_input TermInput;</td></tr>
+<tr><td class="num" id="LN20">20</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN21">21</td><td class="line"><span class='directive'>#include "term_input.inl"</span></td></tr>
+<tr><td class="num" id="LN22">22</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN23">23</td><td class="line"><span class='keyword'>typedef</span> <span class='keyword'>struct</span> {</td></tr>
+<tr><td class="num" id="LN24">24</td><td class="line">  <span class='keyword'>int</span> top, bot, left, right;</td></tr>
+<tr><td class="num" id="LN25">25</td><td class="line">} Rect;</td></tr>
+<tr><td class="num" id="LN26">26</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN27">27</td><td class="line"><span class='keyword'>typedef</span> <span class='keyword'>struct</span> {</td></tr>
+<tr><td class="num" id="LN28">28</td><td class="line">  <span class='keyword'>char</span> data[7];</td></tr>
+<tr><td class="num" id="LN29">29</td><td class="line">  HlAttrs attrs;</td></tr>
+<tr><td class="num" id="LN30">30</td><td class="line">} Cell;</td></tr>
+<tr><td class="num" id="LN31">31</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN32">32</td><td class="line"><span class='keyword'>typedef</span> <span class='keyword'>struct</span> {</td></tr>
+<tr><td class="num" id="LN33">33</td><td class="line">  <span class='macro'>PMap(cstr_t)<span class='expansion'>Map_cstr_t_ptr_t</span></span> *option_cache;</td></tr>
+<tr><td class="num" id="LN34">34</td><td class="line">  unibi_var_t params[9];</td></tr>
+<tr><td class="num" id="LN35">35</td><td class="line">  <span class='keyword'>char</span> buf[0xffff];</td></tr>
+<tr><td class="num" id="LN36">36</td><td class="line">  size_t bufpos;</td></tr>
+<tr><td class="num" id="LN37">37</td><td class="line">  TermInput *input;</td></tr>
+<tr><td class="num" id="LN38">38</td><td class="line">  uv_loop_t *write_loop;</td></tr>
+<tr><td class="num" id="LN39">39</td><td class="line">  unibi_term *ut;</td></tr>
+<tr><td class="num" id="LN40">40</td><td class="line">  uv_tty_t output_handle;</td></tr>
+<tr><td class="num" id="LN41">41</td><td class="line">  uv_signal_t winch_handle;</td></tr>
+<tr><td class="num" id="LN42">42</td><td class="line">  Rect scroll_region;</td></tr>
+<tr><td class="num" id="LN43">43</td><td class="line">  <span class='macro'>kvec_t(Rect)<span class='expansion'>struct { size_t size, capacity; Rect *items; }</span></span> invalid_regions;</td></tr>
+<tr><td class="num" id="LN44">44</td><td class="line">  <span class='keyword'>int</span> row, col;</td></tr>
+<tr><td class="num" id="LN45">45</td><td class="line">  <span class='keyword'>int</span> bg, fg;</td></tr>
+<tr><td class="num" id="LN46">46</td><td class="line">  <span class='keyword'>int</span> out_fd;</td></tr>
+<tr><td class="num" id="LN47">47</td><td class="line">  <span class='keyword'>int</span> old_height;</td></tr>
+<tr><td class="num" id="LN48">48</td><td class="line">  <span class='macro'>bool<span class='expansion'>_Bool</span></span> can_use_terminal_scroll;</td></tr>
+<tr><td class="num" id="LN49">49</td><td class="line">  HlAttrs attrs, print_attrs;</td></tr>
+<tr><td class="num" id="LN50">50</td><td class="line">  Cell **screen;</td></tr>
+<tr><td class="num" id="LN51">51</td><td class="line">  <span class='keyword'>struct</span> {</td></tr>
+<tr><td class="num" id="LN52">52</td><td class="line">    size_t enable_mouse, disable_mouse;</td></tr>
+<tr><td class="num" id="LN53">53</td><td class="line">  } unibi_ext;</td></tr>
+<tr><td class="num" id="LN54">54</td><td class="line">} TUIData;</td></tr>
+<tr><td class="num" id="LN55">55</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN56">56</td><td class="line"><span class='directive'>#ifdef <span class='macro'>INCLUDE_GENERATED_DECLARATIONS<span class='expansion'>1</span></span></span></td></tr>
+<tr><td class="num" id="LN57">57</td><td class="line"><span class='directive'># include "tui/tui.c.generated.h"</span></td></tr>
+<tr><td class="num" id="LN58">58</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN59">59</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN60">60</td><td class="line"><span class='directive'>#define <span class='macro'>EMPTY_ATTRS<span class='expansion'>((HlAttrs){0, 0, 0, 0, 0, -1, -1})</span></span> ((HlAttrs){<span class='macro'>false<span class='expansion'>0</span></span>, <span class='macro'>false<span class='expansion'>0</span></span>, <span class='macro'>false<span class='expansion'>0</span></span>, <span class='macro'>false<span class='expansion'>0</span></span>, <span class='macro'>false<span class='expansion'>0</span></span>, -1, -1})</span></td></tr>
+<tr><td class="num" id="LN61">61</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN62">62</td><td class="line"><span class='directive'>#define <span class='macro'>FOREACH_CELL(ui, top, bot, left, right, go, code)<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (go) { unibi_goto<br>(ui, row, left); } for (int col = left; col &lt;= right; ++col<br>) { Cell *cell = cells + col; (void)(cell); code; } } } while<br> (0)</span></span>               \</span></td></tr>
+<tr><td class="num" id="LN63">63</td><td class="line">  <span class='directive'>do {                                                                  \</span></td></tr>
+<tr><td class="num" id="LN64">64</td><td class="line">    <span class='directive'>TUIData *data = ui-&gt;data;                                           \</span></td></tr>
+<tr><td class="num" id="LN65">65</td><td class="line">    <span class='directive'>for (int row = top; row &lt;= bot; ++row) {                            \</span></td></tr>
+<tr><td class="num" id="LN66">66</td><td class="line">      <span class='directive'>Cell *cells = data-&gt;screen[row];                                  \</span></td></tr>
+<tr><td class="num" id="LN67">67</td><td class="line">      <span class='directive'>if (go) {                                                         \</span></td></tr>
+<tr><td class="num" id="LN68">68</td><td class="line">        <span class='directive'>unibi_goto(ui, row, left);                                      \</span></td></tr>
+<tr><td class="num" id="LN69">69</td><td class="line">      <span class='directive'>}                                                                 \</span></td></tr>
+<tr><td class="num" id="LN70">70</td><td class="line">      <span class='directive'>for (int col = left; col &lt;= right; ++col) {                       \</span></td></tr>
+<tr><td class="num" id="LN71">71</td><td class="line">        <span class='directive'>Cell *cell = cells + col;                                       \</span></td></tr>
+<tr><td class="num" id="LN72">72</td><td class="line">        <span class='directive'>(void)(cell);                                                   \</span></td></tr>
+<tr><td class="num" id="LN73">73</td><td class="line">        <span class='directive'>code;                                                           \</span></td></tr>
+<tr><td class="num" id="LN74">74</td><td class="line">      <span class='directive'>}                                                                 \</span></td></tr>
+<tr><td class="num" id="LN75">75</td><td class="line">    <span class='directive'>}                                                                   \</span></td></tr>
+<tr><td class="num" id="LN76">76</td><td class="line">  <span class='directive'>} while (0)</span></td></tr>
+<tr><td class="num" id="LN77">77</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN78">78</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN79">79</td><td class="line"><span class='keyword'>void</span> tui_start(<span class='keyword'>void</span>)</td></tr>
+<tr><td class="num" id="LN80">80</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN81">81</td><td class="line">  TUIData *data = xcalloc(1, <span class='keyword'>sizeof</span>(TUIData));</td></tr>
+<tr><td class="num" id="LN82">82</td><td class="line">  UI *ui = xcalloc(1, <span class='keyword'>sizeof</span>(UI));</td></tr>
+<tr><td class="num" id="LN83">83</td><td class="line">  ui-&gt;data = data;</td></tr>
+<tr><td class="num" id="LN84">84</td><td class="line">  data-&gt;attrs = data-&gt;print_attrs = <span class='macro'>EMPTY_ATTRS<span class='expansion'>((HlAttrs){0, 0, 0, 0, 0, -1, -1})</span></span>;</td></tr>
+<tr><td class="num" id="LN85">85</td><td class="line">  data-&gt;fg = data-&gt;bg = -1;</td></tr>
+<tr><td class="num" id="LN86">86</td><td class="line">  data-&gt;can_use_terminal_scroll = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN87">87</td><td class="line">  data-&gt;bufpos = 0;</td></tr>
+<tr><td class="num" id="LN88">88</td><td class="line">  data-&gt;option_cache = <span class='macro'>pmap_new(cstr_t)<span class='expansion'>map_cstr_t_ptr_t_new</span></span>();</td></tr>
+<tr><td class="num" id="LN89">89</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN90">90</td><td class="line">  <span class='comment'>// write output to stderr if stdout is not a tty</span></td></tr>
+<tr><td class="num" id="LN91">91</td><td class="line">  data-&gt;out_fd = os_isatty(1) ? 1 : (os_isatty(2) ? 2 : 1);</td></tr>
+<tr><td class="num" id="LN92">92</td><td class="line">  <span class='macro'>kv_init(data-&gt;invalid_regions)<span class='expansion'>((data-&gt;invalid_regions).size = (data-&gt;invalid_regions)<br>.capacity = 0, (data-&gt;invalid_regions).items = 0)</span></span>;</td></tr>
+<tr><td class="num" id="LN93">93</td><td class="line">  <span class='comment'>// setup term input</span></td></tr>
+<tr><td class="num" id="LN94">94</td><td class="line">  data-&gt;input = term_input_new();</td></tr>
+<tr><td class="num" id="LN95">95</td><td class="line">  <span class='comment'>// setup unibilium</span></td></tr>
+<tr><td class="num" id="LN96">96</td><td class="line">  data-&gt;ut = unibi_from_env();</td></tr>
+<tr><td class="num" id="LN97">97</td><td class="line">  <span class='keyword'>if</span> (!data-&gt;ut) {</td></tr>
+<tr><td class="num" id="LN98">98</td><td class="line">    <span class='comment'>// For some reason could not read terminfo file, use a dummy entry that</span></td></tr>
+<tr><td class="num" id="LN99">99</td><td class="line">    <span class='comment'>// will be populated with common values by fix_terminfo below</span></td></tr>
+<tr><td class="num" id="LN100">100</td><td class="line">    data-&gt;ut = unibi_dummy();</td></tr>
+<tr><td class="num" id="LN101">101</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN102">102</td><td class="line">  fix_terminfo(data);</td></tr>
+<tr><td class="num" id="LN103">103</td><td class="line">  <span class='comment'>// Enter alternate screen and clear</span></td></tr>
+<tr><td class="num" id="LN104">104</td><td class="line">  unibi_out(ui, unibi_enter_ca_mode, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN105">105</td><td class="line">  unibi_out(ui, unibi_clear_screen, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN106">106</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN107">107</td><td class="line">  <span class='comment'>// setup output handle in a separate event loop(we wanna do synchronous</span></td></tr>
+<tr><td class="num" id="LN108">108</td><td class="line">  <span class='comment'>// write to the tty)</span></td></tr>
+<tr><td class="num" id="LN109">109</td><td class="line">  data-&gt;write_loop = xmalloc(<span class='keyword'>sizeof</span>(uv_loop_t));</td></tr>
+<tr><td class="num" id="LN110">110</td><td class="line">  uv_loop_init(data-&gt;write_loop);</td></tr>
+<tr><td class="num" id="LN111">111</td><td class="line">  uv_tty_init(data-&gt;write_loop, &amp;data-&gt;output_handle, data-&gt;out_fd, 0);</td></tr>
+<tr><td class="num" id="LN112">112</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN113">113</td><td class="line">  <span class='comment'>// Obtain screen dimensions</span></td></tr>
+<tr><td class="num" id="LN114">114</td><td class="line">  update_size(ui);</td></tr>
+<tr><td class="num" id="LN115">115</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN116">116</td><td class="line">  <span class='comment'>// listen for SIGWINCH</span></td></tr>
+<tr><td class="num" id="LN117">117</td><td class="line">  uv_signal_init(uv_default_loop(), &amp;data-&gt;winch_handle);</td></tr>
+<tr><td class="num" id="LN118">118</td><td class="line">  uv_signal_start(&amp;data-&gt;winch_handle, sigwinch_cb, <span class='macro'>SIGWINCH<span class='expansion'>28</span></span>);</td></tr>
+<tr><td class="num" id="LN119">119</td><td class="line">  data-&gt;winch_handle.data = ui;</td></tr>
+<tr><td class="num" id="LN120">120</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN121">121</td><td class="line">  ui-&gt;stop = tui_stop;</td></tr>
+<tr><td class="num" id="LN122">122</td><td class="line">  ui-&gt;rgb = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN123">123</td><td class="line">  ui-&gt;data = data;</td></tr>
+<tr><td class="num" id="LN124">124</td><td class="line">  ui-&gt;resize = tui_resize;</td></tr>
+<tr><td class="num" id="LN125">125</td><td class="line">  ui-&gt;clear = tui_clear;</td></tr>
+<tr><td class="num" id="LN126">126</td><td class="line">  ui-&gt;eol_clear = tui_eol_clear;</td></tr>
+<tr><td class="num" id="LN127">127</td><td class="line">  ui-&gt;cursor_goto = tui_cursor_goto;</td></tr>
+<tr><td class="num" id="LN128">128</td><td class="line">  ui-&gt;cursor_on = tui_cursor_on;</td></tr>
+<tr><td class="num" id="LN129">129</td><td class="line">  ui-&gt;cursor_off = tui_cursor_off;</td></tr>
+<tr><td class="num" id="LN130">130</td><td class="line">  ui-&gt;mouse_on = tui_mouse_on;</td></tr>
+<tr><td class="num" id="LN131">131</td><td class="line">  ui-&gt;mouse_off = tui_mouse_off;</td></tr>
+<tr><td class="num" id="LN132">132</td><td class="line">  ui-&gt;insert_mode = tui_insert_mode;</td></tr>
+<tr><td class="num" id="LN133">133</td><td class="line">  ui-&gt;normal_mode = tui_normal_mode;</td></tr>
+<tr><td class="num" id="LN134">134</td><td class="line">  ui-&gt;set_scroll_region = tui_set_scroll_region;</td></tr>
+<tr><td class="num" id="LN135">135</td><td class="line">  ui-&gt;scroll = tui_scroll;</td></tr>
+<tr><td class="num" id="LN136">136</td><td class="line">  ui-&gt;highlight_set = tui_highlight_set;</td></tr>
+<tr><td class="num" id="LN137">137</td><td class="line">  ui-&gt;put = tui_put;</td></tr>
+<tr><td class="num" id="LN138">138</td><td class="line">  ui-&gt;bell = tui_bell;</td></tr>
+<tr><td class="num" id="LN139">139</td><td class="line">  ui-&gt;visual_bell = tui_visual_bell;</td></tr>
+<tr><td class="num" id="LN140">140</td><td class="line">  ui-&gt;update_fg = tui_update_fg;</td></tr>
+<tr><td class="num" id="LN141">141</td><td class="line">  ui-&gt;update_bg = tui_update_bg;</td></tr>
+<tr><td class="num" id="LN142">142</td><td class="line">  ui-&gt;flush = tui_flush;</td></tr>
+<tr><td class="num" id="LN143">143</td><td class="line">  ui-&gt;suspend = tui_suspend;</td></tr>
+<tr><td class="num" id="LN144">144</td><td class="line">  ui-&gt;set_title = tui_set_title;</td></tr>
+<tr><td class="num" id="LN145">145</td><td class="line">  ui-&gt;set_icon = tui_set_icon;</td></tr>
+<tr><td class="num" id="LN146">146</td><td class="line">  <span class='comment'>// Attach</span></td></tr>
+<tr><td class="num" id="LN147">147</td><td class="line">  ui_attach(ui);</td></tr>
+<tr><td class="num" id="LN148">148</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN149">149</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN150">150</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_stop(UI *ui)</td></tr>
+<tr><td class="num" id="LN151">151</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN152">152</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN153">153</td><td class="line">  <span class='comment'>// Destroy common stuff</span></td></tr>
+<tr><td class="num" id="LN154">154</td><td class="line">  <span class='macro'>kv_destroy(data-&gt;invalid_regions)<span class='expansion'>free((data-&gt;invalid_regions).items)</span></span>;</td></tr>
+<tr><td class="num" id="LN155">155</td><td class="line">  uv_signal_stop(&amp;data-&gt;winch_handle);</td></tr>
+<tr><td class="num" id="LN156">156</td><td class="line">  uv_close((uv_handle_t *)&amp;data-&gt;winch_handle, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN157">157</td><td class="line">  <span class='comment'>// Destroy input stuff</span></td></tr>
+<tr><td class="num" id="LN158">158</td><td class="line">  term_input_destroy(data-&gt;input);</td></tr>
+<tr><td class="num" id="LN159">159</td><td class="line">  <span class='comment'>// Destroy output stuff</span></td></tr>
+<tr><td class="num" id="LN160">160</td><td class="line">  tui_normal_mode(ui);</td></tr>
+<tr><td class="num" id="LN161">161</td><td class="line">  tui_mouse_off(ui);</td></tr>
+<tr><td class="num" id="LN162">162</td><td class="line">  unibi_out(ui, unibi_exit_attribute_mode, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN163">163</td><td class="line">  unibi_out(ui, unibi_cursor_normal, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN164">164</td><td class="line">  unibi_out(ui, unibi_exit_ca_mode, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN165">165</td><td class="line">  flush_buf(ui);</td></tr>
+<tr><td class="num" id="LN166">166</td><td class="line">  uv_close((uv_handle_t *)&amp;data-&gt;output_handle, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN167">167</td><td class="line">  uv_run(data-&gt;write_loop, UV_RUN_DEFAULT);</td></tr>
+<tr><td class="num" id="LN168">168</td><td class="line">  <span class='keyword'>if</span> (uv_loop_close(data-&gt;write_loop)) {</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path2" class="msg msgControl" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexControl">2</div></td><td><div class="PathNav"><a href="#Path1" title="Previous event (1)">&#x2190;</a></div></td></td><td>Taking false branch</td><td><div class="PathNav"><a href="#Path3" title="Next event (3)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN169">169</td><td class="line">    abort();</td></tr>
+<tr><td class="num" id="LN170">170</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN171">171</td><td class="line">  free(data-&gt;write_loop);</td></tr>
+<tr><td class="num" id="LN172">172</td><td class="line">  unibi_destroy(data-&gt;ut);</td></tr>
+<tr><td class="num" id="LN173">173</td><td class="line">  <span class='keyword'>char</span> *opt_value;</td></tr>
+<tr><td class="num" id="LN174">174</td><td class="line">  <span class='macro'>map_foreach_value(data-&gt;option_cache, opt_value, {<span class='expansion'>{ khint_t __i; for (__i = (khint_t)(0); __i != ((data-&gt;option_cache<br>-&gt;table)-&gt;n_buckets); ++__i) { if (!(!(((data-&gt;option_cache<br>-&gt;table)-&gt;flags[(__i)&gt;&gt;4]&gt;&gt;(((__i)&amp;0xfU<br>)&lt;&lt;1))&amp;3))) continue; (opt_value) = ((data-&gt;option_cache<br>-&gt;table)-&gt;vals[__i]); { free(opt_value); }; } }</span></span></td></tr>
+<tr><td class="num" id="LN175">175</td><td class="line">    <span class='macro'>free(opt_value);<span class='expansion'>{ khint_t __i; for (__i = (khint_t)(0); __i != ((data-&gt;option_cache<br>-&gt;table)-&gt;n_buckets); ++__i) { if (!(!(((data-&gt;option_cache<br>-&gt;table)-&gt;flags[(__i)&gt;&gt;4]&gt;&gt;(((__i)&amp;0xfU<br>)&lt;&lt;1))&amp;3))) continue; (opt_value) = ((data-&gt;option_cache<br>-&gt;table)-&gt;vals[__i]); { free(opt_value); }; } }</span></span></td></tr>
+<tr><td class="num" id="LN176">176</td><td class="line">  <span class='macro'>})<span class='expansion'>{ khint_t __i; for (__i = (khint_t)(0); __i != ((data-&gt;option_cache<br>-&gt;table)-&gt;n_buckets); ++__i) { if (!(!(((data-&gt;option_cache<br>-&gt;table)-&gt;flags[(__i)&gt;&gt;4]&gt;&gt;(((__i)&amp;0xfU<br>)&lt;&lt;1))&amp;3))) continue; (opt_value) = ((data-&gt;option_cache<br>-&gt;table)-&gt;vals[__i]); { free(opt_value); }; } }</span></span>;</td></tr>
+<tr><td class="num" id="LN177">177</td><td class="line">  <span class='macro'>pmap_free(cstr_t)<span class='expansion'>map_cstr_t_ptr_t_free</span></span>(data-&gt;option_cache);</td></tr>
+<tr><td class="num" id="LN178">178</td><td class="line">  destroy_screen(data);</td></tr>
+<tr><td class="num" id="LN179">179</td><td class="line">  free(data);</td></tr>
+<tr><td class="num" id="LN180">180</td><td class="line">  <span class="mrange">free(ui)</span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path3" class="msg msgEvent" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">3</div></td><td><div class="PathNav"><a href="#Path2" title="Previous event (2)">&#x2190;</a></div></td></td><td>Memory is released</td><td><div class="PathNav"><a href="#EndPath" title="Next event (4)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN181">181</td><td class="line">  ui_detach(<span class="mrange">ui</span>);</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">4</div></td><td><div class="PathNav"><a href="#Path3" title="Previous event (3)">&#x2190;</a></div></td></td><td>Use of memory after it is freed</td></tr></table></div></td></tr>
+<tr><td class="num" id="LN182">182</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN183">183</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN184">184</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> try_resize(Event ev)</td></tr>
+<tr><td class="num" id="LN185">185</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN186">186</td><td class="line">  UI *ui = ev.data;</td></tr>
+<tr><td class="num" id="LN187">187</td><td class="line">  update_size(ui);</td></tr>
+<tr><td class="num" id="LN188">188</td><td class="line">  ui_refresh();</td></tr>
+<tr><td class="num" id="LN189">189</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN190">190</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN191">191</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> sigwinch_cb(uv_signal_t *handle, <span class='keyword'>int</span> signum)</td></tr>
+<tr><td class="num" id="LN192">192</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN193">193</td><td class="line">  <span class='comment'>// Queue the event because resizing can result in recursive event_poll calls</span></td></tr>
+<tr><td class="num" id="LN194">194</td><td class="line">  event_push((Event) {</td></tr>
+<tr><td class="num" id="LN195">195</td><td class="line">    .data = handle-&gt;data,</td></tr>
+<tr><td class="num" id="LN196">196</td><td class="line">    .handler = try_resize</td></tr>
+<tr><td class="num" id="LN197">197</td><td class="line">  }, <span class='macro'>false<span class='expansion'>0</span></span>);</td></tr>
+<tr><td class="num" id="LN198">198</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN199">199</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN200">200</td><td class="line"><span class='keyword'>static</span> <span class='macro'>bool<span class='expansion'>_Bool</span></span> attrs_differ(HlAttrs a1, HlAttrs a2)</td></tr>
+<tr><td class="num" id="LN201">201</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN202">202</td><td class="line">  <span class='keyword'>return</span> a1.foreground != a2.foreground || a1.background != a2.background</td></tr>
+<tr><td class="num" id="LN203">203</td><td class="line">    || a1.bold != a2.bold || a1.italic != a2.italic</td></tr>
+<tr><td class="num" id="LN204">204</td><td class="line">    || a1.undercurl != a2.undercurl || a1.underline != a2.underline</td></tr>
+<tr><td class="num" id="LN205">205</td><td class="line">    || a1.reverse != a2.reverse;</td></tr>
+<tr><td class="num" id="LN206">206</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN207">207</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN208">208</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> update_attrs(UI *ui, HlAttrs attrs)</td></tr>
+<tr><td class="num" id="LN209">209</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN210">210</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN211">211</td><td class="line">  unibi_out(ui, unibi_exit_attribute_mode, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN212">212</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN213">213</td><td class="line">  data-&gt;params[0].i = attrs.foreground != -1 ? attrs.foreground : data-&gt;fg;</td></tr>
+<tr><td class="num" id="LN214">214</td><td class="line">  <span class='keyword'>if</span> (data-&gt;params[0].i != -1) {</td></tr>
+<tr><td class="num" id="LN215">215</td><td class="line">    unibi_out(ui, unibi_set_a_foreground, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN216">216</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN217">217</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN218">218</td><td class="line">  data-&gt;params[0].i = attrs.background != -1 ? attrs.background : data-&gt;bg;</td></tr>
+<tr><td class="num" id="LN219">219</td><td class="line">  <span class='keyword'>if</span> (data-&gt;params[0].i != -1) {</td></tr>
+<tr><td class="num" id="LN220">220</td><td class="line">    unibi_out(ui, unibi_set_a_background, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN221">221</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN222">222</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN223">223</td><td class="line">  <span class='keyword'>if</span> (attrs.bold) {</td></tr>
+<tr><td class="num" id="LN224">224</td><td class="line">    unibi_out(ui, unibi_enter_bold_mode, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN225">225</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN226">226</td><td class="line">  <span class='keyword'>if</span> (attrs.italic) {</td></tr>
+<tr><td class="num" id="LN227">227</td><td class="line">    unibi_out(ui, unibi_enter_italics_mode, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN228">228</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN229">229</td><td class="line">  <span class='keyword'>if</span> (attrs.underline) {</td></tr>
+<tr><td class="num" id="LN230">230</td><td class="line">    unibi_out(ui, unibi_enter_underline_mode, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN231">231</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN232">232</td><td class="line">  <span class='keyword'>if</span> (attrs.reverse) {</td></tr>
+<tr><td class="num" id="LN233">233</td><td class="line">    unibi_out(ui, unibi_enter_reverse_mode, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN234">234</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN235">235</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN236">236</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN237">237</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> print_cell(UI *ui, Cell *ptr)</td></tr>
+<tr><td class="num" id="LN238">238</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN239">239</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN240">240</td><td class="line">  <span class='keyword'>if</span> (attrs_differ(ptr-&gt;attrs, data-&gt;print_attrs)) {</td></tr>
+<tr><td class="num" id="LN241">241</td><td class="line">    update_attrs(ui, ptr-&gt;attrs);</td></tr>
+<tr><td class="num" id="LN242">242</td><td class="line">    data-&gt;print_attrs = ptr-&gt;attrs;</td></tr>
+<tr><td class="num" id="LN243">243</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN244">244</td><td class="line">  out(ui, ptr-&gt;data);</td></tr>
+<tr><td class="num" id="LN245">245</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN246">246</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN247">247</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> clear_region(UI *ui, <span class='keyword'>int</span> top, <span class='keyword'>int</span> bot, <span class='keyword'>int</span> left, <span class='keyword'>int</span> right,</td></tr>
+<tr><td class="num" id="LN248">248</td><td class="line">    <span class='macro'>bool<span class='expansion'>_Bool</span></span> refresh)</td></tr>
+<tr><td class="num" id="LN249">249</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN250">250</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN251">251</td><td class="line">  HlAttrs clear_attrs = <span class='macro'>EMPTY_ATTRS<span class='expansion'>((HlAttrs){0, 0, 0, 0, 0, -1, -1})</span></span>;</td></tr>
+<tr><td class="num" id="LN252">252</td><td class="line">  clear_attrs.foreground = data-&gt;fg;</td></tr>
+<tr><td class="num" id="LN253">253</td><td class="line">  clear_attrs.background = data-&gt;bg;</td></tr>
+<tr><td class="num" id="LN254">254</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN255">255</td><td class="line">  <span class='macro'>bool<span class='expansion'>_Bool</span></span> cleared = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN256">256</td><td class="line">  <span class='keyword'>if</span> (refresh &amp;&amp; data-&gt;bg == -1 &amp;&amp; right == ui-&gt;width -1) {</td></tr>
+<tr><td class="num" id="LN257">257</td><td class="line">    <span class='comment'>// Background is set to the default color and the right edge matches the</span></td></tr>
+<tr><td class="num" id="LN258">258</td><td class="line">    <span class='comment'>// screen end, try to use terminal codes for clearing the requested area.</span></td></tr>
+<tr><td class="num" id="LN259">259</td><td class="line">    <span class='keyword'>if</span> (left == 0) {</td></tr>
+<tr><td class="num" id="LN260">260</td><td class="line">      <span class='keyword'>if</span> (bot == ui-&gt;height - 1) {</td></tr>
+<tr><td class="num" id="LN261">261</td><td class="line">        <span class='keyword'>if</span> (top == 0) {</td></tr>
+<tr><td class="num" id="LN262">262</td><td class="line">          unibi_out(ui, unibi_clear_screen, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN263">263</td><td class="line">        } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN264">264</td><td class="line">          unibi_goto(ui, top, 0);</td></tr>
+<tr><td class="num" id="LN265">265</td><td class="line">          unibi_out(ui, unibi_clr_eos, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN266">266</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN267">267</td><td class="line">        cleared = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN268">268</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN269">269</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN270">270</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN271">271</td><td class="line">    <span class='keyword'>if</span> (!cleared) {</td></tr>
+<tr><td class="num" id="LN272">272</td><td class="line">      <span class='comment'>// iterate through each line and clear with clr_eol</span></td></tr>
+<tr><td class="num" id="LN273">273</td><td class="line">      <span class='keyword'>for</span> (<span class='keyword'>int</span> row = top; row &lt;= bot; ++row) {</td></tr>
+<tr><td class="num" id="LN274">274</td><td class="line">        unibi_goto(ui, row, left);</td></tr>
+<tr><td class="num" id="LN275">275</td><td class="line">        unibi_out(ui, unibi_clr_eol, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN276">276</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN277">277</td><td class="line">      cleared = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN278">278</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN279">279</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN280">280</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN281">281</td><td class="line">  <span class='macro'>bool<span class='expansion'>_Bool</span></span> clear = refresh &amp;&amp; !cleared;</td></tr>
+<tr><td class="num" id="LN282">282</td><td class="line">  <span class='macro'>FOREACH_CELL(ui, top, bot, left, right, clear, {<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (clear)<br> { unibi_goto(ui, row, left); } for (int col = left; col &lt;=<br> right; ++col) { Cell *cell = cells + col; (void)(cell); { cell<br>-&gt;data[0] = ' '; cell-&gt;data[1] = 0; cell-&gt;attrs = clear_attrs<br>; if (clear) { print_cell(ui, cell); } }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN283">283</td><td class="line">    <span class='macro'>cell-&gt;data[0] = ' ';<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (clear)<br> { unibi_goto(ui, row, left); } for (int col = left; col &lt;=<br> right; ++col) { Cell *cell = cells + col; (void)(cell); { cell<br>-&gt;data[0] = ' '; cell-&gt;data[1] = 0; cell-&gt;attrs = clear_attrs<br>; if (clear) { print_cell(ui, cell); } }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN284">284</td><td class="line">    <span class='macro'>cell-&gt;data[1] = 0;<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (clear)<br> { unibi_goto(ui, row, left); } for (int col = left; col &lt;=<br> right; ++col) { Cell *cell = cells + col; (void)(cell); { cell<br>-&gt;data[0] = ' '; cell-&gt;data[1] = 0; cell-&gt;attrs = clear_attrs<br>; if (clear) { print_cell(ui, cell); } }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN285">285</td><td class="line">    <span class='macro'>cell-&gt;attrs = clear_attrs;<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (clear)<br> { unibi_goto(ui, row, left); } for (int col = left; col &lt;=<br> right; ++col) { Cell *cell = cells + col; (void)(cell); { cell<br>-&gt;data[0] = ' '; cell-&gt;data[1] = 0; cell-&gt;attrs = clear_attrs<br>; if (clear) { print_cell(ui, cell); } }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN286">286</td><td class="line">    <span class='keyword'><span class='macro'>if</span> (clear) {<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (clear)<br> { unibi_goto(ui, row, left); } for (int col = left; col &lt;=<br> right; ++col) { Cell *cell = cells + col; (void)(cell); { cell<br>-&gt;data[0] = ' '; cell-&gt;data[1] = 0; cell-&gt;attrs = clear_attrs<br>; if (clear) { print_cell(ui, cell); } }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN287">287</td><td class="line">      <span class='macro'>print_cell(ui, cell);<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (clear)<br> { unibi_goto(ui, row, left); } for (int col = left; col &lt;=<br> right; ++col) { Cell *cell = cells + col; (void)(cell); { cell<br>-&gt;data[0] = ' '; cell-&gt;data[1] = 0; cell-&gt;attrs = clear_attrs<br>; if (clear) { print_cell(ui, cell); } }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN288">288</td><td class="line">    <span class='macro'>}<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (clear)<br> { unibi_goto(ui, row, left); } for (int col = left; col &lt;=<br> right; ++col) { Cell *cell = cells + col; (void)(cell); { cell<br>-&gt;data[0] = ' '; cell-&gt;data[1] = 0; cell-&gt;attrs = clear_attrs<br>; if (clear) { print_cell(ui, cell); } }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN289">289</td><td class="line">  <span class='macro'>})<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = top; row &lt;=<br> bot; ++row) { Cell *cells = data-&gt;screen[row]; if (clear)<br> { unibi_goto(ui, row, left); } for (int col = left; col &lt;=<br> right; ++col) { Cell *cell = cells + col; (void)(cell); { cell<br>-&gt;data[0] = ' '; cell-&gt;data[1] = 0; cell-&gt;attrs = clear_attrs<br>; if (clear) { print_cell(ui, cell); } }; } } } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN290">290</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN291">291</td><td class="line">  <span class='comment'>// restore cursor</span></td></tr>
+<tr><td class="num" id="LN292">292</td><td class="line">  unibi_goto(ui, data-&gt;row, data-&gt;col);</td></tr>
+<tr><td class="num" id="LN293">293</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN294">294</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN295">295</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_resize(UI *ui, <span class='keyword'>int</span> width, <span class='keyword'>int</span> height)</td></tr>
+<tr><td class="num" id="LN296">296</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN297">297</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN298">298</td><td class="line">  destroy_screen(data);</td></tr>
+<tr><td class="num" id="LN299">299</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN300">300</td><td class="line">  data-&gt;screen = xmalloc((size_t)height * <span class='keyword'>sizeof</span>(Cell *));</td></tr>
+<tr><td class="num" id="LN301">301</td><td class="line">  <span class='keyword'>for</span> (<span class='keyword'>int</span> i = 0; i &lt; height; i++) {</td></tr>
+<tr><td class="num" id="LN302">302</td><td class="line">    data-&gt;screen[i] = xcalloc((size_t)width, <span class='keyword'>sizeof</span>(Cell));</td></tr>
+<tr><td class="num" id="LN303">303</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN304">304</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN305">305</td><td class="line">  data-&gt;old_height = height;</td></tr>
+<tr><td class="num" id="LN306">306</td><td class="line">  data-&gt;scroll_region.top = 0;</td></tr>
+<tr><td class="num" id="LN307">307</td><td class="line">  data-&gt;scroll_region.bot = height - 1;</td></tr>
+<tr><td class="num" id="LN308">308</td><td class="line">  data-&gt;scroll_region.left = 0;</td></tr>
+<tr><td class="num" id="LN309">309</td><td class="line">  data-&gt;scroll_region.right = width - 1;</td></tr>
+<tr><td class="num" id="LN310">310</td><td class="line">  data-&gt;row = data-&gt;col = 0;</td></tr>
+<tr><td class="num" id="LN311">311</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN312">312</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN313">313</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_clear(UI *ui)</td></tr>
+<tr><td class="num" id="LN314">314</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN315">315</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN316">316</td><td class="line">  clear_region(ui, data-&gt;scroll_region.top, data-&gt;scroll_region.bot,</td></tr>
+<tr><td class="num" id="LN317">317</td><td class="line">      data-&gt;scroll_region.left, data-&gt;scroll_region.right, <span class='macro'>true<span class='expansion'>1</span></span>);</td></tr>
+<tr><td class="num" id="LN318">318</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN319">319</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN320">320</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_eol_clear(UI *ui)</td></tr>
+<tr><td class="num" id="LN321">321</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN322">322</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN323">323</td><td class="line">  clear_region(ui, data-&gt;row, data-&gt;row, data-&gt;col,</td></tr>
+<tr><td class="num" id="LN324">324</td><td class="line">      data-&gt;scroll_region.right, <span class='macro'>true<span class='expansion'>1</span></span>);</td></tr>
+<tr><td class="num" id="LN325">325</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN326">326</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN327">327</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_cursor_goto(UI *ui, <span class='keyword'>int</span> row, <span class='keyword'>int</span> col)</td></tr>
+<tr><td class="num" id="LN328">328</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN329">329</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN330">330</td><td class="line">  data-&gt;row = row;</td></tr>
+<tr><td class="num" id="LN331">331</td><td class="line">  data-&gt;col = col;</td></tr>
+<tr><td class="num" id="LN332">332</td><td class="line">  unibi_goto(ui, row, col);</td></tr>
+<tr><td class="num" id="LN333">333</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN334">334</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN335">335</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_cursor_on(UI *ui)</td></tr>
+<tr><td class="num" id="LN336">336</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN337">337</td><td class="line">  unibi_out(ui, unibi_cursor_normal, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN338">338</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN339">339</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN340">340</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_cursor_off(UI *ui)</td></tr>
+<tr><td class="num" id="LN341">341</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN342">342</td><td class="line">  unibi_out(ui, unibi_cursor_invisible, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN343">343</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN344">344</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN345">345</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_mouse_on(UI *ui)</td></tr>
+<tr><td class="num" id="LN346">346</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN347">347</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN348">348</td><td class="line">  unibi_out(ui, (<span class='keyword'>int</span>)data-&gt;unibi_ext.enable_mouse, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN349">349</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN350">350</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN351">351</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_mouse_off(UI *ui)</td></tr>
+<tr><td class="num" id="LN352">352</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN353">353</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN354">354</td><td class="line">  unibi_out(ui, (<span class='keyword'>int</span>)data-&gt;unibi_ext.disable_mouse, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN355">355</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN356">356</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN357">357</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_insert_mode(UI *ui)</td></tr>
+<tr><td class="num" id="LN358">358</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN359">359</td><td class="line">  unibi_out(ui, -1, <span class='string_literal'>"t_SI"</span>);</td></tr>
+<tr><td class="num" id="LN360">360</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN361">361</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN362">362</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_normal_mode(UI *ui)</td></tr>
+<tr><td class="num" id="LN363">363</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN364">364</td><td class="line">  unibi_out(ui, -1, <span class='string_literal'>"t_EI"</span>);</td></tr>
+<tr><td class="num" id="LN365">365</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN366">366</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN367">367</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_set_scroll_region(UI *ui, <span class='keyword'>int</span> top, <span class='keyword'>int</span> bot, <span class='keyword'>int</span> left,</td></tr>
+<tr><td class="num" id="LN368">368</td><td class="line">    <span class='keyword'>int</span> right)</td></tr>
+<tr><td class="num" id="LN369">369</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN370">370</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN371">371</td><td class="line">  data-&gt;scroll_region.top = top;</td></tr>
+<tr><td class="num" id="LN372">372</td><td class="line">  data-&gt;scroll_region.bot = bot;</td></tr>
+<tr><td class="num" id="LN373">373</td><td class="line">  data-&gt;scroll_region.left = left;</td></tr>
+<tr><td class="num" id="LN374">374</td><td class="line">  data-&gt;scroll_region.right = right;</td></tr>
+<tr><td class="num" id="LN375">375</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN376">376</td><td class="line">  data-&gt;can_use_terminal_scroll =</td></tr>
+<tr><td class="num" id="LN377">377</td><td class="line">    left == 0 &amp;&amp; right == ui-&gt;width - 1</td></tr>
+<tr><td class="num" id="LN378">378</td><td class="line">    &amp;&amp; ((top == 0 &amp;&amp; bot == ui-&gt;height - 1)</td></tr>
+<tr><td class="num" id="LN379">379</td><td class="line">        || unibi_get_str(data-&gt;ut, unibi_change_scroll_region));</td></tr>
+<tr><td class="num" id="LN380">380</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN381">381</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN382">382</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_scroll(UI *ui, <span class='keyword'>int</span> count)</td></tr>
+<tr><td class="num" id="LN383">383</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN384">384</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN385">385</td><td class="line">  <span class='keyword'>int</span> top = data-&gt;scroll_region.top;</td></tr>
+<tr><td class="num" id="LN386">386</td><td class="line">  <span class='keyword'>int</span> bot = data-&gt;scroll_region.bot;</td></tr>
+<tr><td class="num" id="LN387">387</td><td class="line">  <span class='keyword'>int</span> left = data-&gt;scroll_region.left;</td></tr>
+<tr><td class="num" id="LN388">388</td><td class="line">  <span class='keyword'>int</span> right = data-&gt;scroll_region.right;</td></tr>
+<tr><td class="num" id="LN389">389</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN390">390</td><td class="line">  <span class='keyword'>if</span> (data-&gt;can_use_terminal_scroll) {</td></tr>
+<tr><td class="num" id="LN391">391</td><td class="line">    <span class='comment'>// Change terminal scroll region and move cursor to the top</span></td></tr>
+<tr><td class="num" id="LN392">392</td><td class="line">    data-&gt;params[0].i = top;</td></tr>
+<tr><td class="num" id="LN393">393</td><td class="line">    data-&gt;params[1].i = bot;</td></tr>
+<tr><td class="num" id="LN394">394</td><td class="line">    unibi_out(ui, unibi_change_scroll_region, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN395">395</td><td class="line">    unibi_goto(ui, top, left);</td></tr>
+<tr><td class="num" id="LN396">396</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN397">397</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN398">398</td><td class="line">  <span class='comment'>// Compute start/stop/step for the loop below, also use terminal scroll</span></td></tr>
+<tr><td class="num" id="LN399">399</td><td class="line">  <span class='comment'>// if possible</span></td></tr>
+<tr><td class="num" id="LN400">400</td><td class="line">  <span class='keyword'>int</span> start, stop, step;</td></tr>
+<tr><td class="num" id="LN401">401</td><td class="line">  <span class='keyword'>if</span> (count &gt; 0) {</td></tr>
+<tr><td class="num" id="LN402">402</td><td class="line">    start = top;</td></tr>
+<tr><td class="num" id="LN403">403</td><td class="line">    stop = bot - count + 1;</td></tr>
+<tr><td class="num" id="LN404">404</td><td class="line">    step = 1;</td></tr>
+<tr><td class="num" id="LN405">405</td><td class="line">    <span class='keyword'>if</span> (data-&gt;can_use_terminal_scroll) {</td></tr>
+<tr><td class="num" id="LN406">406</td><td class="line">      <span class='keyword'>if</span> (count == 1) {</td></tr>
+<tr><td class="num" id="LN407">407</td><td class="line">        unibi_out(ui, unibi_delete_line, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN408">408</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN409">409</td><td class="line">        data-&gt;params[0].i = count;</td></tr>
+<tr><td class="num" id="LN410">410</td><td class="line">        unibi_out(ui, unibi_parm_delete_line, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN411">411</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN412">412</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN413">413</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN414">414</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN415">415</td><td class="line">    start = bot;</td></tr>
+<tr><td class="num" id="LN416">416</td><td class="line">    stop = top - count - 1;</td></tr>
+<tr><td class="num" id="LN417">417</td><td class="line">    step = -1;</td></tr>
+<tr><td class="num" id="LN418">418</td><td class="line">    <span class='keyword'>if</span> (data-&gt;can_use_terminal_scroll) {</td></tr>
+<tr><td class="num" id="LN419">419</td><td class="line">      <span class='keyword'>if</span> (count == -1) {</td></tr>
+<tr><td class="num" id="LN420">420</td><td class="line">        unibi_out(ui, unibi_insert_line, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN421">421</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN422">422</td><td class="line">        data-&gt;params[0].i = -count;</td></tr>
+<tr><td class="num" id="LN423">423</td><td class="line">        unibi_out(ui, unibi_parm_insert_line, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN424">424</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN425">425</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN426">426</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN427">427</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN428">428</td><td class="line">  <span class='keyword'>if</span> (data-&gt;can_use_terminal_scroll) {</td></tr>
+<tr><td class="num" id="LN429">429</td><td class="line">    <span class='comment'>// Restore terminal scroll region and cursor</span></td></tr>
+<tr><td class="num" id="LN430">430</td><td class="line">    data-&gt;params[0].i = 0;</td></tr>
+<tr><td class="num" id="LN431">431</td><td class="line">    data-&gt;params[1].i = ui-&gt;height - 1;</td></tr>
+<tr><td class="num" id="LN432">432</td><td class="line">    unibi_out(ui, unibi_change_scroll_region, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN433">433</td><td class="line">    unibi_goto(ui, data-&gt;row, data-&gt;col);</td></tr>
+<tr><td class="num" id="LN434">434</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN435">435</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN436">436</td><td class="line">  <span class='keyword'>int</span> i;</td></tr>
+<tr><td class="num" id="LN437">437</td><td class="line">  <span class='comment'>// Scroll internal screen</span></td></tr>
+<tr><td class="num" id="LN438">438</td><td class="line">  <span class='keyword'>for</span> (i = start; i != stop; i += step) {</td></tr>
+<tr><td class="num" id="LN439">439</td><td class="line">    Cell *target_row = data-&gt;screen[i] + left;</td></tr>
+<tr><td class="num" id="LN440">440</td><td class="line">    Cell *source_row = data-&gt;screen[i + count] + left;</td></tr>
+<tr><td class="num" id="LN441">441</td><td class="line">    memcpy(target_row, source_row, <span class='keyword'>sizeof</span>(Cell) * (size_t)(right - left + 1));</td></tr>
+<tr><td class="num" id="LN442">442</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN443">443</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN444">444</td><td class="line">  <span class='comment'>// clear emptied region, updating the terminal if its builtin scrolling</span></td></tr>
+<tr><td class="num" id="LN445">445</td><td class="line">  <span class='comment'>// facility was used. This is done when the background color is not the</span></td></tr>
+<tr><td class="num" id="LN446">446</td><td class="line">  <span class='comment'>// default, since scrolling may leave wrong background in the cleared area.</span></td></tr>
+<tr><td class="num" id="LN447">447</td><td class="line">  <span class='macro'>bool<span class='expansion'>_Bool</span></span> update_clear = data-&gt;bg != -1 &amp;&amp; data-&gt;can_use_terminal_scroll;</td></tr>
+<tr><td class="num" id="LN448">448</td><td class="line">  <span class='keyword'>if</span> (count &gt; 0) {</td></tr>
+<tr><td class="num" id="LN449">449</td><td class="line">    clear_region(ui, stop, stop + count - 1, left, right, update_clear);</td></tr>
+<tr><td class="num" id="LN450">450</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN451">451</td><td class="line">    clear_region(ui, stop + count + 1, stop, left, right, update_clear);</td></tr>
+<tr><td class="num" id="LN452">452</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN453">453</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN454">454</td><td class="line">  <span class='keyword'>if</span> (!data-&gt;can_use_terminal_scroll) {</td></tr>
+<tr><td class="num" id="LN455">455</td><td class="line">    <span class='comment'>// Mark the entire scroll region as invalid for redrawing later</span></td></tr>
+<tr><td class="num" id="LN456">456</td><td class="line">    invalidate(ui, data-&gt;scroll_region.top, data-&gt;scroll_region.bot,</td></tr>
+<tr><td class="num" id="LN457">457</td><td class="line">        data-&gt;scroll_region.left, data-&gt;scroll_region.right);</td></tr>
+<tr><td class="num" id="LN458">458</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN459">459</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN460">460</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN461">461</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_highlight_set(UI *ui, HlAttrs attrs)</td></tr>
+<tr><td class="num" id="LN462">462</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN463">463</td><td class="line">  ((TUIData *)ui-&gt;data)-&gt;attrs = attrs;</td></tr>
+<tr><td class="num" id="LN464">464</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN465">465</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN466">466</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_put(UI *ui, uint8_t *text, size_t size)</td></tr>
+<tr><td class="num" id="LN467">467</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN468">468</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN469">469</td><td class="line">  Cell *cell = data-&gt;screen[data-&gt;row] + data-&gt;col;</td></tr>
+<tr><td class="num" id="LN470">470</td><td class="line">  cell-&gt;data[size] = 0;</td></tr>
+<tr><td class="num" id="LN471">471</td><td class="line">  cell-&gt;attrs = data-&gt;attrs;</td></tr>
+<tr><td class="num" id="LN472">472</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN473">473</td><td class="line">  <span class='keyword'>if</span> (text) {</td></tr>
+<tr><td class="num" id="LN474">474</td><td class="line">    memcpy(cell-&gt;data, text, size);</td></tr>
+<tr><td class="num" id="LN475">475</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN476">476</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN477">477</td><td class="line">  print_cell(ui, cell);</td></tr>
+<tr><td class="num" id="LN478">478</td><td class="line">  data-&gt;col += 1;</td></tr>
+<tr><td class="num" id="LN479">479</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN480">480</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN481">481</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_bell(UI *ui)</td></tr>
+<tr><td class="num" id="LN482">482</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN483">483</td><td class="line">  unibi_out(ui, unibi_bell, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN484">484</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN485">485</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN486">486</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_visual_bell(UI *ui)</td></tr>
+<tr><td class="num" id="LN487">487</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN488">488</td><td class="line">  unibi_out(ui, unibi_flash_screen, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN489">489</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN490">490</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN491">491</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_update_fg(UI *ui, <span class='keyword'>int</span> fg)</td></tr>
+<tr><td class="num" id="LN492">492</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN493">493</td><td class="line">  ((TUIData *)ui-&gt;data)-&gt;fg = fg;</td></tr>
+<tr><td class="num" id="LN494">494</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN495">495</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN496">496</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_update_bg(UI *ui, <span class='keyword'>int</span> bg)</td></tr>
+<tr><td class="num" id="LN497">497</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN498">498</td><td class="line">  ((TUIData *)ui-&gt;data)-&gt;bg = bg;</td></tr>
+<tr><td class="num" id="LN499">499</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN500">500</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN501">501</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_flush(UI *ui)</td></tr>
+<tr><td class="num" id="LN502">502</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN503">503</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN504">504</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN505">505</td><td class="line">  <span class='keyword'>while</span> (<span class='macro'>kv_size(data-&gt;invalid_regions)<span class='expansion'>((data-&gt;invalid_regions).size)</span></span>) {</td></tr>
+<tr><td class="num" id="LN506">506</td><td class="line">    Rect r = <span class='macro'>kv_pop(data-&gt;invalid_regions)<span class='expansion'>((data-&gt;invalid_regions).items[--(data-&gt;invalid_regions<br>).size])</span></span>;</td></tr>
+<tr><td class="num" id="LN507">507</td><td class="line">    <span class='macro'>FOREACH_CELL(ui, r.top, r.bot, r.left, r.right, true, {<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = r.top; row &lt;=<br> r.bot; ++row) { Cell *cells = data-&gt;screen[row]; if (1) {<br> unibi_goto(ui, row, r.left); } for (int col = r.left; col &lt;=<br> r.right; ++col) { Cell *cell = cells + col; (void)(cell); { print_cell<br>(ui, cell); }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN508">508</td><td class="line">      <span class='macro'>print_cell(ui, cell);<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = r.top; row &lt;=<br> r.bot; ++row) { Cell *cells = data-&gt;screen[row]; if (1) {<br> unibi_goto(ui, row, r.left); } for (int col = r.left; col &lt;=<br> r.right; ++col) { Cell *cell = cells + col; (void)(cell); { print_cell<br>(ui, cell); }; } } } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN509">509</td><td class="line">    <span class='macro'>})<span class='expansion'>do { TUIData *data = ui-&gt;data; for (int row = r.top; row &lt;=<br> r.bot; ++row) { Cell *cells = data-&gt;screen[row]; if (1) {<br> unibi_goto(ui, row, r.left); } for (int col = r.left; col &lt;=<br> r.right; ++col) { Cell *cell = cells + col; (void)(cell); { print_cell<br>(ui, cell); }; } } } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN510">510</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN511">511</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN512">512</td><td class="line">  unibi_goto(ui, data-&gt;row, data-&gt;col);</td></tr>
+<tr><td class="num" id="LN513">513</td><td class="line">  flush_buf(ui);</td></tr>
+<tr><td class="num" id="LN514">514</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN515">515</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN516">516</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_suspend(UI *ui)</td></tr>
+<tr><td class="num" id="LN517">517</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN518">518</td><td class="line">  <span class="mrange">tui_stop(ui)</span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="Path1" class="msg msgEvent" style="margin-left:3ex"><table class="msgT"><tr><td valign="top"><div class="PathIndex PathIndexEvent">1</div></td><td>Calling 'tui_stop'</td><td><div class="PathNav"><a href="#Path2" title="Next event (2)">&#x2192;</a></div></td></tr></table></div></td></tr>
+<tr><td class="num" id="LN519">519</td><td class="line">  kill(0, <span class='macro'>SIGTSTP<span class='expansion'>20</span></span>);</td></tr>
+<tr><td class="num" id="LN520">520</td><td class="line">  tui_start();</td></tr>
+<tr><td class="num" id="LN521">521</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN522">522</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN523">523</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_set_title(UI *ui, <span class='keyword'>char</span> *title)</td></tr>
+<tr><td class="num" id="LN524">524</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN525">525</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN526">526</td><td class="line">  <span class='keyword'>if</span> (!(unibi_get_str(data-&gt;ut, unibi_to_status_line)</td></tr>
+<tr><td class="num" id="LN527">527</td><td class="line">     &amp;&amp; unibi_get_str(data-&gt;ut, unibi_from_status_line))) {</td></tr>
+<tr><td class="num" id="LN528">528</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN529">529</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN530">530</td><td class="line">  unibi_out(ui, unibi_to_status_line, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN531">531</td><td class="line">  out(ui, title);</td></tr>
+<tr><td class="num" id="LN532">532</td><td class="line">  unibi_out(ui, unibi_from_status_line, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN533">533</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN534">534</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN535">535</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> tui_set_icon(UI *ui, <span class='keyword'>char</span> *icon)</td></tr>
+<tr><td class="num" id="LN536">536</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN537">537</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN538">538</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN539">539</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> invalidate(UI *ui, <span class='keyword'>int</span> top, <span class='keyword'>int</span> bot, <span class='keyword'>int</span> left, <span class='keyword'>int</span> right)</td></tr>
+<tr><td class="num" id="LN540">540</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN541">541</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN542">542</td><td class="line">  Rect *intersects = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN543">543</td><td class="line">  <span class='comment'>// Increase dimensions before comparing to ensure adjacent regions are</span></td></tr>
+<tr><td class="num" id="LN544">544</td><td class="line">  <span class='comment'>// treated as intersecting</span></td></tr>
+<tr><td class="num" id="LN545">545</td><td class="line">  --top;</td></tr>
+<tr><td class="num" id="LN546">546</td><td class="line">  ++bot;</td></tr>
+<tr><td class="num" id="LN547">547</td><td class="line">  --left;</td></tr>
+<tr><td class="num" id="LN548">548</td><td class="line">  ++right;</td></tr>
+<tr><td class="num" id="LN549">549</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN550">550</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; <span class='macro'>kv_size(data-&gt;invalid_regions)<span class='expansion'>((data-&gt;invalid_regions).size)</span></span>; i++) {</td></tr>
+<tr><td class="num" id="LN551">551</td><td class="line">    Rect *r = &amp;<span class='macro'>kv_A(data-&gt;invalid_regions, i)<span class='expansion'>((data-&gt;invalid_regions).items[(i)])</span></span>;</td></tr>
+<tr><td class="num" id="LN552">552</td><td class="line">    <span class='keyword'>if</span> (!(top &gt; r-&gt;bot || bot &lt; r-&gt;top</td></tr>
+<tr><td class="num" id="LN553">553</td><td class="line">          || left &gt; r-&gt;right || right &lt; r-&gt;left)) {</td></tr>
+<tr><td class="num" id="LN554">554</td><td class="line">      intersects = r;</td></tr>
+<tr><td class="num" id="LN555">555</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN556">556</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN557">557</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN558">558</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN559">559</td><td class="line">  ++top;</td></tr>
+<tr><td class="num" id="LN560">560</td><td class="line">  --bot;</td></tr>
+<tr><td class="num" id="LN561">561</td><td class="line">  ++left;</td></tr>
+<tr><td class="num" id="LN562">562</td><td class="line">  --right;</td></tr>
+<tr><td class="num" id="LN563">563</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN564">564</td><td class="line">  <span class='keyword'>if</span> (intersects) {</td></tr>
+<tr><td class="num" id="LN565">565</td><td class="line">    <span class='comment'>// If top/bot/left/right intersects with a invalid rect, we replace it</span></td></tr>
+<tr><td class="num" id="LN566">566</td><td class="line">    <span class='comment'>// by the union</span></td></tr>
+<tr><td class="num" id="LN567">567</td><td class="line">    intersects-&gt;top = <span class='macro'>MIN(top, intersects-&gt;top)<span class='expansion'>(((top)&lt;(intersects-&gt;top))?(top):(intersects-&gt;top))</span></span>;</td></tr>
+<tr><td class="num" id="LN568">568</td><td class="line">    intersects-&gt;bot = <span class='macro'>MAX(bot, intersects-&gt;bot)<span class='expansion'>(((bot)&gt;(intersects-&gt;bot))?(bot):(intersects-&gt;bot))</span></span>;</td></tr>
+<tr><td class="num" id="LN569">569</td><td class="line">    intersects-&gt;left = <span class='macro'>MIN(left, intersects-&gt;left)<span class='expansion'>(((left)&lt;(intersects-&gt;left))?(left):(intersects-&gt;left<br>))</span></span>;</td></tr>
+<tr><td class="num" id="LN570">570</td><td class="line">    intersects-&gt;right = <span class='macro'>MAX(right, intersects-&gt;right)<span class='expansion'>(((right)&gt;(intersects-&gt;right))?(right):(intersects-&gt;<br>right))</span></span>;</td></tr>
+<tr><td class="num" id="LN571">571</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN572">572</td><td class="line">    <span class='comment'>// Else just add a new entry;</span></td></tr>
+<tr><td class="num" id="LN573">573</td><td class="line">    <span class='macro'>kv_push(Rect, data-&gt;invalid_regions, ((Rect){top, bot, left, right}))<span class='expansion'>do { if ((data-&gt;invalid_regions).size == (data-&gt;invalid_regions<br>).capacity) { (data-&gt;invalid_regions).capacity = (data-&gt;<br>invalid_regions).capacity? (data-&gt;invalid_regions).capacity<br>&lt;&lt;1 : 8; (data-&gt;invalid_regions).items = (Rect*)xrealloc<br>((data-&gt;invalid_regions).items, sizeof(Rect) * (data-&gt;invalid_regions<br>).capacity); } (data-&gt;invalid_regions).items[(data-&gt;invalid_regions<br>).size++] = (((Rect){top, bot, left, right})); } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN574">574</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN575">575</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN576">576</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN577">577</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> update_size(UI *ui)</td></tr>
+<tr><td class="num" id="LN578">578</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN579">579</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN580">580</td><td class="line">  <span class='keyword'>int</span> width = 0, height = 0;</td></tr>
+<tr><td class="num" id="LN581">581</td><td class="line">  <span class='comment'>// 1 - try from a system call(ioctl/TIOCGWINSZ on unix)</span></td></tr>
+<tr><td class="num" id="LN582">582</td><td class="line">  <span class='keyword'>if</span> (!uv_tty_get_winsize(&amp;data-&gt;output_handle, &amp;width, &amp;height)) {</td></tr>
+<tr><td class="num" id="LN583">583</td><td class="line">    <span class='keyword'>goto</span> end;</td></tr>
+<tr><td class="num" id="LN584">584</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN585">585</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN586">586</td><td class="line">  <span class='comment'>// 2 - use $LINES/$COLUMNS if available</span></td></tr>
+<tr><td class="num" id="LN587">587</td><td class="line">  <span class='keyword'>const</span> <span class='keyword'>char</span> *val;</td></tr>
+<tr><td class="num" id="LN588">588</td><td class="line">  <span class='keyword'>int</span> advance;</td></tr>
+<tr><td class="num" id="LN589">589</td><td class="line">  <span class='keyword'>if</span> ((val = os_getenv(<span class='string_literal'>"LINES"</span>))</td></tr>
+<tr><td class="num" id="LN590">590</td><td class="line">      &amp;&amp; sscanf(val, <span class='string_literal'>"%d%n"</span>, &amp;height, &amp;advance) != <span class='macro'>EOF<span class='expansion'>(-1)</span></span> &amp;&amp; advance</td></tr>
+<tr><td class="num" id="LN591">591</td><td class="line">      &amp;&amp; (val = os_getenv(<span class='string_literal'>"COLUMNS"</span>))</td></tr>
+<tr><td class="num" id="LN592">592</td><td class="line">      &amp;&amp; sscanf(val, <span class='string_literal'>"%d%n"</span>, &amp;width, &amp;advance) != <span class='macro'>EOF<span class='expansion'>(-1)</span></span> &amp;&amp; advance) {</td></tr>
+<tr><td class="num" id="LN593">593</td><td class="line">    <span class='keyword'>goto</span> end;</td></tr>
+<tr><td class="num" id="LN594">594</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN595">595</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN596">596</td><td class="line">  <span class='comment'>// 3- read from terminfo if available</span></td></tr>
+<tr><td class="num" id="LN597">597</td><td class="line">  height = unibi_get_num(data-&gt;ut, unibi_lines);</td></tr>
+<tr><td class="num" id="LN598">598</td><td class="line">  width = unibi_get_num(data-&gt;ut, unibi_columns);</td></tr>
+<tr><td class="num" id="LN599">599</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN600">600</td><td class="line">end:</td></tr>
+<tr><td class="num" id="LN601">601</td><td class="line">  <span class='keyword'>if</span> (width &lt;= 0 || height &lt;= 0) {</td></tr>
+<tr><td class="num" id="LN602">602</td><td class="line">    <span class='comment'>// use a default of 80x24</span></td></tr>
+<tr><td class="num" id="LN603">603</td><td class="line">    width = 80;</td></tr>
+<tr><td class="num" id="LN604">604</td><td class="line">    height = 24;</td></tr>
+<tr><td class="num" id="LN605">605</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN606">606</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN607">607</td><td class="line">  ui-&gt;width = width;</td></tr>
+<tr><td class="num" id="LN608">608</td><td class="line">  ui-&gt;height = height;</td></tr>
+<tr><td class="num" id="LN609">609</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN610">610</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN611">611</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> unibi_goto(UI *ui, <span class='keyword'>int</span> row, <span class='keyword'>int</span> col)</td></tr>
+<tr><td class="num" id="LN612">612</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN613">613</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN614">614</td><td class="line">  data-&gt;params[0].i = row;</td></tr>
+<tr><td class="num" id="LN615">615</td><td class="line">  data-&gt;params[1].i = col;</td></tr>
+<tr><td class="num" id="LN616">616</td><td class="line">  unibi_out(ui, unibi_cursor_address, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN617">617</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN618">618</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN619">619</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> unibi_out(UI *ui, <span class='keyword'>int</span> unibi_index, <span class='keyword'>char</span> *nvim_override)</td></tr>
+<tr><td class="num" id="LN620">620</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN621">621</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN622">622</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN623">623</td><td class="line">  <span class='keyword'>const</span> <span class='keyword'>char</span> *str = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN624">624</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN625">625</td><td class="line">  <span class='keyword'>if</span> (nvim_override) {</td></tr>
+<tr><td class="num" id="LN626">626</td><td class="line">    str = get_term_option(ui, nvim_override);</td></tr>
+<tr><td class="num" id="LN627">627</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (unibi_index &gt;= 0) {</td></tr>
+<tr><td class="num" id="LN628">628</td><td class="line">    <span class='keyword'>if</span> (unibi_index &lt; unibi_string_begin_) {</td></tr>
+<tr><td class="num" id="LN629">629</td><td class="line">      str = unibi_get_ext_str(data-&gt;ut, (<span class='keyword'>unsigned</span>)unibi_index);</td></tr>
+<tr><td class="num" id="LN630">630</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN631">631</td><td class="line">      str = unibi_get_str(data-&gt;ut, (<span class='keyword'>unsigned</span>)unibi_index);</td></tr>
+<tr><td class="num" id="LN632">632</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN633">633</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN634">634</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN635">635</td><td class="line">  <span class='keyword'>if</span> (str) {</td></tr>
+<tr><td class="num" id="LN636">636</td><td class="line">    data-&gt;bufpos += unibi_run(str, data-&gt;params, data-&gt;buf + data-&gt;bufpos,</td></tr>
+<tr><td class="num" id="LN637">637</td><td class="line">        <span class='keyword'>sizeof</span>(data-&gt;buf) - data-&gt;bufpos);</td></tr>
+<tr><td class="num" id="LN638">638</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN639">639</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN640">640</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN641">641</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> out(UI *ui, <span class='keyword'>const</span> <span class='keyword'>char</span> *str)</td></tr>
+<tr><td class="num" id="LN642">642</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN643">643</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN644">644</td><td class="line">  data-&gt;bufpos += (size_t)snprintf(data-&gt;buf + data-&gt;bufpos,</td></tr>
+<tr><td class="num" id="LN645">645</td><td class="line">      <span class='keyword'>sizeof</span>(data-&gt;buf) - data-&gt;bufpos, <span class='string_literal'>"%s"</span>, str);</td></tr>
+<tr><td class="num" id="LN646">646</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN647">647</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN648">648</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> unibi_set_if_empty(unibi_term *ut, <span class='keyword'>enum</span> unibi_string str,</td></tr>
+<tr><td class="num" id="LN649">649</td><td class="line">    <span class='keyword'>const</span> <span class='keyword'>char</span> *val)</td></tr>
+<tr><td class="num" id="LN650">650</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN651">651</td><td class="line">  <span class='keyword'>if</span> (!unibi_get_str(ut, str)) {</td></tr>
+<tr><td class="num" id="LN652">652</td><td class="line">    unibi_set_str(ut, str, val);</td></tr>
+<tr><td class="num" id="LN653">653</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN654">654</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN655">655</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN656">656</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> fix_terminfo(TUIData *data)</td></tr>
+<tr><td class="num" id="LN657">657</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN658">658</td><td class="line">  unibi_term *ut = data-&gt;ut;</td></tr>
+<tr><td class="num" id="LN659">659</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN660">660</td><td class="line">  <span class='keyword'>const</span> <span class='keyword'>char</span> *term = os_getenv(<span class='string_literal'>"TERM"</span>);</td></tr>
+<tr><td class="num" id="LN661">661</td><td class="line">  <span class='keyword'>if</span> (!term) {</td></tr>
+<tr><td class="num" id="LN662">662</td><td class="line">    <span class='keyword'>goto</span> end;</td></tr>
+<tr><td class="num" id="LN663">663</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN664">664</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN665">665</td><td class="line"><span class='directive'>#define <span class='macro'>STARTS_WITH(str, prefix)<span class='expansion'>(!memcmp(str, prefix, sizeof(prefix) - 1))</span></span> (!memcmp(str, prefix, sizeof(prefix) - 1))</span></td></tr>
+<tr><td class="num" id="LN666">666</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN667">667</td><td class="line">  <span class='keyword'>if</span> (<span class='macro'>STARTS_WITH(term, <span class='string_literal'>"rxvt"</span>)<span class='expansion'>(!memcmp(term, "rxvt", sizeof("rxvt") - 1))</span></span>) {</td></tr>
+<tr><td class="num" id="LN668">668</td><td class="line">    unibi_set_if_empty(ut, unibi_exit_attribute_mode, <span class='string_literal'>"\x1b[m\x1b(B"</span>);</td></tr>
+<tr><td class="num" id="LN669">669</td><td class="line">    unibi_set_if_empty(ut, unibi_flash_screen, <span class='string_literal'>"\x1b[?5h$&lt;20/&gt;\x1b[?5l"</span>);</td></tr>
+<tr><td class="num" id="LN670">670</td><td class="line">    unibi_set_if_empty(ut, unibi_enter_italics_mode, <span class='string_literal'>"\x1b[3m"</span>);</td></tr>
+<tr><td class="num" id="LN671">671</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (<span class='macro'>STARTS_WITH(term, <span class='string_literal'>"screen"</span>)<span class='expansion'>(!memcmp(term, "screen", sizeof("screen") - 1))</span></span>) {</td></tr>
+<tr><td class="num" id="LN672">672</td><td class="line">    unibi_set_if_empty(ut, unibi_to_status_line, <span class='string_literal'>"\x1b_"</span>);</td></tr>
+<tr><td class="num" id="LN673">673</td><td class="line">    unibi_set_if_empty(ut, unibi_from_status_line, <span class='string_literal'>"\x1b\\"</span>);</td></tr>
+<tr><td class="num" id="LN674">674</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN675">675</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN676">676</td><td class="line">  <span class='keyword'>if</span> (<span class='macro'>STARTS_WITH(term, <span class='string_literal'>"xterm"</span>)<span class='expansion'>(!memcmp(term, "xterm", sizeof("xterm") - 1))</span></span> || <span class='macro'>STARTS_WITH(term, <span class='string_literal'>"rxvt"</span>)<span class='expansion'>(!memcmp(term, "rxvt", sizeof("rxvt") - 1))</span></span>) {</td></tr>
+<tr><td class="num" id="LN677">677</td><td class="line">    unibi_set_if_empty(ut, unibi_cursor_normal, <span class='string_literal'>"\x1b[?12l\x1b[?25h"</span>);</td></tr>
+<tr><td class="num" id="LN678">678</td><td class="line">    unibi_set_if_empty(ut, unibi_cursor_invisible, <span class='string_literal'>"\x1b[?25l"</span>);</td></tr>
+<tr><td class="num" id="LN679">679</td><td class="line">    unibi_set_if_empty(ut, unibi_flash_screen, <span class='string_literal'>"\x1b[?5h$&lt;100/&gt;\x1b[?5l"</span>);</td></tr>
+<tr><td class="num" id="LN680">680</td><td class="line">    unibi_set_if_empty(ut, unibi_exit_attribute_mode, <span class='string_literal'>"\x1b(B\x1b[m"</span>);</td></tr>
+<tr><td class="num" id="LN681">681</td><td class="line">    unibi_set_if_empty(ut, unibi_change_scroll_region, <span class='string_literal'>"\x1b[%i%p1%d;%p2%dr"</span>);</td></tr>
+<tr><td class="num" id="LN682">682</td><td class="line">    unibi_set_if_empty(ut, unibi_clear_screen, <span class='string_literal'>"\x1b[H\x1b[2J"</span>);</td></tr>
+<tr><td class="num" id="LN683">683</td><td class="line">    unibi_set_if_empty(ut, unibi_to_status_line, <span class='string_literal'>"\x1b]2"</span>);</td></tr>
+<tr><td class="num" id="LN684">684</td><td class="line">    unibi_set_if_empty(ut, unibi_from_status_line, <span class='string_literal'>"\x07"</span>);</td></tr>
+<tr><td class="num" id="LN685">685</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN686">686</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN687">687</td><td class="line">end:</td></tr>
+<tr><td class="num" id="LN688">688</td><td class="line">  <span class='comment'>// Fill some empty slots with common terminal strings</span></td></tr>
+<tr><td class="num" id="LN689">689</td><td class="line">  data-&gt;unibi_ext.enable_mouse = unibi_add_ext_str(ut, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>,</td></tr>
+<tr><td class="num" id="LN690">690</td><td class="line">      <span class='string_literal'>"\x1b[?1002h\x1b[?1006h"</span>);</td></tr>
+<tr><td class="num" id="LN691">691</td><td class="line">  data-&gt;unibi_ext.disable_mouse = unibi_add_ext_str(ut, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>,</td></tr>
+<tr><td class="num" id="LN692">692</td><td class="line">      <span class='string_literal'>"\x1b[?1002l\x1b[?1006l"</span>);</td></tr>
+<tr><td class="num" id="LN693">693</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN694">694</td><td class="line">  unibi_set_if_empty(ut, unibi_cursor_address, <span class='string_literal'>"\x1b[%i%p1%d;%p2%dH"</span>);</td></tr>
+<tr><td class="num" id="LN695">695</td><td class="line">  unibi_set_if_empty(ut, unibi_exit_attribute_mode, <span class='string_literal'>"\x1b[0;10m"</span>);</td></tr>
+<tr><td class="num" id="LN696">696</td><td class="line">  unibi_set_if_empty(ut, unibi_set_a_foreground,</td></tr>
+<tr><td class="num" id="LN697">697</td><td class="line">      <span class='string_literal'>"\x1b[%?%p1%{8}%&lt;%t3%p1%d%e%p1%{16}%&lt;%t9%p1%{8}%-%d%e38;5;%p1%d%;m"</span>);</td></tr>
+<tr><td class="num" id="LN698">698</td><td class="line">  unibi_set_if_empty(ut, unibi_set_a_background,</td></tr>
+<tr><td class="num" id="LN699">699</td><td class="line">      <span class='string_literal'>"\x1b[%?%p1%{8}%&lt;%t4%p1%d%e%p1%{16}%&lt;%t10%p1%{8}%-%d%e48;5;%p1%d%;m"</span>);</td></tr>
+<tr><td class="num" id="LN700">700</td><td class="line">  unibi_set_if_empty(ut, unibi_enter_bold_mode, <span class='string_literal'>"\x1b[1m"</span>);</td></tr>
+<tr><td class="num" id="LN701">701</td><td class="line">  unibi_set_if_empty(ut, unibi_enter_underline_mode, <span class='string_literal'>"\x1b[4m"</span>);</td></tr>
+<tr><td class="num" id="LN702">702</td><td class="line">  unibi_set_if_empty(ut, unibi_enter_reverse_mode, <span class='string_literal'>"\x1b[7m"</span>);</td></tr>
+<tr><td class="num" id="LN703">703</td><td class="line">  unibi_set_if_empty(ut, unibi_bell, <span class='string_literal'>"\x07"</span>);</td></tr>
+<tr><td class="num" id="LN704">704</td><td class="line">  unibi_set_if_empty(data-&gt;ut, unibi_enter_ca_mode, <span class='string_literal'>"\x1b[?1049h"</span>);</td></tr>
+<tr><td class="num" id="LN705">705</td><td class="line">  unibi_set_if_empty(data-&gt;ut, unibi_exit_ca_mode, <span class='string_literal'>"\x1b[?1049l"</span>);</td></tr>
+<tr><td class="num" id="LN706">706</td><td class="line">  unibi_set_if_empty(ut, unibi_delete_line, <span class='string_literal'>"\x1b[M"</span>);</td></tr>
+<tr><td class="num" id="LN707">707</td><td class="line">  unibi_set_if_empty(ut, unibi_parm_delete_line, <span class='string_literal'>"\x1b[%p1%dM"</span>);</td></tr>
+<tr><td class="num" id="LN708">708</td><td class="line">  unibi_set_if_empty(ut, unibi_insert_line, <span class='string_literal'>"\x1b[L"</span>);</td></tr>
+<tr><td class="num" id="LN709">709</td><td class="line">  unibi_set_if_empty(ut, unibi_parm_insert_line, <span class='string_literal'>"\x1b[%p1%dL"</span>);</td></tr>
+<tr><td class="num" id="LN710">710</td><td class="line">  unibi_set_if_empty(ut, unibi_clear_screen, <span class='string_literal'>"\x1b[H\x1b[J"</span>);</td></tr>
+<tr><td class="num" id="LN711">711</td><td class="line">  unibi_set_if_empty(ut, unibi_clr_eol, <span class='string_literal'>"\x1b[K"</span>);</td></tr>
+<tr><td class="num" id="LN712">712</td><td class="line">  unibi_set_if_empty(ut, unibi_clr_eos, <span class='string_literal'>"\x1b[J"</span>);</td></tr>
+<tr><td class="num" id="LN713">713</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN714">714</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN715">715</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> flush_buf(UI *ui)</td></tr>
+<tr><td class="num" id="LN716">716</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN717">717</td><td class="line">  <span class='keyword'>static</span> uv_write_t req;</td></tr>
+<tr><td class="num" id="LN718">718</td><td class="line">  <span class='keyword'>static</span> uv_buf_t buf;</td></tr>
+<tr><td class="num" id="LN719">719</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN720">720</td><td class="line">  buf.base = data-&gt;buf;</td></tr>
+<tr><td class="num" id="LN721">721</td><td class="line">  buf.len = data-&gt;bufpos;</td></tr>
+<tr><td class="num" id="LN722">722</td><td class="line">  uv_write(&amp;req, (uv_stream_t *)&amp;data-&gt;output_handle, &amp;buf, 1, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN723">723</td><td class="line">  uv_run(data-&gt;write_loop, UV_RUN_DEFAULT);</td></tr>
+<tr><td class="num" id="LN724">724</td><td class="line">  data-&gt;bufpos = 0;</td></tr>
+<tr><td class="num" id="LN725">725</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN726">726</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN727">727</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>char</span> *get_term_option(UI *ui, <span class='keyword'>char</span> *option)</td></tr>
+<tr><td class="num" id="LN728">728</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN729">729</td><td class="line">  TUIData *data = ui-&gt;data;</td></tr>
+<tr><td class="num" id="LN730">730</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN731">731</td><td class="line">  <span class='keyword'>char</span> *rv = <span class='macro'>pmap_get(cstr_t)<span class='expansion'>map_cstr_t_ptr_t_get</span></span>(data-&gt;option_cache, option);</td></tr>
+<tr><td class="num" id="LN732">732</td><td class="line">  <span class='keyword'>if</span> (!rv) {</td></tr>
+<tr><td class="num" id="LN733">733</td><td class="line">    Error err;</td></tr>
+<tr><td class="num" id="LN734">734</td><td class="line">    Object val = vim_get_option(cstr_as_string(option), &amp;err);</td></tr>
+<tr><td class="num" id="LN735">735</td><td class="line">    <span class='keyword'>if</span> (val.type == kObjectTypeString) {</td></tr>
+<tr><td class="num" id="LN736">736</td><td class="line">      rv = val.data.string.data;</td></tr>
+<tr><td class="num" id="LN737">737</td><td class="line">      <span class='macro'>pmap_put(cstr_t)<span class='expansion'>map_cstr_t_ptr_t_put</span></span>(data-&gt;option_cache, option, rv);</td></tr>
+<tr><td class="num" id="LN738">738</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN739">739</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN740">740</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN741">741</td><td class="line">  <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN742">742</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN743">743</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN744">744</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> destroy_screen(TUIData *data)</td></tr>
+<tr><td class="num" id="LN745">745</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN746">746</td><td class="line">  <span class='keyword'>if</span> (data-&gt;screen) {</td></tr>
+<tr><td class="num" id="LN747">747</td><td class="line">    <span class='keyword'>for</span> (<span class='keyword'>int</span> i = 0; i &lt; data-&gt;old_height; i++) {</td></tr>
+<tr><td class="num" id="LN748">748</td><td class="line">      free(data-&gt;screen[i]);</td></tr>
+<tr><td class="num" id="LN749">749</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN750">750</td><td class="line">    free(data-&gt;screen);</td></tr>
+<tr><td class="num" id="LN751">751</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN752">752</td><td class="line">}</td></tr>
+</table></body></html>
