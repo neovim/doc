@@ -107,7 +107,6 @@ var searchData=
   ['vim_5fstrcat',['vim_strcat',['../strings_8c.html#a10a8ef50156b08e15f12b0b3d5d21f47',1,'strings.c']]],
   ['vim_5fstrchr',['vim_strchr',['../strings_8c.html#aa7309cf381f677e076fa51ed6e1518ee',1,'strings.c']]],
   ['vim_5fstricmp',['vim_stricmp',['../strings_8c.html#a61d999a2eb8b489b24f986da938076f9',1,'strings.c']]],
-  ['vim_5fstrncpy',['vim_strncpy',['../strings_8c.html#ae773c85188b967e2556fc6e8fc7cd5ed',1,'strings.c']]],
   ['vim_5fstrnicmp',['vim_strnicmp',['../strings_8c.html#a0714af62b8bdf862219662cc5dff1724',1,'strings.c']]],
   ['vim_5fstrnsave',['vim_strnsave',['../strings_8c.html#afcf99dbab0f6a5bff0a0227d6dd34bcc',1,'strings.c']]],
   ['vim_5fstrnsave_5fup',['vim_strnsave_up',['../strings_8c.html#a8e8f06f7f671607f167f87aeb082fb1f',1,'strings.c']]],
@@ -139,6 +138,5 @@ var searchData=
   ['virtual_5factive',['virtual_active',['../misc2_8c.html#ad53fe5f53eda7f02128d6cd0b10a3b10',1,'misc2.c']]],
   ['vpeekc',['vpeekc',['../getchar_8c.html#a0c648bee19b787459acaecaeaf0bdace',1,'getchar.c']]],
   ['vpeekc_5fany',['vpeekc_any',['../getchar_8c.html#a2e3ce174131f64d619f9cd25e73fe8c6',1,'getchar.c']]],
-  ['vpeekc_5fnomap',['vpeekc_nomap',['../getchar_8c.html#a36d34397c57b5771122fdc2ac6e3c4fa',1,'getchar.c']]],
   ['vungetc',['vungetc',['../getchar_8c.html#aec78fc004761dda3ad56a2449bd2f0b9',1,'getchar.c']]]
 ];

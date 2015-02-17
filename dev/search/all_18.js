@@ -32,6 +32,5 @@ var searchData=
   ['xstrchrnul',['xstrchrnul',['../memory_8c.html#a231b15058955dc0e308d923cc4c97df7',1,'memory.c']]],
   ['xstrdup',['xstrdup',['../memory_8c.html#af948034a6fa9841282c17be0fdbce605',1,'memory.c']]],
   ['xstrlcpy',['xstrlcpy',['../memory_8c.html#aae10fc1bb9aac1f327f95a605c7e7c08',1,'memory.c']]],
-  ['xstrndup',['xstrndup',['../memory_8c.html#a6a2f013f490b1da3661b74c77eba5f9a',1,'memory.c']]],
-  ['xt_5flen',['XT_LEN',['../term_8c.html#aa7b9e807ca6c3a91bf5bddc4b8f9e872',1,'term.c']]]
+  ['xstrndup',['xstrndup',['../memory_8c.html#a6a2f013f490b1da3661b74c77eba5f9a',1,'memory.c']]]
 ];

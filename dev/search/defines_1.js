@@ -273,6 +273,7 @@ var searchData=
   ['assert_5fconcat_5f',['ASSERT_CONCAT_',['../assert_8h.html#ac41c7fb1ca72aa1768dbc146fe1921c6',1,'assert.h']]],
   ['at_5fcursor',['AT_CURSOR',['../farsi_8c.html#a69b5290352a3cc3a8c4cec420b971006',1,'farsi.c']]],
   ['atc_5ffrom_5fterm',['ATC_FROM_TERM',['../term_8c.html#afdba6fb9c13eb9c10f0347e53b6a673a',1,'term.c']]],
+  ['attr_5fentry',['ATTR_ENTRY',['../syntax_8c.html#adf8ca9d356e58e9d0e0f3d578b62d57d',1,'syntax.c']]],
   ['attr_5foff',['ATTR_OFF',['../syntax_8c.html#a5447df54a9cf96d673356aa6ac058eab',1,'syntax.c']]],
   ['augroup_5fall',['AUGROUP_ALL',['../fileio_8c.html#ab2c4ff23610792a34ae6d5418c4085a9',1,'fileio.c']]],
   ['augroup_5fdefault',['AUGROUP_DEFAULT',['../fileio_8c.html#aa8c07364b40db50208663f2f37f9f0c0',1,'fileio.c']]],

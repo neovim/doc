@@ -251,7 +251,6 @@ var searchData=
   ['ct_5ffname_5fchar',['CT_FNAME_CHAR',['../charset_8h.html#ad9f5435a1ae96a3e864e444b09bb8aac',1,'charset.h']]],
   ['ct_5fid_5fchar',['CT_ID_CHAR',['../charset_8h.html#af081a8bdbe683b6a2bc756bbcf3b179e',1,'charset.h']]],
   ['ct_5fprint_5fchar',['CT_PRINT_CHAR',['../charset_8h.html#a7bc2836b3d9e48f4ee2b2ef6a2f95948',1,'charset.h']]],
-  ['cterm_5fattr_5fentry',['CTERM_ATTR_ENTRY',['../syntax_8c.html#a88eefc77276a2af45c065670967ec2a7',1,'syntax.c']]],
   ['ctrl_5f_5f',['Ctrl__',['../ascii_8h.html#a7be06d856d1cab370734ea05d180542d',1,'ascii.h']]],
   ['ctrl_5fa',['Ctrl_A',['../ascii_8h.html#af03808ff0fe8ffe118696260f20d5b3a',1,'ascii.h']]],
   ['ctrl_5fat',['Ctrl_AT',['../ascii_8h.html#af26653d49148071ba422b6bc0798bf13',1,'ascii.h']]],

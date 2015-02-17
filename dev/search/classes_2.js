@@ -1,6 +1,7 @@
 var searchData=
 [
   ['caller_5fscope',['caller_scope',['../structcaller__scope.html',1,'']]],
+  ['cell',['Cell',['../structCell.html',1,'']]],
   ['channel',['Channel',['../structChannel.html',1,'']]],
   ['channelcallframe',['ChannelCallFrame',['../structChannelCallFrame.html',1,'']]],
   ['cleanup_5fstuff',['cleanup_stuff',['../structcleanup__stuff.html',1,'']]],

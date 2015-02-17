@@ -8,6 +8,7 @@ var searchData=
   ['time_5fentry_5ft',['time_entry_T',['../structtime__entry__T.html',1,'']]],
   ['timerdata',['TimerData',['../structTimerData.html',1,'']]],
   ['trystate_5fs',['trystate_S',['../structtrystate__S.html',1,'']]],
+  ['tuidata',['TUIData',['../structTUIData.html',1,'']]],
   ['typebuf_5ft',['typebuf_T',['../structtypebuf__T.html',1,'']]],
   ['typval_5ft',['typval_T',['../structtypval__T.html',1,'']]]
 ];

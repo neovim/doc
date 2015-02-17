@@ -41,7 +41,6 @@ var searchData=
   ['hist_5finput',['HIST_INPUT',['../ex__getln_8h.html#ad8c308c606fa74c5989066e0939ec15b',1,'ex_getln.h']]],
   ['hist_5fsearch',['HIST_SEARCH',['../ex__getln_8h.html#a0152ce54c611bc34ab256e8409e9ad8b',1,'ex_getln.h']]],
   ['hitreturn',['HITRETURN',['../vim_8h.html#a67a3598c9421f88776e9ea717ca9a6dc',1,'vim.h']]],
-  ['hl_5fall',['HL_ALL',['../syntax_8h.html#a0603ab942dcc34970008ca52fd3c767d',1,'syntax.h']]],
   ['hl_5fattr',['hl_attr',['../vim_8h.html#a6acdd6f258567b79da889e4c6ab0e067',1,'vim.h']]],
   ['hl_5fbold',['HL_BOLD',['../syntax_8h.html#a88dd1027e5027c0d58a30ed31fc8e7eb',1,'syntax.h']]],
   ['hl_5fconceal',['HL_CONCEAL',['../syntax_8h.html#a7a53ef4d1f4ae1fc55063861cd757192',1,'syntax.h']]],

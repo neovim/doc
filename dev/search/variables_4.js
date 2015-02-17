@@ -21,6 +21,7 @@ var searchData=
   ['engine',['engine',['../structregprog.html#a17b35a10bf140540d03cd127c8c68a9d',1,'regprog::engine()'],['../structbt__regprog__T.html#a6607596028b18bddae6834c40fb8ff4d',1,'bt_regprog_T::engine()'],['../structnfa__regprog__T.html#a26ab276d8a2883f4a1ef45480da0bdd6',1,'nfa_regprog_T::engine()']]],
   ['eol_5fclear',['eol_clear',['../structui__t.html#a448c71609ee85ab9bb642f9aec3ec70d',1,'ui_t']]],
   ['err',['err',['../structjob.html#ac1e41a03af4eee15ddf5ae9fd3f9a2fd',1,'job']]],
+  ['err_5fisatty',['err_isatty',['../structmparm__T.html#a1095b4d382cad75b54caac1f04b1eab6',1,'mparm_T']]],
   ['errmsg',['errmsg',['../structexarg.html#ac0914c147d7728c439edc77c88b1099c',1,'exarg']]],
   ['errored',['errored',['../structChannelCallFrame.html#aa6da91330b585ef5bbf54c199d1cf781',1,'ChannelCallFrame']]],
   ['event',['event',['../structAutoPatCmd.html#a5b57f801dcf26ae979df8e63db32e31f',1,'AutoPatCmd']]],

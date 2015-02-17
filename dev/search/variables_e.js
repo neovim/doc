@@ -11,5 +11,6 @@ var searchData=
   ['out1',['out1',['../structnfa__state.html#a6b5efbc7503e9540cdce968e55f6c62a',1,'nfa_state']]],
   ['outfile',['outfile',['../structprt__settings__T.html#ab26e4b46eb152abd13d282cea9c44d3b',1,'prt_settings_T']]],
   ['output_5fconv',['output_conv',['../globals_8h.html#aaa63b8c11c468f8c6f7c265538b36d51',1,'globals.h']]],
+  ['output_5fisatty',['output_isatty',['../structmparm__T.html#adb0610f895a905db77d2d6fd3bfcc7d3',1,'mparm_T']]],
   ['overstrike',['overstrike',['../structcmdline__info.html#abf1e5be4d11b1905f47bd8ff82039740',1,'cmdline_info']]]
 ];
