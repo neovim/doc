@@ -40,7 +40,7 @@ var searchData=
   ['ui_5fset_5ficon',['ui_set_icon',['../ui_8c.html#a058f2bc9bf66235d3b7d715cdaaaab48',1,'ui.c']]],
   ['ui_5fset_5ftitle',['ui_set_title',['../ui_8c.html#a82e13ae09f987e6958682f0a3ff51523',1,'ui.c']]],
   ['ui_5fsuspend',['ui_suspend',['../ui_8c.html#a7294fbe8b093c6769ee1fa54cf814cf4',1,'ui.c']]],
-  ['ui_5fwrite',['ui_write',['../ui_8c.html#a2251f60e6a6f802d02b22fd8c7837930',1,'ui.c']]],
+  ['ui_5fwrite',['ui_write',['../ui_8c.html#ad69b8fad701aef3911762272de8bdc4f',1,'ui.c']]],
   ['unblock_5fautocmds',['unblock_autocmds',['../fileio_8c.html#a2e2dd688ce595d92b43473059d292768',1,'fileio.c']]],
   ['unchanged',['unchanged',['../misc1_8c.html#a511355dd46cc940c14851aaf49859d33',1,'misc1.c']]],
   ['undo_5fallowed',['undo_allowed',['../undo_8c.html#abb772774673bcc2d48da8a6142f2c1e6',1,'undo.c']]],

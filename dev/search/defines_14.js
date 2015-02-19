@@ -96,6 +96,7 @@ var searchData=
   ['tmode_5fsleep',['TMODE_SLEEP',['../term__defs_8h.html#acc8a46975ca0e46962dfcd74d05328e3',1,'term_defs.h']]],
   ['tmp_5flen',['TMP_LEN',['../message_8c.html#aeffa67aeedd0b4eb1d9539ded7a0fd31',1,'message.c']]],
   ['tmplen',['TMPLEN',['../buffer_8c.html#ad8680179060507f0149653f120d17afd',1,'buffer.c']]],
+  ['tmux_5fwrap',['TMUX_WRAP',['../tui_8c.html#a4a16614df07ad1fd46b64bbe915a0615',1,'tui.c']]],
   ['to_5fspecial',['TO_SPECIAL',['../keymap_8h.html#a5300e534627f106485629e271405e42d',1,'keymap.h']]],
   ['tolower_5fasc',['TOLOWER_ASC',['../macros_8h.html#abedb28fafef6553a68ede9057216bfaa',1,'macros.h']]],
   ['tolower_5floc',['TOLOWER_LOC',['../macros_8h.html#a1464644dc2154dbe6df4bf20d3085301',1,'macros.h']]],

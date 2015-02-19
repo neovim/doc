@@ -65,8 +65,6 @@ var searchData=
   ['mb_5fptr2len',['MB_PTR2LEN',['../macros_8h.html#a467b2185a5c6941cdaa5975f59145392',1,'macros.h']]],
   ['mb_5fptr_5fadv',['mb_ptr_adv',['../macros_8h.html#a3bc6317b039170547fab54019204dc38',1,'macros.h']]],
   ['mb_5fptr_5fback',['mb_ptr_back',['../macros_8h.html#a9e5622693135715222dcd5c1f694fd2d',1,'macros.h']]],
-  ['mb_5fstricmp',['MB_STRICMP',['../vim_8h.html#a488e8c98c5ad4dd4d5f17c49c1edea48',1,'vim.h']]],
-  ['mb_5fstrnicmp',['MB_STRNICMP',['../vim_8h.html#a1c402209d2bd8cf0ab105a9150203bf7',1,'vim.h']]],
   ['mblock',['MBLOCK',['../vim_8h.html#a1230d38111133c27e926f6fa113be350',1,'vim.h']]],
   ['mch_5ferrmsg',['mch_errmsg',['../vim_8h.html#ad95b38ae3abdfa08119c6f3465871cce',1,'vim.h']]],
   ['mch_5ffopen',['mch_fopen',['../macros_8h.html#a39270c09da591696b813487160e6450f',1,'macros.h']]],
