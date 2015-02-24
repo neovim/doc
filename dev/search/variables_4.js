@@ -26,7 +26,7 @@ var searchData=
   ['errored',['errored',['../structChannelCallFrame.html#aa6da91330b585ef5bbf54c199d1cf781',1,'ChannelCallFrame']]],
   ['event',['event',['../structAutoPatCmd.html#a5b57f801dcf26ae979df8e63db32e31f',1,'AutoPatCmd']]],
   ['exception',['exception',['../structcleanup__stuff.html#a01ab8b7d3ce077d33535804542eb8adb',1,'cleanup_stuff']]],
-  ['exit_5fcb',['exit_cb',['../structjob.html#abe6bc12ec790022113a50cc6a5bd2452',1,'job']]],
+  ['exit_5fcb',['exit_cb',['../structJobOptions.html#a898b7249330204fc084807baae05ba08',1,'JobOptions']]],
   ['expand',['expand',['../ex__docmd_8c.html#a4fd89930cfa1006f152d636b9a0c7ab9',1,'ex_docmd.c']]],
   ['extra_5fchar',['extra_char',['../structcmdarg__S.html#a2a40234a723a0bc67a687982eb51d9bf',1,'cmdarg_S']]]
 ];

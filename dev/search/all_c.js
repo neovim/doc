@@ -52,7 +52,7 @@ var searchData=
   ['li_5fnext',['li_next',['../structlistitem__S.html#abb33a84716f24bdf8c15f1ab8ba7a9ca',1,'listitem_S']]],
   ['li_5fprev',['li_prev',['../structlistitem__S.html#ae41bd98e10d1482665e8ba26d8a72f94',1,'listitem_S']]],
   ['li_5ftv',['li_tv',['../structlistitem__S.html#a65661823089984c3ee9b5e089d549140',1,'listitem_S']]],
-  ['limit_5fscreen_5fsize',['limit_screen_size',['../term_8c.html#a28bf5d095bf3f881a9902cfdf4ad5def',1,'term.c']]],
+  ['limit_5fscreen_5fsize',['limit_screen_size',['../screen_8c.html#a28bf5d095bf3f881a9902cfdf4ad5def',1,'screen.c']]],
   ['limitscore_5ft',['limitscore_T',['../structlimitscore__T.html',1,'']]],
   ['line',['line',['../structwcmd__T.html#a2c0a065fec5f861454be9798b188fa3a',1,'wcmd_T::line()'],['../structregsub__T.html#ac1c3586ae76573899aaecdadb02ea108',1,'regsub_T::line()'],['../structsoffset.html#a8703d54295aa0834d92bec3a330f0012',1,'soffset::line()']]],
   ['line1',['line1',['../structexarg.html#af6bf73309e827c986153201b24f79d82',1,'exarg']]],

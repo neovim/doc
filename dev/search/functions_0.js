@@ -5,8 +5,6 @@ var searchData=
   ['add_5fchar2buf',['add_char2buf',['../edit_8c.html#a211a9d08c043c232164bd5c6d7311ae3',1,'edit.c']]],
   ['add_5fmap',['add_map',['../getchar_8c.html#afbc6e428ed3f6b27296dd62caabd4116',1,'getchar.c']]],
   ['add_5fpathsep',['add_pathsep',['../path_8c.html#aa03f3d2af8159cd6c0546d5e8a55e677',1,'path.c']]],
-  ['add_5ftermcap_5fentry',['add_termcap_entry',['../term_8c.html#a2d7a4dadd0fd88c1065fe2fb60900795',1,'term.c']]],
-  ['add_5ftermcode',['add_termcode',['../term_8c.html#a69899a5ae8b3b9585afa7e8b916ef270',1,'term.c']]],
   ['add_5fto_5fhistory',['add_to_history',['../ex__getln_8c.html#a3cc7abb0d15331bfab116bd13144691c',1,'ex_getln.c']]],
   ['add_5fto_5fshowcmd',['add_to_showcmd',['../normal_8c.html#ab783a6e2277ad86bf223e96bcd7895a4',1,'normal.c']]],
   ['add_5fto_5fshowcmd_5fc',['add_to_showcmd_c',['../normal_8c.html#a9c0b881f5543eea98e58740e4bc31f0e',1,'normal.c']]],

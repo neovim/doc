@@ -18,5 +18,6 @@ var searchData=
   ['prt_5fsettings_5ft',['prt_settings_T',['../structprt__settings__T.html',1,'']]],
   ['prt_5ftext_5fattr_5ft',['prt_text_attr_T',['../structprt__text__attr__T.html',1,'']]],
   ['ptrlist',['Ptrlist',['../unionPtrlist.html',1,'']]],
+  ['ptyprocess',['PtyProcess',['../structPtyProcess.html',1,'']]],
   ['pumitem_5ft',['pumitem_T',['../structpumitem__T.html',1,'']]]
 ];

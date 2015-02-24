@@ -75,8 +75,6 @@ var searchData=
   ['in_5fstatus_5fline',['IN_STATUS_LINE',['../mouse_8h.html#a8dfb783d416444c90d4c96274be430e7',1,'mouse.h']]],
   ['in_5funknown',['IN_UNKNOWN',['../mouse_8h.html#a337e62254c4fb07c53b0c0e0fb4a3331',1,'mouse.h']]],
   ['inc',['INC',['../option_8c.html#af735670d9b1cd3dfa2d927db387f7123',1,'option.c']]],
-  ['inc2',['INC2',['../term_8c.html#a199da525fad2f3a06fb0d30035f2eb9e',1,'term.c']]],
-  ['inc3',['INC3',['../term_8c.html#a93ce256b5509045f01294b734e8509c7',1,'term.c']]],
   ['indent_5fdec',['INDENT_DEC',['../edit_8h.html#a1627cb4067f62884ebe4c2b38985106d',1,'edit.h']]],
   ['indent_5ffile',['INDENT_FILE',['../os__unix__defs_8h.html#ae3ec43418b49bb7710404437c89ef044',1,'os_unix_defs.h']]],
   ['indent_5finc',['INDENT_INC',['../edit_8h.html#aebe6e9948961ddab0d54c66229cb6d24',1,'edit.h']]],

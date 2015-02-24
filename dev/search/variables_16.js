@@ -106,11 +106,13 @@ var searchData=
   ['wi_5foptset',['wi_optset',['../structwininfo__S.html#a5475038b9a4f535cc43e123cc9087b07',1,'wininfo_S']]],
   ['wi_5fprev',['wi_prev',['../structwininfo__S.html#a07351120390ec0eb7629bfc440c0d9b7',1,'wininfo_S']]],
   ['wi_5fwin',['wi_win',['../structwininfo__S.html#ac07c601107373406e15d1a54de2db7ba',1,'wininfo_S']]],
-  ['width',['width',['../structprt__mediasize__S.html#a9717207f662cba945bf4b99c1a1646be',1,'prt_mediasize_S::width()'],['../structui__t.html#a8f33fdfd1262721bf757842411a89298',1,'ui_t::width()']]],
+  ['width',['width',['../structprt__mediasize__S.html#a9717207f662cba945bf4b99c1a1646be',1,'prt_mediasize_S::width()'],['../structJobOptions.html#a75ddafd4e7d0eb76432d33b141230f68',1,'JobOptions::width()'],['../structui__t.html#a8f33fdfd1262721bf757842411a89298',1,'ui_t::width()']]],
   ['wim_5fflags',['wim_flags',['../globals_8h.html#ac7c650bec1a58b93a10e67d8acacf6a4',1,'globals.h']]],
+  ['winch_5fhandle',['winch_handle',['../structTUIData.html#a029f2b7c35207d2e451e4be9bca0df62',1,'TUIData']]],
   ['window',['window',['../structobject.html#aa1cc09bb0fafde46a6e917fe0cbd088d',1,'object']]],
   ['window_5fcount',['window_count',['../structmparm__T.html#aeac0c77dc6feba005a3c2a4cc046de2b',1,'mparm_T']]],
   ['window_5flayout',['window_layout',['../structmparm__T.html#aefacf15db06f52cb2da09092973d70bf',1,'mparm_T']]],
+  ['winsize',['winsize',['../structPtyProcess.html#a25085eb5aa15f48e9e6ea3e42b683f7b',1,'PtyProcess']]],
   ['wl_5ffolded',['wl_folded',['../structw__line.html#a212f808f0b5aa77a99b1621f784e63a8',1,'w_line']]],
   ['wl_5flastlnum',['wl_lastlnum',['../structw__line.html#a4da08ff1f8db13652bfa55c9b6fdeada',1,'w_line']]],
   ['wl_5flnum',['wl_lnum',['../structw__line.html#aaf592061c17498ea9f1979f6b6c4c880',1,'w_line']]],
@@ -172,6 +174,8 @@ var searchData=
   ['wo_5fwrap_5fsave',['wo_wrap_save',['../structwinopt__T.html#aa81122ebaa45fc373de9c6381d76ae8d',1,'winopt_T']]],
   ['wp',['wp',['../structfline__T.html#ac1f9d9bfaaf34a8c762e1c6c635f41a1',1,'fline_T']]],
   ['wpos',['wpos',['../structrbuffer.html#a3d92871f1394f0b4e774860fe08a7a95',1,'rbuffer']]],
+  ['writable',['writable',['../structJobOptions.html#a4dcf57167f1ca59c8ac5d349928ba308',1,'JobOptions']]],
+  ['write_5floop',['write_loop',['../structTUIData.html#a234ba71febfce9c29da9ea27e05bbcec',1,'TUIData']]],
   ['wstream',['wstream',['../structHandleData.html#a6ab1742737566f51c3a3ada21519e4d5',1,'HandleData::wstream()'],['../structWRequest.html#a995ba63753c5a6f75f786832f49bca37',1,'WRequest::wstream()']]],
   ['wx',['wx',['../structprt__ps__font__S.html#a9178fd1abdfcc5dc48d39461d6b93d31',1,'prt_ps_font_S']]]
 ];

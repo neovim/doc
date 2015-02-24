@@ -9,7 +9,7 @@ var searchData=
   ['ga_5fempty_5finit_5fvalue',['GA_EMPTY_INIT_VALUE',['../garray_8h.html#a3fe6db4166a2f644f319933a428275e0',1,'garray.h']]],
   ['ga_5fptr',['GA_PTR',['../charset_8c.html#adea53a38f03d267b5f3588490625f826',1,'charset.c']]],
   ['gaf',['GAF',['../farsi_8h.html#ada9824f271b8ca227f7f4b84fcf10f39',1,'farsi.h']]],
-  ['gap',['GAP',['../option_8c.html#a2a2129b3f6b7ce06869b7f16b81aff6f',1,'GAP():&#160;option.c'],['../term_8c.html#a2a2129b3f6b7ce06869b7f16b81aff6f',1,'GAP():&#160;term.c']]],
+  ['gap',['GAP',['../option_8c.html#a2a2129b3f6b7ce06869b7f16b81aff6f',1,'option.c']]],
   ['gargcount',['GARGCOUNT',['../buffer__defs_8h.html#a3d8f33df5c19cb28bd255141801ba28c',1,'buffer_defs.h']]],
   ['garglist',['GARGLIST',['../buffer__defs_8h.html#a4973303e7181c08d8192cc4df3d467c8',1,'buffer_defs.h']]],
   ['get_5fchartab',['GET_CHARTAB',['../charset_8c.html#ae5a7ac3d74d578aec18355c0a35f3479',1,'charset.c']]],
@@ -44,7 +44,6 @@ var searchData=
   ['go_5fvertical',['GO_VERTICAL',['../option__defs_8h.html#a63a83218b0beac9d65891d4a6cf9a335',1,'option_defs.h']]],
   ['go_5fvleft',['GO_VLEFT',['../option__defs_8h.html#a4eb10d7d1982300acceb99a14c68a4ec',1,'option_defs.h']]],
   ['go_5fvright',['GO_VRIGHT',['../option__defs_8h.html#ab1129419de0523f91b1480b14aa9142f',1,'option_defs.h']]],
-  ['goto_5fcost',['GOTO_COST',['../screen_8c.html#a5c30fe3588f9dc6586240f734fb195d6',1,'screen.c']]],
   ['gui_5fmch_5ffind_5fdialog',['gui_mch_find_dialog',['../ex__docmd_8c.html#a6acc443ef144f9d8e908f04e0cffd500',1,'ex_docmd.c']]],
   ['gui_5fmch_5freplace_5fdialog',['gui_mch_replace_dialog',['../ex__docmd_8c.html#a28239f5e92ea9d7569b84052d40e2a5c',1,'ex_docmd.c']]]
 ];

@@ -49,7 +49,7 @@ var searchData=
   ['args',['args',['../structRequestEvent.html#aa1aa9551f4ead438340b707a77efd62f',1,'RequestEvent::args()'],['../structDelayedNotification.html#a24b6a36ca00223acff6870b89f4ffc81',1,'DelayedNotification::args()']]],
   ['argt',['argt',['../structexarg.html#ace9d3414c4449c3bc0d25997d89e1239',1,'exarg']]],
   ['arguments',['arguments',['../structprt__settings__T.html#a97e80df5db7397818fa2ae8091442115',1,'prt_settings_T']]],
-  ['argv',['argv',['../structmparm__T.html#a9ba49fddfe86057c09716c8967e1f60b',1,'mparm_T']]],
+  ['argv',['argv',['../structmparm__T.html#a9ba49fddfe86057c09716c8967e1f60b',1,'mparm_T::argv()'],['../structJobOptions.html#acb55cd317793a5f011499985ed089916',1,'JobOptions::argv()']]],
   ['array',['array',['../structobject.html#ab308a4da42b72f7ae00cf5b0b895404b',1,'object']]],
   ['arrow_5fused',['arrow_used',['../globals_8h.html#a18b112bbeef55bff257f080bfc26bd12',1,'globals.h']]],
   ['ascii_5fenc',['ascii_enc',['../structprt__ps__mbfont__S.html#a8d3fe49d6f4b034e59747865e9f6375b',1,'prt_ps_mbfont_S']]],

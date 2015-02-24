@@ -1,7 +1,7 @@
 var searchData=
 [
   ['dal',['DAL',['../farsi_8h.html#a444dc22bc3041dfa0a4cbb5c4f22d8b6',1,'farsi.h']]],
-  ['data',['data',['../structString.html#aac3cd44be218d486e9fe9ecb08662752',1,'String::data()'],['../structobject.html#a4f7540178c8343c0c89a1fcf399b5292',1,'object::data()'],['../structChannel.html#a111fee74ec428fb52eb580d7d722848d',1,'Channel::data()'],['../structevent.html#a675355462c32d49a652673799ca24209',1,'event::data()'],['../structjob.html#a23916c5141ae6ff4d34281f3d0d334bf',1,'job::data()'],['../structrbuffer.html#a10341d501eedbece575464827104e519',1,'rbuffer::data()'],['../structrstream.html#a812c0b0f25665a469257fada652897fb',1,'rstream::data()'],['../structDynamicBuffer.html#a5e262ff6e2a3dfc18bed8054fc0df093',1,'DynamicBuffer::data()'],['../structwstream.html#a8368548ec85277ca76a628f6ffcfe9cd',1,'wstream::data()'],['../structwbuffer.html#a38d305068d35e90c926112dde6f4d86a',1,'wbuffer::data()'],['../structCell.html#a0f86e8165e204433a626a0b35a343bc8',1,'Cell::data()'],['../structui__t.html#a444280f726ee8ab278ceef25a1bda05c',1,'ui_t::data()']]],
+  ['data',['data',['../structString.html#aac3cd44be218d486e9fe9ecb08662752',1,'String::data()'],['../structobject.html#a4f7540178c8343c0c89a1fcf399b5292',1,'object::data()'],['../structChannel.html#a111fee74ec428fb52eb580d7d722848d',1,'Channel::data()'],['../structevent.html#a675355462c32d49a652673799ca24209',1,'event::data()'],['../structJobOptions.html#a200bc2deaf07c8052a39c32e44e6ae65',1,'JobOptions::data()'],['../structrbuffer.html#a10341d501eedbece575464827104e519',1,'rbuffer::data()'],['../structrstream.html#a812c0b0f25665a469257fada652897fb',1,'rstream::data()'],['../structDynamicBuffer.html#a5e262ff6e2a3dfc18bed8054fc0df093',1,'DynamicBuffer::data()'],['../structwstream.html#a8368548ec85277ca76a628f6ffcfe9cd',1,'wstream::data()'],['../structwbuffer.html#a38d305068d35e90c926112dde6f4d86a',1,'wbuffer::data()'],['../structCell.html#a0f86e8165e204433a626a0b35a343bc8',1,'Cell::data()'],['../structui__t.html#a444280f726ee8ab278ceef25a1bda05c',1,'ui_t::data()']]],
   ['data_5fbl',['DATA_BL',['../memline_8c.html#aa644b4da792aa82847aa9bfab40cafab',1,'memline.c']]],
   ['data_5fblock',['data_block',['../structdata__block.html',1,'']]],
   ['data_5fid',['DATA_ID',['../memline_8c.html#a55aa586df150c1192826a1c57dd87401',1,'memline.c']]],
@@ -54,7 +54,6 @@ var searchData=
   ['default_5ffileformat',['default_fileformat',['../misc2_8c.html#ae9cd89271e11533acd02937de717191f',1,'misc2.c']]],
   ['default_5finitializer',['DEFAULT_INITIALIZER',['../map_8c.html#a915b77a93c39d150a9f0d06f66c8d8e6',1,'map.c']]],
   ['default_5fmaxmem',['DEFAULT_MAXMEM',['../wstream_8c.html#a30044fe3de8646b508f2b1a2d4cfabce',1,'wstream.c']]],
-  ['default_5fterm',['DEFAULT_TERM',['../term_8c.html#a8f97baea443b2adf76de92088d5b9a1e',1,'term.c']]],
   ['defcs',['defcs',['../structprt__ps__mbfont__S.html#ad77571933a5b85451fc7e170ae234fee',1,'prt_ps_mbfont_S']]],
   ['defer',['defer',['../structMsgpackRpcRequestHandler.html#a87047a4a6c5adab7dce7ce2c430506a4',1,'MsgpackRpcRequestHandler']]],
   ['defs_2eh',['defs.h',['../api_2private_2defs_8h.html',1,'']]],
@@ -68,7 +67,6 @@ var searchData=
   ['del_5flines',['del_lines',['../misc1_8c.html#a836f33365fc64037209e4691b35e56fa',1,'misc1.c']]],
   ['del_5fmenutrans_5fvars',['del_menutrans_vars',['../eval_8c.html#a5960a0e56b8c555ec534393b6d6896cf',1,'eval.c']]],
   ['del_5fstr',['DEL_STR',['../ascii_8h.html#ace7a3df2689fdc10f9e697c8552cd3c9',1,'ascii.h']]],
-  ['del_5ftermcode',['del_termcode',['../term_8c.html#a23beab6adcd942369662088265792361',1,'term.c']]],
   ['del_5ftrailing_5fspaces',['del_trailing_spaces',['../strings_8c.html#a5eeed1cf0f172d76f720b329e6d09989',1,'strings.c']]],
   ['del_5ftypebuf',['del_typebuf',['../getchar_8c.html#a3fd3b11860db7a0a9d863585465c25da',1,'getchar.c']]],
   ['delayednotification',['DelayedNotification',['../structDelayedNotification.html',1,'']]],
@@ -223,7 +221,6 @@ var searchData=
   ['do_5fexedit',['do_exedit',['../ex__docmd_8c.html#adef7796d7c97fa84b09859e1f9895ffd',1,'ex_docmd.c']]],
   ['do_5fexmode',['do_exmode',['../ex__docmd_8c.html#aa948d019fdd608647502eb9f182a4604',1,'ex_docmd.c']]],
   ['do_5ffinish',['do_finish',['../ex__cmds2_8c.html#a4f0f9fd71a1a3c207df3bf1edccf89d4',1,'ex_cmds2.c']]],
-  ['do_5ffixdel',['do_fixdel',['../ex__cmds_8c.html#a3574551cd84ec9abc994dc0255a4b2e2',1,'ex_cmds.c']]],
   ['do_5fhighlight',['do_highlight',['../syntax_8c.html#a4fae7fb8cabc56a554a6d69d8fddb44a',1,'syntax.c']]],
   ['do_5fin_5fruntimepath',['do_in_runtimepath',['../ex__cmds2_8c.html#afc57edd36cb7ef7c53c12ef9678bd205',1,'ex_cmds2.c']]],
   ['do_5fintthrow',['do_intthrow',['../ex__eval_8c.html#a632fcd6bb6855205fb31b3eaa7a566a9',1,'ex_eval.c']]],

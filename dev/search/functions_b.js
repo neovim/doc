@@ -19,7 +19,7 @@ var searchData=
   ['lbr_5fchartabsize_5fadv',['lbr_chartabsize_adv',['../charset_8c.html#a387bab5eccbdacc7bd6424d7b17b3d8e',1,'charset.c']]],
   ['leave_5fcleanup',['leave_cleanup',['../ex__eval_8c.html#ac4fb9298ea02baac67fdd5c3f0d553e0',1,'ex_eval.c']]],
   ['leftcol_5fchanged',['leftcol_changed',['../cursor_8c.html#a2b43c7fa6edf61f4b65b71e64161de93',1,'cursor.c']]],
-  ['limit_5fscreen_5fsize',['limit_screen_size',['../term_8c.html#a28bf5d095bf3f881a9902cfdf4ad5def',1,'term.c']]],
+  ['limit_5fscreen_5fsize',['limit_screen_size',['../screen_8c.html#a28bf5d095bf3f881a9902cfdf4ad5def',1,'screen.c']]],
   ['line_5fbreakcheck',['line_breakcheck',['../misc1_8c.html#a8703516dc56663f759f265915d1acc2d',1,'misc1.c']]],
   ['linefolded',['lineFolded',['../fold_8c.html#ae93bdeb0b47100cebcf73bbd682fc778',1,'fold.c']]],
   ['linetabsize',['linetabsize',['../charset_8c.html#a81e265d6781fa43442980b427b197a9d',1,'charset.c']]],

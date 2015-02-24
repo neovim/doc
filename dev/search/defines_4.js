@@ -22,7 +22,6 @@ var searchData=
   ['debuggy',['DEBUGGY',['../ex__cmds2_8c.html#a3a64335522f9bd166b31e2e0d2aee30b',1,'ex_cmds2.c']]],
   ['default_5finitializer',['DEFAULT_INITIALIZER',['../map_8c.html#a915b77a93c39d150a9f0d06f66c8d8e6',1,'map.c']]],
   ['default_5fmaxmem',['DEFAULT_MAXMEM',['../wstream_8c.html#a30044fe3de8646b508f2b1a2d4cfabce',1,'wstream.c']]],
-  ['default_5fterm',['DEFAULT_TERM',['../term_8c.html#a8f97baea443b2adf76de92088d5b9a1e',1,'term.c']]],
   ['del',['DEL',['../ascii_8h.html#ad1e508e805e4ddbc05119be4bb260985',1,'ascii.h']]],
   ['del_5fstr',['DEL_STR',['../ascii_8h.html#ace7a3df2689fdc10f9e697c8552cd3c9',1,'ascii.h']]],
   ['delete_5ffold_5fnested',['DELETE_FOLD_NESTED',['../fold_8c.html#a7659f348504f79eefdf704a75c4e7253',1,'fold.c']]],

@@ -58,7 +58,6 @@ var searchData=
   ['vim_5fgettempdir',['vim_gettempdir',['../tempfile_8c.html#ac1bd273a39cd42e96408b3ed87ab44fe',1,'tempfile.c']]],
   ['vim_5finput',['vim_input',['../vim_8c.html#a4445639b2449bfcdd056351f6765d5c0',1,'vim.c']]],
   ['vim_5fis_5fctrl_5fx_5fkey',['vim_is_ctrl_x_key',['../edit_8c.html#a98750b14f1d452561a33afe1d1cf2a3d',1,'edit.c']]],
-  ['vim_5fis_5fxterm',['vim_is_xterm',['../os__unix_8c.html#a202b393af4b1f192b537c0230983b33c',1,'os_unix.c']]],
   ['vim_5fisabsname',['vim_isAbsName',['../path_8c.html#a5ef1498896ca3e8d9fab89a91bf1df25',1,'path.c']]],
   ['vim_5fisblankline',['vim_isblankline',['../charset_8c.html#a60b61e5a418215ab5f2d8b2228cd56cd',1,'charset.c']]],
   ['vim_5fisdigit',['vim_isdigit',['../charset_8c.html#a35845ed87dc61ea86eb2e2f2f2f477f3',1,'charset.c']]],

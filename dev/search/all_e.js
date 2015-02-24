@@ -273,7 +273,6 @@ var searchData=
   ['num_5fcharsets',['num_charsets',['../structprt__ps__mbfont__S.html#ab2c55ceaf25e322e3300d6cc6b360c1a',1,'prt_ps_mbfont_S']]],
   ['num_5fencodings',['num_encodings',['../structprt__ps__mbfont__S.html#a8dacff23d13ca6258e96bf51d2d35041',1,'prt_ps_mbfont_S']]],
   ['num_5fevents',['NUM_EVENTS',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aa375c9117363fc3a2454e271606f3e111',1,'fileio.h']]],
-  ['num_5fmouse_5fclicks',['NUM_MOUSE_CLICKS',['../term_8h.html#ae298256f38b891ae6536b4b7bb3cf095',1,'term.h']]],
   ['num_5fregisters',['NUM_REGISTERS',['../ops_8c.html#a5efff3a4a48efbf589e3a2320997d9b9',1,'ops.c']]],
   ['number',['number',['../structprt__settings__T.html#a21095a0e7eed29ff2be781ee9f87fe1f',1,'prt_settings_T::number()'],['../structoption__table__T.html#acbec49bb9294ee3b5557657d8baa8cf8',1,'option_table_T::number()']]],
   ['number_5fwidth',['number_width',['../screen_8c.html#a9c404f9aed34a4bdceb3df25c2d80d33',1,'screen.c']]],

@@ -242,7 +242,6 @@ var searchData=
   ['ks_5fextra',['KS_EXTRA',['../keymap_8h.html#a5b660c9fbf8eec8e78e2c68a532b80ad',1,'keymap.h']]],
   ['ks_5fhor_5fscrollbar',['KS_HOR_SCROLLBAR',['../keymap_8h.html#afba24a82622b275138adde85750af9b6',1,'keymap.h']]],
   ['ks_5fkey',['KS_KEY',['../keymap_8h.html#a1638b7c051f7982ed5d95e2ed9d28fa1',1,'keymap.h']]],
-  ['ks_5flast',['KS_LAST',['../term__defs_8h.html#a5776f640a7a07e841566384363a8f137',1,'term_defs.h']]],
   ['ks_5fmenu',['KS_MENU',['../keymap_8h.html#abb08078212c9b2abd300bfc40814f342',1,'keymap.h']]],
   ['ks_5fmodifier',['KS_MODIFIER',['../keymap_8h.html#ad24dcee5b82da30f3826c6e1fc48537c',1,'keymap.h']]],
   ['ks_5fmouse',['KS_MOUSE',['../keymap_8h.html#aa8c42fe71442787951cb52bc7c9e16d3',1,'keymap.h']]],

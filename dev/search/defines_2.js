@@ -84,7 +84,6 @@ var searchData=
   ['bs_5feol',['BS_EOL',['../option__defs_8h.html#a5cd2a5292cb376547d03be490154ae7b',1,'option_defs.h']]],
   ['bs_5findent',['BS_INDENT',['../option__defs_8h.html#afe3a68009f0994bfd0fade0e5c2818e1',1,'option_defs.h']]],
   ['bs_5fstart',['BS_START',['../option__defs_8h.html#a328850d621bdabf0f2548113f8680e2e',1,'option_defs.h']]],
-  ['bt_5fextra_5fkeys',['BT_EXTRA_KEYS',['../term_8c.html#a21301972c0ff74265f90c97a9496c87a',1,'term.c']]],
   ['bufempty',['bufempty',['../macros_8h.html#a262dc06774ba50c32f44a35fe0571c11',1,'macros.h']]],
   ['buffer_5fobj',['BUFFER_OBJ',['../api_2private_2helpers_8h.html#adeba4b57ec37a426fa0bd27626312df9',1,'helpers.h']]],
   ['bufname',['BUFNAME',['../ex__cmds__defs_8h.html#ae7e908044d33fbfb457e71d67fec1aa1',1,'ex_cmds_defs.h']]],

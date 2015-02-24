@@ -25,6 +25,7 @@ var searchData=
   ['ci_5fkey',['ci_key',['../structcompitem__S.html#ab82de328587cb3bf7b3beab7f61c7321',1,'compitem_S']]],
   ['ci_5fnewid',['ci_newID',['../structcompitem__S.html#ac144343f02360f5a934dc4815c25c834',1,'compitem_S']]],
   ['clear',['clear',['../structui__t.html#ac317a3166e7a6b893237e2e5f4571131',1,'ui_t']]],
+  ['closed',['closed',['../structjob.html#a8a4a587da5265a952ef479490a49f8b8',1,'job']]],
   ['cmap_5fcharset',['cmap_charset',['../structprt__ps__charset__S.html#ae800ca5174b0cbe76e1370589468d2cd',1,'prt_ps_charset_S']]],
   ['cmap_5fencoding',['cmap_encoding',['../structprt__ps__encoding__S.html#a736f6cac8f12bb3887706a6aaf6738e6',1,'prt_ps_encoding_S']]],
   ['cmd',['cmd',['../structexarg.html#af020ebe893532e08dae5d69d9de52d40',1,'exarg::cmd()'],['../structAutoCmd.html#a20ece3439120ce0a400e20160d3aaa34',1,'AutoCmd::cmd()']]],

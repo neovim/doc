@@ -74,7 +74,6 @@ var searchData=
   ['set_5fchartab',['SET_CHARTAB',['../charset_8c.html#a3c9ba827340c836ff3ec5a734371b227',1,'charset.c']]],
   ['set_5fflag',['SET_FLAG',['../undo_8c.html#ade03e367c4d9c59cd5fac822a2a78f08',1,'undo.c']]],
   ['set_5fno_5fhlsearch',['SET_NO_HLSEARCH',['../vim_8h.html#a4bcead67408b40abde02e14a44cf514b',1,'vim.h']]],
-  ['set_5fnum_5fmouse_5fclicks',['SET_NUM_MOUSE_CLICKS',['../term_8h.html#a00ac0932f7fcb536e9db76c08155126a',1,'term.h']]],
   ['setwsize',['SETWSIZE',['../vim_8h.html#a232224d12bb5a36266b488418a574628',1,'vim.h']]],
   ['sf_5fccomment',['SF_CCOMMENT',['../syntax_8c.html#a7f8b3acc3484f1e7cf4e415be17a7ca8',1,'syntax.c']]],
   ['sf_5fmatch',['SF_MATCH',['../syntax_8c.html#afe08c6609559045512d480455c7ec1db',1,'syntax.c']]],

@@ -398,7 +398,7 @@ var searchData=
   ['exflag_5fnr',['EXFLAG_NR',['../ex__cmds__defs_8h.html#aca39eb4a64698483342a05d579f7dcc0',1,'ex_cmds_defs.h']]],
   ['exflag_5fprint',['EXFLAG_PRINT',['../ex__cmds__defs_8h.html#ab5c6495c0f7dfcb1ded6e1d2dcf1dbcf',1,'ex_cmds_defs.h']]],
   ['exflags',['EXFLAGS',['../ex__cmds__defs_8h.html#aa1cec13bb419bc53e2c9f36048d942d9',1,'ex_cmds_defs.h']]],
-  ['exit_5fcb',['exit_cb',['../structjob.html#abe6bc12ec790022113a50cc6a5bd2452',1,'job']]],
+  ['exit_5fcb',['exit_cb',['../structJobOptions.html#a898b7249330204fc084807baae05ba08',1,'JobOptions']]],
   ['exmode_5fnormal',['EXMODE_NORMAL',['../ex__docmd_8h.html#ad7948b7ac59c79e409e8d0e6d4ff7884',1,'ex_docmd.h']]],
   ['exmode_5fvim',['EXMODE_VIM',['../ex__docmd_8h.html#a0136e4beeb40e50aab767f8d0c7ad1d4',1,'ex_docmd.h']]],
   ['exp_5fcase',['EXP_CASE',['../syntax_8c.html#a94798fdadfbf49a7c658ace669a1d310aa8382edcf5b0045f91622e17dc7733b6',1,'syntax.c']]],
