@@ -84,7 +84,7 @@ download_clang_badge() {
 find_all_bugs_number() {
   # 1. Extract count from line "scan-build: * bugs found".
   # 2. Substitute "No" by 0
-  sed -n 's/scan-build: \(.*\) bugs found./\1/p' ${1} \
+  sed -n 's/scan-build: \(.*\) bugs\{0,1\} found./\1/p' ${1} \
     | sed 's/No/0/'
 }
 
