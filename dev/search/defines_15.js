@@ -44,7 +44,6 @@ var searchData=
   ['usectrlv',['USECTRLV',['../ex__cmds__defs_8h.html#a96c125873bb54cba54a97e45225f2c33',1,'ex_cmds_defs.h']]],
   ['user_5fcmd',['USER_CMD',['../ex__docmd_8c.html#a4ac37e1a18ddd00675a51a7a10a70443',1,'ex_docmd.c']]],
   ['user_5fcmd_5fga',['USER_CMD_GA',['../ex__docmd_8c.html#ae99087c289f20393a09f2c019553ef12',1,'ex_docmd.c']]],
-  ['user_5fhighlight',['USER_HIGHLIGHT',['../globals_8h.html#ac5981f5603950c3594f59391d695e18d',1,'globals.h']]],
   ['usr_5fexrc_5ffile',['USR_EXRC_FILE',['../os__unix__defs_8h.html#a64e667bc5e5a33c1a86279e728a36ad0',1,'os_unix_defs.h']]],
   ['usr_5fgvimrc_5ffile',['USR_GVIMRC_FILE',['../os__unix__defs_8h.html#afc386dc386fbd5759fa845e5778c69c4',1,'os_unix_defs.h']]],
   ['usr_5fgvimrc_5ffile2',['USR_GVIMRC_FILE2',['../os__unix__defs_8h.html#a9a6295ae80c10d15bf147bda113a95ee',1,'os_unix_defs.h']]],

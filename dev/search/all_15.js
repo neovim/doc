@@ -205,7 +205,6 @@ var searchData=
   ['user_5fcmd',['USER_CMD',['../ex__docmd_8c.html#a4ac37e1a18ddd00675a51a7a10a70443',1,'ex_docmd.c']]],
   ['user_5fcmd_5fga',['USER_CMD_GA',['../ex__docmd_8c.html#ae99087c289f20393a09f2c019553ef12',1,'ex_docmd.c']]],
   ['user_5fexpand_5ffunc_5ft',['user_expand_func_T',['../ex__getln_8c.html#af9a9d0eab68c196c343574948d16294f',1,'ex_getln.c']]],
-  ['user_5fhighlight',['USER_HIGHLIGHT',['../globals_8h.html#ac5981f5603950c3594f59391d695e18d',1,'globals.h']]],
   ['userhl',['userhl',['../structstl__hlrec.html#a2bcb76e29abe56af9972d0ec198a0e36',1,'stl_hlrec']]],
   ['useridx',['useridx',['../structexarg.html#a90d39e6e4a6c6406accce7fc5e4a519f',1,'exarg']]],
   ['users_2ec',['users.c',['../users_8c.html',1,'']]],

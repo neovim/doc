@@ -75,7 +75,6 @@ var searchData=
   ['have_5facl',['HAVE_ACL',['../os__unix__defs_8h.html#a6e99bbc6eb8f6c240cee333475ff1075',1,'os_unix_defs.h']]],
   ['have_5fbuflist_5fmatch',['HAVE_BUFLIST_MATCH',['../buffer_8c.html#a36638dc0918f744bf2aa73ebad7a5308',1,'buffer.c']]],
   ['have_5fdup',['HAVE_DUP',['../os__unix__defs_8h.html#a1b56a762290412383bb3793de48da434',1,'os_unix_defs.h']]],
-  ['have_5fsandbox',['HAVE_SANDBOX',['../globals_8h.html#a5eb4ad50b4f6f3786841977feb01ada1',1,'globals.h']]],
   ['he_5fj',['HE_J',['../farsi_8h.html#a52ef3f5cbb930aaf1ec448a8003efe75',1,'farsi.h']]],
   ['head',['head',['../structpat__T.html#aaa85f3c45632362f883ba2247e62404b',1,'pat_T::head()'],['../regexp_8c.html#a110f3b6cdacd45daee818b3e5965f6da',1,'HEAD():&#160;regexp.c']]],
   ['header_5fsize',['HEADER_SIZE',['../memline_8c.html#a49999be01380f41cc0d0f1f1406fb277',1,'memline.c']]],
