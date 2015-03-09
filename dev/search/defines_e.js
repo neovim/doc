@@ -66,16 +66,8 @@ var searchData=
   ['nv_5fss',['NV_SS',['../normal_8c.html#a3b2ec1534be60ace3fc755225b300da5',1,'normal.c']]],
   ['nv_5fsss',['NV_SSS',['../normal_8c.html#ab0a0ab7f6e6fc7379ed91717c0198688',1,'normal.c']]],
   ['nv_5fsts',['NV_STS',['../normal_8c.html#ab21df0e441f00f996a8be425a4c974e2',1,'normal.c']]],
-  ['nvim_5fversion_5fbuild',['NVIM_VERSION_BUILD',['../version__defs_8h.html#ac33d21d40b65e4a14f85935a2371f354',1,'version_defs.h']]],
-  ['nvim_5fversion_5fbuild_5ftype',['NVIM_VERSION_BUILD_TYPE',['../version__defs_8h.html#a43c6ca23a24f1679ad1d6589191d899a',1,'version_defs.h']]],
-  ['nvim_5fversion_5fcflags',['NVIM_VERSION_CFLAGS',['../version__defs_8h.html#a610b0a794b5171e7bcfc57dc1f2f766f',1,'version_defs.h']]],
-  ['nvim_5fversion_5fcommit',['NVIM_VERSION_COMMIT',['../version__defs_8h.html#adc701258e37b37f25d00018af955161c',1,'version_defs.h']]],
-  ['nvim_5fversion_5flong',['NVIM_VERSION_LONG',['../version__defs_8h.html#a3d79d39fd30e8721ac418bf268d469f0',1,'version_defs.h']]],
-  ['nvim_5fversion_5fmajor',['NVIM_VERSION_MAJOR',['../version__defs_8h.html#a55554376e40ebee1faff19e007144c31',1,'version_defs.h']]],
-  ['nvim_5fversion_5fmedium',['NVIM_VERSION_MEDIUM',['../version__defs_8h.html#a1ce8542315881db1a6fcbff6ffe33cea',1,'version_defs.h']]],
-  ['nvim_5fversion_5fminor',['NVIM_VERSION_MINOR',['../version__defs_8h.html#a9b5679ea500335e6c189a4891d43abc9',1,'version_defs.h']]],
-  ['nvim_5fversion_5fpatch',['NVIM_VERSION_PATCH',['../version__defs_8h.html#a01c0671db57a0decd47260f26d85e8b3',1,'version_defs.h']]],
-  ['nvim_5fversion_5fprerelease',['NVIM_VERSION_PRERELEASE',['../version__defs_8h.html#a9ce461e54797ae7d5428ee4cfdd0a2f5',1,'version_defs.h']]],
+  ['nvim_5fversion_5flong',['NVIM_VERSION_LONG',['../version_8c.html#a3d79d39fd30e8721ac418bf268d469f0',1,'version.c']]],
+  ['nvim_5fversion_5fmedium',['NVIM_VERSION_MEDIUM',['../version_8c.html#a1ce8542315881db1a6fcbff6ffe33cea',1,'version.c']]],
   ['nwhite',['NWHITE',['../regexp_8c.html#a98528b31e0aebb5f1f49e2da00f90f80',1,'regexp.c']]],
   ['nword',['NWORD',['../regexp_8c.html#abf0dfc8479e7a526b8191efde6942daf',1,'regexp.c']]]
 ];
