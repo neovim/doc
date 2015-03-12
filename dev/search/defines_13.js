@@ -360,7 +360,6 @@ var searchData=
   ['synspl_5fnotop',['SYNSPL_NOTOP',['../buffer__defs_8h.html#ae111a5867ec15294949a6b9c18096d36',1,'buffer_defs.h']]],
   ['synspl_5ftop',['SYNSPL_TOP',['../buffer__defs_8h.html#a48d61d4bc8d229a18a9debbe3f91d32b',1,'buffer_defs.h']]],
   ['syntax_5ffname',['SYNTAX_FNAME',['../os__unix__defs_8h.html#ab663aef9993732c249d0ef9c39acfd04',1,'os_unix_defs.h']]],
-  ['sys_5fgvimrc_5ffile',['SYS_GVIMRC_FILE',['../os__unix__defs_8h.html#ae33289ae02b28e997701e70dffd6a2af',1,'os_unix_defs.h']]],
   ['sys_5fmenu_5ffile',['SYS_MENU_FILE',['../os__unix__defs_8h.html#a0c5137e8fee838c00d6d8eeca56c7cd7',1,'os_unix_defs.h']]],
   ['sys_5foptwin_5ffile',['SYS_OPTWIN_FILE',['../vim_8h.html#aedf80e092c18b4fc7c1c5d4d0650d203',1,'vim.h']]],
   ['sys_5fvimrc_5ffile',['SYS_VIMRC_FILE',['../os__unix__defs_8h.html#a1911c62ae289848a368895b7bbf06ef5',1,'os_unix_defs.h']]]

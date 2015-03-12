@@ -345,7 +345,7 @@ var searchData=
   ['show_5futf8',['show_utf8',['../mbyte_8c.html#a4316c97906259bfdf46d518c82cdcd92',1,'mbyte.c']]],
   ['showcmd_5fbuflen',['SHOWCMD_BUFLEN',['../normal_8c.html#ab51e7b243a9fdd3ee398733766a1a150',1,'normal.c']]],
   ['showcmd_5fcols',['SHOWCMD_COLS',['../vim_8h.html#a5b86747f1f19c035f3f5b156bae1ccc9',1,'vim.h']]],
-  ['showmatch',['SHOWMATCH',['../vim_8h.html#a8f07ee48fda70d6303de652451dcf295',1,'SHOWMATCH():&#160;vim.h'],['../search_8c.html#a215998f9f835070371d0f7cadb6b27cf',1,'showmatch(int c):&#160;search.c']]],
+  ['showmatch',['showmatch',['../search_8c.html#a215998f9f835070371d0f7cadb6b27cf',1,'showmatch(int c):&#160;search.c'],['../vim_8h.html#a8f07ee48fda70d6303de652451dcf295',1,'SHOWMATCH():&#160;vim.h']]],
   ['showmode',['showmode',['../screen_8c.html#a9401a9b46d2e9c730e99792688d704d7',1,'screen.c']]],
   ['showruler',['showruler',['../screen_8c.html#a3e2000a173301e34fd0b5237cc9b2075',1,'screen.c']]],
   ['shr',['SHR',['../sha256_8c.html#a34f8c30efd49bafaaef210c443a467dc',1,'sha256.c']]],
@@ -984,7 +984,6 @@ var searchData=
   ['syntax_5ffname',['SYNTAX_FNAME',['../os__unix__defs_8h.html#ab663aef9993732c249d0ef9c39acfd04',1,'os_unix_defs.h']]],
   ['syntax_5fpresent',['syntax_present',['../syntax_8c.html#a2d58114d0eee1bdd1fcf096622d5f52e',1,'syntax.c']]],
   ['syntax_5fstart',['syntax_start',['../syntax_8c.html#a560238fd259b657707c82c1722e8cdc5',1,'syntax.c']]],
-  ['sys_5fgvimrc_5ffile',['SYS_GVIMRC_FILE',['../os__unix__defs_8h.html#ae33289ae02b28e997701e70dffd6a2af',1,'os_unix_defs.h']]],
   ['sys_5fmenu_5ffile',['SYS_MENU_FILE',['../os__unix__defs_8h.html#a0c5137e8fee838c00d6d8eeca56c7cd7',1,'os_unix_defs.h']]],
   ['sys_5foptwin_5ffile',['SYS_OPTWIN_FILE',['../vim_8h.html#aedf80e092c18b4fc7c1c5d4d0650d203',1,'vim.h']]],
   ['sys_5fvimrc_5ffile',['SYS_VIMRC_FILE',['../os__unix__defs_8h.html#a1911c62ae289848a368895b7bbf06ef5',1,'os_unix_defs.h']]]

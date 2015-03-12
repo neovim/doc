@@ -210,8 +210,6 @@ var searchData=
   ['users_2ec',['users.c',['../users_8c.html',1,'']]],
   ['using_5fscript',['using_script',['../getchar_8c.html#ab29ff5db05498fa455d5b86e5688fd33',1,'getchar.c']]],
   ['usr_5fexrc_5ffile',['USR_EXRC_FILE',['../os__unix__defs_8h.html#a64e667bc5e5a33c1a86279e728a36ad0',1,'os_unix_defs.h']]],
-  ['usr_5fgvimrc_5ffile',['USR_GVIMRC_FILE',['../os__unix__defs_8h.html#afc386dc386fbd5759fa845e5778c69c4',1,'os_unix_defs.h']]],
-  ['usr_5fgvimrc_5ffile2',['USR_GVIMRC_FILE2',['../os__unix__defs_8h.html#a9a6295ae80c10d15bf147bda113a95ee',1,'os_unix_defs.h']]],
   ['usr_5flog_5ffile',['USR_LOG_FILE',['../log_8c.html#a90af61c26b8d36298079ffac691d1c27',1,'log.c']]],
   ['usr_5fvimrc_5ffile',['USR_VIMRC_FILE',['../os__unix__defs_8h.html#a5c4ee922b135b9f2ab30714325c30840',1,'os_unix_defs.h']]],
   ['usr_5fvimrc_5ffile2',['USR_VIMRC_FILE2',['../os__unix__defs_8h.html#a310fba699c69c8fa66f06f98d58aa65c',1,'os_unix_defs.h']]],
