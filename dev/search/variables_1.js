@@ -275,6 +275,8 @@ var searchData=
   ['buffer',['buffer',['../structobject.html#af9946011065ba3e5963246badf6efc41',1,'object::buffer()'],['../structprt__resfile__buffer__S.html#a0bc3dcb8a118aae6907ad206c7d8df4d',1,'prt_resfile_buffer_S::buffer()'],['../structUIData.html#a54bc775c40a36dba24b445747a57d03a',1,'UIData::buffer()'],['../structrstream.html#a982e9079c2168e1771d7c01e5e980342',1,'rstream::buffer()'],['../structWRequest.html#a4b6a43b2acf03082971b0181ae9fd984',1,'WRequest::buffer()'],['../structcontext__sha256__T.html#a243a57d8ab56c5b99f84d1960576b472',1,'context_sha256_T::buffer()']]],
   ['buflocal_5fnr',['buflocal_nr',['../structAutoPat.html#a8ef6b37e5024400aecd1da92e50bae9f',1,'AutoPat']]],
   ['bufpos',['bufpos',['../structTUIData.html#a8d5b8aaf0d930a3af5c142c810dde40e',1,'TUIData']]],
+  ['busy_5fstart',['busy_start',['../structui__t.html#adf18abc5f40167c0522d4a21c470bec6',1,'ui_t']]],
+  ['busy_5fstop',['busy_stop',['../structui__t.html#ad393f2f3a1eb3abaee200e2ad502191b',1,'ui_t']]],
   ['bw_5fbuf',['bw_buf',['../structbw__info.html#a630f6d1ad07316fc09dce9c9f086f1b0',1,'bw_info']]],
   ['bw_5fconv_5fbuf',['bw_conv_buf',['../structbw__info.html#ac659ef94fd695a38550e0dea3f39bea5',1,'bw_info']]],
   ['bw_5fconv_5fbuflen',['bw_conv_buflen',['../structbw__info.html#a1f8b8d667e9a05acfc87ef4612c5eb7f',1,'bw_info']]],

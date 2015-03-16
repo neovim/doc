@@ -100,8 +100,6 @@ var searchData=
   ['current_5ffunccal',['current_funccal',['../eval_8c.html#acf7e7ea83c7c9c632394605024c3992e',1,'eval.c']]],
   ['current_5fline',['current_line',['../structloop__cookie.html#aacf606407f0fd47c651ac6f277973b8a',1,'loop_cookie']]],
   ['cursor_5fgoto',['cursor_goto',['../structui__t.html#a39a6953a06b354b831b8a784c153f00a',1,'ui_t']]],
-  ['cursor_5foff',['cursor_off',['../structui__t.html#a95807d2006c04724e5766cbbad28311e',1,'ui_t']]],
-  ['cursor_5fon',['cursor_on',['../structui__t.html#a0f7970ff65507df405d322273b29d951',1,'ui_t']]],
   ['cursor_5fstart',['cursor_start',['../structoparg__S.html#a0857162e7c3adec7b5555426416debae',1,'oparg_S']]],
   ['curtab',['curtab',['../globals_8h.html#aec8a130381d8276a622222a7479a08fe',1,'globals.h']]],
   ['curwin',['curwin',['../globals_8h.html#a1440aee39ae90077fff5aeb23c8a3764',1,'globals.h']]]

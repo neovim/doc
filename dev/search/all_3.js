@@ -578,8 +578,6 @@ var searchData=
   ['cursor_5fentry',['cursor_entry',['../structcursor__entry.html',1,'']]],
   ['cursor_5fgoto',['cursor_goto',['../structui__t.html#a39a6953a06b354b831b8a784c153f00a',1,'ui_t']]],
   ['cursor_5fmoved',['CURSOR_MOVED',['../mouse_8h.html#abeb07d4ceb42c3fe036f1033e05fcf6f',1,'mouse.h']]],
-  ['cursor_5foff',['cursor_off',['../structui__t.html#a95807d2006c04724e5766cbbad28311e',1,'ui_t']]],
-  ['cursor_5fon',['cursor_on',['../structui__t.html#a0f7970ff65507df405d322273b29d951',1,'ui_t']]],
   ['cursor_5fpos_5finfo',['cursor_pos_info',['../ops_8c.html#adaa7d5baa7cbe8dd7f0480858b6c089c',1,'ops.c']]],
   ['cursor_5fshape_2ec',['cursor_shape.c',['../cursor__shape_8c.html',1,'']]],
   ['cursor_5fshape_2eh',['cursor_shape.h',['../cursor__shape_8h.html',1,'']]],
