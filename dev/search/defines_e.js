@@ -24,7 +24,6 @@ var searchData=
   ['nlower',['NLOWER',['../regexp_8c.html#af31c375f11fe6faec21b75e638fad7bc',1,'regexp.c']]],
   ['nmarks',['NMARKS',['../mark__defs_8h.html#a1c02ca83443513a6ab1c93dcb316ac7e',1,'mark_defs.h']]],
   ['no_5fbuffers',['NO_BUFFERS',['../globals_8h.html#a559716265a4e4f0cc2a485fc3de818e5',1,'globals.h']]],
-  ['no_5fexpandpath',['NO_EXPANDPATH',['../os__unix__defs_8h.html#a6f79721f3b1e91de65ae0570e1e1a84f',1,'os_unix_defs.h']]],
   ['no_5flocal_5fundolevel',['NO_LOCAL_UNDOLEVEL',['../option__defs_8h.html#a57c940314b87564de95c015c3d36ad78',1,'option_defs.h']]],
   ['no_5fscreen',['NO_SCREEN',['../globals_8h.html#afcec43537029f9dcbf8705496cdbe294',1,'globals.h']]],
   ['nobehind',['NOBEHIND',['../regexp_8c.html#a7251f1e6318e227c9abd3376a5979a6f',1,'regexp.c']]],
