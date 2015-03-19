@@ -82,6 +82,7 @@ var searchData=
   ['original_5ftext',['ORIGINAL_TEXT',['../edit_8c.html#a51326e458e4050b2115863e0edda4d9b',1,'edit.c']]],
   ['out_5fstr',['OUT_STR',['../vim_8h.html#a14fbed0d0794f553388498bffb71bec4',1,'vim.h']]],
   ['out_5fstr_5fnf',['OUT_STR_NF',['../vim_8h.html#ae1f9e2ae33cccf61215e81802d315225',1,'vim.h']]],
+  ['outbuf_5fsize',['OUTBUF_SIZE',['../tui_8c.html#a3df829d6427c2cd4fbd387268040cc65',1,'tui.c']]],
   ['ow',['OW',['../farsi_8h.html#a8eb9cc7ad8a25ec4c4c104fc5f302032',1,'farsi.h']]],
   ['ow_5fow',['OW_OW',['../farsi_8h.html#a803b2f3480503526d6abad8ec30bb246',1,'farsi.h']]]
 ];
