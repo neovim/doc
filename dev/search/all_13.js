@@ -53,7 +53,7 @@ var searchData=
   ['sboxok',['SBOXOK',['../ex__cmds__defs_8h.html#a9b7afbc54e68fae4371f4c17e489f91a',1,'ex_cmds_defs.h']]],
   ['sc_5fcol',['sc_col',['../globals_8h.html#a854ae0633fa2dd21e5184503d010cfdc',1,'globals.h']]],
   ['schar_5ft',['schar_T',['../globals_8h.html#ab3ddbe205d47d9b30e84276bd40e8aa1',1,'globals.h']]],
-  ['schld',['schld',['../structPtyProcess.html#aabe1b1e9b4986f51ab814e56478986a7',1,'PtyProcess']]],
+  ['schld',['schld',['../job_8c.html#a8ca3129c13c037a60689d712e67264e3',1,'job.c']]],
   ['scid_5ft',['scid_T',['../buffer__defs_8h.html#a02a5ed8479635618fa379378a5f8d6d5',1,'buffer_defs.h']]],
   ['scl_5flist',['scl_list',['../structsyn__cluster__S.html#aec1b7409f6f2e6c8cb0bb1b844975969',1,'syn_cluster_S']]],
   ['scl_5fname',['scl_name',['../structsyn__cluster__S.html#a8bd0c63cad59ba14bd8ba81ca42bc8b4',1,'syn_cluster_S']]],

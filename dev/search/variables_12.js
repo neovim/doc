@@ -24,7 +24,7 @@ var searchData=
   ['sb_5ftext',['sb_text',['../structmsgchunk__S.html#a64bcc67df52d7ab1fb44ae5c34f46ac5',1,'msgchunk_S']]],
   ['sb_5fused',['sb_used',['../structsblock__S.html#ac7bdccc868d0fd0f50f196b4ef85ba3d',1,'sblock_S']]],
   ['sc_5fcol',['sc_col',['../globals_8h.html#a854ae0633fa2dd21e5184503d010cfdc',1,'globals.h']]],
-  ['schld',['schld',['../structPtyProcess.html#aabe1b1e9b4986f51ab814e56478986a7',1,'PtyProcess']]],
+  ['schld',['schld',['../job_8c.html#a8ca3129c13c037a60689d712e67264e3',1,'job.c']]],
   ['scl_5flist',['scl_list',['../structsyn__cluster__S.html#aec1b7409f6f2e6c8cb0bb1b844975969',1,'syn_cluster_S']]],
   ['scl_5fname',['scl_name',['../structsyn__cluster__S.html#a8bd0c63cad59ba14bd8ba81ca42bc8b4',1,'syn_cluster_S']]],
   ['scl_5fname_5fu',['scl_name_u',['../structsyn__cluster__S.html#a9fbae59eeb339b4e432c6b6917e9eb52',1,'syn_cluster_S']]],

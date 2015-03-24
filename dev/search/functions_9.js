@@ -6,6 +6,7 @@ var searchData=
   ['job_5ffind',['job_find',['../job_8c.html#ad800026b626609ff15bb325e9d15ea66',1,'job.c']]],
   ['job_5fid',['job_id',['../job_8c.html#a845b1b05ffada9b0814315fd6b49e9e1',1,'job.c']]],
   ['job_5finit',['job_init',['../job_8c.html#a921c0212672588b469066bd9362bb491',1,'job.c']]],
+  ['job_5fpid',['job_pid',['../job_8c.html#ac29751bbcbdac470aad62ef1436268a8',1,'job.c']]],
   ['job_5fresize',['job_resize',['../job_8c.html#a6d88dc0d169b6a1aed3af1fe570bb75b',1,'job.c']]],
   ['job_5fstart',['job_start',['../job_8c.html#a2d128d2327c448ff901b989f7abceb65',1,'job.c']]],
   ['job_5fstop',['job_stop',['../job_8c.html#a8af7e4fa464e20cd837ea2deef0884e3',1,'job.c']]],
