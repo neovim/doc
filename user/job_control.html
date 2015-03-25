@@ -76,11 +76,21 @@ for details
 
 2. Usage						*<A NAME="job-control-usage"></A><B>job-control-usage</B>*
 
+Here's a quick one-liner that creates a job which invokes the &quot;ls&quot; shell
+command and prints the result:
+
+<B>    call jobstart('', 'ls', ['-a'])|au JobActivity * echo v:job_data|au!</B>
+<B>    JobActivity</B>
+
+In the one-liner above, creating the <A HREF="autocmd.html#JobActivity">JobActivity</A> event handler immediately
+after the call to <A HREF="eval.html#jobstart()">jobstart()</A> is not a race because the Nvim job system will
+not publish the job result (even though <A HREF="motion.html#it">it</A> may receive <A HREF="motion.html#it">it</A>) until evaluation of
+the chained user commands (`expr1|expr2|...|exprN`) has completed.|||
+
 Job <A HREF="intro.html#control">control</A> is achieved by calling a combination of the |<A HREF="eval.html#jobstart()">jobstart()</A>|,
 |<A HREF="eval.html#jobsend()">jobsend()</A>| and |<A HREF="eval.html#jobstop()">jobstop()</A>| <A HREF="eval.html#functions">functions</A>, and by listening to the |<A HREF="autocmd.html#JobActivity">JobActivity</A>|
 event. The best way to understand is with a complete example:
 
-<B>    set nocp</B>
 <B>    let job1 = jobstart('shell1', 'bash')</B>
 <B>    let job2 = jobstart('shell2', 'bash', ['-c', 'for ((i = 0; i &lt; 10; i++)); do echo hello $i!; sleep 1; done'])</B>
 
@@ -111,7 +121,7 @@ Here's what is happening:
 - The second shell is started with the <A HREF="starting.html#-c">-c</A> argument, causing <A HREF="motion.html#it">it</A> to execute a
   command then exit. In this <A HREF="change.html#case">case</A>, the command is a for loop that will print 0
   through 9 then exit.
-- The |<A HREF="intro.html#JobHandler()">JobHandler()</A>| function is called by the `JobActivity` <A HREF="autocmd.html#autocommand">autocommand</A> (notice
+- The `JobHandler()` function is called by the `JobActivity` <A HREF="autocmd.html#autocommand">autocommand</A> (notice
   how the shell* <A HREF="pattern.html#pattern">pattern</A> matches the names `shell1` and `shell2` passed to
   |<A HREF="eval.html#jobstart()">jobstart()</A>|), and <A HREF="motion.html#it">it</A> takes care of displaying stdout/stderr received from
   the shells.
@@ -143,7 +153,7 @@ not exit after 2 seconds, `SIGKILL` will be sent.
 
     <footer>
       <div class="container">
-        Generated Tue Mar 24 17:00:15 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/ed1070bb24d61cfeb13c7afa65de64540dabe535"><code>ed1070b</code></a>.
+        Generated Wed Mar 25 08:23:58 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/c56c035576f56f86405c40f3708bff49c996f1f8"><code>c56c035</code></a>.
       </div>
     </footer>
   </body>
