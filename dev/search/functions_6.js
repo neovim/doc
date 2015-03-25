@@ -38,7 +38,7 @@ var searchData=
   ['get_5fdict_5fstring',['get_dict_string',['../eval_8c.html#a78a0a2e05dc40f66c7cfea4c6941c67e',1,'eval.c']]],
   ['get_5fdigraph',['get_digraph',['../digraph_8c.html#ad372630be91a245efcd2dcecac3f7ecc',1,'digraph.c']]],
   ['get_5fencoding_5fdefault',['get_encoding_default',['../option_8c.html#aba6467681c1d6019e586a38e88b5b193',1,'option.c']]],
-  ['get_5fenv_5fname',['get_env_name',['../misc1_8c.html#ac316deb2d8acd576f899e5ce4654a3ce',1,'misc1.c']]],
+  ['get_5fenv_5fname',['get_env_name',['../env_8c.html#ac316deb2d8acd576f899e5ce4654a3ce',1,'env.c']]],
   ['get_5fequalprg',['get_equalprg',['../option_8c.html#ae0fba63eb111fe57aaf861316f30fd76',1,'option.c']]],
   ['get_5ferrorlist',['get_errorlist',['../quickfix_8c.html#a03e9e4005c319adbcd14309a85af7294',1,'quickfix.c']]],
   ['get_5fevent_5fname',['get_event_name',['../fileio_8c.html#a6a7153e896059a106ad5934610c9e282',1,'fileio.c']]],

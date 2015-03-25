@@ -120,7 +120,7 @@ var searchData=
   ['init_5fchartab',['init_chartab',['../charset_8c.html#a8751e2d3c8738c511e4eddc27161e18f',1,'charset.c']]],
   ['init_5fhighlight',['init_highlight',['../syntax_8c.html#a2ea133fa4b192c5bf37ecea68a3fc39b',1,'syntax.c']]],
   ['init_5fhistory',['init_history',['../ex__getln_8c.html#a3b9830ecbd98de7ce0be571922d58286',1,'ex_getln.c']]],
-  ['init_5fhomedir',['init_homedir',['../misc1_8c.html#a5bd328bc06c8c3f71f3d9df207ea39bd',1,'misc1.c']]],
+  ['init_5fhomedir',['init_homedir',['../env_8c.html#a5bd328bc06c8c3f71f3d9df207ea39bd',1,'env.c']]],
   ['init_5fnormal_5fcmds',['init_normal_cmds',['../normal_8c.html#a28946c68804466aa22b6517e02da7395',1,'normal.c']]],
   ['init_5fpos_5ft',['INIT_POS_T',['../pos_8h.html#ad3aa329e09b00bea4fb5a256461e476f',1,'pos.h']]],
   ['init_5fspell_5fchartab',['init_spell_chartab',['../spell_8c.html#a4ae27fa250e3e75b306f77b17acb7a65',1,'spell.c']]],

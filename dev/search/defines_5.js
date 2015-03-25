@@ -44,7 +44,7 @@ var searchData=
   ['enc_5fucsbom',['ENC_UCSBOM',['../option__defs_8h.html#a7c47cc9210934c64398dc963de9f26cb',1,'option_defs.h']]],
   ['enc_5funicode',['ENC_UNICODE',['../mbyte_8h.html#a2ae12437355b3cd581d7ddcd813738fe',1,'mbyte.h']]],
   ['end',['END',['../regexp_8c.html#a29fd18bed01c4d836c7ebfe73a125c3f',1,'regexp.c']]],
-  ['envnamelen',['ENVNAMELEN',['../misc1_8c.html#a6edceae4a221309e39b2cbdb4d413b79',1,'misc1.c']]],
+  ['envnamelen',['ENVNAMELEN',['../env_8c.html#a6edceae4a221309e39b2cbdb4d413b79',1,'env.c']]],
   ['eol',['EOL',['../regexp_8c.html#a4e67e9429d48a2ba8f833ee3b1dceb5d',1,'regexp.c']]],
   ['eol_5fdos',['EOL_DOS',['../option__defs_8h.html#aecddef423586bfbf192adca96adec2e6',1,'option_defs.h']]],
   ['eol_5fmac',['EOL_MAC',['../option__defs_8h.html#a31e3b6df9ad9c7b401b376e17f75caa4',1,'option_defs.h']]],
