@@ -48,6 +48,7 @@ var searchData=
   ['script_5fsv',['SCRIPT_SV',['../eval_8c.html#abc1f4b1a7e7951ee61e32712945a31f7',1,'eval.c']]],
   ['script_5fvars',['SCRIPT_VARS',['../eval_8c.html#a370ae3e63b844a559c858f8ff839e0e3',1,'eval.c']]],
   ['scriptid_5finit',['SCRIPTID_INIT',['../option_8c.html#ad5a613cb4b60e171b08ada4049238e3a',1,'option.c']]],
+  ['scrollback_5fbuffer_5fdefault_5fsize',['SCROLLBACK_BUFFER_DEFAULT_SIZE',['../terminal_8c.html#ad7528f004ad5d9235baff108de10e7a4',1,'terminal.c']]],
   ['se',['SE',['../farsi_8h.html#a18bbe716f5be6adbd2150139244c0262',1,'farsi.h']]],
   ['sea_5fdialog',['SEA_DIALOG',['../globals_8h.html#ae3cc246f2e5dbb91bd5e9ee18014eff6',1,'globals.h']]],
   ['sea_5fnone',['SEA_NONE',['../globals_8h.html#ab9c14f3e74c2ae526ac73d0ac7be68e2',1,'globals.h']]],

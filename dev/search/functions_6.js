@@ -20,6 +20,7 @@ var searchData=
   ['get8ctime',['get8ctime',['../misc2_8c.html#a5693ad67e767d018998a049dc63655e1',1,'misc2.c']]],
   ['get_5farglist',['get_arglist',['../ex__cmds2_8c.html#a11bd2fe2c6cf75822389a1438fd2c4bf',1,'ex_cmds2.c']]],
   ['get_5farglist_5fexp',['get_arglist_exp',['../ex__cmds2_8c.html#a3d418c18fba640e0644c790821e63897',1,'ex_cmds2.c']]],
+  ['get_5fattr_5fentry',['get_attr_entry',['../syntax_8c.html#a0cc43d647e6e6408fa57de892c2eb0c5',1,'syntax.c']]],
   ['get_5faugroup_5fname',['get_augroup_name',['../fileio_8c.html#adab70131b08563747ee94baaee476628',1,'fileio.c']]],
   ['get_5fbehave_5farg',['get_behave_arg',['../ex__docmd_8c.html#ab4d3182964517bd3a9c66219e32d817a',1,'ex_docmd.c']]],
   ['get_5fbkc_5fvalue',['get_bkc_value',['../option_8c.html#a94dea4c02d334f78a27feedc06fb5bb4',1,'option.c']]],

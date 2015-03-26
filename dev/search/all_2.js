@@ -379,7 +379,7 @@ var searchData=
   ['bt_5fnofile',['bt_nofile',['../quickfix_8c.html#a016276412bb4269f1ad464afa8219456',1,'quickfix.c']]],
   ['bt_5fquickfix',['bt_quickfix',['../quickfix_8c.html#a806bcef2a3de70b1ffbb6b8c7c2cc953',1,'quickfix.c']]],
   ['bt_5fregprog_5ft',['bt_regprog_T',['../structbt__regprog__T.html',1,'']]],
-  ['buf',['buf',['../structmatch__T.html#afa57795a77761f19f71805f148ca6ead',1,'match_T::buf()'],['../structTUIData.html#a51143b18adfa3660571f1cf8ecd912c7',1,'TUIData::buf()']]],
+  ['buf',['buf',['../structmatch__T.html#afa57795a77761f19f71805f148ca6ead',1,'match_T::buf()'],['../structterminal.html#ad47e5021a70f306a24133d093cbfafd1',1,'terminal::buf()'],['../structTUIData.html#a51143b18adfa3660571f1cf8ecd912c7',1,'TUIData::buf()']]],
   ['buf_5faddsign',['buf_addsign',['../buffer_8c.html#a7d1bbfb924b283e321f2803a4a0d8cd5',1,'buffer.c']]],
   ['buf_5fchange_5fsign_5ftype',['buf_change_sign_type',['../buffer_8c.html#a41397b8639ac43de34e9c43b376b33c1',1,'buffer.c']]],
   ['buf_5fcheck_5ftimestamp',['buf_check_timestamp',['../fileio_8c.html#a4daa59e54d84ede285f49eafc8d09133',1,'fileio.c']]],

@@ -46,6 +46,7 @@ var searchData=
   ['pfx_5fflags',['PFX_FLAGS',['../spell_8c.html#a610cb32dfc492ab753d1d06403bcd70d',1,'spell.c']]],
   ['plus',['PLUS',['../regexp_8c.html#a0ea7ff5947c5f5430a29fdd98391eb2a',1,'regexp.c']]],
   ['pmap',['PMap',['../map__defs_8h.html#a1962cf47c5b08783985ddb280d058b53',1,'map_defs.h']]],
+  ['pmap_5fclear',['pmap_clear',['../map_8h.html#a695460fde1b3059178bb43631fd38854',1,'map.h']]],
   ['pmap_5fdel',['pmap_del',['../map_8h.html#ad7abe82d77018b7a797ce9cf79c13218',1,'map.h']]],
   ['pmap_5ffree',['pmap_free',['../map_8h.html#a6cf8284bc73fb5373836db6f9fbd9e9d',1,'map.h']]],
   ['pmap_5fget',['pmap_get',['../map_8h.html#a80a17055e3ad534812263abe93c6b0d5',1,'map.h']]],

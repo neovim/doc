@@ -405,6 +405,7 @@ var searchData=
   ['auto_5fformat',['auto_format',['../edit_8c.html#a85d8c8a2466296feb0cc1dbe49dccb31',1,'edit.c']]],
   ['autocmd',['AutoCmd',['../structAutoCmd.html',1,'AutoCmd'],['../fileio_8c.html#aeae4fe66e25953a58616cfb59df22e78',1,'AutoCmd():&#160;fileio.c']]],
   ['autocmd_5fbufnr',['autocmd_bufnr',['../structcaller__scope.html#a3deb4e5da91574f6359d798fb524fcfa',1,'caller_scope']]],
+  ['autocmd_5ffile',['autocmd_file',['../structTerminalJobData.html#aa1798375c7058cd47f90adadfb7ceb21',1,'TerminalJobData']]],
   ['autocmd_5ffname',['autocmd_fname',['../structcaller__scope.html#a0588c0592c6bc1963cc255fea5a5726c',1,'caller_scope']]],
   ['autocmd_5ffname_5ffull',['autocmd_fname_full',['../structcaller__scope.html#a48b541e28bf5c2660f5ee3835f203014',1,'caller_scope::autocmd_fname_full()'],['../globals_8h.html#adc9df713d70547ae5f655c0dba744616',1,'autocmd_fname_full():&#160;globals.h']]],
   ['autocmd_5fmatch',['autocmd_match',['../structcaller__scope.html#a4aeaeb0c81875ff7bebe93e1391a22d9',1,'caller_scope']]],

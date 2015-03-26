@@ -4,7 +4,7 @@ var searchData=
   ['jazr_5fn',['JAZR_N',['../farsi_8h.html#a889a158d387d6c81fc9e6ab5f86ed353',1,'farsi.h']]],
   ['je',['JE',['../farsi_8h.html#a61adf7b292d40bd77c0ee35cb9eb2597',1,'farsi.h']]],
   ['jim',['JIM',['../farsi_8h.html#aa5594ea656f9127770fe9404b51da22f',1,'farsi.h']]],
-  ['job',['job',['../structjob.html',1,'job'],['../structHandleData.html#a41399c8e11d185c3f4d21b691ec936a8',1,'HandleData::job()'],['../job__defs_8h.html#a4150e22449797dfc130512f171768a2b',1,'Job():&#160;job_defs.h']]],
+  ['job',['job',['../structjob.html',1,'job'],['../structTerminalJobData.html#acac75feb0ba8267429036cf373030c1b',1,'TerminalJobData::job()'],['../structHandleData.html#a41399c8e11d185c3f4d21b691ec936a8',1,'HandleData::job()'],['../job__defs_8h.html#a4150e22449797dfc130512f171768a2b',1,'Job():&#160;job_defs.h']]],
   ['job_2ec',['job.c',['../job_8c.html',1,'']]],
   ['job_2eh',['job.h',['../job_8h.html',1,'']]],
   ['job_5fbuffer_5fsize',['JOB_BUFFER_SIZE',['../job_8c.html#aa7d6546bf102d75051de9be765322317',1,'job.c']]],

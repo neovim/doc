@@ -1,7 +1,7 @@
 var searchData=
 [
   ['dal',['DAL',['../farsi_8h.html#a444dc22bc3041dfa0a4cbb5c4f22d8b6',1,'farsi.h']]],
-  ['data',['data',['../structString.html#aac3cd44be218d486e9fe9ecb08662752',1,'String::data()'],['../structobject.html#a4f7540178c8343c0c89a1fcf399b5292',1,'object::data()'],['../structChannel.html#a111fee74ec428fb52eb580d7d722848d',1,'Channel::data()'],['../structevent.html#a675355462c32d49a652673799ca24209',1,'event::data()'],['../structJobOptions.html#a200bc2deaf07c8052a39c32e44e6ae65',1,'JobOptions::data()'],['../structrbuffer.html#a10341d501eedbece575464827104e519',1,'rbuffer::data()'],['../structrstream.html#a812c0b0f25665a469257fada652897fb',1,'rstream::data()'],['../structDynamicBuffer.html#a5e262ff6e2a3dfc18bed8054fc0df093',1,'DynamicBuffer::data()'],['../structwstream.html#a8368548ec85277ca76a628f6ffcfe9cd',1,'wstream::data()'],['../structwbuffer.html#a38d305068d35e90c926112dde6f4d86a',1,'wbuffer::data()'],['../structCell.html#a0f86e8165e204433a626a0b35a343bc8',1,'Cell::data()'],['../structui__t.html#a444280f726ee8ab278ceef25a1bda05c',1,'ui_t::data()']]],
+  ['data',['data',['../structString.html#aac3cd44be218d486e9fe9ecb08662752',1,'String::data()'],['../structobject.html#a4f7540178c8343c0c89a1fcf399b5292',1,'object::data()'],['../structChannel.html#a111fee74ec428fb52eb580d7d722848d',1,'Channel::data()'],['../structevent.html#a675355462c32d49a652673799ca24209',1,'event::data()'],['../structJobOptions.html#a200bc2deaf07c8052a39c32e44e6ae65',1,'JobOptions::data()'],['../structrbuffer.html#a10341d501eedbece575464827104e519',1,'rbuffer::data()'],['../structrstream.html#a812c0b0f25665a469257fada652897fb',1,'rstream::data()'],['../structDynamicBuffer.html#a5e262ff6e2a3dfc18bed8054fc0df093',1,'DynamicBuffer::data()'],['../structwstream.html#a8368548ec85277ca76a628f6ffcfe9cd',1,'wstream::data()'],['../structwbuffer.html#a38d305068d35e90c926112dde6f4d86a',1,'wbuffer::data()'],['../structTerminalOptions.html#ad59417c6f820c76c4ec0e29a1fc16877',1,'TerminalOptions::data()'],['../structCell.html#a0f86e8165e204433a626a0b35a343bc8',1,'Cell::data()'],['../structui__t.html#a444280f726ee8ab278ceef25a1bda05c',1,'ui_t::data()']]],
   ['data_5fbl',['DATA_BL',['../memline_8c.html#aa644b4da792aa82847aa9bfab40cafab',1,'memline.c']]],
   ['data_5fblock',['data_block',['../structdata__block.html',1,'']]],
   ['data_5fid',['DATA_ID',['../memline_8c.html#a55aa586df150c1192826a1c57dd87401',1,'memline.c']]],
@@ -78,6 +78,7 @@ var searchData=
   ['deletefoldrecurse',['deleteFoldRecurse',['../fold_8c.html#a401a92ce51a919ee41a6f92c544890db',1,'fold.c']]],
   ['deletion_5fregister',['DELETION_REGISTER',['../ops_8c.html#a77b4080ddd57b32b0ee26fc9ba1f912c',1,'ops.c']]],
   ['deprecated_20list',['Deprecated List',['../deprecated.html',1,'']]],
+  ['destroy',['destroy',['../structterminal.html#ad785a1239a104c85eebc4c3df0d3816e',1,'terminal']]],
   ['df_5fcount',['df_count',['../structdiffblock__S.html#a6938c69f7e8e19010a770057e65d0435',1,'diffblock_S']]],
   ['df_5flnum',['df_lnum',['../structdiffblock__S.html#a82f970d5ad78238ad763c9d8a4383626',1,'diffblock_S']]],
   ['df_5fnext',['df_next',['../structdiffblock__S.html#aefdb1f7cdeacf248226030fc73acf504',1,'diffblock_S']]],

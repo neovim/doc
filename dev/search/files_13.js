@@ -6,6 +6,8 @@ var searchData=
   ['tag_2eh',['tag.h',['../tag_8h.html',1,'']]],
   ['tempfile_2ec',['tempfile.c',['../tempfile_8c.html',1,'']]],
   ['tempfile_2eh',['tempfile.h',['../tempfile_8h.html',1,'']]],
+  ['terminal_2ec',['terminal.c',['../terminal_8c.html',1,'']]],
+  ['terminal_2eh',['terminal.h',['../terminal_8h.html',1,'']]],
   ['time_2ec',['time.c',['../time_8c.html',1,'']]],
   ['time_2eh',['time.h',['../time_8h.html',1,'']]],
   ['tui_2ec',['tui.c',['../tui_8c.html',1,'']]],

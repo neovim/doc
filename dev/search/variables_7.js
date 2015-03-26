@@ -15,7 +15,7 @@ var searchData=
   ['head',['head',['../structpat__T.html#aaa85f3c45632362f883ba2247e62404b',1,'pat_T']]],
   ['headlen',['headlen',['../structpat__T.html#a01115bdde850bf161a95c0084d92ff6e',1,'pat_T']]],
   ['headless',['headless',['../structmparm__T.html#a0a80240645285d7c839c603f9822cca1',1,'mparm_T']]],
-  ['height',['height',['../structprt__mediasize__S.html#a1ba60630689d87c08c6538253f808a79',1,'prt_mediasize_S::height()'],['../structlineoff__T.html#ae6835ffb4c92c4c092def43dbdfa8108',1,'lineoff_T::height()'],['../structJobOptions.html#a7bfe751a275ee252bdcf79e336ab8c87',1,'JobOptions::height()'],['../structui__t.html#a03e872c6d07107893409447d88dd13de',1,'ui_t::height()']]],
+  ['height',['height',['../structprt__mediasize__S.html#a1ba60630689d87c08c6538253f808a79',1,'prt_mediasize_S::height()'],['../structlineoff__T.html#ae6835ffb4c92c4c092def43dbdfa8108',1,'lineoff_T::height()'],['../structJobOptions.html#a7bfe751a275ee252bdcf79e336ab8c87',1,'JobOptions::height()'],['../structTerminalOptions.html#a1474ceecc044d4d74b6e5832f7e869e3',1,'TerminalOptions::height()'],['../structui__t.html#a03e872c6d07107893409447d88dd13de',1,'ui_t::height()']]],
   ['help',['help',['../structcscmd__T.html#ae9c1736aa202e6e951cdf934ce1d48ca',1,'cscmd_T']]],
   ['hi_5fhash',['hi_hash',['../structhashitem__S.html#a98386bbaac6d9ddf227b2750d8f97a60',1,'hashitem_S']]],
   ['hi_5fkey',['hi_key',['../structhashitem__S.html#a87f4dbc4f9d02097b5146746bb8327c6',1,'hashitem_S']]],

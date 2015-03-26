@@ -5,6 +5,7 @@ var searchData=
   ['sblock_5fs',['sblock_S',['../structsblock__S.html',1,'']]],
   ['scriptitem_5fs',['scriptitem_S',['../structscriptitem__S.html',1,'']]],
   ['scriptvar_5ft',['scriptvar_T',['../structscriptvar__T.html',1,'']]],
+  ['scrollbackline',['ScrollbackLine',['../structScrollbackLine.html',1,'']]],
   ['searchedfile',['SearchedFile',['../structSearchedFile.html',1,'']]],
   ['server',['Server',['../structServer.html',1,'']]],
   ['sftword_5ft',['sftword_T',['../structsftword__T.html',1,'']]],

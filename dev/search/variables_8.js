@@ -19,6 +19,8 @@ var searchData=
   ['insstart',['Insstart',['../globals_8h.html#a3833f856ca654d49a2fae21f7d814e0e',1,'globals.h']]],
   ['insstart_5forig',['Insstart_orig',['../globals_8h.html#a71c34c049c60f7e11fc86677291ccfba',1,'globals.h']]],
   ['integer',['integer',['../structobject.html#af3e1eeadb97a3cc2fd898457cdc78032',1,'object']]],
+  ['invalid_5fend',['invalid_end',['../structterminal.html#a6e766a913547b2f9d8b8f83061673ff3',1,'terminal']]],
+  ['invalid_5fstart',['invalid_start',['../structterminal.html#a31c0a284a139ff4e2c0450a919ef4193',1,'terminal']]],
   ['iobuff',['IObuff',['../globals_8h.html#a25dd1dca05697b8974eb48c2f50f1f9e',1,'globals.h']]],
   ['ip_5fbnum',['ip_bnum',['../structinfo__pointer.html#a140d83e56091daa97560a9a4a82a8c1b',1,'info_pointer']]],
   ['ip_5fhigh',['ip_high',['../structinfo__pointer.html#ac473382eb6323825263f4e65ddbb68de',1,'info_pointer']]],

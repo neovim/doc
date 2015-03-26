@@ -7,7 +7,7 @@ var searchData=
   ['old_5fmod_5fmask',['old_mod_mask',['../structtasave__T.html#afdf679ca889915dc121ce3d4556099f6',1,'tasave_T']]],
   ['op_5ftype',['op_type',['../structoparg__S.html#acb9e3c2b4847f0e369552cad973c137e',1,'oparg_S']]],
   ['opcount',['opcount',['../structcmdarg__S.html#a58f88a02d8bfe611ed941f8950fdf89d',1,'cmdarg_S']]],
-  ['opts',['opts',['../structjob.html#acc09e62b6a393da3a7d3d528e09b424d',1,'job']]],
+  ['opts',['opts',['../structjob.html#acc09e62b6a393da3a7d3d528e09b424d',1,'job::opts()'],['../structterminal.html#a603d2575fb7a867cf9d91de2d5dd05fe',1,'terminal::opts()']]],
   ['out',['out',['../structjob.html#a9027344776fcc73aa165d4eeef168210',1,'job::out()'],['../structnfa__state.html#a5f6af7a656c2d7f366164db6c349780f',1,'nfa_state::out()'],['../structFrag.html#a857b78b327224ffc647fe2c828b2f347',1,'Frag::out()']]],
   ['out1',['out1',['../structnfa__state.html#a6b5efbc7503e9540cdce968e55f6c62a',1,'nfa_state']]],
   ['outfile',['outfile',['../structprt__settings__T.html#ab26e4b46eb152abd13d282cea9c44d3b',1,'prt_settings_T']]],

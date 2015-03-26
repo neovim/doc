@@ -27,10 +27,13 @@ var searchData=
   ['vir_5fconv',['vir_conv',['../structvir__T.html#acefe80fec6de6de45b5abe360d7a65bb',1,'vir_T']]],
   ['vir_5ffd',['vir_fd',['../structvir__T.html#a6f4d5a75f044c9423e517bdd96049412',1,'vir_T']]],
   ['vir_5fline',['vir_line',['../structvir__T.html#a2e340c0b9d1544938d136ef69745e9c4',1,'vir_T']]],
+  ['visible',['visible',['../structterminal.html#acdb627d9dcb1bce3cf2796675728b4b5',1,'terminal']]],
   ['visual',['VIsual',['../globals_8h.html#acf84ebbba1c7b96312e1e8af22a3bf9a',1,'globals.h']]],
   ['visual_5fbell',['visual_bell',['../structui__t.html#a154aa74b68bb3a9049838771f270f4f9',1,'ui_t']]],
   ['visual_5freselect',['VIsual_reselect',['../globals_8h.html#a94f6632f8b7b88cf8fe53e560eeaf6d8',1,'globals.h']]],
   ['vop_5fflags',['vop_flags',['../option__defs_8h.html#a5afe80ed8c1e22b7ec18d6d1d71ee371',1,'option_defs.h']]],
+  ['vt',['vt',['../structterminal.html#abd00efb1c434689f0e1a638bd9ed53c6',1,'terminal']]],
+  ['vts',['vts',['../structterminal.html#ab33698998f9e6e636d83d902aabe88cd',1,'terminal']]],
   ['vv_5fexception',['vv_exception',['../structdbg__stuff.html#ae214d0d3eb51e908d88eff000eee7240',1,'dbg_stuff']]],
   ['vv_5fthrowpoint',['vv_throwpoint',['../structdbg__stuff.html#af51ae41ed949f3b44be4a1fce396ae38',1,'dbg_stuff']]],
   ['vval',['vval',['../structtypval__T.html#ab22f119a86e24e8c162cd48b31661321',1,'typval_T']]]
