@@ -98,6 +98,7 @@ var searchData=
   ['p_5flcs',['p_lcs',['../option__defs_8h.html#a84d51d77e4a6cc7d5a45f543757508e6',1,'option_defs.h']]],
   ['p_5flispwords',['p_lispwords',['../option__defs_8h.html#acb08960e12e7835bab773fd7caf0316b',1,'option_defs.h']]],
   ['p_5flm',['p_lm',['../option__defs_8h.html#a6321c17cc2cdfe9e5a0513abd423dfdb',1,'option_defs.h']]],
+  ['p_5flnr',['p_lnr',['../option__defs_8h.html#a4dadae74698bf7b00e3e7e4119d1dfad',1,'option_defs.h']]],
   ['p_5flpl',['p_lpl',['../option__defs_8h.html#a44c3f7fdd4ec5c1b3c3873f1cdd82db0',1,'option_defs.h']]],
   ['p_5fls',['p_ls',['../option__defs_8h.html#a0ab72837540202051fab461152caf3e0',1,'option_defs.h']]],
   ['p_5flz',['p_lz',['../option__defs_8h.html#aa2a1fc899791fcf7104d37b4298d5254',1,'option_defs.h']]],
