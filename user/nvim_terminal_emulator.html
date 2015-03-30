@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: nvim_terminal_emulator</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <div class="site-nav">
+          <ul>
+            <li><a href="/">Neovim Home</a></li>
+          </ul>
+        </div>
+        <a href="/"><img class="logo" alt="Vim documentation: nvim_terminal_emulator" src="/images/logo@2x.png" /></a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: nvim_terminal_emulator</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="nvim_terminal_emulator.txt"></A><B>nvim_terminal_emulator.txt</B>*    For Nvim.				{Nvim}
+
+
+		 NVIM REFERENCE MANUAL    by Thiago de Arruda
+
+
+
+Nvim integrated terminal emulator		     *<A NAME="nvim-terminal-emulator"></A><B>nvim-terminal-emulator</B>*
+
+1. Introduction			|<A HREF="#nvim-terminal-emulator-introduction">nvim-terminal-emulator-introduction</A>|
+2. Spawning			|<A HREF="#nvim-terminal-emulator-spawning">nvim-terminal-emulator-spawning</A>|
+3. Input			|<A HREF="#nvim-terminal-emulator-input">nvim-terminal-emulator-input</A>|
+4. Configuration		|<A HREF="#nvim-terminal-emulator-configuration">nvim-terminal-emulator-configuration</A>|
+
+==============================================================================
+
+1. Introduction			      *<A NAME="nvim-terminal-emulator-introduction"></A><B>nvim-terminal-emulator-introduction</B>*
+
+One feature that distinguishes Nvim from Vim is that <A HREF="motion.html#it">it</A> implements a mostly
+complete VT220/xterm-like terminal emulator. The terminal is presented to the
+user <A HREF="motion.html#as">as</A> a special buffer type, one that is asynchronously updated to mirror
+the virtual terminal display <A HREF="motion.html#as">as</A> data is received from the program connected
+to <A HREF="motion.html#it">it</A>. For most purposes, terminal <A HREF="windows.html#buffers">buffers</A> behave a lot like normal <A HREF="windows.html#buffers">buffers</A>
+with <A HREF="options.html#'nomodifiable'">'nomodifiable'</A> set.
+
+
+The implementation is powered by libvterm[1], a powerful abstract terminal
+emulation library.
+
+ [1]:	<A HREF="http://www.leonerd.org.uk/code/libvterm/">http://www.leonerd.org.uk/code/libvterm/</A>
+
+==============================================================================
+
+2. Spawning			      *<A NAME="nvim-terminal-emulator-spawning"></A><B>nvim-terminal-emulator-spawning</B>*
+
+There are 3 ways to create a terminal buffer:
+
+- By invoking the |<A HREF="various.html#:terminal">:terminal</A>| ex command.
+- By calling the |<A HREF="eval.html#termopen()">termopen()</A>| function.
+- By editing a file with a name matching `term://(.{-}//(\d+:)?)?\zs.*`.
+  For example:
+
+<B>    :e term://bash</B>
+<B>    :vsp term://top</B>
+ 
+When the terminal spawns the program, the buffer will start to mirror the
+terminal display and change its name to `term://$CWD//$PID:$COMMAND`.
+Note that |<A HREF="starting.html#:mksession">:mksession</A>| will &quot;save&quot; the terminal <A HREF="windows.html#buffers">buffers</A> by restarting all
+programs when the session is restored.
+
+==============================================================================
+
+3. Input			      *<A NAME="nvim-terminal-emulator-input"></A><B>nvim-terminal-emulator-input</B>*
+
+Sending input is possible by entering terminal mode, which is achieved by
+pressing any key that would enter insert mode in a normal buffer (|<A HREF="insert.html#i">i</A>| or |<A HREF="insert.html#a">a</A>|
+for example). The |<A HREF="various.html#:terminal">:terminal</A>| ex command will automatically enter terminal
+mode once it's spawned. While in terminal mode, Nvim will forward all keys to
+the underlying program. The only exception is the &lt;C-\&gt;&lt;C-n&gt; key combo,
+which will exit back to normal mode.
+
+Terminal mode has its own namespace for mappings, which is accessed with the
+&quot;<A HREF="motion.html#t">t</A>&quot; prefix. It's possible to use terminal mappings to customize interaction
+with the terminal. For example, here's how to map <A HREF="intro.html#&lt;Esc&gt;">&lt;Esc&gt;</A> to exit terminal mode:
+
+<B>    :tnoremap &lt;Esc&gt; &lt;C-\&gt;&lt;C-n&gt;</B>
+ 
+Navigating to other <A HREF="windows.html#windows">windows</A> is only possible by exiting to normal mode, which
+can be cumbersome with &lt;C-\&gt;&lt;C-n&gt; keys. Here are some mappings to improve
+the <A HREF="motion.html#navigation">navigation</A> experience:
+
+<B>    :tnoremap &lt;A-h&gt; &lt;C-\&gt;&lt;C-n&gt;&lt;C-w&gt;h</B>
+<B>    :tnoremap &lt;A-j&gt; &lt;C-\&gt;&lt;C-n&gt;&lt;C-w&gt;j</B>
+<B>    :tnoremap &lt;A-k&gt; &lt;C-\&gt;&lt;C-n&gt;&lt;C-w&gt;k</B>
+<B>    :tnoremap &lt;A-l&gt; &lt;C-\&gt;&lt;C-n&gt;&lt;C-w&gt;l</B>
+<B>    :nnoremap &lt;A-h&gt; &lt;C-w&gt;h</B>
+<B>    :nnoremap &lt;A-j&gt; &lt;C-w&gt;j</B>
+<B>    :nnoremap &lt;A-k&gt; &lt;C-w&gt;k</B>
+<B>    :nnoremap &lt;A-l&gt; &lt;C-w&gt;l</B>
+ 
+This allows using `Alt+{h,j,k,l}` to navigate between <A HREF="windows.html#windows">windows</A> no matter if
+they are displaying a normal buffer or a terminal buffer in terminal mode.
+
+Mouse input is also fully supported, and has the following behavior:
+
+- If the program has enabled mouse events, the corresponding events will be
+  forwarded to the program.
+- If mouse events are disabled (the default), terminal focus will be lost and
+  the event will be processed <A HREF="motion.html#as">as</A> in a normal buffer.
+- If another <A HREF="windows.html#window">window</A> is clicked, terminal focus will be lost and <A HREF="nvim_intro.html#nvim">nvim</A> will jump
+  to the clicked <A HREF="windows.html#window">window</A>
+- If the mouse wheel is used while the mouse is positioned in another <A HREF="windows.html#window">window</A>,
+  the terminal wont lose focus and the hovered <A HREF="windows.html#window">window</A> will be scrolled.
+
+==============================================================================
+
+4. Configuration		     *<A NAME="nvim-terminal-emulator-configuration"></A><B>nvim-terminal-emulator-configuration</B>*
+
+Terminal <A HREF="windows.html#buffers">buffers</A> can be customized through the following global/buffer-local
+<A HREF="eval.html#variables">variables</A> (set via the |<A HREF="autocmd.html#TermOpen">TermOpen</A>| autocmd):
+
+- `{g,b}:terminal_scrollback_buffer_size`: Scrollback buffer size, between 1
+  and 100000 <A HREF="motion.html#inclusive">inclusive</A>. The default is 1000.
+- `{g,b}:terminal_color_$NUM`: The terminal color palette, where `$NUM` is the
+  color index, between 0 and 255 <A HREF="motion.html#inclusive">inclusive</A>. This only affects UIs with RGB
+  capabilities; for normal terminals the color index is simply forwarded.
+- `{g,b}:terminal_focused_cursor_highlight`: Highlight group applied to the
+  cursor in a focused terminal. The default equivalent to having a group with
+  `cterm=reverse` `gui=reverse``.
+- `{g,b}:terminal_unfocused_cursor_highlight`: Highlight group applied to the
+  cursor in an unfocused terminal. The default equivalent to having a group with
+  `ctermbg=11` `guibg=#fce94f``.
+
+The configuration <A HREF="eval.html#variables">variables</A> are only processed when the terminal starts, which
+is why <A HREF="motion.html#it">it</A> needs to be done with the |<A HREF="autocmd.html#TermOpen">TermOpen</A>| autocmd or setting global
+<A HREF="eval.html#variables">variables</A> before the terminal is started.
+
+==============================================================================
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Mon Mar 30 00:37:16 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/960b9108c2928b6cf0adcabdb829d06996635211"><code>960b910</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>

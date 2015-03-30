@@ -76,37 +76,28 @@ for details
 
 2. Usage						*<A NAME="job-control-usage"></A><B>job-control-usage</B>*
 
-Here's a quick one-liner that creates a job which invokes the &quot;ls&quot; shell
-command and prints the result:
-
-<B>    call jobstart('', 'ls', ['-a'])|au JobActivity * echo v:job_data|au!</B>
-<B>    JobActivity</B>
-
-In the one-liner above, creating the <A HREF="autocmd.html#JobActivity">JobActivity</A> event handler immediately
-after the call to <A HREF="eval.html#jobstart()">jobstart()</A> is not a race because the Nvim job system will
-not publish the job result (even though <A HREF="motion.html#it">it</A> may receive <A HREF="motion.html#it">it</A>) until evaluation of
-the chained user commands (`expr1|expr2|...|exprN`) has completed.|||
-
 Job <A HREF="intro.html#control">control</A> is achieved by calling a combination of the |<A HREF="eval.html#jobstart()">jobstart()</A>|,
-|<A HREF="eval.html#jobsend()">jobsend()</A>| and |<A HREF="eval.html#jobstop()">jobstop()</A>| <A HREF="eval.html#functions">functions</A>, and by listening to the |<A HREF="autocmd.html#JobActivity">JobActivity</A>|
-event. The best way to understand is with a complete example:
+|<A HREF="eval.html#jobsend()">jobsend()</A>| and |<A HREF="eval.html#jobstop()">jobstop()</A>| <A HREF="eval.html#functions">functions</A>. Here's an example:
 
-<B>    let job1 = jobstart('shell1', 'bash')</B>
-<B>    let job2 = jobstart('shell2', 'bash', ['-c', 'for ((i = 0; i &lt; 10; i++)); do echo hello $i!; sleep 1; done'])</B>
-
-<B>    function JobHandler()</B>
-<B>      if v:job_data[1] == 'stdout'</B>
-<B>        let str = 'shell '. v:job_data[0].' stdout: '.join(v:job_data[2])</B>
-<B>      elseif v:job_data[1] == 'stderr'</B>
-<B>        let str = 'shell '.v:job_data[0].' stderr: '.join(v:job_data[2])</B>
+<B>    function s:JobHandler(job_id, data, event)</B>
+<B>      if a:event == 'stdout'</B>
+<B>        let str = self.shell.' stdout: '.join(a:data)</B>
+<B>      elseif a:event == 'stderr'</B>
+<B>        let str = self.shell.' stderr: '.join(a:data)</B>
 <B>      else</B>
-<B>        let str = 'shell '.v:job_data[0].' exited'</B>
+<B>        let str = self.shell.' exited'</B>
 <B>      endif</B>
 
 <B>      call append(line('$'), str)</B>
 <B>    endfunction</B>
+<B>    let s:callbacks = {</B>
+<B>    \ 'on_stdout': function('s:JobHandler'),</B>
+<B>    \ 'on_stderr': function('s:JobHandler'),</B>
+<B>    \ 'on_exit': function('s:JobHandler')</B>
+<B>    \ }</B>
+<B>    let job1 = jobstart(['bash'], extend({'shell': 'shell 1'}, s:callbacks))</B>
+<B>    let job2 = jobstart(['bash', '-c', 'for i in {1..10}; do echo hello $i!; sleep 1; done'], extend({'shell': 'shell 2'}, s:callbacks))</B>
 
-<B>    au JobActivity shell* call JobHandler()</B>
  
 To test the above, copy <A HREF="motion.html#it">it</A> to the file ~/jobcontrol.vim and start with a clean
 <A HREF="nvim_intro.html#nvim">nvim</A> instance:
@@ -121,16 +112,51 @@ Here's what is happening:
 - The second shell is started with the <A HREF="starting.html#-c">-c</A> argument, causing <A HREF="motion.html#it">it</A> to execute a
   command then exit. In this <A HREF="change.html#case">case</A>, the command is a for loop that will print 0
   through 9 then exit.
-- The `JobHandler()` function is called by the `JobActivity` <A HREF="autocmd.html#autocommand">autocommand</A> (notice
-  how the shell* <A HREF="pattern.html#pattern">pattern</A> matches the names `shell1` and `shell2` passed to
-  |<A HREF="eval.html#jobstart()">jobstart()</A>|), and <A HREF="motion.html#it">it</A> takes care of displaying stdout/stderr received from
+- The `JobHandler()` function is a callback passed to |<A HREF="eval.html#jobstart()">jobstart()</A>| to handle
+  various job events. It takes care of displaying stdout/stderr received from
   the shells.
-- The v:job_data is an array set by the <A HREF="autocmd.html#JobActivity">JobActivity</A> event. It has the
-  following elements:
+- The arguments passed to `JobHandler()` are: 
+
   0: The job id
-  1: The kind of activity: one of &quot;stdout&quot;, &quot;stderr&quot; or &quot;exit&quot;
-  2: When &quot;activity&quot; is &quot;stdout&quot; or &quot;stderr&quot;, this will contain a <A HREF="eval.html#list">list</A> of
-     lines read from stdout or stderr
+  1: If the event is &quot;stdout&quot; or &quot;stderr&quot;, a <A HREF="eval.html#list">list</A> with lines read from the
+     corresponding stream. For &quot;exit&quot;, <A HREF="motion.html#it">it</A> is the status returned by the
+     program.
+  2: The event type, which is &quot;stdout&quot;, &quot;stderr&quot; or &quot;exit&quot;.
+
+The <A HREF="options.html#options">options</A> dictionary is passed <A HREF="motion.html#as">as</A> the &quot;<A HREF="eval.html#self">self</A>&quot; variable to the callback
+function. Here's a more object-oriented version of the above:
+
+<B>    let Shell = {}</B>
+<B>    </B>
+<B>    function Shell.on_stdout(job_id, data)</B>
+<B>      call append(line('$'), self.get_name().' stdout: '.join(a:data))</B>
+<B>    endfunction</B>
+<B>    </B>
+<B>    function Shell.on_stderr(job_id, data)</B>
+<B>      call append(line('$'), self.get_name().' stderr: '.join(a:data))</B>
+<B>    endfunction</B>
+<B>    </B>
+<B>    function Shell.on_exit(job_id, data)</B>
+<B>      call append(line('$'), self.get_name().' exited')</B>
+<B>    endfunction</B>
+<B>    </B>
+<B>    function Shell.get_name()</B>
+<B>      return 'shell '.self.name</B>
+<B>    endfunction</B>
+<B>    </B>
+<B>    function Shell.new(name, ...)</B>
+<B>      let instance = extend(copy(g:Shell), {'name': a:name})</B>
+<B>      let argv = ['bash']</B>
+<B>      if a:0 &gt; 0</B>
+<B>        let argv += ['-c', a:1]</B>
+<B>      endif</B>
+<B>      let instance.id = jobstart(argv, instance)</B>
+<B>      return instance</B>
+<B>    endfunction</B>
+<B>    </B>
+<B>    let s1 = Shell.new('1')</B>
+<B>    let s2 = Shell.new('2', 'for i in {1..10}; do echo hello $i!; sleep 1; done')</B>
+
 
 To send data to the job's stdin, one can use the |<A HREF="eval.html#jobsend()">jobsend()</A>| function, like
 this:
@@ -153,7 +179,7 @@ not exit after 2 seconds, `SIGKILL` will be sent.
 
     <footer>
       <div class="container">
-        Generated Sun Mar 29 08:19:57 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/9d02e5b984bb540567766941cff4d03f0b6e1837"><code>9d02e5b</code></a>.
+        Generated Mon Mar 30 00:37:16 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/960b9108c2928b6cf0adcabdb829d06996635211"><code>960b910</code></a>.
       </div>
     </footer>
   </body>

@@ -4318,6 +4318,17 @@ items({dict})						*<A NAME="items()"></A><B>items()</B>*
 		order.
 
 
+jobclose({job}[, {stream}])				{Nvim} *<A NAME="jobclose()"></A><B>jobclose()</B>*
+		Close {job}'s {stream}, which can be one &quot;stdin&quot;, &quot;stdout&quot; or
+		&quot;stderr&quot;. If {stream} is omitted, all streams are closed.
+
+
+jobresize({job}, {width}, {height})			{Nvim} *<A NAME="jobresize()"></A><B>jobresize()</B>*
+		Resize {job}'s pseudo terminal <A HREF="windows.html#window">window</A> to {width} and {height}.
+		This function will fail if used on jobs started without the
+		&quot;pty&quot; option.
+
+
 jobsend({job}, {data})					{Nvim} *<A NAME="jobsend()"></A><B>jobsend()</B>*
 		Send data to {job} by <A HREF="editing.html#writing">writing</A> <A HREF="motion.html#it">it</A> to the stdin of the process.
 		Returns 1 if the write succeeded, 0 otherwise.
@@ -4331,14 +4342,28 @@ jobsend({job}, {data})					{Nvim} *<A NAME="jobsend()"></A><B>jobsend()</B>*
   		will send &quot;abc&lt;NL&gt;123&lt;NUL&gt;456&lt;NL&gt;&quot;.
 
 
-jobstart({name}, {prog}[, {argv}])			{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
-		Spawns {prog} <A HREF="motion.html#as">as</A> a job and associate <A HREF="motion.html#it">it</A> with the {name} <A HREF="#string">string</A>,
-		which will be used to match the &quot;filename pattern&quot; in
-		|<A HREF="autocmd.html#JobActivity">JobActivity</A>| events. It returns:
-		  - The job id on success, which is used by |<A HREF="#jobsend()">jobsend()</A>| and
+jobstart({argv}[, {opts}])			{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
+		Spawns {argv}(list) <A HREF="motion.html#as">as</A> a job. If passed, {opts} must be a
+		dictionary with any of the following keys:
+		  - on_stdout: stdout event handler
+		  - on_stderr: stderr event handler
+		  - on_exit: exit event handler
+		  - pty: If set, the job will be connected to a new pseudo
+		    terminal, and the job streams are connected to the master
+		    file descriptor.
+		  - width: Width of the terminal screen(only if pty is set)
+		  - height: Height of the terminal screen(only if pty is set)
+		  - <A HREF="starting.html#TERM">TERM</A>: $TERM environment variable(only if pty is set)
+		Either funcrefs or function names can be passed <A HREF="motion.html#as">as</A> event
+		handlers. The {opts} object is also used <A HREF="motion.html#as">as</A> the &quot;<A HREF="#self">self</A>&quot;
+		argument for the callback, so the caller may pass arbitrary
+		data by setting other key.(see |<A HREF="#Dictionary-function">Dictionary-function</A>| for more
+		information).
+		Returns:
+		  - The job ID on success, which is used by |<A HREF="#jobsend()">jobsend()</A>| and
 		    |<A HREF="#jobstop()">jobstop()</A>|
 		  - 0 when the job table is full or on invalid arguments
-		  - -1 when {prog} is not executable
+		  - -1 when {argv}[0] is not executable
 		See |<A HREF="job_control.html#job-control">job-control</A>| for more information.
 
 
@@ -4346,9 +4371,28 @@ jobstop({job})						{Nvim} *<A NAME="jobstop()"></A><B>jobstop()</B>*
 		Stop a job created with |<A HREF="#jobstart()">jobstart()</A>| by sending a `SIGTERM`
 		to the corresponding process. If the process doesn't exit
 		cleanly soon, a `SIGKILL` will be sent. When the job is
-		finally closed, a |<A HREF="autocmd.html#JobActivity">JobActivity</A>| event will trigger with
+		finally closed, a |<A HREF="intro.html#JobActivity">JobActivity</A>| event will trigger with
 		`v:job_data[0]` set to `exited`.  See |<A HREF="job_control.html#job-control">job-control</A>| for more
 		information.
+
+
+jobwait({ids}[, {timeout}])				{Nvim} *<A NAME="jobwait()"></A><B>jobwait()</B>*
+		Wait for a set of jobs to finish. The {ids} argument is a <A HREF="#list">list</A>
+		of ids for jobs that will be waited for. If passed, {timeout}
+		is the maximum number of milliseconds to wait. While this
+		function is executing, callbacks for jobs not in the {ids}
+		<A HREF="#list">list</A> can be executed. Also, the screen wont be updated unless
+		|<A HREF="various.html#:redraw">:redraw</A>| is invoked by one of the callbacks.
+
+		Returns a <A HREF="#list">list</A> of integers with the same length <A HREF="motion.html#as">as</A> {ids}, with
+		each integer representing the wait result for the
+		corresponding job id. The possible values for the resulting
+		integers are:
+
+		&#42; the job return code if the job exited
+		&#42; -1 if the wait timed out for the job
+		&#42; -2 if the job was interrupted
+		&#42; -3 if the job id is invalid.
 
 
 join({list} [, {sep}])					*<A NAME="join()"></A><B>join()</B>*
@@ -6722,6 +6766,18 @@ taglist({expr})							*<A NAME="taglist()"></A><B>taglist()</B>*
 		For <A HREF="os_win32.html#MS-Windows">MS-Windows</A> forward slashes are used when the <A HREF="options.html#'shellslash'">'shellslash'</A>
 		option is set or when <A HREF="options.html#'shellcmdflag'">'shellcmdflag'</A> starts with '<A HREF="motion.html#-">-</A>'.
 
+
+termopen({command}[, {opts}])			{Nvim} *<A NAME="termopen()"></A><B>termopen()</B>*
+		Spawns {command} using the shell in a new pseudo-terminal
+		session connected to the current buffer.  This function fails
+		if the current buffer is modified (all buffer contents are
+		destroyed).  The {opts} <A HREF="#dict">dict</A> is similar to the one passed to
+		|<A HREF="#jobstart()">jobstart()</A>|, but the `pty`, `width`, `height`, and `TERM` fields are
+		ignored: `height`/`width` are taken from the current <A HREF="windows.html#window">window</A> and
+		$TERM is set to &quot;xterm-256color&quot;.  Returns the same values <A HREF="motion.html#as">as</A>
+		|<A HREF="#jobstart()">jobstart()</A>|.
+
+		See |<A HREF="nvim_terminal_emulator.html#nvim-terminal-emulator">nvim-terminal-emulator</A>| for more information.
 
 
 tan({expr})						*<A NAME="tan()"></A><B>tan()</B>*
@@ -9500,7 +9556,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sun Mar 29 08:19:56 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/9d02e5b984bb540567766941cff4d03f0b6e1837"><code>9d02e5b</code></a>.
+        Generated Mon Mar 30 00:37:15 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/960b9108c2928b6cf0adcabdb829d06996635211"><code>960b910</code></a>.
       </div>
     </footer>
   </body>
