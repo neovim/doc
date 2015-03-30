@@ -55,7 +55,6 @@ var searchData=
   ['event_5finsertcharpre',['EVENT_INSERTCHARPRE',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aab7eb128888cce13a91234ca92d65cbaa',1,'fileio.h']]],
   ['event_5finsertenter',['EVENT_INSERTENTER',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aa81d8a9f88055825e0be5eab5b4764a38',1,'fileio.h']]],
   ['event_5finsertleave',['EVENT_INSERTLEAVE',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aa6d2aa5f9940dc00f784b516dfe46345b',1,'fileio.h']]],
-  ['event_5fjobactivity',['EVENT_JOBACTIVITY',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aa2fe10f120308fa1d91634754dd179c8e',1,'fileio.h']]],
   ['event_5fmenupopup',['EVENT_MENUPOPUP',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aac316e1162ef10953a56f5af8b95cf595',1,'fileio.h']]],
   ['event_5fquickfixcmdpost',['EVENT_QUICKFIXCMDPOST',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aac615f350a4bb4c2631e35cd14e13633a',1,'fileio.h']]],
   ['event_5fquickfixcmdpre',['EVENT_QUICKFIXCMDPRE',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58aaae867ed7b6451fe406f8f5f3495bebdd',1,'fileio.h']]],

@@ -33,7 +33,6 @@ var searchData=
   ['vv_5ffoldstart',['VV_FOLDSTART',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a68b1ffbf59543e7477b20c2819822d30',1,'eval.h']]],
   ['vv_5fhlsearch',['VV_HLSEARCH',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a621cca8bf03aee85c592c4ae0ac2d5e9',1,'eval.h']]],
   ['vv_5finsertmode',['VV_INSERTMODE',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a903ff8c2ec5fc61d1880014be938369c',1,'eval.h']]],
-  ['vv_5fjob_5fdata',['VV_JOB_DATA',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a84f44216585ec39df8fab6233dc59a7c',1,'eval.h']]],
   ['vv_5fkey',['VV_KEY',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a9192ad50b8377f63cf133191fd2f2def',1,'eval.h']]],
   ['vv_5flang',['VV_LANG',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a7c114dc3d266b8181932dcc7fe4c82ed',1,'eval.h']]],
   ['vv_5flc_5ftime',['VV_LC_TIME',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a70a86caa801f5cd6a55cec930b8f9ddd',1,'eval.h']]],

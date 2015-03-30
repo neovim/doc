@@ -8,6 +8,7 @@ var searchData=
   ['call_5ffunc_5fretstr',['call_func_retstr',['../eval_8c.html#abc96e349d51b458fedf36bf08d8ea0c8',1,'eval.c']]],
   ['call_5fshell',['call_shell',['../misc2_8c.html#ade32024b6bc80d828ed2b061a2023743',1,'misc2.c']]],
   ['call_5fvim_5ffunction',['call_vim_function',['../eval_8c.html#a0d9ed7bfabc11d0ab3a34557f33638e4',1,'eval.c']]],
+  ['callback',['callback',['../structJobEvent.html#a5f8d55da2024b4fe13efad17902e04bf',1,'JobEvent']]],
   ['called_5femsg',['called_emsg',['../globals_8h.html#a8226ea083c93610f349ca43624d05129',1,'globals.h']]],
   ['caller',['caller',['../structfunccall__S.html#a1ae5751da798f7735ffcd35e6a4ca15c',1,'funccall_S']]],
   ['caller_5fscope',['caller_scope',['../structcaller__scope.html',1,'']]],

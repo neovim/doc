@@ -35,7 +35,7 @@ var searchData=
   ['max_5flimit',['MAX_LIMIT',['../regexp_8c.html#ab0d690a0d4a93666d44346dfd058ada0',1,'regexp.c']]],
   ['max_5fmco',['MAX_MCO',['../globals_8h.html#a201f1cd7885027da40f3d535673ac0a6',1,'globals.h']]],
   ['max_5fmsg_5fhist_5flen',['MAX_MSG_HIST_LEN',['../vim_8h.html#a3d4413226c0bd09c31415a665843bc21',1,'vim.h']]],
-  ['max_5frunning_5fjobs',['MAX_RUNNING_JOBS',['../job_8c.html#ae9ccb0584e9befe21c85be80c846f0b7',1,'job.c']]],
+  ['max_5frunning_5fjobs',['MAX_RUNNING_JOBS',['../job__defs_8h.html#ae9ccb0584e9befe21c85be80c846f0b7',1,'job_defs.h']]],
   ['max_5fswap_5fpage_5fsize',['MAX_SWAP_PAGE_SIZE',['../vim_8h.html#abbfe8ed4898615c9b8da6bbbb5308ec1',1,'vim.h']]],
   ['max_5fsyn_5finc_5ftag',['MAX_SYN_INC_TAG',['../syntax_8c.html#a06e3b581d695a24f0234fb70be355139',1,'syntax.c']]],
   ['max_5ftypenr',['MAX_TYPENR',['../vim_8h.html#afea0c39d33add624f5ec11db81e099a3',1,'vim.h']]],
