@@ -65,7 +65,6 @@ var searchData=
   ['diff_5fvertical',['DIFF_VERTICAL',['../diff_8c.html#aa531c6ee6c615a826fb71fa4d50256c0',1,'diff.c']]],
   ['diff_5fyes',['DIFF_YES',['../spell_8c.html#a776c69b26e170196bc7d0557c2f2b98b',1,'spell.c']]],
   ['digit',['DIGIT',['../regexp_8c.html#a75405d0fa11f1bf15346f61ed092f448',1,'regexp.c']]],
-  ['dirent',['dirent',['../os__unix__defs_8h.html#a89957e9be80ef12a50eb4eca72ecd888',1,'os_unix_defs.h']]],
   ['display_5ferrors',['display_errors',['../vim_8h.html#a8187769fb523cf44f3f2bf502ce801d0',1,'vim.h']]],
   ['dlg_5fbutton_5fsep',['DLG_BUTTON_SEP',['../message_8c.html#a1bc11dc0c0f87725aca8124169d055b7',1,'message.c']]],
   ['dlg_5fhotkey_5fchar',['DLG_HOTKEY_CHAR',['../message_8c.html#a67c03f89a81ebc93ee889736ca2f7c57',1,'message.c']]],

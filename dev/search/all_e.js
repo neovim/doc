@@ -12,7 +12,6 @@ var searchData=
   ['name_5fto_5fcolor',['name_to_color',['../syntax_8c.html#a23085295a9032e8f1701664e1db149a4',1,'syntax.c']]],
   ['name_5fto_5fmod_5fmask',['name_to_mod_mask',['../keymap_8c.html#a90f0a5240dd783da269a13260640e1bd',1,'keymap.c']]],
   ['namebuff',['NameBuff',['../globals_8h.html#acd7490e10692d22d03112f19258d6afb',1,'globals.h']]],
-  ['namlen',['NAMLEN',['../os__unix__defs_8h.html#abb80c1eb90e546dbdc94f79e74ffd787',1,'os_unix_defs.h']]],
   ['nchar',['nchar',['../structcmdarg__S.html#a984058650799ea2b4ca68f9939fde722',1,'cmdarg_S']]],
   ['ncharc1',['ncharC1',['../structcmdarg__S.html#a7861dee31b3ee8d4280ab5a11519e7fb',1,'cmdarg_S']]],
   ['ncharc2',['ncharC2',['../structcmdarg__S.html#aee9f7816a89f1781b773ce72f02f3ecc',1,'cmdarg_S']]],

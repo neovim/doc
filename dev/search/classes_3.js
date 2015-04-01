@@ -11,5 +11,6 @@ var searchData=
   ['diffblock_5fs',['diffblock_S',['../structdiffblock__S.html',1,'']]],
   ['digraph',['digraph',['../structdigraph.html',1,'']]],
   ['dir_5fstack_5ft',['dir_stack_T',['../structdir__stack__T.html',1,'']]],
+  ['directory',['Directory',['../structDirectory.html',1,'']]],
   ['dynamicbuffer',['DynamicBuffer',['../structDynamicBuffer.html',1,'']]]
 ];

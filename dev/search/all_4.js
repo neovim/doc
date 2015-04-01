@@ -178,7 +178,7 @@ var searchData=
   ['dir',['dir',['../structsoffset.html#a6488831cd205a1dd236bd4da1be7d4da',1,'soffset']]],
   ['dir_5fof_5ffile_5fexists',['dir_of_file_exists',['../path_8c.html#a76ad24fa05274ebc94416e847f4bf144',1,'path.c']]],
   ['dir_5fstack_5ft',['dir_stack_T',['../structdir__stack__T.html',1,'']]],
-  ['dirent',['dirent',['../os__unix__defs_8h.html#a89957e9be80ef12a50eb4eca72ecd888',1,'os_unix_defs.h']]],
+  ['directory',['Directory',['../structDirectory.html',1,'']]],
   ['dirname',['dirname',['../structdir__stack__T.html#ab697407585dcf56aa533f28958f6c0b4',1,'dir_stack_T']]],
   ['discard_5fcurrent_5fexception',['discard_current_exception',['../ex__eval_8c.html#a06d7be1cb44cc1e9b451028b6148fa0e',1,'ex_eval.c']]],
   ['discard_5fpending_5freturn',['discard_pending_return',['../eval_8c.html#a93183836efa78e55c54c2d730089bbc2',1,'eval.c']]],
