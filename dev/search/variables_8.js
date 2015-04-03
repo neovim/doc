@@ -19,6 +19,7 @@ var searchData=
   ['insstart',['Insstart',['../globals_8h.html#a3833f856ca654d49a2fae21f7d814e0e',1,'globals.h']]],
   ['insstart_5forig',['Insstart_orig',['../globals_8h.html#a71c34c049c60f7e11fc86677291ccfba',1,'globals.h']]],
   ['integer',['integer',['../structobject.html#af3e1eeadb97a3cc2fd898457cdc78032',1,'object']]],
+  ['internal_5frefcount',['internal_refcount',['../structdictvar__S.html#af1c6cd0bcb1b683f7eaa1ec96629b042',1,'dictvar_S']]],
   ['invalid_5fend',['invalid_end',['../structterminal.html#a6e766a913547b2f9d8b8f83061673ff3',1,'terminal']]],
   ['invalid_5fstart',['invalid_start',['../structterminal.html#a31c0a284a139ff4e2c0450a919ef4193',1,'terminal']]],
   ['iobuff',['IObuff',['../globals_8h.html#a25dd1dca05697b8974eb48c2f50f1f9e',1,'globals.h']]],

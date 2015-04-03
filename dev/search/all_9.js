@@ -171,6 +171,7 @@ var searchData=
   ['int_5fstr_5ffn',['int_str_fn',['../dl_8c.html#a666968fdc0a6970a5018a0604403bee1',1,'dl.c']]],
   ['integer',['integer',['../structobject.html#af3e1eeadb97a3cc2fd898457cdc78032',1,'object::integer()'],['../api_2private_2defs_8h.html#a23abc5a95167751b01dabc5eb2396241',1,'Integer():&#160;defs.h']]],
   ['integer_5fobj',['INTEGER_OBJ',['../api_2private_2helpers_8h.html#ab744c3793bd5c8ef48c1893ac48e1f8b',1,'helpers.h']]],
+  ['internal_5frefcount',['internal_refcount',['../structdictvar__S.html#af1c6cd0bcb1b683f7eaa1ec96629b042',1,'dictvar_S']]],
   ['interval',['interval',['../structinterval.html',1,'']]],
   ['intro_5fmessage',['intro_message',['../version_8c.html#adc94ae3e8797bd98124ca5f6004611be',1,'version.c']]],
   ['invalid_5fend',['invalid_end',['../structterminal.html#a6e766a913547b2f9d8b8f83061673ff3',1,'terminal']]],
