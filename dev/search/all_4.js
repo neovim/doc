@@ -69,7 +69,6 @@ var searchData=
   ['del_5fstr',['DEL_STR',['../ascii_8h.html#ace7a3df2689fdc10f9e697c8552cd3c9',1,'ascii.h']]],
   ['del_5ftrailing_5fspaces',['del_trailing_spaces',['../strings_8c.html#a5eeed1cf0f172d76f720b329e6d09989',1,'strings.c']]],
   ['del_5ftypebuf',['del_typebuf',['../getchar_8c.html#a3fd3b11860db7a0a9d863585465c25da',1,'getchar.c']]],
-  ['delayednotification',['DelayedNotification',['../structDelayedNotification.html',1,'']]],
   ['delete_5ffirst_5fmsg',['delete_first_msg',['../message_8c.html#aa4126a2c3996cddd65da5621ebd3df4c',1,'message.c']]],
   ['delete_5ffold_5fnested',['DELETE_FOLD_NESTED',['../fold_8c.html#a7659f348504f79eefdf704a75c4e7253',1,'fold.c']]],
   ['deleted_5flines',['deleted_lines',['../misc1_8c.html#a27dadabe44d461913b091e10980f35ba',1,'misc1.c']]],

@@ -13,7 +13,7 @@ var searchData=
   ['cb',['cb',['../structrstream.html#ac60fbd647f75d47cc0fa153b4c3e807c',1,'rstream::cb()'],['../structwstream.html#a478f5e424b3a48ff54955064de57b5b2',1,'wstream::cb()'],['../structwbuffer.html#a4a9884a48112c54a133e9934fc5f3655',1,'wbuffer::cb()']]],
   ['cb_5fflags',['cb_flags',['../option__defs_8h.html#a8f1aadd0ad3e7200b91cb68dfc859882',1,'option_defs.h']]],
   ['cells',['cells',['../structScrollbackLine.html#a596c11895daa293a702836b0b2904dd6',1,'ScrollbackLine']]],
-  ['channel',['channel',['../structRequestEvent.html#afe4578e4be8f543cd881aa38978e5553',1,'RequestEvent::channel()'],['../structDelayedNotification.html#ac20045d2f8fc125d8c78d2ae047dcfc1',1,'DelayedNotification::channel()']]],
+  ['channel',['channel',['../structRequestEvent.html#afe4578e4be8f543cd881aa38978e5553',1,'RequestEvent']]],
   ['channel_5fid',['channel_id',['../structUIData.html#a94f193063b6b4feabd9863cfe0a80cd4',1,'UIData']]],
   ['char1',['char1',['../structdigraph.html#ae35949039b6e589dffad3f950640d30d',1,'digraph']]],
   ['char2',['char2',['../structdigraph.html#a82c8309f706a5a8e2c278cba9f797700',1,'digraph']]],

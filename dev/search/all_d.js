@@ -230,7 +230,6 @@ var searchData=
   ['messages',['messages',['../structvim__exception.html#a54ffd15f77b98518266bdf6cab6c8ecb',1,'vim_exception']]],
   ['messaging',['messaging',['../screen_8c.html#a3b701aafefdf4259164a0399a07af50f',1,'screen.c']]],
   ['meta',['Meta',['../ascii_8h.html#ab34fe012583896dad11906d8edc7fc97',1,'ascii.h']]],
-  ['method',['method',['../structDelayedNotification.html#a127c1755bdff2bc3c75da9b809ad247c',1,'DelayedNotification']]],
   ['method_5fmaxlen',['METHOD_MAXLEN',['../channel_8h.html#a26678ea3ae80abdf365d09490b13542e',1,'channel.h']]],
   ['mf_5fblocknr_5fmax',['mf_blocknr_max',['../structmemfile.html#aa0bbdc78a43847cb756129e7fa4d2abc',1,'memfile']]],
   ['mf_5fblocknr_5fmin',['mf_blocknr_min',['../structmemfile.html#a43ea07fa5fb0656c8e493a91407a695f',1,'memfile']]],
