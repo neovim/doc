@@ -26,7 +26,7 @@ var searchData=
   ['backspace_5fline',['BACKSPACE_LINE',['../edit_8c.html#adecba2e676cf03edb595cf965f720bb7',1,'edit.c']]],
   ['backspace_5fword',['BACKSPACE_WORD',['../edit_8c.html#acc15ce4c6c0c2ba33ef702fa38084ace',1,'edit.c']]],
   ['backspace_5fword_5fnot_5fspace',['BACKSPACE_WORD_NOT_SPACE',['../edit_8c.html#a7bc87dd1db1c98b09bc6806c87f05b1e',1,'edit.c']]],
-  ['backtracking_5fengine',['BACKTRACKING_ENGINE',['../regexp_8c.html#a82a6225a14fd6812ccf62442bbc156fc',1,'regexp.c']]],
+  ['backtracking_5fengine',['BACKTRACKING_ENGINE',['../regexp__defs_8h.html#a82a6225a14fd6812ccf62442bbc156fc',1,'regexp_defs.h']]],
   ['backward',['BACKWARD',['../vim_8h.html#adf445abfe1b77fa63f89e315ccc2f7f2',1,'vim.h']]],
   ['backward_5ffile',['BACKWARD_FILE',['../vim_8h.html#aef166ca13cc57e42cc4d735652dcae1d',1,'vim.h']]],
   ['bad_5fdrop',['BAD_DROP',['../ex__cmds__defs_8h.html#ab2027c9bd737d71f52fcd2e9317acd3e',1,'ex_cmds_defs.h']]],

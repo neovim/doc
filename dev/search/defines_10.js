@@ -45,6 +45,7 @@ var searchData=
   ['pfd_5fprefixtree',['PFD_PREFIXTREE',['../spell_8c.html#aeb6b48f1aa8e13517efe9f4fbd6150ff',1,'spell.c']]],
   ['pfx_5fflags',['PFX_FLAGS',['../spell_8c.html#a610cb32dfc492ab753d1d06403bcd70d',1,'spell.c']]],
   ['plus',['PLUS',['../regexp_8c.html#a0ea7ff5947c5f5430a29fdd98391eb2a',1,'regexp.c']]],
+  ['plus_5fregister',['PLUS_REGISTER',['../ops_8c.html#a1369eec3c004eba5c74b63223a2067bd',1,'ops.c']]],
   ['pmap',['PMap',['../map__defs_8h.html#a1962cf47c5b08783985ddb280d058b53',1,'map_defs.h']]],
   ['pmap_5fclear',['pmap_clear',['../map_8h.html#a695460fde1b3059178bb43631fd38854',1,'map.h']]],
   ['pmap_5fdel',['pmap_del',['../map_8h.html#ad7abe82d77018b7a797ce9cf79c13218',1,'map.h']]],

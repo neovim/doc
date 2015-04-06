@@ -48,7 +48,7 @@ var searchData=
   ['mb_5ftail_5foff',['mb_tail_off',['../mbyte_8c.html#a3271fa1cdc14e81bc235fbea5e45dc31',1,'mbyte.c']]],
   ['mb_5funescape',['mb_unescape',['../mbyte_8c.html#a54796eb65a7546209a492f3f8622dbf1',1,'mbyte.c']]],
   ['mch_5fexit',['mch_exit',['../os__unix_8c.html#acd4e72a371bf7c129e35ee6546077902',1,'os_unix.c']]],
-  ['mch_5fexpand_5fwildcards',['mch_expand_wildcards',['../os__unix_8c.html#aef492cf9a4881f117ea4bcc4d663bbf7',1,'os_unix.c']]],
+  ['mch_5fexpand_5fwildcards',['mch_expand_wildcards',['../os__unix_8c.html#afbcf86ec79bbeddad0e4a2994676ebd5',1,'os_unix.c']]],
   ['mch_5fnodetype',['mch_nodetype',['../os__unix_8c.html#a8a6f9270d0f73ddd78beb56b587cb247',1,'os_unix.c']]],
   ['mch_5fprint_5fbegin',['mch_print_begin',['../hardcopy_8c.html#a78dd21072b4f859b9b7ec82599867ac0',1,'hardcopy.c']]],
   ['mch_5fprint_5fbegin_5fpage',['mch_print_begin_page',['../hardcopy_8c.html#a0659a1178cfb4d8888f61ab33a5dcc9c',1,'hardcopy.c']]],

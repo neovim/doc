@@ -279,7 +279,7 @@ var searchData=
   ['augroup_5ferror',['AUGROUP_ERROR',['../fileio_8c.html#a3dd8c1431119b09656aa319ecac46171',1,'fileio.c']]],
   ['augroup_5fname',['AUGROUP_NAME',['../fileio_8c.html#aba3e5c7c49360019d2761abcc2191e91',1,'fileio.c']]],
   ['autoload_5fchar',['AUTOLOAD_CHAR',['../eval_8c.html#a6ef4d2aca28604896cc90c3bef4f0770',1,'eval.c']]],
-  ['automatic_5fengine',['AUTOMATIC_ENGINE',['../regexp_8c.html#a9185ee5172b29cf25454c239a060c9d4',1,'regexp.c']]],
+  ['automatic_5fengine',['AUTOMATIC_ENGINE',['../regexp__defs_8h.html#a9185ee5172b29cf25454c239a060c9d4',1,'regexp_defs.h']]],
   ['ayn',['AYN',['../farsi_8h.html#a588a7465469c663e51e73311ebaf7d19',1,'farsi.h']]],
   ['ayn_5f',['AYN_',['../farsi_8h.html#a14a3a6be445e38303a94c8a26c70168a',1,'farsi.h']]]
 ];

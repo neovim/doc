@@ -766,6 +766,7 @@ var searchData=
   ['st_5fwordlen',['st_wordlen',['../structsuggest__T.html#a2b2567f2d2b6b7b4524bf168e578709b',1,'suggest_T']]],
   ['stack_5fincr',['STACK_INCR',['../memline_8c.html#a0caed9f008450f4f072f64fa9023aa0a',1,'memline.c']]],
   ['star',['STAR',['../regexp_8c.html#a94c3dc9846edbbb70f678768633a4796',1,'regexp.c']]],
+  ['star_5fregister',['STAR_REGISTER',['../ops_8c.html#a28fa5bc0dc9809308acf9df2fe23ba56',1,'ops.c']]],
   ['start',['start',['../structstl__hlrec.html#adbc9abb3aa973e3f31960033bd348488',1,'stl_hlrec::start()'],['../structfline__T.html#aa063d862f854f3f701d2ffffbff80db1',1,'fline_T::start()'],['../structoparg__S.html#ac0493d7fce1ef43093baddd494d875e2',1,'oparg_S::start()'],['../structnfa__regprog__T.html#acd9957fd0ff3bd179c58209b3e24cfbb',1,'nfa_regprog_T::start()'],['../structFrag.html#aac6ff10fdf0f9b6c00aead95ce34a726',1,'Frag::start()'],['../structregsub__T.html#ace0c4f5552e3305ecddc2900b323d3b6',1,'regsub_T::start()'],['../structregsub__T.html#a34af997aa81dedea0211864f9fa6a2e0',1,'regsub_T::start()']]],
   ['start_5fchar_5fvcols',['start_char_vcols',['../structblock__def.html#a4e5d790047c10069b02364d3b259ccb2',1,'block_def']]],
   ['start_5fcol_5fnr',['start_col_nr',['../structsorti__T.html#a40c9c66aca7d7a5ee40d154d45bc6461',1,'sorti_T']]],

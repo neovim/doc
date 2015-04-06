@@ -156,7 +156,7 @@ var searchData=
   ['get_5fviminfo_5fparameter',['get_viminfo_parameter',['../option_8c.html#abd8579be19f99b759c27e62dbb739ebf',1,'option.c']]],
   ['get_5fvisual_5ftext',['get_visual_text',['../normal_8c.html#aa605156c9e5f7f492049ce99bb469bfe',1,'normal.c']]],
   ['get_5fwinopts',['get_winopts',['../buffer_8c.html#ab2199ca38333a71876d5e617919dc8c6',1,'buffer.c']]],
-  ['get_5fyank_5fregister',['get_yank_register',['../ops_8c.html#adcbaca8c60fb7cd486a899fda9c825e4',1,'ops.c']]],
+  ['get_5fyank_5fregister',['get_yank_register',['../ops_8c.html#a6fae19bcf7cab4ed23891692a8dfd831',1,'ops.c']]],
   ['getaltfname',['getaltfname',['../buffer_8c.html#a9fbdd165bfd0e950654592d79a07bb2c',1,'buffer.c']]],
   ['getchar_2ec',['getchar.c',['../getchar_8c.html',1,'']]],
   ['getchar_2eh',['getchar.h',['../getchar_8h.html',1,'']]],

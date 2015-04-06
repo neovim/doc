@@ -275,6 +275,7 @@ var searchData=
   ['sst_5fmin_5fentries',['SST_MIN_ENTRIES',['../syntax__defs_8h.html#a81cdf2d2a764d4bc70ea36bdd38772d7',1,'syntax_defs.h']]],
   ['stack_5fincr',['STACK_INCR',['../memline_8c.html#a0caed9f008450f4f072f64fa9023aa0a',1,'memline.c']]],
   ['star',['STAR',['../regexp_8c.html#a94c3dc9846edbbb70f678768633a4796',1,'regexp.c']]],
+  ['star_5fregister',['STAR_REGISTER',['../ops_8c.html#a28fa5bc0dc9809308acf9df2fe23ba56',1,'ops.c']]],
   ['starts_5fwith',['STARTS_WITH',['../tui_8c.html#aa6e1ca612420822e09270ef397db5f42',1,'tui.c']]],
   ['static_5fassert',['STATIC_ASSERT',['../assert_8h.html#a83ea8d74b1ef7e6d8257a70dcd848a67',1,'assert.h']]],
   ['status_5fheight',['STATUS_HEIGHT',['../vim_8h.html#af7a8ef6be32628fd8b76fd3eb29f82e5',1,'vim.h']]],

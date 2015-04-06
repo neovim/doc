@@ -29,5 +29,6 @@ var searchData=
   ['exit_5fcb',['exit_cb',['../structJobOptions.html#a898b7249330204fc084807baae05ba08',1,'JobOptions']]],
   ['exited',['exited',['../structTerminalJobData.html#a102b55872e2cb2411dba20f15e6a1b1d',1,'TerminalJobData']]],
   ['expand',['expand',['../ex__docmd_8c.html#a4fd89930cfa1006f152d636b9a0c7ab9',1,'ex_docmd.c']]],
+  ['expr',['expr',['../structregengine.html#a705cea9ce7786614e33c89823a5d4bca',1,'regengine']]],
   ['extra_5fchar',['extra_char',['../structcmdarg__S.html#a2a40234a723a0bc67a687982eb51d9bf',1,'cmdarg_S']]]
 ];

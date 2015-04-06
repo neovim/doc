@@ -131,7 +131,7 @@ var searchData=
   ['get_5fviminfo_5fparameter',['get_viminfo_parameter',['../option_8c.html#abd8579be19f99b759c27e62dbb739ebf',1,'option.c']]],
   ['get_5fvisual_5ftext',['get_visual_text',['../normal_8c.html#aa605156c9e5f7f492049ce99bb469bfe',1,'normal.c']]],
   ['get_5fwinopts',['get_winopts',['../buffer_8c.html#ab2199ca38333a71876d5e617919dc8c6',1,'buffer.c']]],
-  ['get_5fyank_5fregister',['get_yank_register',['../ops_8c.html#adcbaca8c60fb7cd486a899fda9c825e4',1,'ops.c']]],
+  ['get_5fyank_5fregister',['get_yank_register',['../ops_8c.html#a6fae19bcf7cab4ed23891692a8dfd831',1,'ops.c']]],
   ['getaltfname',['getaltfname',['../buffer_8c.html#a9fbdd165bfd0e950654592d79a07bb2c',1,'buffer.c']]],
   ['getcmdline',['getcmdline',['../ex__getln_8c.html#a6f60bfb4da7fe0e248e0ed66bf6d5712',1,'ex_getln.c']]],
   ['getcmdline_5fprompt',['getcmdline_prompt',['../ex__getln_8c.html#aeb271acb478cdc4bfc06439ee2a36af6',1,'ex_getln.c']]],

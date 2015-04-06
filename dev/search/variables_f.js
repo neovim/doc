@@ -238,7 +238,7 @@ var searchData=
   ['parse_5fstate_5ft',['parse_state_T',['../regexp_8c.html#ae1dbd15248dcb1646cf1eb6e10e32294',1,'regexp.c']]],
   ['pat',['pat',['../structAutoPat.html#a8c98c4f05140757493f39f6604dc1a81',1,'AutoPat::pat()'],['../structspat.html#ad6c74e83b279cbca2aa0e673ee6f1718',1,'spat::pat()'],['../structpat__T.html#aebbe15f2e0be4b053603ea54c8e82339',1,'pat_T::pat()']]],
   ['patlen',['patlen',['../structAutoPat.html#a94b3b493b92af446216c24be6f8436c9',1,'AutoPat']]],
-  ['pattern',['pattern',['../structmatchitem.html#ad547d70b3fe0ccc2b6a4ab95a353ba39',1,'matchitem::pattern()'],['../structtime__entry__T.html#aec07935606568180cb5ac78552eac289',1,'time_entry_T::pattern()']]],
+  ['pattern',['pattern',['../structmatchitem.html#ad547d70b3fe0ccc2b6a4ab95a353ba39',1,'matchitem::pattern()'],['../structnfa__regprog__T.html#ab7ec5e86583aa95e6fdac82990ddf5ce',1,'nfa_regprog_T::pattern()'],['../structtime__entry__T.html#aec07935606568180cb5ac78552eac289',1,'time_entry_T::pattern()']]],
   ['pb_5fcount',['pb_count',['../structpointer__block.html#a3247d4de4f33d045d93ca3e0b43cd27b',1,'pointer_block']]],
   ['pb_5fcount_5fmax',['pb_count_max',['../structpointer__block.html#ab12bba4e8c37f7deccc815e3a7b8618f',1,'pointer_block']]],
   ['pb_5fid',['pb_id',['../structpointer__block.html#ad26a358d2f8c63baeede7fffff4593f0',1,'pointer_block']]],

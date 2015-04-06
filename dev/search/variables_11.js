@@ -2,6 +2,8 @@ var searchData=
 [
   ['rangeend',['rangeEnd',['../structconvertStruct.html#ac8dd996815da3f0cdfabd5c9eacd4dce',1,'convertStruct']]],
   ['rangestart',['rangeStart',['../structconvertStruct.html#a9d04d27328b672cd0fcd6a58e1865d6d',1,'convertStruct']]],
+  ['re_5fengine',['re_engine',['../structregprog.html#a7f6de11d9f89eae443c566c0654aa08c',1,'regprog::re_engine()'],['../structbt__regprog__T.html#a21242a03a3ddbb77355cd624af0168c5',1,'bt_regprog_T::re_engine()'],['../structnfa__regprog__T.html#a4f18c1dabaffdd79e3aac5ead4ee6d00',1,'nfa_regprog_T::re_engine()']]],
+  ['re_5fflags',['re_flags',['../structregprog.html#a0c05fb082a6c5ef8e619eda1bffaecda',1,'regprog::re_flags()'],['../structbt__regprog__T.html#a1c45440eafb4b720d9bbfe205002534e',1,'bt_regprog_T::re_flags()'],['../structnfa__regprog__T.html#a4e09ded965a0562f1fdbd41632020471',1,'nfa_regprog_T::re_flags()']]],
   ['read_5fedit',['read_edit',['../structexarg.html#a890d17f4aaf19e596b75ab4db4a152c6',1,'exarg']]],
   ['received',['received',['../structJobEvent.html#a99aa58e4c4b7d921a0e95f8131e7c9f6',1,'JobEvent']]],
   ['refcnt',['refcnt',['../structreg__extmatch__T.html#abb0946f16ec7489b59022c64f7ecc22e',1,'reg_extmatch_T']]],

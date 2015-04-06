@@ -410,7 +410,7 @@ var searchData=
   ['autocmd_5fmatch',['autocmd_match',['../structcaller__scope.html#a4aeaeb0c81875ff7bebe93e1391a22d9',1,'caller_scope']]],
   ['autocmd_5fsupported',['autocmd_supported',['../fileio_8c.html#a6448e38b95d6b59616461b8174aab200',1,'fileio.c']]],
   ['autoload_5fchar',['AUTOLOAD_CHAR',['../eval_8c.html#a6ef4d2aca28604896cc90c3bef4f0770',1,'eval.c']]],
-  ['automatic_5fengine',['AUTOMATIC_ENGINE',['../regexp_8c.html#a9185ee5172b29cf25454c239a060c9d4',1,'regexp.c']]],
+  ['automatic_5fengine',['AUTOMATIC_ENGINE',['../regexp__defs_8h.html#a9185ee5172b29cf25454c239a060c9d4',1,'regexp_defs.h']]],
   ['autopat',['AutoPat',['../structAutoPat.html',1,'AutoPat'],['../fileio_8c.html#aceb1a884fb0de403333d18544ac2983a',1,'AutoPat():&#160;fileio.c']]],
   ['autopatcmd',['AutoPatCmd',['../structAutoPatCmd.html',1,'AutoPatCmd'],['../fileio_8c.html#aa29b60c854c63ad96324a3bfcbb4449a',1,'AutoPatCmd():&#160;fileio.c']]],
   ['autowrite',['autowrite',['../ex__cmds2_8c.html#aa4369dbf4994968d541a9935452daa06',1,'ex_cmds2.c']]],
