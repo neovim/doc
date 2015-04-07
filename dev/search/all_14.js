@@ -206,7 +206,7 @@ var searchData=
   ['tty_5ffd',['tty_fd',['../structPtyProcess.html#a2728ff1fb954283cbbdf5345702404bb',1,'PtyProcess']]],
   ['tui_2ec',['tui.c',['../tui_8c.html',1,'']]],
   ['tui_2eh',['tui.h',['../tui_8h.html',1,'']]],
-  ['tui_5fstart',['tui_start',['../tui_8c.html#a122154f63b38129dc661b84fcde2c770',1,'tui.c']]],
+  ['tui_5fstart',['tui_start',['../tui_8c.html#a159a27dd6b8cb3efca8976da7e29c283',1,'tui.c']]],
   ['tuidata',['TUIData',['../structTUIData.html',1,'']]],
   ['type',['type',['../structError.html#a4d9ef9fdc894088985e42ccda181ece7',1,'Error::type()'],['../structobject.html#a604599eed152e854882bc42dd2d2e1c8',1,'object::type()'],['../structJobEvent.html#af314650fa520d47437a1a004f2e8746d',1,'JobEvent::type()'],['../structvim__exception.html#adaecf14218ac2f99cd1605ba53de270a',1,'vim_exception::type()'],['../structprt__ps__resource__S.html#a126067dae10ce91db799cbb1cb612788',1,'prt_ps_resource_S::type()'],['../structprt__dsc__comment__S.html#a79b9d6809e65705201ed47e5ef606474',1,'prt_dsc_comment_S::type()'],['../structprt__dsc__line__S.html#a2735854c832ab5fb4ab083752c4e2b8d',1,'prt_dsc_line_S::type()'],['../structServer.html#aa1327f3a0e74023ab4e1e2c6957b3eb8',1,'Server::type()']]],
   ['type_5fequal',['TYPE_EQUAL',['../eval_8c.html#adecc3b73314d5f82a3225b15ccc6dd1facf0c7169928cf54dfeb1a4f402057b5f',1,'eval.c']]],
