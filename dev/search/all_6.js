@@ -133,7 +133,7 @@ var searchData=
   ['fgets_5fsize',['FGETS_SIZE',['../fileio_8c.html#a4d6447f1924da917b0348155cfd01440',1,'fileio.c']]],
   ['fi_5flevel',['fi_level',['../structfoldinfo.html#ad1b9db6d306aa03e6c1e1ea10da43229',1,'foldinfo']]],
   ['fi_5flist',['fi_list',['../structforinfo__T.html#aef3a6b46ddad08ace916d8f59648b18a',1,'forinfo_T']]],
-  ['fi_5flnum',['fi_lnum',['../structfoldinfo.html#a1d61808e6208733062b896c1df49db88',1,'foldinfo']]],
+  ['fi_5flnum',['fi_lnum',['../structfoldinfo.html#a5d66dc96b5e8a3223f5030ee8584aa1e',1,'foldinfo']]],
   ['fi_5flow_5flevel',['fi_low_level',['../structfoldinfo.html#aace3348fb561de009de2c817e7cc1e74',1,'foldinfo']]],
   ['fi_5flw',['fi_lw',['../structforinfo__T.html#a0ebdb7303463e1c33ad817ccc3101181',1,'forinfo_T']]],
   ['fi_5fsemicolon',['fi_semicolon',['../structforinfo__T.html#a809263d59de28a7a6b6ed87740589640',1,'forinfo_T']]],

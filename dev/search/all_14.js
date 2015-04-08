@@ -134,7 +134,7 @@ var searchData=
   ['to',['to',['../structkmap__T.html#a9adcf2b00147ce38dbb1e1fb3b659658',1,'kmap_T::to()'],['../structmenutrans__T.html#a677757a810fbb87e440533e750596f9e',1,'menutrans_T::to()'],['../structlangmap__entry__T.html#a162523a29794a6a4e2c9cf01b2119666',1,'langmap_entry_T::to()']]],
   ['to_5ffp',['to_fp',['../structcsi.html#af83092a970863a5ec4e0c7e36b7e2c89',1,'csi']]],
   ['to_5fspecial',['TO_SPECIAL',['../keymap_8h.html#a5300e534627f106485629e271405e42d',1,'keymap.h']]],
-  ['tof_5ftya',['toF_TyA',['../farsi_8c.html#a9b8aa111af8275cd138c51e8efb6f36b',1,'farsi.c']]],
+  ['tof_5ftya',['toF_TyA',['../farsi_8c.html#a64992a4feb2bb49defdad21deaa44dc2',1,'farsi.c']]],
   ['tofree',['tofree',['../structjoin__S.html#adfea5d39138deae82ad392acae63f9ff',1,'join_S']]],
   ['tolower_5fasc',['TOLOWER_ASC',['../macros_8h.html#abedb28fafef6553a68ede9057216bfaa',1,'macros.h']]],
   ['tolower_5floc',['TOLOWER_LOC',['../macros_8h.html#a1464644dc2154dbe6df4bf20d3085301',1,'macros.h']]],
