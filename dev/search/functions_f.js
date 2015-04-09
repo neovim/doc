@@ -84,7 +84,7 @@ var searchData=
   ['pum_5fundisplay',['pum_undisplay',['../popupmnu_8c.html#a5e463f630e9f5d85f08bb2fc650841e5',1,'popupmnu.c']]],
   ['pum_5fvisible',['pum_visible',['../popupmnu_8c.html#a92cea3c27a6962e1204a14822367375f',1,'popupmnu.c']]],
   ['push_5fshowcmd',['push_showcmd',['../normal_8c.html#ab48b9d994125e4c14c8411003ef267c5',1,'normal.c']]],
-  ['put_5fbytes',['put_bytes',['../misc2_8c.html#a0f0cfe964e9751f7a2a39f9f105b7af2',1,'misc2.c']]],
+  ['put_5fbytes',['put_bytes',['../misc2_8c.html#aff1844dd411f2d7e944a737b534e39da',1,'misc2.c']]],
   ['put_5feol',['put_eol',['../ex__docmd_8c.html#a47652016ae7d425ffcc64d8153ee2533',1,'ex_docmd.c']]],
   ['put_5fescstr',['put_escstr',['../getchar_8c.html#a6a56f2edf98b827e99dbab7dc921f73f',1,'getchar.c']]],
   ['put_5ffolds',['put_folds',['../fold_8c.html#a83b9f7de1d1cc014702808bd3327c174',1,'fold.c']]],

@@ -8,7 +8,7 @@ var searchData=
   ['u_5ffind_5ffirst_5fchanged',['u_find_first_changed',['../undo_8c.html#a3109fad866d25ed00837968e7812e707',1,'undo.c']]],
   ['u_5fget_5fundo_5ffile_5fname',['u_get_undo_file_name',['../undo_8c.html#a23e48ae49662ee0021682f9abea598a9',1,'undo.c']]],
   ['u_5finssub',['u_inssub',['../undo_8c.html#a220c50aa35ab0d34139bcee216a294ed',1,'undo.c']]],
-  ['u_5fread_5fundo',['u_read_undo',['../undo_8c.html#a54babaa7995628ce57db7b69cf094194',1,'undo.c']]],
+  ['u_5fread_5fundo',['u_read_undo',['../undo_8c.html#ae7015e98c80d147705e3d655963c8e25',1,'undo.c']]],
   ['u_5fredo',['u_redo',['../undo_8c.html#a42170edb91815bead0e4cc31363505f0',1,'undo.c']]],
   ['u_5fsave',['u_save',['../undo_8c.html#af782c43f195e8e240548be5618c2afc6',1,'undo.c']]],
   ['u_5fsave_5fcursor',['u_save_cursor',['../undo_8c.html#a87c3205cde8e5b77ba68eaf166ab252f',1,'undo.c']]],

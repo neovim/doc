@@ -253,6 +253,8 @@ var searchData=
   ['bh_5fpage_5fcount',['bh_page_count',['../structbhdr.html#ae96a431d17ab76667cb35e34460d0f1e',1,'bhdr']]],
   ['bh_5fprev',['bh_prev',['../structbhdr.html#a281bf094d23a3d4cbfe9e11f43ac6390',1,'bhdr']]],
   ['bh_5fspace',['bh_space',['../structbuffheader.html#abcfc145b51f4b2bee8f85f97077a1f07',1,'buffheader']]],
+  ['bi_5fbuf',['bi_buf',['../structbufinfo__T.html#a6cbb8e00298cb89a686ac124cc8af510',1,'bufinfo_T']]],
+  ['bi_5ffp',['bi_fp',['../structbufinfo__T.html#a43745feee178ddd810b6df99f1f47b2b',1,'bufinfo_T']]],
   ['bkc_5fflags',['bkc_flags',['../option__defs_8h.html#aab5d6878455ad807da491116603cb42a',1,'option_defs.h']]],
   ['blinkoff',['blinkoff',['../structcursor__entry.html#a82bd3b51eb29a394d3819fcfd7249544',1,'cursor_entry']]],
   ['blinkon',['blinkon',['../structcursor__entry.html#a40e18c8dd751477364ccebaa8c6a95eb',1,'cursor_entry']]],

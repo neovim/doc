@@ -520,7 +520,7 @@ var searchData=
   ['push_5fchar',['PUSH_CHAR',['../vim_8c.html#a0f9f9bcf630be259c4517268139fb76d',1,'vim.c']]],
   ['push_5fshowcmd',['push_showcmd',['../normal_8c.html#ab48b9d994125e4c14c8411003ef267c5',1,'normal.c']]],
   ['put',['put',['../structui__t.html#a0d9debb625f6275c0faa76c79fc30b9c',1,'ui_t::put()'],['../api_2private_2helpers_8h.html#ad9c4697de565d6819af95019b8b021a2',1,'PUT():&#160;helpers.h']]],
-  ['put_5fbytes',['put_bytes',['../misc2_8c.html#a0f0cfe964e9751f7a2a39f9f105b7af2',1,'misc2.c']]],
+  ['put_5fbytes',['put_bytes',['../misc2_8c.html#aff1844dd411f2d7e944a737b534e39da',1,'misc2.c']]],
   ['put_5fcursend',['PUT_CURSEND',['../ops_8h.html#a1b9038ed2b1ae176fef0f42db9dcfa8d',1,'ops.h']]],
   ['put_5fcursline',['PUT_CURSLINE',['../ops_8h.html#acc481680bd3997d4b1e0814ad72e94ac',1,'ops.h']]],
   ['put_5feol',['put_eol',['../ex__docmd_8c.html#a47652016ae7d425ffcc64d8153ee2533',1,'ex_docmd.c']]],

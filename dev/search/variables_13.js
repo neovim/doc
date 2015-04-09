@@ -31,8 +31,6 @@ var searchData=
   ['throw_5flnum',['throw_lnum',['../structvim__exception.html#a33ab2a38b355eabf300ff1f3c13242e9',1,'vim_exception']]],
   ['throw_5fmsg',['throw_msg',['../structmsglist.html#a3d49c3a63c338a424d19c51eabf1cdb7',1,'msglist']]],
   ['throw_5fname',['throw_name',['../structvim__exception.html#a48be7c536a9c513028442117928be692',1,'vim_exception']]],
-  ['timed_5fout',['timed_out',['../structTimerData.html#a6bbbfd3679bda2434ee8fadabcc1ccfd',1,'TimerData']]],
-  ['timer',['timer',['../structTimerData.html#adba645514dc6e704f2f9150574734c71',1,'TimerData']]],
   ['title',['title',['../structprt__ps__resource__S.html#abf1a7cb15460ae4fd584bdb1b1df3ab6',1,'prt_ps_resource_S']]],
   ['tm',['tm',['../structmatch__T.html#acbe19a09886335d3db942f694225961e',1,'match_T']]],
   ['tn_5fdid_5ffilefind_5finit',['tn_did_filefind_init',['../structtagname__T.html#a2b4551a8e7e060aa926146e47488cab1',1,'tagname_T']]],

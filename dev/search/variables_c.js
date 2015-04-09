@@ -103,7 +103,6 @@ var searchData=
   ['mouse_5foff',['mouse_off',['../structui__t.html#a015adfb225cd3572859c44bc4a2ee48a',1,'ui_t']]],
   ['mouse_5fon',['mouse_on',['../structui__t.html#ae1288e030f409c0be80850df5e3d40df',1,'ui_t']]],
   ['mouse_5frow',['mouse_row',['../globals_8h.html#ac2e09843f59a705f5e1b2a83080fbf45',1,'globals.h']]],
-  ['ms',['ms',['../structTimerData.html#a8761efeeb4f565abd3a637bb1f8f0dbf',1,'TimerData']]],
   ['msg',['msg',['../structError.html#a012d5a13fc047cfb6da9616bbdf463f1',1,'Error::msg()'],['../structmsglist.html#ac8341db39c8dc65be756be2c67b2b9fc',1,'msglist::msg()'],['../structmsg__hist.html#a22426b9b62f3448b50af0fda1ef41774',1,'msg_hist::msg()']]],
   ['msg_5fbuf',['msg_buf',['../globals_8h.html#abf237fcb55f45d33b653f64b15f97dd1',1,'globals.h']]],
   ['msg_5fcol',['msg_col',['../globals_8h.html#aeca5747830fc5511b00793cde06f61f5',1,'globals.h']]],

@@ -66,8 +66,6 @@ var searchData=
   ['bl_5fwhite',['BL_WHITE',['../edit_8h.html#a4853074fb465395174d66dd0b933792d',1,'edit.h']]],
   ['block0_5fid0',['BLOCK0_ID0',['../memline_8c.html#ace6f748ee345944bbe21944baea19883',1,'memline.c']]],
   ['block0_5fid1',['BLOCK0_ID1',['../memline_8c.html#a19b014ee9a087900435acfa5166c2bea',1,'memline.c']]],
-  ['block0_5fid1_5fc0',['BLOCK0_ID1_C0',['../memline_8c.html#aca48449cf4d92cab475956ba7760efaa',1,'memline.c']]],
-  ['block0_5fid1_5fc1',['BLOCK0_ID1_C1',['../memline_8c.html#a8dcf918c830f292339754bb9db126932',1,'memline.c']]],
   ['bol',['BOL',['../regexp_8c.html#a3b6c9a4a7fbccb1ac0e525e52c931896',1,'regexp.c']]],
   ['boolean_5fobj',['BOOLEAN_OBJ',['../api_2private_2helpers_8h.html#a54fd7906326ebadfb3e157b17c6291fe',1,'helpers.h']]],
   ['bow',['BOW',['../regexp_8c.html#aa4f7e4cfe33c3863e12ee5fbcf16dea6',1,'regexp.c']]],
