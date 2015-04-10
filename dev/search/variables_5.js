@@ -72,7 +72,6 @@ var searchData=
   ['fname',['fname',['../structsource__cookie.html#a819dd7c5c287db125a8a30881b054c5a',1,'source_cookie::fname()'],['../structAutoPatCmd.html#a8aacb646de8d7c6c6802118d9cce8eaa',1,'AutoPatCmd::fname()'],['../structcsi.html#acbcb8a7d2e9b72cf797de14015a2f54a',1,'csi::fname()'],['../structxfilemark.html#a2362325e7dca0b07100b96d94d58b2f6',1,'xfilemark::fname()'],['../structtag__pointers.html#aa7b4ec357dac14f124d152077ac14080',1,'tag_pointers::fname()']]],
   ['fname_5fend',['fname_end',['../structtag__pointers.html#ada1231ebf2df09f8b16d3ab1dc7435d0',1,'tag_pointers']]],
   ['fnum',['fnum',['../structfilemark.html#a40783351402af521156d7e27d7acf5c7',1,'filemark']]],
-  ['focused_5fcursor_5fattr_5fid',['focused_cursor_attr_id',['../structterminal.html#a2baf9d89bacff415712118be15aa63f9',1,'terminal']]],
   ['force_5fabort',['force_abort',['../structdbg__stuff.html#a2b60dc3ceaf7927fa8ce23423cef994c',1,'dbg_stuff']]],
   ['force_5fbin',['force_bin',['../structexarg.html#adc8d214a7c8bcaa5fa6ad24886f7af1b',1,'exarg']]],
   ['force_5fenc',['force_enc',['../structexarg.html#aa1a072c9c4dfafa9af02eb3cfbc1feca',1,'exarg']]],

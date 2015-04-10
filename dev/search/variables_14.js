@@ -53,7 +53,6 @@ var searchData=
   ['uline_5fwidth',['uline_width',['../structprt__ps__font__S.html#a952ec343a09b56d3d0bcb474eea05a78',1,'prt_ps_font_S']]],
   ['undercurl',['undercurl',['../structprt__text__attr__T.html#a125bdf5280175b381c4b99f3f6c86bb1',1,'prt_text_attr_T::undercurl()'],['../structHlAttrs.html#ab3a64e2adcf47e59d4668a0fe237aa6c',1,'HlAttrs::undercurl()']]],
   ['underline',['underline',['../structprt__text__attr__T.html#a634e9c7f3be5ab7d46188d0211134a6c',1,'prt_text_attr_T::underline()'],['../structHlAttrs.html#aab317c1060499e14a417c4edc376a51f',1,'HlAttrs::underline()']]],
-  ['unfocused_5fcursor_5fattr_5fid',['unfocused_cursor_attr_id',['../structterminal.html#a40b0a9312f1f3e1a04e9be7daf60b0dc',1,'terminal']]],
   ['unibi_5fext',['unibi_ext',['../structTUIData.html#af2a12eaf672627950d02fc49aad3288a',1,'TUIData']]],
   ['update_5fbg',['update_bg',['../structui__t.html#a13da8a533920abc0e4ddaf168f94db0c',1,'ui_t']]],
   ['update_5ffg',['update_fg',['../structui__t.html#afc47dbc2cb4923e7223d0808e768a51d',1,'ui_t']]],

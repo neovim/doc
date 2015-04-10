@@ -194,6 +194,8 @@ var searchData=
   ['hlf_5fspl',['HLF_SPL',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a792a8dd4523f8ea156b7fcf43740fa39',1,'globals.h']]],
   ['hlf_5fspr',['HLF_SPR',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60abf2668117e7a02dbe56105916781c765',1,'globals.h']]],
   ['hlf_5ft',['hlf_T',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60',1,'hlf_T():&#160;globals.h'],['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a4fb58f8b9953765c810c24f81eff37f0',1,'HLF_T():&#160;globals.h']]],
+  ['hlf_5fterm',['HLF_TERM',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60ab2f3c63e5a55dd1bfedf594de12f9520',1,'globals.h']]],
+  ['hlf_5ftermnc',['HLF_TERMNC',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a554142cb3d5488d68a4a3349f28c3891',1,'globals.h']]],
   ['hlf_5ftp',['HLF_TP',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a4281c8f4ab225b333b1908954088cb73',1,'globals.h']]],
   ['hlf_5ftpf',['HLF_TPF',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a1e3f19a477994a046981c11c1629238e',1,'globals.h']]],
   ['hlf_5ftps',['HLF_TPS',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a214834d7a5acd60d709e7be91e2fbfcf',1,'globals.h']]],

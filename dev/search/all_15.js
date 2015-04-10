@@ -157,7 +157,6 @@ var searchData=
   ['undo_5fdefs_2eh',['undo_defs.h',['../undo__defs_8h.html',1,'']]],
   ['undo_5fhash_5fsize',['UNDO_HASH_SIZE',['../vim_8h.html#a5996531431e7f6cb912e7dbc9671c6c3',1,'vim.h']]],
   ['undo_5ftime',['undo_time',['../undo_8c.html#a7e76b1b177e3f0b5c57c204719442686',1,'undo.c']]],
-  ['unfocused_5fcursor_5fattr_5fid',['unfocused_cursor_attr_id',['../structterminal.html#a40b0a9312f1f3e1a04e9be7daf60b0dc',1,'terminal']]],
   ['unibi_5fext',['unibi_ext',['../structTUIData.html#af2a12eaf672627950d02fc49aad3288a',1,'TUIData']]],
   ['unix_5fdefs_2eh',['unix_defs.h',['../unix__defs_8h.html',1,'']]],
   ['unputcmdline',['unputcmdline',['../ex__getln_8c.html#a4a943b6415c7a28d071187f428ad5e95',1,'ex_getln.c']]],

@@ -282,7 +282,6 @@ var searchData=
   ['fo_5fwhite_5fpar',['FO_WHITE_PAR',['../option__defs_8h.html#abc9a118de99d4923d600a313eaf73a83',1,'option_defs.h']]],
   ['fo_5fwrap',['FO_WRAP',['../option__defs_8h.html#a7d4031c6345a87fa91d6bedf0efb7a73',1,'option_defs.h']]],
   ['fo_5fwrap_5fcoms',['FO_WRAP_COMS',['../option__defs_8h.html#ab55eb23c5d4d653c94de5501364f756f',1,'option_defs.h']]],
-  ['focused_5fcursor_5fattr_5fid',['focused_cursor_attr_id',['../structterminal.html#a2baf9d89bacff415712118be15aa63f9',1,'terminal']]],
   ['fold_2ec',['fold.c',['../fold_8c.html',1,'']]],
   ['fold_2eh',['fold.h',['../fold_8h.html',1,'']]],
   ['fold_5ft',['fold_T',['../structfold__T.html',1,'']]],
