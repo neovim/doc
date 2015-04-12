@@ -35,6 +35,7 @@ var searchData=
   ['get_5fcursor_5fline_5fptr',['get_cursor_line_ptr',['../cursor_8c.html#ad303d543671694f476f6d0fd515f00c0',1,'cursor.c']]],
   ['get_5fcursor_5fpos_5fptr',['get_cursor_pos_ptr',['../cursor_8c.html#a3882000cebb7ed4b07336bbc9abcc885',1,'cursor.c']]],
   ['get_5fcursor_5frel_5flnum',['get_cursor_rel_lnum',['../cursor_8c.html#a123577af6e2d37722104c3db8c486796',1,'cursor.c']]],
+  ['get_5fdefault_5fregister_5fname',['get_default_register_name',['../ops_8c.html#a50ea10b318c159c3544f98b2ab908caf',1,'ops.c']]],
   ['get_5fdict_5fnumber',['get_dict_number',['../eval_8c.html#a11b31cb80469ddf7164368558ce2673e',1,'eval.c']]],
   ['get_5fdict_5fstring',['get_dict_string',['../eval_8c.html#a78a0a2e05dc40f66c7cfea4c6941c67e',1,'eval.c']]],
   ['get_5fdigraph',['get_digraph',['../digraph_8c.html#ad372630be91a245efcd2dcecac3f7ecc',1,'digraph.c']]],
