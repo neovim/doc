@@ -12,7 +12,6 @@ var searchData=
   ['ccgd_5fexcmd',['CCGD_EXCMD',['../ex__cmds2_8h.html#a9cf94f238075f1a38becfcfdd8496e7b',1,'ex_cmds2.h']]],
   ['ccgd_5fforceit',['CCGD_FORCEIT',['../ex__cmds2_8h.html#a6035494c5f7dfa11d158dac37d20422e',1,'ex_cmds2.h']]],
   ['ccgd_5fmultwin',['CCGD_MULTWIN',['../ex__cmds2_8h.html#aeb0b502ee575478fa6827031872ddc99',1,'ex_cmds2.h']]],
-  ['cent',['CENT',['../syntax_8c.html#aa1bc3d74dafaea89a299b12d74773a94',1,'syntax.c']]],
   ['cf_5fupper',['CF_UPPER',['../spell_8c.html#a7c9ce45c91817be15b4e0df67b87e8b6',1,'spell.c']]],
   ['cf_5fword',['CF_WORD',['../spell_8c.html#a81a2b090be2ee85e9dd29c239395a9c0',1,'spell.c']]],
   ['channel_5fbuffer_5fsize',['CHANNEL_BUFFER_SIZE',['../channel_8c.html#af29b65459670533eee2cfe975af7e114',1,'channel.c']]],

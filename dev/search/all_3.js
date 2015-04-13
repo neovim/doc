@@ -36,7 +36,6 @@ var searchData=
   ['ccgd_5fmultwin',['CCGD_MULTWIN',['../ex__cmds2_8h.html#aeb0b502ee575478fa6827031872ddc99',1,'ex_cmds2.h']]],
   ['cell',['Cell',['../structCell.html',1,'']]],
   ['cells',['cells',['../structScrollbackLine.html#a596c11895daa293a702836b0b2904dd6',1,'ScrollbackLine']]],
-  ['cent',['CENT',['../syntax_8c.html#aa1bc3d74dafaea89a299b12d74773a94',1,'syntax.c']]],
   ['cf_5fupper',['CF_UPPER',['../spell_8c.html#a7c9ce45c91817be15b4e0df67b87e8b6',1,'spell.c']]],
   ['cf_5fword',['CF_WORD',['../spell_8c.html#a81a2b090be2ee85e9dd29c239395a9c0',1,'spell.c']]],
   ['change_5findent',['change_indent',['../edit_8c.html#a198cef8fae2db6d484ff1db77d716724',1,'edit.c']]],

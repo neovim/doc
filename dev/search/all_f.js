@@ -43,7 +43,7 @@ var searchData=
   ['op_5fformatexpr',['op_formatexpr',['../ops_8c.html#a50357880bd18267d82dfb5d2858c3efc',1,'ops.c']]],
   ['op_5ffunction',['OP_FUNCTION',['../ops_8h.html#a7128082abfd9a473175349e33e0c0d6b',1,'ops.h']]],
   ['op_5findent',['OP_INDENT',['../ops_8h.html#aa6a8e00e75aa4c7929cf06fd717bb7df',1,'ops.h']]],
-  ['op_5finsert',['op_insert',['../ops_8c.html#a36aedfe014c9d8be44e9d2942e9ab230',1,'op_insert(oparg_T *oap, long count1):&#160;ops.c'],['../ops_8h.html#ae12c4b6ba73fd6197c07262692b83e78',1,'OP_INSERT():&#160;ops.h']]],
+  ['op_5finsert',['OP_INSERT',['../ops_8h.html#ae12c4b6ba73fd6197c07262692b83e78',1,'OP_INSERT():&#160;ops.h'],['../ops_8c.html#a36aedfe014c9d8be44e9d2942e9ab230',1,'op_insert(oparg_T *oap, long count1):&#160;ops.c']]],
   ['op_5fjoin',['OP_JOIN',['../ops_8h.html#aa2ffb8f7ece764ee5ffd16b06fb6371e',1,'ops.h']]],
   ['op_5fjoin_5fns',['OP_JOIN_NS',['../ops_8h.html#a26f7ee238dec36d66382a853be2f8a2c',1,'ops.h']]],
   ['op_5flower',['OP_LOWER',['../ops_8h.html#a876d4b3e005bdf09ca4e58d26a78e1dd',1,'ops.h']]],
