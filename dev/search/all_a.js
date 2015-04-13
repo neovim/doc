@@ -31,7 +31,6 @@ var searchData=
   ['job_5fwrite',['job_write',['../job_8c.html#afa521ccffb2aa7a5eaa53848671d9509',1,'job.c']]],
   ['job_5fwrite_5fcb',['job_write_cb',['../job_8c.html#aa9a0fd0841614315f019b17aa874b9a2',1,'job.c']]],
   ['jobevent',['JobEvent',['../structJobEvent.html',1,'']]],
-  ['jobeventfreer',['JobEventFreer',['../eval_8c.html#aed8da17c520aba2f9291fd801213cb6b',1,'eval.c']]],
   ['jobname',['jobname',['../structprt__settings__T.html#a543195644e7889ec60e4b19bdb312956',1,'prt_settings_T']]],
   ['joboptions',['JobOptions',['../structJobOptions.html',1,'']]],
   ['join_5fs',['join_S',['../structjoin__S.html',1,'']]],

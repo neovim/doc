@@ -27,6 +27,7 @@ var searchData=
   ['eval_5ffoldexpr',['eval_foldexpr',['../eval_8c.html#a7af18b92cd0e9d38ea3ebfe2c2849c75',1,'eval.c']]],
   ['eval_5ffor_5fline',['eval_for_line',['../eval_8c.html#a169959d19407f172b92a9a43e90d9e0e',1,'eval.c']]],
   ['eval_5fhas_5fprovider',['eval_has_provider',['../eval_8c.html#aca509edbe87440d967f246f488f246c4',1,'eval.c']]],
+  ['eval_5finit',['eval_init',['../eval_8c.html#ac44a8e720fbf729fad64e55fcd1c5d9f',1,'eval.c']]],
   ['eval_5fpatch',['eval_patch',['../eval_8c.html#a0bf7e03dfacd9577fbd2767e95154dfe',1,'eval.c']]],
   ['eval_5fprintexpr',['eval_printexpr',['../eval_8c.html#add781d87a04d6981cad4c9e78ea30ffd',1,'eval.c']]],
   ['eval_5fsoundfold',['eval_soundfold',['../spell_8c.html#abbff2cc33aa64c7d9a0ed002962c2c50',1,'spell.c']]],

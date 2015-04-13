@@ -1,6 +1,7 @@
 var searchData=
 [
   ['xcalloc',['xcalloc',['../memory_8c.html#a6de391a5b85c9c9c452b8e5f9b98913c',1,'memory.c']]],
+  ['xfree',['xfree',['../memory_8c.html#a976e14808b9247ec952c262553f09f8f',1,'memory.c']]],
   ['xmalloc',['xmalloc',['../memory_8c.html#aa946fb0a1f9e3d380d37d3fc77b085e4',1,'memory.c']]],
   ['xmallocz',['xmallocz',['../memory_8c.html#a219302c1a427e6037a2c88fb06536470',1,'memory.c']]],
   ['xmemdup',['xmemdup',['../memory_8c.html#a40f83fec2046a44aa9c75ddb259a551d',1,'memory.c']]],
