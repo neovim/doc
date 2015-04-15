@@ -178,6 +178,8 @@ var searchData=
   ['server',['Server',['../structServer.html',1,'']]],
   ['server_2ec',['server.c',['../server_8c.html',1,'']]],
   ['server_2eh',['server.h',['../server_8h.html',1,'']]],
+  ['server_5faddress_5flist',['server_address_list',['../server_8c.html#a57c693e0ba09f8cff44ac1ac8092f4ea',1,'server.c']]],
+  ['server_5finit',['server_init',['../server_8c.html#ab1227b4bfefa358d832d6141d15edf24',1,'server.c']]],
   ['server_5fstart',['server_start',['../server_8c.html#ab5360341724b9a1bbd4c723ad0d8e858',1,'server.c']]],
   ['server_5fstop',['server_stop',['../server_8c.html#ac6df478c3d9de74432a5be29d5e575ce',1,'server.c']]],
   ['server_5fteardown',['server_teardown',['../server_8c.html#a44b32b6967c04c49bdd07c799f7837af',1,'server.c']]],

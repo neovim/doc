@@ -79,5 +79,6 @@ var searchData=
   ['os_5fsetenv',['os_setenv',['../env_8c.html#abec153184ee85102cce2767adff2863e',1,'env.c']]],
   ['os_5fsetperm',['os_setperm',['../fs_8c.html#a49953c1ffb81c31d749173f685753818',1,'fs.c']]],
   ['os_5fsystem',['os_system',['../shell_8c.html#a48e93529e1f83f4b13ed2b912e9ec7d9',1,'shell.c']]],
+  ['os_5funsetenv',['os_unsetenv',['../env_8c.html#a409588a93cc250f084ade5a895888da4',1,'env.c']]],
   ['otherfile',['otherfile',['../buffer_8c.html#aac13c3cf91629ec59eb1dda6748c8ea1',1,'buffer.c']]]
 ];
