@@ -16,7 +16,7 @@ var searchData=
   ['op_5freplace',['op_replace',['../ops_8c.html#a55959d0f9b541b76ac64e03e13c3b4d8',1,'ops.c']]],
   ['op_5fshift',['op_shift',['../ops_8c.html#aa25d03dd468935d47f2090236878a1f1',1,'ops.c']]],
   ['op_5ftilde',['op_tilde',['../ops_8c.html#a382dfbf71cb71f42a9d79ac4a6117834',1,'ops.c']]],
-  ['op_5fyank',['op_yank',['../ops_8c.html#a223ed5e2e9c85a735fe213eac5303950',1,'ops.c']]],
+  ['op_5fyank',['op_yank',['../ops_8c.html#a1031933f3119c0a111b893b035e2bbe2',1,'ops.c']]],
   ['open_5fbuffer',['open_buffer',['../buffer_8c.html#a1fcbd564641925e50627240e85a1d80a',1,'buffer.c']]],
   ['open_5fexfile',['open_exfile',['../ex__docmd_8c.html#a931b09fde9e60ba99633592b7339e309',1,'ex_docmd.c']]],
   ['open_5fline',['open_line',['../misc1_8c.html#a5374895d3b6e91494504be5219ba7942',1,'misc1.c']]],

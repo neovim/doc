@@ -90,7 +90,6 @@ var searchData=
   ['put_5ffolds',['put_folds',['../fold_8c.html#a83b9f7de1d1cc014702808bd3327c174',1,'fold.c']]],
   ['put_5fline',['put_line',['../ex__docmd_8c.html#aeb90db96aedc6a9d30927b9846e079fd',1,'ex_docmd.c']]],
   ['put_5fon_5fcmdline',['put_on_cmdline',['../ex__getln_8c.html#aa5c40fe8650c84c11489d53a8d81d4b7',1,'ex_getln.c']]],
-  ['put_5fregister',['put_register',['../ops_8c.html#a6a837d19cfc49969493c6a518b5e933c',1,'ops.c']]],
   ['put_5ftime',['put_time',['../misc2_8c.html#adb33218e17d9b35f90994e26553ee5fa',1,'misc2.c']]],
   ['putcmdline',['putcmdline',['../ex__getln_8c.html#a48b8b952db0b1afcb7b8805e02fbcaf1',1,'ex_getln.c']]],
   ['putdigraph',['putdigraph',['../digraph_8c.html#a0660b632e0a1102ca2c3cf9d21cea8fa',1,'digraph.c']]]

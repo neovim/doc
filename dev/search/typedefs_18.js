@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zero_5fbl',['ZERO_BL',['../memline_8c.html#aec4e566464ccfa4269696281e8fc119b',1,'memline.c']]]
+  ['yankreg_5ft',['yankreg_T',['../ops_8h.html#abb3dea1a23462d2ae45a40778162afa5',1,'ops.h']]]
 ];

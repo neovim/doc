@@ -316,6 +316,7 @@ var searchData=
   ['copy_5fjumplist',['copy_jumplist',['../mark_8c.html#a387ffeb5808e8c8c389e030addcbfcc3',1,'mark.c']]],
   ['copy_5floclist',['copy_loclist',['../quickfix_8c.html#a984d4d7c3bb0f4cf41ca4693625893a3',1,'quickfix.c']]],
   ['copy_5foption_5fpart',['copy_option_part',['../misc2_8c.html#ad78e67561ddb2f5dab35d7cd81a4b14f',1,'misc2.c']]],
+  ['copy_5fregister',['copy_register',['../ops_8c.html#a6df765474d3c61344925580c19b5b96c',1,'ops.c']]],
   ['copy_5ftv',['copy_tv',['../eval_8c.html#a2adbb0036ebbf4fb81d0b6a5af53ceea',1,'eval.c']]],
   ['copy_5fviminfo_5fmarks',['copy_viminfo_marks',['../mark_8c.html#ae94a31cc22a1424d4602059c4a9d4685',1,'mark.c']]],
   ['copy_5fwinopt',['copy_winopt',['../option_8c.html#a3a6afe81c88a04683c95d5c05978edda',1,'option.c']]],

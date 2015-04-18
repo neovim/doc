@@ -359,6 +359,7 @@ var searchData=
   ['free_5fjumplist',['free_jumplist',['../mark_8c.html#a019d8c124beadae40d9ff8c607d47cbf',1,'mark.c']]],
   ['free_5fmenutrans',['FREE_MENUTRANS',['../menu_8c.html#ab9906c93848f95dd21d03c12b3991859',1,'menu.c']]],
   ['free_5fptr_5fptr',['FREE_PTR_PTR',['../garray_8h.html#acb5b56f258e95545476069b2bb0ffb75',1,'garray.h']]],
+  ['free_5fregister',['free_register',['../ops_8c.html#a8d98a79b5ca639311f3b275029fdb758',1,'ops.c']]],
   ['free_5fscreenlines',['free_screenlines',['../screen_8c.html#ac2d84d0963228f7dcc393f00d3488086',1,'screen.c']]],
   ['free_5fstring_5foption',['free_string_option',['../option_8c.html#aeb9d6480a68bfee6052f8e8afc8eda94',1,'option.c']]],
   ['free_5fsug_5fword',['FREE_SUG_WORD',['../spell_8c.html#ae12d9b3c599bab97a762e46d6628330b',1,'spell.c']]],
