@@ -104,7 +104,7 @@ var searchData=
   ['get_5fmatch',['get_match',['../window_8c.html#a0ae6c486a7ae40e4963ea881dfa710ff',1,'window.c']]],
   ['get_5fmenu_5fname',['get_menu_name',['../menu_8c.html#a2bd6f4880079fdc4b86b93208de156f6',1,'menu.c']]],
   ['get_5fmenu_5fnames',['get_menu_names',['../menu_8c.html#a365d7120317ae42eb7cca4517cdb9de9',1,'menu.c']]],
-  ['get_5fmess_5flang',['get_mess_lang',['../ex__cmds2_8c.html#a281edf76f218779dd6104106cb2d6537',1,'ex_cmds2.c']]],
+  ['get_5fmess_5flang',['get_mess_lang',['../ex__cmds2_8c.html#a1c0edcd10b6ff7b11fb59cb89c56ac84',1,'ex_cmds2.c']]],
   ['get_5fmouse_5fbutton',['get_mouse_button',['../keymap_8c.html#abbc1ab7736b3db2de10a1ccd71303cbe',1,'keymap.c']]],
   ['get_5fnumber',['get_number',['../misc1_8c.html#aa43159dfdc77eb5fdba574297156b0f4',1,'misc1.c']]],
   ['get_5fnumber_5findent',['get_number_indent',['../indent_8c.html#aa88fccc085dcb79b0619af2ec6565d51',1,'indent.c']]],
