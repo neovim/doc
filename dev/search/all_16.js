@@ -139,7 +139,7 @@ var searchData=
   ['vim_5fisabsname',['vim_isAbsName',['../path_8c.html#a5ef1498896ca3e8d9fab89a91bf1df25',1,'path.c']]],
   ['vim_5fisblankline',['vim_isblankline',['../charset_8c.html#a60b61e5a418215ab5f2d8b2228cd56cd',1,'charset.c']]],
   ['vim_5fisbreak',['vim_isbreak',['../macros_8h.html#ac6c11971465a1aa82123611a18a4c748',1,'macros.h']]],
-  ['vim_5fisdigit',['vim_isdigit',['../charset_8c.html#a35845ed87dc61ea86eb2e2f2f2f477f3',1,'vim_isdigit(int c):&#160;charset.c'],['../macros_8h.html#a1c79e75cde848afa5b4c0be7c1c99ead',1,'VIM_ISDIGIT():&#160;macros.h']]],
+  ['vim_5fisdigit',['VIM_ISDIGIT',['../macros_8h.html#a1c79e75cde848afa5b4c0be7c1c99ead',1,'VIM_ISDIGIT():&#160;macros.h'],['../charset_8c.html#a35845ed87dc61ea86eb2e2f2f2f477f3',1,'vim_isdigit(int c):&#160;charset.c']]],
   ['vim_5fisfilec',['vim_isfilec',['../charset_8c.html#a91048c88b6fa8fce6d8e22d1c9794c9a',1,'charset.c']]],
   ['vim_5fisfilec_5for_5fwc',['vim_isfilec_or_wc',['../charset_8c.html#a2e1b5e56feab020b172369dd21727d73',1,'charset.c']]],
   ['vim_5fisidc',['vim_isIDc',['../charset_8c.html#af7cb7c923f313c7384ec8c61b26f6427',1,'charset.c']]],
