@@ -45,8 +45,6 @@ var searchData=
   ['vim_5fgeneric',['VIM_GENERIC',['../message_8h.html#a3067757bb8749adde24f89624c66e1b9',1,'message.h']]],
   ['vim_5finfo',['VIM_INFO',['../message_8h.html#adf312872ea552e35a0e9fed4ef69ae11',1,'message.h']]],
   ['vim_5fisbreak',['vim_isbreak',['../macros_8h.html#ac6c11971465a1aa82123611a18a4c748',1,'macros.h']]],
-  ['vim_5fisdigit',['VIM_ISDIGIT',['../macros_8h.html#a1c79e75cde848afa5b4c0be7c1c99ead',1,'macros.h']]],
-  ['vim_5fiswhite',['vim_iswhite',['../vim_8h.html#a54a489f0b731d57e4abd75ad38f9f4ae',1,'vim.h']]],
   ['vim_5flast_5ftype',['VIM_LAST_TYPE',['../message_8h.html#a8f92740eac1c89df17f64e236090047a',1,'message.h']]],
   ['vim_5fno',['VIM_NO',['../message_8h.html#a929b62284773bf65dac881e0d3f1e404',1,'message.h']]],
   ['vim_5fquestion',['VIM_QUESTION',['../message_8h.html#ac3089c136f95c1bec34aea6e11b62ce2',1,'message.h']]],
