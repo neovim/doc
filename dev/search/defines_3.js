@@ -121,7 +121,6 @@ var searchData=
   ['cpo_5fbufoptglob',['CPO_BUFOPTGLOB',['../option__defs_8h.html#a1c3f61b0ad158045c64aa3e36ecb2fa9',1,'option_defs.h']]],
   ['cpo_5fchdir',['CPO_CHDIR',['../option__defs_8h.html#a324f9c1119b225f5bc5c208af09392ff',1,'option_defs.h']]],
   ['cpo_5fconcat',['CPO_CONCAT',['../option__defs_8h.html#a51589b37ee0bc5d78fd8d56fcdfb012f',1,'option_defs.h']]],
-  ['cpo_5fcw',['CPO_CW',['../option__defs_8h.html#a60c8c3c7b9759272045eac919d25dd0e',1,'option_defs.h']]],
   ['cpo_5fdigraph',['CPO_DIGRAPH',['../option__defs_8h.html#ad156e77fcbf7cc41ac93a0ebaac2ea08',1,'option_defs.h']]],
   ['cpo_5fdollar',['CPO_DOLLAR',['../option__defs_8h.html#a3023824cf19fc6c4b48ae55206527470',1,'option_defs.h']]],
   ['cpo_5fdottag',['CPO_DOTTAG',['../option__defs_8h.html#aef923e89c636cd7164b281e19cd01875',1,'option_defs.h']]],

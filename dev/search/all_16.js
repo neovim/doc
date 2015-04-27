@@ -165,6 +165,7 @@ var searchData=
   ['vim_5fregexec',['vim_regexec',['../regexp_8c.html#abefc0928e7264f306f6149e3c5bdb074',1,'regexp.c']]],
   ['vim_5fregexec_5fmulti',['vim_regexec_multi',['../regexp_8c.html#aadd2ea18575d987a7d170f4b9b6ab4d4',1,'regexp.c']]],
   ['vim_5fregexec_5fnl',['vim_regexec_nl',['../regexp_8c.html#a4b41bae50ff3129f9030c3371a785dce',1,'regexp.c']]],
+  ['vim_5fregexec_5fprog',['vim_regexec_prog',['../regexp_8c.html#ae126d3ee358e74b24d1278b845f22887',1,'regexp.c']]],
   ['vim_5fregfree',['vim_regfree',['../regexp_8c.html#ae85d66ec0c262d0e6c22766cd75e0287',1,'regexp.c']]],
   ['vim_5fregsub',['vim_regsub',['../regexp_8c.html#a41e3f0e3d27ccb6a1449816bcf1e08b5',1,'regexp.c']]],
   ['vim_5fregsub_5fmulti',['vim_regsub_multi',['../regexp_8c.html#af1b2cf37f77fe2ac8deeaf542f2db413',1,'regexp.c']]],
