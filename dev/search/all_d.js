@@ -391,7 +391,7 @@ var searchData=
   ['modified_5fwas_5fset',['modified_was_set',['../globals_8h.html#a6d4a8e450cebb9157bba2742eb67c0ed',1,'globals.h']]],
   ['modifier_5flen',['modifier_len',['../ex__docmd_8c.html#ab3f857675af0e9cde6df2204bb7fc5e3',1,'ex_docmd.c']]],
   ['modify',['MODIFY',['../ex__cmds__defs_8h.html#a56bda2bdd8bf16c41b6bfc2a97da9789',1,'ex_cmds_defs.h']]],
-  ['modify_5ffname',['modify_fname',['../eval_8c.html#a279d8a6ef4315074c5217516b038b075',1,'eval.c']]],
+  ['modify_5ffname',['modify_fname',['../eval_8c.html#aac1caa4e45919f551c1ab3ca6d614466',1,'eval.c']]],
   ['modname',['modname',['../fileio_8c.html#aac79f705198b1f5212fd7f7bba16b852',1,'fileio.c']]],
   ['mopen',['MOPEN',['../regexp_8c.html#a008c64d7ff144db080f27c61afaa4f42',1,'regexp.c']]],
   ['motion_5fforce',['motion_force',['../structoparg__S.html#a698e54e0d3dada0523dee842e70f8817',1,'oparg_S']]],

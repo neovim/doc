@@ -111,7 +111,7 @@ var searchData=
   ['ml_5fsync_5fall',['ml_sync_all',['../memline_8c.html#a102390907b2af0b1cec3c50bf4308f81',1,'memline.c']]],
   ['ml_5ftimestamp',['ml_timestamp',['../memline_8c.html#a9f6bf1b47e0e5c17ed49833bfffe8527',1,'memline.c']]],
   ['modifier_5flen',['modifier_len',['../ex__docmd_8c.html#ab3f857675af0e9cde6df2204bb7fc5e3',1,'ex_docmd.c']]],
-  ['modify_5ffname',['modify_fname',['../eval_8c.html#a279d8a6ef4315074c5217516b038b075',1,'eval.c']]],
+  ['modify_5ffname',['modify_fname',['../eval_8c.html#aac1caa4e45919f551c1ab3ca6d614466',1,'eval.c']]],
   ['modname',['modname',['../fileio_8c.html#aac79f705198b1f5212fd7f7bba16b852',1,'fileio.c']]],
   ['mouse_5fcomp_5fpos',['mouse_comp_pos',['../mouse_8c.html#afc736b5d09e09febcb2539d48ac22642',1,'mouse.c']]],
   ['mouse_5ffind_5fwin',['mouse_find_win',['../mouse_8c.html#aa4bcbbec1786380497d0dd427619e441',1,'mouse.c']]],

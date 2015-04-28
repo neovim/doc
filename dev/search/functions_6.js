@@ -129,7 +129,7 @@ var searchData=
   ['get_5fvim_5fvar_5fnr',['get_vim_var_nr',['../eval_8c.html#a364519d1370f738c396c8ebdf9159ddd',1,'eval.c']]],
   ['get_5fvim_5fvar_5fstr',['get_vim_var_str',['../eval_8c.html#a5c7a8c84b65dc8166f8bb9c1db583d54',1,'eval.c']]],
   ['get_5fviminfo_5fparameter',['get_viminfo_parameter',['../option_8c.html#abd8579be19f99b759c27e62dbb739ebf',1,'option.c']]],
-  ['get_5fvisual_5ftext',['get_visual_text',['../normal_8c.html#aa605156c9e5f7f492049ce99bb469bfe',1,'normal.c']]],
+  ['get_5fvisual_5ftext',['get_visual_text',['../normal_8c.html#a3b6663199e58e8370f30ed7ca3669688',1,'normal.c']]],
   ['get_5fwinopts',['get_winopts',['../buffer_8c.html#ab2199ca38333a71876d5e617919dc8c6',1,'buffer.c']]],
   ['get_5fyank_5fregister',['get_yank_register',['../ops_8c.html#acc151e1dbf2838a25eb3b330a47a87aa',1,'ops.c']]],
   ['getaltfname',['getaltfname',['../buffer_8c.html#a9fbdd165bfd0e950654592d79a07bb2c',1,'buffer.c']]],
