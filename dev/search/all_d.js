@@ -470,7 +470,7 @@ var searchData=
   ['msg_5fprt_5fline',['msg_prt_line',['../message_8c.html#a9d407c8358ee9c59938ba369432dfaa7',1,'message.c']]],
   ['msg_5fputchar',['msg_putchar',['../message_8c.html#ae0edfa8d1999c41726a759fd06a1ab6e',1,'message.c']]],
   ['msg_5fputchar_5fattr',['msg_putchar_attr',['../message_8c.html#aeff36e9de2f511fcf68782db50e4ba2c',1,'message.c']]],
-  ['msg_5fputs',['msg_puts',['../message_8c.html#ad5fe35b41a2f7a864f37f6738dab5899',1,'msg_puts(char_u *s):&#160;message.c'],['../vim_8h.html#afe1018d9bd62dd460c6a614591bbbcbc',1,'MSG_PUTS():&#160;vim.h']]],
+  ['msg_5fputs',['MSG_PUTS',['../vim_8h.html#afe1018d9bd62dd460c6a614591bbbcbc',1,'MSG_PUTS():&#160;vim.h'],['../message_8c.html#ad5fe35b41a2f7a864f37f6738dab5899',1,'msg_puts(char_u *s):&#160;message.c']]],
   ['msg_5fputs_5fattr',['MSG_PUTS_ATTR',['../vim_8h.html#a2bf98897cdf829da16add87333bba7b3',1,'MSG_PUTS_ATTR():&#160;vim.h'],['../message_8c.html#a8fe72d94a15b00cd9cd59cdfd9ef10c5',1,'msg_puts_attr(char_u *s, int attr):&#160;message.c']]],
   ['msg_5fputs_5flong',['MSG_PUTS_LONG',['../vim_8h.html#afec7d16d29a912cddbdd1d323277952e',1,'vim.h']]],
   ['msg_5fputs_5flong_5fattr',['MSG_PUTS_LONG_ATTR',['../vim_8h.html#a2135ac9e2dab73958ca1d878c43c1c82',1,'MSG_PUTS_LONG_ATTR():&#160;vim.h'],['../message_8c.html#a886705b2e4de3a9b94d9d3bc46740369',1,'msg_puts_long_attr(char_u *longstr, int attr):&#160;message.c']]],
@@ -534,7 +534,7 @@ var searchData=
   ['mt_5fre_5foff',['MT_RE_OFF',['../tag_8c.html#a8ff8c04848c1a665119872c45850db35',1,'tag.c']]],
   ['mt_5fst_5fcur',['MT_ST_CUR',['../tag_8c.html#aa0d52c87d3e7ad1ad1e655f7f7c46782',1,'tag.c']]],
   ['mt_5fst_5foth',['MT_ST_OTH',['../tag_8c.html#a4b72f97476cf930b2ee33ccc37ffb530',1,'tag.c']]],
-  ['multi',['multi',['../structregsub__T.html#a97fff15a7acefaf5b93f46681f547b42',1,'regsub_T']]],
+  ['multi',['multi',['../structregsub__T.html#a5eb602c7855c24e2afa36eb0c502c2aa',1,'regsub_T']]],
   ['multi_5fmult',['MULTI_MULT',['../regexp_8c.html#a56cd45f8ad6a13f958427ad4bf7ed7a1',1,'regexp.c']]],
   ['multi_5fone',['MULTI_ONE',['../regexp_8c.html#a17de9a9aceb1d9fa93139afe29230769',1,'regexp.c']]],
   ['multibytecode',['MULTIBYTECODE',['../regexp_8c.html#ac3879eed53b9ae2b4f2823987bb5f6ec',1,'regexp.c']]]

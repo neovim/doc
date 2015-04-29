@@ -4,6 +4,7 @@ var searchData=
   ['actext',['actext',['../structVimMenu.html#abfbc45899445a759fc001a7abfeeb80c',1,'VimMenu']]],
   ['addr',['addr',['../structServer.html#ab6e364431e9ea5b60824ce8e79020d81',1,'Server::addr()'],['../structServer.html#a3a55959924ea0a6912d3fe6530c89a46',1,'Server::addr()'],['../structefm__S.html#af25df0937902ab8951fc01937fbfa479',1,'efm_S::addr()']]],
   ['addr_5fcount',['addr_count',['../structexarg.html#a6df745abf04de31377b3beb6282c29c6',1,'exarg']]],
+  ['addr_5ftype',['addr_type',['../structexarg.html#a26c04fe1b1fdb8bc1ab21376fed10a56',1,'exarg']]],
   ['ae_5fadd',['ae_add',['../structaffentry__S.html#aaf63dd3d4a63d612167ef0c28f44d404',1,'affentry_S']]],
   ['ae_5fchop',['ae_chop',['../structaffentry__S.html#ab0583fd4c6f256831ce5f1235e2a2b12',1,'affentry_S']]],
   ['ae_5fcompforbid',['ae_compforbid',['../structaffentry__S.html#a7b068e1297a2d73a7e465f334ef6b954',1,'affentry_S']]],

@@ -142,6 +142,7 @@ var searchData=
   ['get_5ftv_5fnumber_5fchk',['get_tv_number_chk',['../eval_8c.html#a6aae64fa854b21abf482e712f097fe1a',1,'eval.c']]],
   ['get_5ftv_5fstring_5fchk',['get_tv_string_chk',['../eval_8c.html#a3d3bf3d45f69910679a6eadd7da2d003',1,'eval.c']]],
   ['get_5fuint32',['GET_UINT32',['../sha256_8c.html#a544d14714aed6d150435336296c66061',1,'sha256.c']]],
+  ['get_5fuser_5fcmd_5faddr_5ftype',['get_user_cmd_addr_type',['../ex__docmd_8c.html#a688a42e263c2a7c9637febab37216c41',1,'ex_docmd.c']]],
   ['get_5fuser_5fcmd_5fcomplete',['get_user_cmd_complete',['../ex__docmd_8c.html#a0e45f3549946550760c73516f8006d5d',1,'ex_docmd.c']]],
   ['get_5fuser_5fcmd_5fflags',['get_user_cmd_flags',['../ex__docmd_8c.html#aaf26859d0d7a47bebe70e9b99d665b22',1,'ex_docmd.c']]],
   ['get_5fuser_5fcmd_5fnargs',['get_user_cmd_nargs',['../ex__docmd_8c.html#a76812e377e23729b6009a7fa50889710',1,'ex_docmd.c']]],

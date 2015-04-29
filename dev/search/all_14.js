@@ -57,7 +57,7 @@ var searchData=
   ['tb_5fsilent',['tb_silent',['../structtypebuf__T.html#a840a56b81309bbb4eca3ae28fb2a3221',1,'typebuf_T']]],
   ['tbuffer_5flen',['TBUFFER_LEN',['../menu_8c.html#a2829a6b5424d88355f99c26317b36b22',1,'menu.c']]],
   ['tco_5fbuffer_5fsize',['TCO_BUFFER_SIZE',['../option_8c.html#a76f64f94896bfc3e7528e49fd47bb164',1,'option.c']]],
-  ['tcp',['tcp',['../structServer.html#abeb883de3650b836fe1b127f6803511c',1,'Server']]],
+  ['tcp',['tcp',['../structServer.html#ae59ccf7b9f662f268bb07c85e22b1bf6',1,'Server']]],
   ['te',['TE',['../farsi_8h.html#a91c0a910ad7ea895ed9093c9286df2f2',1,'farsi.h']]],
   ['tee',['TEE',['../farsi_8h.html#a97589dbdb636c1a59bdfe05a8ccdebe1',1,'farsi.h']]],
   ['tee_5f',['TEE_',['../farsi_8h.html#ad2636f27a2fc42c26630dbdd972fdf11',1,'farsi.h']]],

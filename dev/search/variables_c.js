@@ -109,5 +109,5 @@ var searchData=
   ['msg_5frow',['msg_row',['../globals_8h.html#a376f82c59d5c5bf72c5bc753f7554128',1,'globals.h']]],
   ['msg_5fscrolled',['msg_scrolled',['../globals_8h.html#a0b03bc5fdd1ab38b00bf9264b8c7275b',1,'globals.h']]],
   ['mshape',['mshape',['../structcursor__entry.html#af618354b5410e23249775766ce5f94d3',1,'cursor_entry']]],
-  ['multi',['multi',['../structregsub__T.html#a97fff15a7acefaf5b93f46681f547b42',1,'regsub_T']]]
+  ['multi',['multi',['../structregsub__T.html#a5eb602c7855c24e2afa36eb0c502c2aa',1,'regsub_T']]]
 ];

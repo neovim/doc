@@ -8,6 +8,8 @@ var searchData=
   ['langmap_5fadjust',['LANGMAP_ADJUST',['../macros_8h.html#ac65f34162021b489484b3167fb7b746e',1,'macros.h']]],
   ['langp_5fentry',['LANGP_ENTRY',['../spell_8c.html#add038c2c2e581bfa15ad7f431f5359ca',1,'spell.c']]],
   ['last_5fnl',['LAST_NL',['../regexp_8c.html#aca1237a4f196d8689749024a6ef630d2',1,'regexp.c']]],
+  ['last_5ftab_5fnr',['LAST_TAB_NR',['../ex__docmd_8c.html#aeea940e1bc38b65d4988b42fb7cb0c3d',1,'ex_docmd.c']]],
+  ['last_5fwin_5fnr',['LAST_WIN_NR',['../ex__docmd_8c.html#ad38232263d1c03d95118fd022b88b469',1,'ex_docmd.c']]],
   ['latin1lower',['LATIN1LOWER',['../charset_8c.html#a7b2353f50be9089dcbc7dfe627d16e56',1,'charset.c']]],
   ['latin1upper',['LATIN1UPPER',['../charset_8c.html#a19a61b23d5eb7e0a88ceed1517234eb0',1,'charset.c']]],
   ['lbuflen',['LBUFLEN',['../diff_8c.html#ac570af6781e9b5c073b2e2702fc4a92a',1,'diff.c']]],
