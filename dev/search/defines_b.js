@@ -169,7 +169,6 @@ var searchData=
   ['key2termcap0',['KEY2TERMCAP0',['../keymap_8h.html#a00002183ba9f477e592fcebef079594f',1,'keymap.h']]],
   ['key2termcap1',['KEY2TERMCAP1',['../keymap_8h.html#ae30ebcd456dd8dbdd811d199fc617a18',1,'keymap.h']]],
   ['key_5fcomplete',['KEY_COMPLETE',['../edit_8h.html#a7338b7b020b533b9790afad34db839ad',1,'edit.h']]],
-  ['key_5fnames_5ftable_5flen',['KEY_NAMES_TABLE_LEN',['../keymap_8c.html#ab31711b5dddea8a8e7a7acc16cf4307b',1,'keymap.c']]],
   ['key_5fopen_5fback',['KEY_OPEN_BACK',['../edit_8h.html#a1a2ec7c9234012e6123604383e84deff',1,'edit.h']]],
   ['key_5fopen_5fforw',['KEY_OPEN_FORW',['../edit_8h.html#abbc33a7dc4a7ba89b4991b7117ed0040',1,'edit.h']]],
   ['keylen_5fpart_5fkey',['KEYLEN_PART_KEY',['../getchar_8h.html#a19e6080a2e78ef10773ede651041d3a9',1,'getchar.h']]],
