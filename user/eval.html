@@ -2177,8 +2177,8 @@ synIDattr( {synID}, {what} [, {mode}])
 synIDtrans( {synID})		<A HREF="#Number">Number</A>	translated <A HREF="syntax.html#syntax">syntax</A> ID of {synID}
 synconcealed( {lnum}, {col})	<A HREF="#List">List</A>    info about concealing
 synstack( {lnum}, {col})	<A HREF="#List">List</A>	stack of <A HREF="syntax.html#syntax">syntax</A> IDs at {lnum} and {col}
-system( {expr} [, {input}])	String	output of shell command/filter {expr}
-systemlist( {expr} [, {input}])	<A HREF="#List">List</A>	output of shell command/filter {expr}
+system( {cmd} [, {input}])	String	output of shell command/filter {cmd}
+systemlist( {cmd} [, {input}])	<A HREF="#List">List</A>	output of shell command/filter {cmd}
 tabpagebuflist( [{arg}])	<A HREF="#List">List</A>	<A HREF="#list">list</A> of buffer numbers in <A HREF="intro.html#tab">tab</A> page
 tabpagenr( [{arg}])		<A HREF="#Number">Number</A>	number of current or last <A HREF="intro.html#tab">tab</A> page
 tabpagewinnr( {tabarg}[, {arg}])
@@ -4340,9 +4340,12 @@ jobsend({job}, {data})					{Nvim} *<A NAME="jobsend()"></A><B>jobsend()</B>*
   		will send &quot;abc&lt;NL&gt;123&lt;NUL&gt;456&lt;NL&gt;&quot;.
 
 
-jobstart({argv}[, {opts}])			{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
-		Spawns {argv}(list) <A HREF="motion.html#as">as</A> a job. If passed, {opts} must be a
-		dictionary with any of the following keys:
+jobstart({cmd}[, {opts}])				{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
+		Spawns {cmd} <A HREF="motion.html#as">as</A> a job.  If {cmd} is a |<A HREF="#List">List</A>|, <A HREF="motion.html#it">it</A> will be run
+		directly.  If {cmd} is a |<A HREF="intro.html#String">String</A>|, <A HREF="motion.html#it">it</A> will be equivalent to
+<B>			:call jobstart([&amp;shell, &amp;shellcmdflag, '{cmd}'])</B>
+ 		If passed, {opts} must be a dictionary with any of the
+		following keys:
 		  - on_stdout: stdout event handler
 		  - on_stderr: stderr event handler
 		  - on_exit: exit event handler
@@ -4361,7 +4364,8 @@ jobstart({argv}[, {opts}])			{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
 		  - The job ID on success, which is used by |<A HREF="#jobsend()">jobsend()</A>| and
 		    |<A HREF="#jobstop()">jobstop()</A>|
 		  - 0 when the job table is full or on invalid arguments
-		  - -1 when {argv}[0] is not executable
+		  - -1 when {cmd}[0] is not executable.  Will never fail if
+		    {cmd} is a <A HREF="#string">string</A> unless <A HREF="options.html#'shell'">'shell'</A> is not executable.
 		See |<A HREF="job_control.html#job-control">job-control</A>| for more information.
 
 
@@ -6592,9 +6596,10 @@ synstack({lnum}, {col})					*<A NAME="synstack()"></A><B>synstack()</B>*
 		valid positions.
 
 
-system({expr} [, {input}])				*<A NAME="system()"></A><B>system()</B>* *<A NAME="E677"></A><B>E677</B>*
-		Get the output of the shell command {expr} <A HREF="motion.html#as">as</A> a <A HREF="#string">string</A>.  See
-		|<A HREF="#systemlist()">systemlist()</A>| to get the output <A HREF="motion.html#as">as</A> a <A HREF="#List">List</A>.
+system({cmd} [, {input}])				*<A NAME="system()"></A><B>system()</B>* *<A NAME="E677"></A><B>E677</B>*
+		Get the output of the shell command {cmd} <A HREF="motion.html#as">as</A> a |<A HREF="intro.html#String">String</A>|.  {cmd}
+		will be run the same <A HREF="motion.html#as">as</A> in |<A HREF="#jobstart()">jobstart()</A>|.  See |<A HREF="#systemlist()">systemlist()</A>|
+		to get the output <A HREF="motion.html#as">as</A> a |<A HREF="#List">List</A>|.
 
 		When {input} is given and is a <A HREF="#string">string</A> this <A HREF="#string">string</A> is written 
 		to a file and passed <A HREF="motion.html#as">as</A> stdin to the command.  The <A HREF="#string">string</A> is 
@@ -6608,7 +6613,7 @@ system({expr} [, {input}])				*<A NAME="system()"></A><B>system()</B>* *<A NAME=
 
 		Note: Use |<A HREF="#shellescape()">shellescape()</A>| or |<A HREF="cmdline.html#::S">::S</A>| with |<A HREF="#expand()">expand()</A>| or 
 		|<A HREF="#fnamemodify()">fnamemodify()</A>| to <A HREF="intro.html#escape">escape</A> special characters in a command 
-		argument.  Newlines in {expr} may cause the command to fail.  
+		argument.  Newlines in {cmd} may cause the command to fail.  
 		The characters in <A HREF="options.html#'shellquote'">'shellquote'</A> and <A HREF="options.html#'shellxquote'">'shellxquote'</A> may also 
 		cause trouble.
 		This is not to be used for interactive commands.
@@ -6623,11 +6628,8 @@ system({expr} [, {input}])				*<A NAME="system()"></A><B>system()</B>* *<A NAME=
 		To avoid the <A HREF="#string">string</A> being truncated at a NUL, all NUL
 		characters are replaced with SOH (0x01).
 
-		The command executed is constructed using several <A HREF="options.html#options">options</A>:
-	<A HREF="options.html#'shell'">'shell'</A> <A HREF="options.html#'shellcmdflag'">'shellcmdflag'</A> <A HREF="options.html#'shellxquote'">'shellxquote'</A> {expr} <A HREF="options.html#'shellredir'">'shellredir'</A> {tmp} <A HREF="options.html#'shellxquote'">'shellxquote'</A>
-		({tmp} is an automatically generated file name).
-		For <A HREF="os_unix.html#Unix">Unix</A> braces are put around {expr} to allow for
-		concatenated commands.
+		The command executed is constructed using several <A HREF="options.html#options">options</A> when
+		{cmd} is a <A HREF="#string">string</A>: <A HREF="options.html#'shell'">'shell'</A> <A HREF="options.html#'shellcmdflag'">'shellcmdflag'</A> {cmd}
 
 		The command will be executed in &quot;cooked&quot; mode, so that a
 		<A HREF="pattern.html#CTRL-C">CTRL-C</A> will interrupt the command (on <A HREF="os_unix.html#Unix">Unix</A> at least).
@@ -6643,7 +6645,7 @@ system({expr} [, {input}])				*<A NAME="system()"></A><B>system()</B>* *<A NAME=
 
 
 
-systemlist({expr} [, {input} [, {keepempty}]])		*<A NAME="systemlist()"></A><B>systemlist()</B>*
+systemlist({cmd} [, {input} [, {keepempty}]])		*<A NAME="systemlist()"></A><B>systemlist()</B>*
 		Same <A HREF="motion.html#as">as</A> |<A HREF="#system()">system()</A>|, but returns a |<A HREF="#List">List</A>| with lines (parts of 
 		output separated by NL) with NULs transformed into NLs. Output 
 		is the same <A HREF="motion.html#as">as</A> |<A HREF="#readfile()">readfile()</A>| will output with {binary} argument 
@@ -6748,15 +6750,19 @@ taglist({expr})							*<A NAME="taglist()"></A><B>taglist()</B>*
 		option is set or when <A HREF="options.html#'shellcmdflag'">'shellcmdflag'</A> starts with '<A HREF="motion.html#-">-</A>'.
 
 
-termopen({command}[, {opts}])			{Nvim} *<A NAME="termopen()"></A><B>termopen()</B>*
-		Spawns {command} using the shell in a new pseudo-terminal
-		session connected to the current buffer.  This function fails
-		if the current buffer is modified (all buffer contents are
-		destroyed).  The {opts} <A HREF="#dict">dict</A> is similar to the one passed to
-		|<A HREF="#jobstart()">jobstart()</A>|, but the `pty`, `width`, `height`, and `TERM` fields are
-		ignored: `height`/`width` are taken from the current <A HREF="windows.html#window">window</A> and
-		$TERM is set to &quot;xterm-256color&quot;.  Returns the same values <A HREF="motion.html#as">as</A>
-		|<A HREF="#jobstart()">jobstart()</A>|.
+termopen({cmd}[, {opts}])			{Nvim} *<A NAME="termopen()"></A><B>termopen()</B>*
+		Spawns {cmd} in a new pseudo-terminal session connected
+		to the current buffer.  {cmd} is the same <A HREF="motion.html#as">as</A> the one passed to
+		|<A HREF="#jobstart()">jobstart()</A>|.  This function fails if the current buffer is
+		modified (all buffer contents are destroyed).
+
+		The {opts} <A HREF="#dict">dict</A> is similar to the one passed to |<A HREF="#jobstart()">jobstart()</A>|,
+		but the `pty`, `width`, `height`, and `TERM` fields are
+		ignored: `height`/`width` are taken from the current <A HREF="windows.html#window">window</A>
+		and `$TERM` is set to &quot;xterm-256color&quot;, and <A HREF="motion.html#it">it</A> may have a
+		`name` field.  `name`, if present, sets the buffer's name to
+		&quot;term://{cwd}/{pid}:{name}&quot;.
+		Returns the same values <A HREF="motion.html#as">as</A> |<A HREF="#jobstart()">jobstart()</A>|.
 
 		See |<A HREF="nvim_terminal_emulator.html#nvim-terminal-emulator">nvim-terminal-emulator</A>| for more information.
 
@@ -9531,7 +9537,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sat May  2 08:20:44 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/205466830207a920c62146b7b689fac2e395431a"><code>2054668</code></a>.
+        Generated Sun May  3 08:19:49 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/28ad7b5026d731a832bf60ba4c497c9e3d97e9ff"><code>28ad7b5</code></a>.
       </div>
     </footer>
   </body>
