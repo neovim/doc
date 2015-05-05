@@ -360,7 +360,6 @@ var searchData=
   ['cpo_5ffwrite',['CPO_FWRITE',['../option__defs_8h.html#adc75052f6c1b000feef98643d9f0f63e',1,'option_defs.h']]],
   ['cpo_5fhash',['CPO_HASH',['../option__defs_8h.html#af53f45d4d6a6462c4977a43bd29811f0',1,'option_defs.h']]],
   ['cpo_5findent',['CPO_INDENT',['../option__defs_8h.html#a0aa286334eaee27597a7918c8c0552ee',1,'option_defs.h']]],
-  ['cpo_5finsend',['CPO_INSEND',['../option__defs_8h.html#a55c3343211f90b75a6143ec62a84b75e',1,'option_defs.h']]],
   ['cpo_5fintmod',['CPO_INTMOD',['../option__defs_8h.html#a83d6f8cd573accc952c0f468edeee823',1,'option_defs.h']]],
   ['cpo_5fjoincol',['CPO_JOINCOL',['../option__defs_8h.html#a3c04d2c5293bd18ff45ff19c34b5676a',1,'option_defs.h']]],
   ['cpo_5fjoinsp',['CPO_JOINSP',['../option__defs_8h.html#a038f1d4079c28adf4af021bac1f02b11',1,'option_defs.h']]],
