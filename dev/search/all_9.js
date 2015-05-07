@@ -71,7 +71,7 @@ var searchData=
   ['idx_5futf8',['IDX_UTF8',['../mbyte_8c.html#ae2601dc61bb3c9399e8c4d46240f4b6e',1,'mbyte.c']]],
   ['ie',['IE',['../farsi_8h.html#ac4d73397b6a181409fa4b2b104e97273',1,'farsi.h']]],
   ['ie_5f',['IE_',['../farsi_8h.html#ad203d0ef5ab2f636857e3024e4c0860f',1,'farsi.h']]],
-  ['if',['if',['../memory_8c.html#a9b7341a14434c03823fd805713b568cf',1,'if(!ret):&#160;memory.c'],['../msgpack__rpc_2helpers_8c.html#a2ed0e4c31f4ded58f96949cfa77b9387',1,'if(err-&gt;set):&#160;helpers.c']]],
+  ['if',['if',['../memory_8c.html#a9b7341a14434c03823fd805713b568cf',1,'if(!ret):&#160;memory.c'],['../msgpack__rpc_2helpers_8c.html#a2ed0e4c31f4ded58f96949cfa77b9387',1,'if(err-&gt;set):&#160;helpers.c'],['../path_8c.html#a64abe55b69a54d152223ce3aa24206a1',1,'if(sep):&#160;path.c']]],
   ['if_5fcscope_2ec',['if_cscope.c',['../if__cscope_8c.html',1,'']]],
   ['if_5fcscope_2eh',['if_cscope.h',['../if__cscope_8h.html',1,'']]],
   ['if_5fcscope_5fdefs_2eh',['if_cscope_defs.h',['../if__cscope__defs_8h.html',1,'']]],

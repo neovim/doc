@@ -112,7 +112,7 @@ var searchData=
   ['ml_5ftimestamp',['ml_timestamp',['../memline_8c.html#a9f6bf1b47e0e5c17ed49833bfffe8527',1,'memline.c']]],
   ['modifier_5flen',['modifier_len',['../ex__docmd_8c.html#ab3f857675af0e9cde6df2204bb7fc5e3',1,'ex_docmd.c']]],
   ['modify_5ffname',['modify_fname',['../eval_8c.html#aac1caa4e45919f551c1ab3ca6d614466',1,'eval.c']]],
-  ['modname',['modname',['../fileio_8c.html#aac79f705198b1f5212fd7f7bba16b852',1,'fileio.c']]],
+  ['modname',['modname',['../fileio_8c.html#ae853c2a054f16795681351d03db63774',1,'fileio.c']]],
   ['mouse_5fcomp_5fpos',['mouse_comp_pos',['../mouse_8c.html#afc736b5d09e09febcb2539d48ac22642',1,'mouse.c']]],
   ['mouse_5ffind_5fwin',['mouse_find_win',['../mouse_8c.html#aa4bcbbec1786380497d0dd427619e441',1,'mouse.c']]],
   ['mouse_5fhas',['mouse_has',['../mouse_8c.html#a9dcf10e948e1528b2eba6cab3ad3f3bd',1,'mouse.c']]],

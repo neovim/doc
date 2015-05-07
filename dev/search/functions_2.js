@@ -103,7 +103,7 @@ var searchData=
   ['comp_5fcol',['comp_col',['../option_8c.html#a0505bd60bd0c3b3a69f8a736c01c4ede',1,'option.c']]],
   ['comp_5ftextwidth',['comp_textwidth',['../edit_8c.html#a7f924a6c363d3cc62d79f831366d6cc7',1,'edit.c']]],
   ['compute_5fcmdrow',['compute_cmdrow',['../ex__getln_8c.html#ac1540869293cb3cca342eb6c872c1344',1,'ex_getln.c']]],
-  ['concat_5ffnames',['concat_fnames',['../path_8c.html#a6e27f7ca42f964251d6fb9c8bd3f29cd',1,'path.c']]],
+  ['concat_5ffnames',['concat_fnames',['../path_8c.html#ac560e6d106683768d5af5ec9bbe9a5d6',1,'path.c']]],
   ['concat_5fstr',['concat_str',['../strings_8c.html#a8003194d690a09dbef34c2fdf06cd8d5',1,'strings.c']]],
   ['conceal_5fcheck_5fcursur_5fline',['conceal_check_cursur_line',['../screen_8c.html#adb46f02c8c285bd6bb4e8799e974bf05',1,'screen.c']]],
   ['conceal_5fcursor_5fline',['conceal_cursor_line',['../screen_8c.html#a904ed9b70868b604d5268ffab28528aa',1,'screen.c']]],

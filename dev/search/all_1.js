@@ -224,7 +224,7 @@ var searchData=
   ['add_5fchar2buf',['add_char2buf',['../edit_8c.html#a211a9d08c043c232164bd5c6d7311ae3',1,'edit.c']]],
   ['add_5fmap',['add_map',['../getchar_8c.html#afbc6e428ed3f6b27296dd62caabd4116',1,'getchar.c']]],
   ['add_5fnl',['ADD_NL',['../regexp_8c.html#a1333495fccc1fba2f7f3a195d6398a2d',1,'regexp.c']]],
-  ['add_5fpathsep',['add_pathsep',['../path_8c.html#aa03f3d2af8159cd6c0546d5e8a55e677',1,'path.c']]],
+  ['add_5fpathsep',['add_pathsep',['../path_8c.html#a5094b10803e3c1253ad592613f1f77a5',1,'path.c']]],
   ['add_5fstate_5fif_5fmatch',['ADD_STATE_IF_MATCH',['../regexp__nfa_8c.html#a50e51373d25bb01c76e08de71ef53db9',1,'regexp_nfa.c']]],
   ['add_5fto_5fhistory',['add_to_history',['../ex__getln_8c.html#a3cc7abb0d15331bfab116bd13144691c',1,'ex_getln.c']]],
   ['add_5fto_5fshowcmd',['add_to_showcmd',['../normal_8c.html#ab783a6e2277ad86bf223e96bcd7895a4',1,'normal.c']]],

@@ -77,6 +77,7 @@ var searchData=
   ['deletefoldrecurse',['deleteFoldRecurse',['../fold_8c.html#a401a92ce51a919ee41a6f92c544890db',1,'fold.c']]],
   ['deletion_5fregister',['DELETION_REGISTER',['../ops_8c.html#a77b4080ddd57b32b0ee26fc9ba1f912c',1,'ops.c']]],
   ['deprecated_20list',['Deprecated List',['../deprecated.html',1,'']]],
+  ['dest',['dest',['../path_8c.html#a0edffc97962f9ef6293f9061e71686e7',1,'path.c']]],
   ['destroy',['destroy',['../structterminal.html#ad785a1239a104c85eebc4c3df0d3816e',1,'terminal']]],
   ['df_5fcount',['df_count',['../structdiffblock__S.html#a6938c69f7e8e19010a770057e65d0435',1,'diffblock_S']]],
   ['df_5flnum',['df_lnum',['../structdiffblock__S.html#a82f970d5ad78238ad763c9d8a4383626',1,'diffblock_S']]],

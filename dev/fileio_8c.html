@@ -228,8 +228,8 @@ Functions</h2></td></tr>
 <tr class="separator:ae5d954144e0ed7fd8e7c0b43e0b68513"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50aa66a2d73710f4913f311a7add64d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fileio_8c.html#a50aa66a2d73710f4913f311a7add64d7">shorten_fnames</a> (int force)</td></tr>
 <tr class="separator:a50aa66a2d73710f4913f311a7add64d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac79f705198b1f5212fd7f7bba16b852"><td class="memItemLeft" align="right" valign="top"><a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fileio_8c.html#aac79f705198b1f5212fd7f7bba16b852">modname</a> (<a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a> *fname, <a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a> *ext, int prepend_dot)</td></tr>
-<tr class="separator:aac79f705198b1f5212fd7f7bba16b852"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae853c2a054f16795681351d03db63774"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fileio_8c.html#ae853c2a054f16795681351d03db63774">modname</a> (const char *fname, const char *ext, bool prepend_dot) <a class="el" href="func__attr_8h.html#a7659a7cb26eea6eba1665046d4ae17fe">FUNC_ATTR_NONNULL_ARG</a>(2)</td></tr>
+<tr class="separator:ae853c2a054f16795681351d03db63774"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5db19ca608e2af8356b6808c8e355bbb"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fileio_8c.html#a5db19ca608e2af8356b6808c8e355bbb">vim_fgets</a> (<a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a> *buf, int size, FILE *fp)</td></tr>
 <tr class="separator:a5db19ca608e2af8356b6808c8e355bbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0bc0ace50d9cb272c0ed6810a74b2d0d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="fileio_8c.html#a0bc0ace50d9cb272c0ed6810a74b2d0d">vim_rename</a> (<a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a> *from, <a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a> *to)</td></tr>
@@ -1461,26 +1461,26 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aac79f705198b1f5212fd7f7bba16b852"></a>
+<a class="anchor" id="ae853c2a054f16795681351d03db63774"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a>* modname </td>
+          <td class="memname">char* modname </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a> *&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>fname</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="types_8h.html#abdb7824437f4665a51798757139f570b">char_u</a> *&#160;</td>
+          <td class="paramtype">const char *&#160;</td>
           <td class="paramname"><em>ext</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>prepend_dot</em>&#160;</td>
         </tr>
         <tr>
@@ -1490,6 +1490,26 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Get new filename ended by given extension.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fname</td><td>The original filename. If NULL, use current directory name and ext to compute new filename. </td></tr>
+    <tr><td class="paramname">ext</td><td>The extension to add to the filename. 4 chars max if prefixed with a dot, 3 otherwise. </td></tr>
+    <tr><td class="paramname">prepend_dot</td><td>If true, prefix ext with a dot. Does nothing if ext already starts with a dot, or if fname is NULL.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>[allocated] - A new filename, made up from:<ul>
+<li>fname + ext, if fname not NULL.</li>
+<li>current dir + ext, if fname is NULL. On Windows, and if ext starts with ".", a "_" is preprended to ext (for filename to be valid). Result is guaranteed to:</li>
+<li>be ended by &lt;ext&gt;.</li>
+<li>have a basename with at most BASENAMELEN chars: original basename is truncated if necessary.</li>
+<li>be different than original: basename chars are replaced by "_" if necessary. If that can't be done because truncated value of original filename was made of all underscores, replace first "_" by "v".</li>
+</ul>
+</dd></dl>
+<ul>
+<li>NULL, if fname is NULL and there was a problem trying to get current directory. </li>
+</ul>
 
 </div>
 </div>
@@ -1834,7 +1854,7 @@ Functions</h2></td></tr>
 <!-- start footer part -->
 <footer>
   <div class="container">
-    Generated on Wed May 6 2015 08:26:09 for Neovim by
+    Generated on Thu May 7 2015 08:17:13 for Neovim by
     <a href="http://www.doxygen.org/index.html">Doxygen</a>
     1.8.7
   </div>
