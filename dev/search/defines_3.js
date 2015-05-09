@@ -161,7 +161,6 @@ var searchData=
   ['cpo_5fsearch',['CPO_SEARCH',['../option__defs_8h.html#afc8f4c6506e83ce2a09166ed11259dc5',1,'option_defs.h']]],
   ['cpo_5fshowmatch',['CPO_SHOWMATCH',['../option__defs_8h.html#a63c17dc90838795ebc7bdf3041f9d557',1,'option_defs.h']]],
   ['cpo_5fspeci',['CPO_SPECI',['../option__defs_8h.html#abd115745328170636f61dccd49c19faf',1,'option_defs.h']]],
-  ['cpo_5fstar',['CPO_STAR',['../option__defs_8h.html#a231e298b20eb0b1d62430de6e4224a7c',1,'option_defs.h']]],
   ['cpo_5fsubpercent',['CPO_SUBPERCENT',['../option__defs_8h.html#acda5b256311292c9bd8e81062b373f36',1,'option_defs.h']]],
   ['cpo_5ftagpat',['CPO_TAGPAT',['../option__defs_8h.html#a574578e9f3b06d1ce1cf3469d001ac79',1,'option_defs.h']]],
   ['cpo_5ftsize',['CPO_TSIZE',['../option__defs_8h.html#a1594402d211f28b9cdbe2b4019edfb6e',1,'option_defs.h']]],
