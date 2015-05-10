@@ -120,7 +120,7 @@ var searchData=
   ['vim_5ffindfile_5fstopdir',['vim_findfile_stopdir',['../file__search_8c.html#ac6da74ff0170af749d186a7cf47fc951',1,'file_search.c']]],
   ['vim_5ffnamecmp',['vim_fnamecmp',['../path_8c.html#aa0f071f3924558ea2475cc601df452c5',1,'path.c']]],
   ['vim_5ffnamencmp',['vim_fnamencmp',['../path_8c.html#a4d1e35a7b2354a14f8a368244c26cb55',1,'path.c']]],
-  ['vim_5ffullname',['vim_FullName',['../path_8c.html#af8c2650f5ae65ed13e6e2dbb699d9d8d',1,'path.c']]],
+  ['vim_5ffullname',['vim_FullName',['../path_8c.html#a50f685fcaca0a14ca00ab5109d17b2be',1,'path.c']]],
   ['vim_5fgeneric',['VIM_GENERIC',['../message_8h.html#a3067757bb8749adde24f89624c66e1b9',1,'message.h']]],
   ['vim_5fget_5fapi_5finfo',['vim_get_api_info',['../vim_8c.html#a211c43b8ff7c5e263cf4ee62074b09eb',1,'vim.c']]],
   ['vim_5fget_5fcolor_5fmap',['vim_get_color_map',['../vim_8c.html#a5f801fcfc14145cb8e8adb5ad330ae31',1,'vim.c']]],
