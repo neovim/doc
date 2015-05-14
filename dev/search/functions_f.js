@@ -45,7 +45,6 @@ var searchData=
   ['preserve_5fexit',['preserve_exit',['../misc1_8c.html#a0babf0a4ea468d19e40e4f1e5e8c29f7',1,'misc1.c']]],
   ['print_5fline',['print_line',['../ex__cmds_8c.html#afe9850629fa00a6ec58dd7c493c3e0a3',1,'ex_cmds.c']]],
   ['print_5fline_5fno_5fprefix',['print_line_no_prefix',['../ex__cmds_8c.html#aae148d91142805dfb3aac363a0897b3e',1,'ex_cmds.c']]],
-  ['process_5fenv',['process_env',['../main_8c.html#ae925c9abe041621d55619e04e5359bbb',1,'main.c']]],
   ['prof_5fchild_5fenter',['prof_child_enter',['../eval_8c.html#a3de01a6ea0b06ddaecc369dbe726e7cf',1,'eval.c']]],
   ['prof_5fchild_5fexit',['prof_child_exit',['../eval_8c.html#a5fd9ae8cd04b50f969cc85d336e7c804',1,'eval.c']]],
   ['prof_5fdef_5ffunc',['prof_def_func',['../ex__cmds2_8c.html#aaa0e1c3f1416069d1359f77d38f78423',1,'ex_cmds2.c']]],
