@@ -1733,7 +1733,9 @@ Predefined Vim <A HREF="#variables">variables</A>:			*<A NAME="vim-variable"></A
 
 
 					*<A NAME="v:servername"></A><B>v:servername</B>* *<A NAME="servername-variable"></A><B>servername-variable</B>*
-<A HREF="#v:servername">v:servername</A>	The resulting registered |<A HREF="remote.html#x11-clientserver">x11-clientserver</A>| name if any.
+<A HREF="#v:servername">v:servername</A>	Default {Nvim} server address. Equivalent to
+		|<A HREF="msgpack_rpc.html#$NVIM_LISTEN_ADDRESS">$NVIM_LISTEN_ADDRESS</A>| on <A HREF="starting.html#startup">startup</A>, but may differ if the
+		latter is modified or unset. |<A HREF="#serverstop()">serverstop()</A>|
 		Read-only.
 
 		
@@ -2561,8 +2563,8 @@ char2nr({expr}[, {utf8}])					*<A NAME="char2nr()"></A><B>char2nr()</B>*
 <B>			char2nr("ABC")		returns 65</B>
  		When {utf8} is omitted or zero, the current <A HREF="options.html#'encoding'">'encoding'</A> is used.
 		Example for &quot;<A HREF="mbyte.html#utf-8">utf-8</A>&quot;:
-<B>			char2nr("แ")		returns 225</B>
-<B>			char2nr("แ"[0])		returns 195</B>
+<B>			char2nr("รก")		returns 225</B>
+<B>			char2nr("รก"[0])		returns 195</B>
  		With {utf8} set to 1, always treat <A HREF="motion.html#as">as</A> <A HREF="mbyte.html#utf-8">utf-8</A> characters.
 		A combining character is a separate character.
 		|<A HREF="#nr2char()">nr2char()</A>| does the opposite.
@@ -5767,27 +5769,35 @@ server2client( {clientid}, {string})			*<A NAME="server2client()"></A><B>server2
 <B>			:echo server2client(expand("&lt;client&gt;"), "HELLO")</B>
  
 
-<A HREF="#serverlist()">serverlist()</A>					*<A NAME="serverlist()"></A><B>serverlist()</B>*
+<A HREF="#serverlist()">serverlist()</A>						*<A NAME="serverlist()"></A><B>serverlist()</B>*
 		Returns a <A HREF="#list">list</A> of available server names in a <A HREF="#list">list</A>.
 		When there are no servers an empty <A HREF="#string">string</A> is returned.
 		Example:
 <B>			:echo serverlist()</B>
+
+ 							*<A NAME="--serverlist"></A><B>--serverlist</B>*
+		The Vim command-line option `--serverlist` can be imitated:
+<B>			nvim --cmd "echo serverlist()" --cmd "q"</B>
  
 
-serverlisten([{address}])				*<A NAME="serverlisten()"></A><B>serverlisten()</B>*
-		Opens a <A HREF="os_unix.html#Unix">Unix</A> or TCP socket at <A HREF="cmdline.html#{address}">{address}</A> for clients to connect
-		to and returns <A HREF="cmdline.html#{address}">{address}</A>. If no address is given, <A HREF="motion.html#it">it</A> is
-		equivalent to
-<B>			:call serverlisten(tempname())</B>
-  		If |<A HREF="msgpack_rpc.html#$NVIM_LISTEN_ADDRESS">$NVIM_LISTEN_ADDRESS</A>| is not set, <A HREF="motion.html#it">it</A> will be set to
-		<A HREF="cmdline.html#{address}">{address}</A>.
+serverstart([{address}])				*<A NAME="serverstart()"></A><B>serverstart()</B>*
+		Opens a named pipe or TCP socket at <A HREF="cmdline.html#{address}">{address}</A> for clients to
+		connect to and returns <A HREF="cmdline.html#{address}">{address}</A>. If no address is given, <A HREF="motion.html#it">it</A>
+		is equivalent to:
+<B>			:call serverstart(tempname())</B>
+  		|<A HREF="msgpack_rpc.html#$NVIM_LISTEN_ADDRESS">$NVIM_LISTEN_ADDRESS</A>| is set to <A HREF="cmdline.html#{address}">{address}</A> if not already set.
 
+							*<A NAME="--servername"></A><B>--servername</B>*
+		The Vim command-line option `--servername` can be imitated:
+<B>			nvim --cmd "let g:server_addr = serverstart('foo')"</B>
+ 
 
 serverstop({address})					*<A NAME="serverstop()"></A><B>serverstop()</B>*
-		Closes the <A HREF="os_unix.html#Unix">Unix</A> or TCP socket at <A HREF="cmdline.html#{address}">{address}</A>. Does nothing if
-		<A HREF="cmdline.html#{address}">{address}</A> is empty, or does not refer to a server. If
-		<A HREF="cmdline.html#{address}">{address}</A> equals |<A HREF="msgpack_rpc.html#$NVIM_LISTEN_ADDRESS">$NVIM_LISTEN_ADDRESS</A>|, the listen address
-		will be unset.
+		Closes the pipe or socket at <A HREF="cmdline.html#{address}">{address}</A>. Does nothing if
+		<A HREF="cmdline.html#{address}">{address}</A> is empty or invalid.
+		If |<A HREF="msgpack_rpc.html#$NVIM_LISTEN_ADDRESS">$NVIM_LISTEN_ADDRESS</A>| is stopped <A HREF="motion.html#it">it</A> is unset.
+		If |<A HREF="#v:servername">v:servername</A>| is stopped <A HREF="motion.html#it">it</A> is set to the next available
+		address returned by |<A HREF="#serverlist()">serverlist()</A>|.
 
 
 setbufvar({expr}, {varname}, {val})			*<A NAME="setbufvar()"></A><B>setbufvar()</B>*
@@ -9535,7 +9545,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sat May 16 08:23:28 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/6f72f56492c0948371c746356458c1693efa85a3"><code>6f72f56</code></a>.
+        Generated Sun May 17 08:29:39 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/f4423c96973c1c35945c5be9b22331550be92ce8"><code>f4423c9</code></a>.
       </div>
     </footer>
   </body>
