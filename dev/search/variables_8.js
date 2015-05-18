@@ -12,7 +12,6 @@ var searchData=
   ['index',['index',['../structwordnode__S.html#ac3b5fb91aee2175b7897109f22517696',1,'wordnode_S']]],
   ['indir',['indir',['../structvimoption.html#aaf8b7e899b3ddfe028f9d91567d024c7',1,'vimoption']]],
   ['input',['input',['../structTUIData.html#aca285038704f753f77079457ccd46d85',1,'TUIData']]],
-  ['input_5fconv',['input_conv',['../globals_8h.html#a4cca7f97f4efce3b64574cba798c49aa',1,'globals.h']]],
   ['input_5ffn',['input_fn',['../structcmdline__info.html#a3aaf6465bbb9adf60b98ac198d81481d',1,'cmdline_info']]],
   ['input_5fisatty',['input_isatty',['../structmparm__T.html#a35e2a87f540012762ab3a4c8be9bd58d',1,'mparm_T']]],
   ['insert_5fmode',['insert_mode',['../structui__t.html#af317571b74cdab8fdc2320db577615b2',1,'ui_t']]],

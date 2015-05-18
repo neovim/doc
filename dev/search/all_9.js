@@ -133,7 +133,6 @@ var searchData=
   ['input_2eh',['input.h',['../input_8h.html',1,'']]],
   ['input_5fbuffer_5fsize',['INPUT_BUFFER_SIZE',['../input_8c.html#aa9b8dcc02cea15aab8e3d0b7860327a7',1,'input.c']]],
   ['input_5fbuflen',['INPUT_BUFLEN',['../edit_8c.html#a08138f717a55fe7b906e95ce821ca478',1,'edit.c']]],
-  ['input_5fconv',['input_conv',['../globals_8h.html#a4cca7f97f4efce3b64574cba798c49aa',1,'globals.h']]],
   ['input_5fdone',['input_done',['../input_8c.html#a28e8f7422afbe5bffb7352bc4648a797',1,'input.c']]],
   ['input_5fenqueue',['input_enqueue',['../input_8c.html#a93f7c4f284c88b611de43b2ed8206086',1,'input.c']]],
   ['input_5ffn',['input_fn',['../structcmdline__info.html#a3aaf6465bbb9adf60b98ac198d81481d',1,'cmdline_info']]],
