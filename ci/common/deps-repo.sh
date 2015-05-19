@@ -18,6 +18,12 @@ DEPS_OSX64_BRANCH=${DEPS_OSX64_BRANCH:-${DEPS_BRANCH:-master}}
 DEPS_OSX64_DIR=${DEPS_OSX64_DIR:-${DEPS_DIR:-/opt/neovim-deps}}
 DEPS_OSX64_SUBTREE=${DEPS_OSX64_SUBTREE:-/osx-x64/}
 
+# Dependencies source code
+DEPS_SRC_REPO=${DEPS_SRC_REPO:-${DEPS_REPO:-neovim/deps}}
+DEPS_SRC_BRANCH=${DEPS_SRC_BRANCH:-${DEPS_BRANCH:-master}}
+DEPS_SRC_DIR=${DEPS_SRC_DIR:-${DEPS_DIR:-/opt/neovim-deps}}
+DEPS_SRC_SUBTREE=${DEPS_SRC_SUBTREE:-/src/}
+
 # Set up prebuilt 64-bit Neovim dependencies.
 setup_deps64() {
   local deps_dir="DEPS_${CI_OS^^}64_DIR"
