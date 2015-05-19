@@ -199,7 +199,6 @@ var searchData=
   ['p_5ftsr',['p_tsr',['../option__defs_8h.html#a09a7fb0fca3dedb7c63675757dc725ef',1,'option_defs.h']]],
   ['p_5fttimeout',['p_ttimeout',['../option__defs_8h.html#ac3b27badeb23ddbd9bda2de1d8ab2ba6',1,'option_defs.h']]],
   ['p_5fttm',['p_ttm',['../option__defs_8h.html#aa254e00bf766dd107171a07b94738f32',1,'option_defs.h']]],
-  ['p_5fttyscroll',['p_ttyscroll',['../option__defs_8h.html#a123fe92864837f1d9f856d0fd92d80f6',1,'option_defs.h']]],
   ['p_5fuc',['p_uc',['../option__defs_8h.html#ab9d1347f05d6fab96b4ebba410df10f6',1,'option_defs.h']]],
   ['p_5fudir',['p_udir',['../option__defs_8h.html#a4d39e31a7cf55819cc0b748948b53845',1,'option_defs.h']]],
   ['p_5ful',['p_ul',['../option__defs_8h.html#a5b22718f211887cdd7e90ba2bf60d82e',1,'option_defs.h']]],

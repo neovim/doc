@@ -65,7 +65,7 @@ var searchData=
   ['temp_5ffile_5fpath_5fmaxlen',['TEMP_FILE_PATH_MAXLEN',['../unix__defs_8h.html#a2ecbd3b6bd1795000308850facf75066',1,'TEMP_FILE_PATH_MAXLEN():&#160;unix_defs.h'],['../win__defs_8h.html#a2ecbd3b6bd1795000308850facf75066',1,'TEMP_FILE_PATH_MAXLEN():&#160;win_defs.h']]],
   ['tempfile_2ec',['tempfile.c',['../tempfile_8c.html',1,'']]],
   ['tempfile_2eh',['tempfile.h',['../tempfile_8h.html',1,'']]],
-  ['term',['term',['../structTerminalJobData.html#ad98354a2ce8966aad25cad04ad318fae',1,'TerminalJobData::term()'],['../structmparm__T.html#a597ce2f7b3376b944d01b181b8111103',1,'mparm_T::term()']]],
+  ['term',['term',['../structTerminalJobData.html#ad98354a2ce8966aad25cad04ad318fae',1,'TerminalJobData']]],
   ['term_5ffocus',['TERM_FOCUS',['../vim_8h.html#a32b72dbc7b77346d425b786a4ebabadc',1,'vim.h']]],
   ['term_5fname',['term_name',['../structJobOptions.html#ad8b8b8666d96d24f4da40682130b6b0e',1,'JobOptions']]],
   ['term_5fsent',['term_sent',['../structjob.html#a9afacb35a5b47a85bcf222e72f77c857',1,'job']]],

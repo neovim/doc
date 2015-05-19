@@ -20,7 +20,7 @@ var searchData=
   ['tb_5foff',['tb_off',['../structtypebuf__T.html#ab6553635679a8e869536561a8f16d2de',1,'typebuf_T']]],
   ['tb_5fsilent',['tb_silent',['../structtypebuf__T.html#a840a56b81309bbb4eca3ae28fb2a3221',1,'typebuf_T']]],
   ['tcp',['tcp',['../structServer.html#ae59ccf7b9f662f268bb07c85e22b1bf6',1,'Server']]],
-  ['term',['term',['../structTerminalJobData.html#ad98354a2ce8966aad25cad04ad318fae',1,'TerminalJobData::term()'],['../structmparm__T.html#a597ce2f7b3376b944d01b181b8111103',1,'mparm_T::term()']]],
+  ['term',['term',['../structTerminalJobData.html#ad98354a2ce8966aad25cad04ad318fae',1,'TerminalJobData']]],
   ['term_5fname',['term_name',['../structJobOptions.html#ad8b8b8666d96d24f4da40682130b6b0e',1,'JobOptions']]],
   ['term_5fsent',['term_sent',['../structjob.html#a9afacb35a5b47a85bcf222e72f77c857',1,'job']]],
   ['terminal',['terminal',['../structfile__buffer.html#a15bf37f02655068bd49d71d4c0fa9126',1,'file_buffer']]],
