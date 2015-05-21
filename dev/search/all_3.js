@@ -372,7 +372,6 @@ var searchData=
   ['cpo_5fliteral',['CPO_LITERAL',['../option__defs_8h.html#aae48618313c28d39e051675296411882',1,'option_defs.h']]],
   ['cpo_5fmatch',['CPO_MATCH',['../option__defs_8h.html#a6b675f1bc1bddbc7170302fb4f3f9576',1,'option_defs.h']]],
   ['cpo_5fmatchbsl',['CPO_MATCHBSL',['../option__defs_8h.html#a2993e2e54afbe5fe4b7dd54398a02b3c',1,'option_defs.h']]],
-  ['cpo_5fminus',['CPO_MINUS',['../option__defs_8h.html#ab536960c64297c3f4f087ea15b59e45f',1,'option_defs.h']]],
   ['cpo_5fnumcol',['CPO_NUMCOL',['../option__defs_8h.html#a7ca25ee58494367fa15a3b0eb23ffac8',1,'option_defs.h']]],
   ['cpo_5fovernew',['CPO_OVERNEW',['../option__defs_8h.html#ace6ff360ab8c4ac71f14c3201c1f96ac',1,'option_defs.h']]],
   ['cpo_5fpara',['CPO_PARA',['../option__defs_8h.html#ad9bb8673e1ee4e1e8b1a4c5c58994e41',1,'option_defs.h']]],
