@@ -34,7 +34,7 @@
 <HR>
 <PRE>
 
-*<A NAME="options.txt"></A><B>options.txt</B>*	For Vim version 7.4.  Last change: 2014 Sep 23
+*<A NAME="options.txt"></A><B>options.txt</B>*	For Vim version 7.4.  Last change: 2014 Nov 05
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -2107,14 +2107,6 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 			This flag is also used for other features, such <A HREF="motion.html#as">as</A>
 			<A HREF="indent.html#C-indenting">C-indenting</A>.
 
-								*<A NAME="cpo--"></A><B>cpo--</B>*
-		-	When included, a vertical <A HREF="intro.html#movement">movement</A> command fails when
-			<A HREF="motion.html#it">it</A> would go above the first line or below the last
-			line.  Without <A HREF="motion.html#it">it</A> the cursor moves to the first or
-			last line, unless <A HREF="motion.html#it">it</A> already was in that line.
-			Applies to the commands &quot;<A HREF="motion.html#-">-</A>&quot;, &quot;<A HREF="motion.html#k">k</A>&quot;, <A HREF="motion.html#CTRL-P">CTRL-P</A>, &quot;<A HREF="motion.html#+">+</A>&quot;, &quot;<A HREF="motion.html#j">j</A>&quot;,
-			<A HREF="motion.html#CTRL-N">CTRL-N</A>, <A HREF="motion.html#CTRL-J">CTRL-J</A> and &quot;:1234&quot;.
-
 								*<A NAME="cpo-+"></A><B>cpo-+</B>*
 		+	When included, a &quot;<A HREF="editing.html#:write">:write</A> file&quot; command will reset the
 			<A HREF="#'modified'">'modified'</A> flag of the buffer, even though the buffer
@@ -3162,7 +3154,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
 
 					*<A NAME="'formatoptions'"></A><B>'formatoptions'</B>* *<A NAME="'fo'"></A><B>'fo'</B>*
-<A HREF="#'formatoptions'">'formatoptions'</A> <A HREF="#'fo'">'fo'</A>	<A HREF="eval.html#string">string</A> (Vim default: &quot;tcq&quot;, <A HREF="intro.html#Vi">Vi</A> default: &quot;vt&quot;)
+<A HREF="#'formatoptions'">'formatoptions'</A> <A HREF="#'fo'">'fo'</A>	<A HREF="eval.html#string">string</A> (default: &quot;tcqj&quot;, <A HREF="intro.html#Vi">Vi</A> default: &quot;vt&quot;)
 			local to buffer
 	This is a sequence of letters which describes how automatic
 	<A HREF="change.html#formatting">formatting</A> is to be done.  See |<A HREF="change.html#fo-table">fo-table</A>|.  When the <A HREF="#'paste'">'paste'</A> option is
@@ -4423,6 +4415,8 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	be able to execute <A HREF="intro.html#Normal">Normal</A> mode commands.
 	This is the opposite of the <A HREF="#'keymap'">'keymap'</A> option, where characters are
 	mapped in <A HREF="insert.html#Insert">Insert</A> mode.
+	Also consider setting <A HREF="#'langnoremap'">'langnoremap'</A> to avoid <A HREF="#'langmap'">'langmap'</A> applies to
+	characters resulting from a <A HREF="map.html#mapping">mapping</A>.
 	This option cannot be set from a |<A HREF="#modeline">modeline</A>| or in the |<A HREF="eval.html#sandbox">sandbox</A>|, for
 	security reasons.
 
@@ -6983,8 +6977,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
 
 						*<A NAME="'tags'"></A><B>'tags'</B>* *<A NAME="'tag'"></A><B>'tag'</B>* *<A NAME="E433"></A><B>E433</B>*
-<A HREF="#'tags'">'tags'</A> <A HREF="#'tag'">'tag'</A>		<A HREF="eval.html#string">string</A>	(default &quot;./tags,tags&quot;, when compiled with
-				|+emacs_tags|: &quot;./tags,./TAGS,tags,TAGS&quot;)
+<A HREF="#'tags'">'tags'</A> <A HREF="#'tag'">'tag'</A>		<A HREF="eval.html#string">string</A>	(default &quot;./tags;,tags&quot;)
 			global or local to buffer |<A HREF="#global-local">global-local</A>|
 	Filenames for the <A HREF="tagsrch.html#tag">tag</A> command, separated by spaces or commas.  To
 	include a space or comma in a file name, precede <A HREF="motion.html#it">it</A> with a <A HREF="intro.html#backslash">backslash</A>
@@ -7001,10 +6994,6 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	|<A HREF="various.html#+path_extra">+path_extra</A>| feature}
 	The |<A HREF="eval.html#tagfiles()">tagfiles()</A>| function can be used to get a <A HREF="eval.html#list">list</A> of the file names
 	actually used.
-	If Vim was compiled with the |<A HREF="various.html#+emacs_tags">+emacs_tags</A>| feature, Emacs-style tag
-	files are also supported.  They are automatically recognized.  The
-	default value becomes &quot;./tags,./TAGS,tags,TAGS&quot;, unless <A HREF="change.html#case">case</A>
-	differences are ignored (MS-Windows).  |<A HREF="tagsrch.html#emacs-tags">emacs-tags</A>|
 	The use of |<A HREF="#:set+=">:set+=</A>| and |<A HREF="#:set-=">:set-=</A>| is preferred when adding or removing
 	file names from the <A HREF="eval.html#list">list</A>.  This avoids problems when a future version
 	uses another default.
@@ -7345,6 +7334,9 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	current buffer:
 <B>		setlocal ul=-1</B>
  	This helps when you run out of memory for a single change.
+
+	The local value is set to -123456 when the global value is to be used.
+
 	Also see |<A HREF="undo.html#clear-undo">clear-undo</A>|.
 
 
@@ -8034,7 +8026,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
     <footer>
       <div class="container">
-        Generated Tue May 19 08:42:49 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/73137e0a84d73196db1a8d66a45210f7ffb6632d"><code>73137e0</code></a>.
+        Generated Thu May 21 08:30:39 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/ac42fb8ca729ecac3bc3c43d4f68ce79ca3a5faa"><code>ac42fb8</code></a>.
       </div>
     </footer>
   </body>
