@@ -70,6 +70,7 @@ var searchData=
   ['vreplace',['VREPLACE',['../vim_8h.html#a1414c4bf4fb24ccbddaee33a01e10c3a',1,'vim.h']]],
   ['vreplace_5fflag',['VREPLACE_FLAG',['../vim_8h.html#a359e6b03376abfe70a58439ed2421d96',1,'vim.h']]],
   ['vv_5fcompat',['VV_COMPAT',['../eval_8c.html#a3f0fbb5571da1bfc76172315020050c3',1,'eval.c']]],
+  ['vv_5fdict',['vv_dict',['../eval_8c.html#a54c481215115a02082d1b4b2ae2e2ec1',1,'eval.c']]],
   ['vv_5ffloat',['vv_float',['../eval_8c.html#a9944f3b09f652b4a95d12a18775c0706',1,'eval.c']]],
   ['vv_5flist',['vv_list',['../eval_8c.html#ab3512c1cbc83626e0f954899c60827c6',1,'eval.c']]],
   ['vv_5fname',['VV_NAME',['../eval_8c.html#a2f1530a9b92d47d0fc98571c8e15db76',1,'eval.c']]],

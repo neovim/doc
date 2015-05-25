@@ -101,6 +101,7 @@ var searchData=
   ['set_5ftty_5foption',['set_tty_option',['../option_8c.html#a40408c13b11c9bbe829edae3f59ed2db',1,'option.c']]],
   ['set_5fvcount',['set_vcount',['../eval_8c.html#af4a73781b6b10a9fd4a67df28c281bc2',1,'eval.c']]],
   ['set_5fvim_5fvar_5fchar',['set_vim_var_char',['../eval_8c.html#aa10dd0a09a291715fabfee80b7913563',1,'eval.c']]],
+  ['set_5fvim_5fvar_5fdict',['set_vim_var_dict',['../eval_8c.html#a7a3b92781b19bc74e98ae6431c4f9d2a',1,'eval.c']]],
   ['set_5fvim_5fvar_5flist',['set_vim_var_list',['../eval_8c.html#a19036292688dec52327531ca9e34b11e',1,'eval.c']]],
   ['set_5fvim_5fvar_5fnr',['set_vim_var_nr',['../eval_8c.html#a102a00f7bd11bbd535409f3d96b92957',1,'eval.c']]],
   ['set_5fvim_5fvar_5fstring',['set_vim_var_string',['../eval_8c.html#ad24dc360910df498ab3f75c5957e55b6',1,'eval.c']]],

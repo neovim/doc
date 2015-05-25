@@ -14,6 +14,7 @@ var searchData=
   ['vv_5fcmdarg',['VV_CMDARG',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a00df4687f79bda2ceff6ef811e93d57b',1,'eval.h']]],
   ['vv_5fcmdbang',['VV_CMDBANG',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a0595659504f8f4ba81c6a374a1b84490',1,'eval.h']]],
   ['vv_5fcommand_5foutput',['VV_COMMAND_OUTPUT',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5af686d985e49b725fdc5e6b820a8d386d',1,'eval.h']]],
+  ['vv_5fcompleted_5fitem',['VV_COMPLETED_ITEM',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5a51e2d7440ba174ec63aab80eb9f94a52',1,'eval.h']]],
   ['vv_5fcount',['VV_COUNT',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5af1703088113a11d9bdb05cf7d469af21',1,'eval.h']]],
   ['vv_5fcount1',['VV_COUNT1',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5aac4889483b2d29e465c17f466e3ddb28',1,'eval.h']]],
   ['vv_5fctype',['VV_CTYPE',['../eval_8h.html#a99fb83031ce9923c84392b4e92f956b5aa22ece21897a263685ce736fe0d7a481',1,'eval.h']]],
