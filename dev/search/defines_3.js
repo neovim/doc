@@ -137,7 +137,6 @@ var searchData=
   ['cpo_5findent',['CPO_INDENT',['../option__defs_8h.html#a0aa286334eaee27597a7918c8c0552ee',1,'option_defs.h']]],
   ['cpo_5fintmod',['CPO_INTMOD',['../option__defs_8h.html#a83d6f8cd573accc952c0f468edeee823',1,'option_defs.h']]],
   ['cpo_5fjoincol',['CPO_JOINCOL',['../option__defs_8h.html#a3c04d2c5293bd18ff45ff19c34b5676a',1,'option_defs.h']]],
-  ['cpo_5fjoinsp',['CPO_JOINSP',['../option__defs_8h.html#a038f1d4079c28adf4af021bac1f02b11',1,'option_defs.h']]],
   ['cpo_5fkeepro',['CPO_KEEPRO',['../option__defs_8h.html#a052429c65178cd273a100479e207d7a1',1,'option_defs.h']]],
   ['cpo_5fkeycode',['CPO_KEYCODE',['../option__defs_8h.html#aa6aef8a171968f40107d6e2f8b9340a4',1,'option_defs.h']]],
   ['cpo_5fkoffset',['CPO_KOFFSET',['../option__defs_8h.html#a002471d8f70171bc7321a16d77f0add9',1,'option_defs.h']]],

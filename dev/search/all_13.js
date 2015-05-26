@@ -882,7 +882,7 @@ var searchData=
   ['strchrsub',['strchrsub',['../memory_8c.html#a76467bc2bc18e489937e1b3c92790da5',1,'memory.c']]],
   ['strcmp',['STRCMP',['../vim_8h.html#a75fb5fb9d785a71f9d82f4d008a48278',1,'vim.h']]],
   ['strcnt',['strcnt',['../memory_8c.html#a7b03f2e520ad451f0c2ba4807d1b4703',1,'memory.c']]],
-  ['strcpy',['strcpy',['../path_8c.html#afafd887dcabfc3a4442fccf99b772c85',1,'strcpy(dest, fname1):&#160;path.c'],['../vim_8h.html#aa9cea5fcb1483307770f365fb24aa08d',1,'STRCPY():&#160;vim.h']]],
+  ['strcpy',['STRCPY',['../vim_8h.html#aa9cea5fcb1483307770f365fb24aa08d',1,'STRCPY():&#160;vim.h'],['../path_8c.html#afafd887dcabfc3a4442fccf99b772c85',1,'strcpy(dest, fname1):&#160;path.c']]],
   ['stream',['stream',['../structrstream.html#a0889a99fa3b0dbf62cf3dba996b6c647',1,'rstream::stream()'],['../structwstream.html#adf3bc93b58fa45b0d74835c55e3c1020',1,'wstream::stream()']]],
   ['stricmp',['STRICMP',['../vim_8h.html#aadcd31e93b60b8223d40a984ee8a5ee3',1,'vim.h']]],
   ['string',['String',['../structString.html',1,'String'],['../structobject.html#a1e0cb4d1faa56889500279ca1d445a82',1,'object::string()'],['../structprt__dsc__comment__S.html#a49811b0901ad4d3e002b98a70c615c79',1,'prt_dsc_comment_S::string()'],['../structprt__dsc__line__S.html#a20696b46ce0a3a2ca9449c0b5d57f7f7',1,'prt_dsc_line_S::string()'],['../structoption__table__T.html#adaedf925f2853ff1f67094778169097d',1,'option_table_T::string()']]],

@@ -378,7 +378,7 @@ var searchData=
   ['prev_5fcount0',['prev_count0',['../structoparg__S.html#af0777a2a0b1d5c3568a407cb6daf7f20',1,'oparg_S']]],
   ['prev_5fopcount',['prev_opcount',['../structoparg__S.html#a01a3c07767b421dede17b1cfbb014418',1,'oparg_S']]],
   ['previous_5ffunccal',['previous_funccal',['../eval_8c.html#a95ac73cc2588f1101d28061ecddb77bb',1,'eval.c']]],
-  ['print',['PRINT',['../regexp_8c.html#a8b43bafee90b30676faae508c21cb8d7',1,'PRINT():&#160;regexp.c'],['../if__cscope__defs_8h.html#a7c3d335a8658b9709c30027eaecec1f7a89e0e9b5bb34d03cf847f255e27633c8',1,'Print():&#160;if_cscope_defs.h']]],
+  ['print',['Print',['../if__cscope__defs_8h.html#a7c3d335a8658b9709c30027eaecec1f7a89e0e9b5bb34d03cf847f255e27633c8',1,'Print():&#160;if_cscope_defs.h'],['../regexp_8c.html#a8b43bafee90b30676faae508c21cb8d7',1,'PRINT():&#160;regexp.c']]],
   ['print_5fline',['print_line',['../ex__cmds_8c.html#afe9850629fa00a6ec58dd7c493c3e0a3',1,'ex_cmds.c']]],
   ['print_5fline_5fno_5fprefix',['print_line_no_prefix',['../ex__cmds_8c.html#aae148d91142805dfb3aac363a0897b3e',1,'ex_cmds.c']]],
   ['print_5fnumber_5fwidth',['PRINT_NUMBER_WIDTH',['../hardcopy_8h.html#a43b368177951ebc0ac63e47ddb35aef8',1,'hardcopy.h']]],
