@@ -197,6 +197,7 @@ var searchData=
   ['strchrsub',['strchrsub',['../memory_8c.html#a76467bc2bc18e489937e1b3c92790da5',1,'memory.c']]],
   ['strcnt',['strcnt',['../memory_8c.html#a7b03f2e520ad451f0c2ba4807d1b4703',1,'memory.c']]],
   ['strcpy',['strcpy',['../path_8c.html#afafd887dcabfc3a4442fccf99b772c85',1,'path.c']]],
+  ['stream_5fset_5fblocking',['stream_set_blocking',['../stream_8c.html#a494d355cc3d5d1e8748bebad885437e4',1,'stream.c']]],
   ['string_5fconvert',['string_convert',['../mbyte_8c.html#a292b10d441c471490ca7fe10c4bf33bd',1,'mbyte.c']]],
   ['string_5fconvert_5fext',['string_convert_ext',['../mbyte_8c.html#a7702c28c06dd5821b2b30e8385259efe',1,'mbyte.c']]],
   ['strup_5fsave',['strup_save',['../strings_8c.html#a9c71bae9bc001a0819c21de4547fdda5',1,'strings.c']]],

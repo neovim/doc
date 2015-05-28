@@ -16,6 +16,7 @@ var searchData=
   ['sjiscorr_2ec',['sjiscorr.c',['../sjiscorr_8c.html',1,'']]],
   ['spell_2ec',['spell.c',['../spell_8c.html',1,'']]],
   ['spell_2eh',['spell.h',['../spell_8h.html',1,'']]],
+  ['stream_2ec',['stream.c',['../stream_8c.html',1,'']]],
   ['strings_2ec',['strings.c',['../strings_8c.html',1,'']]],
   ['strings_2eh',['strings.h',['../strings_8h.html',1,'']]],
   ['syntax_2ec',['syntax.c',['../syntax_8c.html',1,'']]],
