@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: pi_matchit</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <div class="site-nav">
+          <ul>
+            <li><a href="/">Neovim Home</a></li>
+          </ul>
+        </div>
+        <a href="/"><img class="logo" alt="Vim documentation: pi_matchit" src="/images/logo@2x.png" /></a>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: pi_matchit</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="pi_matchit.txt"></A><B>pi_matchit.txt</B>*   Extended &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; matching
+
+For Vim version 6.3.  Last change:  2015 May 21
+
+
+*<A NAME="matchit"></A><B>matchit</B>* *<A NAME="matchit.vim"></A><B>matchit.vim</B>*
+
+1. Extended matching with &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;				|<A HREF="#matchit-intro">matchit-intro</A>|
+2. Activation						|<A HREF="#matchit-activate">matchit-activate</A>|
+3. Configuration					|<A HREF="#matchit-configure">matchit-configure</A>|
+4. Supporting a New Language				|<A HREF="#matchit-newlang">matchit-newlang</A>|
+5. Known Bugs and Limitations				|<A HREF="#matchit-bugs">matchit-bugs</A>|
+
+The functionality mentioned here is a plugin, see |<A HREF="usr_05.html#add-plugin">add-plugin</A>|.
+You can avoid loading this <A HREF="usr_05.html#plugin">plugin</A> by setting the &quot;loaded_matchit&quot; variable
+in your |<A HREF="starting.html#vimrc">vimrc</A>| file:
+<B>	:let loaded_matchit = 1</B>
+
+==============================================================================
+
+1. Extended matching with &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;				*<A NAME="matchit-intro"></A><B>matchit-intro</B>*
+
+
+							*<A NAME="matchit-&#37;"></A><B>matchit-&#37;</B>*
+<A HREF="motion.html#&#37;">&#37;</A>	Cycle forward through matching groups, such <A HREF="motion.html#as">as</A> &quot;if&quot;, &quot;else&quot;, &quot;endif&quot;,
+	<A HREF="motion.html#as">as</A> specified by |<A HREF="#b:match_words">b:match_words</A>|.
+
+
+							*<A NAME="g&#37;"></A><B>g&#37;</B>* *<A NAME="v_g&#37;"></A><B>v_g&#37;</B>* *<A NAME="o_g&#37;"></A><B>o_g&#37;</B>*
+<A HREF="#g&#37;">g&#37;</A>	Cycle backwards through matching groups, <A HREF="motion.html#as">as</A> specified by
+	|<A HREF="#b:match_words">b:match_words</A>|.  For example, go from &quot;if&quot; to &quot;endif&quot; to &quot;else&quot;.
+
+
+							*<A NAME="[&#37;"></A><B>[&#37;</B>* *<A NAME="v_[&#37;"></A><B>v_[&#37;</B>* *<A NAME="o_[&#37;"></A><B>o_[&#37;</B>*
+<A HREF="#[&#37;">[&#37;</A>	Go to <A HREF="intro.html#[count]">[count]</A> previous unmatched group, <A HREF="motion.html#as">as</A> specified by
+	|<A HREF="#b:match_words">b:match_words</A>|.  Similar to |<A HREF="motion.html#[{">[{</A>|.
+
+
+							*<A NAME="]&#37;"></A><B>]&#37;</B>* *<A NAME="v_]&#37;"></A><B>v_]&#37;</B>* *<A NAME="o_]&#37;"></A><B>o_]&#37;</B>*
+<A HREF="#]&#37;">]&#37;</A>	Go to <A HREF="intro.html#[count]">[count]</A> next unmatched group, <A HREF="motion.html#as">as</A> specified by
+	|<A HREF="#b:match_words">b:match_words</A>|.  Similar to |<A HREF="motion.html#]}">]}</A>|.
+
+
+							*<A NAME="a&#37;"></A><B>a&#37;</B>* *<A NAME="v_a&#37;"></A><B>v_a&#37;</B>*
+<A HREF="#a&#37;">a&#37;</A>	In <A HREF="visual.html#Visual">Visual</A> mode, select the matching group, <A HREF="motion.html#as">as</A> specified by
+	|<A HREF="#b:match_words">b:match_words</A>|, containing the cursor.  Similar to |<A HREF="motion.html#v_a[">v_a[</A>|.
+	A <A HREF="intro.html#[count]">[count]</A> is ignored, and only the first character of the closing
+	<A HREF="pattern.html#pattern">pattern</A> is selected.
+
+In Vim, <A HREF="motion.html#as">as</A> in plain <A HREF="intro.html#vi">vi</A>, the percent key, |<A HREF="motion.html#&#37;">&#37;</A>|, jumps the cursor from a brace,
+bracket, or paren to its match.  This can be configured with the <A HREF="options.html#'matchpairs'">'matchpairs'</A>
+option.  The <A HREF="#matchit">matchit</A> <A HREF="usr_05.html#plugin">plugin</A> extends this in several ways:
+
+	    You can match whole words, such <A HREF="motion.html#as">as</A> &quot;if&quot; and &quot;endif&quot;, not just
+	single characters.  You can also specify a |<A HREF="pattern.html#regular-expression">regular-expression</A>|.
+	    You can define groups with more than two words, such <A HREF="motion.html#as">as</A> &quot;if&quot;,
+	&quot;else&quot;, &quot;endif&quot;.  Banging on the &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; key will cycle from the &quot;if&quot; to
+	the first &quot;else&quot;, the next &quot;else&quot;, <A HREF="eval.html#...">...</A>, the closing &quot;endif&quot;, and back
+	to the opening &quot;if&quot;.  Nested structures are skipped.  Using |<A HREF="#g&#37;">g&#37;</A>| goes
+	in the reverse direction.
+	    By default, words inside comments and strings are ignored, unless
+	the cursor is inside a comment or <A HREF="eval.html#string">string</A> when you type &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;.  If the
+	only thing you want to <A HREF="diff.html#do">do</A> is modify the behavior of &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; so that <A HREF="motion.html#it">it</A>
+	behaves this way, you <A HREF="diff.html#do">do</A> not have to define |<A HREF="#b:match_words">b:match_words</A>|, since the
+	<A HREF="usr_41.html#script">script</A> uses the <A HREF="options.html#'matchpairs'">'matchpairs'</A> option <A HREF="motion.html#as">as</A> well <A HREF="motion.html#as">as</A> this variable.
+
+See |<A HREF="#matchit-details">matchit-details</A>| for details on what the <A HREF="usr_41.html#script">script</A> does, and |<A HREF="#b:match_words">b:match_words</A>|
+for how to specify matching patterns.
+
+
+MODES:			*<A NAME="matchit-modes"></A><B>matchit-modes</B>* *<A NAME="matchit-v_&#37;"></A><B>matchit-v_&#37;</B>* *<A NAME="matchit-o_&#37;"></A><B>matchit-o_&#37;</B>*
+
+Mostly, &#37; and related motions (|<A HREF="#g&#37;">g&#37;</A>| and |<A HREF="#[&#37;">[&#37;</A>| and |<A HREF="#]&#37;">]&#37;</A>|) work just like built-in
+motion commands in |<A HREF="intro.html#Operator-pending">Operator-pending</A>| and |<A HREF="visual.html#Visual">Visual</A>| modes.  However, you
+cannot make these motions |<A HREF="motion.html#linewise">linewise</A>| or |<A HREF="motion.html#characterwise">characterwise</A>|, since the |<A HREF="map.html#:omap">:omap</A>|s
+that define them start with &quot;<A HREF="visual.html#v">v</A>&quot; in order to make the default behavior
+<A HREF="motion.html#inclusive">inclusive</A>.  (See |<A HREF="motion.html#o_v">o_v</A>|.)  In other words, &quot;dV&#37;&quot; will not work.  The
+work-around is to go through <A HREF="visual.html#Visual">Visual</A> mode:  &quot;V&#37;d&quot; will work.
+
+
+LANGUAGES:					*<A NAME="matchit-languages"></A><B>matchit-languages</B>*
+
+Currently, the following languages are supported:  Ada, ASP with VBS, Csh,
+DTD, Entity, Essbase, Fortran, HTML, JSP (same <A HREF="motion.html#as">as</A> HTML), LaTeX, Lua, Pascal,
+SGML, Shell, Tcsh, Vim, XML.  Other languages may already have support via
+the default |<A HREF="usr_43.html#filetype-plugin">filetype-plugin</A>|<A HREF="change.html#s">s</A> in the standard vim <A HREF="intro.html#distribution">distribution</A>.
+
+To support a new language, see |<A HREF="#matchit-newlang">matchit-newlang</A>| below.
+
+
+DETAILS:				*<A NAME="matchit-details"></A><B>matchit-details</B>* *<A NAME="matchit-parse"></A><B>matchit-parse</B>*
+
+Here is an outline of what <A HREF="#matchit.vim">matchit.vim</A> does each time you hit the &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; key.  If
+there are backrefs in |<A HREF="#b:match_words">b:match_words</A>| then the first step is to produce a
+version in which these back references have been eliminated; if there are no
+backrefs then this step is skipped.  This step is called parsing.  For
+example, &quot;\(foo\|bar\):end\1&quot; is parsed to yield
+&quot;\(foo\|bar\):end\(foo\|bar\)&quot;.  This can get tricky, especially if there are
+nested groups.  If debugging is turned on, the parsed version is saved <A HREF="motion.html#as">as</A>
+|<A HREF="#b:match_pat">b:match_pat</A>|.
+
+
+							*<A NAME="matchit-choose"></A><B>matchit-choose</B>*
+Next, the <A HREF="usr_41.html#script">script</A> looks for a <A HREF="motion.html#word">word</A> on the current line that matches the <A HREF="pattern.html#pattern">pattern</A>
+just constructed.  It includes the patterns from the <A HREF="options.html#'matchpairs'">'matchpairs'</A> option.
+The goal is to <A HREF="diff.html#do">do</A> what you expect, which turns out to be a little complicated.
+The <A HREF="usr_41.html#script">script</A> follows these rules:
+
+	Insist on a match that ends on or after the cursor.
+	Prefer a match that includes the cursor position (that is, one that
+		starts on or before the cursor).
+	Prefer a match that starts <A HREF="motion.html#as">as</A> close to the cursor <A HREF="motion.html#as">as</A> possible.
+	If more than one <A HREF="pattern.html#pattern">pattern</A> in |<A HREF="#b:match_words">b:match_words</A>| matches, choose the one
+		that is listed first.
+
+Examples:
+
+	Suppose you
+<B>		:let b:match_words = '&lt;:&gt;,&lt;tag&gt;:&lt;/tag&gt;'</B>
+ 	and hit &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; with the cursor on or before the &quot;<A HREF="change.html#&lt;">&lt;</A>&quot; in &quot;a &lt;tag&gt; is born&quot;.
+	The <A HREF="pattern.html#pattern">pattern</A> '<A HREF="change.html#&lt;">&lt;</A>' comes first, so <A HREF="motion.html#it">it</A> is preferred over '&lt;tag&gt;', which
+	also matches.  If the cursor is on the &quot;<A HREF="motion.html#t">t</A>&quot;, however, then '&lt;tag&gt;' is
+	preferred, because this matches a bit of text containing the cursor.
+	If the two groups of patterns were reversed then '<A HREF="change.html#&lt;">&lt;</A>' would never be
+	preferred.
+
+	Suppose you
+<B>		:let b:match_words = 'if:end if'</B>
+ 	(Note the space!) and hit &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; with the cursor at the end of &quot;end if&quot;.
+	Then &quot;if&quot; matches, which is probably not what you want, but if the
+	cursor starts on the &quot;end &quot; then &quot;end if&quot; is chosen.  (You can avoid
+	this problem by using a more complicated <A HREF="pattern.html#pattern">pattern</A>.)
+
+If there is no match, the cursor does not move.  (Before version 1.13 of the
+<A HREF="usr_41.html#script">script</A>, <A HREF="motion.html#it">it</A> would fall back on the usual behavior of |<A HREF="motion.html#&#37;">&#37;</A>|).  If debugging is
+turned on, the matched bit of text is saved <A HREF="motion.html#as">as</A> |<A HREF="#b:match_match">b:match_match</A>| and the cursor
+column of the start of the match is saved <A HREF="motion.html#as">as</A> |<A HREF="#b:match_col">b:match_col</A>|.
+
+Next, the <A HREF="usr_41.html#script">script</A> looks through |<A HREF="#b:match_words">b:match_words</A>| (original and parsed versions)
+for the group and <A HREF="pattern.html#pattern">pattern</A> that match.  If debugging is turned on, the group is
+saved <A HREF="motion.html#as">as</A> |<A HREF="#b:match_ini">b:match_ini</A>| (the first <A HREF="pattern.html#pattern">pattern</A>) and |<A HREF="#b:match_tail">b:match_tail</A>| (the rest).  If
+there are backrefs then, in addition, the matching <A HREF="pattern.html#pattern">pattern</A> is saved <A HREF="motion.html#as">as</A>
+|<A HREF="#b:match_word">b:match_word</A>| and a table of translations is saved <A HREF="motion.html#as">as</A> |<A HREF="#b:match_table">b:match_table</A>|.  If
+there are backrefs, these are determined from the matching <A HREF="pattern.html#pattern">pattern</A> and
+|<A HREF="#b:match_match">b:match_match</A>| and substituted into each <A HREF="pattern.html#pattern">pattern</A> in the matching group.
+
+The <A HREF="usr_41.html#script">script</A> decides whether to search forwards or backwards and chooses
+arguments for the |<A HREF="eval.html#searchpair()">searchpair()</A>| function.  Then, the cursor is moved to the
+start of the match, and |<A HREF="eval.html#searchpair()">searchpair()</A>| is called.  By default, matching
+structures inside strings and comments are ignored.  This can be changed by
+setting |<A HREF="#b:match_skip">b:match_skip</A>|.
+
+==============================================================================
+
+2. Activation						*<A NAME="matchit-activate"></A><B>matchit-activate</B>*
+
+For a new language, you can add a line such <A HREF="motion.html#as">as</A>
+<B>	let b:match_words = '\&lt;foo\&gt;:\&lt;bar\&gt;'</B>
+to the corresponding |<A HREF="usr_43.html#filetype-plugin">filetype-plugin</A>|.  See |<A HREF="#b:match_words">b:match_words</A>| below for how
+this variable is interpreted.
+
+==============================================================================
+
+3. Configuration					*<A NAME="matchit-configure"></A><B>matchit-configure</B>*
+
+There are several <A HREF="eval.html#variables">variables</A> that govern the behavior of <A HREF="#matchit.vim">matchit.vim</A>.  Note
+that these are <A HREF="eval.html#variables">variables</A> local to the buffer, not <A HREF="options.html#options">options</A>, so use |<A HREF="eval.html#:let">:let</A>| to
+define them, not |<A HREF="options.html#:set">:set</A>|.  Some of these <A HREF="eval.html#variables">variables</A> have values that matter; for
+others, <A HREF="motion.html#it">it</A> only matters whether the variable has been defined.  All of these
+can be defined in the |<A HREF="usr_43.html#filetype-plugin">filetype-plugin</A>| or <A HREF="autocmd.html#autocommand">autocommand</A> that defines
+|<A HREF="#b:match_words">b:match_words</A>| or &quot;on the fly.&quot;
+
+The main variable is |<A HREF="#b:match_words">b:match_words</A>|.  It is described in the section below on
+supporting a new language.
+
+
+				*<A NAME="MatchError"></A><B>MatchError</B>* *<A NAME="matchit-hl"></A><B>matchit-hl</B>* *<A NAME="matchit-highlight"></A><B>matchit-highlight</B>*
+<A HREF="#MatchError">MatchError</A> is the highlight group for error <A HREF="message.html#messages">messages</A> from the <A HREF="usr_41.html#script">script</A>.  By
+default, <A HREF="motion.html#it">it</A> is linked to WarningMsg.  If you <A HREF="diff.html#do">do</A> not want to be bothered by
+error <A HREF="message.html#messages">messages</A>, you can define this to be something invisible.  For example,
+if you use the <A HREF="gui.html#GUI">GUI</A> version of Vim and your command line is normally white, you
+can <A HREF="diff.html#do">do</A>
+<B>	:hi MatchError guifg=white guibg=white</B>
+ 
+
+						*<A NAME="b:match_ignorecase"></A><B>b:match_ignorecase</B>*
+If you
+<B>	:let b:match_ignorecase = 1</B>
+then <A HREF="#matchit.vim">matchit.vim</A> acts <A HREF="motion.html#as">as</A> if <A HREF="options.html#'ignorecase'">'ignorecase'</A> is set: for example, &quot;end&quot; and &quot;END&quot;
+are equivalent.  If you
+<B>	:let b:match_ignorecase = 0</B>
+then <A HREF="#matchit.vim">matchit.vim</A> treats &quot;end&quot; and &quot;END&quot; differently.  (There will be no
+b:match_infercase option unless someone requests <A HREF="motion.html#it">it</A>.)
+
+
+						*<A NAME="b:match_debug"></A><B>b:match_debug</B>*
+Define <A HREF="#b:match_debug">b:match_debug</A> if you want debugging information to be saved.  See
+|<A HREF="#matchit-debug">matchit-debug</A>|, below.
+
+
+						*<A NAME="b:match_skip"></A><B>b:match_skip</B>*
+If <A HREF="#b:match_skip">b:match_skip</A> is defined, <A HREF="motion.html#it">it</A> is passed <A HREF="motion.html#as">as</A> the skip argument to
+|<A HREF="eval.html#searchpair()">searchpair()</A>|.  This controls when matching structures are skipped, or
+ignored.  By default, they are ignored inside comments and strings, <A HREF="motion.html#as">as</A>
+determined by the |<A HREF="syntax.html#syntax">syntax</A>| mechanism.  (If syntax highlighting is turned off,
+nothing is skipped.)  You can set <A HREF="#b:match_skip">b:match_skip</A> to a <A HREF="eval.html#string">string</A>, which evaluates to
+a non-zero, numerical value if the match is to be skipped or zero if the match
+should not be skipped.  In addition, the following special values are
+supported by <A HREF="#matchit.vim">matchit.vim</A>:
+	s:foo becomes (current <A HREF="syntax.html#syntax">syntax</A> item) =~ foo
+	S:foo becomes (current <A HREF="syntax.html#syntax">syntax</A> item) !~ foo
+	r:foo becomes (line before cursor) =~ foo
+	R:foo becomes (line before cursor) !~ foo
+(The &quot;<A HREF="change.html#s">s</A>&quot; is meant to suggest &quot;<A HREF="syntax.html#syntax">syntax</A>&quot;, and the &quot;<A HREF="change.html#r">r</A>&quot; is meant to suggest
+&quot;regular expression&quot;.)
+
+Examples:
+
+	You can get the default behavior with
+<B>		:let b:match_skip = 's:comment\|string'</B>
+ 
+	If you want to skip matching structures unless they are at the start
+	of the line (ignoring <A HREF="pattern.html#whitespace">whitespace</A>) then you can
+<B>		:let b:match_skip = 'R:^\s*'</B>
+ 	Do not <A HREF="diff.html#do">do</A> this if strings or comments can span several lines, since
+	the normal <A HREF="syntax.html#syntax">syntax</A> checking will not be done if you set <A HREF="#b:match_skip">b:match_skip</A>.
+
+	In LaTeX, since &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; is used <A HREF="motion.html#as">as</A> the comment character, you can
+<B>		:let b:match_skip = 'r:%'</B>
+ 	Unfortunately, this will skip anything after &quot;\&#37;&quot;, an escaped &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;.  To
+	allow for this, and also &quot;\\&#37;&quot; (an excaped <A HREF="intro.html#backslash">backslash</A> followed by the
+	comment character) you can
+<B>		:let b:match_skip = 'r:\(^\|[^\\]\)\(\\\\\)*%'</B>
+ 
+	See the $VIMRUNTIME/ftplugin/vim.vim for an example that uses both
+	<A HREF="syntax.html#syntax">syntax</A> and a regular <A HREF="eval.html#expression">expression</A>.
+
+==============================================================================
+
+4. Supporting a New Language				*<A NAME="matchit-newlang"></A><B>matchit-newlang</B>*
+
+							*<A NAME="b:match_words"></A><B>b:match_words</B>*
+In order for <A HREF="#matchit.vim">matchit.vim</A> to support a new language, you must define a suitable
+<A HREF="pattern.html#pattern">pattern</A> for |<A HREF="#b:match_words">b:match_words</A>|.  You may also want to set some of the
+|<A HREF="#matchit-configure">matchit-configure</A>| <A HREF="eval.html#variables">variables</A>, <A HREF="motion.html#as">as</A> described above.  If your language has a
+complicated <A HREF="syntax.html#syntax">syntax</A>, or many keywords, you will need to know something about
+Vim's |<A HREF="pattern.html#regular-expression">regular-expression</A>|s.
+
+The format for |<A HREF="#b:match_words">b:match_words</A>| is similar to that of the <A HREF="options.html#'matchpairs'">'matchpairs'</A> option:
+<A HREF="motion.html#it">it</A> is a comma (,)-separated <A HREF="eval.html#list">list</A> of groups; each group is a colon(:)-separated
+<A HREF="eval.html#list">list</A> of patterns (regular expressions).  Commas and backslashes that are part
+of a <A HREF="pattern.html#pattern">pattern</A> should be escaped with backslashes ('\:' and '\,').  It is OK to
+have only one group; the effect is undefined if a group has only one <A HREF="pattern.html#pattern">pattern</A>.
+A simple example is
+<B>	:let b:match_words = '\&lt;if\&gt;:\&lt;endif\&gt;,'</B>
+<B>		\ . '\&lt;while\&gt;:\&lt;continue\&gt;:\&lt;break\&gt;:\&lt;endwhile\&gt;'</B>
+(In Vim regular expressions, |<A HREF="pattern.html#/\&lt;">/\&lt;</A>| and |<A HREF="pattern.html#/\&gt;">/\&gt;</A>| denote <A HREF="motion.html#word">word</A> boundaries.  Thus &quot;if&quot;
+matches the end of &quot;endif&quot; but &quot;\&lt;if\&gt;&quot; does not.)  Then banging on the &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;
+key will bounce the cursor between &quot;if&quot; and the matching &quot;endif&quot;; and from
+&quot;while&quot; to any matching &quot;continue&quot; or &quot;break&quot;, then to the matching &quot;endwhile&quot;
+and back to the &quot;while&quot;.  It is almost always easier to use |<A HREF="eval.html#literal-string">literal-string</A>|s
+(single <A HREF="quotes.html#quotes">quotes</A>) <A HREF="motion.html#as">as</A> above:  '\&lt;if\&gt;' rather than &quot;\\&lt;if\\&gt;&quot; and so on.
+
+Exception:  If the &quot;<A HREF="cmdline.html#:">:</A>&quot; character does not appear in <A HREF="#b:match_words">b:match_words</A>, then <A HREF="motion.html#it">it</A> is
+treated <A HREF="motion.html#as">as</A> an <A HREF="eval.html#expression">expression</A> to be evaluated.  For example,
+<B>	:let b:match_words = 'GetMatchWords()'</B>
+allows you to define a function.  This can return a different <A HREF="eval.html#string">string</A> depending
+on the current <A HREF="syntax.html#syntax">syntax</A>, for example.
+
+Once you have defined the appropriate value of |<A HREF="#b:match_words">b:match_words</A>|, you will
+probably want to have this set automatically each time you edit the
+appropriate file type.  The recommended way to <A HREF="diff.html#do">do</A> this is by adding the
+definition to a |<A HREF="usr_43.html#filetype-plugin">filetype-plugin</A>| file.
+
+Tips: Be careful that your initial <A HREF="pattern.html#pattern">pattern</A> does not match your final <A HREF="pattern.html#pattern">pattern</A>.
+See the example above for the use of word-boundary expressions.  It is usually
+better to use &quot;.\{-}&quot; (as many <A HREF="motion.html#as">as</A> necessary) instead of &quot;.*&quot; (as many <A HREF="motion.html#as">as</A>
+possible).  See |<A HREF="pattern.html#/\{-">/\{-</A>|.  For example, in the <A HREF="eval.html#string">string</A> &quot;&lt;tag&gt;label&lt;/tag&gt;&quot;, &quot;&lt;.*&gt;&quot;
+matches the whole <A HREF="eval.html#string">string</A> whereas &quot;&lt;.\{-}&gt;&quot; and &quot;&lt;[^&gt;]*&gt;&quot; match &quot;&lt;tag&gt;&quot; and
+&quot;&lt;/tag&gt;&quot;.
+
+
+				*<A NAME="matchit-spaces"></A><B>matchit-spaces</B>* *<A NAME="matchit-s:notend"></A><B>matchit-s:notend</B>*
+If &quot;if&quot; is to be paired with &quot;end if&quot; (Note the space!) then <A HREF="motion.html#word">word</A> boundaries
+are not enough.  Instead, define a regular <A HREF="eval.html#expression">expression</A> s:notend that will match
+anything but &quot;end&quot; and use <A HREF="motion.html#it">it</A> <A HREF="motion.html#as">as</A> follows:
+<B>	:let s:notend = '\%(\&lt;end\s\+\)\@&lt;!'</B>
+<B>	:let b:match_words = s:notend . '\&lt;if\&gt;:\&lt;end\s\+if\&gt;'</B>
+
+ 							*<A NAME="matchit-s:sol"></A><B>matchit-s:sol</B>*
+This is a simplified version of what is done for Ada.  The s:notend is a
+|<A HREF="eval.html#script-variable">script-variable</A>|.  Similarly, you may want to define a start-of-line regular
+<A HREF="eval.html#expression">expression</A>
+<B>	:let s:sol = '\%(^\|;\)\s*'</B>
+if keywords are only recognized after the start of a line or after a
+semicolon (;), with optional white space.
+
+
+					*<A NAME="matchit-backref"></A><B>matchit-backref</B>* *<A NAME="matchit-\1"></A><B>matchit-\1</B>*
+In any group, the expressions `\1`, `\2`, <A HREF="eval.html#...">...</A>, `\9` (see |<A HREF="pattern.html#/\1">/\1</A>|) refer to parts of the
+INITIAL <A HREF="pattern.html#pattern">pattern</A> enclosed in escaped parentheses.  These are referred to <A HREF="motion.html#as">as</A>
+back references, or backrefs.  For example,
+<B>	:let b:match_words = '\&lt;b\(o\+\)\&gt;:\(h\)\1\&gt;'</B>
+means that &quot;bo&quot; pairs with &quot;ho&quot; and &quot;boo&quot; pairs with &quot;hoo&quot; and so on.  Note
+that &quot;\1&quot; does not refer to the &quot;\(h\)&quot; in this example.  If you have
+&quot;\(nested \(parentheses\)\) then &quot;\d&quot; refers to the d-th &quot;\(&quot; and everything
+up to and including the matching &quot;\)&quot;:  in &quot;\(nested\(parentheses\)\)&quot;, &quot;\1&quot;
+refers to everything and &quot;\2&quot; refers to &quot;\(parentheses\)&quot;.  If you use a
+variable such <A HREF="motion.html#as">as</A> `s:notend` or `s:sol` in the previous <A HREF="motion.html#paragraph">paragraph</A> then remember
+to <A HREF="intro.html#count">count</A> any &quot;\(&quot; patterns in this variable.  You <A HREF="diff.html#do">do</A> not have to <A HREF="intro.html#count">count</A> groups
+defined by |<A HREF="pattern.html#/\&#37;(\)">/\&#37;(\)</A>|.
+
+It should be possible to resolve back references from any <A HREF="pattern.html#pattern">pattern</A> in the
+group.  For example,
+<B>	:let b:match_words = '\(foo\)\(bar\):more\1:and\2:end\1\2'</B>
+would not work because &quot;\2&quot; cannot be determined from &quot;morefoo&quot; and &quot;\1&quot;
+cannot be determined from &quot;andbar&quot;.  On the other hand,
+<B>	:let b:match_words = '\(\(foo\)\(bar\)\):\3\2:end\1'</B>
+should work (and have the same effect <A HREF="motion.html#as">as</A> &quot;foobar:barfoo:endfoobar&quot;), although
+this has not been thoroughly tested.
+
+You can use |<A HREF="pattern.html#/zero-width">/zero-width</A>| patterns such <A HREF="motion.html#as">as</A> |<A HREF="pattern.html#/\@&lt;=">/\@&lt;=</A>| and |<A HREF="pattern.html#/\zs">/\zs</A>|.  (The latter has
+not been thouroughly tested in <A HREF="#matchit.vim">matchit.vim</A>.)  For example, if the keyword &quot;if&quot;
+must occur at the start of the line, with optional white space, you might use
+the <A HREF="pattern.html#pattern">pattern</A> &quot;\(^\s*\)\@&lt;=if&quot; so that the cursor will end on the &quot;<A HREF="insert.html#i">i</A>&quot; instead of
+at the start of the line.  For another example, if HTML had only one <A HREF="tagsrch.html#tag">tag</A> then
+one could
+<B>	:let b:match_words = '&lt;:&gt;,&lt;\@&lt;=tag&gt;:&lt;\@&lt;=/tag&gt;'</B>
+so that &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; can bounce between matching &quot;<A HREF="change.html#&lt;">&lt;</A>&quot; and &quot;<A HREF="change.html#&gt;">&gt;</A>&quot; pairs or (starting on
+&quot;<A HREF="tagsrch.html#tag">tag</A>&quot; or &quot;/tag&quot;) between matching <A HREF="tagsrch.html#tags">tags</A>.  Without the |<A HREF="pattern.html#/\@&lt;=">/\@&lt;=</A>|, the <A HREF="usr_41.html#script">script</A> would
+bounce from &quot;<A HREF="tagsrch.html#tag">tag</A>&quot; to the &quot;<A HREF="change.html#&lt;">&lt;</A>&quot; in &quot;&lt;/tag&gt;&quot;, and another &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; would not take you
+back to where you started.
+
+
+DEBUGGING				*<A NAME="matchit-debug"></A><B>matchit-debug</B>* *<A NAME=":MatchDebug"></A><B>:MatchDebug</B>*
+
+If you are having trouble figuring out the appropriate definition of
+|<A HREF="#b:match_words">b:match_words</A>| then you can take advantage of the same information I use when
+debugging the <A HREF="usr_41.html#script">script</A>.  This is especially true if you are not sure whether
+your patterns or my <A HREF="usr_41.html#script">script</A> are at fault!  To make this more convenient, I have
+made the command <A HREF="#:MatchDebug">:MatchDebug</A>, which defines the variable |<A HREF="#b:match_debug">b:match_debug</A>| and
+creates a Matchit menu.  This menu makes <A HREF="motion.html#it">it</A> convenient to check the values of
+the <A HREF="eval.html#variables">variables</A> described below.  You will probably also want to read
+|<A HREF="#matchit-details">matchit-details</A>| above.
+
+Defining the variable |<A HREF="#b:match_debug">b:match_debug</A>| causes the <A HREF="usr_41.html#script">script</A> to set the following
+<A HREF="eval.html#variables">variables</A>, each time you hit the &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; key.  Several of these are only defined
+if |<A HREF="#b:match_words">b:match_words</A>| includes backrefs.
+
+
+							*<A NAME="b:match_pat"></A><B>b:match_pat</B>*
+The <A HREF="#b:match_pat">b:match_pat</A> variable is set to |<A HREF="#b:match_words">b:match_words</A>| with backrefs parsed.
+
+							*<A NAME="b:match_match"></A><B>b:match_match</B>*
+The <A HREF="#b:match_match">b:match_match</A> variable is set to the bit of text that is recognized <A HREF="motion.html#as">as</A> a
+match.
+
+							*<A NAME="b:match_col"></A><B>b:match_col</B>*
+The <A HREF="#b:match_col">b:match_col</A> variable is set to the cursor column of the start of the
+matching text.
+
+							*<A NAME="b:match_wholeBR"></A><B>b:match_wholeBR</B>*
+The <A HREF="#b:match_wholeBR">b:match_wholeBR</A> variable is set to the comma-separated group of patterns
+that matches, with backrefs unparsed.
+
+							*<A NAME="b:match_iniBR"></A><B>b:match_iniBR</B>*
+The <A HREF="#b:match_iniBR">b:match_iniBR</A> variable is set to the first <A HREF="pattern.html#pattern">pattern</A> in |<A HREF="#b:match_wholeBR">b:match_wholeBR</A>|.
+
+							*<A NAME="b:match_ini"></A><B>b:match_ini</B>*
+The <A HREF="#b:match_ini">b:match_ini</A> variable is set to the first <A HREF="pattern.html#pattern">pattern</A> in |<A HREF="#b:match_wholeBR">b:match_wholeBR</A>|,
+with backrefs resolved from |<A HREF="#b:match_match">b:match_match</A>|.
+
+							*<A NAME="b:match_tail"></A><B>b:match_tail</B>*
+The <A HREF="#b:match_tail">b:match_tail</A> variable is set to the remaining patterns in
+|<A HREF="#b:match_wholeBR">b:match_wholeBR</A>|, with backrefs resolved from |<A HREF="#b:match_match">b:match_match</A>|.
+
+							*<A NAME="b:match_word"></A><B>b:match_word</B>*
+The <A HREF="#b:match_word">b:match_word</A> variable is set to the <A HREF="pattern.html#pattern">pattern</A> from |<A HREF="#b:match_wholeBR">b:match_wholeBR</A>| that
+matches |<A HREF="#b:match_match">b:match_match</A>|.
+
+							*<A NAME="b:match_table"></A><B>b:match_table</B>*
+The back reference '\'.d refers to the same thing <A HREF="motion.html#as">as</A> '\'.b:match_table[d] in
+|<A HREF="#b:match_word">b:match_word</A>|.
+
+==============================================================================
+
+5. Known Bugs and Limitations				*<A NAME="matchit-bugs"></A><B>matchit-bugs</B>*
+
+The various |<A HREF="map.html#:vmap">:vmap</A>|<A HREF="change.html#s">s</A> defined in the <A HREF="usr_41.html#script">script</A> (&#37;, |<A HREF="#g&#37;">g&#37;</A>|, |<A HREF="#[&#37;">[&#37;</A>|, |<A HREF="#]&#37;">]&#37;</A>|, |<A HREF="#a&#37;">a&#37;</A>|) may
+have undesired effects in Select mode |<A HREF="visual.html#Select-mode-mapping">Select-mode-mapping</A>|.  At least, if you
+want to replace the selection with any character in &quot;ag&#37;[]&quot; there will be a
+pause of |<A HREF="options.html#'updatetime'">'updatetime'</A>| first.
+
+It would be <A HREF="todo.html#nice">nice</A> if &quot;<A HREF="change.html#\0">\0</A>&quot; were recognized <A HREF="motion.html#as">as</A> the entire <A HREF="pattern.html#pattern">pattern</A>.  That is, <A HREF="motion.html#it">it</A>
+would be <A HREF="todo.html#nice">nice</A> if &quot;foo:\end\0&quot; had the same effect <A HREF="motion.html#as">as</A> &quot;\(foo\):\end\1&quot;.
+
+==============================================================================
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Fri Jun  5 08:28:51 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/98053f0f9fc3405e48ba3a9089a29fd23b3b414c"><code>98053f0</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>
