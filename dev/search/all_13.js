@@ -206,6 +206,7 @@ var searchData=
   ['set_5fcontext_5fin_5fsyntax_5fcmd',['set_context_in_syntax_cmd',['../syntax_8c.html#a5bbac651ac1846e2cad90436f00e3173',1,'syntax.c']]],
   ['set_5fcurbuf',['set_curbuf',['../buffer_8c.html#a8bd275cc0cfd1693b99babb4c80ebbb4',1,'buffer.c']]],
   ['set_5fempty_5frows',['set_empty_rows',['../move_8c.html#aca1c4ca1030e0766b68b620b9c825f9f',1,'move.c']]],
+  ['set_5fencoding',['set_encoding',['../structui__t.html#adfdb9141fa71907f523b4d02ad02d35f',1,'ui_t']]],
   ['set_5ferrorlist',['set_errorlist',['../quickfix_8c.html#a3d7c9ea49b50fb88da79f3fbd996c2c7',1,'quickfix.c']]],
   ['set_5fexpr_5fline',['set_expr_line',['../ops_8c.html#a51c72908e5b3c760e97874426c530a3d',1,'ops.c']]],
   ['set_5ffile_5foptions',['set_file_options',['../fileio_8c.html#a2705a8d679e28658bd6aecfad851fab3',1,'fileio.c']]],

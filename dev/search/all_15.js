@@ -139,6 +139,7 @@ var searchData=
   ['ui_5fstop_5fhighlight',['ui_stop_highlight',['../ui_8c.html#abb7018339714d628f348aba7ecda5462',1,'ui.c']]],
   ['ui_5fsuspend',['ui_suspend',['../ui_8c.html#a7294fbe8b093c6769ee1fa54cf814cf4',1,'ui.c']]],
   ['ui_5ft',['ui_t',['../structui__t.html',1,'']]],
+  ['ui_5fupdate_5fencoding',['ui_update_encoding',['../ui_8c.html#abd12d98da7aac3ca55d0e7ab4add3b41',1,'ui.c']]],
   ['ui_5fvisual_5fbell',['ui_visual_bell',['../ui_8c.html#a771a58a8f911b94e38084c7233d34eec',1,'ui.c']]],
   ['uidata',['UIData',['../structUIData.html',1,'']]],
   ['uint32_5ft_5feq',['uint32_t_eq',['../map_8c.html#a68518d3a76fafb4452e24a0408fdc676',1,'map.c']]],
