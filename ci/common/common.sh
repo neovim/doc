@@ -113,18 +113,17 @@ commit_subtree() {(
     git config --local user.name ${GIT_NAME}
     git config --local user.email ${GIT_EMAIL}
 
-    git commit -m "${CI_TARGET//-/ }: Automatic update." && {
-      until (git pull --rebase git://github.com/${!repo} ${!branch} &&
-             git push https://${GH_TOKEN}@github.com/${!repo} ${!branch} >/dev/null 2>&1 &&
-             echo "Pushed to ${!repo} ${!branch}."); do
-        echo "Retry pushing to ${!repo} ${!branch}."
-        sleep 1
-      done
-    } || echo "No changes for ${CI_TARGET//-/ }."
+    git commit -m "${CI_TARGET//-/ }: Automatic update." || true
+    until (git pull --rebase git://github.com/${!repo} ${!branch} &&
+           git push https://${GH_TOKEN}@github.com/${!repo} ${!branch} >/dev/null 2>&1 &&
+           echo "Pushed to ${!repo} ${!branch}."); do
+      echo "Retry pushing to ${!repo} ${!branch}."
+      sleep 1
+    done
     return
-  } || prompt_key_local "Build finished, do you want to commit and push the results to ${!repo} ${!branch} (change by setting ${repo}/${branch})?" && {
+  } || prompt_key_local "Build finished, do you want to commit and push the results to ${!repo}:${!branch} (change by setting ${repo}/${branch})?" && {
     # Commit in local builds.
-    git commit
+    git commit || true
     git push ssh://git@github.com/${!repo} ${!branch}
   }
 )}

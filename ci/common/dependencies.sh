@@ -46,3 +46,11 @@ install_gcc_multilib() {
   ln -fs ${DEPS_BIN_DIR}/gcc ${DEPS_BIN_DIR}/cc
   ln -fs ${DEPS_BIN_DIR}/g++ ${DEPS_BIN_DIR}/c++
 }
+
+install_git_bzr() {
+  echo "Installing git-bzr-ng..."
+  sudo add-apt-repository "deb http://ppa.launchpad.net/fwalch/git-bzr-ng/ubuntu precise main"
+  sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AF82DF84
+  sudo apt-get update -qq
+  sudo apt-get install -y -q git-bzr-ng
+}
