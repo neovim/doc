@@ -53,12 +53,12 @@ Nvim support for remote plugins 		  *<A NAME="remote-plugin"></A><B>remote-plugi
 1. Introduction					    *<A NAME="remote-plugin-intro"></A><B>remote-plugin-intro</B>*
 
 Extensibility is a primary goal of Nvim. Any programming language may be used
-to extend <A HREF="nvim_intro.html#nvim">nvim</A> without changes to <A HREF="nvim_intro.html#nvim">nvim</A> itself. This is achieved with remote
+to extend Nvim without changes to Nvim itself. This is achieved with remote
 plugins, coprocesses that have a direct communication channel (via
 |<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>|) with the Nvim process.
 
-Even though these plugins are running in separate processes they can call, be
-called, and receive events just <A HREF="motion.html#as">as</A> if the code was being executed in the main
+Even though these plugins run in separate processes they can call, be called,
+and receive events just <A HREF="motion.html#as">as</A> if the plugin's code were executed in the main
 process.
 
 ==============================================================================
@@ -67,22 +67,21 @@ process.
 
 While plugins can be implemented <A HREF="motion.html#as">as</A> arbitrary programs that communicate
 directly with the high-level Nvim API and are called via |<A HREF="eval.html#rpcrequest()">rpcrequest()</A>| and
-|<A HREF="eval.html#rpcnotify()">rpcnotify()</A>|, that is not the best approach available. Instead, developers
-should first check if a <A HREF="usr_05.html#plugin">plugin</A> host implementation is available for their
-chosen programming language.
+|<A HREF="eval.html#rpcnotify()">rpcnotify()</A>|, that is not the best approach. Instead, developers should first
+check whether a <A HREF="usr_05.html#plugin">plugin</A> host is available for their chosen programming language.
 
-Plugin hosts are programs that provide a high level environment for plugins,
+Plugin hosts are programs that provide a high-level environment for plugins,
 taking care of most boilerplate involved in defining commands, autocmds, and
 <A HREF="eval.html#functions">functions</A> that are implemented over |<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>| connections. Hosts are
 loaded only when one of their registered plugins require <A HREF="motion.html#it">it</A>, keeping Nvim's
-<A HREF="starting.html#startup">startup</A> <A HREF="motion.html#as">as</A> fast <A HREF="motion.html#as">as</A> possible if many plugins/hosts are installed.
+<A HREF="starting.html#startup">startup</A> <A HREF="motion.html#as">as</A> fast <A HREF="motion.html#as">as</A> possible, even if many plugins/hosts are installed.
 
 ==============================================================================
 
 3. Example					    *<A NAME="remote-plugin-example"></A><B>remote-plugin-example</B>*
 
 The best way to learn about remote plugins is with an example, so let's see
-what a <A HREF="if_pyth.html#Python">Python</A> <A HREF="usr_05.html#plugin">plugin</A> looks like. This <A HREF="usr_05.html#plugin">plugin</A> exports a command, a function and
+what a <A HREF="if_pyth.html#Python">Python</A> <A HREF="usr_05.html#plugin">plugin</A> looks like. This <A HREF="usr_05.html#plugin">plugin</A> exports a command, a function, and
 an autocmd. The <A HREF="usr_05.html#plugin">plugin</A> is called 'Limit', and all <A HREF="motion.html#it">it</A> does is limit the number
 of requests made to <A HREF="motion.html#it">it</A>. Here's the <A HREF="usr_05.html#plugin">plugin</A> source code:
 
@@ -121,17 +120,17 @@ of requests made to <A HREF="motion.html#it">it</A>. Here's the <A HREF="usr_05.
 <B>            self.calls += 1</B>
  
 
-As can be seen, the <A HREF="usr_05.html#plugin">plugin</A> is implemented using pure <A HREF="if_pyth.html#Python">Python</A> idioms (classes,
-methods, and decorators), the translation between these language-specific
-idioms to vimscript occurs while the <A HREF="usr_05.html#plugin">plugin</A> manifest is being generated (see
-below).
+As can be seen, the <A HREF="usr_05.html#plugin">plugin</A> is implemented using idiomatic <A HREF="if_pyth.html#Python">Python</A> (classes,
+methods, and decorators). The translation between these language-specific
+idioms to Vimscript occurs while the <A HREF="usr_05.html#plugin">plugin</A> manifest is being generated (see
+the next section).
 
 Notice that the exported command and autocmd are defined with the &quot;sync&quot; flag,
 which affects how Nvim calls the <A HREF="usr_05.html#plugin">plugin</A>: with &quot;sync&quot; the |<A HREF="eval.html#rpcrequest()">rpcrequest()</A>|
 function is used, which will block Nvim until the handler function returns a
 value. Without the &quot;sync&quot; flag, the call is made using a fire and forget
-approach with |<A HREF="eval.html#rpcnotify()">rpcnotify()</A>| (return values or exceptions raised in the handler
-function are ignored).
+approach with |<A HREF="eval.html#rpcnotify()">rpcnotify()</A>|, meaning return values or exceptions raised in the
+handler function are ignored.
 
 To test the above <A HREF="usr_05.html#plugin">plugin</A>, <A HREF="motion.html#it">it</A> must be saved in &quot;rplugin/python&quot; in a
 <A HREF="options.html#'runtimepath'">'runtimepath'</A> directory (~/.nvim/rplugin/python/limit.py for example). Then,
@@ -142,35 +141,34 @@ the remote <A HREF="usr_05.html#plugin">plugin</A> manifest must be generated wi
 4. Remote <A HREF="usr_05.html#plugin">plugin</A> manifest			    *<A NAME="remote-plugin-manifest"></A><B>remote-plugin-manifest</B>*
 
 Just installing remote plugins to &quot;rplugin/{host}&quot; isn't enough for them to be
-automatically loaded when required. The `:UpdateRemotePlugins` command must be
-executed every time a remote <A HREF="usr_05.html#plugin">plugin</A> is installed, updated, or deleted.
+automatically loaded when required. You must execute `:UpdateRemotePlugins`
+every time a remote <A HREF="usr_05.html#plugin">plugin</A> is installed, updated, or deleted.
 
-`:UpdateRemotePlugins` will generate the remote <A HREF="usr_05.html#plugin">plugin</A> manifest, a special
-vimscript file containing declarations for all vimscript entities
+`:UpdateRemotePlugins` generates the remote <A HREF="usr_05.html#plugin">plugin</A> manifest, a special
+Vimscript file containing declarations for all Vimscript entities
 (commands/autocommands/functions) defined by all remote plugins, with each
-entity associated with the host and <A HREF="usr_05.html#plugin">plugin</A> path. The manifest can be seen <A HREF="motion.html#as">as</A> a
-generated extension to the user's <A HREF="starting.html#vimrc">vimrc</A> (it even has the <A HREF="starting.html#vimrc">vimrc</A> filename
-prepended).
+entity associated with the host and <A HREF="usr_05.html#plugin">plugin</A> path. The manifest is a generated
+extension to the user's <A HREF="starting.html#vimrc">vimrc</A> (it even has the <A HREF="starting.html#vimrc">vimrc</A> filename prepended).
 
-The manifest declarations are nothing but calls to the remote#host#RegisterPlugin
-function, which will take care of bootstrapping the host <A HREF="motion.html#as">as</A> soon <A HREF="motion.html#as">as</A> the
-declared command, <A HREF="autocmd.html#autocommand">autocommand</A>, or function is used for the first time.
+Manifest declarations are just calls to the `remote#host#RegisterPlugin`
+function, which takes care of bootstrapping the host <A HREF="motion.html#as">as</A> soon <A HREF="motion.html#as">as</A> the declared
+command, <A HREF="autocmd.html#autocommand">autocommand</A>, or function is used for the first time.
 
 The manifest generation step is necessary to keep Nvim's <A HREF="starting.html#startup">startup</A> fast in
 situations where a user has remote plugins with different hosts. For example,
-say a user has three plugins, for <A HREF="if_pyth.html#Python">Python</A>, java and .NET hosts respectively. If
+say a user has three plugins, for <A HREF="if_pyth.html#Python">Python</A>, Java and .NET hosts respectively. If
 we were to load all three plugins at <A HREF="starting.html#startup">startup</A>, then three language runtimes
-would also be spawned which could take seconds!
+would also be spawned, which could take seconds!
 
-With the manifest, each host will only be loaded when required. Continuing
-with the example, say the java <A HREF="usr_05.html#plugin">plugin</A> is a semantic completion engine for java
-source files. If <A HREF="motion.html#it">it</A> defines the <A HREF="autocmd.html#autocommand">autocommand</A> &quot;<A HREF="autocmd.html#BufEnter">BufEnter</A> *.java&quot;, then the java
-host will only be spawned when files ending with &quot;.java&quot; are loaded.
+With the manifest, each host will only be loaded when required. Continuing with
+the example, say the Java <A HREF="usr_05.html#plugin">plugin</A> is a semantic completion engine for Java code.
+If <A HREF="motion.html#it">it</A> defines the <A HREF="autocmd.html#autocommand">autocommand</A> &quot;<A HREF="autocmd.html#BufEnter">BufEnter</A> *.java&quot;, then the Java host is spawned
+only when Nvim loads a buffer matching &quot;*.java&quot;.
 
-If the explicit call to `:UpdateRemotePlugins` seems incovenient, try to see
-<A HREF="motion.html#it">it</A> like this: It's a way to give IDE-like capabilities to <A HREF="nvim_intro.html#nvim">nvim</A> while still
-keeping <A HREF="motion.html#it">it</A> fast and lightweight for general use. It can also be seen <A HREF="motion.html#as">as</A>
-analogous to the |<A HREF="helphelp.html#:helptags">:helptags</A>| facility.
+If the explicit call to `:UpdateRemotePlugins` seems incovenient, try to see <A HREF="motion.html#it">it</A>
+like this: It's a way to provide IDE capabilities in Nvim while still keeping
+<A HREF="motion.html#it">it</A> fast and lightweight for general use. It's also analogous to the |<A HREF="helphelp.html#:helptags">:helptags</A>|
+command.
 
 ==============================================================================
 <A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
@@ -179,7 +177,7 @@ analogous to the |<A HREF="helphelp.html#:helptags">:helptags</A>| facility.
 
     <footer>
       <div class="container">
-        Generated Wed Jun 24 08:23:30 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/91fcd3378750080fb94d3030a6fc29a4f86b15e8"><code>91fcd33</code></a>.
+        Generated Thu Jun 25 08:17:54 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/34a5efd7a9a5c093207ab9d235719de546ff7479"><code>34a5efd</code></a>.
       </div>
     </footer>
   </body>
