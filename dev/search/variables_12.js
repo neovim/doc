@@ -139,7 +139,7 @@ var searchData=
   ['si_5ftrans_5fid',['si_trans_id',['../structstate__item.html#a8024645a02c21e4ea510af22bc91b478',1,'state_item']]],
   ['si_5fverbose',['si_verbose',['../structspellinfo__S.html#a74246256bb478e3eecc78e7e98cd3e24',1,'spellinfo_S']]],
   ['sid',['SID',['../structcaller__scope.html#a69dfe3204c7aa7cc5d3c4d675811128b',1,'caller_scope']]],
-  ['silent',['silent',['../structVimMenu.html#ac7129f99b422189787580c4c170d9719',1,'VimMenu']]],
+  ['silent',['silent',['../structVimMenu.html#ac2f2a6f290f1058e02457e8c95f99161',1,'VimMenu']]],
   ['size',['size',['../structString.html#a467ea29ffa5dd45a89f7c01e199fd104',1,'String::size()'],['../structArray.html#a13f67ab957f4fdd3443d7f62b2fd09ce',1,'Array::size()'],['../structDictionary.html#a30bbe791c57ae21169a4b7d2c44798e8',1,'Dictionary::size()'],['../structwbuffer.html#a457bd8fc37d290d1b75f60337fc7fefc',1,'wbuffer::size()']]],
   ['skip',['skip',['../structexarg.html#a773bcdda1e8cbf9c8f408b770e6a3117',1,'exarg']]],
   ['sl_5fadd',['sl_add',['../structslang__S.html#af5ea8b1b446cbdb65a18449a44ca5656',1,'slang_S']]],

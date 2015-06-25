@@ -384,7 +384,7 @@ var searchData=
   ['print_5fnumber_5fwidth',['PRINT_NUMBER_WIDTH',['../hardcopy_8h.html#a43b368177951ebc0ac63e47ddb35aef8',1,'hardcopy.h']]],
   ['print_5fpos',['print_pos',['../structprt__pos__T.html#a59f8cae65225517b2a06f3466c71e390',1,'prt_pos_T']]],
   ['printer_5fpage_5fnum',['printer_page_num',['../globals_8h.html#a154a41ac1b41e4ce25762590c5471feb',1,'globals.h']]],
-  ['priority',['priority',['../structmatchitem.html#a4f4437f85482d8f94ba7fb50d36f0ac5',1,'matchitem::priority()'],['../structVimMenu.html#aa65df902acfbe32560018197ff053ea0',1,'VimMenu::priority()']]],
+  ['priority',['priority',['../structmatchitem.html#a4f4437f85482d8f94ba7fb50d36f0ac5',1,'matchitem::priority()'],['../structVimMenu.html#ac4c61282ededf80cc970a0f254be0a13',1,'VimMenu::priority()']]],
   ['prl_5fitem',['PRL_ITEM',['../ex__cmds2_8c.html#a1688a3ebf833a058069780d97528329a',1,'ex_cmds2.c']]],
   ['proc',['proc',['../structUvProcess.html#a642b502790b2b15f8d919c0539fe263e',1,'UvProcess']]],
   ['proc_5fopts',['proc_opts',['../structUvProcess.html#a2ef30fbf26d9b4a60d7b804a1808ea1b',1,'UvProcess']]],

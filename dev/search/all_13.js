@@ -466,7 +466,7 @@ var searchData=
   ['signcmd_5funplace',['SIGNCMD_UNPLACE',['../ex__cmds_8c.html#a15343e0c7e4776b4b9b31cffaedd6e9e',1,'ex_cmds.c']]],
   ['signlist',['signlist',['../structsignlist.html',1,'']]],
   ['signlist_5ft',['signlist_T',['../sign__defs_8h.html#a89a3f2e87cf98ea581d6b3ce13d1eee3',1,'sign_defs.h']]],
-  ['silent',['silent',['../structVimMenu.html#ac7129f99b422189787580c4c170d9719',1,'VimMenu']]],
+  ['silent',['silent',['../structVimMenu.html#ac2f2a6f290f1058e02457e8c95f99161',1,'VimMenu']]],
   ['simple',['SIMPLE',['../regexp_8c.html#af24471f1578a70e28e9c6775449d88b8',1,'regexp.c']]],
   ['simplify_5ffilename',['simplify_filename',['../path_8c.html#a7eee11b4544aafc357269c6a6d7213f0',1,'path.c']]],
   ['simplify_5fkey',['simplify_key',['../keymap_8c.html#aac99dfc9965e8bdc644c5c523e63d7ff',1,'keymap.c']]],
