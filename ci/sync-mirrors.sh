@@ -12,22 +12,12 @@ MIRROR_BRANCH=${MIRROR_BRANCH:-master}
 
 sync_bzr_mirror() {
   local repo="${1}"
-  local mirror_url="git://github.com/${MIRROR_USER}/${repo}.git"
   local upstream_url="http://bazaar.leonerd.org.uk/c/${repo}"
   local repo_dir="${WORK_DIR}/${repo}"
 
-  echo "Cloning Git mirror repo ${mirror_url}:${MIRROR_BRANCH} into ${repo_dir}."
+  echo "Cloning upstream repo ${upstream_url} into ${repo_dir}."
   rm -rf "${repo_dir}"
-  git clone --branch "${MIRROR_BRANCH}" --depth 1 "${mirror_url}" "${repo_dir}"
-
-  (
-    cd "${repo_dir}"
-    echo "Importing ${upstream_url} into Git branch ${repo}-import."
-    git bzr import "${upstream_url}" "${repo}-import"
-
-    echo "Fast-forwarding ${MIRROR_BRANCH} to ${repo}-import."
-    git merge --ff-only "${repo}-import"
-  )
+  git bzr clone "${upstream_url}" "${repo_dir}"
 
   echo "Pushing to ${MIRROR_USER}/${repo}."
   MIRROR_SUBTREE="/" \
