@@ -173,10 +173,10 @@ var searchData=
   ['wo_5fwrap',['wo_wrap',['../structwinopt__T.html#ad7949bb1425ec2752bca43f01846bd2f',1,'winopt_T']]],
   ['wo_5fwrap_5fsave',['wo_wrap_save',['../structwinopt__T.html#aa81122ebaa45fc373de9c6381d76ae8d',1,'winopt_T']]],
   ['wp',['wp',['../structfline__T.html#ac1f9d9bfaaf34a8c762e1c6c635f41a1',1,'fline_T']]],
-  ['wpos',['wpos',['../structrbuffer.html#a3d92871f1394f0b4e774860fe08a7a95',1,'rbuffer']]],
   ['writable',['writable',['../structJobOptions.html#a4dcf57167f1ca59c8ac5d349928ba308',1,'JobOptions']]],
   ['write_5fcb',['write_cb',['../structTerminalOptions.html#a628d7802aafd9f5776e6eb382e02b394',1,'TerminalOptions']]],
   ['write_5floop',['write_loop',['../structTUIData.html#a234ba71febfce9c29da9ea27e05bbcec',1,'TUIData']]],
+  ['write_5fptr',['write_ptr',['../structrbuffer.html#a512c2e25509b1ea13cc2a86ac23011c1',1,'rbuffer']]],
   ['wstream',['wstream',['../structHandleData.html#a6ab1742737566f51c3a3ada21519e4d5',1,'HandleData::wstream()'],['../structWRequest.html#a995ba63753c5a6f75f786832f49bca37',1,'WRequest::wstream()']]],
   ['wx',['wx',['../structprt__ps__font__S.html#a9178fd1abdfcc5dc48d39461d6b93d31',1,'prt_ps_font_S']]]
 ];

@@ -99,6 +99,7 @@ var searchData=
   ['from_5fnoamp',['from_noamp',['../structmenutrans__T.html#a46f669416be4939adf91f880c5e7fa26',1,'menutrans_T']]],
   ['ft_5ffrom',['ft_from',['../structfromto__S.html#a3a686bf3f1491b80b34ce60291937228',1,'fromto_S']]],
   ['ft_5fto',['ft_to',['../structfromto__S.html#a789fe0cb2b3297d4648a0d6587f88704',1,'fromto_S']]],
+  ['full_5fcb',['full_cb',['../structrbuffer.html#a55fa0b189980075157869de9323cddd3',1,'rbuffer']]],
   ['fullname',['fullname',['../structvimoption.html#aaef209d5d3ab318df64509d808a026fc',1,'vimoption']]],
   ['func',['func',['../structfunccall__S.html#ad8090854e5899a3632359502f8409b6e',1,'funccall_S::func()'],['../structcscmd__T.html#a1747554e4a1517848cb670cc7536a0c7',1,'cscmd_T::func()'],['../structsubcommand.html#a959261fedf5d012df5eb67b36386f4a7',1,'subcommand::func()']]],
   ['func_5fattr_5fnonnull_5fret',['FUNC_ATTR_NONNULL_RET',['../memory_8c.html#aa77008ac38bc6da28fd13edc0a1d3f72',1,'FUNC_ATTR_NONNULL_RET():&#160;memory.c'],['../path_8c.html#a959bbf662aa84ea8abf67bedc7def0a5',1,'FUNC_ATTR_NONNULL_RET():&#160;path.c']]],

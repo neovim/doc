@@ -24,6 +24,7 @@ var searchData=
   ['nextline',['nextline',['../structsource__cookie.html#a0d89487209adee15be463489827292d9',1,'source_cookie']]],
   ['no_5fscs',['no_scs',['../structspat.html#a118f94a0608d49af73354fc35683093d',1,'spat']]],
   ['no_5fswap_5ffile',['no_swap_file',['../structmparm__T.html#aa90e5e188aed10bff09b23bcdbd5284c',1,'mparm_T']]],
+  ['nonfull_5fcb',['nonfull_cb',['../structrbuffer.html#a1c1dc217b28e626539af4779f0c1bc7a',1,'rbuffer']]],
   ['noremap',['noremap',['../structVimMenu.html#ad66004392524caf7451a8ee08509bb0d',1,'VimMenu']]],
   ['norm',['norm',['../structregsubs__T.html#a9d74555fa04948dda9a6bf7b623955f3',1,'regsubs_T']]],
   ['normal_5fmode',['normal_mode',['../structui__t.html#ac380c1a14a021dd4bc6ca8740eace881',1,'ui_t']]],

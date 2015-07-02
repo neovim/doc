@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['rbuffer',['RBuffer',['../rstream__defs_8h.html#a3b95c32c3360fb410b8b9ec50bbd825a',1,'rstream_defs.h']]],
+  ['rbuffer',['RBuffer',['../rbuffer_8h.html#a3b95c32c3360fb410b8b9ec50bbd825a',1,'rbuffer.h']]],
+  ['rbuffer_5fcallback',['rbuffer_callback',['../rbuffer_8h.html#ae7c6010c5a1d9f9a0d2bd06919939090',1,'rbuffer.h']]],
   ['regbehind_5ft',['regbehind_T',['../regexp_8c.html#a4ca29f1671c56cff831e94da817527c5',1,'regexp.c']]],
   ['regengine_5ft',['regengine_T',['../regexp__defs_8h.html#a172c326df2bc4c437ffe1a03be8ce946',1,'regexp_defs.h']]],
   ['regitem_5ft',['regitem_T',['../regexp_8c.html#ad55dbe552d8fa4cb5c6338496d28fc2b',1,'regexp.c']]],
@@ -10,5 +11,5 @@ var searchData=
   ['result_5ft',['result_T',['../digraph_8c.html#a130de4e859e01ad34944a4f5d1ad73c7',1,'digraph.c']]],
   ['rgbvalue',['RgbValue',['../syntax__defs_8h.html#a54f8a29e3b8d0f09fbda28b8bbe44a4f',1,'syntax_defs.h']]],
   ['rstream',['RStream',['../rstream__defs_8h.html#a23e79c3fda15fda6902a3fa88d29f901',1,'rstream_defs.h']]],
-  ['rstream_5fcb',['rstream_cb',['../rstream__defs_8h.html#a1dc80c38c5f0fb22ac1d381127f1d867',1,'rstream_defs.h']]]
+  ['rstream_5fcb',['rstream_cb',['../rstream__defs_8h.html#aadc2b879c5edacf5cc43dbe488579de0',1,'rstream_defs.h']]]
 ];

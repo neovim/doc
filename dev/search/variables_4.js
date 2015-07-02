@@ -13,6 +13,7 @@ var searchData=
   ['end_5fadjusted',['end_adjusted',['../structoparg__S.html#a2e27e323624cac065dca446ea65ccd93',1,'oparg_S']]],
   ['end_5fchar_5fvcols',['end_char_vcols',['../structblock__def.html#a8dfaba71582b4154434c5ae3471c5e32',1,'block_def']]],
   ['end_5fcol_5fnr',['end_col_nr',['../structsorti__T.html#a1b82ed7fb702fdd3aaf05364dac964c4',1,'sorti_T']]],
+  ['end_5fptr',['end_ptr',['../structrbuffer.html#ac2b73b570b5536d186785da82419d5aa',1,'rbuffer']]],
   ['end_5fvcol',['end_vcol',['../structoparg__S.html#a452e10d3742231674662653bf4d00bfa',1,'oparg_S::end_vcol()'],['../structblock__def.html#aa4502f6efc4e5ce4e6dee54bc13444b2',1,'block_def::end_vcol()']]],
   ['endcol',['endcol',['../structmatch__T.html#a1d032e65b0edfc97391c23aaec49be94',1,'match_T']]],
   ['endp',['endp',['../structregmatch__T.html#a08f025a2796a267c5a9ffae4e4f5553b',1,'regmatch_T']]],

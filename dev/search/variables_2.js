@@ -7,7 +7,7 @@ var searchData=
   ['canon',['canon',['../mbyte_8c.html#a0e818a02b04731f1bff94e983f2b0b23',1,'mbyte.c']]],
   ['cansplit',['cansplit',['../structcscmd__T.html#a428006c1563c89e982e671f90e1caa89',1,'cscmd_T']]],
   ['cap',['cap',['../structDynamicBuffer.html#abe7373c0cd18dfe0345c4c2bf808e67a',1,'DynamicBuffer']]],
-  ['capacity',['capacity',['../structArray.html#aed247f79ae1409cd0c85203e9c47ef9f',1,'Array::capacity()'],['../structDictionary.html#a9a3a7481be7f915e73b2165707cbb216',1,'Dictionary::capacity()'],['../structrbuffer.html#a50cc110f5fc3dc36793a468239cabbae',1,'rbuffer::capacity()']]],
+  ['capacity',['capacity',['../structArray.html#aed247f79ae1409cd0c85203e9c47ef9f',1,'Array::capacity()'],['../structDictionary.html#a9a3a7481be7f915e73b2165707cbb216',1,'Dictionary::capacity()']]],
   ['caught',['caught',['../structvim__exception.html#a9eb95b0ea1194926b8d5c79707477f30',1,'vim_exception']]],
   ['caught_5fstack',['caught_stack',['../structdbg__stuff.html#a0918e1c2884c2046bc102e3347533619',1,'dbg_stuff']]],
   ['cb',['cb',['../structrstream.html#ac60fbd647f75d47cc0fa153b4c3e807c',1,'rstream::cb()'],['../structwstream.html#a478f5e424b3a48ff54955064de57b5b2',1,'wstream::cb()'],['../structwbuffer.html#a4a9884a48112c54a133e9934fc5f3655',1,'wbuffer::cb()']]],

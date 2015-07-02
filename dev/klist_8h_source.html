@@ -119,113 +119,127 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">#define _AC_KLIST_H</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="memory_8h.html">nvim/memory.h</a>&quot;</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="func__attr_8h.html">nvim/func_attr.h</a>&quot;</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="klist_8h.html#a90dba7919783b45dcc8f30dfaf4c309a">   34</a></span>&#160;<span class="preprocessor">#define KMEMPOOL_INIT(name, kmptype_t, kmpfree_f)                       \</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">    typedef struct {                                                    \</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">        size_t cnt, n, max;                                             \</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">        kmptype_t **buf;                                                \</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">    } kmp_##name##_t;                                                   \</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">    static inline kmp_##name##_t *kmp_init_##name(void) {               \</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">        return xcalloc(1, sizeof(kmp_##name##_t));                      \</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">    static inline void kmp_destroy_##name(kmp_##name##_t *mp)           \</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">        REAL_FATTR_UNUSED;                                              \</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">    static inline void kmp_destroy_##name(kmp_##name##_t *mp) {         \</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">        size_t k;                                                       \</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">        for (k = 0; k &lt; mp-&gt;n; ++k) {                                   \</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">            kmpfree_f(mp-&gt;buf[k]); xfree(mp-&gt;buf[k]);                   \</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">        }                                                               \</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">        xfree(mp-&gt;buf); xfree(mp);                                      \</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">    static inline kmptype_t *kmp_alloc_##name(kmp_##name##_t *mp) {     \</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">        ++mp-&gt;cnt;                                                      \</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">        if (mp-&gt;n == 0) return xcalloc(1, sizeof(kmptype_t));           \</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">        return mp-&gt;buf[--mp-&gt;n];                                        \</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">    static inline void kmp_free_##name(kmp_##name##_t *mp, kmptype_t *p) { \</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">        --mp-&gt;cnt;                                                      \</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">        if (mp-&gt;n == mp-&gt;max) {                                         \</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">            mp-&gt;max = mp-&gt;max? mp-&gt;max&lt;&lt;1 : 16;                         \</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">            mp-&gt;buf = xrealloc(mp-&gt;buf, sizeof(kmptype_t *) * mp-&gt;max); \</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">        }                                                               \</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">        mp-&gt;buf[mp-&gt;n++] = p;                                           \</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">    }</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="klist_8h.html#a36617be9d36fbc027b9150530f78f05d">   65</a></span>&#160;<span class="preprocessor">#define kmempool_t(name) kmp_##name##_t</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="klist_8h.html#a75488922535eb7147899207dbdd2f6fa">   66</a></span>&#160;<span class="preprocessor">#define kmp_init(name) kmp_init_##name()</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="klist_8h.html#a2f6f601ca8b8915d360801e47363f081">   67</a></span>&#160;<span class="preprocessor">#define kmp_destroy(name, mp) kmp_destroy_##name(mp)</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="klist_8h.html#aff5615e7c7adc1514e50e27cf4ac9167">   68</a></span>&#160;<span class="preprocessor">#define kmp_alloc(name, mp) kmp_alloc_##name(mp)</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="klist_8h.html#ac102063c37c4c1f888691c213e2ce076">   69</a></span>&#160;<span class="preprocessor">#define kmp_free(name, mp, p) kmp_free_##name(mp, p)</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="klist_8h.html#afc551e2e6181c7e2277bf679ed90e2d7">   71</a></span>&#160;<span class="preprocessor">#define KLIST_INIT(name, kltype_t, kmpfree_t)                           \</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">    struct __kl1_##name {                                               \</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">        kltype_t data;                                                  \</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">        struct __kl1_##name *next;                                      \</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">    };                                                                  \</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">    typedef struct __kl1_##name kl1_##name;                             \</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">    KMEMPOOL_INIT(name, kl1_##name, kmpfree_t)                          \</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">    typedef struct {                                                    \</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">        kl1_##name *head, *tail;                                        \</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">        kmp_##name##_t *mp;                                             \</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">        size_t size;                                                    \</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">    } kl_##name##_t;                                                    \</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">    static inline kl_##name##_t *kl_init_##name(void) {                 \</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">        kl_##name##_t *kl = xcalloc(1, sizeof(kl_##name##_t));          \</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">        kl-&gt;mp = kmp_init(name);                                        \</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">        kl-&gt;head = kl-&gt;tail = kmp_alloc(name, kl-&gt;mp);                  \</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">        kl-&gt;head-&gt;next = 0;                                             \</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">        return kl;                                                      \</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">    static inline void kl_destroy_##name(kl_##name##_t *kl)             \</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">        REAL_FATTR_UNUSED;                                              \</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">    static inline void kl_destroy_##name(kl_##name##_t *kl) {           \</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">        kl1_##name *p;                                                  \</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">        for (p = kl-&gt;head; p != kl-&gt;tail; p = p-&gt;next)                  \</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">            kmp_free(name, kl-&gt;mp, p);                                  \</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">        kmp_free(name, kl-&gt;mp, p);                                      \</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">        kmp_destroy(name, kl-&gt;mp);                                      \</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">        xfree(kl);                                                       \</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">    static inline kltype_t *kl_pushp_##name(kl_##name##_t *kl) {        \</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">        kl1_##name *q, *p = kmp_alloc(name, kl-&gt;mp);                    \</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">        q = kl-&gt;tail; p-&gt;next = 0; kl-&gt;tail-&gt;next = p; kl-&gt;tail = p;    \</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">        ++kl-&gt;size;                                                     \</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">        return &amp;q-&gt;data;                                                \</span></div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">    static inline int kl_shift_##name(kl_##name##_t *kl, kltype_t *d) { \</span></div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">        kl1_##name *p;                                                  \</span></div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">        if (kl-&gt;head-&gt;next == 0) return -1;                             \</span></div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">        --kl-&gt;size;                                                     \</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">        p = kl-&gt;head; kl-&gt;head = kl-&gt;head-&gt;next;                        \</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">        if (d) *d = p-&gt;data;                                            \</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">        kmp_free(name, kl-&gt;mp, p);                                      \</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">        return 0;                                                       \</span></div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">    }</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
-<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="klist_8h.html#a191dd67cfc7c22a899290c20c68808b4">  116</a></span>&#160;<span class="preprocessor">#define kliter_t(name) kl1_##name</span></div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="klist_8h.html#ac7f87e195754c73baf00050ca58d7cc9">  117</a></span>&#160;<span class="preprocessor">#define klist_t(name) kl_##name##_t</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="klist_8h.html#a94cdbcfd0a07a42b337cdc137792f62a">  118</a></span>&#160;<span class="preprocessor">#define kl_val(iter) ((iter)-&gt;data)</span></div>
-<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="klist_8h.html#acfec70bf21c9c222cbd44b500bd6ff57">  119</a></span>&#160;<span class="preprocessor">#define kl_next(iter) ((iter)-&gt;next)</span></div>
-<div class="line"><a name="l00120"></a><span class="lineno"><a class="line" href="klist_8h.html#a2187fe4492a5642bd72b284e39861ea9">  120</a></span>&#160;<span class="preprocessor">#define kl_begin(kl) ((kl)-&gt;head)</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno"><a class="line" href="klist_8h.html#ac4adf28eea5b4771e28f3cade4162d2c">  121</a></span>&#160;<span class="preprocessor">#define kl_end(kl) ((kl)-&gt;tail)</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;</div>
-<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="klist_8h.html#a20cdf8bbb166f77a6b92ba8eae518926">  123</a></span>&#160;<span class="preprocessor">#define kl_init(name) kl_init_##name()</span></div>
-<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="klist_8h.html#af03f1e866e90dde853978a8f818fcba5">  124</a></span>&#160;<span class="preprocessor">#define kl_destroy(name, kl) kl_destroy_##name(kl)</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="klist_8h.html#ae9a529364cc9f9220f238a3ae444fcdd">  125</a></span>&#160;<span class="preprocessor">#define kl_pushp(name, kl) kl_pushp_##name(kl)</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="klist_8h.html#a1ff1c41332779d2dbfd6f524e9bebc79">  126</a></span>&#160;<span class="preprocessor">#define kl_shift(name, kl, d) kl_shift_##name(kl, d)</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno"><a class="line" href="klist_8h.html#a167593447985e1453fd9b8ea6ff2b754">  127</a></span>&#160;<span class="preprocessor">#define kl_empty(kl) ((kl)-&gt;size == 0)</span></div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">#include &lt;<a class="code" href="assert_8h.html">assert.h</a>&gt;</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="memory_8h.html">nvim/memory.h</a>&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="func__attr_8h.html">nvim/func_attr.h</a>&quot;</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
+<div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="klist_8h.html#a90dba7919783b45dcc8f30dfaf4c309a">   36</a></span>&#160;<span class="preprocessor">#define KMEMPOOL_INIT(name, kmptype_t, kmpfree_f)                       \</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">    typedef struct {                                                    \</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">        size_t cnt, n, max;                                             \</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">        kmptype_t **buf;                                                \</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">    } kmp_##name##_t;                                                   \</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">    static inline kmp_##name##_t *kmp_init_##name(void) {               \</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">        return xcalloc(1, sizeof(kmp_##name##_t));                      \</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">    static inline void kmp_destroy_##name(kmp_##name##_t *mp)           \</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">        REAL_FATTR_UNUSED;                                              \</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">    static inline void kmp_destroy_##name(kmp_##name##_t *mp) {         \</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">        size_t k;                                                       \</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">        for (k = 0; k &lt; mp-&gt;n; ++k) {                                   \</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">            kmpfree_f(mp-&gt;buf[k]); xfree(mp-&gt;buf[k]);                   \</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">        }                                                               \</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">        xfree(mp-&gt;buf); xfree(mp);                                      \</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">    static inline kmptype_t *kmp_alloc_##name(kmp_##name##_t *mp) {     \</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">        ++mp-&gt;cnt;                                                      \</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">        if (mp-&gt;n == 0) return xcalloc(1, sizeof(kmptype_t));           \</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">        return mp-&gt;buf[--mp-&gt;n];                                        \</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">    static inline void kmp_free_##name(kmp_##name##_t *mp, kmptype_t *p) { \</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">        --mp-&gt;cnt;                                                      \</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">        if (mp-&gt;n == mp-&gt;max) {                                         \</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">            mp-&gt;max = mp-&gt;max? mp-&gt;max&lt;&lt;1 : 16;                         \</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">            mp-&gt;buf = xrealloc(mp-&gt;buf, sizeof(kmptype_t *) * mp-&gt;max); \</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">        }                                                               \</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">        mp-&gt;buf[mp-&gt;n++] = p;                                           \</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="klist_8h.html#a36617be9d36fbc027b9150530f78f05d">   67</a></span>&#160;<span class="preprocessor">#define kmempool_t(name) kmp_##name##_t</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="klist_8h.html#a75488922535eb7147899207dbdd2f6fa">   68</a></span>&#160;<span class="preprocessor">#define kmp_init(name) kmp_init_##name()</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="klist_8h.html#a2f6f601ca8b8915d360801e47363f081">   69</a></span>&#160;<span class="preprocessor">#define kmp_destroy(name, mp) kmp_destroy_##name(mp)</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="klist_8h.html#aff5615e7c7adc1514e50e27cf4ac9167">   70</a></span>&#160;<span class="preprocessor">#define kmp_alloc(name, mp) kmp_alloc_##name(mp)</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="klist_8h.html#ac102063c37c4c1f888691c213e2ce076">   71</a></span>&#160;<span class="preprocessor">#define kmp_free(name, mp, p) kmp_free_##name(mp, p)</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="klist_8h.html#afc551e2e6181c7e2277bf679ed90e2d7">   73</a></span>&#160;<span class="preprocessor">#define KLIST_INIT(name, kltype_t, kmpfree_t)                           \</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">    struct __kl1_##name {                                               \</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">        kltype_t data;                                                  \</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">        struct __kl1_##name *next;                                      \</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">    };                                                                  \</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">    typedef struct __kl1_##name kl1_##name;                             \</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">    KMEMPOOL_INIT(name, kl1_##name, kmpfree_t)                          \</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">    typedef struct {                                                    \</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">        kl1_##name *head, *tail;                                        \</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor">        kmp_##name##_t *mp;                                             \</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">        size_t size;                                                    \</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">    } kl_##name##_t;                                                    \</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">    static inline kl_##name##_t *kl_init_##name(void) {                 \</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">        kl_##name##_t *kl = xcalloc(1, sizeof(kl_##name##_t));          \</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">        kl-&gt;mp = kmp_init(name);                                        \</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">        kl-&gt;head = kl-&gt;tail = kmp_alloc(name, kl-&gt;mp);                  \</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">        kl-&gt;head-&gt;next = 0;                                             \</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">        return kl;                                                      \</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">    static inline void kl_destroy_##name(kl_##name##_t *kl)             \</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">        REAL_FATTR_UNUSED;                                              \</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">    static inline void kl_destroy_##name(kl_##name##_t *kl) {           \</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">        kl1_##name *p;                                                  \</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">        for (p = kl-&gt;head; p != kl-&gt;tail; p = p-&gt;next)                  \</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">            kmp_free(name, kl-&gt;mp, p);                                  \</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">        kmp_free(name, kl-&gt;mp, p);                                      \</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">        kmp_destroy(name, kl-&gt;mp);                                      \</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">        xfree(kl);                                                      \</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">    static inline void kl_push_##name(kl_##name##_t *kl, kltype_t d) {  \</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">        kl1_##name *q, *p = kmp_alloc(name, kl-&gt;mp);                    \</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">        q = kl-&gt;tail; p-&gt;next = 0; kl-&gt;tail-&gt;next = p; kl-&gt;tail = p;    \</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">        ++kl-&gt;size;                                                     \</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">        q-&gt;data = d;                                                    \</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">    static inline kltype_t kl_shift_at_##name(kl_##name##_t *kl,        \</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">                                              kl1_##name **n) {         \</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">        assert((*n)-&gt;next);                                             \</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">        kl1_##name *p;                                                  \</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">        --kl-&gt;size;                                                     \</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">        p = *n;                                                         \</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">        *n = (*n)-&gt;next;                                                \</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">        if (p == kl-&gt;head) kl-&gt;head = *n;                               \</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;<span class="preprocessor">        kltype_t d = p-&gt;data;                                           \</span></div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">        kmp_free(name, kl-&gt;mp, p);                                      \</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;<span class="preprocessor">        return d;                                                       \</span></div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">    }                                                                   \</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">    </span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;</div>
+<div class="line"><a name="l00122"></a><span class="lineno"><a class="line" href="klist_8h.html#a191dd67cfc7c22a899290c20c68808b4">  122</a></span>&#160;<span class="preprocessor">#define kliter_t(name) kl1_##name</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno"><a class="line" href="klist_8h.html#ac7f87e195754c73baf00050ca58d7cc9">  123</a></span>&#160;<span class="preprocessor">#define klist_t(name) kl_##name##_t</span></div>
+<div class="line"><a name="l00124"></a><span class="lineno"><a class="line" href="klist_8h.html#a94cdbcfd0a07a42b337cdc137792f62a">  124</a></span>&#160;<span class="preprocessor">#define kl_val(iter) ((iter)-&gt;data)</span></div>
+<div class="line"><a name="l00125"></a><span class="lineno"><a class="line" href="klist_8h.html#acfec70bf21c9c222cbd44b500bd6ff57">  125</a></span>&#160;<span class="preprocessor">#define kl_next(iter) ((iter)-&gt;next)</span></div>
+<div class="line"><a name="l00126"></a><span class="lineno"><a class="line" href="klist_8h.html#a2187fe4492a5642bd72b284e39861ea9">  126</a></span>&#160;<span class="preprocessor">#define kl_begin(kl) ((kl)-&gt;head)</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno"><a class="line" href="klist_8h.html#ac4adf28eea5b4771e28f3cade4162d2c">  127</a></span>&#160;<span class="preprocessor">#define kl_end(kl) ((kl)-&gt;tail)</span></div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="klist_8h.html#a20cdf8bbb166f77a6b92ba8eae518926">  129</a></span>&#160;<span class="preprocessor">#define kl_init(name) kl_init_##name()</span></div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="klist_8h.html#af03f1e866e90dde853978a8f818fcba5">  130</a></span>&#160;<span class="preprocessor">#define kl_destroy(name, kl) kl_destroy_##name(kl)</span></div>
+<div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="klist_8h.html#a7724b51a13289a4ab7ec0c0fa3402343">  131</a></span>&#160;<span class="preprocessor">#define kl_push(name, kl, d) kl_push_##name(kl, d)</span></div>
+<div class="line"><a name="l00132"></a><span class="lineno"><a class="line" href="klist_8h.html#add74be69d59c386a77ab867a11315c09">  132</a></span>&#160;<span class="preprocessor">#define kl_shift_at(name, kl, node) kl_shift_at_##name(kl, node)</span></div>
+<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="klist_8h.html#a1ed0835fa06c32d68b3dc815ba3f253d">  133</a></span>&#160;<span class="preprocessor">#define kl_shift(name, kl) kl_shift_at(name, kl, &amp;kl-&gt;head)</span></div>
+<div class="line"><a name="l00134"></a><span class="lineno"><a class="line" href="klist_8h.html#a167593447985e1453fd9b8ea6ff2b754">  134</a></span>&#160;<span class="preprocessor">#define kl_empty(kl) ((kl)-&gt;size == 0)</span></div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;<span class="comment">// Iteration macros. It&#39;s ok to modify the list while iterating as long as a</span></div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;<span class="comment">// `break` statement is executed before the next iteration.</span></div>
+<div class="line"><a name="l00137"></a><span class="lineno"><a class="line" href="klist_8h.html#acb9b3ce9669c3cade3af38a1ec23a041">  137</a></span>&#160;<span class="preprocessor">#define kl_iter(name, kl, p) kl_iter_at(name, kl, p, NULL)</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno"><a class="line" href="klist_8h.html#af8cc6224d6c7f6698d3a97a9079ce262">  138</a></span>&#160;<span class="preprocessor">#define kl_iter_at(name, kl, p, h) \</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;<span class="preprocessor">  for (kl1_##name *p = h ? h : kl-&gt;head; p != kl-&gt;tail; p = p-&gt;next)</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="memory_8h_html"><div class="ttname"><a href="memory_8h.html">memory.h</a></div></div>
+<div class="ttc" id="assert_8h_html"><div class="ttname"><a href="assert_8h.html">assert.h</a></div></div>
 <div class="ttc" id="func__attr_8h_html"><div class="ttname"><a href="func__attr_8h.html">func_attr.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <footer>
   <div class="container">
-    Generated on Wed Jul 1 2015 08:39:34 for Neovim by
+    Generated on Thu Jul 2 2015 08:22:10 for Neovim by
     <a href="http://www.doxygen.org/index.html">Doxygen</a>
     1.8.7
   </div>

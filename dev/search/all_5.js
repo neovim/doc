@@ -71,6 +71,7 @@ var searchData=
   ['end_5fadjusted',['end_adjusted',['../structoparg__S.html#a2e27e323624cac065dca446ea65ccd93',1,'oparg_S']]],
   ['end_5fchar_5fvcols',['end_char_vcols',['../structblock__def.html#a8dfaba71582b4154434c5ae3471c5e32',1,'block_def']]],
   ['end_5fcol_5fnr',['end_col_nr',['../structsorti__T.html#a1b82ed7fb702fdd3aaf05364dac964c4',1,'sorti_T']]],
+  ['end_5fptr',['end_ptr',['../structrbuffer.html#ac2b73b570b5536d186785da82419d5aa',1,'rbuffer']]],
   ['end_5fvcol',['end_vcol',['../structoparg__S.html#a452e10d3742231674662653bf4d00bfa',1,'oparg_S::end_vcol()'],['../structblock__def.html#aa4502f6efc4e5ce4e6dee54bc13444b2',1,'block_def::end_vcol()']]],
   ['end_5fvisual_5fmode',['end_visual_mode',['../normal_8c.html#a8f74875f4dd3322be33dd207d22762e0',1,'normal.c']]],
   ['end_5fword',['end_word',['../search_8c.html#af00b2b062ad84ed4d6a326fcf7f37458',1,'search.c']]],

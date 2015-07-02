@@ -86,6 +86,7 @@ var searchData=
   ['free_5ftv',['free_tv',['../eval_8c.html#a7f0e833805071bb680d552ba9d80fc53',1,'eval.c']]],
   ['free_5ftypebuf',['free_typebuf',['../getchar_8c.html#a66350e5d252219e1c21bc36e4812596b',1,'getchar.c']]],
   ['freewild',['FreeWild',['../misc1_8c.html#a5086b658043e0a5bf23116fb75b8936e',1,'misc1.c']]],
+  ['fs_5finit',['fs_init',['../fs_8c.html#ae9386973b39dad27b36dc6262ec4d6b9',1,'fs.c']]],
   ['fullname_5fsave',['FullName_save',['../path_8c.html#a3d0637e8c5940467300dc37e467f0251',1,'path.c']]],
   ['func_5fbreakpoint',['func_breakpoint',['../eval_8c.html#aa75d4bb36139b8a72ad2d1bc0e8b3f41',1,'eval.c']]],
   ['func_5fcall',['func_call',['../eval_8c.html#a3722fbc7d9cc8147b215a06ba9e44e2e',1,'eval.c']]],
