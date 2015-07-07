@@ -207,7 +207,7 @@ var searchData=
   ['cmdattr',['cmdattr',['../structcmdline__info.html#af94019d40c42d4438211a97d7397dd4a',1,'cmdline_info']]],
   ['cmdbuff',['cmdbuff',['../structcmdline__info.html#a65331e7a5b3a419aface036ab3856a2e',1,'cmdline_info']]],
   ['cmdbufflen',['cmdbufflen',['../structcmdline__info.html#a6eb0eb3f790c9d2cb91e86c891a66bf2',1,'cmdline_info']]],
-  ['cmdbuffsize',['CMDBUFFSIZE',['../os__unix__defs_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;os_unix_defs.h'],['../vim_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;vim.h']]],
+  ['cmdbuffsize',['CMDBUFFSIZE',['../os__defs_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;os_defs.h'],['../vim_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;vim.h']]],
   ['cmdchar',['cmdchar',['../structcmdarg__S.html#a529a1135862402adc4588f86e3f3f632',1,'cmdarg_S']]],
   ['cmdfirstc',['cmdfirstc',['../structcmdline__info.html#a94c610d5c86f24b406bbfb6ce9dcd387',1,'cmdline_info']]],
   ['cmdidx',['cmdidx',['../structexarg.html#a2ef28498b904f9bd9127f7fc1b962d67',1,'exarg']]],

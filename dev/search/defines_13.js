@@ -142,9 +142,9 @@ var searchData=
   ['sid_5fmodeline',['SID_MODELINE',['../globals_8h.html#abd55d0382f1ab0cf7465b668684d127a',1,'globals.h']]],
   ['sid_5fnone',['SID_NONE',['../globals_8h.html#ac6114d8cfde1bec7ef5e874450427dfe',1,'globals.h']]],
   ['sident',['SIDENT',['../regexp_8c.html#a7b2cb4d9c500953183292545b790d200',1,'regexp.c']]],
-  ['sigdefarg',['SIGDEFARG',['../os__unix__defs_8h.html#aabc2db49512384916a5e647d3a13f750',1,'os_unix_defs.h']]],
-  ['sigdummyarg',['SIGDUMMYARG',['../os__unix__defs_8h.html#af57201fec2ea32724b4449a6638db62c',1,'os_unix_defs.h']]],
-  ['sighasarg',['SIGHASARG',['../os__unix__defs_8h.html#a3e8a753141abd3106a68d07592f9baa4',1,'os_unix_defs.h']]],
+  ['sigdefarg',['SIGDEFARG',['../os__defs_8h.html#aabc2db49512384916a5e647d3a13f750',1,'os_defs.h']]],
+  ['sigdummyarg',['SIGDUMMYARG',['../os__defs_8h.html#af57201fec2ea32724b4449a6638db62c',1,'os_defs.h']]],
+  ['sighasarg',['SIGHASARG',['../os__defs_8h.html#a3e8a753141abd3106a68d07592f9baa4',1,'os_defs.h']]],
   ['sign_5fany',['SIGN_ANY',['../sign__defs_8h.html#aa1b3b88a138a5586ab58119b0dfda3b5',1,'sign_defs.h']]],
   ['sign_5ficon',['SIGN_ICON',['../sign__defs_8h.html#ab23b0cbf73e1f8d5641d69c94b4258fd',1,'sign_defs.h']]],
   ['sign_5flinehl',['SIGN_LINEHL',['../sign__defs_8h.html#a686565295f2633d526262075a95bda6e',1,'sign_defs.h']]],
@@ -221,7 +221,7 @@ var searchData=
   ['spec_5fperc',['SPEC_PERC',['../ex__docmd_8c.html#ae3893247a11ec457802d1014a7bc9f8d',1,'ex_docmd.c']]],
   ['spec_5fsfile',['SPEC_SFILE',['../ex__docmd_8c.html#ac1719a86b5fa001ff242ea78d1d9780d',1,'ex_docmd.c']]],
   ['spec_5fslnum',['SPEC_SLNUM',['../ex__docmd_8c.html#a24a4d8465aa548e7b754483fda49a905',1,'ex_docmd.c']]],
-  ['special_5fwildchar',['SPECIAL_WILDCHAR',['../os__unix__defs_8h.html#a95b4370894b250141bd2f656c98f1d2d',1,'os_unix_defs.h']]],
+  ['special_5fwildchar',['SPECIAL_WILDCHAR',['../unix__defs_8h.html#a95b4370894b250141bd2f656c98f1d2d',1,'unix_defs.h']]],
   ['spell_5fisupper',['SPELL_ISUPPER',['../spell_8c.html#aff3308ef9d3d75bd1e1c39cb6c29269d',1,'spell.c']]],
   ['spell_5ftofold',['SPELL_TOFOLD',['../spell_8c.html#af146be20d2a2ce59531fa0edaa3bbf32',1,'spell.c']]],
   ['spell_5ftoupper',['SPELL_TOUPPER',['../spell_8c.html#a6ae62d49e8bd61e6eb892b98db66ef03',1,'spell.c']]],
@@ -360,8 +360,7 @@ var searchData=
   ['synspl_5fdefault',['SYNSPL_DEFAULT',['../buffer__defs_8h.html#ae8ca6b51b150fd5b5c40b592ec413d68',1,'buffer_defs.h']]],
   ['synspl_5fnotop',['SYNSPL_NOTOP',['../buffer__defs_8h.html#ae111a5867ec15294949a6b9c18096d36',1,'buffer_defs.h']]],
   ['synspl_5ftop',['SYNSPL_TOP',['../buffer__defs_8h.html#a48d61d4bc8d229a18a9debbe3f91d32b',1,'buffer_defs.h']]],
-  ['syntax_5ffname',['SYNTAX_FNAME',['../os__unix__defs_8h.html#ab663aef9993732c249d0ef9c39acfd04',1,'os_unix_defs.h']]],
-  ['sys_5fmenu_5ffile',['SYS_MENU_FILE',['../os__unix__defs_8h.html#a0c5137e8fee838c00d6d8eeca56c7cd7',1,'os_unix_defs.h']]],
+  ['syntax_5ffname',['SYNTAX_FNAME',['../unix__defs_8h.html#ab663aef9993732c249d0ef9c39acfd04',1,'unix_defs.h']]],
   ['sys_5foptwin_5ffile',['SYS_OPTWIN_FILE',['../vim_8h.html#aedf80e092c18b4fc7c1c5d4d0650d203',1,'vim.h']]],
-  ['sys_5fvimrc_5ffile',['SYS_VIMRC_FILE',['../os__unix__defs_8h.html#a1911c62ae289848a368895b7bbf06ef5',1,'os_unix_defs.h']]]
+  ['sys_5fvimrc_5ffile',['SYS_VIMRC_FILE',['../unix__defs_8h.html#a1911c62ae289848a368895b7bbf06ef5',1,'unix_defs.h']]]
 ];

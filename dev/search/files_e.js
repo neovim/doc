@@ -8,6 +8,5 @@ var searchData=
   ['os_2eh',['os.h',['../os_8h.html',1,'']]],
   ['os_5fdefs_2eh',['os_defs.h',['../os__defs_8h.html',1,'']]],
   ['os_5funix_2ec',['os_unix.c',['../os__unix_8c.html',1,'']]],
-  ['os_5funix_2eh',['os_unix.h',['../os__unix_8h.html',1,'']]],
-  ['os_5funix_5fdefs_2eh',['os_unix_defs.h',['../os__unix__defs_8h.html',1,'']]]
+  ['os_5funix_2eh',['os_unix.h',['../os__unix_8h.html',1,'']]]
 ];

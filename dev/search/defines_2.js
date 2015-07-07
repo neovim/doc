@@ -33,7 +33,7 @@ var searchData=
   ['bad_5fkeep',['BAD_KEEP',['../ex__cmds__defs_8h.html#a2ecdf12bea0e44bfd58b27d2868e0291',1,'ex_cmds_defs.h']]],
   ['bad_5freplace',['BAD_REPLACE',['../ex__cmds__defs_8h.html#acef2ef1067d913e691f47233838d0dd1',1,'ex_cmds_defs.h']]],
   ['bang',['BANG',['../ex__cmds__defs_8h.html#a4b540d252558bbfc6963934c5c871477',1,'ex_cmds_defs.h']]],
-  ['basenamelen',['BASENAMELEN',['../os__unix__defs_8h.html#a4023d3df4a3cb3602ed231495d445947',1,'os_unix_defs.h']]],
+  ['basenamelen',['BASENAMELEN',['../os__defs_8h.html#a4023d3df4a3cb3602ed231495d445947',1,'os_defs.h']]],
   ['bco_5falways',['BCO_ALWAYS',['../option_8h.html#a6ac7acb7051b6f2a9c75ebb3e10ec019',1,'option.h']]],
   ['bco_5fenter',['BCO_ENTER',['../option_8h.html#a03661524ae9548cdf507d2c50bffb6a7',1,'option.h']]],
   ['bco_5fnohelp',['BCO_NOHELP',['../option_8h.html#ae641c3f61ffb1df37bc7a40568383a9f',1,'option.h']]],

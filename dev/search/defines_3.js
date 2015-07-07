@@ -63,7 +63,7 @@ var searchData=
   ['cmd_5fnext',['CMD_NEXT',['../ex__cmds2_8c.html#ab280ea9e373c377f430e715c5a524385',1,'ex_cmds2.c']]],
   ['cmd_5fquit',['CMD_QUIT',['../ex__cmds2_8c.html#a00623bb158e456576d15c670176fcfe6',1,'ex_cmds2.c']]],
   ['cmd_5fstep',['CMD_STEP',['../ex__cmds2_8c.html#ad56827296f51c2c46e3e9dd9e4d3fe80',1,'ex_cmds2.c']]],
-  ['cmdbuffsize',['CMDBUFFSIZE',['../os__unix__defs_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;os_unix_defs.h'],['../vim_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;vim.h']]],
+  ['cmdbuffsize',['CMDBUFFSIZE',['../os__defs_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;os_defs.h'],['../vim_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;vim.h']]],
   ['cmdline',['CMDLINE',['../vim_8h.html#a17cfc132230dcbede6802a80d600b2b2',1,'vim.h']]],
   ['cmdwin',['CMDWIN',['../ex__cmds__defs_8h.html#a393d467a1515e4213d0ee44109c3091d',1,'ex_cmds_defs.h']]],
   ['cmp_5finternal',['CMP_INTERNAL',['../option__defs_8h.html#a347b7fd28c2b606320785b6889831849',1,'option_defs.h']]],

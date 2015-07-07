@@ -272,7 +272,7 @@ var searchData=
   ['bad_5freplace',['BAD_REPLACE',['../ex__cmds__defs_8h.html#acef2ef1067d913e691f47233838d0dd1',1,'ex_cmds_defs.h']]],
   ['badi',['badi',['../structlimitscore__T.html#a4cd997b1093180053f865e2950d7f6ec',1,'limitscore_T']]],
   ['bang',['BANG',['../ex__cmds__defs_8h.html#a4b540d252558bbfc6963934c5c871477',1,'ex_cmds_defs.h']]],
-  ['basenamelen',['BASENAMELEN',['../os__unix__defs_8h.html#a4023d3df4a3cb3602ed231495d445947',1,'os_unix_defs.h']]],
+  ['basenamelen',['BASENAMELEN',['../os__defs_8h.html#a4023d3df4a3cb3602ed231495d445947',1,'os_defs.h']]],
   ['bbox_5fmax_5fy',['bbox_max_y',['../structprt__ps__font__S.html#adfccdbee8acf1032e0bdd7754ee72ad7',1,'prt_ps_font_S']]],
   ['bbox_5fmin_5fy',['bbox_min_y',['../structprt__ps__font__S.html#ae73e724cc8fc4b8ff58a76f139a9f8b7',1,'prt_ps_font_S']]],
   ['bck_5fword',['bck_word',['../search_8c.html#a5883614f84c14346baba155e1aad8859',1,'search.c']]],
