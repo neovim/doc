@@ -9,6 +9,7 @@ var searchData=
   ['rbuffer_5fproduced',['rbuffer_produced',['../rbuffer_8c.html#a91f44514ca49daa291527c0e88224f17',1,'rbuffer.c']]],
   ['rbuffer_5fread',['rbuffer_read',['../rbuffer_8c.html#ae1dfec41fc807799c4c57d9394a790d6',1,'rbuffer.c']]],
   ['rbuffer_5fread_5fptr',['rbuffer_read_ptr',['../rbuffer_8c.html#a27a50bf09e93786aa0c2698619636d77',1,'rbuffer.c']]],
+  ['rbuffer_5freset',['rbuffer_reset',['../rbuffer_8c.html#a5d111441fdb65a12ae19a9308dd73f0a',1,'rbuffer.c']]],
   ['rbuffer_5fsize',['rbuffer_size',['../rbuffer_8c.html#a8aa0f4242c2522ff8da11e335feb02ce',1,'rbuffer.c']]],
   ['rbuffer_5fspace',['rbuffer_space',['../rbuffer_8c.html#a07585f0aebded24d439787a08a8c0d18',1,'rbuffer.c']]],
   ['rbuffer_5fwrite',['rbuffer_write',['../rbuffer_8c.html#a8800877d441ac9d81c50504067c0db75',1,'rbuffer.c']]],
