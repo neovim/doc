@@ -173,7 +173,7 @@ var searchData=
   ['p_5fsc',['p_sc',['../option__defs_8h.html#a78d578f8a1711adb0cced21bf3afae46',1,'option_defs.h']]],
   ['p_5fscs',['p_scs',['../option__defs_8h.html#a8b2fd122c817cc6bf4f0e0d9d5a0b98d',1,'option_defs.h']]],
   ['p_5fsections',['p_sections',['../option__defs_8h.html#a356b5a09926dd95870ddc6673cb45ea2',1,'option_defs.h']]],
-  ['p_5fsecure',['p_secure',['../option__defs_8h.html#a6e07d83ec16d32bc5c6dec679f4833d5',1,'p_secure():&#160;option_defs.h'],['../option_8c.html#ac892fc4fabcac0160e59c4f33e5b7c8a',1,'P_SECURE():&#160;option.c']]],
+  ['p_5fsecure',['P_SECURE',['../option_8c.html#ac892fc4fabcac0160e59c4f33e5b7c8a',1,'P_SECURE():&#160;option.c'],['../option__defs_8h.html#a6e07d83ec16d32bc5c6dec679f4833d5',1,'p_secure():&#160;option_defs.h']]],
   ['p_5fsel',['p_sel',['../option__defs_8h.html#a4d3414c2fee9cab576dfcae3e05c8b2b',1,'option_defs.h']]],
   ['p_5fsft',['p_sft',['../option__defs_8h.html#a958855566dfe0521eb036a5599be9acb',1,'option_defs.h']]],
   ['p_5fsh',['p_sh',['../option__defs_8h.html#a282f3a73a693abd64d9c8a39349b4d8e',1,'option_defs.h']]],
