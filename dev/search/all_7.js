@@ -224,7 +224,6 @@ var searchData=
   ['go_5fpointer',['GO_POINTER',['../option__defs_8h.html#a8082e35b13c8150fe92f59e32e9bb3f3',1,'option_defs.h']]],
   ['go_5fright',['GO_RIGHT',['../option__defs_8h.html#a11db633e9145688b245ae7fa0555c4bb',1,'option_defs.h']]],
   ['go_5ftabline',['GO_TABLINE',['../option__defs_8h.html#a61046a41dbc91ec5814c7bc33c7bf413',1,'option_defs.h']]],
-  ['go_5ftearoff',['GO_TEAROFF',['../option__defs_8h.html#a5f03a834c795d0693085a766af6ee60a',1,'option_defs.h']]],
   ['go_5ftoolbar',['GO_TOOLBAR',['../option__defs_8h.html#a67246f62bfde052c575f1097cc854004',1,'option_defs.h']]],
   ['go_5fvertical',['GO_VERTICAL',['../option__defs_8h.html#a63a83218b0beac9d65891d4a6cf9a335',1,'option_defs.h']]],
   ['go_5fvleft',['GO_VLEFT',['../option__defs_8h.html#a4eb10d7d1982300acceb99a14c68a4ec',1,'option_defs.h']]],
