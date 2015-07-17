@@ -35,6 +35,7 @@ var searchData=
   ['lookfor_5fscopedecl',['LOOKFOR_SCOPEDECL',['../indent__c_8c.html#a724b59cdf0b873c546fcca02e2629dbf',1,'indent_c.c']]],
   ['lookfor_5fterm',['LOOKFOR_TERM',['../indent__c_8c.html#ab35478434ba8d729b4cf568d67216f8b',1,'indent_c.c']]],
   ['lookfor_5funterm',['LOOKFOR_UNTERM',['../indent__c_8c.html#a105140a180acb0b894b2f22657522c69',1,'indent_c.c']]],
+  ['loop_5fpoll_5fevents_5funtil',['LOOP_POLL_EVENTS_UNTIL',['../loop_8h.html#a3825e7149cc42580842ae076f4c6158d',1,'loop.h']]],
   ['lower',['LOWER',['../regexp_8c.html#aaa9295df3f8f6033cae4b89cc7e5ff29',1,'regexp.c']]],
   ['lreplace',['LREPLACE',['../vim_8h.html#addb1286839c1c41cf21ed4d07d5470d5',1,'vim.h']]],
   ['lsize',['LSIZE',['../vim_8h.html#a8c509f130f8dae582048da077effe84a',1,'vim.h']]],

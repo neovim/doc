@@ -17,7 +17,7 @@ var searchData=
   ['match_5ftext',['match_text',['../structnfa__regprog__T.html#a533b14763f3ebfa4c7fbb59fdd11a8a2',1,'nfa_regprog_T']]],
   ['matched',['matched',['../structSearchedFile.html#a7d67d11c8b49f7493e1f48f5cc3ff5b1',1,'SearchedFile']]],
   ['matches',['matches',['../structreg__extmatch__T.html#a37bc6d5e3d3cbf48d30d178d54afb5f7',1,'reg_extmatch_T']]],
-  ['maxmem',['maxmem',['../structJobOptions.html#a1fc0cac7dfa11fd41599c93b20bacf86',1,'JobOptions::maxmem()'],['../structwstream.html#aeb1daca31aec5cf09f7a7e7c975e08c0',1,'wstream::maxmem()']]],
+  ['maxmem',['maxmem',['../structstream.html#aa6e9106e7c0fc81770127afe8a613fd4',1,'stream']]],
   ['maxval',['maxval',['../structregstar__S.html#a6a30c9b642082d1488b0ac0d741f9096',1,'regstar_S']]],
   ['mb_5fbytelen_5ftab',['mb_bytelen_tab',['../globals_8h.html#ad99377081eacc51d42985b962d65e3c1',1,'globals.h']]],
   ['mb_5fchar2bytes',['mb_char2bytes',['../globals_8h.html#a0e4fa6df1ff3b41dcd91f7adc8322fa3',1,'globals.h']]],
@@ -109,5 +109,5 @@ var searchData=
   ['msg_5frow',['msg_row',['../globals_8h.html#a376f82c59d5c5bf72c5bc753f7554128',1,'globals.h']]],
   ['msg_5fscrolled',['msg_scrolled',['../globals_8h.html#a0b03bc5fdd1ab38b00bf9264b8c7275b',1,'globals.h']]],
   ['mshape',['mshape',['../structcursor__entry.html#af618354b5410e23249775766ce5f94d3',1,'cursor_entry']]],
-  ['multi',['multi',['../structregsub__T.html#a5eb602c7855c24e2afa36eb0c502c2aa',1,'regsub_T']]]
+  ['multi',['multi',['../structregsub__T.html#a656116d783d3cce09bf9ffb43c4a5bce',1,'regsub_T']]]
 ];

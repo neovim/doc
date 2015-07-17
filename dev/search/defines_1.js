@@ -224,7 +224,7 @@ var searchData=
   ['addr_5floaded_5fbuffers',['ADDR_LOADED_BUFFERS',['../ex__cmds__defs_8h.html#a3307ddd01e102ec4186b7789620b90d7',1,'ex_cmds_defs.h']]],
   ['addr_5ftabs',['ADDR_TABS',['../ex__cmds__defs_8h.html#ac30d16e51501da1c404126827bf0e2ff',1,'ex_cmds_defs.h']]],
   ['addr_5fwindows',['ADDR_WINDOWS',['../ex__cmds__defs_8h.html#adbbcd613a3154e9b244136438291fdff',1,'ex_cmds_defs.h']]],
-  ['address_5fmax_5fsize',['ADDRESS_MAX_SIZE',['../server_8c.html#ae8b7400e2f7f9d2a73365ebe2b7f0935',1,'server.c']]],
+  ['address_5fmax_5fsize',['ADDRESS_MAX_SIZE',['../socket_8h.html#ae8b7400e2f7f9d2a73365ebe2b7f0935',1,'socket.h']]],
   ['advance_5freginput',['ADVANCE_REGINPUT',['../regexp_8c.html#aaffcb5d87bf2e79f8e5947c8e3425d1d',1,'regexp.c']]],
   ['aft_5fcaplong',['AFT_CAPLONG',['../spell_8c.html#a10b08248197d0f341dee382b1718cb94',1,'spell.c']]],
   ['aft_5fchar',['AFT_CHAR',['../spell_8c.html#a1f913076d73dd4dfb79f6acb8be4698a',1,'spell.c']]],

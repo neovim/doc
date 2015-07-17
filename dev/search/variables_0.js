@@ -2,7 +2,7 @@ var searchData=
 [
   ['a',['a',['../structdecomp__T.html#abe4253441cff78e3fd3abc3ef99dac2a',1,'decomp_T']]],
   ['actext',['actext',['../structVimMenu.html#abfbc45899445a759fc001a7abfeeb80c',1,'VimMenu']]],
-  ['addr',['addr',['../structServer.html#ab6e364431e9ea5b60824ce8e79020d81',1,'Server::addr()'],['../structServer.html#a3a55959924ea0a6912d3fe6530c89a46',1,'Server::addr()'],['../structefm__S.html#af25df0937902ab8951fc01937fbfa479',1,'efm_S::addr()']]],
+  ['addr',['addr',['../structsocket__watcher.html#a425c6d6b8a723062b338f2ef3003800c',1,'socket_watcher::addr()'],['../structsocket__watcher.html#ab534281135a2089cc344518c4bbe8f52',1,'socket_watcher::addr()'],['../structefm__S.html#af25df0937902ab8951fc01937fbfa479',1,'efm_S::addr()']]],
   ['addr_5fcount',['addr_count',['../structexarg.html#a6df745abf04de31377b3beb6282c29c6',1,'exarg']]],
   ['addr_5ftype',['addr_type',['../structexarg.html#a26c04fe1b1fdb8bc1ab21376fed10a56',1,'exarg']]],
   ['ae_5fadd',['ae_add',['../structaffentry__S.html#aaf63dd3d4a63d612167ef0c28f44d404',1,'affentry_S']]],
@@ -50,7 +50,7 @@ var searchData=
   ['args',['args',['../structRequestEvent.html#aa1aa9551f4ead438340b707a77efd62f',1,'RequestEvent']]],
   ['argt',['argt',['../structexarg.html#ace9d3414c4449c3bc0d25997d89e1239',1,'exarg']]],
   ['arguments',['arguments',['../structprt__settings__T.html#a97e80df5db7397818fa2ae8091442115',1,'prt_settings_T']]],
-  ['argv',['argv',['../structmparm__T.html#a9ba49fddfe86057c09716c8967e1f60b',1,'mparm_T::argv()'],['../structJobOptions.html#acb55cd317793a5f011499985ed089916',1,'JobOptions::argv()']]],
+  ['argv',['argv',['../structprocess.html#abfefedf4a4596782ec8a6b41789ef786',1,'process::argv()'],['../structmparm__T.html#a9ba49fddfe86057c09716c8967e1f60b',1,'mparm_T::argv()']]],
   ['array',['array',['../structobject.html#ab308a4da42b72f7ae00cf5b0b895404b',1,'object']]],
   ['arrow_5fused',['arrow_used',['../globals_8h.html#a18b112bbeef55bff257f080bfc26bd12',1,'globals.h']]],
   ['ascii_5fenc',['ascii_enc',['../structprt__ps__mbfont__S.html#a8d3fe49d6f4b034e59747865e9f6375b',1,'prt_ps_mbfont_S']]],

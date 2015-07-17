@@ -208,7 +208,7 @@ var searchData=
   ['khash_5fset_5finit_5fint64',['KHASH_SET_INIT_INT64',['../khash_8h.html#a328af9814c0f533e559c59a6bb3d2677',1,'khash.h']]],
   ['khash_5fset_5finit_5fstr',['KHASH_SET_INIT_STR',['../khash_8h.html#ad4888f7576deb67071be65084b28a12c',1,'khash.h']]],
   ['khash_5ft',['khash_t',['../khash_8h.html#a918655286199787582304265cd9d4463',1,'khash.h']]],
-  ['kill_5ftimeout',['KILL_TIMEOUT',['../job_8c.html#a0041680469140758be68a3f08cc738e8',1,'job.c']]],
+  ['kill_5ftimeout',['KILL_TIMEOUT',['../process_8c.html#a0041680469140758be68a3f08cc738e8',1,'process.c']]],
   ['kl_5fbegin',['kl_begin',['../klist_8h.html#a2187fe4492a5642bd72b284e39861ea9',1,'klist.h']]],
   ['kl_5fdestroy',['kl_destroy',['../klist_8h.html#af03f1e866e90dde853978a8f818fcba5',1,'klist.h']]],
   ['kl_5fempty',['kl_empty',['../klist_8h.html#a167593447985e1453fd9b8ea6ff2b754',1,'klist.h']]],

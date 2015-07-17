@@ -5,6 +5,7 @@ var searchData=
   ['pointer_5fentry',['pointer_entry',['../structpointer__entry.html',1,'']]],
   ['pos_5ft',['pos_T',['../structpos__T.html',1,'']]],
   ['posmatch',['posmatch',['../structposmatch.html',1,'']]],
+  ['process',['process',['../structprocess.html',1,'']]],
   ['prt_5fdsc_5fcomment_5fs',['prt_dsc_comment_S',['../structprt__dsc__comment__S.html',1,'']]],
   ['prt_5fdsc_5fline_5fs',['prt_dsc_line_S',['../structprt__dsc__line__S.html',1,'']]],
   ['prt_5fmediasize_5fs',['prt_mediasize_S',['../structprt__mediasize__S.html',1,'']]],
@@ -18,6 +19,6 @@ var searchData=
   ['prt_5fsettings_5ft',['prt_settings_T',['../structprt__settings__T.html',1,'']]],
   ['prt_5ftext_5fattr_5ft',['prt_text_attr_T',['../structprt__text__attr__T.html',1,'']]],
   ['ptrlist',['Ptrlist',['../unionPtrlist.html',1,'']]],
-  ['ptyprocess',['PtyProcess',['../structPtyProcess.html',1,'']]],
+  ['pty_5fprocess',['pty_process',['../structpty__process.html',1,'']]],
   ['pumitem_5ft',['pumitem_T',['../structpumitem__T.html',1,'']]]
 ];

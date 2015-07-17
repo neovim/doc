@@ -73,12 +73,11 @@ var searchData=
   ['write_5fviminfo_5fsearch_5fpattern',['write_viminfo_search_pattern',['../search_8c.html#a47b57d4ae4a03e828f2aa3af8be0d35d',1,'search.c']]],
   ['write_5fviminfo_5fsub_5fstring',['write_viminfo_sub_string',['../ex__cmds_8c.html#adea10f3a74b03ae4c6306f9c7003639a',1,'ex_cmds.c']]],
   ['write_5fviminfo_5fvarlist',['write_viminfo_varlist',['../eval_8c.html#aece7486c010daa95f6fbad0510e0f54a',1,'eval.c']]],
-  ['wstream_5ffree',['wstream_free',['../wstream_8c.html#ae11f53a5dc808afe5ccb557aaef1252d',1,'wstream.c']]],
-  ['wstream_5fnew',['wstream_new',['../wstream_8c.html#a653aa720b3159be031dbbd83fa0b4c63',1,'wstream.c']]],
+  ['wstream_5finit',['wstream_init',['../wstream_8c.html#af72ebbbc1f5236590c04e166de843ad0',1,'wstream.c']]],
+  ['wstream_5finit_5ffd',['wstream_init_fd',['../wstream_8c.html#abb8658054b5d0c5f04cbee620af1a951',1,'wstream.c']]],
+  ['wstream_5finit_5fstream',['wstream_init_stream',['../wstream_8c.html#a65f60178702db099b7598ef53dfc8b0a',1,'wstream.c']]],
   ['wstream_5fnew_5fbuffer',['wstream_new_buffer',['../wstream_8c.html#ade1794e093b6379124f86a469042b7ba',1,'wstream.c']]],
   ['wstream_5frelease_5fwbuffer',['wstream_release_wbuffer',['../wstream_8c.html#a622779c46c0a00bbc2c2cc5ee660afda',1,'wstream.c']]],
-  ['wstream_5fset_5ffile',['wstream_set_file',['../wstream_8c.html#ad50b12fd49094371be2364aa5dbf0d00',1,'wstream.c']]],
-  ['wstream_5fset_5fstream',['wstream_set_stream',['../wstream_8c.html#a1ffd3b729141333bcecb61376b3d5716',1,'wstream.c']]],
-  ['wstream_5fset_5fwrite_5fcb',['wstream_set_write_cb',['../wstream_8c.html#a1b6de8d8cf1566acd6ab2fd2b69b399a',1,'wstream.c']]],
-  ['wstream_5fwrite',['wstream_write',['../wstream_8c.html#a9c9c3d09541a66942b11014944d4a493',1,'wstream.c']]]
+  ['wstream_5fset_5fwrite_5fcb',['wstream_set_write_cb',['../wstream_8c.html#a1c7a1e8144e17fc3f8e24e09ce6c6d88',1,'wstream.c']]],
+  ['wstream_5fwrite',['wstream_write',['../wstream_8c.html#ad793e838b9a4ce1b9a26a38bb6b3c988',1,'wstream.c']]]
 ];

@@ -22,7 +22,7 @@ var searchData=
   ['temp_5ffile_5fpath_5fmaxlen',['TEMP_FILE_PATH_MAXLEN',['../unix__defs_8h.html#a2ecbd3b6bd1795000308850facf75066',1,'TEMP_FILE_PATH_MAXLEN():&#160;unix_defs.h'],['../win__defs_8h.html#a2ecbd3b6bd1795000308850facf75066',1,'TEMP_FILE_PATH_MAXLEN():&#160;win_defs.h']]],
   ['term_5ffocus',['TERM_FOCUS',['../vim_8h.html#a32b72dbc7b77346d425b786a4ebabadc',1,'vim.h']]],
   ['term_5fstr',['term_str',['../vim_8h.html#a40bb20d0855d869e16ce55af407d3b18',1,'vim.h']]],
-  ['term_5ftimeout',['TERM_TIMEOUT',['../job_8c.html#a98c00711b9567ed2d037a5f19be4c87a',1,'job.c']]],
+  ['term_5ftimeout',['TERM_TIMEOUT',['../process_8c.html#a98c00711b9567ed2d037a5f19be4c87a',1,'process.c']]],
   ['termcap2key',['TERMCAP2KEY',['../keymap_8h.html#a4c8c96cf912db168274f81915674e40e',1,'keymap.h']]],
   ['terminal_5foptions_5finit',['TERMINAL_OPTIONS_INIT',['../terminal_8h.html#a6bca266afee4cf909e20ff720ce3e1a4',1,'terminal.h']]],
   ['textdomain',['textdomain',['../vim_8h.html#a4aff4edc09ea9fa224a467bd1e43bb78',1,'vim.h']]],
