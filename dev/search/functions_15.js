@@ -23,6 +23,7 @@ var searchData=
   ['verbose_5ftry_5fmalloc',['verbose_try_malloc',['../memory_8c.html#a8af346742b0ef5494ac3cd7dc5e40668',1,'memory.c']]],
   ['vgetc',['vgetc',['../getchar_8c.html#a15db3f8639823b11e0a9e1ea99873be5',1,'getchar.c']]],
   ['vim_5fbeep',['vim_beep',['../misc1_8c.html#a775b5106ed06174ee94babb4624d3cb5',1,'misc1.c']]],
+  ['vim_5fcall_5ffunction',['vim_call_function',['../vim_8c.html#a21bbda2952b1c68f336b1a188faa5e4d',1,'vim.c']]],
   ['vim_5fchange_5fdirectory',['vim_change_directory',['../vim_8c.html#ad369ba1c79130aa4d79ec9e24774cb3f',1,'vim.c']]],
   ['vim_5fchdir',['vim_chdir',['../misc2_8c.html#a05bda11d595c6dd11d5d91b2fa795fe6',1,'misc2.c']]],
   ['vim_5fchdirfile',['vim_chdirfile',['../misc2_8c.html#a5ed23ebe9710b0c7c928cd18de872161',1,'misc2.c']]],

@@ -94,6 +94,7 @@ var searchData=
   ['vim_5facl_5ft',['vim_acl_T',['../types_8h.html#a74a3bf25dd551addd7429bc9155809f0',1,'types.h']]],
   ['vim_5fall',['VIM_ALL',['../message_8h.html#ad591ca6f1455f099491ea319280dcc1d',1,'message.h']]],
   ['vim_5fbeep',['vim_beep',['../misc1_8c.html#a775b5106ed06174ee94babb4624d3cb5',1,'misc1.c']]],
+  ['vim_5fcall_5ffunction',['vim_call_function',['../vim_8c.html#a21bbda2952b1c68f336b1a188faa5e4d',1,'vim.c']]],
   ['vim_5fcancel',['VIM_CANCEL',['../message_8h.html#a25b1822ac38c819dcfcd8dabce7eadb1',1,'message.h']]],
   ['vim_5fchange_5fdirectory',['vim_change_directory',['../vim_8c.html#ad369ba1c79130aa4d79ec9e24774cb3f',1,'vim.c']]],
   ['vim_5fchdir',['vim_chdir',['../misc2_8c.html#a05bda11d595c6dd11d5d91b2fa795fe6',1,'misc2.c']]],

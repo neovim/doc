@@ -27,7 +27,7 @@ var searchData=
   ['max_5farg_5fcmds',['MAX_ARG_CMDS',['../main_8c.html#a3077f70001d969fe82c7c7c92d30d334',1,'main.c']]],
   ['max_5fcluster_5fid',['MAX_CLUSTER_ID',['../syntax_8c.html#a9288ec6aebc1219f9f8bd901d3c5abc7',1,'syntax.c']]],
   ['max_5fconnections',['MAX_CONNECTIONS',['../server_8c.html#a053b7859476cc9867ec62c49e68d3fa1',1,'server.c']]],
-  ['max_5ffunc_5fargs',['MAX_FUNC_ARGS',['../eval_8c.html#a37518bc74bd0a87c02ca65a1fe8a5842',1,'eval.c']]],
+  ['max_5ffunc_5fargs',['MAX_FUNC_ARGS',['../eval_8h.html#a37518bc74bd0a87c02ca65a1fe8a5842',1,'eval.h']]],
   ['max_5fhl_5fid',['MAX_HL_ID',['../syntax_8c.html#a5e34fbe31306bb82d182ebb69431d3d7',1,'syntax.c']]],
   ['max_5fkey_5fcode_5flen',['MAX_KEY_CODE_LEN',['../keymap_8h.html#aae548c2ee7079e69f55ad6cb8093b8e9',1,'keymap.h']]],
   ['max_5fkey_5fname_5flen',['MAX_KEY_NAME_LEN',['../keymap_8h.html#a8732f89507b83b583a85bd00272f3def',1,'keymap.h']]],
