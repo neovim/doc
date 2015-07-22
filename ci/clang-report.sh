@@ -16,9 +16,8 @@ generate_clang_report() {
   # Generate static analysis report
   mkdir -p build/clang-report
 
-  if scan-build \
+  if "${SCAN_BUILD:-scan-build}" \
       --status-bugs \
-      --use-analyzer=$(which clang) \
       --html-title="Neovim Static Analysis Report" \
       -o build/clang-report \
       ${MAKE_CMD} \
@@ -104,11 +103,6 @@ get_code_quality_color() {
   fi
   blue=0
   printf "%.2x%.2x%.2x" $red $green $blue
-}
-
-is_ci_build && {
-  install_clang
-  setup_deps64
 }
 
 DOC_SUBTREE="/reports/clang/"

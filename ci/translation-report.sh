@@ -73,10 +73,6 @@ get_translation_report_body() {
   done
 }
 
-is_ci_build && {
-  setup_deps64
-}
-
 DOC_SUBTREE="/reports/translations/"
 clone_doc
 clone_neovim

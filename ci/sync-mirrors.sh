@@ -17,7 +17,7 @@ sync_bzr_mirror() {
 
   echo "Cloning upstream repo ${upstream_url} into ${repo_dir}."
   rm -rf "${repo_dir}"
-  git bzr clone "${upstream_url}" "${repo_dir}"
+  git-bzr clone "${upstream_url}" "${repo_dir}"
 
   echo "Pushing to ${MIRROR_USER}/${repo}."
   MIRROR_SUBTREE="/" \

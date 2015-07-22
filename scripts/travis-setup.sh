@@ -38,15 +38,11 @@ _setup_deps() {
 }
 
 deps_x64() {
-  _setup_deps "/opt/neovim-deps/${TRAVIS_OS_NAME}-x64"
-}
-
-deps_x86() {
-  if [ "${TRAVIS_OS_NAME}" != "linux" ]; then
-    >&2 echo "32-bit dependencies only supported for Linux."
+  if [ "${TRAVIS_OS_NAME}" != "osx" ]; then
+    >&2 echo "Prebuilt dependencies are only supported for OS X."
     exit 1
   fi
-  _setup_deps "/opt/neovim-deps/linux-x86"
+  _setup_deps "/opt/neovim-deps/osx-x64"
 }
 
 _call_function() {

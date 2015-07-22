@@ -1,6 +1,8 @@
+sudo: false
 language: c
 os:
   - linux
+compiler: gcc-5
 env:
   global:
     # Encrypted environment variables, see
@@ -12,11 +14,8 @@ env:
     - secure: pgI3Qt7bCRDeuKX38hP9xTJ6CdbwoUkcPToHnfDFYeclhUJRgCfZhCKKO+zTwqoa2Jx7wShoFeHaKidOFctg4ls4lrn47b0bPFED3LtU7RDQaeamqFKzgTV1IcEpkUfGl/i8tOmaEd7UvyUHKuKZmjmVr4Ce4ugATShYB186EW0=
   matrix:
     - CI_TARGET=assign-labels
-    - CI_TARGET=clang-report
     - CI_TARGET=coverity
     - CI_TARGET=deps-src
-    - CI_TARGET=deps32
-    - CI_TARGET=deps64
     - CI_TARGET=doc-index
     - CI_TARGET=doxygen
     - CI_TARGET=nightly
@@ -26,6 +25,9 @@ env:
     - CI_TARGET=vimpatch-report
 matrix:
   include:
+    - os: linux
+      env: CI_TARGET=clang-report SCAN_BUILD=scan-build-3.6
+      compiler: clang-3.6
     - os: osx
       env: CI_TARGET=deps64
       compiler: gcc-4.9
@@ -37,6 +39,34 @@ install:
     fi
 script:
   - ./ci/${CI_TARGET}.sh
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise-3.6
+      - ubuntu-toolchain-r-test
+    packages:
+      # Basic Neovim/test dependencies.
+      - autoconf
+      - automake
+      - build-essential
+      - cmake
+      - gdb
+      - libtool
+      - pkg-config
+      - unzip
+      - xclip
+      # Additional compilers/tools.
+      - clang-3.6
+      - g++-5
+      - gcc-5
+      - llvm-3.6-dev
+      # Tools required for bot-ci.
+      - bzr-fastimport
+cache:
+  apt: true
+  directories:
+    - "${TRAVIS_BUILD_DIR}/.deps/build/src"
+
 notifications:
   email:
     on_success: never
