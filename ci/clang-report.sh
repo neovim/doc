@@ -13,9 +13,12 @@ source ${BUILD_DIR}/ci/common/html.sh
 generate_clang_report() {
   cd ${NEOVIM_DIR}
 
-  # Generate static analysis report
   mkdir -p build/clang-report
 
+  # Compile deps
+  ${MAKE_CMD} deps
+
+  # Generate report
   if "${SCAN_BUILD:-scan-build}" \
       --status-bugs \
       --html-title="Neovim Static Analysis Report" \
