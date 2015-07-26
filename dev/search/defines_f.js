@@ -80,6 +80,7 @@ var searchData=
   ['opt_5fwin',['OPT_WIN',['../option_8c.html#a24e3fca0f6a1bdf4bac29084544794be',1,'option.c']]],
   ['opt_5fwinonly',['OPT_WINONLY',['../option_8h.html#abbb9e91a6b26d3053becc038a39b1c12',1,'option.h']]],
   ['original_5ftext',['ORIGINAL_TEXT',['../edit_8c.html#a51326e458e4050b2115863e0edda4d9b',1,'edit.c']]],
+  ['os_5fstrerror',['os_strerror',['../os__defs_8h.html#a337322a2a03d31e8ac5a9077f490da09',1,'os_defs.h']]],
   ['out_5fstr',['OUT_STR',['../vim_8h.html#a14fbed0d0794f553388498bffb71bec4',1,'vim.h']]],
   ['out_5fstr_5fnf',['OUT_STR_NF',['../vim_8h.html#ae1f9e2ae33cccf61215e81802d315225',1,'vim.h']]],
   ['outbuf_5fsize',['OUTBUF_SIZE',['../tui_8c.html#a3df829d6427c2cd4fbd387268040cc65',1,'tui.c']]],

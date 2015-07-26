@@ -892,7 +892,7 @@ var searchData=
   ['str_5fint_5ffn',['str_int_fn',['../dl_8c.html#a0cd5175943ac25bb09a4b56e2c5efbad',1,'dl.c']]],
   ['str_5fptr',['STR_PTR',['../charset_8c.html#af88dd3f3de54ea19fed8f4adfe36b1c2',1,'charset.c']]],
   ['str_5fstr_5ffn',['str_str_fn',['../dl_8c.html#a1e8c6d6bc348687b28f37e18a24e0e99',1,'dl.c']]],
-  ['strcat',['strcat',['../path_8c.html#aebf961f97555c6c093582c7a72d9d9db',1,'strcat(dest, fname2):&#160;path.c'],['../vim_8h.html#ada443375305fc60b73f44a59a2bf3f3b',1,'STRCAT():&#160;vim.h']]],
+  ['strcat',['STRCAT',['../vim_8h.html#ada443375305fc60b73f44a59a2bf3f3b',1,'STRCAT():&#160;vim.h'],['../path_8c.html#aebf961f97555c6c093582c7a72d9d9db',1,'strcat(dest, fname2):&#160;path.c']]],
   ['strchrsub',['strchrsub',['../memory_8c.html#a76467bc2bc18e489937e1b3c92790da5',1,'memory.c']]],
   ['strcmp',['STRCMP',['../vim_8h.html#a75fb5fb9d785a71f9d82f4d008a48278',1,'vim.h']]],
   ['strcnt',['strcnt',['../memory_8c.html#a7b03f2e520ad451f0c2ba4807d1b4703',1,'memory.c']]],
