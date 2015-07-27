@@ -27,7 +27,6 @@ var searchData=
   ['nonfull_5fcb',['nonfull_cb',['../structrbuffer.html#a1c1dc217b28e626539af4779f0c1bc7a',1,'rbuffer']]],
   ['noremap',['noremap',['../structVimMenu.html#ad66004392524caf7451a8ee08509bb0d',1,'VimMenu']]],
   ['norm',['norm',['../structregsubs__T.html#a9d74555fa04948dda9a6bf7b623955f3',1,'regsubs_T']]],
-  ['normal_5fmode',['normal_mode',['../structui__t.html#ac380c1a14a021dd4bc6ca8740eace881',1,'ui_t']]],
   ['noswapfile',['noswapfile',['../structcmdmod__T.html#a60ba129ef0cdc2694342a37ba1e72438',1,'cmdmod_T']]],
   ['nstate',['nstate',['../structnfa__regprog__T.html#a4f7f811289169fca844a6d35a5ae3db4',1,'nfa_regprog_T']]],
   ['nsubexp',['nsubexp',['../structnfa__regprog__T.html#a93a089e399a51725b89e2054003db430',1,'nfa_regprog_T']]],

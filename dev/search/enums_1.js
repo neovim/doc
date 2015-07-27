@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['bfa_5fvalues',['bfa_values',['../buffer_8h.html#a194d17de26e3126c21b1f22a3fd41c5d',1,'buffer.h']]],
-  ['bln_5fvalues',['bln_values',['../buffer_8h.html#a0757e048a6e01ef9cdfbde931168616a',1,'buffer.h']]]
+  ['channeltype',['ChannelType',['../channel_8c.html#a19a96edeeb9d37072c4ce9f862d19ba8',1,'channel.c']]],
+  ['csid_5fe',['csid_e',['../if__cscope__defs_8h.html#a4749f14dd57f1e60c59d120789a81738',1,'if_cscope_defs.h']]]
 ];

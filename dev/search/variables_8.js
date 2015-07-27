@@ -16,7 +16,6 @@ var searchData=
   ['input',['input',['../structTUIData.html#aca285038704f753f77079457ccd46d85',1,'TUIData']]],
   ['input_5ffn',['input_fn',['../structcmdline__info.html#a3aaf6465bbb9adf60b98ac198d81481d',1,'cmdline_info']]],
   ['input_5fisatty',['input_isatty',['../structmparm__T.html#a35e2a87f540012762ab3a4c8be9bd58d',1,'mparm_T']]],
-  ['insert_5fmode',['insert_mode',['../structui__t.html#af317571b74cdab8fdc2320db577615b2',1,'ui_t']]],
   ['insstart',['Insstart',['../globals_8h.html#a3833f856ca654d49a2fae21f7d814e0e',1,'globals.h']]],
   ['insstart_5forig',['Insstart_orig',['../globals_8h.html#a71c34c049c60f7e11fc86677291ccfba',1,'globals.h']]],
   ['integer',['integer',['../structobject.html#af3e1eeadb97a3cc2fd898457cdc78032',1,'object']]],

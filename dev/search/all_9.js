@@ -162,7 +162,6 @@ var searchData=
   ['inschar_5fformat',['INSCHAR_FORMAT',['../edit_8h.html#ada6f5a726ec52d465cc694910bc36334',1,'edit.h']]],
   ['inschar_5fno_5ffex',['INSCHAR_NO_FEX',['../edit_8h.html#a29598f1912a9b189d023515ec114950a',1,'edit.h']]],
   ['insert',['INSERT',['../vim_8h.html#a9cec4693931a816d4ad374c3a00e0dae',1,'vim.h']]],
-  ['insert_5fmode',['insert_mode',['../structui__t.html#af317571b74cdab8fdc2320db577615b2',1,'ui_t']]],
   ['insert_5freg',['insert_reg',['../ops_8c.html#a3af001e25743312ab352fa81844ecea4',1,'ops.c']]],
   ['insertchar',['insertchar',['../edit_8c.html#a196c3fa367de6ca93fd13f7658e84d16',1,'edit.c']]],
   ['insstart',['Insstart',['../globals_8h.html#a3833f856ca654d49a2fae21f7d814e0e',1,'globals.h']]],

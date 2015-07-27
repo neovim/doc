@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['hlf_5ft',['hlf_T',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60',1,'globals.h']]]
+  ['idopt_5ft',['idopt_T',['../option_8c.html#ad60af5f97038d9316b31a3c84c7eb144',1,'option.c']]],
+  ['inbufpollresult',['InbufPollResult',['../input_8c.html#aba659b7ea89ff3ccbfb12e87073859cf',1,'input.c']]]
 ];

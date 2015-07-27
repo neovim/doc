@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['workingstatus',['WorkingStatus',['../globals_8h.html#a4ec64f8310e1f754ab829ff0b95ce86a',1,'globals.h']]]
+  ['yreg_5fmode_5ft',['yreg_mode_t',['../ops_8c.html#a10442280beb7331c6ae3e7e36dfe04bb',1,'ops.c']]]
 ];

@@ -408,7 +408,6 @@ var searchData=
   ['augroup_5fdefault',['AUGROUP_DEFAULT',['../fileio_8c.html#aa8c07364b40db50208663f2f37f9f0c0',1,'fileio.c']]],
   ['augroup_5ferror',['AUGROUP_ERROR',['../fileio_8c.html#a3dd8c1431119b09656aa319ecac46171',1,'fileio.c']]],
   ['augroup_5fname',['AUGROUP_NAME',['../fileio_8c.html#aba3e5c7c49360019d2761abcc2191e91',1,'fileio.c']]],
-  ['auto_5fevent',['auto_event',['../fileio_8h.html#a2de49dcf3b3c1e1043a2373b0d69a58a',1,'fileio.h']]],
   ['auto_5fformat',['auto_format',['../edit_8c.html#a85d8c8a2466296feb0cc1dbe49dccb31',1,'edit.c']]],
   ['autocmd',['AutoCmd',['../structAutoCmd.html',1,'AutoCmd'],['../fileio_8c.html#aeae4fe66e25953a58616cfb59df22e78',1,'AutoCmd():&#160;fileio.c']]],
   ['autocmd_5fbufnr',['autocmd_bufnr',['../structcaller__scope.html#a3deb4e5da91574f6359d798fb524fcfa',1,'caller_scope']]],

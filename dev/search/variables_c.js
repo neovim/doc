@@ -94,6 +94,7 @@ var searchData=
   ['mlcs_5fnumlines',['mlcs_numlines',['../structml__chunksize.html#a94551d16436f07723a154c4828a39e79',1,'ml_chunksize']]],
   ['mlcs_5ftotalsize',['mlcs_totalsize',['../structml__chunksize.html#a654e28fe493bb9d5caca33b574f1fcd5',1,'ml_chunksize']]],
   ['mnemonic',['mnemonic',['../structVimMenu.html#a2d702b7d7d1d817ce73547e742afb825',1,'VimMenu']]],
+  ['mode_5fchange',['mode_change',['../structui__t.html#aa3487d26a205f352753d38fb74cb32e7',1,'ui_t']]],
   ['modec',['modec',['../structprt__settings__T.html#ac0b8a5d7ab8e83158e69ac6210779fb4',1,'prt_settings_T']]],
   ['modes',['modes',['../structVimMenu.html#a322360d3b21473b062c6fddf6514067e',1,'VimMenu']]],
   ['modified_5fwas_5fset',['modified_was_set',['../globals_8h.html#a6d4a8e450cebb9157bba2742eb67c0ed',1,'globals.h']]],
