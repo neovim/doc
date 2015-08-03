@@ -34,7 +34,7 @@
 <HR>
 <PRE>
 
-*<A NAME="todo.txt"></A><B>todo.txt</B>*      For Vim version 7.4.  Last change: 2014 Nov 19
+*<A NAME="todo.txt"></A><B>todo.txt</B>*      For Vim version 7.4.  Last change: 2014 Dec 06
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -72,9 +72,23 @@ not be repeated below, unless there is extra information.
 
 							*<A NAME="known-bugs"></A><B>known-bugs</B>*
 
+Patch to fix <A HREF="eval.html#list">list</A> range assign crash. (Yukihiro Nakadaira, 2014 Dec 1)
+
+Patch to fix range with user command. (Marcin Szamotulski, 2014 Dec 2)
+Update Dec 6, with support for user commands.
+
+When <A HREF="windows.html#window">window</A> number in <A HREF="intro.html#Ex">Ex</A> range is too high, give an error?
+Only when backwards compatible.
+
+:s/\n// doesn't change anything.  Since 7.4.232? (Eliseo Martínez, 2014 Nov
+28)  Patch on Issue 287
+
+Using vim_snprintf() in window.c can be in a function.
+
 Regexp problems:
 - The <A HREF="pattern.html#NFA">NFA</A> engine does not implement the time limit passed to
   nfa_regexec_multi()
+- Very slow with a long line and Ruby highlighting. (John Whitley, 2014 Dec 4)
 - Bug with <A HREF="pattern.html#pattern">pattern</A>: '\vblock (\d+)\.\n.*\d+&#37;(\1)@&lt;!\.$'
   (Lech Lorens, 2014 Feb 3)
 - Issue 164: freeze on <A HREF="pattern.html#regexp">regexp</A> search.
@@ -102,16 +116,10 @@ Breaks test_eval.  Inefficient, can we only compute y_width when needed?
 Problem that a previous silent &quot;<A HREF="eval.html#:throw">:throw</A>&quot; causes a following try/catch not to
 work. (ZyX, 2013 Sep 28)
 
+Patch to fix recognizing function name. (Ozaki Kiichi, 2014 Nov 28)
+
 &quot;<A HREF="editing.html#:cd">:cd</A> C:\Windows\System32\drivers\etc*&quot; does not work, even though the
 directory exists. (Sergio Gallelli, 2013 Dec 29)
-
-Patch by Marcin Szamotulski to add <A HREF="intro.html#count">count</A> to <A HREF="windows.html#:close">:close</A> (2014 Aug 10, update Aug
-14, Aug 30)
-    Make &quot;:1close&quot; close the first <A HREF="windows.html#window">window</A>.
-    Make &quot;:+1close&quot; close the next <A HREF="windows.html#window">window</A>.
-    Make &quot;:-1close&quot; close the previous <A HREF="windows.html#window">window</A>.
-Doesn't look right, asked for updates.
-Update 2014 Nov 8. Replied with suggestions.
 
 The entries added by <A HREF="eval.html#matchaddpos()">matchaddpos()</A> are returned by <A HREF="eval.html#getmatches()">getmatches()</A> but can't be
 set with <A HREF="eval.html#setmatches()">setmatches()</A>. (lcd47, 2014 Jun 29)
@@ -122,33 +130,33 @@ Problem using &quot;<A HREF="eval.html#:try">:try</A>&quot; inside &quot;<A HREF
 
 <A HREF="if_pyth.html#Python">Python</A>: &quot;<A HREF="if_pyth.html#:py">:py</A> raw_input('prompt')&quot; doesn't work. (Manu Hack)
 
-Patch to fix issue 78. (Christian Brabandt, 2014 Oct 8)
-
-Patch to fix leak in <A HREF="eval.html#map()">map()</A> with error. (Christian Brabandt, 2014 Oct 11)
-
-Patch to fix incsearch for &quot;2/pattern/e&quot;.
-
-Patch to fix memory leak in <A HREF="print.html#:hardcopy">:hardcopy</A>. (Christian Brabandt, 2014 Nov 16)
-
-Patch to fix warnings in if_ruby.c. (Ken Takata, 2014 Nov 17)
-
-Patch to make test 63 pass when in a B&amp;W terminal. (Christian Brabandt, 2014
-Nov 15)  Other patch (better) on Nov 17.
-
 Change behavior of <A HREF="eval.html#v:hlsearch">v:hlsearch</A>?  Patch from Christian, 2014 Oct 22.
+
+Patch to recover from X server restart: hint on Issue 203 (2014 Nov 21 18:44)
 
 <A HREF="os_win32.html#MS-Windows">MS-Windows</A>: When editing a file with a leading space, <A HREF="editing.html#writing">writing</A> <A HREF="motion.html#it">it</A> uses the
 wrong name. (Aram, 2014 Nov 7)  Vim 7.4.
+
+Add LessCss support. (Jenoma / Alessandro Vioni, 2014 Nov 24)
+Now with updated <A HREF="uganda.html#license">license</A>, Nov 24.
 
 patch to remove FEAT_OSFILETYPE from fileio.c. (Christian, 2014 Nov 12)
 
 Value returned by <A HREF="eval.html#virtcol()">virtcol()</A> changes depending on how lines wrap.  This is
 inconsistent with the documentation.
 
-Patch to fix relatie numbers. (Christian Brabandt, 2014 Nov 17)
+Ukrainian <A HREF="usr_01.html#vimtutor">vimtutor</A>. (Issue 288)
+
+Regenerate the <A HREF="mbyte.html#Unicode">Unicode</A> tables in mbyte.c.
+Diff from ZyX, 2014 Dec 6.
+
+Patch to fix relative numbers. (Christian Brabandt, 2014 Nov 17)
+Update Nov 26.
 
 Patch to fix wrong <A HREF="change.html#formatting">formatting</A> if <A HREF="options.html#'linebreak'">'linebreak'</A> is set. (Christian Brabandt, 2014
 Nov 12)
+
+Patch to avoid recognizing polkit <A HREF="motion.html#as">as</A> hog files. (Issue 292)
 
 Patch to support hex values for setting option value.
 (Zyx, 2015 Nov 6)
@@ -160,16 +168,28 @@ Update Nov 5.
 <A HREF="os_win32.html#MS-Windows">MS-Windows</A>: Crash opening very long file name starting with &quot;\\&quot;.
 (Christian Brock, 2012 Jun 29)
 
+Cursorline background color not mixed with character highlight.
+Patch by Yasuhiro Matsumoto, 2014 Dec 3.
+
 Problem using <A HREF="diff.html#diff">diff</A> <A HREF="syntax.html#syntax">syntax</A> with cp932 encoding.  Idea from Yasuhiro Matsumoto,
 patch from Ken Takata (2014 Nov 6)
 
 ml_updatechunk() is slow when retrying for another encoding. (John Little,
 2014 Sep 11)
 
+Patch to add a different <A HREF="intro.html#escape">escape</A> sequence for replace mode.
+(Omar Sandoval, 2014 Nov 30)
+
+Patch to allow values greater than 255 for ctermfg/ctermbg on Windows.
+(Yasuhiro Matsumoto, 2014 Dec 5)
+
 When <A HREF="options.html#'balloonexpr'">'balloonexpr'</A> returns a <A HREF="eval.html#list">list</A> the result has a trailing newline.
 Just remove one trailing newline. (lcd, 2014 Oct 17)
 
 Make comments in the test Makefile silent. (Kartik Agaram, 2014 Sep 24)
+
+Result of <A HREF="eval.html#systemlist()">systemlist()</A> does not show whether text ended in line break.
+(Bjorn Linse, 2014 Nov 27)
 
 When in <A HREF="options.html#'comments'">'comments'</A> &quot;n:x&quot; follows after three-part comment directly <A HREF="motion.html#it">it</A> repeats
 any one-character from the previous line. (Kartik Agaram, 2014 Sep 19)
@@ -184,6 +204,15 @@ Adding &quot;<A HREF="change.html#~">~</A>&quot; to <A HREF="options.html#'cdpat
 Plugins need to make a lot of effort, lots of mappings, to know what happened
 before pressing the key that triggers a <A HREF="usr_05.html#plugin">plugin</A> action.  How about keeping the
 last N pressed keys, so that they <A HREF="diff.html#do">do</A> not need to be mapped?
+
+&quot;:q!&quot; should reset modified flag for current buffer, if another buffer is
+modified no need to <A HREF="editing.html#abandon">abandon</A> <A HREF="motion.html#it">it</A> again.
+Patch from Yasuhiro Matsumoto, 2014 Nov 21.
+Update from Hirohito Higashi, 2014 Nov 21.
+With test, Nov 23.
+
+Wrong <A HREF="scroll.html#scrolling">scrolling</A> when using incsearch.  Patch by Christian Brabandt, 2014 Dec 4.
+Is this a good solution?
 
 Can assign to s:type when a function s:type has been defined.
 Also the other way around: define a function while a variable with that name
@@ -213,6 +242,7 @@ Bug: Autocompleting &quot;:tag/pat&quot; replaces &quot;/pat&quot; with a match 
 insert a space. (Micha Mos, 2014 Nov 7)
 
 Patch to add the :bvimgrep command.  (Christian Brabandt, 2014 Nov 12)
+Update Dec 6.
 
 Patch to add argument to <A HREF="quickfix.html#:cquit">:cquit</A>. (Thinca, 2014 Oct 12)
 
@@ -324,6 +354,10 @@ Patch to support <A HREF="eval.html#expression">expression</A> argument to <A HR
 Yasuhiro Matsumoto, 2013 May 31.
 Or should we add a more general mechanism, like a lambda() function?
 Patch by Yasuhiro Matsumoto, 2014 Sep 16.
+
+Patch to fix display of listchars on the cursorline. (Nayuri Aohime, 2013)
+Update suggested by Yasuhiro Matsumoto, 2014 Nov 25:
+https://gist.github.com/presuku/d3d6b230b9b6dcfc0477
 
 Patch for XDG base directory support. (Jean François Bignolles, 2014 Mar 4)
 Remark on the docs.  Should not be a compile time feature.  But then what?
@@ -574,6 +608,14 @@ location <A HREF="eval.html#list">list</A>. (Yegappan Lakshmanan, 2013 Jun 2)
 - <A HREF="os_win32.html#Win32">Win32</A>: When the taskbar is at the top of the screen creating the tabbar
   causes the <A HREF="windows.html#window">window</A> to move unnecessarily. (William <A HREF="motion.html#E">E</A>. Skeith III, 2012 Jan
   12) Patch: 2012 Jan 13  Needs more work (2012 Feb 2)
+
+Patch to use Modern UI 2.0 for the Nsis installer. (Guopeng Wen, 2010 Jul 30)
+Latest version: 2011 May 18 
+8   Windows install with NSIS: make <A HREF="motion.html#it">it</A> possible to <A HREF="diff.html#do">do</A> a silent install, see
+	<A HREF="http://nsis.sourceforge.net/Docs/Chapter4.html#4.12">http://nsis.sourceforge.net/Docs/Chapter4.html#4.12</A>
+    Version from Guopeng Wen that does this (2010 Dec 27)
+Alternative: MSI installer: https://github.com/petrkle/vim-msi/
+Or the one on Issue 279
 
 <A HREF="options.html#'iminsert'">'iminsert'</A> global value set when using &quot;<A HREF="options.html#:setlocal">:setlocal</A> iminsert&quot;? (Wu, 2012 Jun 23)
 
@@ -885,7 +927,7 @@ Assume the system converts between the actual encoding of the filesystem to
 the system encoding (usually <A HREF="mbyte.html#utf-8">utf-8</A>).
 
 Patch to add <A HREF="gui.html#GUI">GUI</A> colors to the terminal, when <A HREF="motion.html#it">it</A> supports <A HREF="motion.html#it">it</A>. (ZyX, 2013 Jan
-26, update 2013 Dec 14)
+26, update 2013 Dec 14, another 2014 Nov 22)
 
 Problem producing <A HREF="tagsrch.html#tags">tags</A> file when hebrew.frx is present.  It has a BOM.
 Results in <A HREF="helphelp.html#E670">E670</A>. (Tony Mechelynck, 2010 May 2)
@@ -1517,13 +1559,6 @@ Netbeans problem.  Use &quot;nc <A HREF="starting.html#-l">-l</A> 127.0.0.1 5555
 with &quot;gvim -nb:localhost:55555:foo&quot;.  From nc <A HREF="diff.html#do">do</A>: '1:editFile!0 &quot;foo&quot;'.  Then
 go to <A HREF="insert.html#Insert">Insert</A> mode and add a few lines.  Then backspacing every other time
 moves the cursor instead of <A HREF="change.html#deleting">deleting</A>. (Chris Kaiser, 2007 Sep 25)
-
-Patch to use Modern UI 2.0 for the Nsis installer. (Guopeng Wen, 2010 Jul 30)
-Latest version: 2011 May 18
-8   Windows install with NSIS: make <A HREF="motion.html#it">it</A> possible to <A HREF="diff.html#do">do</A> a silent install, see
-	<A HREF="http://nsis.sourceforge.net/Docs/Chapter4.html#4.12">http://nsis.sourceforge.net/Docs/Chapter4.html#4.12</A>
-    Version from Guopeng Wen that does this (2010 Dec 27)
-Alternative: MSI installer: https://github.com/petrkle/vim-msi/
 
 Windows installer should install 32-bit version of right-click handler also on
 64-bit systems. (Brian Cunningham, 2011 Dec 28)
@@ -4891,7 +4926,7 @@ empty line would appear.
 
     <footer>
       <div class="container">
-        Generated Sun Aug  2 08:17:03 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/efa059c5a4611629890e28987a83aa781952b78c"><code>efa059c</code></a>.
+        Generated Mon Aug  3 08:20:01 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/9f350e615cba96713666e681c68b002f38efb407"><code>9f350e6</code></a>.
       </div>
     </footer>
   </body>

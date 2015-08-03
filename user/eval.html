@@ -34,7 +34,7 @@
 <HR>
 <PRE>
 
-*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2014 Nov 15
+*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2014 Nov 27
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -1660,6 +1660,13 @@ Predefined Vim <A HREF="#variables">variables</A>:			*<A NAME="vim-variable"></A
 		value is zero when there was no mouse button click.
 
 
+				*<A NAME="v:msgpack_types"></A><B>v:msgpack_types</B>* *<A NAME="msgpack_types-variable"></A><B>msgpack_types-variable</B>*
+<A HREF="#v:msgpack_types">v:msgpack_types</A>	<A HREF="#Dictionary">Dictionary</A> containing msgpack types used by |<A HREF="#msgpackparse()">msgpackparse()</A>| 
+		and |<A HREF="#msgpackdump()">msgpackdump()</A>|. All types inside dictionary are fixed 
+		(not editable) empty lists. To check whether some <A HREF="#list">list</A> is one 
+		of msgpack types, use |<A HREF="motion.html#is">is</A>| <A HREF="motion.html#operator">operator</A>.
+
+
 					*<A NAME="v:oldfiles"></A><B>v:oldfiles</B>* *<A NAME="oldfiles-variable"></A><B>oldfiles-variable</B>*
 <A HREF="#v:oldfiles">v:oldfiles</A>	<A HREF="#List">List</A> of file names that is loaded from the |<A HREF="starting.html#viminfo">viminfo</A>| file on
 		<A HREF="starting.html#startup">startup</A>.  These are the files that Vim remembers marks for.
@@ -2069,6 +2076,8 @@ min( {list})			<A HREF="#Number">Number</A>	minimum value of items in {list}
 mkdir( {name} [, {path} [, {prot}]])
 				<A HREF="#Number">Number</A>	create directory {name}
 mode( [expr])			String	current editing mode
+msgpackdump( {list})		<A HREF="#List">List</A>	dump a <A HREF="#list">list</A> of <A HREF="vimindex.html#objects">objects</A> to msgpack
+msgpackparse( {list})		<A HREF="#List">List</A>	parse msgpack to a <A HREF="#list">list</A> of <A HREF="vimindex.html#objects">objects</A>
 nextnonblank( {lnum})		<A HREF="#Number">Number</A>	line nr of non-blank line &gt;= {lnum}
 nr2char( {expr}[, {utf8}])	String	single char with ASCII/UTF8 value {expr}
 or( {expr}, {expr})		<A HREF="#Number">Number</A>  bitwise OR
@@ -3554,6 +3563,17 @@ getchar([expr])						*<A NAME="getchar()"></A><B>getchar()</B>*
 <B>			:    endif</B>
 <B>			:  endwhile</B>
 <B>			:endfunction</B>
+ 
+		You may also receive syntetic characters, such <A HREF="motion.html#as">as</A>
+		|<A HREF="autocmd.html#&lt;CursorHold&gt;">&lt;CursorHold&gt;</A>|. Often you will want to ignore this and get
+		another character:
+<B>			:function GetKey()</B>
+<B>			:  let c = getchar()</B>
+<B>			:  while c == "\&lt;CursorHold&gt;"</B>
+<B>			:    let c = getchar()</B>
+<B>			:  endwhile</B>
+<B>			:  return c</B>
+<B>			:endfunction</B>
 
 
 <A HREF="#getcharmod()">getcharmod()</A>						*<A NAME="getcharmod()"></A><B>getcharmod()</B>*
@@ -3781,7 +3801,7 @@ getpos({expr})	Get the position for {expr}.  For possible values of {expr}
 		This can be used to save and restore the position of a <A HREF="motion.html#mark">mark</A>:
 <B>			let save_a_mark = getpos("'a")</B>
 <B>			...</B>
-<B>			call setpos(''a', save_a_mark</B>
+<B>			call setpos("'a", save_a_mark)</B>
  		Also see |<A HREF="#getcurpos()">getcurpos()</A>| and |<A HREF="#setpos()">setpos()</A>|.
 
 
@@ -4956,6 +4976,95 @@ mode([expr])	Return a <A HREF="#string">string</A> that indicates the current mo
 		with |<A HREF="#remote_expr()">remote_expr()</A>| In most other places <A HREF="motion.html#it">it</A> always returns
 		&quot;<A HREF="change.html#c">c</A>&quot; or &quot;<A HREF="pattern.html#n">n</A>&quot;.
 		Also see |<A HREF="#visualmode()">visualmode()</A>|.
+
+
+msgpackdump({list})				   {Nvim} *<A NAME="msgpackdump()"></A><B>msgpackdump()</B>*
+		Convert a <A HREF="#list">list</A> of VimL <A HREF="vimindex.html#objects">objects</A> to msgpack. Returned value is
+		|readfile()|-style <A HREF="#list">list</A>. Example:
+<B>			call writefile(msgpackdump([{}]), 'fname.mpack', 'b')</B>
+ 		This will write the single 0x80 byte to `fname.mpack` file
+		(dictionary with zero items is represented by 0x80 byte in
+		messagepack).
+
+		Limitations:
+		1. |<A HREF="#Funcref">Funcref</A>|<A HREF="change.html#s">s</A> cannot be dumped.
+		2. Containers that reference themselves cannot be dumped.
+		3. <A HREF="#Dictionary">Dictionary</A> keys are always dumped <A HREF="motion.html#as">as</A> STR strings.
+		4. Other strings are always dumped <A HREF="motion.html#as">as</A> BIN strings.
+		5. Points 3. and 4. <A HREF="diff.html#do">do</A> not apply to |<A HREF="#msgpack-special-dict">msgpack-special-dict</A>|s.
+
+
+msgpackparse({list})				   {Nvim} *<A NAME="msgpackparse()"></A><B>msgpackparse()</B>*
+		Convert a |readfile()|-style <A HREF="#list">list</A> to a <A HREF="#list">list</A> of VimL <A HREF="vimindex.html#objects">objects</A>. 
+		Example:
+<B>			let fname = expand('~/.nvim/shada/main.shada')</B>
+<B>			let mpack = readfile(fname, 'b')</B>
+<B>			let shada_objects = msgpackparse(mpack)</B>
+ 		This will read |<A HREF="intro.html#shada-file">shada-file</A>| to `shada_objects` <A HREF="#list">list</A>.
+
+		Limitations:
+		1. Mapping ordering is not preserved unless messagepack 
+		   <A HREF="map.html#mapping">mapping</A> is dumped using generic  <A HREF="map.html#mapping">mapping</A> 
+		   (|<A HREF="#msgpack-special-map">msgpack-special-map</A>|).
+		2. Since the parser aims to preserve all data untouched 
+		   (except for 1.) some strings are parsed to 
+		   |<A HREF="#msgpack-special-dict">msgpack-special-dict</A>| format which is not convenient to 
+		   use.
+
+							*<A NAME="msgpack-special-dict"></A><B>msgpack-special-dict</B>*
+		Some messagepack strings may be parsed to special 
+		dictionaries. Special dictionaries are dictionaries which
+
+		1. Contain exactly two keys: `_TYPE` and `_VALUE`.
+		2. `_TYPE` key is one of the types found in |<A HREF="#v:msgpack_types">v:msgpack_types</A>| 
+		   variable.
+		3. Value for `_VALUE` has the following format (Key column 
+		   contains name of the key from |<A HREF="#v:msgpack_types">v:msgpack_types</A>|):
+
+<B><FONT color="#54A23D">		Key	Value </FONT></B>
+		nil	Zero, ignored when dumping.
+		<A HREF="options.html#boolean">boolean</A>	One or zero. When dumping <A HREF="motion.html#it">it</A> is only checked that 
+			value is a |<A HREF="#Number">Number</A>|.
+		integer	|<A HREF="#List">List</A>| with four numbers: sign (-1 or 1), highest two 
+			bits, number with bits from 62nd to 31st, lowest 31 
+			bits. I.e. to get actual number one will need to use 
+			code like
+<B>				_VALUE[0] * ((_VALUE[1] &lt;&lt; 62)</B>
+<B>				             &amp; (_VALUE[2] &lt;&lt; 31)</B>
+<B>				             &amp; _VALUE[3])</B>
+ 			Special dictionary with this type will appear in 
+			|<A HREF="#msgpackparse()">msgpackparse()</A>| output under one of the following 
+			circumstances:
+			1. |<A HREF="#Number">Number</A>| is 32-bit and value is either above 
+			   INT32_MAX or below INT32_MIN.
+			2. |<A HREF="#Number">Number</A>| is 64-bit and value is above INT64_MAX. It 
+			   cannot possibly be below INT64_MIN because msgpack 
+			   C parser does not support such values.
+		float	|<A HREF="#Float">Float</A>|. This value cannot possibly appear in 
+			|<A HREF="#msgpackparse()">msgpackparse()</A>| output.
+		<A HREF="#string">string</A>	|readfile()|-style <A HREF="#list">list</A> of strings. This value will 
+			appear in |<A HREF="#msgpackparse()">msgpackparse()</A>| output if <A HREF="#string">string</A> contains 
+			zero byte or if <A HREF="#string">string</A> is a <A HREF="map.html#mapping">mapping</A> key and <A HREF="map.html#mapping">mapping</A> is 
+			being represented <A HREF="motion.html#as">as</A> special dictionary for other 
+			reasons.
+		binary	|readfile()|-style <A HREF="#list">list</A> of strings. This value will 
+			appear in |<A HREF="#msgpackparse()">msgpackparse()</A>| output if binary <A HREF="#string">string</A> 
+			contains zero byte.
+		array	|<A HREF="#List">List</A>|. This value cannot appear in |<A HREF="#msgpackparse()">msgpackparse()</A>| 
+			output.
+
+							*<A NAME="msgpack-special-map"></A><B>msgpack-special-map</B>*
+		map	|<A HREF="#List">List</A>| of |<A HREF="#List">List</A>|s with two items (key and value) each. 
+			This value will appear in |<A HREF="#msgpackparse()">msgpackparse()</A>| output if 
+			parsed <A HREF="map.html#mapping">mapping</A> contains one of the following keys:
+			1. Any key that is not a <A HREF="#string">string</A> (including keys which 
+			   are binary strings).
+			2. String with NUL byte inside.
+			3. Duplicate key.
+			4. Empty key.
+		ext	|<A HREF="#List">List</A>| with two values: first is a signed integer 
+			representing extension type. Second is 
+			|readfile()|-style <A HREF="#list">list</A> of strings.
 
 
 nextnonblank({lnum})					*<A NAME="nextnonblank()"></A><B>nextnonblank()</B>*
@@ -9541,7 +9650,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sun Aug  2 08:17:02 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/efa059c5a4611629890e28987a83aa781952b78c"><code>efa059c</code></a>.
+        Generated Mon Aug  3 08:19:59 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/9f350e615cba96713666e681c68b002f38efb407"><code>9f350e6</code></a>.
       </div>
     </footer>
   </body>
