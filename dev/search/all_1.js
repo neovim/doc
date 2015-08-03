@@ -386,6 +386,7 @@ var searchData=
   ['ascii_5fisupper',['ASCII_ISUPPER',['../macros_8h.html#a0813d526d3d6787fd20ca8c5c4a1cc7f',1,'macros.h']]],
   ['ask_5fyesno',['ask_yesno',['../misc1_8c.html#ae93903a02102e5b0e54d22aa2b292f03',1,'misc1.c']]],
   ['askmore',['ASKMORE',['../vim_8h.html#a9dc8cc5c84de6ea9358c8bbdf2008caa',1,'vim.h']]],
+  ['assert',['assert',['../eval_8c.html#a56679c846fba54dfe7416cd4c8b7a38e',1,'eval.c']]],
   ['assert_2eh',['assert.h',['../assert_8h.html',1,'']]],
   ['assert_5fconcat',['ASSERT_CONCAT',['../assert_8h.html#a9fad378d3538885ffce2b40a29334fbb',1,'assert.h']]],
   ['assert_5fconcat_5f',['ASSERT_CONCAT_',['../assert_8h.html#ac41c7fb1ca72aa1768dbc146fe1921c6',1,'assert.h']]],

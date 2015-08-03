@@ -25,6 +25,8 @@ var searchData=
   ['var_5fstring',['VAR_STRING',['../eval__defs_8h.html#a8563ca097ac5353ca232447d2e802489',1,'eval_defs.h']]],
   ['var_5funknown',['VAR_UNKNOWN',['../eval__defs_8h.html#a96188c382c0ac22565ec8c9c228ecf60',1,'eval_defs.h']]],
   ['var_5fwin',['VAR_WIN',['../option_8c.html#a92198e9354e0baa1283aca24b6f4b323',1,'option.c']]],
+  ['varnumber_5fmax',['VARNUMBER_MAX',['../eval__defs_8h.html#add0980d5007962ba49bbc83cdc84bdd9',1,'eval_defs.h']]],
+  ['varnumber_5fmin',['VARNUMBER_MIN',['../eval__defs_8h.html#acf5d244a6bb1d4d0c9a5a69efb39ff48',1,'eval_defs.h']]],
   ['vcol_5fhlc',['VCOL_HLC',['../screen_8c.html#aa098ec676adaf9ef7ed000c5f69fb5af',1,'screen.c']]],
   ['ve_5fall',['VE_ALL',['../option__defs_8h.html#a3b92ce715676a21ece882922c3ae6fd0',1,'option_defs.h']]],
   ['ve_5fblock',['VE_BLOCK',['../option__defs_8h.html#a0b8d237bbf17d74e6aa7931ea1cfb2aa',1,'option_defs.h']]],

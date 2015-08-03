@@ -2,7 +2,7 @@ var searchData=
 [
   ['oap',['oap',['../structcmdarg__S.html#a977734dc80074a0a55e43e20a0203a8e',1,'cmdarg_S']]],
   ['off',['off',['../structfline__T.html#a90521e5d2e093753a21c87b398a49ae4',1,'fline_T::off()'],['../structsoffset.html#ad47f130e994d0489c2d279517769649d',1,'soffset::off()'],['../structspat.html#a7ed0d055564c1f66d6297a4e8c5bb560',1,'spat::off()']]],
-  ['offset',['offset',['../structconvertStruct.html#a816e42b4aae7c4bc2c64236a3d0fce3e',1,'convertStruct']]],
+  ['offset',['offset',['../structListReaderState.html#a851057b39a300821b5611f4c531abed0',1,'ListReaderState::offset()'],['../structconvertStruct.html#a816e42b4aae7c4bc2c64236a3d0fce3e',1,'convertStruct::offset()']]],
   ['old_5fchar',['old_char',['../structtasave__T.html#a348ada8b0e902468e8956fc0cb901e76',1,'tasave_T']]],
   ['old_5fmod_5fmask',['old_mod_mask',['../structtasave__T.html#afdf679ca889915dc121ce3d4556099f6',1,'tasave_T']]],
   ['on_5fexit',['on_exit',['../structTerminalJobData.html#abd2570fdf5527cd0160eeb2f6c45b99c',1,'TerminalJobData']]],

@@ -393,7 +393,7 @@ var searchData=
   ['func_5fattr_5fnonnull_5fret',['FUNC_ATTR_NONNULL_RET',['../func__attr_8h.html#a81804a86724b1292d60a44f25304345b',1,'FUNC_ATTR_NONNULL_RET():&#160;func_attr.h'],['../memory_8c.html#aa77008ac38bc6da28fd13edc0a1d3f72',1,'FUNC_ATTR_NONNULL_RET():&#160;memory.c'],['../path_8c.html#a959bbf662aa84ea8abf67bedc7def0a5',1,'FUNC_ATTR_NONNULL_RET():&#160;path.c']]],
   ['func_5fattr_5fpure',['FUNC_ATTR_PURE',['../func__attr_8h.html#a5d0503c6e5540d690efe95700dfd0c0e',1,'func_attr.h']]],
   ['func_5fattr_5funused',['FUNC_ATTR_UNUSED',['../func__attr_8h.html#a88fe8278d0eb3b0607f7243d19eda36c',1,'func_attr.h']]],
-  ['func_5fattr_5fwarn_5funused_5fresult',['FUNC_ATTR_WARN_UNUSED_RESULT',['../func__attr_8h.html#a0513e624a5f4caba068c4d921e4e7e16',1,'func_attr.h']]],
+  ['func_5fattr_5fwarn_5funused_5fresult',['FUNC_ATTR_WARN_UNUSED_RESULT',['../func__attr_8h.html#a0513e624a5f4caba068c4d921e4e7e16',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;func_attr.h'],['../eval_8c.html#a7e7f51bf3a580c90a772b7e0f16afe4f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;eval.c']]],
   ['func_5fbreakpoint',['func_breakpoint',['../eval_8c.html#aa75d4bb36139b8a72ad2d1bc0e8b3f41',1,'eval.c']]],
   ['func_5fcall',['func_call',['../eval_8c.html#a3722fbc7d9cc8147b215a06ba9e44e2e',1,'eval.c']]],
   ['func_5fdbg_5ftick',['func_dbg_tick',['../eval_8c.html#a36a59e841c7e26ecfa10a657a1cbf7d7',1,'eval.c']]],

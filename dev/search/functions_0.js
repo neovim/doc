@@ -44,6 +44,7 @@ var searchData=
   ['arabic_5fshape',['arabic_shape',['../arabic_8c.html#aa22967813d05e78c651911ecb8c58e5f',1,'arabic.c']]],
   ['arrayof',['ArrayOf',['../api_2buffer_8c.html#a910f20ac8647adbd7087107157eff91d',1,'ArrayOf(String):&#160;buffer.c'],['../api_2buffer_8c.html#a2a0cecba9d1a9c6a0975001e304b4d37',1,'ArrayOf(Integer, 2):&#160;buffer.c'],['../tabpage_8c.html#acb87e9838a9289b47210384ea76f7772',1,'ArrayOf(Window):&#160;tabpage.c'],['../vim_8c.html#a910f20ac8647adbd7087107157eff91d',1,'ArrayOf(String):&#160;vim.c'],['../vim_8c.html#a73e8c79bf9755ce9fa997e668c874aa2',1,'ArrayOf(Buffer):&#160;vim.c'],['../vim_8c.html#acb87e9838a9289b47210384ea76f7772',1,'ArrayOf(Window):&#160;vim.c'],['../vim_8c.html#a2a2d59483f74c31e1b80c84fe4abd420',1,'ArrayOf(Tabpage):&#160;vim.c'],['../api_2window_8c.html#a2a0cecba9d1a9c6a0975001e304b4d37',1,'ArrayOf(Integer, 2):&#160;window.c']]],
   ['ask_5fyesno',['ask_yesno',['../misc1_8c.html#ae93903a02102e5b0e54d22aa2b292f03',1,'misc1.c']]],
+  ['assert',['assert',['../eval_8c.html#a56679c846fba54dfe7416cd4c8b7a38e',1,'eval.c']]],
   ['au_5fevent_5fdisable',['au_event_disable',['../fileio_8c.html#a41079a61a8a604bcbcbf3d7365e21d65',1,'fileio.c']]],
   ['au_5fevent_5frestore',['au_event_restore',['../fileio_8c.html#ade84ada57311cc1fd3900f4af00b1e0e',1,'fileio.c']]],
   ['au_5fexists',['au_exists',['../fileio_8c.html#a65a95d4a783cdf2b22622ea6b3b1f6f5',1,'fileio.c']]],

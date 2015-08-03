@@ -1,7 +1,6 @@
 var searchData=
 [
   ['c',['c',['../structdecomp__T.html#a1b0e71f8a5ba3d1eac9a79ff6d265751',1,'decomp_T::c()'],['../structnfa__state.html#ab1312b9f7fc41eececb1d1554c7056f6',1,'nfa_state::c()']]],
-  ['callback',['callback',['../structJobEvent.html#a5f8d55da2024b4fe13efad17902e04bf',1,'JobEvent']]],
   ['called_5femsg',['called_emsg',['../globals_8h.html#a8226ea083c93610f349ca43624d05129',1,'globals.h']]],
   ['caller',['caller',['../structfunccall__S.html#a1ae5751da798f7735ffcd35e6a4ca15c',1,'funccall_S']]],
   ['canon',['canon',['../mbyte_8c.html#a0e818a02b04731f1bff94e983f2b0b23',1,'mbyte.c']]],
@@ -91,7 +90,7 @@ var searchData=
   ['cs_5flflags',['cs_lflags',['../structcondstack.html#a67fdcde2b438895b3730cb47498f5923',1,'condstack']]],
   ['cs_5fline',['cs_line',['../structcondstack.html#a0a071e1d008cfc1e981b2192fb74dc5a',1,'condstack']]],
   ['cs_5flooplevel',['cs_looplevel',['../structcondstack.html#a076347661e0f96cbce2792205a61c839',1,'condstack']]],
-  ['cs_5fpend',['cs_pend',['../structcondstack.html#ab4da92d70a7c8e04430960135b33b25e',1,'condstack']]],
+  ['cs_5fpend',['cs_pend',['../structcondstack.html#a01848d92aed7cb7de82caeac4f7f4165',1,'condstack']]],
   ['cs_5fpending',['cs_pending',['../structcondstack.html#a768f32c9764bbe426926d5db39eeac7a',1,'condstack']]],
   ['cs_5ftrylevel',['cs_trylevel',['../structcondstack.html#a9c8261af419f3c941bb6dcf1ef673d97',1,'condstack']]],
   ['csp_5fex',['csp_ex',['../structcondstack.html#a9cce9653dee1f2e4387b4aee7e3c825c',1,'condstack']]],
@@ -108,7 +107,7 @@ var searchData=
   ['current_5fexception',['current_exception',['../structdbg__stuff.html#a091f59954dbec3c336ee06c8f2800d0c',1,'dbg_stuff::current_exception()'],['../globals_8h.html#a99f8616af5c83a419348439aa77f6c99',1,'current_exception():&#160;globals.h']]],
   ['current_5ffunccal',['current_funccal',['../eval_8c.html#acf7e7ea83c7c9c632394605024c3992e',1,'eval.c']]],
   ['current_5fline',['current_line',['../structloop__cookie.html#aacf606407f0fd47c651ac6f277973b8a',1,'loop_cookie']]],
-  ['cursor',['cursor',['../structterminal.html#a2d3dc6a1db9eb769698f49ce8ec2ef46',1,'terminal']]],
+  ['cursor',['cursor',['../structterminal.html#ae0199b84a1a23c9f1045840a9d8ae6ee',1,'terminal']]],
   ['cursor_5fgoto',['cursor_goto',['../structui__t.html#a39a6953a06b354b831b8a784c153f00a',1,'ui_t']]],
   ['cursor_5fstart',['cursor_start',['../structoparg__S.html#a0857162e7c3adec7b5555426416debae',1,'oparg_S']]],
   ['curtab',['curtab',['../globals_8h.html#aec8a130381d8276a622222a7479a08fe',1,'globals.h']]],

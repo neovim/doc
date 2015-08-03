@@ -84,6 +84,7 @@ var searchData=
   ['info_5flog_5flevel',['INFO_LOG_LEVEL',['../log_8h.html#a8fa6c5ec8254575a940cf0a632310a95',1,'log.h']]],
   ['init',['INIT',['../globals_8h.html#a6964dec5207b7152ab40ad9402b46727',1,'globals.h']]],
   ['init_5fpos_5ft',['INIT_POS_T',['../pos_8h.html#ad3aa329e09b00bea4fb5a256461e476f',1,'pos.h']]],
+  ['init_5fspecial_5fdict',['INIT_SPECIAL_DICT',['../eval_8c.html#a675a519871829c5d7da1c74b0a08b0ef',1,'eval.c']]],
   ['initializer',['INITIALIZER',['../map_8c.html#aa2bffdb71a5868e5d31b6318d68da954',1,'map.c']]],
   ['initializer_5fdeclare',['INITIALIZER_DECLARE',['../map_8c.html#a581b637f07268b211945deecf5089e47',1,'map.c']]],
   ['input_5fbuffer_5fsize',['INPUT_BUFFER_SIZE',['../input_8c.html#aa9b8dcc02cea15aab8e3d0b7860327a7',1,'input.c']]],
