@@ -111,5 +111,5 @@ var searchData=
   ['msg_5frow',['msg_row',['../globals_8h.html#a376f82c59d5c5bf72c5bc753f7554128',1,'globals.h']]],
   ['msg_5fscrolled',['msg_scrolled',['../globals_8h.html#a0b03bc5fdd1ab38b00bf9264b8c7275b',1,'globals.h']]],
   ['mshape',['mshape',['../structcursor__entry.html#af618354b5410e23249775766ce5f94d3',1,'cursor_entry']]],
-  ['multi',['multi',['../structregsub__T.html#a21fd0183c297231c7bdd246137032775',1,'regsub_T']]]
+  ['multi',['multi',['../structregsub__T.html#ac8c0ff67f30b5c370cc2c4fd3bebe78f',1,'regsub_T']]]
 ];

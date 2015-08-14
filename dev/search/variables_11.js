@@ -53,8 +53,8 @@ var searchData=
   ['rs_5fno',['rs_no',['../structregitem__S.html#aac8d53873b83742d43607298e7eb858b',1,'regitem_S']]],
   ['rs_5fscan',['rs_scan',['../structregitem__S.html#a38046a147ce25f4387bdb3e38b2514ef',1,'regitem_S']]],
   ['rs_5fstate',['rs_state',['../structregitem__S.html#ab28a5071e21a12f26ba1c9bc917b9604',1,'regitem_S']]],
-  ['rs_5fu',['rs_u',['../structregsave__T.html#a53ad4501940f65b55a52c4831a15a91e',1,'regsave_T']]],
-  ['rs_5fun',['rs_un',['../structregitem__S.html#a1d652c37f9eeeec17244f60bdedf2a9c',1,'regitem_S']]],
+  ['rs_5fu',['rs_u',['../structregsave__T.html#a68d07dee07e8b8a2abff995e17186864',1,'regsave_T']]],
+  ['rs_5fun',['rs_un',['../structregitem__S.html#a9eb48eed06f8a09d386142099b3a78b3',1,'regitem_S']]],
   ['ru_5fcol',['ru_col',['../globals_8h.html#a52643f37faefff5ae72ca6ea328b4e5f',1,'globals.h']]],
   ['ru_5fwid',['ru_wid',['../globals_8h.html#a15ff3a4d1261883be5090ddce9c15507',1,'globals.h']]]
 ];

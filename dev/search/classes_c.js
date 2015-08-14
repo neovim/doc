@@ -7,6 +7,7 @@ var searchData=
   ['memfile',['memfile',['../structmemfile.html',1,'']]],
   ['memline',['memline',['../structmemline.html',1,'']]],
   ['menutrans_5ft',['menutrans_T',['../structmenutrans__T.html',1,'']]],
+  ['message',['message',['../structmessage.html',1,'']]],
   ['mf_5fblocknr_5ftrans_5fitem',['mf_blocknr_trans_item',['../structmf__blocknr__trans__item.html',1,'']]],
   ['mf_5fhashitem',['mf_hashitem',['../structmf__hashitem.html',1,'']]],
   ['mf_5fhashtab',['mf_hashtab',['../structmf__hashtab.html',1,'']]],

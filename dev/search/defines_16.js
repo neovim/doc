@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['va_5fevent_5finit',['VA_EVENT_INIT',['../event_2defs_8h.html#a90881d444f5dd9e1872bae79df88ee50',1,'defs.h']]],
   ['valid',['VALID',['../screen_8h.html#ad47ac60ff0cfac53148a07bc32fc7585',1,'screen.h']]],
   ['valid_5fbotline',['VALID_BOTLINE',['../buffer__defs_8h.html#ae7257df27ce88d3f8a4996793f3975a1',1,'buffer_defs.h']]],
   ['valid_5fbotline_5fap',['VALID_BOTLINE_AP',['../buffer__defs_8h.html#a15b38488b8d4fc1987693ba3ef4f5572',1,'buffer_defs.h']]],

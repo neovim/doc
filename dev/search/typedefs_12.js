@@ -25,7 +25,7 @@ var searchData=
   ['str_5fstr_5ffn',['str_str_fn',['../dl_8c.html#a1e8c6d6bc348687b28f37e18a24e0e99',1,'dl.c']]],
   ['stream',['Stream',['../stream_8h.html#ab3641288ebdabb0113f0f134e70c5e7b',1,'stream.h']]],
   ['stream_5fclose_5fcb',['stream_close_cb',['../stream_8h.html#acf0794898e3e3d36570313efddf4b422',1,'stream.h']]],
-  ['stream_5fread_5fcb',['stream_read_cb',['../stream_8h.html#a614eb9220ccb993ca65185e1cf100761',1,'stream.h']]],
+  ['stream_5fread_5fcb',['stream_read_cb',['../stream_8h.html#af2bbf0e6f77d3363b1c0bf71f2566449',1,'stream.h']]],
   ['stream_5fwrite_5fcb',['stream_write_cb',['../stream_8h.html#a4cfd95b2ce3ba7a6f1446ec408f12ebc',1,'stream.h']]],
   ['suginfo_5ft',['suginfo_T',['../spell_8c.html#aab4f4009bf9b1c69710a0c5bee2c077c',1,'spell.c']]],
   ['syl_5fitem_5ft',['syl_item_T',['../spell_8c.html#a5a9a3afe57155352ea2622076b6d08cf',1,'spell.c']]],

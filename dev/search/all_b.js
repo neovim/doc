@@ -360,7 +360,7 @@ var searchData=
   ['kl_5fval',['kl_val',['../klist_8h.html#a94cdbcfd0a07a42b337cdc137792f62a',1,'klist.h']]],
   ['klist_2eh',['klist.h',['../klist_8h.html',1,'']]],
   ['klist_5finit',['KLIST_INIT',['../klist_8h.html#afc551e2e6181c7e2277bf679ed90e2d7',1,'klist.h']]],
-  ['klist_5ft',['klist_t',['../structloop.html#afc4060d6f544619edfa95cbd16583704',1,'loop::klist_t(Event)*deferred_events'],['../structloop.html#a2aa68fcc55433552d5ab5356687b41ae',1,'loop::klist_t(WatcherPtr)*children'],['../klist_8h.html#ac7f87e195754c73baf00050ca58d7cc9',1,'klist_t():&#160;klist.h']]],
+  ['klist_5ft',['klist_t',['../structloop.html#a2aa68fcc55433552d5ab5356687b41ae',1,'loop::klist_t()'],['../klist_8h.html#ac7f87e195754c73baf00050ca58d7cc9',1,'klist_t():&#160;klist.h']]],
   ['kliter_5ft',['kliter_t',['../klist_8h.html#a191dd67cfc7c22a899290c20c68808b4',1,'klist.h']]],
   ['kmalloc',['kmalloc',['../khash_8h.html#a0bf106cd8a14ea630b35ab5265e69bc9',1,'khash.h']]],
   ['kmap_5fllen',['KMAP_LLEN',['../digraph_8c.html#ad6e02e44f116de148b4a2be8194e009d',1,'digraph.c']]],

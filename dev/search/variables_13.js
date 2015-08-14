@@ -18,7 +18,7 @@ var searchData=
   ['tb_5fnoremap',['tb_noremap',['../structtypebuf__T.html#a02b447ff34fdac4a4d750b46943a8372',1,'typebuf_T']]],
   ['tb_5foff',['tb_off',['../structtypebuf__T.html#ab6553635679a8e869536561a8f16d2de',1,'typebuf_T']]],
   ['tb_5fsilent',['tb_silent',['../structtypebuf__T.html#a840a56b81309bbb4eca3ae28fb2a3221',1,'typebuf_T']]],
-  ['tcp',['tcp',['../structsocket__watcher.html#ae4b023443a3f86b3df6e648c2174c983',1,'socket_watcher::tcp()'],['../structstream.html#ac3ad5659881c4b790a3b8ee3d614c824',1,'stream::tcp()']]],
+  ['tcp',['tcp',['../structsocket__watcher.html#af3f857ad60e0490598863160dca4adb8',1,'socket_watcher::tcp()'],['../structstream.html#ac3ad5659881c4b790a3b8ee3d614c824',1,'stream::tcp()']]],
   ['term',['term',['../structTerminalJobData.html#ad98354a2ce8966aad25cad04ad318fae',1,'TerminalJobData']]],
   ['term_5fname',['term_name',['../structpty__process.html#abac2ef931eff97184bf84b7019466388',1,'pty_process']]],
   ['term_5fsent',['term_sent',['../structprocess.html#a6d79a1defd42893ce3b33db93dc5e6bc',1,'process']]],

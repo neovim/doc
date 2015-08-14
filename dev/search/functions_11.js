@@ -80,6 +80,6 @@ var searchData=
   ['rstream_5finit',['rstream_init',['../rstream_8c.html#a08e1e65ea0d342373b4b8d38f103e60c',1,'rstream.c']]],
   ['rstream_5finit_5ffd',['rstream_init_fd',['../rstream_8c.html#a611b2292976603925a390179d809cc4f',1,'rstream.c']]],
   ['rstream_5finit_5fstream',['rstream_init_stream',['../rstream_8c.html#a59d45db1632d0987e66c95c335813717',1,'rstream.c']]],
-  ['rstream_5fstart',['rstream_start',['../rstream_8c.html#a206e88f7fdc3e4981e3f2a6ef555b87b',1,'rstream.c']]],
-  ['rstream_5fstop',['rstream_stop',['../rstream_8c.html#a38b11c79d49396f79a7e1b72cf1d1637',1,'rstream.c']]]
+  ['rstream_5fstart',['rstream_start',['../rstream_8c.html#a16e9d613a2536534c40dc77c2fd13875',1,'rstream.c']]],
+  ['rstream_5fstop',['rstream_stop',['../rstream_8c.html#a9a7903b561a338b4c46afa4b21a0b871',1,'rstream.c']]]
 ];

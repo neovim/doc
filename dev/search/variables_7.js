@@ -2,7 +2,7 @@ var searchData=
 [
   ['had_5fend',['had_end',['../structfline__T.html#aedb89fcc1de49ae6951f7136e2707cb2',1,'fline_T']]],
   ['handle',['handle',['../structfile__buffer.html#afb27b9e42e832e9261136eebc0d96b31',1,'file_buffer::handle()'],['../structtabpage__S.html#ad51bd9e4c068a73d392ea47a501cc928',1,'tabpage_S::handle()'],['../structwindow__S.html#af82c489d14dea5e4a45e39e0c5128249',1,'window_S::handle()'],['../structsocket__watcher.html#aec792247ecf8a6bac66d0b6cec83f730',1,'socket_watcher::handle()'],['../structsocket__watcher.html#a3672e52c48fa92166edca714a25df5dd',1,'socket_watcher::handle()']]],
-  ['handler',['handler',['../structevent.html#a681e506fa1d9f3ba1397cf8f09bd5c9f',1,'event::handler()'],['../structRequestEvent.html#a51d1a50e19b9cd4a52403451aeb491c3',1,'RequestEvent::handler()']]],
+  ['handler',['handler',['../structmessage.html#ac21fa5cd94581a006f7edae776d04b1b',1,'message::handler()'],['../structRequestEvent.html#a51d1a50e19b9cd4a52403451aeb491c3',1,'RequestEvent::handler()']]],
   ['has_5fbackref',['has_backref',['../structnfa__regprog__T.html#a0a286f0ebd43d8c581b55710387299a5',1,'nfa_regprog_T']]],
   ['has_5fcharset',['has_charset',['../structprt__ps__charset__S.html#a96b9c011831053cbb754148c88b7d326',1,'prt_ps_charset_S']]],
   ['has_5fcolor',['has_color',['../structprt__settings__T.html#a801a0dc76a2b76cd58cd5c3d8cce7ccc',1,'prt_settings_T']]],
@@ -15,6 +15,7 @@ var searchData=
   ['head',['head',['../structpat__T.html#aaa85f3c45632362f883ba2247e62404b',1,'pat_T']]],
   ['headlen',['headlen',['../structpat__T.html#a01115bdde850bf161a95c0084d92ff6e',1,'pat_T']]],
   ['headless',['headless',['../structmparm__T.html#a0a80240645285d7c839c603f9822cca1',1,'mparm_T']]],
+  ['headtail',['headtail',['../structqueue.html#aae4a6e47431d2984e7c010ed17a71f4a',1,'queue']]],
   ['height',['height',['../structpty__process.html#a033139fb62d4410492a922a48742a935',1,'pty_process::height()'],['../structprt__mediasize__S.html#a1ba60630689d87c08c6538253f808a79',1,'prt_mediasize_S::height()'],['../structlineoff__T.html#ae6835ffb4c92c4c092def43dbdfa8108',1,'lineoff_T::height()'],['../structTerminalOptions.html#a1474ceecc044d4d74b6e5832f7e869e3',1,'TerminalOptions::height()'],['../structui__t.html#a03e872c6d07107893409447d88dd13de',1,'ui_t::height()']]],
   ['help',['help',['../structcscmd__T.html#ae9c1736aa202e6e951cdf934ce1d48ca',1,'cscmd_T']]],
   ['hi',['hi',['../structMPConvStackVal.html#a995214fe66119bf562f755be4461ccc6',1,'MPConvStackVal']]],

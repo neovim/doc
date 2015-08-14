@@ -2,11 +2,10 @@ var searchData=
 [
   ['id',['id',['../structarglist.html#af26b4de1eb776a71bb52e80006d64f12',1,'arglist::id()'],['../structmatchitem.html#a2e884d7323d270717a5bee6d2f74ca85',1,'matchitem::id()'],['../structcursor__entry.html#a8dc24386c2de14f1375e6a32dcfbe93c',1,'cursor_entry::id()'],['../structTerminalJobData.html#a0702607d4af263cc10ed4a1c5f22a480',1,'TerminalJobData::id()'],['../structChannel.html#a598d86971786418fb94ddf33ea1d2e99',1,'Channel::id()'],['../structnfa__state.html#aa6c59194186ea1f5ab5ede6af95a5fea',1,'nfa_state::id()'],['../structnfa__list__T.html#a616c7f8b44d001e83e3195178f053cd3',1,'nfa_list_T::id()'],['../structsignlist.html#af4d28aa2fa8e4d68a8a2e72641ef285a',1,'signlist::id()'],['../structtime__entry__T.html#a552cf47cc5c585222b02c850ed256c58',1,'time_entry_T::id()'],['../structsp__syn.html#a6738fd9a418b9d42bb2af39096d21640',1,'sp_syn::id()']]],
   ['id_5flm',['id_lm',['../structcursor__entry.html#a7f73782f403cf2460af8af5a69bb9a56',1,'cursor_entry']]],
-  ['idle',['idle',['../structstream.html#ade66c7e3cc3c436ea90f770b37906f63',1,'stream']]],
+  ['idle',['idle',['../structidle__event.html#a677fe9864cf8daf4354a7f68d38e4749',1,'idle_event::idle()'],['../structstream.html#ade66c7e3cc3c436ea90f770b37906f63',1,'stream::idle()']]],
   ['idx',['idx',['../structsortItem__T.html#a91d63ee8742750c6f13a4cddf50e99b2',1,'sortItem_T']]],
   ['ignored',['ignored',['../globals_8h.html#aae6c94a56a028c2659ab01147239c2c2',1,'globals.h']]],
   ['ignoredp',['ignoredp',['../globals_8h.html#ae76d8edaf2a5914ecee6de01f18f030e',1,'globals.h']]],
-  ['immediate_5fevents',['immediate_events',['../structloop.html#a495c30faf6ae46245dfa86b75f9e26f9',1,'loop']]],
   ['in',['in',['../structTerminalJobData.html#aa33b3cf2ca9c991026d9232b1bd08149',1,'TerminalJobData::in()'],['../structprocess.html#adf6779f6716291590ce047ebd825df50',1,'process::in()']]],
   ['in_5fuse',['in_use',['../structregsub__T.html#a27725d0c17dd3a4c391817b2cec117e3',1,'regsub_T']]],
   ['inc_5ftag',['inc_tag',['../structsp__syn.html#aafe1a57ad126381ea16c4079c87b92ae',1,'sp_syn']]],
@@ -35,6 +34,6 @@ var searchData=
   ['is_5fshort',['is_short',['../structblock__def.html#a2c5b9b7a2bd14823cd58fc94e20d59b1',1,'block_def']]],
   ['is_5fvisual',['is_VIsual',['../structoparg__S.html#a0bfdee9aacb2a3f44395f910ed560a4e',1,'oparg_S']]],
   ['italic',['italic',['../structprt__text__attr__T.html#aacdac715511f322d0e4c5d4c6560ce0d',1,'prt_text_attr_T::italic()'],['../structHlAttrs.html#a022bc22cfeeb5a410482507b89ffa900',1,'HlAttrs::italic()']]],
-  ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T']]],
+  ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T::item()'],['../structqueue__item.html#ab6c62800c4396d7882d4f04ecaec4b1b',1,'queue_item::item()']]],
   ['items',['items',['../structArray.html#a0e3f4c859e2f1e144bb27247a51a3721',1,'Array::items()'],['../structDictionary.html#afe6bfe0dd9c276eb86f2280f81ef26a3',1,'Dictionary::items()']]]
 ];
