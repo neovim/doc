@@ -42,6 +42,7 @@ var searchData=
   ['w_5fnrwidth',['w_nrwidth',['../structwindow__S.html#ad956cef38a803efaabb0e977a02ff861',1,'window_S']]],
   ['w_5fnrwidth_5fline_5fcount',['w_nrwidth_line_count',['../structwindow__S.html#a75a8f8d86a26103634cde2a505fd7e2e',1,'window_S']]],
   ['w_5fnrwidth_5fwidth',['w_nrwidth_width',['../structwindow__S.html#a8f50746c37f7ec4238fdb7ab77ca37b2',1,'window_S']]],
+  ['w_5fok',['W_OK',['../win__defs_8h.html#ae5acf4043c0903cda7436b108e29e8e6',1,'win_defs.h']]],
   ['w_5fold_5fbotfill',['w_old_botfill',['../structwindow__S.html#a9ae3a7d02b77daefe289ffbbdf1cb40f',1,'window_S']]],
   ['w_5fold_5fcursor_5ffcol',['w_old_cursor_fcol',['../structwindow__S.html#a6b83f25f9ce31cd0a6caccb63a6eb0ba',1,'window_S']]],
   ['w_5fold_5fcursor_5flcol',['w_old_cursor_lcol',['../structwindow__S.html#a02d25b5209be47d8299199b39560bdfb',1,'window_S']]],

@@ -2,6 +2,7 @@ var searchData=
 [
   ['w_5fconv',['W_CONV',['../farsi_8h.html#acc8fd504e65d3c99c03da38c2f6067ce',1,'farsi.h']]],
   ['w_5fendcol',['W_ENDCOL',['../screen_8c.html#a8753b90d132a2bd7d71ce3e6e087ceab',1,'screen.c']]],
+  ['w_5fok',['W_OK',['../win__defs_8h.html#ae5acf4043c0903cda7436b108e29e8e6',1,'win_defs.h']]],
   ['w_5fp_5farab',['w_p_arab',['../buffer__defs_8h.html#a6bcf5d82b890e1dc04474a73be428cf5',1,'buffer_defs.h']]],
   ['w_5fp_5fbri',['w_p_bri',['../buffer__defs_8h.html#aaadd2997852754e885bb2eeb8ebc5ed1',1,'buffer_defs.h']]],
   ['w_5fp_5fbriopt',['w_p_briopt',['../buffer__defs_8h.html#a09cd9b7f9770251c957111aa7863a2aa',1,'buffer_defs.h']]],
