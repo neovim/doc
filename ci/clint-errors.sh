@@ -21,7 +21,7 @@ generate_clint_report() {
   local index_file="$DOC_DIR/$DOC_SUBTREE/index.html"
 
   ./clint.py --record-errors="$errors_file" \
-    src/nvim/**/*.c src/nvim/**/*.h 2>> "$index_file" || true
+    src/nvim/**/*.c src/nvim/**/*.h 2> "$index_file" || true
 
   local title="Clint.py errors list"
   local body="<pre>$(cat "$index_file")</pre>"
