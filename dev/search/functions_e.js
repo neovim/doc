@@ -38,7 +38,6 @@ var searchData=
   ['os_5ffchown',['os_fchown',['../fs_8c.html#ac79fce6e901555324895469e38fcc9cc',1,'fs.c']]],
   ['os_5ffile_5fexists',['os_file_exists',['../fs_8c.html#ae11b9b57daaf48300f78aa9c8dbe26bc',1,'fs.c']]],
   ['os_5ffile_5fis_5freadable',['os_file_is_readable',['../fs_8c.html#a9549610c0709a5c1aff7e0d3ecbd8932',1,'fs.c']]],
-  ['os_5ffile_5fis_5freadonly',['os_file_is_readonly',['../fs_8c.html#ad03faa88262352e088f2bef2a679ee9c',1,'fs.c']]],
   ['os_5ffile_5fis_5fwritable',['os_file_is_writable',['../fs_8c.html#a362c00174a68645c46019e71702ccd82',1,'fs.c']]],
   ['os_5ffileid',['os_fileid',['../fs_8c.html#a9f765b3823c3cf3fb8483f2e503c31c6',1,'fs.c']]],
   ['os_5ffileid_5fequal',['os_fileid_equal',['../fs_8c.html#a6c5b6729a3b6c634a4377186375a37a3',1,'fs.c']]],
