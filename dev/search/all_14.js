@@ -176,7 +176,7 @@ var searchData=
   ['transstr',['transstr',['../charset_8c.html#aa6cd69a6bf19b8313271c363bef99e68',1,'charset.c']]],
   ['trigger_5fcursorhold',['trigger_cursorhold',['../fileio_8c.html#a9d64dd270633eb23211034eaaa2e2955',1,'fileio.c']]],
   ['trlbar',['TRLBAR',['../ex__cmds__defs_8h.html#ae046258a90b928595e51d43e8974dcb2',1,'ex_cmds_defs.h']]],
-  ['true',['TRUE',['../vim_8h.html#aa8cecfc5c5c054d2875c03e77b7be15d',1,'TRUE():&#160;vim.h'],['../eval_8c.html#a930920b2bc42824a5c03be681830f4b2',1,'true():&#160;eval.c']]],
+  ['true',['true',['../eval_8c.html#a930920b2bc42824a5c03be681830f4b2',1,'true():&#160;eval.c'],['../vim_8h.html#aa8cecfc5c5c054d2875c03e77b7be15d',1,'TRUE():&#160;vim.h']]],
   ['trunc_5fstring',['trunc_string',['../message_8c.html#ada41b9374b5cf03bf7e8d164025b15ba',1,'message.c']]],
   ['truncate_5fline',['truncate_line',['../misc1_8c.html#ab1611ae8b3fff29992a3968e0a713e44',1,'misc1.c']]],
   ['truncate_5fspaces',['truncate_spaces',['../edit_8c.html#a6f8bd267f6f8f04fc4f5c10f44422440',1,'edit.c']]],
