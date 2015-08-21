@@ -2133,6 +2133,7 @@ server2client( {clientid}, {string})
 				<A HREF="#Number">Number</A>	send reply <A HREF="#string">string</A>
 <A HREF="#serverlist()">serverlist()</A>			String	get a <A HREF="#list">list</A> of available servers
 setbufvar( {expr}, {varname}, {val})	set {varname} in buffer {expr} to {val}
+setcharsearch( {dict})		Dict	set character search from {dict}
 setcmdpos( {pos})		<A HREF="#Number">Number</A>	set cursor position in command-line
 setline( {lnum}, {line})	<A HREF="#Number">Number</A>	set line {lnum} to {line}
 setloclist( {nr}, {list}[, {action}])
@@ -3591,6 +3592,27 @@ getchar([expr])						*<A NAME="getchar()"></A><B>getchar()</B>*
 		Only the modifiers that have not been included in the
 		character itself are obtained.	Thus Shift-a results in &quot;<A HREF="insert.html#A">A</A>&quot;
 		without a modifier.
+
+
+<A HREF="#getcharsearch()">getcharsearch()</A>						*<A NAME="getcharsearch()"></A><B>getcharsearch()</B>*
+		Return the current character search information <A HREF="motion.html#as">as</A> a {dict}
+		with the following entries:
+
+		    char	character previously used for a character
+				search (|<A HREF="motion.html#t">t</A>|, |<A HREF="motion.html#f">f</A>|, |<A HREF="motion.html#T">T</A>|, or |<A HREF="motion.html#F">F</A>|); empty <A HREF="#string">string</A>
+				if no character search has been performed
+		    forward	direction of character search; 1 for forward,
+				0 for backward
+		    until	type of character search; 1 for a |<A HREF="motion.html#t">t</A>| or |<A HREF="motion.html#T">T</A>|
+				character search, 0 for an |<A HREF="motion.html#f">f</A>| or |<A HREF="motion.html#F">F</A>|
+				character search
+
+		This can be useful to always have |<A HREF="motion.html#;">;</A>| and |<A HREF="motion.html#,">,</A>| search
+		forward/backward regardless of the direction of the previous
+		character search:
+<B>			:nnoremap &lt;expr&gt; ; getcharsearch().forward ? ';' : ','</B>
+<B>			:nnoremap &lt;expr&gt; , getcharsearch().forward ? ',' : ';'</B>
+ 		Also see |<A HREF="#setcharsearch()">setcharsearch()</A>|.
 
 
 <A HREF="#getcmdline()">getcmdline()</A>						*<A NAME="getcmdline()"></A><B>getcmdline()</B>*
@@ -5935,6 +5957,27 @@ setbufvar({expr}, {varname}, {val})			*<A NAME="setbufvar()"></A><B>setbufvar()<
 <B>			:call setbufvar(1, "&amp;mod", 1)</B>
 <B>			:call setbufvar("todo", "myvar", "foobar")</B>
  		This function is not available in the |<A HREF="#sandbox">sandbox</A>|.
+
+
+<A HREF="#setcharsearch()">setcharsearch()</A>						*<A NAME="setcharsearch()"></A><B>setcharsearch()</B>*
+		Set the current character search information to {dict},
+		which contains one or more of the following entries:
+
+		    char	character which will be used for a subsequent
+				|<A HREF="motion.html#,">,</A>| or |<A HREF="motion.html#;">;</A>| command; an empty <A HREF="#string">string</A> clears the
+				character search
+		    forward	direction of character search; 1 for forward,
+				0 for backward
+		    until	type of character search; 1 for a |<A HREF="motion.html#t">t</A>| or |<A HREF="motion.html#T">T</A>|
+				character search, 0 for an |<A HREF="motion.html#f">f</A>| or |<A HREF="motion.html#F">F</A>|
+				character search
+
+		This can be useful to save/restore a user's character search
+		from a <A HREF="usr_41.html#script">script</A>:
+<B>			:let prevsearch = getcharsearch()</B>
+<B>			:" Perform a command which clobbers user's search</B>
+<B>			:call setcharsearch(prevsearch)</B>
+ 		Also see |<A HREF="#getcharsearch()">getcharsearch()</A>|.
 
 
 setcmdpos({pos})					*<A NAME="setcmdpos()"></A><B>setcmdpos()</B>*
@@ -9651,7 +9694,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Thu Aug 20 08:19:30 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/2647677618118a1d9c34f7210c149ce9bc6e3d2a"><code>2647677</code></a>.
+        Generated Fri Aug 21 08:17:59 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/0ec6a9c3c3f1fd6e76941895248c968b436581c7"><code>0ec6a9c</code></a>.
       </div>
     </footer>
   </body>
