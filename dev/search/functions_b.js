@@ -1,6 +1,9 @@
 var searchData=
 [
   ['langmap_5fadjust_5fmb',['langmap_adjust_mb',['../option_8c.html#aba8459be8bb7276adee89dbd2eb8a615',1,'option.c']]],
+  ['last_5fcsearch',['last_csearch',['../search_8c.html#a8dde058b173be984026d663ddd29999a',1,'search.c']]],
+  ['last_5fcsearch_5fforward',['last_csearch_forward',['../search_8c.html#a864f93b492776e84fa22e74f4cc1c048',1,'search.c']]],
+  ['last_5fcsearch_5funtil',['last_csearch_until',['../search_8c.html#ac831f957fc26841aa74b917913fda4f2',1,'search.c']]],
   ['last_5fpat_5fprog',['last_pat_prog',['../search_8c.html#ac1be67f3020c23f268ff7e6e93f8b397',1,'search.c']]],
   ['last_5fsearch_5fpat',['last_search_pat',['../search_8c.html#ade1848cd88bdb9e00285441d3f576ff2',1,'search.c']]],
   ['last_5fset_5fmsg',['last_set_msg',['../eval_8c.html#a43d6d2dc6047546ae0258aad4805a95b',1,'eval.c']]],
