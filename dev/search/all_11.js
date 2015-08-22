@@ -42,7 +42,7 @@ var searchData=
   ['queue_2eh',['queue.h',['../event_2queue_8h.html',1,'']]],
   ['queue_5fadd',['QUEUE_ADD',['../lib_2queue_8h.html#a0a8817097625ae10323b692ef5ea5bc8',1,'queue.h']]],
   ['queue_5fdata',['QUEUE_DATA',['../lib_2queue_8h.html#a6595f7e72c9ef969af4b209307b0cee3',1,'queue.h']]],
-  ['queue_5fempty',['queue_empty',['../queue_8c.html#ac13fbf345e3ce6a0136afac6cbc039ad',1,'queue_empty(Queue *queue):&#160;queue.c'],['../lib_2queue_8h.html#a6750e0691001d4318e2e71ef514515c1',1,'QUEUE_EMPTY():&#160;queue.h']]],
+  ['queue_5fempty',['QUEUE_EMPTY',['../lib_2queue_8h.html#a6750e0691001d4318e2e71ef514515c1',1,'QUEUE_EMPTY():&#160;queue.h'],['../queue_8c.html#ac13fbf345e3ce6a0136afac6cbc039ad',1,'queue_empty(Queue *queue):&#160;queue.c']]],
   ['queue_5fforeach',['QUEUE_FOREACH',['../lib_2queue_8h.html#a009b5826b736095648b3607ef90c812a',1,'queue.h']]],
   ['queue_5ffree',['queue_free',['../queue_8c.html#a42c7cc8caeb6778234887511db8fba40',1,'queue.c']]],
   ['queue_5fget',['queue_get',['../queue_8c.html#a4d1a4f0358b5a7029285c9ef3d0d5769',1,'queue.c']]],

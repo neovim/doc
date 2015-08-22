@@ -9,7 +9,7 @@ var searchData=
   ['read_5fedit',['read_edit',['../structexarg.html#a890d17f4aaf19e596b75ab4db4a152c6',1,'exarg']]],
   ['read_5fptr',['read_ptr',['../structrbuffer.html#aa9c86f8876e83eeb5a16e9e40dff1415',1,'rbuffer']]],
   ['refcnt',['refcnt',['../structreg__extmatch__T.html#abb0946f16ec7489b59022c64f7ecc22e',1,'reg_extmatch_T']]],
-  ['refcount',['refcount',['../structTerminalJobData.html#a46f73b4ae0c743f8bdaaa2e25d11d0bd',1,'TerminalJobData::refcount()'],['../structprocess.html#afe28212c5f296002cf6ba8fe605bf369',1,'process::refcount()'],['../structwbuffer.html#a106eeb826a586037de17e77cd18527b1',1,'wbuffer::refcount()'],['../structChannel.html#ae9cd14f738958e78ee3cf2826753ae2f',1,'Channel::refcount()']]],
+  ['refcount',['refcount',['../structTerminalJobData.html#a46f73b4ae0c743f8bdaaa2e25d11d0bd',1,'TerminalJobData::refcount()'],['../structprocess.html#afe28212c5f296002cf6ba8fe605bf369',1,'process::refcount()'],['../structwbuffer.html#a106eeb826a586037de17e77cd18527b1',1,'wbuffer::refcount()'],['../structChannel.html#ae9cd14f738958e78ee3cf2826753ae2f',1,'Channel::refcount()'],['../structterminal.html#a8ec4571d74b2164811d9e7cc7ccf70f7',1,'terminal::refcount()']]],
   ['reg_5fprog',['reg_prog',['../structAutoPat.html#a2c46743cf6036ab5ec84eb1c82cf243b',1,'AutoPat']]],
   ['reganch',['reganch',['../structbt__regprog__T.html#a41ebdd5b54875a7c6e7ab6e094788ba2',1,'bt_regprog_T::reganch()'],['../structnfa__regprog__T.html#a5d74d7f03c44a62b342666af3c652e23',1,'nfa_regprog_T::reganch()']]],
   ['regcomp',['regcomp',['../structregengine.html#af22ef5bd7c4608eb28bd22928ca15da4',1,'regengine']]],

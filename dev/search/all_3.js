@@ -57,6 +57,7 @@ var searchData=
   ['channel_5fclose',['channel_close',['../channel_8c.html#ab3cb01b6837b0013820053e2ae45c0df',1,'channel.c']]],
   ['channel_5ffrom_5fconnection',['channel_from_connection',['../channel_8c.html#a110a8ccc441edfdd5445a54934f4a80c',1,'channel.c']]],
   ['channel_5ffrom_5fprocess',['channel_from_process',['../channel_8c.html#aef9b8926e6c21e41aea19db3097a5144',1,'channel.c']]],
+  ['channel_5ffrom_5fstdio',['channel_from_stdio',['../channel_8c.html#a39a106924e1fbfb5624143391dfc1e25',1,'channel.c']]],
   ['channel_5fid',['channel_id',['../structUIData.html#a94f193063b6b4feabd9863cfe0a80cd4',1,'UIData']]],
   ['channel_5fsend_5fcall',['channel_send_call',['../channel_8c.html#ad5d758ca9c0b90dab1104434afc716c5',1,'channel.c']]],
   ['channel_5fsend_5fevent',['channel_send_event',['../channel_8c.html#ad8029885e6949c6b3994f1f0a536ff5f',1,'channel.c']]],
