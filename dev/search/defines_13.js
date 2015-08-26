@@ -251,6 +251,7 @@ var searchData=
   ['sreq_5fbuf',['SREQ_BUF',['../option__defs_8h.html#a141b031464b208b7cebb3a3a66bd8263',1,'option_defs.h']]],
   ['sreq_5fglobal',['SREQ_GLOBAL',['../option__defs_8h.html#a2cc24d7a2f5cf74ea6af3140e45a0ebe',1,'option_defs.h']]],
   ['sreq_5fwin',['SREQ_WIN',['../option__defs_8h.html#a6b0015118bb9af88f9f1c3477148a442',1,'option_defs.h']]],
+  ['ssize_5fmax',['SSIZE_MAX',['../win__defs_8h.html#a2d6569aa794c2f23e90691e60d2f3ad2',1,'win_defs.h']]],
   ['ssop_5fblank',['SSOP_BLANK',['../option__defs_8h.html#ad74b153691094cff2aab9ff08266ca20',1,'option_defs.h']]],
   ['ssop_5fbuffers',['SSOP_BUFFERS',['../option__defs_8h.html#a25c9802e86a830497ad08a3ec76b6c79',1,'option_defs.h']]],
   ['ssop_5fcurdir',['SSOP_CURDIR',['../option__defs_8h.html#a3684385b1a1952556f3e804bcf5d0b11',1,'option_defs.h']]],

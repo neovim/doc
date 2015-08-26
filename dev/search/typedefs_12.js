@@ -20,6 +20,7 @@ var searchData=
   ['socketwatcher',['SocketWatcher',['../socket_8h.html#abe9600e72d7256e9b8db5a5ffb319db1',1,'socket.h']]],
   ['spellinfo_5ft',['spellinfo_T',['../spell_8c.html#abdb9e3e2c1e0e2e061104c13303d61b9',1,'spell.c']]],
   ['spelload_5ft',['spelload_T',['../spell_8c.html#a59a0586f3defe2b22af8c3fea231c257',1,'spell.c']]],
+  ['ssize_5ft',['ssize_t',['../win__defs_8h.html#a894c4d58faeee7675b9e7e8244de1386',1,'win_defs.h']]],
   ['stateitem_5ft',['stateitem_T',['../syntax_8c.html#a181a4abf75449f799e93e239c35c6043',1,'syntax.c']]],
   ['str_5fint_5ffn',['str_int_fn',['../dl_8c.html#a0cd5175943ac25bb09a4b56e2c5efbad',1,'dl.c']]],
   ['str_5fstr_5ffn',['str_str_fn',['../dl_8c.html#a1e8c6d6bc348687b28f37e18a24e0e99',1,'dl.c']]],
