@@ -2,6 +2,7 @@ var searchData=
 [
   ['langmap_5fentry_5ft',['langmap_entry_T',['../structlangmap__entry__T.html',1,'']]],
   ['langp_5fs',['langp_S',['../structlangp__S.html',1,'']]],
+  ['libuv_5fprocess',['libuv_process',['../structlibuv__process.html',1,'']]],
   ['limitscore_5ft',['limitscore_T',['../structlimitscore__T.html',1,'']]],
   ['lineoff_5ft',['lineoff_T',['../structlineoff__T.html',1,'']]],
   ['listitem_5fs',['listitem_S',['../structlistitem__S.html',1,'']]],

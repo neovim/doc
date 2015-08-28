@@ -323,7 +323,7 @@ var searchData=
   ['ml_5fclose',['ml_close',['../memline_8c.html#abe58d9866bc8d9d29c219f731bb85ceb',1,'memline.c']]],
   ['ml_5fclose_5fall',['ml_close_all',['../memline_8c.html#a03d439d0a90af7064a71e4103b0a5b9f',1,'memline.c']]],
   ['ml_5fclose_5fnotmod',['ml_close_notmod',['../memline_8c.html#a604565a0ff35e06e698b0b74abc87ec1',1,'memline.c']]],
-  ['ml_5fdelete',['ml_delete',['../memline_8c.html#acc7926ea1ef47502c4c44de231e2dbfc',1,'ml_delete(linenr_T lnum, int message):&#160;memline.c'],['../memline_8c.html#ae92d6ba5b936547467fd45f1b6534778',1,'ML_DELETE():&#160;memline.c']]],
+  ['ml_5fdelete',['ML_DELETE',['../memline_8c.html#ae92d6ba5b936547467fd45f1b6534778',1,'ML_DELETE():&#160;memline.c'],['../memline_8c.html#acc7926ea1ef47502c4c44de231e2dbfc',1,'ml_delete(linenr_T lnum, int message):&#160;memline.c']]],
   ['ml_5fempty',['ML_EMPTY',['../memline__defs_8h.html#a67ecfd4d644d8b33ba15512b7136602a',1,'memline_defs.h']]],
   ['ml_5fextra',['ML_EXTRA',['../tag_8c.html#a421123d90e9b0e3cf508f5c0ae513297',1,'tag.c']]],
   ['ml_5ffind',['ML_FIND',['../memline_8c.html#a1de07181f87bda4348b87eb71e0ab526',1,'memline.c']]],

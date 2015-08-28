@@ -270,7 +270,7 @@ var searchData=
   ['printer_5fpage_5fnum',['printer_page_num',['../globals_8h.html#a154a41ac1b41e4ce25762590c5471feb',1,'globals.h']]],
   ['priority',['priority',['../structmatchitem.html#a4f4437f85482d8f94ba7fb50d36f0ac5',1,'matchitem::priority()'],['../structmessage.html#abb8e990d0d2d887af78581cf265eaea6',1,'message::priority()'],['../structVimMenu.html#ac4c61282ededf80cc970a0f254be0a13',1,'VimMenu::priority()']]],
   ['proc',['proc',['../structTerminalJobData.html#ad9b74b5f83c8114b01c5bd7e6cb50d9e',1,'TerminalJobData']]],
-  ['process',['process',['../structpty__process.html#a881101b4b063eb9ad3bce235d78d74e5',1,'pty_process::process()'],['../structuv__process.html#a993e11669e77d544a4f7181def6b3673',1,'uv_process::process()']]],
+  ['process',['process',['../structlibuv__process.html#a7f3b4bf351c2bcfad247f5aaff727fca',1,'libuv_process::process()'],['../structpty__process.html#a881101b4b063eb9ad3bce235d78d74e5',1,'pty_process::process()']]],
   ['prof_5fchild',['prof_child',['../structfunccall__S.html#a19028f9770821a58f6c1045997622dbe',1,'funccall_S']]],
   ['prog',['prog',['../structefm__S.html#a95a3ac8b48482a08ac991f9aece9081f',1,'efm_S']]],
   ['program',['program',['../structbt__regprog__T.html#a68d32f491ccb15e3ece0d036a0f42cdf',1,'bt_regprog_T']]],

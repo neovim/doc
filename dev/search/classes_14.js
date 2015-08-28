@@ -5,6 +5,5 @@ var searchData=
   ['ucmd',['ucmd',['../structucmd.html',1,'']]],
   ['ufunc',['ufunc',['../structufunc.html',1,'']]],
   ['ui_5ft',['ui_t',['../structui__t.html',1,'']]],
-  ['uidata',['UIData',['../structUIData.html',1,'']]],
-  ['uv_5fprocess',['uv_process',['../structuv__process.html',1,'']]]
+  ['uidata',['UIData',['../structUIData.html',1,'']]]
 ];

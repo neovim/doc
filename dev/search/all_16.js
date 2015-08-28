@@ -249,7 +249,7 @@ var searchData=
   ['vir_5ft',['vir_T',['../structvir__T.html',1,'']]],
   ['virtual_5factive',['virtual_active',['../misc2_8c.html#ad53fe5f53eda7f02128d6cd0b10a3b10',1,'misc2.c']]],
   ['visible',['visible',['../structterminal.html#acdb627d9dcb1bce3cf2796675728b4b5',1,'terminal']]],
-  ['visual',['VIsual',['../globals_8h.html#acf84ebbba1c7b96312e1e8af22a3bf9a',1,'VIsual():&#160;globals.h'],['../vim_8h.html#a5719963d148e344fe549ddff3b70f9b2',1,'VISUAL():&#160;vim.h']]],
+  ['visual',['VISUAL',['../vim_8h.html#a5719963d148e344fe549ddff3b70f9b2',1,'VISUAL():&#160;vim.h'],['../globals_8h.html#acf84ebbba1c7b96312e1e8af22a3bf9a',1,'VIsual():&#160;globals.h']]],
   ['visual_5fbell',['visual_bell',['../structui__t.html#a154aa74b68bb3a9049838771f270f4f9',1,'ui_t']]],
   ['visual_5freselect',['VIsual_reselect',['../globals_8h.html#a94f6632f8b7b88cf8fe53e560eeaf6d8',1,'globals.h']]],
   ['visualinfo_5ft',['visualinfo_T',['../structvisualinfo__T.html',1,'']]],

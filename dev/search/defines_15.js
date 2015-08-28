@@ -32,6 +32,7 @@ var searchData=
   ['upper',['UPPER',['../regexp_8c.html#ab7a309e1cb06fb6bcbd4314371443416',1,'regexp.c']]],
   ['url_5fbackslash',['URL_BACKSLASH',['../path_8c.html#a518635ea1856293589fe429c6ab28096',1,'path.c']]],
   ['url_5fslash',['URL_SLASH',['../path_8c.html#aa8157b6eae49b3baa2fee4a65289ffff',1,'path.c']]],
+  ['use_5fcrnl',['USE_CRNL',['../win__defs_8h.html#ae0b5a0edfc6038ce864d7c440fec692f',1,'win_defs.h']]],
   ['usectrlv',['USECTRLV',['../ex__cmds__defs_8h.html#a96c125873bb54cba54a97e45225f2c33',1,'ex_cmds_defs.h']]],
   ['user_5fcmd',['USER_CMD',['../ex__docmd_8c.html#a4ac37e1a18ddd00675a51a7a10a70443',1,'ex_docmd.c']]],
   ['user_5fcmd_5fga',['USER_CMD_GA',['../ex__docmd_8c.html#ae99087c289f20393a09f2c019553ef12',1,'ex_docmd.c']]],

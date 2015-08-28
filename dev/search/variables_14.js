@@ -70,10 +70,10 @@ var searchData=
   ['userhl',['userhl',['../structstl__hlrec.html#a2bcb76e29abe56af9972d0ec198a0e36',1,'stl_hlrec']]],
   ['useridx',['useridx',['../structexarg.html#a90d39e6e4a6c6406accce7fc5e4a519f',1,'exarg']]],
   ['ut',['ut',['../structTUIData.html#aa07b131befaf96d760f2afa651124701',1,'TUIData']]],
-  ['uv',['uv',['../structTerminalJobData.html#a2be9b9749c68df6fb7a1de33faad8ad0',1,'TerminalJobData::uv()'],['../structloop.html#aae8230c0dfc4beb0cc36568856823323',1,'loop::uv()'],['../structsignal__watcher.html#a54139a2df78aef2e3e0d2a5acd758aa0',1,'signal_watcher::uv()'],['../structsocket__watcher.html#aec51215d2b2bce6a579f8d3eb682fb56',1,'socket_watcher::uv()'],['../structstream.html#a672c655d7d07eeff24913b01504a2995',1,'stream::uv()'],['../structtime__watcher.html#ab59315c450cd24137fb1acd02966bb55',1,'time_watcher::uv()'],['../structuv__process.html#a97f139f5bbf96b16fa9d0a739490c78f',1,'uv_process::uv()']]],
+  ['uv',['uv',['../structTerminalJobData.html#ac032c22b53836a22bb0f6de5e6b414f5',1,'TerminalJobData::uv()'],['../structlibuv__process.html#a4aa9b44a4e092f2534a130066350521f',1,'libuv_process::uv()'],['../structloop.html#aae8230c0dfc4beb0cc36568856823323',1,'loop::uv()'],['../structsignal__watcher.html#a54139a2df78aef2e3e0d2a5acd758aa0',1,'signal_watcher::uv()'],['../structsocket__watcher.html#aec51215d2b2bce6a579f8d3eb682fb56',1,'socket_watcher::uv()'],['../structstream.html#a672c655d7d07eeff24913b01504a2995',1,'stream::uv()'],['../structtime__watcher.html#ab59315c450cd24137fb1acd02966bb55',1,'time_watcher::uv()']]],
   ['uv_5freq',['uv_req',['../structWRequest.html#a05e52cebd77b1bcc989e6806a8ac47cf',1,'WRequest']]],
   ['uvbuf',['uvbuf',['../structstream.html#a92c3ab23723f0ca7c735fd144991e6ac',1,'stream']]],
-  ['uvopts',['uvopts',['../structuv__process.html#a05ffdfc87abf5dd52462290b5fb14327',1,'uv_process']]],
-  ['uvstdio',['uvstdio',['../structuv__process.html#a1d8a9efab3580ad28e112ee5a1b967d8',1,'uv_process']]],
+  ['uvopts',['uvopts',['../structlibuv__process.html#ab93f1d4036b52a3409e62ccc5adc9cc6',1,'libuv_process']]],
+  ['uvstdio',['uvstdio',['../structlibuv__process.html#aed149565255dc49f0e052e4b94dc6aad',1,'libuv_process']]],
   ['uvstream',['uvstream',['../structstream.html#a929b592b810d390483d50854c5f76d6b',1,'stream']]]
 ];
