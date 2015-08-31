@@ -793,6 +793,7 @@ var searchData=
   ['start_5fchar_5fvcols',['start_char_vcols',['../structblock__def.html#a4e5d790047c10069b02364d3b259ccb2',1,'block_def']]],
   ['start_5fcol',['start_col',['../structregsub__T.html#a25526680f6ed8ecb70efa74a49926dfa',1,'regsub_T']]],
   ['start_5fcol_5fnr',['start_col_nr',['../structsorti__T.html#a40c9c66aca7d7a5ee40d154d45bc6461',1,'sorti_T']]],
+  ['start_5fglobal_5fchanges',['start_global_changes',['../ops_8c.html#a4e5726a021038268c9171a43908c0278',1,'ops.c']]],
   ['start_5flnum',['start_lnum',['../structregsub__T.html#ab9c66c6adc614a1421c89604392c278a',1,'regsub_T']]],
   ['start_5fptr',['start_ptr',['../structrbuffer.html#a91eb345302063ad9b5d1686a8e9257a0',1,'rbuffer']]],
   ['start_5fredo',['start_redo',['../getchar_8c.html#afefb79b2aac7337e7348e80f40527dab',1,'getchar.c']]],

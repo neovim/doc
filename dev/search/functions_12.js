@@ -190,6 +190,7 @@ var searchData=
   ['spell_5fsuggest_5flist',['spell_suggest_list',['../spell_8c.html#ad72aa99b2aa5313a6dceb8ad59786883',1,'spell.c']]],
   ['spell_5fto_5fword_5fend',['spell_to_word_end',['../spell_8c.html#a929ef58b5cc5d0ba6a79f47a703cb9fb',1,'spell.c']]],
   ['spell_5fword_5fstart',['spell_word_start',['../spell_8c.html#af6d7ebda1f8e7f9dd2823df0b2e599ba',1,'spell.c']]],
+  ['start_5fglobal_5fchanges',['start_global_changes',['../ops_8c.html#a4e5726a021038268c9171a43908c0278',1,'ops.c']]],
   ['start_5fredo',['start_redo',['../getchar_8c.html#afefb79b2aac7337e7348e80f40527dab',1,'getchar.c']]],
   ['start_5fredo_5fins',['start_redo_ins',['../getchar_8c.html#a10e1abe30cb31349268631d990b7a7de',1,'getchar.c']]],
   ['start_5fselection',['start_selection',['../normal_8c.html#a95c30abe5b59c5707b9ccc5f83667335',1,'normal.c']]],
