@@ -180,7 +180,7 @@ var searchData=
   ['digraph_2ec',['digraph.c',['../digraph_8c.html',1,'']]],
   ['digraph_2eh',['digraph.h',['../digraph_8h.html',1,'']]],
   ['dir',['dir',['../structsoffset.html#a6488831cd205a1dd236bd4da1be7d4da',1,'soffset']]],
-  ['dir_5fof_5ffile_5fexists',['dir_of_file_exists',['../path_8c.html#a76ad24fa05274ebc94416e847f4bf144',1,'path.c']]],
+  ['dir_5fof_5ffile_5fexists',['dir_of_file_exists',['../path_8c.html#ab6cf875c19365cc1069bf76c0ca1fa03',1,'path.c']]],
   ['dir_5fstack_5ft',['dir_stack_T',['../structdir__stack__T.html',1,'']]],
   ['directory',['Directory',['../structDirectory.html',1,'']]],
   ['dirname',['dirname',['../structdir__stack__T.html#ab697407585dcf56aa533f28958f6c0b4',1,'dir_stack_T']]],

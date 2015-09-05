@@ -7,7 +7,7 @@ var searchData=
   ['call_5fshell',['call_shell',['../misc2_8c.html#ade32024b6bc80d828ed2b061a2023743',1,'misc2.c']]],
   ['call_5fvim_5ffunction',['call_vim_function',['../eval_8c.html#a0d9ed7bfabc11d0ab3a34557f33638e4',1,'eval.c']]],
   ['can_5fabandon',['can_abandon',['../ex__cmds2_8c.html#ad904f1d8d9b8425b89c2261c7b1b7ff0',1,'ex_cmds2.c']]],
-  ['can_5fbs',['can_bs',['../option_8c.html#ac90b26e277c358cf3d5368f393846f58',1,'option.c']]],
+  ['can_5fbs',['can_bs',['../option_8c.html#a93ee31fd20ac323d4ffb7f0fefa30b8a',1,'option.c']]],
   ['cancelredo',['CancelRedo',['../getchar_8c.html#ae033a689727702c570a1653f781b0322',1,'getchar.c']]],
   ['cause_5ferrthrow',['cause_errthrow',['../ex__eval_8c.html#a2d67f4c6119ad646c4ebb8a6ecc57cc1',1,'ex_eval.c']]],
   ['change_5findent',['change_indent',['../edit_8c.html#a198cef8fae2db6d484ff1db77d716724',1,'edit.c']]],

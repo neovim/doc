@@ -13,7 +13,7 @@ var searchData=
   ['caller',['caller',['../structfunccall__S.html#a1ae5751da798f7735ffcd35e6a4ca15c',1,'funccall_S']]],
   ['caller_5fscope',['caller_scope',['../structcaller__scope.html',1,'']]],
   ['can_5fabandon',['can_abandon',['../ex__cmds2_8c.html#ad904f1d8d9b8425b89c2261c7b1b7ff0',1,'ex_cmds2.c']]],
-  ['can_5fbs',['can_bs',['../option_8c.html#ac90b26e277c358cf3d5368f393846f58',1,'option.c']]],
+  ['can_5fbs',['can_bs',['../option_8c.html#a93ee31fd20ac323d4ffb7f0fefa30b8a',1,'option.c']]],
   ['cancelredo',['CancelRedo',['../getchar_8c.html#ae033a689727702c570a1653f781b0322',1,'getchar.c']]],
   ['canon',['canon',['../mbyte_8c.html#a0e818a02b04731f1bff94e983f2b0b23',1,'mbyte.c']]],
   ['cansplit',['cansplit',['../structcscmd__T.html#a428006c1563c89e982e671f90e1caa89',1,'cscmd_T']]],

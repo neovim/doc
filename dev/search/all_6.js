@@ -142,7 +142,7 @@ var searchData=
   ['file1',['FILE1',['../ex__cmds__defs_8h.html#af95a9160010159174d4a260bfb1c70fc',1,'ex_cmds_defs.h']]],
   ['file_5fbuffer',['file_buffer',['../structfile__buffer.html',1,'']]],
   ['file_5fcomparison',['file_comparison',['../path_8h.html#ad979f31688a4e58ba10df1788b8a7512',1,'path.h']]],
-  ['file_5fff_5fdiffers',['file_ff_differs',['../option_8c.html#af832fd3b72ea789b5753c6286069f6ba',1,'option.c']]],
+  ['file_5fff_5fdiffers',['file_ff_differs',['../option_8c.html#a9a2e3a1fe1139cb9ae9a33e41f284554',1,'option.c']]],
   ['file_5fid',['file_id',['../structfile__buffer.html#a0b92d6f68a35ec394e71e0ef5c47df87',1,'file_buffer::file_id()'],['../structscriptitem__S.html#a641012d79b08de1f0fae9f23ae3269ed',1,'scriptitem_S::file_id()'],['../structff__visited.html#ac6cd40f7206c73029766a02ced5137a1',1,'ff_visited::file_id()'],['../structcsi.html#a589946e628abe1626c6042d36ee4307b',1,'csi::file_id()']]],
   ['file_5fid_5fempty',['FILE_ID_EMPTY',['../fs__defs_8h.html#a4d51ad7868df1b87c4a4f2638eeee963',1,'fs_defs.h']]],
   ['file_5fid_5fvalid',['file_id_valid',['../structfile__buffer.html#a3ae8a4f422f2dbc65422eb607773a85d',1,'file_buffer::file_id_valid()'],['../structscriptitem__S.html#a2c060dc95091ba12c7f6428923b492dc',1,'scriptitem_S::file_id_valid()'],['../structff__visited.html#a99e53435a3485a21b7c316eee6a78074',1,'ff_visited::file_id_valid()']]],

@@ -18,7 +18,7 @@ var searchData=
   ['win_5fdrag_5fstatus_5fline',['win_drag_status_line',['../window_8c.html#aa5ee7d091aede56dd9d5297df00f38fd',1,'window.c']]],
   ['win_5fdrag_5fvsep_5fline',['win_drag_vsep_line',['../window_8c.html#a29826f35300032d3faa6221ac9720932',1,'window.c']]],
   ['win_5fenter',['win_enter',['../window_8c.html#ab9585de0f94043f1a97bf1a45e64428e',1,'window.c']]],
-  ['win_5fequal',['win_equal',['../window_8c.html#aade2063ed98bc0e3c59e41964097e9b7',1,'window.c']]],
+  ['win_5fequal',['win_equal',['../window_8c.html#a36afb4cae00880230a5a70ff39140398',1,'window.c']]],
   ['win_5ffind_5ftabpage',['win_find_tabpage',['../window_8c.html#a30d750d44a092931d35e52dd64073343',1,'window.c']]],
   ['win_5ffree_5flsize',['win_free_lsize',['../window_8c.html#a297e2b03b19ff0b70cc3a6987959e478',1,'window.c']]],
   ['win_5fgoto',['win_goto',['../window_8c.html#acf1ef98c65a3c76b4484ccce80b1eabb',1,'window.c']]],

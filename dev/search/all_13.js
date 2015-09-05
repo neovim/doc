@@ -13,7 +13,7 @@ var searchData=
   ['salfirst_5ft',['salfirst_T',['../spell_8c.html#af70ae1e1bdb8ab3c747a2a08fefa4fdd',1,'spell.c']]],
   ['salitem_5fs',['salitem_S',['../structsalitem__S.html',1,'']]],
   ['salitem_5ft',['salitem_T',['../spell_8c.html#a878ec59beb72820e6b9ef223465fd9d3',1,'spell.c']]],
-  ['same_5fdirectory',['same_directory',['../path_8c.html#a7bbb60cf940e6fbc12e0ecd4e124c5c0',1,'path.c']]],
+  ['same_5fdirectory',['same_directory',['../path_8c.html#a2c11d6a4a00c80db7781fd6a2745a53e',1,'path.c']]],
   ['sattr_5ft',['sattr_T',['../globals_8h.html#ae5481da181fa7c2285fb3b23a2670dfb',1,'globals.h']]],
   ['save_5fabsolute_5fpath',['save_absolute_path',['../path_8c.html#a3592920bda4aa28743dc8713dd4bc913',1,'path.c']]],
   ['save_5fafter',['save_after',['../structregbehind__S.html#afa273aa5a3f7da829f001b4f3049b8f0',1,'regbehind_S']]],
