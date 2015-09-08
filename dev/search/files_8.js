@@ -8,6 +8,8 @@ var searchData=
   ['indent_2eh',['indent.h',['../indent_8h.html',1,'']]],
   ['indent_5fc_2ec',['indent_c.c',['../indent__c_8c.html',1,'']]],
   ['indent_5fc_2eh',['indent_c.h',['../indent__c_8h.html',1,'']]],
-  ['input_2ec',['input.c',['../input_8c.html',1,'']]],
-  ['input_2eh',['input.h',['../input_8h.html',1,'']]]
+  ['input_2ec',['input.c',['../tui_2input_8c.html',1,'']]],
+  ['input_2ec',['input.c',['../os_2input_8c.html',1,'']]],
+  ['input_2eh',['input.h',['../tui_2input_8h.html',1,'']]],
+  ['input_2eh',['input.h',['../os_2input_8h.html',1,'']]]
 ];

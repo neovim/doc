@@ -234,6 +234,7 @@ var searchData=
   ['params',['params',['../structTUIData.html#a6fc4623e8d5939bdf464c3d560161b92',1,'TUIData']]],
   ['parent',['parent',['../structqueue__item.html#aca3b799a844504ee6b5a97fa92e18cfd',1,'queue_item::parent()'],['../structqueue.html#af9fa670f56c1838a066ea63a30735598',1,'queue::parent()'],['../structVimMenu.html#ac88f56d5adfbb1debede0d20ec2b1640',1,'VimMenu::parent()']]],
   ['parse_5fstate_5ft',['parse_state_T',['../regexp_8c.html#ae1dbd15248dcb1646cf1eb6e10e32294',1,'regexp.c']]],
+  ['paste_5fenabled',['paste_enabled',['../structterm__input.html#aa61db7cd63f68d10a94f6b0ab4aa6b78',1,'term_input']]],
   ['pat',['pat',['../structAutoPat.html#a8c98c4f05140757493f39f6604dc1a81',1,'AutoPat::pat()'],['../structspat.html#ad6c74e83b279cbca2aa0e673ee6f1718',1,'spat::pat()'],['../structpat__T.html#aebbe15f2e0be4b053603ea54c8e82339',1,'pat_T::pat()']]],
   ['patlen',['patlen',['../structAutoPat.html#a94b3b493b92af446216c24be6f8436c9',1,'AutoPat']]],
   ['pattern',['pattern',['../structmatchitem.html#ad547d70b3fe0ccc2b6a4ab95a353ba39',1,'matchitem::pattern()'],['../structnfa__regprog__T.html#ab7ec5e86583aa95e6fdac82990ddf5ce',1,'nfa_regprog_T::pattern()'],['../structtime__entry__T.html#aec07935606568180cb5ac78552eac289',1,'time_entry_T::pattern()']]],

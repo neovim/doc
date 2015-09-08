@@ -19,7 +19,7 @@ var searchData=
   ['emit',['EMIT',['../regexp__nfa_8c.html#a12df4a05b25f0180775f178287b12a38',1,'regexp_nfa.c']]],
   ['emit2',['EMIT2',['../regexp__nfa_8c.html#a6bad37dfc0bf9f0e7bb133511145154c',1,'regexp_nfa.c']]],
   ['emitmbc',['EMITMBC',['../regexp__nfa_8c.html#a08c9f837f4463c021648c3559ecaae20',1,'regexp_nfa.c']]],
-  ['empty_5fattrs',['EMPTY_ATTRS',['../tui_8c.html#a1d3d601ce4de833b3c284b24b8ce716f',1,'tui.c']]],
+  ['empty_5fattrs',['EMPTY_ATTRS',['../ugrid_8h.html#a1d3d601ce4de833b3c284b24b8ce716f',1,'ugrid.h']]],
   ['empty_5fif_5fnull',['EMPTY_IF_NULL',['../macros_8h.html#a7b543437e3ee6a339b22d9f1650df3ac',1,'macros.h']]],
   ['emsg',['EMSG',['../vim_8h.html#a2df1efa9857d383b38e9786b135ca748',1,'vim.h']]],
   ['emsg2',['EMSG2',['../vim_8h.html#af9f54ca08c7ebda215314e18369dca9b',1,'vim.h']]],

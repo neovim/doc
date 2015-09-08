@@ -106,7 +106,7 @@ var searchData=
   ['wi_5foptset',['wi_optset',['../structwininfo__S.html#a5475038b9a4f535cc43e123cc9087b07',1,'wininfo_S']]],
   ['wi_5fprev',['wi_prev',['../structwininfo__S.html#a07351120390ec0eb7629bfc440c0d9b7',1,'wininfo_S']]],
   ['wi_5fwin',['wi_win',['../structwininfo__S.html#ac07c601107373406e15d1a54de2db7ba',1,'wininfo_S']]],
-  ['width',['width',['../structpty__process.html#ab8e0653f6739f1fbc5e1e10cbe3f4416',1,'pty_process::width()'],['../structprt__mediasize__S.html#a9717207f662cba945bf4b99c1a1646be',1,'prt_mediasize_S::width()'],['../structTerminalOptions.html#a733f27896a5f84536c11ec94ac09d109',1,'TerminalOptions::width()'],['../structui__t.html#a8f33fdfd1262721bf757842411a89298',1,'ui_t::width()']]],
+  ['width',['width',['../structpty__process.html#ab8e0653f6739f1fbc5e1e10cbe3f4416',1,'pty_process::width()'],['../structprt__mediasize__S.html#a9717207f662cba945bf4b99c1a1646be',1,'prt_mediasize_S::width()'],['../structTerminalOptions.html#a733f27896a5f84536c11ec94ac09d109',1,'TerminalOptions::width()'],['../structugrid.html#ad0a95de0a3cbf3ba1741aefc3e67fe18',1,'ugrid::width()'],['../structui__t.html#a8f33fdfd1262721bf757842411a89298',1,'ui_t::width()']]],
   ['wim_5fflags',['wim_flags',['../globals_8h.html#ac7c650bec1a58b93a10e67d8acacf6a4',1,'globals.h']]],
   ['winch_5fhandle',['winch_handle',['../structTUIData.html#affb978b12f42184db88572def6621b4f',1,'TUIData']]],
   ['window',['window',['../structobject.html#aa1cc09bb0fafde46a6e917fe0cbd088d',1,'object']]],
@@ -174,7 +174,7 @@ var searchData=
   ['wo_5fwrap_5fsave',['wo_wrap_save',['../structwinopt__T.html#aa81122ebaa45fc373de9c6381d76ae8d',1,'winopt_T']]],
   ['wp',['wp',['../structfline__T.html#ac1f9d9bfaaf34a8c762e1c6c635f41a1',1,'fline_T']]],
   ['write_5fcb',['write_cb',['../structstream.html#a5eeff81f1b1f67e1f049dc5235838155',1,'stream::write_cb()'],['../structTerminalOptions.html#a628d7802aafd9f5776e6eb382e02b394',1,'TerminalOptions::write_cb()']]],
-  ['write_5floop',['write_loop',['../structTUIData.html#a234ba71febfce9c29da9ea27e05bbcec',1,'TUIData']]],
+  ['write_5floop',['write_loop',['../structTUIData.html#a91b826d4b8a0ff0e90f097775b747cca',1,'TUIData']]],
   ['write_5fptr',['write_ptr',['../structrbuffer.html#a512c2e25509b1ea13cc2a86ac23011c1',1,'rbuffer']]],
   ['wx',['wx',['../structprt__ps__font__S.html#a9178fd1abdfcc5dc48d39461d6b93d31',1,'prt_ps_font_S']]]
 ];

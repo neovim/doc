@@ -323,7 +323,7 @@ var searchData=
   ['ml_5fclose',['ml_close',['../memline_8c.html#abe58d9866bc8d9d29c219f731bb85ceb',1,'memline.c']]],
   ['ml_5fclose_5fall',['ml_close_all',['../memline_8c.html#a03d439d0a90af7064a71e4103b0a5b9f',1,'memline.c']]],
   ['ml_5fclose_5fnotmod',['ml_close_notmod',['../memline_8c.html#a604565a0ff35e06e698b0b74abc87ec1',1,'memline.c']]],
-  ['ml_5fdelete',['ML_DELETE',['../memline_8c.html#ae92d6ba5b936547467fd45f1b6534778',1,'ML_DELETE():&#160;memline.c'],['../memline_8c.html#acc7926ea1ef47502c4c44de231e2dbfc',1,'ml_delete(linenr_T lnum, int message):&#160;memline.c']]],
+  ['ml_5fdelete',['ml_delete',['../memline_8c.html#acc7926ea1ef47502c4c44de231e2dbfc',1,'ml_delete(linenr_T lnum, int message):&#160;memline.c'],['../memline_8c.html#ae92d6ba5b936547467fd45f1b6534778',1,'ML_DELETE():&#160;memline.c']]],
   ['ml_5fempty',['ML_EMPTY',['../memline__defs_8h.html#a67ecfd4d644d8b33ba15512b7136602a',1,'memline_defs.h']]],
   ['ml_5fextra',['ML_EXTRA',['../tag_8c.html#a421123d90e9b0e3cf508f5c0ae513297',1,'tag.c']]],
   ['ml_5ffind',['ML_FIND',['../memline_8c.html#a1de07181f87bda4348b87eb71e0ab526',1,'memline.c']]],
@@ -471,7 +471,7 @@ var searchData=
   ['msg_5fputs',['MSG_PUTS',['../vim_8h.html#afe1018d9bd62dd460c6a614591bbbcbc',1,'MSG_PUTS():&#160;vim.h'],['../message_8c.html#ad5fe35b41a2f7a864f37f6738dab5899',1,'msg_puts(char_u *s):&#160;message.c']]],
   ['msg_5fputs_5fattr',['MSG_PUTS_ATTR',['../vim_8h.html#a2bf98897cdf829da16add87333bba7b3',1,'MSG_PUTS_ATTR():&#160;vim.h'],['../message_8c.html#a8fe72d94a15b00cd9cd59cdfd9ef10c5',1,'msg_puts_attr(char_u *s, int attr):&#160;message.c']]],
   ['msg_5fputs_5flong',['MSG_PUTS_LONG',['../vim_8h.html#afec7d16d29a912cddbdd1d323277952e',1,'vim.h']]],
-  ['msg_5fputs_5flong_5fattr',['MSG_PUTS_LONG_ATTR',['../vim_8h.html#a2135ac9e2dab73958ca1d878c43c1c82',1,'MSG_PUTS_LONG_ATTR():&#160;vim.h'],['../message_8c.html#a886705b2e4de3a9b94d9d3bc46740369',1,'msg_puts_long_attr(char_u *longstr, int attr):&#160;message.c']]],
+  ['msg_5fputs_5flong_5fattr',['msg_puts_long_attr',['../message_8c.html#a886705b2e4de3a9b94d9d3bc46740369',1,'msg_puts_long_attr(char_u *longstr, int attr):&#160;message.c'],['../vim_8h.html#a2135ac9e2dab73958ca1d878c43c1c82',1,'MSG_PUTS_LONG_ATTR():&#160;vim.h']]],
   ['msg_5fputs_5flong_5flen_5fattr',['msg_puts_long_len_attr',['../message_8c.html#ab3b2ee6d153398e662068288801dc28b',1,'message.c']]],
   ['msg_5fputs_5ftitle',['MSG_PUTS_TITLE',['../vim_8h.html#ad74d9106e2d053ef13c910e8dc6363e7',1,'MSG_PUTS_TITLE():&#160;vim.h'],['../message_8c.html#ac9f5fa9fc5c661009cb88e3fa9294648',1,'msg_puts_title(char_u *s):&#160;message.c']]],
   ['msg_5frow',['msg_row',['../globals_8h.html#a376f82c59d5c5bf72c5bc753f7554128',1,'globals.h']]],
@@ -536,5 +536,6 @@ var searchData=
   ['multi',['multi',['../structregsub__T.html#ac8c0ff67f30b5c370cc2c4fd3bebe78f',1,'regsub_T']]],
   ['multi_5fmult',['MULTI_MULT',['../regexp_8c.html#a56cd45f8ad6a13f958427ad4bf7ed7a1',1,'regexp.c']]],
   ['multi_5fone',['MULTI_ONE',['../regexp_8c.html#a17de9a9aceb1d9fa93139afe29230769',1,'regexp.c']]],
-  ['multibytecode',['MULTIBYTECODE',['../regexp_8c.html#ac3879eed53b9ae2b4f2823987bb5f6ec',1,'regexp.c']]]
+  ['multibytecode',['MULTIBYTECODE',['../regexp_8c.html#ac3879eed53b9ae2b4f2823987bb5f6ec',1,'regexp.c']]],
+  ['mutex',['mutex',['../structloop.html#a7baab27d53c837067bccf898ba446d3c',1,'loop::mutex()'],['../structui__bridge__data.html#aa0cfd6a936eeef414402a48074ec09f8',1,'ui_bridge_data::mutex()']]]
 ];

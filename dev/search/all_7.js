@@ -240,6 +240,7 @@ var searchData=
   ['grab_5ffile_5fname',['grab_file_name',['../window_8c.html#acb355b7c9c021f9568217c3e93cd5629',1,'window.c']]],
   ['gregflags',['GRegFlags',['../ops_8h.html#a6cd6ec9dcabe7f3d09924962c836312d',1,'ops.h']]],
   ['grep_5finternal',['grep_internal',['../quickfix_8c.html#adda89757cc4011d315d8965272fd959c',1,'quickfix.c']]],
+  ['grid',['grid',['../structTUIData.html#a42529a3c27c7dede2fccf81a1d9d6f33',1,'TUIData']]],
   ['group',['group',['../structAutoPat.html#a4b89d6bc14de915e0c086588173051d3',1,'AutoPat::group()'],['../structAutoPatCmd.html#a81c67de2173f15310a11f199f523ab8c',1,'AutoPatCmd::group()']]],
   ['growarray',['growarray',['../structgrowarray.html',1,'']]],
   ['gui_5fmch_5ffind_5fdialog',['gui_mch_find_dialog',['../ex__docmd_8c.html#a6acc443ef144f9d8e908f04e0cffd500',1,'ex_docmd.c']]],

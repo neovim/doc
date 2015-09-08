@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['idleevent',['IdleEvent',['../loop_8c.html#acba9412fd26459d2791268e270980009',1,'loop.c']]],
   ['idx_5ft',['idx_T',['../spell_8c.html#a402cb9f51ea9d131dff2dbba7cbe2aec',1,'spell.c']]],
   ['indenter',['Indenter',['../ops_8h.html#a95812aaf46f12b8ca13295745724cd08',1,'ops.h']]],
   ['indentgetter',['IndentGetter',['../edit_8h.html#a284e5e2878b58ce0a02add8f03b9fb2d',1,'edit.h']]],

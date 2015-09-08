@@ -142,7 +142,6 @@ var searchData=
   ['for_5fall_5fwindows_5fin_5ftab',['FOR_ALL_WINDOWS_IN_TAB',['../globals_8h.html#a6a25cb8adde99ce4585242491447c404',1,'globals.h']]],
   ['force_5fbin',['FORCE_BIN',['../ex__cmds__defs_8h.html#adade35874286a0d3adf67ddd3bf8c4bc',1,'ex_cmds_defs.h']]],
   ['force_5fnobin',['FORCE_NOBIN',['../ex__cmds__defs_8h.html#a0c3a0b0c5323f8880858f0e5d844b9cf',1,'ex_cmds_defs.h']]],
-  ['foreach_5fcell',['FOREACH_CELL',['../tui_8c.html#afba3ecc05dabd57b9da82c6c27c63216',1,'tui.c']]],
   ['forward',['FORWARD',['../vim_8h.html#a6ddfdda7a062d10cff4a72b76b44aeb8',1,'vim.h']]],
   ['forward_5ffile',['FORWARD_FILE',['../vim_8h.html#a0a4ee5acc312853d0dcc187c28ba9dbf',1,'vim.h']]],
   ['fr_5fcol',['FR_COL',['../buffer__defs_8h.html#a1550136201965c30cf3efa46db0234f7',1,'buffer_defs.h']]],

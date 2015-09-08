@@ -108,63 +108,70 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;</div>
 <div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="structloop.html">   17</a></span>&#160;typedef struct <a class="code" href="structloop.html">loop</a> {</div>
 <div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="structloop.html#aae8230c0dfc4beb0cc36568856823323">   18</a></span>&#160;  uv_loop_t <a class="code" href="structloop.html#aae8230c0dfc4beb0cc36568856823323">uv</a>;</div>
-<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="structloop.html#a1ccbf04f40c8bb007e4721eb27635e4e">   19</a></span>&#160;  <a class="code" href="structqueue.html">Queue</a> *events, *<a class="code" href="structloop.html#a1ccbf04f40c8bb007e4721eb27635e4e">fast_events</a>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="structloop.html#ac295d3cbea098809ebdc6c7e689618ff">   19</a></span>&#160;  <a class="code" href="structqueue.html">Queue</a> *events, *fast_events, *<a class="code" href="structloop.html#ac295d3cbea098809ebdc6c7e689618ff">thread_events</a>;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <a class="code" href="klist_8h.html#ac7f87e195754c73baf00050ca58d7cc9">klist_t</a>(<a class="code" href="loop_8h.html#a474c59910b33407ae1ec9b3f504cc717">WatcherPtr</a>) *children;</div>
 <div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="structloop.html#ae26373123a0ac90641a335e9a496b498">   21</a></span>&#160;  uv_signal_t <a class="code" href="structloop.html#ae26373123a0ac90641a335e9a496b498">children_watcher</a>;</div>
 <div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="structloop.html#aa4dc2226919877603cf665260e11ef3e">   22</a></span>&#160;  uv_timer_t children_kill_timer, <a class="code" href="structloop.html#aa4dc2226919877603cf665260e11ef3e">poll_timer</a>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="structloop.html#a3d1c47ec9a0362d6586edbcb5fddc2ef">   23</a></span>&#160;  <span class="keywordtype">size_t</span> <a class="code" href="structloop.html#a3d1c47ec9a0362d6586edbcb5fddc2ef">children_stop_requests</a>;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;} <a class="code" href="loop_8h.html#ae8ce2461c5be616fe2f4ada9b67b9fc1">Loop</a>;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="loop_8h.html#aea4e4a24a841cb105aafcd2b40d5dc13">   26</a></span>&#160;<span class="preprocessor">#define CREATE_EVENT(queue, handler, argc, ...)                  \</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="preprocessor">  do {                                                           \</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="preprocessor">    if (queue) {                                                 \</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="preprocessor">      queue_put((queue), (handler), argc, __VA_ARGS__);          \</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">    } else {                                                     \</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">      void *argv[argc] = {__VA_ARGS__};                          \</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">      (handler)(argv);                                           \</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">    }                                                            \</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">  } while (0)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// Poll for events until a condition or timeout</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="loop_8h.html#a8abf91bade6af6700e9f96629fecf31b">   37</a></span>&#160;<span class="preprocessor">#define LOOP_PROCESS_EVENTS_UNTIL(loop, queue, timeout, condition)           \</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">  do {                                                                       \</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">    int remaining = timeout;                                                 \</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">    uint64_t before = (remaining &gt; 0) ? os_hrtime() : 0;                     \</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">    while (!(condition)) {                                                   \</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">      LOOP_PROCESS_EVENTS(loop, queue, remaining);                           \</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">      if (remaining == 0) {                                                  \</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">        break;                                                               \</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">      } else if (remaining &gt; 0) {                                            \</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">        uint64_t now = os_hrtime();                                          \</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">        remaining -= (int) ((now - before) / 1000000);                       \</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">        before = now;                                                        \</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">        if (remaining &lt;= 0) {                                                \</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">          break;                                                             \</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">        }                                                                    \</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">      }                                                                      \</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">    }                                                                        \</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">  } while (0)</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="loop_8h.html#aa8cb322ee98c330d8572e405667ca924">   56</a></span>&#160;<span class="preprocessor">#define LOOP_PROCESS_EVENTS(loop, queue, timeout)                            \</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">  do {                                                                       \</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">    if (queue &amp;&amp; !queue_empty(queue)) {                                      \</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">      queue_process_events(queue);                                           \</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">    } else {                                                                 \</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">      loop_poll_events(loop, timeout);                                       \</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">    }                                                                        \</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">  } while (0)</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#ifdef INCLUDE_GENERATED_DECLARATIONS</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor"># include &quot;event/loop.h.generated.h&quot;</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">#endif  // NVIM_EVENT_LOOP_H</span></div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="structloop.html#abe62edb73e0b7014495567bf57fb33bf">   24</a></span>&#160;  uv_async_t <a class="code" href="structloop.html#abe62edb73e0b7014495567bf57fb33bf">async</a>;</div>
+<div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="structloop.html#a7baab27d53c837067bccf898ba446d3c">   25</a></span>&#160;  uv_mutex_t <a class="code" href="structloop.html#a7baab27d53c837067bccf898ba446d3c">mutex</a>;</div>
+<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="structloop.html#af78d6073fc1eb0709f277ebb3bf5253f">   26</a></span>&#160;  <span class="keywordtype">int</span> <a class="code" href="structloop.html#af78d6073fc1eb0709f277ebb3bf5253f">recursive</a>;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;} <a class="code" href="loop_8h.html#ae8ce2461c5be616fe2f4ada9b67b9fc1">Loop</a>;</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;</div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="loop_8h.html#aea4e4a24a841cb105aafcd2b40d5dc13">   29</a></span>&#160;<span class="preprocessor">#define CREATE_EVENT(queue, handler, argc, ...)                  \</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="preprocessor">  do {                                                           \</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">    if (queue) {                                                 \</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">      queue_put((queue), (handler), argc, __VA_ARGS__);          \</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">    } else {                                                     \</span></div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">      void *argv[argc] = {__VA_ARGS__};                          \</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">      (handler)(argv);                                           \</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">    }                                                            \</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// Poll for events until a condition or timeout</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="loop_8h.html#a8abf91bade6af6700e9f96629fecf31b">   40</a></span>&#160;<span class="preprocessor">#define LOOP_PROCESS_EVENTS_UNTIL(loop, queue, timeout, condition)           \</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">  do {                                                                       \</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">    int remaining = timeout;                                                 \</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">    uint64_t before = (remaining &gt; 0) ? os_hrtime() : 0;                     \</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">    while (!(condition)) {                                                   \</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">      LOOP_PROCESS_EVENTS(loop, queue, remaining);                           \</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">      if (remaining == 0) {                                                  \</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">        break;                                                               \</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">      } else if (remaining &gt; 0) {                                            \</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">        uint64_t now = os_hrtime();                                          \</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">        remaining -= (int) ((now - before) / 1000000);                       \</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">        before = now;                                                        \</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">        if (remaining &lt;= 0) {                                                \</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">          break;                                                             \</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">        }                                                                    \</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">      }                                                                      \</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">    }                                                                        \</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="loop_8h.html#aa8cb322ee98c330d8572e405667ca924">   59</a></span>&#160;<span class="preprocessor">#define LOOP_PROCESS_EVENTS(loop, queue, timeout)                            \</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">  do {                                                                       \</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">    if (queue &amp;&amp; !queue_empty(queue)) {                                      \</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">      queue_process_events(queue);                                           \</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">    } else {                                                                 \</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">      loop_poll_events(loop, timeout);                                       \</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">    }                                                                        \</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">  } while (0)</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#ifdef INCLUDE_GENERATED_DECLARATIONS</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor"># include &quot;event/loop.h.generated.h&quot;</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#endif  // NVIM_EVENT_LOOP_H</span></div>
 <div class="ttc" id="structloop_html_aae8230c0dfc4beb0cc36568856823323"><div class="ttname"><a href="structloop.html#aae8230c0dfc4beb0cc36568856823323">loop::uv</a></div><div class="ttdeci">uv_loop_t uv</div><div class="ttdef"><b>Definition:</b> loop.h:18</div></div>
 <div class="ttc" id="klist_8h_html"><div class="ttname"><a href="klist_8h.html">klist.h</a></div></div>
 <div class="ttc" id="os_2time_8h_html"><div class="ttname"><a href="os_2time_8h.html">time.h</a></div></div>
 <div class="ttc" id="structloop_html_a3d1c47ec9a0362d6586edbcb5fddc2ef"><div class="ttname"><a href="structloop.html#a3d1c47ec9a0362d6586edbcb5fddc2ef">loop::children_stop_requests</a></div><div class="ttdeci">size_t children_stop_requests</div><div class="ttdef"><b>Definition:</b> loop.h:23</div></div>
+<div class="ttc" id="structloop_html_ac295d3cbea098809ebdc6c7e689618ff"><div class="ttname"><a href="structloop.html#ac295d3cbea098809ebdc6c7e689618ff">loop::thread_events</a></div><div class="ttdeci">Queue * thread_events</div><div class="ttdef"><b>Definition:</b> loop.h:19</div></div>
+<div class="ttc" id="structloop_html_a7baab27d53c837067bccf898ba446d3c"><div class="ttname"><a href="structloop.html#a7baab27d53c837067bccf898ba446d3c">loop::mutex</a></div><div class="ttdeci">uv_mutex_t mutex</div><div class="ttdef"><b>Definition:</b> loop.h:25</div></div>
+<div class="ttc" id="structloop_html_af78d6073fc1eb0709f277ebb3bf5253f"><div class="ttname"><a href="structloop.html#af78d6073fc1eb0709f277ebb3bf5253f">loop::recursive</a></div><div class="ttdeci">int recursive</div><div class="ttdef"><b>Definition:</b> loop.h:26</div></div>
 <div class="ttc" id="structqueue_html"><div class="ttname"><a href="structqueue.html">queue</a></div><div class="ttdef"><b>Definition:</b> queue.c:70</div></div>
+<div class="ttc" id="structloop_html_abe62edb73e0b7014495567bf57fb33bf"><div class="ttname"><a href="structloop.html#abe62edb73e0b7014495567bf57fb33bf">loop::async</a></div><div class="ttdeci">uv_async_t async</div><div class="ttdef"><b>Definition:</b> loop.h:24</div></div>
 <div class="ttc" id="loop_8h_html_a474c59910b33407ae1ec9b3f504cc717"><div class="ttname"><a href="loop_8h.html#a474c59910b33407ae1ec9b3f504cc717">WatcherPtr</a></div><div class="ttdeci">void * WatcherPtr</div><div class="ttdef"><b>Definition:</b> loop.h:12</div></div>
 <div class="ttc" id="klist_8h_html_afc551e2e6181c7e2277bf679ed90e2d7"><div class="ttname"><a href="klist_8h.html#afc551e2e6181c7e2277bf679ed90e2d7">KLIST_INIT</a></div><div class="ttdeci">#define KLIST_INIT(name, kltype_t, kmpfree_t)</div><div class="ttdef"><b>Definition:</b> klist.h:73</div></div>
 <div class="ttc" id="event_2queue_8h_html"><div class="ttname"><a href="event_2queue_8h.html">queue.h</a></div></div>
@@ -174,13 +181,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="loop_8h_html_a42c4d1b67a82e90a542f977f38eb3b77"><div class="ttname"><a href="loop_8h.html#a42c4d1b67a82e90a542f977f38eb3b77">_noop</a></div><div class="ttdeci">#define _noop(x)</div><div class="ttdef"><b>Definition:</b> loop.h:14</div></div>
 <div class="ttc" id="structloop_html_aa4dc2226919877603cf665260e11ef3e"><div class="ttname"><a href="structloop.html#aa4dc2226919877603cf665260e11ef3e">loop::poll_timer</a></div><div class="ttdeci">uv_timer_t poll_timer</div><div class="ttdef"><b>Definition:</b> loop.h:22</div></div>
 <div class="ttc" id="klist_8h_html_ac7f87e195754c73baf00050ca58d7cc9"><div class="ttname"><a href="klist_8h.html#ac7f87e195754c73baf00050ca58d7cc9">klist_t</a></div><div class="ttdeci">#define klist_t(name)</div><div class="ttdef"><b>Definition:</b> klist.h:123</div></div>
-<div class="ttc" id="structloop_html_a1ccbf04f40c8bb007e4721eb27635e4e"><div class="ttname"><a href="structloop.html#a1ccbf04f40c8bb007e4721eb27635e4e">loop::fast_events</a></div><div class="ttdeci">Queue * fast_events</div><div class="ttdef"><b>Definition:</b> loop.h:19</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <footer>
   <div class="container">
-    Generated on Mon Sep 7 2015 08:15:28 for Neovim by
+    Generated on Tue Sep 8 2015 08:17:46 for Neovim by
     <a href="http://www.doxygen.org/index.html">Doxygen</a>
     1.8.7
   </div>

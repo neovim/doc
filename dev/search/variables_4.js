@@ -27,7 +27,7 @@ var searchData=
   ['err_5fisatty',['err_isatty',['../structmparm__T.html#a1095b4d382cad75b54caac1f04b1eab6',1,'mparm_T']]],
   ['errmsg',['errmsg',['../structexarg.html#ac0914c147d7728c439edc77c88b1099c',1,'exarg']]],
   ['errored',['errored',['../structChannelCallFrame.html#aa6da91330b585ef5bbf54c199d1cf781',1,'ChannelCallFrame']]],
-  ['event',['event',['../structidle__event.html#a746aeb3bc70ef92c53bea45da42ac872',1,'idle_event::event()'],['../structqueue__item.html#ab9f38adaa5b69bf1e04945fd0ff74b36',1,'queue_item::event()'],['../structAutoPatCmd.html#a5b57f801dcf26ae979df8e63db32e31f',1,'AutoPatCmd::event()']]],
+  ['event',['event',['../structqueue__item.html#ab9f38adaa5b69bf1e04945fd0ff74b36',1,'queue_item::event()'],['../structAutoPatCmd.html#a5b57f801dcf26ae979df8e63db32e31f',1,'AutoPatCmd::event()']]],
   ['events',['events',['../structTerminalJobData.html#aabe888190bb4c208cca4560db7ceecff',1,'TerminalJobData::events()'],['../structloop.html#a5e081a83e6b27d44d10d40e7f8f83a53',1,'loop::events()'],['../structprocess.html#a952dd568334a57bad9cb45b8d5be0f2e',1,'process::events()'],['../structsignal__watcher.html#a7b1f48487db7162cff827931f84ef266',1,'signal_watcher::events()'],['../structsocket__watcher.html#a1ae468c06d45d265684808b86827bf47',1,'socket_watcher::events()'],['../structstream.html#aa297db6d2b78bb79aa73de167da9415a',1,'stream::events()'],['../structtime__watcher.html#aa7a4d95e73dc1d8191cb6d313103ddc6',1,'time_watcher::events()']]],
   ['exception',['exception',['../structcleanup__stuff.html#a01ab8b7d3ce077d33535804542eb8adb',1,'cleanup_stuff']]],
   ['exited',['exited',['../structTerminalJobData.html#a102b55872e2cb2411dba20f15e6a1b1d',1,'TerminalJobData']]],

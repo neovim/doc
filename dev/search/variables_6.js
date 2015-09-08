@@ -11,5 +11,6 @@ var searchData=
   ['globvardict',['globvardict',['../globals_8h.html#aa1e3b6594df899f03e14287849995349',1,'globals.h']]],
   ['goodi',['goodi',['../structlimitscore__T.html#a281d8b8c22a25376b3438852365ab458',1,'limitscore_T']]],
   ['got_5fint',['got_int',['../structdbg__stuff.html#a73705bd16b95fbf0d2b2e7c998ceb9de',1,'dbg_stuff']]],
+  ['grid',['grid',['../structTUIData.html#a42529a3c27c7dede2fccf81a1d9d6f33',1,'TUIData']]],
   ['group',['group',['../structAutoPat.html#a4b89d6bc14de915e0c086588173051d3',1,'AutoPat::group()'],['../structAutoPatCmd.html#a81c67de2173f15310a11f199f523ab8c',1,'AutoPatCmd::group()']]]
 ];
