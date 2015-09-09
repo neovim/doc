@@ -24,7 +24,7 @@ var searchData=
   ['ga_5fset_5fgrowsize',['ga_set_growsize',['../garray_8c.html#a1bdfdada4b219c579465bf50f70abc1d',1,'garray.c']]],
   ['gaf',['GAF',['../farsi_8h.html#ada9824f271b8ca227f7f4b84fcf10f39',1,'farsi.h']]],
   ['gap',['GAP',['../option_8c.html#a2a2129b3f6b7ce06869b7f16b81aff6f',1,'option.c']]],
-  ['garbage_5fcollect',['garbage_collect',['../eval_8c.html#a54d68baad8a18985d5f17576bf7db498',1,'eval.c']]],
+  ['garbage_5fcollect',['garbage_collect',['../eval_8c.html#a548c11c8294df61a2e6716d6f3dace44',1,'eval.c']]],
   ['gargcount',['GARGCOUNT',['../buffer__defs_8h.html#a3d8f33df5c19cb28bd255141801ba28c',1,'buffer_defs.h']]],
   ['garglist',['GARGLIST',['../buffer__defs_8h.html#a4973303e7181c08d8192cc4df3d467c8',1,'buffer_defs.h']]],
   ['garray_2ec',['garray.c',['../garray_8c.html',1,'']]],

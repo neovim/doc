@@ -31,7 +31,7 @@ var searchData=
   ['lines_5fgap',['lines_gap',['../structloop__cookie.html#adfcb2c58dfcd5573964058b86f1f0aea',1,'loop_cookie']]],
   ['lines_5fper_5fpage',['lines_per_page',['../structprt__settings__T.html#a3d2b5820c41507ea81db92f4a1313a97',1,'prt_settings_T']]],
   ['link',['link',['../structqueue__item.html#a3911b3a6f4c34fa0d45b6367adcbff2f',1,'queue_item']]],
-  ['list',['list',['../structMPConvStackVal.html#a196a8e83f018e263d363d46023a508eb',1,'MPConvStackVal::list()'],['../structregsub__T.html#acf39ad012dddea53096d716207e70cf7',1,'regsub_T::list()']]],
+  ['list',['list',['../structMPConvStackVal.html#a196a8e83f018e263d363d46023a508eb',1,'MPConvStackVal::list()'],['../structlist__stack__S.html#a98b87f117ccb316ca1eecb0fc29b67f7',1,'list_stack_S::list()'],['../structregsub__T.html#acf39ad012dddea53096d716207e70cf7',1,'regsub_T::list()']]],
   ['literal',['literal',['../structmparm__T.html#a10551cc317c677ab151c58f34ec39a0e',1,'mparm_T']]],
   ['ll_5fdi',['ll_di',['../structlval__S.html#a67fe97bdfbd3596c36f269712c500603',1,'lval_S']]],
   ['ll_5fdict',['ll_dict',['../structlval__S.html#a9891a286dbc9e32cdbd4fb7ebd64cab0',1,'lval_S']]],

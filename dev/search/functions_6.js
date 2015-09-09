@@ -10,7 +10,7 @@ var searchData=
   ['ga_5finit',['ga_init',['../garray_8c.html#acda4c108cf164ab1a3581cce927e51d2',1,'garray.c']]],
   ['ga_5fremove_5fduplicate_5fstrings',['ga_remove_duplicate_strings',['../garray_8c.html#a1d685f5199f71b56a63c9156bf844077',1,'garray.c']]],
   ['ga_5fset_5fgrowsize',['ga_set_growsize',['../garray_8c.html#a1bdfdada4b219c579465bf50f70abc1d',1,'garray.c']]],
-  ['garbage_5fcollect',['garbage_collect',['../eval_8c.html#a54d68baad8a18985d5f17576bf7db498',1,'eval.c']]],
+  ['garbage_5fcollect',['garbage_collect',['../eval_8c.html#a548c11c8294df61a2e6716d6f3dace44',1,'eval.c']]],
   ['gchar_5fcursor',['gchar_cursor',['../cursor_8c.html#a569280f1dbc30c1fecba6bdcf87e5992',1,'cursor.c']]],
   ['gchar_5fpos',['gchar_pos',['../misc1_8c.html#a7ce48e295dfe275d090b5cf774787fcf',1,'misc1.c']]],
   ['gen_5fexpand_5fwildcards',['gen_expand_wildcards',['../path_8c.html#a19b64f507a25280b7ac00e5c54fdeb1e',1,'path.c']]],

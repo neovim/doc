@@ -264,6 +264,7 @@ var searchData=
   ['prefix',['prefix',['../structefm__S.html#adeec752bc8b76bbbebad725d65b04023',1,'efm_S']]],
   ['present',['present',['../structoption__table__T.html#aea426bddc8fe1326a37d006431371d4b',1,'option_table_T']]],
   ['pressed_5fbutton',['pressed_button',['../structterminal.html#a49738a3876c33e38fb754d2fcd124f70',1,'terminal']]],
+  ['prev',['prev',['../structht__stack__S.html#ac06c983082cb0f8d7c5f3aeeed7ffa42',1,'ht_stack_S::prev()'],['../structlist__stack__S.html#a4fad366f5fb309014baffa8ba9c13b43',1,'list_stack_S::prev()']]],
   ['prev_5fcount0',['prev_count0',['../structoparg__S.html#af0777a2a0b1d5c3568a407cb6daf7f20',1,'oparg_S']]],
   ['prev_5fopcount',['prev_opcount',['../structoparg__S.html#a01a3c07767b421dede17b1cfbb014418',1,'oparg_S']]],
   ['previous_5ffunccal',['previous_funccal',['../eval_8c.html#a95ac73cc2588f1101d28061ecddb77bb',1,'eval.c']]],

@@ -36,7 +36,7 @@ var searchData=
   ['qf_5fwinheight',['QF_WINHEIGHT',['../vim_8h.html#a49773596c0e03ded9f43114f04a9d4fa',1,'vim.h']]],
   ['qfline_5fs',['qfline_S',['../structqfline__S.html',1,'']]],
   ['qfline_5ft',['qfline_T',['../quickfix_8c.html#a20ac18d615a57aa22fade718cd16029e',1,'quickfix.c']]],
-  ['queue',['queue',['../structqueue.html',1,'queue'],['../structqueue__item.html#ab24b142ebc5657d2be1dd80bd3ac0822',1,'queue_item::queue()'],['../lib_2queue_8h.html#aba85246539f23fea8bd054206d986694',1,'QUEUE():&#160;queue.h'],['../event_2queue_8h.html#a8560ae2ddf510ea6643f85a929bffa48',1,'Queue():&#160;queue.h']]],
+  ['queue',['queue',['../structqueue.html',1,'queue'],['../structqueue__item.html#ab24b142ebc5657d2be1dd80bd3ac0822',1,'queue_item::queue()'],['../event_2queue_8h.html#a8560ae2ddf510ea6643f85a929bffa48',1,'Queue():&#160;queue.h'],['../lib_2queue_8h.html#aba85246539f23fea8bd054206d986694',1,'QUEUE():&#160;queue.h']]],
   ['queue_2ec',['queue.c',['../queue_8c.html',1,'']]],
   ['queue_2eh',['queue.h',['../lib_2queue_8h.html',1,'']]],
   ['queue_2eh',['queue.h',['../event_2queue_8h.html',1,'']]],

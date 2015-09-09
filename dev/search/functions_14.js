@@ -63,7 +63,6 @@ var searchData=
   ['ui_5fstart_5fhighlight',['ui_start_highlight',['../ui_8c.html#a6372d288bd283c6ed9a2d908a21b7f55',1,'ui.c']]],
   ['ui_5fstop_5fhighlight',['ui_stop_highlight',['../ui_8c.html#abb7018339714d628f348aba7ecda5462',1,'ui.c']]],
   ['ui_5fsuspend',['ui_suspend',['../ui_8c.html#a7294fbe8b093c6769ee1fa54cf814cf4',1,'ui.c']]],
-  ['ui_5fupdate_5fencoding',['ui_update_encoding',['../ui_8c.html#abd12d98da7aac3ca55d0e7ab4add3b41',1,'ui.c']]],
   ['ui_5fupdate_5fmenu',['ui_update_menu',['../ui_8c.html#a231d1a6ade4d65e71130deaae4b69f70',1,'ui.c']]],
   ['ui_5fvisual_5fbell',['ui_visual_bell',['../ui_8c.html#a771a58a8f911b94e38084c7233d34eec',1,'ui.c']]],
   ['unblock_5fautocmds',['unblock_autocmds',['../fileio_8c.html#a2e2dd688ce595d92b43473059d292768',1,'fileio.c']]],

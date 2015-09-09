@@ -30,6 +30,7 @@ var searchData=
   ['hisstr',['hisstr',['../structhist__entry.html#a1511f236a3a54ce649b838c099d2f1e7',1,'hist_entry']]],
   ['hl',['hl',['../structmatchitem.html#a7597c71db2076e347f9144da3f0acaf1',1,'matchitem']]],
   ['hlg_5fid',['hlg_id',['../structmatchitem.html#a8c26e7c04d279fa354ce9eb03acd16d4',1,'matchitem']]],
+  ['ht',['ht',['../structht__stack__S.html#a724466fda2af87cc586b366744caf0c8',1,'ht_stack_S']]],
   ['ht_5farray',['ht_array',['../structhashtable__S.html#a7cfd4386f392f78cfca0fec4e1188156',1,'hashtable_S']]],
   ['ht_5ffilled',['ht_filled',['../structhashtable__S.html#acbcd23d4bbef3b8dd63b1aee6a918cfd',1,'hashtable_S']]],
   ['ht_5flocked',['ht_locked',['../structhashtable__S.html#ab3cac3e01bf2fca94fcf486eea4d8e75',1,'hashtable_S']]],

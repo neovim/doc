@@ -47,7 +47,6 @@ var searchData=
   ['seq',['seq',['../structu__header.html#a33b9eceb67411f9c3b31025e6f59d224',1,'u_header']]],
   ['sesave',['sesave',['../structregitem__S.html#a71a821d314ab4693f88fc67cfba7ac20',1,'regitem_S']]],
   ['set',['set',['../structError.html#ac2e5ca47de9f5d24115f2a0ec622e407',1,'Error']]],
-  ['set_5fencoding',['set_encoding',['../structui__t.html#adfdb9141fa71907f523b4d02ad02d35f',1,'ui_t']]],
   ['set_5ficon',['set_icon',['../structui__t.html#ae94f5a8497511335af6298a04ff10850',1,'ui_t']]],
   ['set_5fscroll_5fregion',['set_scroll_region',['../structui__t.html#abfd2ccec9e86979011cc07ad37a55e54',1,'ui_t']]],
   ['set_5ftitle',['set_title',['../structui__t.html#a31c3db928b4d9af611bb9fb5f56c8044',1,'ui_t']]],

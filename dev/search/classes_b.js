@@ -5,6 +5,7 @@ var searchData=
   ['libuv_5fprocess',['libuv_process',['../structlibuv__process.html',1,'']]],
   ['limitscore_5ft',['limitscore_T',['../structlimitscore__T.html',1,'']]],
   ['lineoff_5ft',['lineoff_T',['../structlineoff__T.html',1,'']]],
+  ['list_5fstack_5fs',['list_stack_S',['../structlist__stack__S.html',1,'']]],
   ['listitem_5fs',['listitem_S',['../structlistitem__S.html',1,'']]],
   ['listreaderstate',['ListReaderState',['../structListReaderState.html',1,'']]],
   ['listvar_5fs',['listvar_S',['../structlistvar__S.html',1,'']]],
