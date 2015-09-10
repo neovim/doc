@@ -9,7 +9,7 @@ var searchData=
   ['w_5fbotline',['w_botline',['../structwindow__S.html#a4432856c7a9db9817a39600fa096647c',1,'window_S']]],
   ['w_5fbuffer',['w_buffer',['../structwindow__S.html#a4869138fb763f40f6194f7fdff2d9b6a',1,'window_S']]],
   ['w_5fchangelistidx',['w_changelistidx',['../structwindow__S.html#a9b4ec276379bad6771243ea221d7d70c',1,'window_S']]],
-  ['w_5fcline_5ffolded',['w_cline_folded',['../structwindow__S.html#ac86b91b3f3b8abac5af3ece58a10725c',1,'window_S']]],
+  ['w_5fcline_5ffolded',['w_cline_folded',['../structwindow__S.html#a4a1a0ceccb04791781578c6acbfd3f59',1,'window_S']]],
   ['w_5fcline_5fheight',['w_cline_height',['../structwindow__S.html#af3130ff5ec543155ad5273c05162f4a2',1,'window_S']]],
   ['w_5fcline_5frow',['w_cline_row',['../structwindow__S.html#a7eb15d1792aa4510e9dbf512d1a5ad61',1,'window_S']]],
   ['w_5fclosing',['w_closing',['../structwindow__S.html#abb48e323f5c568ee88383b57c2679e13',1,'window_S']]],
