@@ -77,7 +77,7 @@ download_clang_badge() {
   local code_quality_color="$(get_code_quality_color ${all_bugs_number})"
   local badge="clang_analysis-${all_bugs_number}-${code_quality_color}"
   wget https://img.shields.io/badge/${badge}.svg \
-    --secure-protocol=sslv3 \
+    --secure-protocol=TLSv1 \
     -O ${DOC_DIR}/reports/clang/badge.svg
 }
 
