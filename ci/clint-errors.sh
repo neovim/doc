@@ -34,6 +34,7 @@ download_clint_badge() {
   local code_quality_color="$(get_code_quality_color ${errors_number})"
   local badge="clint-${errors_number}-${code_quality_color}"
   wget https://img.shields.io/badge/${badge}.svg \
+    --secure-protocol=sslv3 \
     -O ${DOC_DIR}/$DOC_SUBTREE/badge.svg
 }
 
