@@ -53,7 +53,7 @@ var searchData=
   ['get_5fcmdline_5fstr',['get_cmdline_str',['../ex__getln_8c.html#a7207d0d631a502055c1c6059ff49ec27',1,'ex_getln.c']]],
   ['get_5fcmdline_5ftype',['get_cmdline_type',['../ex__getln_8c.html#aaf2f16443a9d0a6c6dcfcbb939cc7ff7',1,'ex_getln.c']]],
   ['get_5fcommand_5fname',['get_command_name',['../ex__docmd_8c.html#af736018bc90a245caa7b89b3e2c40681',1,'ex_docmd.c']]],
-  ['get_5fconfig_5fvalue',['GET_CONFIG_VALUE',['../terminal_8c.html#af924a029e54f061ffd1262a61c2335c5',1,'terminal.c']]],
+  ['get_5fconfig_5fvalue',['GET_CONFIG_VALUE',['../terminal_8c.html#a9b2a0e5b72222437a39106de8a48f6a6',1,'terminal.c']]],
   ['get_5fcscope_5fname',['get_cscope_name',['../if__cscope_8c.html#acc3b9445bc91d387dd7b29ee29e14cb7',1,'if_cscope.c']]],
   ['get_5fcursor_5fline_5fptr',['get_cursor_line_ptr',['../cursor_8c.html#ad303d543671694f476f6d0fd515f00c0',1,'cursor.c']]],
   ['get_5fcursor_5fpos_5fptr',['get_cursor_pos_ptr',['../cursor_8c.html#a3882000cebb7ed4b07336bbc9abcc885',1,'cursor.c']]],

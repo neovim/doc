@@ -13,7 +13,7 @@ var searchData=
   ['gargcount',['GARGCOUNT',['../buffer__defs_8h.html#a3d8f33df5c19cb28bd255141801ba28c',1,'buffer_defs.h']]],
   ['garglist',['GARGLIST',['../buffer__defs_8h.html#a4973303e7181c08d8192cc4df3d467c8',1,'buffer_defs.h']]],
   ['get_5fchartab',['GET_CHARTAB',['../charset_8c.html#ae5a7ac3d74d578aec18355c0a35f3479',1,'charset.c']]],
-  ['get_5fconfig_5fvalue',['GET_CONFIG_VALUE',['../terminal_8c.html#af924a029e54f061ffd1262a61c2335c5',1,'terminal.c']]],
+  ['get_5fconfig_5fvalue',['GET_CONFIG_VALUE',['../terminal_8c.html#a9b2a0e5b72222437a39106de8a48f6a6',1,'terminal.c']]],
   ['get_5floc_5flist',['GET_LOC_LIST',['../quickfix_8c.html#a9ed7d5e86774f3378d67a4d94d2a59b8',1,'quickfix.c']]],
   ['get_5fuint32',['GET_UINT32',['../sha256_8c.html#a544d14714aed6d150435336296c66061',1,'sha256.c']]],
   ['ghaf',['GHAF',['../farsi_8h.html#a4e8fbe14e2cd0c6302f7af9206c814e0',1,'farsi.h']]],
