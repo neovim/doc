@@ -94,6 +94,7 @@ var searchData=
   ['w_5fwinrow',['w_winrow',['../structwindow__S.html#a3713c22ef1a05b01014ec0f543d02b79',1,'window_S']]],
   ['w_5fwinvar',['w_winvar',['../structwindow__S.html#a9ad50b1122781649dac00e65a2e102d2',1,'window_S']]],
   ['w_5fwrow',['w_wrow',['../structwindow__S.html#adb75982365749276dfb859fa42a93587',1,'window_S']]],
+  ['waiting',['waiting',['../structterm__input.html#ae1efc72b34bbb2704c56e89b55733419',1,'term_input']]],
   ['want_5ffull_5fscreen',['want_full_screen',['../structmparm__T.html#a88361008f64963f091c217b6f90f4059',1,'mparm_T']]],
   ['wc_5fcount',['wc_count',['../structwordcount__S.html#aff5d9e063df43beebd8ef0614a79ea5e',1,'wordcount_S']]],
   ['wc_5fword',['wc_word',['../structwordcount__S.html#a25e74c229805c7be025560d81f62f673',1,'wordcount_S']]],

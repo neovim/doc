@@ -35,6 +35,7 @@ var searchData=
   ['ke_5fmouseup',['KE_MOUSEUP',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a0a82e1d400164bea4120e0fc2c7e9397',1,'keymap.h']]],
   ['ke_5fname',['KE_NAME',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0ab598b4bc8ee684a41b7bed4887e8ee80',1,'keymap.h']]],
   ['ke_5fnop',['KE_NOP',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a92ef58eacd1ca9192778741fe78466ad',1,'keymap.h']]],
+  ['ke_5fpaste',['KE_PASTE',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a39a5a6d832d27d18a072f5cb1c2d62c7',1,'keymap.h']]],
   ['ke_5fplug',['KE_PLUG',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a778a2739c01a1fd70bd5d4622213fd05',1,'keymap.h']]],
   ['ke_5frightdrag',['KE_RIGHTDRAG',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a566401acf57d8aff0e968bb5c9e2317e',1,'keymap.h']]],
   ['ke_5frightmouse',['KE_RIGHTMOUSE',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a1744b2ae00f4a37706748538a8866593',1,'keymap.h']]],
