@@ -17,7 +17,11 @@ var searchData=
   ['map_5fto_5fexists',['map_to_exists',['../getchar_8c.html#a55944ef804334de525d6c06965b34ece',1,'getchar.c']]],
   ['map_5fto_5fexists_5fmode',['map_to_exists_mode',['../getchar_8c.html#a0322f0dbcebaa1da5ee52556527507fe',1,'getchar.c']]],
   ['mark_5fadjust',['mark_adjust',['../mark_8c.html#a2e021e15ceaa5cafb16d056331aace34',1,'mark.c']]],
+  ['mark_5fbuffer_5fiter',['mark_buffer_iter',['../mark_8c.html#a591799a0b458c693d57afd45f3b36460',1,'mark.c']]],
   ['mark_5fcol_5fadjust',['mark_col_adjust',['../mark_8c.html#a94cc6edb4136aeb5ff9fd4478bddbc41',1,'mark.c']]],
+  ['mark_5fglobal_5fiter',['mark_global_iter',['../mark_8c.html#a0f7e12c3ebc6680196d32ad9c319b4ef',1,'mark.c']]],
+  ['mark_5fjumplist_5fiter',['mark_jumplist_iter',['../mark_8c.html#aa2730091b19f32e108dc2c648290abcd',1,'mark.c']]],
+  ['mark_5fset_5flocal',['mark_set_local',['../mark_8c.html#abfbc5a2f28459c6ac5e2b58d4479d551',1,'mark.c']]],
   ['match_5fadd',['match_add',['../window_8c.html#a50bfc75e037ae31a343d0b46437db47d',1,'window.c']]],
   ['match_5fdelete',['match_delete',['../window_8c.html#af9cbde92fb248a3fa829c388d8d570ac',1,'window.c']]],
   ['match_5ffile_5flist',['match_file_list',['../fileio_8c.html#a3602af7edabfec4256655718ba789d1e',1,'fileio.c']]],
@@ -186,5 +190,6 @@ var searchData=
   ['msgpack_5frpc_5fto_5finteger',['msgpack_rpc_to_integer',['../msgpack__rpc_2helpers_8c.html#ae3745c9679393827db136fa6347d8851',1,'helpers.c']]],
   ['msgpack_5frpc_5fto_5fobject',['msgpack_rpc_to_object',['../msgpack__rpc_2helpers_8c.html#afe8dbb25e6d910aa16f41235bb0ec6bb',1,'helpers.c']]],
   ['msgpack_5frpc_5fto_5fstring',['msgpack_rpc_to_string',['../msgpack__rpc_2helpers_8c.html#a5ef61b7c3dcb2b12f2d69107f9c89145',1,'helpers.c']]],
-  ['msgpack_5frpc_5fvalidate',['msgpack_rpc_validate',['../msgpack__rpc_2helpers_8c.html#a04b89baf17ae89e345ef454304688eb4',1,'helpers.c']]]
+  ['msgpack_5frpc_5fvalidate',['msgpack_rpc_validate',['../msgpack__rpc_2helpers_8c.html#a04b89baf17ae89e345ef454304688eb4',1,'helpers.c']]],
+  ['msgpack_5fto_5fvim',['msgpack_to_vim',['../eval_8c.html#a8a571e9aab53cb9136f9d2eb1069ba49',1,'eval.c']]]
 ];

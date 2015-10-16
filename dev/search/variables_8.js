@@ -30,11 +30,17 @@ var searchData=
   ['ip_5fhigh',['ip_high',['../structinfo__pointer.html#ac473382eb6323825263f4e65ddbb68de',1,'info_pointer']]],
   ['ip_5findex',['ip_index',['../structinfo__pointer.html#acdf584cb720506bd2f40240dc71bab50',1,'info_pointer']]],
   ['ip_5flow',['ip_low',['../structinfo__pointer.html#a4a99e7d504486b928d73e306227af4a4',1,'info_pointer']]],
+  ['is_5flast_5fused',['is_last_used',['../structShadaEntry.html#ad8eaeaa32ea8167d1d4a01f790c3d299',1,'ShadaEntry']]],
   ['is_5fmax',['is_MAX',['../structblock__def.html#a74e3129c23a35b120d745b7668d67a99',1,'block_def']]],
   ['is_5fonechar',['is_oneChar',['../structblock__def.html#a38004b8aeec4dc9aff73dbe994dfe9a8',1,'block_def']]],
   ['is_5fshort',['is_short',['../structblock__def.html#a2c5b9b7a2bd14823cd58fc94e20d59b1',1,'block_def']]],
+  ['is_5fsubstitute_5fpattern',['is_substitute_pattern',['../structShadaEntry.html#a3a343d27dad8d3e0490528086125513d',1,'ShadaEntry']]],
   ['is_5fvisual',['is_VIsual',['../structoparg__S.html#a0bfdee9aacb2a3f44395f910ed560a4e',1,'oparg_S']]],
   ['italic',['italic',['../structprt__text__attr__T.html#aacdac715511f322d0e4c5d4c6560ce0d',1,'prt_text_attr_T::italic()'],['../structHlAttrs.html#a022bc22cfeeb5a410482507b89ffa900',1,'HlAttrs::italic()']]],
   ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T::item()'],['../structqueue__item.html#ab6c62800c4396d7882d4f04ecaec4b1b',1,'queue_item::item()']]],
-  ['items',['items',['../structArray.html#a0e3f4c859e2f1e144bb27247a51a3721',1,'Array::items()'],['../structDictionary.html#afe6bfe0dd9c276eb86f2280f81ef26a3',1,'Dictionary::items()']]]
+  ['items',['items',['../structArray.html#a0e3f4c859e2f1e144bb27247a51a3721',1,'Array::items()'],['../structDictionary.html#afe6bfe0dd9c276eb86f2280f81ef26a3',1,'Dictionary::items()']]],
+  ['iter',['iter',['../structHistoryMergerState.html#a2a68933c0450d2b3324838d82ca65b47',1,'HistoryMergerState']]],
+  ['iter_5fmark',['iter_mark',['../mark_8c.html#a810b98fa97021ff40315c2db95b0b401',1,'mark.c']]],
+  ['iter_5foff',['iter_off',['../mark_8c.html#ac608c04d1c81eda01b29eed70bd2ec14',1,'iter_off():&#160;mark.c'],['../ops_8c.html#ac608c04d1c81eda01b29eed70bd2ec14',1,'iter_off():&#160;ops.c']]],
+  ['iter_5freg',['iter_reg',['../ops_8c.html#a1fb4844abffa049b8f913e303dbbb595',1,'ops.c']]]
 ];

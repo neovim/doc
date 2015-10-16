@@ -36,7 +36,6 @@ var searchData=
   ['post_5fchdir',['post_chdir',['../ex__docmd_8c.html#abe1259258171aa6b6bc6c3d68bd68153',1,'ex_docmd.c']]],
   ['prep_5fexarg',['prep_exarg',['../fileio_8c.html#a21e458ac34423762385b1fd34bed7d58',1,'fileio.c']]],
   ['prepare_5ftagpreview',['prepare_tagpreview',['../ex__cmds_8c.html#a311f03b167f1f72f9a6c8f3fe4aec88c',1,'ex_cmds.c']]],
-  ['prepare_5fviminfo_5fhistory',['prepare_viminfo_history',['../ex__getln_8c.html#acfe3d9e5b16da4163c8feacb81c5eb63',1,'ex_getln.c']]],
   ['preprocs_5fleft',['preprocs_left',['../ops_8c.html#a98f0964c240574a1a83cfd2cabe57695',1,'ops.c']]],
   ['preserve_5fexit',['preserve_exit',['../misc1_8c.html#a0babf0a4ea468d19e40e4f1e5e8c29f7',1,'misc1.c']]],
   ['print_5fline',['print_line',['../ex__cmds_8c.html#afe9850629fa00a6ec58dd7c493c3e0a3',1,'ex_cmds.c']]],

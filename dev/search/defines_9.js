@@ -1,6 +1,7 @@
 var searchData=
 [
   ['iconv_5fmult',['ICONV_MULT',['../fileio_8c.html#ab4b859dffb5392c445d10516e29ab64a',1,'fileio.c']]],
+  ['id',['ID',['../shada_8c.html#a7b2d374b4ac9c3445a073d3858e5932a',1,'shada.c']]],
   ['id_5flist_5fall',['ID_LIST_ALL',['../syntax_8c.html#a00b6d82b228f3d896ad75b6654edd6d3',1,'syntax.c']]],
   ['ident',['IDENT',['../regexp_8c.html#a096a20e68e4e980b6845ad843ec2c3a7',1,'regexp.c']]],
   ['idx_5fbig5',['IDX_BIG5',['../mbyte_8c.html#a153d720d4a14dfff197ca0d2d8c04f7e',1,'mbyte.c']]],
@@ -98,6 +99,8 @@ var searchData=
   ['int2ptr',['INT2PTR',['../ui__bridge_8c.html#a5de7679de0a03f7f9884cccd13128e6a',1,'ui_bridge.c']]],
   ['int_5feq',['int_eq',['../map_8c.html#ae50292d57d6b19683dc9056f51ac772d',1,'map.c']]],
   ['int_5fhash',['int_hash',['../map_8c.html#a1c1555383e18cdfdae60d161d3bfee1d',1,'map.c']]],
+  ['int_5fkey',['INT_KEY',['../shada_8c.html#ae812c399de910a955bbc9b6d6b6b0068',1,'shada.c']]],
+  ['integer_5fkey',['INTEGER_KEY',['../shada_8c.html#a78a0ca18d30b9213090fc16e732b9569',1,'shada.c']]],
   ['integer_5fobj',['INTEGER_OBJ',['../api_2private_2helpers_8h.html#ab744c3793bd5c8ef48c1893ac48e1f8b',1,'helpers.h']]],
   ['invalid_5fstate',['INVALID_STATE',['../syntax_8c.html#aee822b60cf29df9b013487aacc409897',1,'syntax.c']]],
   ['inverted',['INVERTED',['../screen_8h.html#ab05995eec69c22f9170313d727c35788',1,'screen.h']]],

@@ -7,10 +7,13 @@ var searchData=
   ['ga_5fmaxlen',['ga_maxlen',['../structgrowarray.html#a1d63b1d96cd87a4c5b5f4fade4a28e87',1,'growarray']]],
   ['getline',['getline',['../structexarg.html#a569632c37c5cfc359711a51eb7fd52ab',1,'exarg::getline()'],['../structloop__cookie.html#a388f05573192d543f1169df28e2bf15a',1,'loop_cookie::getline()']]],
   ['global_5falist',['global_alist',['../globals_8h.html#a5ad902bd6d0455a0473c1d8490369979',1,'globals.h']]],
+  ['global_5fmarks',['global_marks',['../structWriteMergerState.html#a8ce232537109c1daf76b6c2572d4b829',1,'WriteMergerState']]],
+  ['global_5fvar',['global_var',['../structShadaEntry.html#a2135369ef18f3f3bae3772c562153f78',1,'ShadaEntry']]],
   ['globaldir',['globaldir',['../structaco__save__T.html#aac59471518e29fcbdade5f4e2e5c7028',1,'aco_save_T']]],
   ['globvardict',['globvardict',['../globals_8h.html#aa1e3b6594df899f03e14287849995349',1,'globals.h']]],
   ['goodi',['goodi',['../structlimitscore__T.html#a281d8b8c22a25376b3438852365ab458',1,'limitscore_T']]],
   ['got_5fint',['got_int',['../structdbg__stuff.html#a73705bd16b95fbf0d2b2e7c998ceb9de',1,'dbg_stuff']]],
+  ['greatest_5ftimestamp',['greatest_timestamp',['../structFileMarks.html#a69610bebe15674a218a19884be10ade0',1,'FileMarks']]],
   ['grid',['grid',['../structTUIData.html#a42529a3c27c7dede2fccf81a1d9d6f33',1,'TUIData']]],
   ['group',['group',['../structAutoPat.html#a4b89d6bc14de915e0c086588173051d3',1,'AutoPat::group()'],['../structAutoPatCmd.html#a81c67de2173f15310a11f199f523ab8c',1,'AutoPatCmd::group()']]]
 ];

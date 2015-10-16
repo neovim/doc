@@ -2,6 +2,10 @@ var searchData=
 [
   ['a',['a',['../structdecomp__T.html#abe4253441cff78e3fd3abc3ef99dac2a',1,'decomp_T']]],
   ['actext',['actext',['../structVimMenu.html#abfbc45899445a759fc001a7abfeeb80c',1,'VimMenu']]],
+  ['additional_5fdata',['additional_data',['../structfile__buffer.html#a2c563408ae6a71f377c36551f623d57a',1,'file_buffer::additional_data()'],['../structfilemark.html#a43f1bec1d39a45a70ad81da0487ff2e6',1,'filemark::additional_data()'],['../structyankreg.html#a8d92c1c01fd59249b284c0ad618697c6',1,'yankreg::additional_data()'],['../structspat.html#a19934a6328302183374de0ebc95bdeed',1,'spat::additional_data()'],['../structShadaEntry.html#a6f5fc008459ce15804ceb9aa9cc1b829',1,'ShadaEntry::additional_data()']]],
+  ['additional_5felements',['additional_elements',['../structSubReplacementString.html#acd6feb1041e6d23d69db1898aeb62944',1,'SubReplacementString::additional_elements()'],['../structhist__entry.html#ad053c98c764dab17a42e4c7580d55887',1,'hist_entry::additional_elements()'],['../structShadaEntry.html#afef322d858ba41ab6acdadabcefdc238',1,'ShadaEntry::additional_elements()']]],
+  ['additional_5fmarks',['additional_marks',['../structFileMarks.html#a340b517ee9b94b8cde03bdcf0e0be993',1,'FileMarks']]],
+  ['additional_5fmarks_5fsize',['additional_marks_size',['../structFileMarks.html#a8d195834b3875fee5dc94ad70f06e5f7',1,'FileMarks']]],
   ['addr',['addr',['../structsocket__watcher.html#a425c6d6b8a723062b338f2ef3003800c',1,'socket_watcher::addr()'],['../structsocket__watcher.html#ab534281135a2089cc344518c4bbe8f52',1,'socket_watcher::addr()'],['../structefm__S.html#af25df0937902ab8951fc01937fbfa479',1,'efm_S::addr()']]],
   ['addr_5fcount',['addr_count',['../structexarg.html#a6df745abf04de31377b3beb6282c29c6',1,'exarg']]],
   ['addr_5ftype',['addr_type',['../structexarg.html#a26c04fe1b1fdb8bc1ab21376fed10a56',1,'exarg']]],

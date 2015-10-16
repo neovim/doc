@@ -8,5 +8,6 @@ var searchData=
   ['winopt_5ft',['winopt_T',['../structwinopt__T.html',1,'']]],
   ['wordcount_5fs',['wordcount_S',['../structwordcount__S.html',1,'']]],
   ['wordnode_5fs',['wordnode_S',['../structwordnode__S.html',1,'']]],
-  ['wrequest',['WRequest',['../structWRequest.html',1,'']]]
+  ['wrequest',['WRequest',['../structWRequest.html',1,'']]],
+  ['writemergerstate',['WriteMergerState',['../structWriteMergerState.html',1,'']]]
 ];

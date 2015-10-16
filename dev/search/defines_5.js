@@ -22,15 +22,15 @@ var searchData=
   ['empty_5fattrs',['EMPTY_ATTRS',['../ugrid_8h.html#a1d3d601ce4de833b3c284b24b8ce716f',1,'ugrid.h']]],
   ['empty_5fif_5fnull',['EMPTY_IF_NULL',['../macros_8h.html#a7b543437e3ee6a339b22d9f1650df3ac',1,'macros.h']]],
   ['emsg',['EMSG',['../vim_8h.html#a2df1efa9857d383b38e9786b135ca748',1,'vim.h']]],
-  ['emsg2',['EMSG2',['../vim_8h.html#af9f54ca08c7ebda215314e18369dca9b',1,'vim.h']]],
+  ['emsg2',['emsg2',['../shada_8c.html#a7b712a0ceb6a96d56a284622dd370cf2',1,'emsg2():&#160;shada.c'],['../vim_8h.html#af9f54ca08c7ebda215314e18369dca9b',1,'EMSG2():&#160;vim.h']]],
   ['emsg2_5fret_5ffail',['EMSG2_RET_FAIL',['../regexp_8c.html#af082cfea994077d5a3da04843b1dd7e0',1,'regexp.c']]],
   ['emsg2_5fret_5fnull',['EMSG2_RET_NULL',['../regexp_8c.html#a588812bb341d1ce8a7e07d302861c06c',1,'regexp.c']]],
-  ['emsg3',['EMSG3',['../vim_8h.html#a55d378d9df7bad3cc28e7d32bd28db87',1,'vim.h']]],
+  ['emsg3',['emsg3',['../shada_8c.html#ae54249c28a193f97ef19c0d085bc611f',1,'emsg3():&#160;shada.c'],['../vim_8h.html#a55d378d9df7bad3cc28e7d32bd28db87',1,'EMSG3():&#160;vim.h']]],
   ['emsg_5fone_5fret_5fnull',['EMSG_ONE_RET_NULL',['../regexp_8c.html#a8eb17ffc0c00747403dc677d20727c84',1,'regexp.c']]],
   ['emsg_5fret_5ffail',['EMSG_RET_FAIL',['../regexp_8c.html#a9ea93cc4e66f5146ddd59535ba2b910e',1,'regexp.c']]],
   ['emsg_5fret_5fnull',['EMSG_RET_NULL',['../regexp_8c.html#ab498bcac51faeb44bca0b42be21ac40f',1,'regexp.c']]],
   ['emsgn',['EMSGN',['../vim_8h.html#af150721965351fc5842ada7a523e3843',1,'vim.h']]],
-  ['emsgu',['EMSGU',['../vim_8h.html#ae74a27c7f568f30e9f8a332ac21b3204',1,'vim.h']]],
+  ['emsgu',['emsgu',['../shada_8c.html#a8dbfdd17a94ff519ce21b93f1bc980f7',1,'emsgu():&#160;shada.c'],['../vim_8h.html#ae74a27c7f568f30e9f8a332ac21b3204',1,'EMSGU():&#160;vim.h']]],
   ['enc_5f2byte',['ENC_2BYTE',['../mbyte_8h.html#ad8a140bf52388f449511d407a651b0da',1,'mbyte.h']]],
   ['enc_5f2word',['ENC_2WORD',['../mbyte_8h.html#acf0d34fea5993174819d098297016bb1',1,'mbyte.h']]],
   ['enc_5f4byte',['ENC_4BYTE',['../mbyte_8h.html#a0f05a812f6e927b3c4e21fb860829006',1,'mbyte.h']]],
@@ -102,5 +102,5 @@ var searchData=
   ['extern',['EXTERN',['../globals_8h.html#a77366c1bd428629dc898e188bfd182a3',1,'EXTERN():&#160;globals.h'],['../main_8c.html#a77366c1bd428629dc898e188bfd182a3',1,'EXTERN():&#160;main.c']]],
   ['externcmd',['EXTERNCMD',['../vim_8h.html#a653d6ac8281dd9d05020eb6d9b844175',1,'vim.h']]],
   ['extra',['EXTRA',['../ex__cmds__defs_8h.html#af4d98da13b92f926914c4a759759b393',1,'ex_cmds_defs.h']]],
-  ['extra_5fmarks',['EXTRA_MARKS',['../mark_8c.html#a123165f22654403d56a151e7db9da1ee',1,'mark.c']]]
+  ['extra_5fmarks',['EXTRA_MARKS',['../mark__defs_8h.html#a123165f22654403d56a151e7db9da1ee',1,'mark_defs.h']]]
 ];

@@ -2,7 +2,7 @@ var searchData=
 [
   ['var_5fflavour_5fdefault',['VAR_FLAVOUR_DEFAULT',['../eval_8c.html#a9537941b128f5ca71fa7fba7b4d4a156ac3f6f9e44a199b26a28a2940b36b36a5',1,'eval.c']]],
   ['var_5fflavour_5fsession',['VAR_FLAVOUR_SESSION',['../eval_8c.html#a9537941b128f5ca71fa7fba7b4d4a156a4ab049667cea9da74a4915396e12c864',1,'eval.c']]],
-  ['var_5fflavour_5fviminfo',['VAR_FLAVOUR_VIMINFO',['../eval_8c.html#a9537941b128f5ca71fa7fba7b4d4a156a4ae6230200c4d3635561a49c32055322',1,'eval.c']]],
+  ['var_5fflavour_5fshada',['VAR_FLAVOUR_SHADA',['../eval_8c.html#a9537941b128f5ca71fa7fba7b4d4a156a405fee0f0d0eacbb7a9c314c2c50e993',1,'eval.c']]],
   ['vv_5fbeval_5fbufnr',['VV_BEVAL_BUFNR',['../eval_8h.html#a0411cd49bb5b71852cecd93bcbf0ca2dac54c865e7396fe039c1caf051e05d31f',1,'eval.h']]],
   ['vv_5fbeval_5fcol',['VV_BEVAL_COL',['../eval_8h.html#a0411cd49bb5b71852cecd93bcbf0ca2dae581ef32ee24eefd04f049f1c347f709',1,'eval.h']]],
   ['vv_5fbeval_5flnum',['VV_BEVAL_LNUM',['../eval_8h.html#a0411cd49bb5b71852cecd93bcbf0ca2da8a452f8bd5b2eaddef6b1d9f59982597',1,'eval.h']]],

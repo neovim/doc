@@ -86,6 +86,7 @@ var searchData=
   ['find_5fkeepword',['FIND_KEEPWORD',['../spell_8c.html#a65e7245adc17c853db1dde3b6c39dc4a',1,'spell.c']]],
   ['find_5fnamespace_5flim',['FIND_NAMESPACE_LIM',['../indent__c_8c.html#a9f34ca232f68dd6138d5245d2bde1d85',1,'indent_c.c']]],
   ['find_5fprefix',['FIND_PREFIX',['../spell_8c.html#a86080a2966ab90b2d0697fa1cc316163',1,'spell.c']]],
+  ['find_5fshada_5fparameter',['find_shada_parameter',['../shada_8c.html#a0be357236e7e02966efa7b445bb22818',1,'shada.c']]],
   ['find_5fstring',['FIND_STRING',['../normal_8h.html#a5b649e1b3f9173cd8ae0526296250a58',1,'normal.h']]],
   ['findfile_5fboth',['FINDFILE_BOTH',['../file__search_8h.html#a3ad5df60beb51233e194b0a28f99f282',1,'file_search.h']]],
   ['findfile_5fdir',['FINDFILE_DIR',['../file__search_8h.html#a2215d87c1ec96855075e264d684f8f9a',1,'file_search.h']]],
@@ -152,6 +153,7 @@ var searchData=
   ['free_5ffname',['FREE_FNAME',['../edit_8c.html#ace3b3dd5e214f68a1eefa4a8afab852c',1,'edit.c']]],
   ['free_5fjoin_5ftofree',['FREE_JOIN_TOFREE',['../eval_8c.html#ad74f4231a9878ef20ee3051fcc95bf09',1,'eval.c']]],
   ['free_5fmenutrans',['FREE_MENUTRANS',['../menu_8c.html#ab9906c93848f95dd21d03c12b3991859',1,'menu.c']]],
+  ['free_5fpossibly_5ffreed_5fshada_5fentry',['FREE_POSSIBLY_FREED_SHADA_ENTRY',['../shada_8c.html#af05876dd29b989f79a796cbaa5652acb',1,'shada.c']]],
   ['free_5fptr_5fptr',['FREE_PTR_PTR',['../garray_8h.html#acb5b56f258e95545476069b2bb0ffb75',1,'garray.h']]],
   ['free_5fsug_5fword',['FREE_SUG_WORD',['../spell_8c.html#ae12d9b3c599bab97a762e46d6628330b',1,'spell.c']]],
   ['free_5fwcmd',['FREE_WCMD',['../ex__docmd_8c.html#a892af0a50a4dbbb8a46311e759563a12',1,'ex_docmd.c']]],
@@ -169,7 +171,7 @@ var searchData=
   ['func_5fattr_5fnonnull_5fret',['FUNC_ATTR_NONNULL_RET',['../func__attr_8h.html#a81804a86724b1292d60a44f25304345b',1,'func_attr.h']]],
   ['func_5fattr_5fpure',['FUNC_ATTR_PURE',['../func__attr_8h.html#a5d0503c6e5540d690efe95700dfd0c0e',1,'func_attr.h']]],
   ['func_5fattr_5funused',['FUNC_ATTR_UNUSED',['../func__attr_8h.html#a88fe8278d0eb3b0607f7243d19eda36c',1,'func_attr.h']]],
-  ['func_5fattr_5fwarn_5funused_5fresult',['FUNC_ATTR_WARN_UNUSED_RESULT',['../func__attr_8h.html#a0513e624a5f4caba068c4d921e4e7e16',1,'func_attr.h']]],
+  ['func_5fattr_5fwarn_5funused_5fresult',['FUNC_ATTR_WARN_UNUSED_RESULT',['../func__attr_8h.html#a7569e4590e0916dc8a36210e858fbb2f',1,'func_attr.h']]],
   ['funcarg',['FUNCARG',['../eval_8c.html#a54d1ae1fe9626de10e655ae7709a9699',1,'eval.c']]],
   ['funcline',['FUNCLINE',['../eval_8c.html#aa335e6720113ef4e875f4ad015438d6f',1,'eval.c']]]
 ];

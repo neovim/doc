@@ -12,6 +12,10 @@ var searchData=
   ['op_5fformatexpr',['op_formatexpr',['../ops_8c.html#a50357880bd18267d82dfb5d2858c3efc',1,'ops.c']]],
   ['op_5finsert',['op_insert',['../ops_8c.html#a36aedfe014c9d8be44e9d2942e9ab230',1,'ops.c']]],
   ['op_5fon_5flines',['op_on_lines',['../ops_8c.html#ac2618f7084311696d38fa8206b66e494',1,'ops.c']]],
+  ['op_5fregister_5famount',['op_register_amount',['../ops_8c.html#a44925cd10707b43254a6128bc3576090',1,'ops.c']]],
+  ['op_5fregister_5fget',['op_register_get',['../ops_8c.html#adca7b5af9ea28b26ad1454d51236783f',1,'ops.c']]],
+  ['op_5fregister_5fiter',['op_register_iter',['../ops_8c.html#a4d3052804ea8dad9aecac7898737b586',1,'ops.c']]],
+  ['op_5fregister_5fset',['op_register_set',['../ops_8c.html#a51867ebc4019b4961005515e436684ad',1,'ops.c']]],
   ['op_5freindent',['op_reindent',['../ops_8c.html#a4c3acd9a512e877e65b26a267a4de117',1,'ops.c']]],
   ['op_5freplace',['op_replace',['../ops_8c.html#a55959d0f9b541b76ac64e03e13c3b4d8',1,'ops.c']]],
   ['op_5fshift',['op_shift',['../ops_8c.html#aa25d03dd468935d47f2090236878a1f1',1,'ops.c']]],
@@ -81,6 +85,7 @@ var searchData=
   ['os_5fsetenv',['os_setenv',['../env_8c.html#a7c5a977050f7a06e1499d0107fc70913',1,'env.c']]],
   ['os_5fsetperm',['os_setperm',['../fs_8c.html#a49953c1ffb81c31d749173f685753818',1,'fs.c']]],
   ['os_5fsystem',['os_system',['../shell_8c.html#a5db7238fbdcf53986f4a1b87ad29b7c7',1,'shell.c']]],
+  ['os_5ftime',['os_time',['../os_2time_8c.html#a16f79fd7439b69201d30f29fb196bdb7',1,'time.c']]],
   ['os_5funsetenv',['os_unsetenv',['../env_8c.html#a409588a93cc250f084ade5a895888da4',1,'env.c']]],
   ['otherfile',['otherfile',['../buffer_8c.html#aac13c3cf91629ec59eb1dda6748c8ea1',1,'buffer.c']]]
 ];

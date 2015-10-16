@@ -1,6 +1,11 @@
 var searchData=
 [
   ['help',['Help',['../if__cscope__defs_8h.html#a4749f14dd57f1e60c59d120789a81738a2c1b595c80ad4c1b7452f5ef8887ffba',1,'if_cscope_defs.h']]],
+  ['hist_5fcmd',['HIST_CMD',['../ex__getln_8h.html#a5132dc04a038b45ee5bf237a3281bbada6dc225c644679c36584f96a8af195301',1,'ex_getln.h']]],
+  ['hist_5fdebug',['HIST_DEBUG',['../ex__getln_8h.html#a5132dc04a038b45ee5bf237a3281bbada4cd8325803fca53b38d6cc9200a4afe3',1,'ex_getln.h']]],
+  ['hist_5fexpr',['HIST_EXPR',['../ex__getln_8h.html#a5132dc04a038b45ee5bf237a3281bbada9576df9cb7fdd73497ad385009b3cfb4',1,'ex_getln.h']]],
+  ['hist_5finput',['HIST_INPUT',['../ex__getln_8h.html#a5132dc04a038b45ee5bf237a3281bbadaab89804eae8464dce0211350cca28b65',1,'ex_getln.h']]],
+  ['hist_5fsearch',['HIST_SEARCH',['../ex__getln_8h.html#a5132dc04a038b45ee5bf237a3281bbadaab6e86bacd20f6b6899d3dab2c3f3c44',1,'ex_getln.h']]],
   ['hlf_5f8',['HLF_8',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60a83c449e58948e670ef549703c1fe3c53',1,'globals.h']]],
   ['hlf_5fadd',['HLF_ADD',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60aefd34cbd3607dae828885ad1f4a4d5e8',1,'globals.h']]],
   ['hlf_5fat',['HLF_AT',['../globals_8h.html#af67ce53b835b6cd1005e9a7a0ffcfc60ae25de56452abab21325e03833ebaed54',1,'globals.h']]],

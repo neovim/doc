@@ -55,6 +55,7 @@ var searchData=
   ['try_5fend',['try_end',['../api_2private_2helpers_8c.html#ac92e07c09b31f4adfa5fdb4caa0c7c79',1,'helpers.c']]],
   ['try_5fmalloc',['try_malloc',['../memory_8c.html#a9fd7bd8b42a295bc9cdd8f006bbd277c',1,'memory.c']]],
   ['try_5fstart',['try_start',['../api_2private_2helpers_8c.html#a4a8f2a3944a7c60a066cf5aa5caf143d',1,'helpers.c']]],
+  ['try_5fto_5ffree_5fmemory',['try_to_free_memory',['../memory_8c.html#a5e19e7aebeca86de05b8958ac5015f67',1,'memory.c']]],
   ['tui_5fstart',['tui_start',['../tui_8c.html#a159a27dd6b8cb3efca8976da7e29c283',1,'tui.c']]],
   ['typeahead_5fnoflush',['typeahead_noflush',['../getchar_8c.html#ab11fa063c4e78b9c90fec373d060817c',1,'getchar.c']]],
   ['typebuf_5fchanged',['typebuf_changed',['../getchar_8c.html#ab42bbff75f64dd0e5c4a23e5c6527baa',1,'getchar.c']]],
