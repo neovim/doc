@@ -110,6 +110,7 @@ Regexp problems:
 - Using back reference before the capturing group sometimes works with the old
   engine, can we <A HREF="diff.html#do">do</A> this with the new engine?  E.g. with
   &quot;/\&#37;(&lt;\1&gt;\)\@&lt;=.*\&#37;(&lt;\/\(\w\+\)&gt;\)\@=&quot; matching text inside HTML <A HREF="tagsrch.html#tags">tags</A>.
+- Diff highlighting can be very slow. (Issue 309)
 
 Still using freed memory after using <A HREF="eval.html#setloclist()">setloclist()</A>. (lcd, 2014 Jul 23)
 More info Jul 24.  Not clear why.
@@ -173,6 +174,16 @@ Update Nov 5.
 <A HREF="os_win32.html#MS-Windows">MS-Windows</A>: Crash opening very long file name starting with &quot;\\&quot;.
 (Christian Brock, 2012 Jun 29)
 
+Patch for this from Marcin Szamotulski, 2014 Dec 28:
+8   Make the # <A HREF="sponsor.html#register">register</A> writable, so that <A HREF="motion.html#it">it</A> can be restored after jumping
+    around in <A HREF="windows.html#windows">windows</A>.
+
+Using <A HREF="various.html#CTRL-L">CTRL-L</A> while popup menu is visible behaves like <A HREF="motion.html#CTRL-P">CTRL-P</A>, which is wrong.
+Patch by Yasuhiro Matsumoto, 2015 Jan 5.
+Is this right?  Comment from Amadeus Demarzi.
+Another patch from Christian, Jan 6.
+Comment from Hirohito Higashi, Jan 6.
+
 Cursorline background color not mixed with character highlight.
 Patch by Yasuhiro Matsumoto, 2014 Dec 3.
 
@@ -185,8 +196,18 @@ ml_updatechunk() is slow when retrying for another encoding. (John Little,
 Patch to add a different <A HREF="intro.html#escape">escape</A> sequence for replace mode.
 (Omar Sandoval, 2014 Nov 30)
 
+Calling <A HREF="eval.html#setreg()">setreg()</A> with an empty <A HREF="eval.html#list">list</A> doesn't work.
+Patch by Yasuhiro Matsumoto, 2014 Dec 14.
+
+Extended file attributes lost on write (backupcopy=no).  Issue 306.
+
+Window height computed incorrectly when Vim is minimized.
+Patch to fix this. (Ingo Karkat, 2014 Dec 19)
+
 Patch to allow values greater than 255 for ctermfg/ctermbg on Windows.
 (Yasuhiro Matsumoto, 2014 Dec 5)
+
+Mixup of highlighting when there is a match and SpellBad. (ZyX, 2015 Jan 1)
 
 When <A HREF="options.html#'balloonexpr'">'balloonexpr'</A> returns a <A HREF="eval.html#list">list</A> the result has a trailing newline.
 Just remove one trailing newline. (lcd, 2014 Oct 17)
@@ -235,6 +256,8 @@ Redo only remembers the last change.  Could use &quot;{count}g.&quot; to <A HREF
 change.  How does the user know which change?  At least have a way to <A HREF="eval.html#list">list</A>
 them: &quot;:repeats&quot;.
 
+Patch for <A HREF="eval.html#glob()">glob()</A>, adding slash to normal files. (Ingo Karkat, 2014 Dec 22)
+
 Using &quot;<A HREF="repeat.html#.">.</A>&quot; to repeat an <A HREF="intro.html#Ex">Ex</A> command puts that command in <A HREF="cmdline.html#history">history</A>.  Probably
 should not happen.  If the command is the result of a <A HREF="map.html#mapping">mapping</A> it's not put in
 <A HREF="cmdline.html#history">history</A> either. (Jacob Niehus, 2014 Nov 2)
@@ -264,6 +287,9 @@ Spell files use a latin single <A HREF="change.html#quote.">quote.</A> <A HREF="
 0x2019.  (Ron Aaron, 2014 Apr 4)
 New OpenOffice <A HREF="spell.html#spell">spell</A> files support this with ICONV.  But they are not
 compatible with Vim <A HREF="spell.html#spell">spell</A> files.  The old files can no longer be downloaded.
+
+Patch to make <A HREF="autocmd.html#FocusGained">FocusGained</A> and <A HREF="autocmd.html#FocusLost">FocusLost</A> work in modern terminals. (Hayaki
+Saito, 2013 Apr 24)
 
 <A HREF="os_win32.html#Win32">Win32</A>: patch to use 64 bit stat() if possible. (Ken Takata, 2014 May 12)
 More tests May 14. Update May 29.  Update Aug 10.
@@ -584,9 +610,6 @@ Patch to improve equivalence classes in <A HREF="pattern.html#regexp">regexp</A>
 
 Patch with suggestions for <A HREF="starting.html#starting.txt">starting.txt</A>. (Tony Mechelynck, 2012 Oct 24)
 But use Gnome instead of GTK?
-
-Patch to make <A HREF="autocmd.html#FocusGained">FocusGained</A> and <A HREF="autocmd.html#FocusLost">FocusLost</A> work in modern terminals. (Hayaki
-Saito, 2013 Apr 24)
 
 Should be possible to enable/disable <A HREF="pi_paren.html#matchparen">matchparen</A> per <A HREF="windows.html#window">window</A> or buffer.
 Add a check for b:no_match_paren in Highlight_matching_Pair() (Marcin
@@ -990,7 +1013,7 @@ Gui menu edit/paste in block mode insert only inserts in one line (Bjorn
 Winckler, 2011 May 11)
 Requires a map mode for <A HREF="insert.html#Insert">Insert</A> mode started from blockwise <A HREF="visual.html#Visual">Visual</A> mode.
 
-Writing nested <A HREF="eval.html#List">List</A> and Dict in <A HREF="starting.html#viminfo">viminfo</A> gives error message and can't be read
+Writing nested <A HREF="eval.html#List">List</A> and Dict in viminfo gives error message and can't be read
 back. (Yukihiro Nakadaira, 2010 Nov 13)
 
 Problem with cursor in the wrong column. (SungHyun Nam, 2010 Mar 11)
@@ -1522,7 +1545,7 @@ Windows 98: pasting from the <A HREF="gui.html#clipboard">clipboard</A> with tex
 a trailing NUL.  (Joachim Hofmann)  Perhaps the length specified for CF_TEXT
 isn't right?
 
-When a <A HREF="sponsor.html#register">register</A> contains illegal bytes, <A HREF="editing.html#writing">writing</A> <A HREF="starting.html#viminfo">viminfo</A> in <A HREF="mbyte.html#utf-8">utf-8</A> and reading
+When a <A HREF="sponsor.html#register">register</A> contains illegal bytes, <A HREF="editing.html#writing">writing</A> viminfo in <A HREF="mbyte.html#utf-8">utf-8</A> and reading
 <A HREF="motion.html#it">it</A> back doesn't result in <A HREF="mbyte.html#utf-8">utf-8</A>. (Devin Bayer)
 
 Command line completion: Scanning for <A HREF="tagsrch.html#tags">tags</A> doesn't check for typed key now and
@@ -2326,7 +2349,7 @@ MSDOS and <A HREF="os_win32.html#Win32">Win32</A>:
     changes.
 8   With <A HREF="options.html#'viminfo'">'viminfo'</A> set such that the &quot;.viminfo&quot; file is written on a FAT
     filesystem, an illegal file name may be created: &quot;.vim&quot;.
-8   For each buffer that is opened, the <A HREF="starting.html#viminfo">viminfo</A> file is opened and read to
+8   For each buffer that is opened, the viminfo file is opened and read to
     check for file marks.  This can be slow.
 7   In xterm, recognize both vt100 and vt220 cursor keys.  Change
     add_termcode() to not remove an existing entry for a name, when it's
@@ -2385,8 +2408,8 @@ MSDOS and <A HREF="os_win32.html#Win32">Win32</A>:
     &quot;initdir&quot; is the default path to be used.
 7   When <A HREF="options.html#'scrolloff'">'scrolloff'</A> is exactly half the <A HREF="windows.html#window">window</A> height, &quot;<A HREF="motion.html#j">j</A>&quot; causes a scroll of
     two lines at a time.  &quot;<A HREF="motion.html#k">k</A>&quot; doesn't <A HREF="diff.html#do">do</A> this. (Cory <A HREF="motion.html#T">T</A>. Echols)
-8   When write_viminfo() is used while there are many orphaned <A HREF="starting.html#viminfo">viminfo</A>
-    tempfiles <A HREF="editing.html#writing">writing</A> the <A HREF="starting.html#viminfo">viminfo</A> file fails.  Give a clear error message so
+8   When write_viminfo() is used while there are many orphaned viminfo
+    tempfiles <A HREF="editing.html#writing">writing</A> the viminfo file fails.  Give a clear error message so
     that the user knows he has to delete the files.
 7   It's possible to redefine a <A HREF="map.html#script-local">script-local</A> function with &quot;:func
     &lt;SNR&gt;123_Test()&quot;. (Krishna)  Disallow this.
@@ -4224,9 +4247,9 @@ Swap (.swp) files:
 
 
 Viminfo:
-7   Can probably remove the code that checks for a writable <A HREF="starting.html#viminfo">viminfo</A> file,
+7   Can probably remove the code that checks for a writable viminfo file,
     because we now <A HREF="diff.html#do">do</A> the chown() for root, and others can't overwrite someone
-    else's <A HREF="starting.html#viminfo">viminfo</A> file.
+    else's viminfo file.
 8   When there is no .viminfo file and someone does &quot;su&quot;, runs Vim, a
     root-owned .viminfo file is created.  Is there a good way to avoid this?
     Perhaps check the owner of the directory.  Only when root?
@@ -4240,7 +4263,7 @@ Viminfo:
     Also remember which files have been read and written.  How to display
     this?
 7   Also store the &quot;. <A HREF="sponsor.html#register">register</A> (last inserted text).
-7   Make <A HREF="motion.html#it">it</A> possible to store buffer names in <A HREF="starting.html#viminfo">viminfo</A> file relative to some
+7   Make <A HREF="motion.html#it">it</A> possible to store buffer names in viminfo file relative to some
     directory, to make them portable over a <A HREF="pi_netrw.html#network">network</A>. (Aaron)
 6   Store a snapshot of the currently opened <A HREF="windows.html#windows">windows</A>.  So that when quitting
     Vim, and then starting again (without a file name argument), you see the
@@ -4283,7 +4306,7 @@ Sessions:
     default value.
 7   With &quot;<A HREF="starting.html#:mksession">:mksession</A>&quot; also store the <A HREF="tagsrch.html#tag">tag</A> stack and jump <A HREF="cmdline.html#history">history</A>. (Michal
     Malecki)
-7   Persistent <A HREF="eval.html#variables">variables</A>: &quot;p:var&quot;; stored in <A HREF="starting.html#viminfo">viminfo</A> file and sessions files.
+7   Persistent <A HREF="eval.html#variables">variables</A>: &quot;p:var&quot;; stored in viminfo file and sessions files.
 
 
 Options:
@@ -4451,8 +4474,6 @@ Argument <A HREF="eval.html#list">list</A>:
 
 Registers:
 8   Don't display empty <A HREF="change.html#registers">registers</A> with &quot;<A HREF="change.html#:display">:display</A>&quot;. (Etienne)
-8   Make the # <A HREF="sponsor.html#register">register</A> writable, so that <A HREF="motion.html#it">it</A> can be restored after jumping
-    around in <A HREF="windows.html#windows">windows</A>.
 8   Add put command that overwrites existing text.  Should also work for
     blocks.  Useful to move text around in a table.  Works like using &quot;<A HREF="change.html#R">R</A> ^R r&quot;
     for every line.
@@ -4479,7 +4500,7 @@ Debug mode:
     when evaluating to non-zero.  Add the &quot;watchadd expr&quot; command, stop when
     the value of the <A HREF="eval.html#expression">expression</A> changes.  &quot;:watchdel&quot; deletes an item,
     &quot;:watchlist&quot; lists the items. (Charles Campbell)
-7   Store the <A HREF="cmdline.html#history">history</A> from debug mode in <A HREF="starting.html#viminfo">viminfo</A>.
+7   Store the <A HREF="cmdline.html#history">history</A> from debug mode in viminfo.
 7   Make the debug mode <A HREF="cmdline.html#history">history</A> available with <A HREF="eval.html#histget()">histget()</A> et al.
 
 
@@ -4931,7 +4952,7 @@ empty line would appear.
 
     <footer>
       <div class="container">
-        Generated Wed Oct  7 08:19:10 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/7be75a02917b40e5791e3f98d177f833a348df35"><code>7be75a0</code></a>.
+        Generated Fri Oct 16 14:52:40 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/3a970e57dfd48f090f8ccc21567b7974e13d4c68"><code>3a970e5</code></a>.
       </div>
     </footer>
   </body>

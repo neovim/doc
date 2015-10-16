@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="pi_netrw.txt"></A><B>pi_netrw.txt</B>*  For Vim version 7.4.  Last change: 2014 May 13
+*<A NAME="pi_netrw.txt"></A><B>pi_netrw.txt</B>*  For Vim version 7.4.  Last change: 2015 Jan 05
 
 	    ------------------------------------------------
 	    NETRW REFERENCE MANUAL    by Charles <A HREF="motion.html#E">E</A>. Campbell
@@ -48,7 +48,7 @@ Author: Charles E. Campbell <A HREF="mailto:NdrOchip@ScampbellPfamily.AbizM">&lt
 	  (remove NOSPAM from Campbell's email first)
 
 
-Copyright: Copyright (C) 1999-2014 Charles <A HREF="motion.html#E">E</A> Campbell    *<A NAME="netrw-copyright"></A><B>netrw-copyright</B>*
+Copyright: Copyright (C) 1999-2015 Charles <A HREF="motion.html#E">E</A> Campbell    *<A NAME="netrw-copyright"></A><B>netrw-copyright</B>*
 	The VIM LICENSE applies to the files in this package, including
 	<A HREF="#netrw.vim">netrw.vim</A>, <A HREF="#pi_netrw.txt">pi_netrw.txt</A>, netrwFileHandlers.vim, netrwSettings.vim, and
 	syntax/netrw.vim.  Like anything else that's free, <A HREF="#netrw.vim">netrw.vim</A> and its
@@ -61,11 +61,13 @@ Copyright: Copyright (C) 1999-2014 Charles <A HREF="motion.html#E">E</A> Campbel
 
 
 
+		*<A NAME="netrw"></A><B>netrw</B>*
+
 		*<A NAME="dav"></A><B>dav</B>*    *<A NAME="ftp"></A><B>ftp</B>*    *<A NAME="netrw-file"></A><B>netrw-file</B>*  *<A NAME="rcp"></A><B>rcp</B>*    *<A NAME="scp"></A><B>scp</B>*
 
 		*<A NAME="davs"></A><B>davs</B>*   *<A NAME="http"></A><B>http</B>*   *<A NAME="netrw.vim"></A><B>netrw.vim</B>*   *<A NAME="rsync"></A><B>rsync</B>*  *<A NAME="sftp"></A><B>sftp</B>*
 
-		*<A NAME="fetch"></A><B>fetch</B>*  *<A NAME="netrw"></A><B>netrw</B>*  *<A NAME="network"></A><B>network</B>*
+		*<A NAME="fetch"></A><B>fetch</B>*  *<A NAME="network"></A><B>network</B>*
 
 ==============================================================================
 
@@ -103,7 +105,7 @@ Copyright: Copyright (C) 1999-2014 Charles <A HREF="motion.html#E">E</A> Campbel
       Changing To A Bookmarked Directory..................|netrw-gbYXXY
       Changing To A Predecessor Directory.................|netrw-uYXXY
       Changing To A Successor Directory...................|netrw-UYXXY
-      Customizing Browsing With A <A HREF="autocmd.html#User">User</A> Function...........|netrw-xYXXY
+      Customizing Browsing With A Special Handler.........|netrw-xYXXY
       Deleting Bookmarks..................................|netrw-mBYXXY
       Deleting Files Or Directories.......................|netrw-DYXXY
       Directory Exploring Commands........................|netrw-exploreYXXY
@@ -122,7 +124,9 @@ Copyright: Copyright (C) 1999-2014 Charles <A HREF="motion.html#E">E</A> Campbel
       Unmarking Files.....................................|netrw-mFYXXY
       Marking Files By QuickFix List......................|netrw-qFYXXY
       Marking Files By Regular Expression.................|netrw-mrYXXY
-      Marked Files: Arbitrary Command.....................|netrw-mxYXXY
+      Marked Files: Arbitrary Shell Command...............|netrw-mxYXXY
+      Marked Files: Arbitrary Shell Command, En Bloc......|netrw-mXYXXY
+      Marked Files: Arbitrary Vim Command.................|netrw-mvYXXY
       Marked Files: Compression And Decompression.........|netrw-mzYXXY
       Marked Files: Copying...............................|netrw-mcYXXY
       Marked Files: Diff..................................|netrw-mdYXXY
@@ -266,6 +270,8 @@ EXTERNAL APPLICATIONS AND PROTOCOLS			*<A NAME="netrw-externapp"></A><B>netrw-ex
 	   <A HREF="#scp">scp</A>:   *<A NAME="g:netrw_scp_cmd"></A><B>g:netrw_scp_cmd</B>*      = &quot;<A HREF="#scp">scp</A> -q&quot;
 
 	  <A HREF="#sftp">sftp</A>:   *<A NAME="g:netrw_sftp_cmd"></A><B>g:netrw_sftp_cmd</B>*     = &quot;<A HREF="#sftp">sftp</A>&quot;
+
+	  file:   *<A NAME="g:netrw_file_cmd"></A><B>g:netrw_file_cmd</B>*     = &quot;elinks&quot; or &quot;links&quot;
 
 
 	*<A NAME="g:netrw_http_xcmd"></A><B>g:netrw_http_xcmd</B>* : the option <A HREF="eval.html#string">string</A> for http://... protocols are
@@ -413,7 +419,7 @@ YXXYnetrw-externapp|:
 
 
  *<A NAME="g:netrw_bufsettings"></A><B>g:netrw_bufsettings</B>*	the settings that <A HREF="#netrw">netrw</A> <A HREF="windows.html#buffers">buffers</A> have
- 			(default) noma nomod nonu nowrap ro nobl
+			(default) noma nomod nonu nowrap ro nobl
 
 
  *<A NAME="g:netrw_chgwin"></A><B>g:netrw_chgwin</B>*	specifies a <A HREF="windows.html#window">window</A> number where subsequent file edits
@@ -477,7 +483,7 @@ YXXYnetrw-externapp|:
 
  *<A NAME="g:netrw_uid"></A><B>g:netrw_uid</B>*		(ftp) user-id,      retained on a per-vim-session basis
 
- *<A NAME="s:netrw_passwd"></A><B>s:netrw_passwd</B>* 	(ftp) password,     retained on a per-vim-session basis
+ *<A NAME="s:netrw_passwd"></A><B>s:netrw_passwd</B>*	(ftp) password,     retained on a per-vim-session basis
 
 
  *<A NAME="g:netrw_preview"></A><B>g:netrw_preview</B>*	=0 (default) preview <A HREF="windows.html#window">window</A> shown in a horizontally
@@ -485,6 +491,14 @@ YXXYnetrw-externapp|:
 			=1 preview <A HREF="windows.html#window">window</A> shown in a vertically split <A HREF="windows.html#window">window</A>.
 			   Also affects the &quot;previous window&quot; (see |<A HREF="#netrw-P">netrw-P</A>|)
 			   in the same way.
+			The |<A HREF="#g:netrw_alto">g:netrw_alto</A>| variable may be used to provide
+			additional splitting <A HREF="intro.html#control">control</A>:
+				<A HREF="#g:netrw_preview">g:netrw_preview</A> <A HREF="#g:netrw_alto">g:netrw_alto</A> result
+				         0             0     |<A HREF="windows.html#:aboveleft">:aboveleft</A>|
+				         0             1     |<A HREF="windows.html#:belowright">:belowright</A>|
+				         1             0     |<A HREF="windows.html#:topleft">:topleft</A>|
+				         1             1     |<A HREF="windows.html#:botright">:botright</A>|
+			To <A HREF="intro.html#control">control</A> sizing, see |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>|
 
 
  *<A NAME="g:netrw_scpport"></A><B>g:netrw_scpport</B>*	= &quot;-P&quot; : option to use to set port for <A HREF="#scp">scp</A>
@@ -492,7 +506,7 @@ YXXYnetrw-externapp|:
  *<A NAME="g:netrw_sshport"></A><B>g:netrw_sshport</B>*	= &quot;<A HREF="starting.html#-p">-p</A>&quot; : option to use to set port for ssh
 
 
- *<A NAME="g:netrw_sepchr"></A><B>g:netrw_sepchr</B>* 	=\0xff
+ *<A NAME="g:netrw_sepchr"></A><B>g:netrw_sepchr</B>*	=\0xff
 			=\0x01 for enc <A HREF="change.html#==">==</A> euc-jp (and perhaps <A HREF="motion.html#it">it</A> should be for
 			   others, too, please let me know)
 			   Separates priority codes from filenames internally.
@@ -516,7 +530,7 @@ YXXYnetrw-externapp|:
 			=0 force normal ftp behavior (no trailing line removal)
 
 
- *<A NAME="g:netrw_cygwin"></A><B>g:netrw_cygwin</B>* 	=1 assume <A HREF="#scp">scp</A> under <A HREF="windows.html#windows">windows</A> is from cygwin. Also
+ *<A NAME="g:netrw_cygwin"></A><B>g:netrw_cygwin</B>*	=1 assume <A HREF="#scp">scp</A> under <A HREF="windows.html#windows">windows</A> is from cygwin. Also
 			   permits <A HREF="#network">network</A> browsing to use ls with time and
 			   size <A HREF="change.html#sorting">sorting</A> (default if <A HREF="windows.html#windows">windows</A>)
 			=0 assume Windows' <A HREF="#scp">scp</A> accepts windows-style paths
@@ -776,6 +790,16 @@ your &lt;.vimrc&gt; customization file:
 <B>	  filetype plugin indent on</B>
 <B>	endif</B>
  
+By also including the following lines in your <A HREF="starting.html#.vimrc">.vimrc</A>, one may have <A HREF="#netrw">netrw</A>
+immediately activate when using [g]vim without any filenames, showing the
+current directory:
+
+<B>	" Augroup VimStartup:</B>
+<B>	augroup VimStartup</B>
+<B>	  au!</B>
+<B>	  au VimEnter * if expand("%") == "" | e . | endif</B>
+<B>	augroup END</B>
+ 
 
 ==============================================================================
 
@@ -943,7 +967,7 @@ Netrw supports a number of protocols.  These protocols are invoked using the
     <A HREF="#g:netrw_http_cmd">g:netrw_http_cmd</A>     var   =&quot;fetch -o&quot;     if      <A HREF="#fetch">fetch</A> is available
     <A HREF="#g:netrw_http_cmd">g:netrw_http_cmd</A>     var   =&quot;wget -O&quot;      else if wget  is available
     <A HREF="#g:netrw_http_put_cmd">g:netrw_http_put_cmd</A> var   =&quot;curl -T&quot;
-    <A HREF="#g:netrw_list_cmd">g:netrw_list_cmd</A>     var   =&quot;ssh USEPORT HOSTNAME ls -Fa&quot;
+    |<A HREF="#g:netrw_list_cmd">g:netrw_list_cmd</A>|    var   =&quot;ssh USEPORT HOSTNAME ls -Fa&quot;
     <A HREF="#g:netrw_rcp_cmd">g:netrw_rcp_cmd</A>      var   =&quot;rcp&quot;
     <A HREF="#g:netrw_rsync_cmd">g:netrw_rsync_cmd</A>    var   =&quot;rsync -a&quot;
     <A HREF="#g:netrw_scp_cmd">g:netrw_scp_cmd</A>      var   =&quot;scp -q&quot;
@@ -1157,6 +1181,9 @@ QUICK REFERENCE: MAPS				*<A NAME="netrw-browse-maps"></A><B>netrw-browse-maps</
  	 <A HREF="helphelp.html#&lt;F1&gt;">&lt;F1&gt;</A>	Causes Netrw to issue help
 	 &lt;cr&gt;	Netrw will enter the directory or read the file      |<A HREF="#netrw-cr">netrw-cr</A>|
 	 &lt;del&gt;	Netrw will attempt to remove the file/directory      |<A HREF="#netrw-del">netrw-del</A>|
+	 &lt;c-h&gt;	Edit file hiding <A HREF="eval.html#list">list</A>                             |<A HREF="#netrw-ctrl-h">netrw-ctrl-h</A>|
+	 &lt;c-l&gt;	Causes Netrw to refresh the directory listing     |<A HREF="#netrw-ctrl-l">netrw-ctrl-l</A>|
+	 &lt;c-r&gt;	Browse using a gvim server                        |<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>|
 	   -	Makes Netrw go up one directory                      |<A HREF="#netrw--">netrw--</A>|
 	   a	Toggles between normal display,                      |<A HREF="#netrw-a">netrw-a</A>|
 	    	hiding (suppress display of files matching <A HREF="#g:netrw_list_hide">g:netrw_list_hide</A>)
@@ -1166,23 +1193,27 @@ QUICK REFERENCE: MAPS				*<A NAME="netrw-browse-maps"></A><B>netrw-browse-maps</
 	   d	Make a directory                                     |<A HREF="#netrw-d">netrw-d</A>|
 	   D	Attempt to remove the file(s)/directory(ies)         |<A HREF="#netrw-D">netrw-D</A>|
 	   gb	Go to previous bookmarked directory                  |<A HREF="#netrw-gb">netrw-gb</A>|
+	   gd	Force treatment <A HREF="motion.html#as">as</A> directory                         |<A HREF="#netrw-gd">netrw-gd</A>|
+	   gf	Force treatment <A HREF="motion.html#as">as</A> file                              |<A HREF="#netrw-gf">netrw-gf</A>|
 	   gh	Quick hide/unhide of dot-files                       |<A HREF="#netrw-gh">netrw-gh</A>|
-	 &lt;c-h&gt;	Edit file hiding <A HREF="eval.html#list">list</A>                             |<A HREF="#netrw-ctrl-h">netrw-ctrl-h</A>|
 	   i	Cycle between thin, long, wide, and tree listings    |<A HREF="#netrw-i">netrw-i</A>|
-	 &lt;c-l&gt;	Causes Netrw to refresh the directory listing     |<A HREF="#netrw-ctrl-l">netrw-ctrl-l</A>|
 	   mb	Bookmark current directory                           |<A HREF="#netrw-mb">netrw-mb</A>|
 	   mc	Copy marked files to marked-file target directory    |<A HREF="#netrw-mc">netrw-mc</A>|
 	   md	Apply <A HREF="diff.html#diff">diff</A> to marked files (up to 3)                 |<A HREF="#netrw-md">netrw-md</A>|
 	   me	Place marked files on arg <A HREF="eval.html#list">list</A> and edit them         |<A HREF="#netrw-me">netrw-me</A>|
 	   mf	<A HREF="motion.html#Mark">Mark</A> a file                                          |<A HREF="#netrw-mf">netrw-mf</A>|
+	   mF	Unmark files                                         |<A HREF="#netrw-mF">netrw-mF</A>|
+	   mg	Apply vimgrep to marked files                        |<A HREF="#netrw-mg">netrw-mg</A>|
 	   mh	Toggle marked file suffices' presence on hiding <A HREF="eval.html#list">list</A> |<A HREF="#netrw-mh">netrw-mh</A>|
 	   mm	Move marked files to marked-file target directory    |<A HREF="#netrw-mm">netrw-mm</A>|
 	   mp	Print marked files                                   |<A HREF="#netrw-mp">netrw-mp</A>|
-	   mr	<A HREF="motion.html#Mark">Mark</A> files satisfying a shell-style |<A HREF="pattern.html#regexp">regexp</A>|         |<A HREF="#netrw-mr">netrw-mr</A>|
+	   mr	<A HREF="motion.html#Mark">Mark</A> files using a shell-style |<A HREF="pattern.html#regexp">regexp</A>|                |<A HREF="#netrw-mr">netrw-mr</A>|
 	   mt	Current browsing directory becomes markfile target   |<A HREF="#netrw-mt">netrw-mt</A>|
 	   mT	Apply <A HREF="tagsrch.html#ctags">ctags</A> to marked files                          |<A HREF="#netrw-mT">netrw-mT</A>|
 	   mu	Unmark all marked files                              |<A HREF="#netrw-mu">netrw-mu</A>|
+	   mv	Apply arbitrary vim   command to marked files        |<A HREF="#netrw-mv">netrw-mv</A>|
 	   mx	Apply arbitrary shell command to marked files        |<A HREF="#netrw-mx">netrw-mx</A>|
+	   mX	Apply arbitrary shell command to marked files en bloc|netrw-mXYXXY
 	   mz	Compress/decompress marked files                     |<A HREF="#netrw-mz">netrw-mz</A>|
 	   o	Enter the file/directory under the cursor in a new   |<A HREF="#netrw-o">netrw-o</A>|
 	    	browser <A HREF="windows.html#window">window</A>.  A horizontal split is used.
@@ -1191,6 +1222,7 @@ QUICK REFERENCE: MAPS				*<A NAME="netrw-browse-maps"></A><B>netrw-browse-maps</
 	   P	Browse in the previously used <A HREF="windows.html#window">window</A>                 |<A HREF="#netrw-P">netrw-P</A>|
 	   qb	<A HREF="eval.html#List">List</A> bookmarked directories and <A HREF="cmdline.html#history">history</A>              |<A HREF="#netrw-qb">netrw-qb</A>|
 	   qf	Display information on file                          |<A HREF="#netrw-qf">netrw-qf</A>|
+	   qF	<A HREF="motion.html#Mark">Mark</A> files using a <A HREF="quickfix.html#quickfix">quickfix</A> <A HREF="eval.html#list">list</A>                     |<A HREF="#netrw-qF">netrw-qF</A>|
 	   r	Reverse <A HREF="change.html#sorting">sorting</A> order                                |<A HREF="#netrw-r">netrw-r</A>|
 	   R	Rename the designed file(s)/directory(ies)           |<A HREF="#netrw-R">netrw-R</A>|
 	   s	<A HREF="visual.html#Select">Select</A> <A HREF="change.html#sorting">sorting</A> style: by name, time, or file size    |<A HREF="#netrw-s">netrw-s</A>|
@@ -1215,7 +1247,7 @@ QUICK REFERENCE: MAPS				*<A NAME="netrw-browse-maps"></A><B>netrw-browse-maps</
 			mouse
 	&lt;2-leftmouse&gt;	(gvim only) when:
 			 &#42; in a netrw-selected file, AND
-			 &#42; |<A HREF="#g:netrw_retmap">g:netrw_retmap</A>| <A HREF="change.html#==">==</A> 1     AND
+			 &#42; |<A HREF="#g:netrw_retmap">g:netrw_retmap</A>| <A HREF="change.html#==">==</A> 1       AND
 			 &#42; the user doesn't already have a &lt;2-leftmouse&gt;
 			   <A HREF="map.html#mapping">mapping</A> defined before <A HREF="#netrw">netrw</A> is autoloaded,
 			then a double clicked leftmouse button will return
@@ -1235,7 +1267,7 @@ QUICK REFERENCE: COMMANDS	*<A NAME="netrw-explore-cmds"></A><B>netrw-explore-cmd
      :Ntree....................................................|netrw-ntreeYXXY
      :Explore[!]  [dir] Explore directory of current file......|netrw-exploreYXXY
      :Hexplore[!] [dir] Horizontal Split <A HREF="change.html#&amp;">&amp;</A> Explore.............|netrw-exploreYXXY
-     <A HREF="#:Lexplore">:Lexplore</A>    [dir] Left Explorer Toggle...................|netrw-exploreYXXY
+     :Lexplore[!] [dir] Left Explorer Toggle...................|netrw-exploreYXXY
      :Nexplore[!] [dir] Vertical Split <A HREF="change.html#&amp;">&amp;</A> Explore...............|netrw-exploreYXXY
      :Pexplore[!] [dir] Vertical Split <A HREF="change.html#&amp;">&amp;</A> Explore...............|netrw-exploreYXXY
      <A HREF="#:Rexplore">:Rexplore</A>          Return to Explorer.....................|netrw-exploreYXXY
@@ -1244,19 +1276,47 @@ QUICK REFERENCE: COMMANDS	*<A NAME="netrw-explore-cmds"></A><B>netrw-explore-cmd
      :Vexplore[!] [dir] Vertical Split <A HREF="change.html#&amp;">&amp;</A> Explore...............|netrw-exploreYXXY
 
 
-BOOKMARKING A DIRECTORY	*<A NAME="netrw-mb"></A><B>netrw-mb</B>* *<A NAME="netrw-bookmark"></A><B>netrw-bookmark</B>* *<A NAME="netrw-bookmarks"></A><B>netrw-bookmarks</B>* {{{2
+BOOKMARKING A DIRECTORY *<A NAME="netrw-mb"></A><B>netrw-mb</B>* *<A NAME="netrw-bookmark"></A><B>netrw-bookmark</B>* *<A NAME="netrw-bookmarks"></A><B>netrw-bookmarks</B>* {{{2
 
-One may easily &quot;<A HREF="usr_03.html#bookmark">bookmark</A>&quot; a directory by using
+One may easily &quot;<A HREF="usr_03.html#bookmark">bookmark</A>&quot; the currently browsed directory by using
 
 <B>	mb</B>
  
+
+								*<A NAME=".netrwbook"></A><B>.netrwbook</B>*
 Bookmarks are retained in between sessions in a $HOME/.netrwbook file, and are
 kept in sorted order.
+
+If there are marked files and/or directories, mb will add them to the <A HREF="usr_03.html#bookmark">bookmark</A>
+<A HREF="eval.html#list">list</A>.
+
+
+*<A NAME="netrw-:NetrwMB"></A><B>netrw-:NetrwMB</B>*
+Addtionally, one may use :NetrwMB to <A HREF="usr_03.html#bookmark">bookmark</A> files or directories.
+
+<B>	:NetrwMB[!] [files/directories]</B>
+
+  No bang: enters files/directories into Netrw's <A HREF="usr_03.html#bookmark">bookmark</A> system
+
+   No argument and in <A HREF="#netrw">netrw</A> buffer:
+     if there are marked files: <A HREF="usr_03.html#bookmark">bookmark</A> marked files
+     otherwise                : <A HREF="usr_03.html#bookmark">bookmark</A> file/directory under cursor
+   No argument and not in <A HREF="#netrw">netrw</A> buffer: bookmarks current open file
+   Has arguments: globs them individually and bookmarks them
+
+ With bang: deletes files/directories from Netrw's <A HREF="usr_03.html#bookmark">bookmark</A> system
+
+The :NetrwMB command is available outside of <A HREF="#netrw">netrw</A> <A HREF="windows.html#buffers">buffers</A> (once <A HREF="#netrw">netrw</A> has been
+invoked in the session).
+
+The file &quot;<A HREF="#.netrwbook">.netrwbook</A>&quot; holds bookmarks when <A HREF="#netrw">netrw</A> (and vim) is not active.  By
+default, its stored on the first directory on the user's |<A HREF="options.html#'runtimepath'">'runtimepath'</A>|.
 
 Related Topics:
 	|<A HREF="#netrw-gb">netrw-gb</A>| how to return (go) to a <A HREF="usr_03.html#bookmark">bookmark</A>
 	|<A HREF="#netrw-mB">netrw-mB</A>| how to delete bookmarks
 	|<A HREF="#netrw-qb">netrw-qb</A>| how to <A HREF="eval.html#list">list</A> bookmarks
+	|<A HREF="#g:netrw_home">g:netrw_home</A>| controls where <A HREF="#.netrwbook">.netrwbook</A> is kept
 
 
 
@@ -1283,7 +1343,7 @@ horizontally or vertically, respectively.  When the option is set to three, a
 When using the <A HREF="gui.html#gui">gui</A> (gvim), one may select a file by pressing the &lt;leftmouse&gt;
 button.  In addition, if
 
- *|<A HREF="#g:netrw_retmap">g:netrw_retmap</A>| <A HREF="change.html#==">==</A> 1      AND   (its default value is 0)
+ &#42; |<A HREF="#g:netrw_retmap">g:netrw_retmap</A>| <A HREF="change.html#==">==</A> 1       AND   (its default value is 0)
  &#42; in a netrw-selected file, AND
  &#42; the user doesn't already have a &lt;2-leftmouse&gt; <A HREF="map.html#mapping">mapping</A> defined before
    <A HREF="#netrw">netrw</A> is loaded
@@ -1302,19 +1362,20 @@ are introduced into a directory), the listing may become out-of-date.  One may
 always refresh directory listing <A HREF="windows.html#buffers">buffers</A> by pressing ctrl-L (see
 |<A HREF="#netrw-ctrl-l">netrw-ctrl-l</A>|).
 
-
 								*<A NAME=":netrw-s-cr"></A><B>:netrw-s-cr</B>*
 <B><FONT color="#54A23D">    Squeezing the Current Tree-Listing Directory</FONT></B>
     When the tree listing style is enabled (see |<A HREF="#netrw-i">netrw-i</A>|) and one is using
     gvim, then the &lt;s-cr&gt; <A HREF="map.html#mapping">mapping</A> may be used to squeeze (close) the
     directory currently containing the cursor.
 
-
-Related topics: |<A HREF="#netrw-o">netrw-o</A>| |<A HREF="#netrw-p">netrw-p</A>| |<A HREF="#netrw-P">netrw-P</A>| |<A HREF="#netrw-t">netrw-t</A>| |<A HREF="#netrw-v">netrw-v</A>|
-Associated setting <A HREF="eval.html#variables">variables</A>: |<A HREF="#g:netrw_browse_split">g:netrw_browse_split</A>|      |<A HREF="#g:netrw_fastbrowse">g:netrw_fastbrowse</A>|
-                              |<A HREF="#g:netrw_ftp_list_cmd">g:netrw_ftp_list_cmd</A>| |<A HREF="#g:netrw_ftp_sizelist_cmd">g:netrw_ftp_sizelist_cmd</A>|
-			      |<A HREF="#g:netrw_ftp_timelist_cmd">g:netrw_ftp_timelist_cmd</A>|  |<A HREF="#g:netrw_ssh_cmd">g:netrw_ssh_cmd</A>|
-			      |<A HREF="#g:netrw_ssh_browse_reject">g:netrw_ssh_browse_reject</A>| |<A HREF="#g:netrw_use_noswf">g:netrw_use_noswf</A>|
+Related topics:
+	|<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>|	|<A HREF="#netrw-o">netrw-o</A>|	|<A HREF="#netrw-p">netrw-p</A>|
+	|<A HREF="#netrw-P">netrw-P</A>|	|<A HREF="#netrw-t">netrw-t</A>|	|<A HREF="#netrw-v">netrw-v</A>|
+Associated setting <A HREF="eval.html#variables">variables</A>:
+   |<A HREF="#g:netrw_browse_split">g:netrw_browse_split</A>|	|<A HREF="#g:netrw_fastbrowse">g:netrw_fastbrowse</A>|
+   |<A HREF="#g:netrw_ftp_list_cmd">g:netrw_ftp_list_cmd</A>|	|<A HREF="#g:netrw_ftp_sizelist_cmd">g:netrw_ftp_sizelist_cmd</A>|
+   |<A HREF="#g:netrw_ftp_timelist_cmd">g:netrw_ftp_timelist_cmd</A>|	|<A HREF="#g:netrw_ssh_browse_reject">g:netrw_ssh_browse_reject</A>|
+   |<A HREF="#g:netrw_ssh_cmd">g:netrw_ssh_cmd</A>|		|<A HREF="#g:netrw_use_noswf">g:netrw_use_noswf</A>|
 
 
 
@@ -1329,13 +1390,15 @@ cursor at the top.
 
 Associated setting <A HREF="eval.html#variables">variables</A>: |<A HREF="#g:netrw_alto">g:netrw_alto</A>| |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>|
 
-Related Actions |<A HREF="#netrw-cr">netrw-cr</A>| |<A HREF="#netrw-p">netrw-p</A>| |<A HREF="#netrw-t">netrw-t</A>| |<A HREF="#netrw-v">netrw-v</A>|
+Related topics:
+	|<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>|	|<A HREF="#netrw-o">netrw-o</A>|	|<A HREF="#netrw-p">netrw-p</A>|
+	|<A HREF="#netrw-P">netrw-P</A>|	|<A HREF="#netrw-t">netrw-t</A>|	|<A HREF="#netrw-v">netrw-v</A>|
 Associated setting <A HREF="eval.html#variables">variables</A>:
    |<A HREF="#g:netrw_alto">g:netrw_alto</A>|    <A HREF="intro.html#control">control</A> above/below splitting
    |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| <A HREF="intro.html#control">control</A> initial sizing
 
 
-BROWSING WITH A NEW TAB				*<A NAME="netrw-t"></A><B>netrw-t</B>*
+BROWSING WITH A NEW TAB				*<A NAME="netrw-t"></A><B>netrw-t</B>* {{{2
 
 Normally one enters a file or directory using the &lt;cr&gt;.  The &quot;<A HREF="motion.html#t">t</A>&quot; map
 allows one to open a new <A HREF="windows.html#window">window</A> holding the new directory listing or file in
@@ -1343,7 +1406,9 @@ a new <A HREF="intro.html#tab">tab</A>.
 
 If you'd like to have the new listing in a background <A HREF="intro.html#tab">tab</A>, use |<A HREF="tabpage.html#gT">gT</A>|.
 
-Related Actions |<A HREF="#netrw-cr">netrw-cr</A>| |<A HREF="#netrw-o">netrw-o</A>| |<A HREF="#netrw-p">netrw-p</A>| |<A HREF="#netrw-v">netrw-v</A>|
+Related topics:
+	|<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>|	|<A HREF="#netrw-o">netrw-o</A>|	|<A HREF="#netrw-p">netrw-p</A>|
+	|<A HREF="#netrw-P">netrw-P</A>|	|<A HREF="#netrw-t">netrw-t</A>|	|<A HREF="#netrw-v">netrw-v</A>|
 Associated setting <A HREF="eval.html#variables">variables</A>:
    |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| <A HREF="intro.html#control">control</A> initial sizing
 
@@ -1360,14 +1425,32 @@ cursor at the left.
 There is only one tree listing buffer; using &quot;<A HREF="visual.html#v">v</A>&quot; on a displayed subdirectory
 will split the screen, but the same buffer will be shown <A HREF="if_cscop.html#twice">twice</A>.
 
-Related Actions: |<A HREF="#netrw-cr">netrw-cr</A>| |<A HREF="#netrw-o">netrw-o</A>| |<A HREF="#netrw-t">netrw-t</A>| |<A HREF="#netrw-v">netrw-v</A>|
+Related topics:
+	|<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>|	|<A HREF="#netrw-o">netrw-o</A>|	|<A HREF="#netrw-p">netrw-p</A>|
+	|<A HREF="#netrw-P">netrw-P</A>|	|<A HREF="#netrw-t">netrw-t</A>|	|<A HREF="#netrw-v">netrw-v</A>|
 Associated setting <A HREF="eval.html#variables">variables</A>:
    |<A HREF="#g:netrw_altv">g:netrw_altv</A>|    <A HREF="intro.html#control">control</A> right/left splitting
    |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| <A HREF="intro.html#control">control</A> initial sizing
 
 
 
-CHANGE LISTING STYLE  (THIN LONG WIDE TREE)   			*<A NAME="netrw-i"></A><B>netrw-i</B>* {{{2
+BROWSING USING A GVIM SERVER			*<A NAME="netrw-ctrl-r"></A><B>netrw-ctrl-r</B>* {{{2
+
+One may keep a browsing gvim separate from the gvim being used to edit.
+Use the &lt;c-r&gt; map on a file (not a directory) in the <A HREF="#netrw">netrw</A> browser, and <A HREF="motion.html#it">it</A>
+will use a gvim server (see |<A HREF="#g:netrw_servername">g:netrw_servername</A>|).  Subsequent use of &lt;cr&gt;
+(see |<A HREF="#netrw-cr">netrw-cr</A>|) will re-use that server for editing files.
+
+Related topics:
+	|<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>|	|<A HREF="#netrw-o">netrw-o</A>|	|<A HREF="#netrw-p">netrw-p</A>|
+	|<A HREF="#netrw-P">netrw-P</A>|	|<A HREF="#netrw-t">netrw-t</A>|	|<A HREF="#netrw-v">netrw-v</A>|
+Associated setting <A HREF="eval.html#variables">variables</A>:
+	|<A HREF="#g:netrw_servername">g:netrw_servername</A>|   : sets name of server
+	|<A HREF="#g:netrw_browse_split">g:netrw_browse_split</A>| : controls how &lt;cr&gt; will open files
+
+
+
+CHANGE LISTING STYLE  (THIN LONG WIDE TREE)			*<A NAME="netrw-i"></A><B>netrw-i</B>* {{{2
 
 The &quot;<A HREF="insert.html#i">i</A>&quot; map cycles between the thin, long, wide, and tree listing formats.
 
@@ -1392,7 +1475,7 @@ name.
 
 One may make a preferred listing style your default; see |<A HREF="#g:netrw_liststyle">g:netrw_liststyle</A>|.
 As an example, by putting the following line in your <A HREF="starting.html#.vimrc">.vimrc</A>,
-<B>	let g:netrw_liststyle= 4</B>
+<B>	let g:netrw_liststyle= 3</B>
 the tree style will become your default listing style.
 
 One typical way to use the <A HREF="#netrw">netrw</A> tree display is to:
@@ -1449,8 +1532,16 @@ The &quot;<A HREF="undo.html#u">u</A>&quot; map also accepts counts to go back i
 For your convenience, |<A HREF="#netrw-qb">netrw-qb</A>| lists the <A HREF="cmdline.html#history">history</A> number which can be
 re-used in that <A HREF="intro.html#count">count</A>.
 
+
+						*<A NAME=".netrwhist"></A><B>.netrwhist</B>*
 See |<A HREF="#g:netrw_dirhistmax">g:netrw_dirhistmax</A>| for how to <A HREF="intro.html#control">control</A> the quantity of <A HREF="cmdline.html#history">history</A> stack
-slots.
+slots.  The file &quot;<A HREF="#.netrwhist">.netrwhist</A>&quot; holds <A HREF="cmdline.html#history">history</A> when <A HREF="#netrw">netrw</A> (and vim) is not
+active.  By default, its stored on the first directory on the user's
+|<A HREF="options.html#'runtimepath'">'runtimepath'</A>|.
+
+Related Topics:
+	|<A HREF="#netrw-U">netrw-U</A>| <A HREF="change.html#changing">changing</A> to a successor directory
+	|<A HREF="#g:netrw_home">g:netrw_home</A>| controls where <A HREF="#.netrwhist">.netrwhist</A> is kept
 
 
 
@@ -1467,7 +1558,7 @@ slots.
 
 
 
-CHANGING TREE TOP				*<A NAME="netrw-ntree"></A><B>netrw-ntree</B>* *<A NAME=":Ntree"></A><B>:Ntree</B>*
+CHANGING TREE TOP				*<A NAME="netrw-ntree"></A><B>netrw-ntree</B>* *<A NAME=":Ntree"></A><B>:Ntree</B>* {{{2
 
 One may specify a new tree top for tree listings using
 
@@ -1479,7 +1570,7 @@ With a &quot;dirname&quot;, the specified directory name is used.
 
 
 
-NETRW CLEAN					*<A NAME="netrw-clean"></A><B>netrw-clean</B>* *<A NAME=":NetrwClean"></A><B>:NetrwClean</B>*
+NETRW CLEAN					*<A NAME="netrw-clean"></A><B>netrw-clean</B>* *<A NAME=":NetrwClean"></A><B>:NetrwClean</B>* {{{2
 
 With <A HREF="#:NetrwClean">:NetrwClean</A> one may easily remove <A HREF="#netrw">netrw</A> from one's home directory;
 more precisely, from the first directory on your |<A HREF="options.html#'runtimepath'">'runtimepath'</A>|.
@@ -1494,17 +1585,16 @@ permission to remove a file, <A HREF="motion.html#it">it</A> will issue an error
 
 						*<A NAME="netrw-gx"></A><B>netrw-gx</B>*
 
-CUSTOMIZING BROWSING WITH A USER FUNCTION	*<A NAME="netrw-x"></A><B>netrw-x</B>* *<A NAME="netrw-handler"></A><B>netrw-handler</B>* {{{2
+CUSTOMIZING BROWSING WITH A SPECIAL HANDLER	*<A NAME="netrw-x"></A><B>netrw-x</B>* *<A NAME="netrw-handler"></A><B>netrw-handler</B>* {{{2
 						(also see |<A HREF="#netrw_filehandler">netrw_filehandler</A>|)
 
 Certain files, such <A HREF="motion.html#as">as</A> html, gif, jpeg, (word/office) doc, etc, files, are
-best seen with a special handler (ie. a tool provided with your computer).
-Netrw allows one to invoke such special handlers by:
+best seen with a special handler (ie. a tool provided with your computer's
+operating system).  Netrw allows one to invoke such special handlers by:
 
 <B>	* when Exploring, hit the "x" key</B>
 <B>	* when editing, hit gx with the cursor atop the special filename</B>
- 	  (not available if the |<A HREF="#g:netrw_nogx">g:netrw_nogx</A>| variable exists)
-
+ 	  (latter not available if the |<A HREF="#g:netrw_nogx">g:netrw_nogx</A>| variable exists)
 Netrw determines which special handler by the following method:
 
   &#42; if |<A HREF="#g:netrw_browsex_viewer">g:netrw_browsex_viewer</A>| exists, then <A HREF="motion.html#it">it</A> will be used to attempt to
@@ -1512,14 +1602,14 @@ Netrw determines which special handler by the following method:
 
 <B>	:let g:netrw_browsex_viewer= "kfmclient exec"</B>
     or
-<B>	:let g:netrw_browsex_viewer= "gnome-open"</B>
+<B>	:let g:netrw_browsex_viewer= "xdg-open"</B>
  
-    If <A HREF="#g:netrw_browsex_viewer">g:netrw_browsex_viewer</A> <A HREF="change.html#==">==</A> '<A HREF="motion.html#-">-</A>', then netrwFileHandler() will be
-    invoked first (see |<A HREF="#netrw_filehandler">netrw_filehandler</A>|).
+    If <A HREF="#g:netrw_browsex_viewer">g:netrw_browsex_viewer</A> <A HREF="change.html#==">==</A> '<A HREF="motion.html#-">-</A>', then netrwFileHandlers#Invoke() will be
+    used instead (see |<A HREF="#netrw_filehandler">netrw_filehandler</A>|).
 
   &#42; for Windows 32 or 64, the url and FileProtocolHandler dlls are used.
   &#42; for Gnome (with gnome-open): gnome-open is used.
-  &#42; for KDE (with kfmclient)   : kfmclient is used.
+  &#42; for KDE (with kfmclient)   : kfmclient is used
   &#42; for <A HREF="os_mac.html#Mac">Mac</A> OS X               : open is used.
   &#42; otherwise the netrwFileHandler <A HREF="usr_05.html#plugin">plugin</A> is used.
 
@@ -1528,18 +1618,32 @@ appropriate application to use to &quot;handle&quot; these files.  Such things <
 OpenOffice (*.sfx), visualization (*.jpg, *.gif, etc), and PostScript (*.ps,
 *.eps) can be handled.
 
+The gx <A HREF="map.html#mapping">mapping</A> extends to all <A HREF="windows.html#buffers">buffers</A>; apply &quot;gx&quot; while atop a <A HREF="motion.html#word">word</A> and <A HREF="#netrw">netrw</A>
+will apply a special handler to <A HREF="motion.html#it">it</A> (like &quot;<A HREF="change.html#x">x</A>&quot; works when in a <A HREF="#netrw">netrw</A> buffer).
+One may also use visual mode (see |<A HREF="visual.html#visual-start">visual-start</A>|) to select the text that the
+special handler will use.  Normally gx uses expand(&quot;&lt;cfile&gt;&quot;) to pick up the
+text under the cursor; one may change what |<A HREF="eval.html#expand()">expand()</A>| uses via the
+|<A HREF="#g:netrw_gx">g:netrw_gx</A>| variable.  Alternatively, one may select the text to be used by
+gx via first making a visual selection (see |<A HREF="visual.html#visual-block">visual-block</A>|).
+
+Associated setting <A HREF="eval.html#variables">variables</A>:
+	|<A HREF="#g:netrw_gx">g:netrw_gx</A>|	<A HREF="intro.html#control">control</A> how gx picks up the text under the cursor
+	|<A HREF="#g:netrw_nogx">g:netrw_nogx</A>|	prevent gx map while editing
+
 
 							*<A NAME="netrw_filehandler"></A><B>netrw_filehandler</B>*
 
-The &quot;<A HREF="change.html#x">x</A>&quot; map applies a function to a file, based on its extension.  Of course,
-the handler function must exist for <A HREF="motion.html#it">it</A> to be called!
+When |<A HREF="#g:netrw_browsex_viewer">g:netrw_browsex_viewer</A>| exists and is &quot;<A HREF="motion.html#-">-</A>&quot;, then netrw will attempt to
+handle the special file with a vim function.  The &quot;<A HREF="change.html#x">x</A>&quot; map applies a function
+to a file, based on its extension.  Of course, the handler function must exist
+for <A HREF="motion.html#it">it</A> to be called!
 
-<B> Ex. mypgm.html   x -&gt;</B>
-<B>                  NFH_html("scp://user@host/some/path/mypgm.html")</B>
- 
-Users may write their own <A HREF="#netrw">netrw</A> File Handler <A HREF="eval.html#functions">functions</A> to support more
-<A HREF="cmdline.html#suffixes">suffixes</A> with special handling.  See &lt;autoload/netrwFileHandlers.vim&gt; for
-examples on how to make file handler <A HREF="eval.html#functions">functions</A>.   As an example:
+<B> Ex. mypgm.html   x -&gt; NFH_html("scp://user@host/some/path/mypgm.html")</B>
+
+ 	Users may write their own <A HREF="#netrw">netrw</A> File Handler <A HREF="eval.html#functions">functions</A> to
+	support more <A HREF="cmdline.html#suffixes">suffixes</A> with special handling.  See
+	&lt;autoload/netrwFileHandlers.vim&gt; for examples on how to make
+	file handler <A HREF="eval.html#functions">functions</A>.   As an example:
 
 <B>	" NFH_suffix(filename)</B>
 <B>	fun! NFH_suffix(filename)</B>
@@ -1575,7 +1679,14 @@ DELETING BOOKMARKS					*<A NAME="netrw-mB"></A><B>netrw-mB</B>* {{{2
 To delete a <A HREF="usr_03.html#bookmark">bookmark</A>, use
 
 <B>	{cnt}mB</B>
- 
+
+If there are marked files, then mB will remove them from the
+<A HREF="usr_03.html#bookmark">bookmark</A> <A HREF="eval.html#list">list</A>.
+
+Alternatively, one may use :NetrwMB! (see |<A HREF="#netrw-:NetrwMB">netrw-:NetrwMB</A>|).
+
+<B>	:NetrwMB! [files/directories]</B>
+
 Related Topics:
 	|<A HREF="#netrw-gb">netrw-gb</A>| how to return (go) to a <A HREF="usr_03.html#bookmark">bookmark</A>
 	|<A HREF="#netrw-mb">netrw-mb</A>| how to make a <A HREF="usr_03.html#bookmark">bookmark</A>
@@ -1640,15 +1751,15 @@ DIRECTORY EXPLORATION COMMANDS  {{{2
 
      :[N]Hexplore[!] [dir]... Horizontal Split <A HREF="change.html#&amp;">&amp;</A> Explore             *<A NAME=":Hexplore"></A><B>:Hexplore</B>*
 
-     <A HREF="#:Rexplore">:Rexplore</A>            <A HREF="eval.html#...">...</A> Return to/from Explorer                *<A NAME=":Rexplore"></A><B>:Rexplore</B>*
+     :[N]Lexplore[!] [dir]... Left Explorer Toggle                   *<A NAME=":Lexplore"></A><B>:Lexplore</B>*
 
      :[N]Sexplore[!] [dir]... Split&amp;Explore current file's directory *<A NAME=":Sexplore"></A><B>:Sexplore</B>*
 
-     <A HREF="#:Texplore">:Texplore</A>       [dir]... <A HREF="intro.html#Tab">Tab</A>              <A HREF="change.html#&amp;">&amp;</A> Explore             *<A NAME=":Texplore"></A><B>:Texplore</B>*
-
      :[N]Vexplore[!] [dir]... Vertical   Split <A HREF="change.html#&amp;">&amp;</A> Explore             *<A NAME=":Vexplore"></A><B>:Vexplore</B>*
 
-     <A HREF="#:Lexplore">:Lexplore</A>       [dir]... Left Explorer Toggle                   *<A NAME=":Lexplore"></A><B>:Lexplore</B>*
+     <A HREF="#:Texplore">:Texplore</A>       [dir]... <A HREF="intro.html#Tab">Tab</A> <A HREF="change.html#&amp;">&amp;</A> Explore                          *<A NAME=":Texplore"></A><B>:Texplore</B>*
+
+     <A HREF="#:Rexplore">:Rexplore</A>            <A HREF="eval.html#...">...</A> Return to/from Explorer                *<A NAME=":Rexplore"></A><B>:Rexplore</B>*
 
      Used with <A HREF="#:Explore">:Explore</A> **/pattern : (also see |<A HREF="#netrw-starstar">netrw-starstar</A>|)
 
@@ -1660,60 +1771,79 @@ DIRECTORY EXPLORATION COMMANDS  {{{2
 						*<A NAME="netrw-:Explore"></A><B>netrw-:Explore</B>*
 <A HREF="#:Explore">:Explore</A>  will open the local-directory browser on the current file's
           directory (or on directory [dir] if specified).  The <A HREF="windows.html#window">window</A> will be
-	  split only if the file has been modified, otherwise the browsing
-	  <A HREF="windows.html#window">window</A> will take over that <A HREF="windows.html#window">window</A>.  Normally the splitting is taken
-	  horizontally.
+	  split only if the file has been modified and |<A HREF="options.html#'hidden'">'hidden'</A>| is not set,
+	  otherwise the browsing <A HREF="windows.html#window">window</A> will take over that <A HREF="windows.html#window">window</A>.  Normally
+	  the splitting is taken horizontally.
 	  Also see: |<A HREF="#netrw-:Rexplore">netrw-:Rexplore</A>|
 <A HREF="#:Explore">:Explore</A>! is like <A HREF="#:Explore">:Explore</A>, but will use vertical splitting.
 
-						*<A NAME="netrw-:Lexplore"></A><B>netrw-:Lexplore</B>*
-<A HREF="#:Lexplore">:Lexplore</A> [dir] toggles an Explorer <A HREF="windows.html#window">window</A> on the left hand side
-          of the current <A HREF="intro.html#tab">tab</A>  It will open a <A HREF="#netrw">netrw</A> <A HREF="windows.html#window">window</A> on the current
-	  directory if [dir] is omitted; a <A HREF="#:Lexplore">:Lexplore</A> [dir] will show
-	  the specified directory in the left-hand side browser display
-	  no matter from which <A HREF="windows.html#window">window</A> the command is issued.  By default,
-	  <A HREF="#:Lexplore">:Lexplore</A> will change an uninitialized |<A HREF="#g:netrw_chgwin">g:netrw_chgwin</A>| to 2;
-	  edits will thus be preferentially made in window#2.
-	  Also see: |netrw-C&#124;&#124; |g:netrw_chgwin| |g:netrw_winsize||||||
-	  	    |netrw-p| |netrw-P&#124;&#124; |g:netrw_browse_split||||||
-
-						*<A NAME="netrw-:Sexplore"></A><B>netrw-:Sexplore</B>*
-<A HREF="#:Sexplore">:Sexplore</A> will always split the <A HREF="windows.html#window">window</A> before invoking the local-directory
-          browser.  As with Explore, the splitting is normally done
-	  horizontally.
-<A HREF="#:Sexplore">:Sexplore</A>! [dir] is like <A HREF="#:Sexplore">:Sexplore</A>, but the splitting will be done vertically.
 
 						*<A NAME="netrw-:Hexplore"></A><B>netrw-:Hexplore</B>*
 <A HREF="#:Hexplore">:Hexplore</A>  [dir] does an <A HREF="#:Explore">:Explore</A> with |<A HREF="windows.html#:belowright">:belowright</A>| horizontal splitting.
 <A HREF="#:Hexplore">:Hexplore</A>! [dir] does an <A HREF="#:Explore">:Explore</A> with |<A HREF="windows.html#:aboveleft">:aboveleft</A>|  horizontal splitting.
 
-						*<A NAME="netrw-:Vexplore"></A><B>netrw-:Vexplore</B>*
-<A HREF="#:Vexplore">:Vexplore</A>  [dir] does an <A HREF="#:Explore">:Explore</A> with |<A HREF="windows.html#:leftabove">:leftabove</A>|  vertical splitting.
-<A HREF="#:Vexplore">:Vexplore</A>! [dir] does an <A HREF="#:Explore">:Explore</A> with |<A HREF="windows.html#:rightbelow">:rightbelow</A>| vertical splitting.
+
+						*<A NAME="netrw-:Lexplore"></A><B>netrw-:Lexplore</B>*
+:[N]Lexplore [dir] toggles a full height Explorer <A HREF="windows.html#window">window</A> on the left hand side
+	  of the current <A HREF="intro.html#tab">tab</A>.  It will open a <A HREF="#netrw">netrw</A> <A HREF="windows.html#window">window</A> on the current
+	  directory if [dir] is omitted; a <A HREF="#:Lexplore">:Lexplore</A> [dir] will show the
+	  specified directory in the left-hand side browser display no matter
+	  from which <A HREF="windows.html#window">window</A> the command is issued.  By default, <A HREF="#:Lexplore">:Lexplore</A> will
+	  change an uninitialized |<A HREF="#g:netrw_chgwin">g:netrw_chgwin</A>| to 2; edits will thus
+	  preferentially be made in window#2.
+	    The [N] specifies a |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| just for the new <A HREF="#:Lexplore">:Lexplore</A>
+	  <A HREF="windows.html#window">window</A>.
+	    Those who like this method often also like tree style displays;
+	  see |<A HREF="#g:netrw_liststyle">g:netrw_liststyle</A>|.
+
+	  Also see: |<A HREF="#netrw-C">netrw-C</A>| |<A HREF="#g:netrw_chgwin">g:netrw_chgwin</A>| |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>|
+		    |<A HREF="#netrw-p">netrw-p</A>| |<A HREF="#netrw-P">netrw-P</A>|        |<A HREF="#g:netrw_browse_split">g:netrw_browse_split</A>|
+
+:[N]Lexplore! is like <A HREF="#:Lexplore">:Lexplore</A>, except that the full-height Explorer <A HREF="windows.html#window">window</A>
+	  will open on the right hand side, and an uninitialized |<A HREF="#g:netrw_chgwin">g:netrw_chgwin</A>|
+	  will be set to 1.
+
+
+						*<A NAME="netrw-:Sexplore"></A><B>netrw-:Sexplore</B>*
+:[N]Sexplore will always split the <A HREF="windows.html#window">window</A> before invoking the local-directory
+	  browser.  As with Explore, the splitting is normally done
+	  horizontally.
+:[N]Sexplore! [dir] is like <A HREF="#:Sexplore">:Sexplore</A>, but the splitting will be done vertically.
+
 
 						*<A NAME="netrw-:Texplore"></A><B>netrw-:Texplore</B>*
 <A HREF="#:Texplore">:Texplore</A>  [dir] does a |<A HREF="tabpage.html#:tabnew">:tabnew</A>| before generating the browser <A HREF="windows.html#window">window</A>
 
-By default, these commands use the current file's directory.  However, one may
-explicitly provide a directory (path) to use.
 
-The [N] will override |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| to specify the quantity of rows and/or
-columns the new explorer <A HREF="windows.html#window">window</A> should have.
+						*<A NAME="netrw-:Vexplore"></A><B>netrw-:Vexplore</B>*
+:[N]Vexplore  [dir] does an <A HREF="#:Explore">:Explore</A> with |<A HREF="windows.html#:leftabove">:leftabove</A>|  vertical splitting.
+:[N]Vexplore! [dir] does an <A HREF="#:Explore">:Explore</A> with |<A HREF="windows.html#:rightbelow">:rightbelow</A>| vertical splitting.
 
-Otherwise, the |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| variable, if <A HREF="motion.html#it">it</A> has been specified by the
-user, is used to <A HREF="intro.html#control">control</A> the quantity of rows and/or columns new explorer
-<A HREF="windows.html#windows">windows</A> should have.
+The optional parameters are:
 
+ [N]: This parameter will override |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| to specify the quantity of
+      rows and/or columns the new explorer <A HREF="windows.html#window">window</A> should have.
+      Otherwise, the |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| variable, if <A HREF="motion.html#it">it</A> has been specified by the
+      user, is used to <A HREF="intro.html#control">control</A> the quantity of rows and/or columns new
+      explorer <A HREF="windows.html#windows">windows</A> should have.
+
+ [dir]: By default, these explorer commands use the current file's directory.
+        However, one may explicitly provide a directory (path) to use instead;
+	ie.
+
+<B>	:Explore /some/path</B>
+ 
 
 						*<A NAME="netrw-:Rexplore"></A><B>netrw-:Rexplore</B>*
-<A HREF="#:Rexplore">:Rexplore</A>  This command is a little different from the others <A HREF="motion.html#as">as</A> <A HREF="motion.html#it">it</A> doesn't
-	   necessarily open an Explorer <A HREF="windows.html#window">window</A>.
+<A HREF="#:Rexplore">:Rexplore</A>  This command is a little different from the other Explore commands
+	   <A HREF="motion.html#as">as</A> <A HREF="motion.html#it">it</A> doesn't necessarily open an Explorer <A HREF="windows.html#window">window</A>.
 
 <B><FONT color="#54A23D">	   Return to Explorer</FONT></B>
-	   When one edits a file, for example by pressing &lt;cr&gt; when the
-	   cursor is atop a file in a <A HREF="#netrw">netrw</A> browser <A HREF="windows.html#window">window</A>, <A HREF="#:Rexplore">:Rexplore</A> will
-	   return the display to that of the last <A HREF="#netrw">netrw</A> browser display
-	   in that <A HREF="windows.html#window">window</A>.
+	   When one edits a file using <A HREF="#netrw">netrw</A> which can occur, for example,
+	   when pressing &lt;cr&gt; while the cursor is atop a filename in a <A HREF="#netrw">netrw</A>
+	   browser <A HREF="windows.html#window">window</A>, a <A HREF="#:Rexplore">:Rexplore</A> issued while editing that file will
+	   return the display to that of the last <A HREF="#netrw">netrw</A> browser display in
+	   that <A HREF="windows.html#window">window</A>.
 
 <B><FONT color="#54A23D">	   Return from Explorer</FONT></B>
 	   Conversely, when one is editing a directory, issuing a <A HREF="#:Rexplore">:Rexplore</A>
@@ -1727,11 +1857,11 @@ Also see: |<A HREF="#g:netrw_alto">g:netrw_alto</A>| |<A HREF="#g:netrw_altv">g:
 
 
 
-*<A NAME="netrw-star"></A><B>netrw-star</B>* *<A NAME="netrw-starpat"></A><B>netrw-starpat</B>* *<A NAME="netrw-starstar"></A><B>netrw-starstar</B>* *<A NAME="netrw-starstarpat"></A><B>netrw-starstarpat</B>*
-EXPLORING WITH STARS AND PATTERNS
+*<A NAME="netrw-star"></A><B>netrw-star</B>* *<A NAME="netrw-starpat"></A><B>netrw-starpat</B>* *<A NAME="netrw-starstar"></A><B>netrw-starstar</B>* *<A NAME="netrw-starstarpat"></A><B>netrw-starstarpat</B>* *<A NAME="netrw-grep"></A><B>netrw-grep</B>*
+EXPLORING WITH STARS AND PATTERNS {{{2
 
 When Explore, Sexplore, Hexplore, or Vexplore are used with one of the
-following four styles, Explore generates a <A HREF="eval.html#list">list</A> of files which satisfy
+following four patterns Explore generates a <A HREF="eval.html#list">list</A> of files which satisfy
 the request.
 
 <B>    */filepat	files in current directory which satisfy filepat</B>
@@ -1753,7 +1883,7 @@ will clear the explore <A HREF="eval.html#list">list</A>.
 
 If your console or <A HREF="gui.html#gui">gui</A> produces recognizable shift-up or shift-down sequences,
 then you'll likely find using shift-downarrow and shift-uparrow convenient.
-They're mapped by <A HREF="#netrw">netrw</A>:
+They're mapped by <A HREF="#netrw">netrw</A> <A HREF="motion.html#as">as</A> follows:
 
 	&lt;s-down&gt;  <A HREF="change.html#==">==</A> Nexplore, and
 	&lt;s-up&gt;    <A HREF="change.html#==">==</A> Pexplore.
@@ -1839,7 +1969,7 @@ Associated setting <A HREF="eval.html#variables">variables</A>: |<A HREF="#g:net
 
 
 
-EXECUTING FILE UNDER CURSOR VIA SYSTEM()			*<A NAME="netrw-X"></A><B>netrw-X</B>*
+EXECUTING FILE UNDER CURSOR VIA SYSTEM()			*<A NAME="netrw-X"></A><B>netrw-X</B>* {{{2
 
 Pressing X while the cursor is atop an executable file will yield a prompt
 using the filename asking for any arguments.  Upon pressing a [return], <A HREF="#netrw">netrw</A>
@@ -1936,27 +2066,28 @@ Netrw provides a helper function 'netrw_gitignore#Hide()' that, when used with
 |<A HREF="#g:netrw_list_hide">g:netrw_list_hide</A>| automatically hides all git-ignored files.
 
 'netrw_gitignore#Hide' searches for patterns in the following files:
-	'./.gitignore'
-	'./.git/info/exclude'
-	global gitignore file: `git config --global core.excludesfile`
-	system gitignore file: `git config --system core.excludesfile`
 
+<B>	'./.gitignore'</B>
+<B>	'./.git/info/exclude'</B>
+<B>	global gitignore file: `git config --global core.excludesfile`</B>
+<B>	system gitignore file: `git config --system core.excludesfile`</B>
+ 
 Files that <A HREF="diff.html#do">do</A> not exist, are ignored.
 Git-ignore patterns are taken from existing files, and converted to patterns for
 hiding files. For example, if you had '*.log' in your '.gitignore' file, <A HREF="motion.html#it">it</A>
 would be converted to '.*\.log'.
 
-To use this function, simply assign it's output to |<A HREF="#g:netrw_list_hide">g:netrw_list_hide</A>| option.
+To use this function, simply assign its output to |<A HREF="#g:netrw_list_hide">g:netrw_list_hide</A>| option. 
 
-	Example: let g:netrw_list_hide= netrw_gitignore#Hide()
-		Git-ignored files are hidden in Netrw.
+<B>	Example: let g:netrw_list_hide= netrw_gitignore#Hide()</B>
+<B>		Git-ignored files are hidden in Netrw.</B>
 
-	Example: let g:netrw_list_hide= netrw_gitignore#Hide('my_gitignore_file')
-		Function can take additional files with git-ignore patterns.
+<B>	Example: let g:netrw_list_hide= netrw_gitignore#Hide('my_gitignore_file')</B>
+<B>		Function can take additional files with git-ignore patterns.</B>
 
-	Example: g:netrw_list_hide= netrw_gitignore#Hide() . '.*\.swp$'
-		Combining 'netrw_gitignore#Hide' with custom patterns.
-
+<B>	Example: g:netrw_list_hide= netrw_gitignore#Hide() . '.*\.swp$'</B>
+<B>		Combining 'netrw_gitignore#Hide' with custom patterns.</B>
+ 
 
 
 IMPROVING BROWSING			*<A NAME="netrw-listhack"></A><B>netrw-listhack</B>* *<A NAME="netrw-ssh-hack"></A><B>netrw-ssh-hack</B>* {{{2
@@ -2097,7 +2228,7 @@ Associated setting variable: |<A HREF="#g:netrw_keepdir">g:netrw_keepdir</A>|
 MARKING FILES					*<A NAME="netrw-:MF"></A><B>netrw-:MF</B>*	*<A NAME="netrw-mf"></A><B>netrw-mf</B>* {{{2
 	(also see |<A HREF="#netrw-mr">netrw-mr</A>|)
 
-Netrw has several ways of marking files:
+Netrw provides several ways to <A HREF="motion.html#mark">mark</A> files:
 
 	&#42; One may <A HREF="motion.html#mark">mark</A> files with the cursor atop a filename and
 	  then pressing &quot;mf&quot;.
@@ -2120,6 +2251,8 @@ The following <A HREF="#netrw">netrw</A> maps make use of marked files:
 
     |<A HREF="#netrw-a">netrw-a</A>|	Hide marked files/directories
     |<A HREF="#netrw-D">netrw-D</A>|	Delete marked files/directories
+    |<A HREF="#netrw-mb">netrw-mb</A>|	Append marked files to bookmarks
+    |<A HREF="#netrw-mB">netrw-mB</A>|	Delete marked files from bookmarks
     |<A HREF="#netrw-mc">netrw-mc</A>|	Copy marked files to target
     |<A HREF="#netrw-md">netrw-md</A>|	Apply vimdiff to marked files
     |<A HREF="#netrw-me">netrw-me</A>|	Edit marked files
@@ -2129,7 +2262,9 @@ The following <A HREF="#netrw">netrw</A> maps make use of marked files:
     |<A HREF="#netrw-mp">netrw-mp</A>|	Print marked files
     |<A HREF="#netrw-mt">netrw-mt</A>|	Set target for |<A HREF="#netrw-mm">netrw-mm</A>| and |<A HREF="#netrw-mc">netrw-mc</A>|
     |<A HREF="#netrw-mT">netrw-mT</A>|	Generate <A HREF="tagsrch.html#tags">tags</A> using marked files
+    |<A HREF="#netrw-mv">netrw-mv</A>|	Apply vim command to marked files
     |<A HREF="#netrw-mx">netrw-mx</A>|	Apply shell command to marked files
+    |<A HREF="#netrw-mX">netrw-mX</A>|	Apply shell command to marked files, en bloc
     |<A HREF="#netrw-mz">netrw-mz</A>|	Compress/Decompress marked files
     |<A HREF="#netrw-O">netrw-O</A>|	Obtain marked files
     |<A HREF="#netrw-R">netrw-R</A>|	Rename marked files
@@ -2154,13 +2289,13 @@ If the mouse is enabled and works with your vim, you may use &lt;s-leftmouse&gt;
 leftmouse.  (see |<A HREF="#netrw-mouse">netrw-mouse</A>|)
 
 
-*<A NAME="markfilelist"></A><B>markfilelist</B>* *<A NAME="global_markfilelist"></A><B>global_markfilelist</B>* *<A NAME="local_markfilelist"></A><B>local_markfilelist</B>*
+			*<A NAME="markfilelist"></A><B>markfilelist</B>* *<A NAME="global_markfilelist"></A><B>global_markfilelist</B>* *<A NAME="local_markfilelist"></A><B>local_markfilelist</B>*
 All marked files are entered onto the global marked file <A HREF="eval.html#list">list</A>; there is only
-one such <A HREF="eval.html#list">list</A>.  In addition, every <A HREF="#netrw">netrw</A> buffer also has its own local marked
-file <A HREF="eval.html#list">list</A>; since <A HREF="#netrw">netrw</A> <A HREF="windows.html#buffers">buffers</A> are associated with specific directories, this
-means that each directory has its own local marked file <A HREF="eval.html#list">list</A>.  The various
-commands which operate on marked files use one or the other of the marked file
-lists.
+one such <A HREF="eval.html#list">list</A>.  In addition, every <A HREF="#netrw">netrw</A> buffer also has its own buffer-local
+marked file <A HREF="eval.html#list">list</A>; since <A HREF="#netrw">netrw</A> <A HREF="windows.html#buffers">buffers</A> are associated with specific
+directories, this means that each directory has its own local marked file
+<A HREF="eval.html#list">list</A>.  The various commands which operate on marked files use one or the other
+of the marked file lists.
 
 Known Problem: if one is using tree mode (|<A HREF="#g:netrw_liststyle">g:netrw_liststyle</A>|) and several
 directories have files with the same name,  then marking such a file will
@@ -2178,7 +2313,7 @@ mf (|<A HREF="#netrw-mf">netrw-mf</A>|) on a specific file to unmark just that f
 
 
 
-MARKING FILES BY QUICKFIX LIST				*<A NAME="netrw-qF"></A><B>netrw-qF</B>*
+MARKING FILES BY QUICKFIX LIST				*<A NAME="netrw-qF"></A><B>netrw-qF</B>* {{{2
 	(also see |<A HREF="#netrw-mf">netrw-mf</A>|)
 
 One may convert the |<A HREF="quickfix.html#quickfix-error-lists">quickfix-error-lists</A>| into a marked file list using
@@ -2200,7 +2335,21 @@ expressions (yet-another-option).
 
 
 
-MARKED FILES: ARBITRARY COMMAND				*<A NAME="netrw-mx"></A><B>netrw-mx</B>* {{{2
+MARKED FILES, ARBITRARY VIM COMMAND				*<A NAME="netrw-mv"></A><B>netrw-mv</B>*  {{{2
+	    (See |<A HREF="#netrw-mf">netrw-mf</A>| and |<A HREF="#netrw-mr">netrw-mr</A>| for how to <A HREF="motion.html#mark">mark</A> files)
+		      (uses the local marked-file <A HREF="eval.html#list">list</A>)
+
+The &quot;mv&quot; map causes <A HREF="#netrw">netrw</A> execute an arbitrary vim command on each file
+on the local marked file <A HREF="eval.html#list">list</A>, individually:
+
+	&#42; 1split
+	&#42; sil! keepalt <A HREF="motion.html#e">e</A> file
+	&#42; run vim command
+	&#42; sil! keepalt wq!
+
+
+
+MARKED FILES, ARBITRARY <A HREF="starting.html#SHELL">SHELL</A> COMMAND				*<A NAME="netrw-mx"></A><B>netrw-mx</B>* {{{2
 	    (See |<A HREF="#netrw-mf">netrw-mf</A>| and |<A HREF="#netrw-mr">netrw-mr</A>| for how to <A HREF="motion.html#mark">mark</A> files)
 		      (uses the local marked-file <A HREF="eval.html#list">list</A>)
 
@@ -2208,6 +2357,38 @@ Upon activation of the &quot;mx&quot; map, <A HREF="#netrw">netrw</A> will query
 command to be applied to all marked files.  All &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;s in the command will be
 substituted with the name of each marked file in turn.  If no &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;s are in the
 command, then the command will be followed by a space and a marked filename.
+
+Example:
+	(mark files)
+	mx
+	Enter command: cat
+
+	The result is a series of shell commands:
+	cat 'file1'
+	cat 'file2'
+	<A HREF="eval.html#...">...</A>
+
+
+
+MARKED FILES, ARBITRARY <A HREF="starting.html#SHELL">SHELL</A> COMMAND, EN BLOC 			*<A NAME="netrw-mX"></A><B>netrw-mX</B>* {{{2
+	    (See |<A HREF="#netrw-mf">netrw-mf</A>| and |<A HREF="#netrw-mr">netrw-mr</A>| for how to <A HREF="motion.html#mark">mark</A> files)
+		      (uses the global marked-file <A HREF="eval.html#list">list</A>)
+
+Upon activation of the 'mX' map, <A HREF="#netrw">netrw</A> will query the user for some (external)
+command to be applied to all marked files on the global marked file <A HREF="eval.html#list">list</A>.  The
+&quot;en bloc&quot; means that one command will be executed on all the files at once:
+
+<B>	command files</B>
+
+It is useful, for example, to select files and make a tarball:
+
+	(mark files)
+	mX
+	Enter command: <A HREF="pi_tar.html#tar">tar</A> cf mynewtarball.tar
+
+The command that will be run in this example:
+
+	<A HREF="pi_tar.html#tar">tar</A> cf mynewtarball.tar 'file1' 'file2' <A HREF="eval.html#...">...</A>
 
 
 
@@ -2223,6 +2404,10 @@ that's &quot;<A HREF="pi_gzip.html#gzip">gzip</A>&quot;.
 For decompression, <A HREF="#netrw">netrw</A> provides a |<A HREF="eval.html#Dictionary">Dictionary</A>| of suffices and their
 associated decompressing utilities; see |<A HREF="#g:netrw_decompress">g:netrw_decompress</A>|.
 
+Remember that one can <A HREF="motion.html#mark">mark</A> multiple files by regular <A HREF="eval.html#expression">expression</A>
+(see |<A HREF="#netrw-mr">netrw-mr</A>|); this is particularly useful to facilitate compressing and
+decompressing a large number of files.
+
 Associated setting <A HREF="eval.html#variables">variables</A>: |<A HREF="#g:netrw_compress">g:netrw_compress</A>| |<A HREF="#g:netrw_decompress">g:netrw_decompress</A>|
 
 
@@ -2234,7 +2419,16 @@ MARKED FILES: COPYING						*<A NAME="netrw-mc"></A><B>netrw-mc</B>* {{{2
 select file(s) (see |<A HREF="#netrw-mf">netrw-mf</A>|), and press &quot;mc&quot;.  The copy is done
 from the current <A HREF="windows.html#window">window</A> (where one does the mf) to the target.
 
-Associated setting variable: |<A HREF="#g:netrw_localcopycmd">g:netrw_localcopycmd</A>| |<A HREF="#g:netrw_ssh_cmd">g:netrw_ssh_cmd</A>|
+If one does not have a target directory set with |<A HREF="#netrw-mt">netrw-mt</A>|, then netrw
+will query you for a directory to copy to.
+
+One may also copy directories and their contents (local only) to a target
+directory.
+
+Associated setting <A HREF="eval.html#variables">variables</A>:
+	|<A HREF="#g:netrw_localcopycmd">g:netrw_localcopycmd</A>|
+	|<A HREF="#g:netrw_localcopydircmd">g:netrw_localcopydircmd</A>|
+	|<A HREF="#g:netrw_ssh_cmd">g:netrw_ssh_cmd</A>|
 
 
 MARKED FILES: DIFF						*<A NAME="netrw-md"></A><B>netrw-md</B>* {{{2
@@ -2271,7 +2465,7 @@ Thus, one may use
 <B>	mr ...file-pattern</B>
 <B>	mg ..contents-pattern</B>
 to have a marked file <A HREF="eval.html#list">list</A> satisfying the <A HREF="autocmd.html#file-pattern">file-pattern</A> but containing the
-desried contents-pattern.
+desired contents-pattern.
 
 
 MARKED FILES: HIDING AND UNHIDING BY SUFFIX			*<A NAME="netrw-mh"></A><B>netrw-mh</B>* {{{2
@@ -2334,7 +2528,7 @@ Set the marked file copy/move-to target (see |<A HREF="#netrw-mc">netrw-mc</A>| 
   &#42; Also, if the cursor is in the banner, then the <A HREF="#netrw">netrw</A> window's currently
     displayed directory is used for the copy/move-to target.
     Unless the target already is the current directory.  In which <A HREF="change.html#case">case</A>,
-    remove the target.
+    typing &quot;mf&quot; clears the target.
 
   &#42; However, if the cursor is atop a directory name, then that directory is
     used for the copy/move-to target
@@ -2344,9 +2538,9 @@ Set the marked file copy/move-to target (see |<A HREF="#netrw-mc">netrw-mc</A>| 
     This command uses |<A HREF="map.html#&lt;q-args&gt;">&lt;q-args&gt;</A>|, so spaces in the directory name are
     permitted without escaping.
 
-There is only one copy/move-to target per vim session; ie. the target is a
-<A HREF="usr_41.html#script">script</A> variable (see |<A HREF="eval.html#s:var">s:var</A>|) and is shared between all <A HREF="#netrw">netrw</A> <A HREF="windows.html#windows">windows</A> (in an
-instance of vim).
+There is only one copy/move-to target at a time in a vim session; ie. the
+target is a <A HREF="usr_41.html#script">script</A> variable (see |<A HREF="eval.html#s:var">s:var</A>|) and is shared between all <A HREF="#netrw">netrw</A>
+<A HREF="windows.html#windows">windows</A> (in an instance of vim).
 
 When using <A HREF="gui.html#menus">menus</A> and gvim, <A HREF="#netrw">netrw</A> provides a &quot;Targets&quot; entry which allows one
 to pick a target from the <A HREF="eval.html#list">list</A> of bookmarks and <A HREF="cmdline.html#history">history</A>.
@@ -2385,7 +2579,7 @@ edit the desired file and go to the <A HREF="tagsrch.html#tag">tag</A>.
 Associated setting <A HREF="eval.html#variables">variables</A>: |<A HREF="#g:netrw_ctags">g:netrw_ctags</A>| |<A HREF="#g:netrw_ssh_cmd">g:netrw_ssh_cmd</A>|
 
 
-MARKED FILES: TARGET DIRECTORY USING BOOKMARKS  		*<A NAME="netrw-Tb"></A><B>netrw-Tb</B>* {{{2
+MARKED FILES: TARGET DIRECTORY USING BOOKMARKS		*<A NAME="netrw-Tb"></A><B>netrw-Tb</B>* {{{2
 
 Sets the marked file copy/move-to target.
 
@@ -2404,7 +2598,7 @@ Related topics:
 
 
 
-MARKED FILES: TARGET DIRECTORY USING HISTORY	  		*<A NAME="netrw-Th"></A><B>netrw-Th</B>* {{{2
+MARKED FILES: TARGET DIRECTORY USING HISTORY			*<A NAME="netrw-Th"></A><B>netrw-Th</B>* {{{2
 
 Sets the marked file copy/move-to target.
 
@@ -2466,8 +2660,6 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
   *<A NAME="g:netrw_banner"></A><B>g:netrw_banner</B>*		enable/suppress the banner
 				=0: suppress the banner
 				=1: banner is enabled (default)
-				NOTE: suppressing the banner is a new feature
-				which may cause problems.
 
 
   *<A NAME="g:netrw_bannerbackslash"></A><B>g:netrw_bannerbackslash</B>*	if this variable exists and is not zero, the
@@ -2476,7 +2668,7 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 
 
   *<A NAME="g:netrw_browse_split"></A><B>g:netrw_browse_split</B>*	when browsing, &lt;cr&gt; will open the file by:
-				=0: re-using the same <A HREF="windows.html#window">window</A>
+				=0: re-using the same <A HREF="windows.html#window">window</A>  (default)
 				=1: horizontally splitting the <A HREF="windows.html#window">window</A> first
 				=2: vertically   splitting the <A HREF="windows.html#window">window</A> first
 				=3: open file in new <A HREF="intro.html#tab">tab</A>
@@ -2484,10 +2676,19 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 				    Note that |<A HREF="#g:netrw_preview">g:netrw_preview</A>| may be used
 				    to get vertical splitting instead of
 				    horizontal splitting.
+				=[servername,tab-number,window-number]
+				    Given a |<A HREF="eval.html#List">List</A>| such <A HREF="motion.html#as">as</A> this, a remote server
+				    named by the &quot;servername&quot; will be used for
+				    editing.  It will also use the specified <A HREF="intro.html#tab">tab</A>
+				    and <A HREF="windows.html#window">window</A> numbers to perform editing
+				    (see |<A HREF="remote.html#clientserver">clientserver</A>|, |<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>|)
+				This option does not affect |<A HREF="#:Lexplore">:Lexplore</A>|
+				<A HREF="windows.html#windows">windows</A>.
 
 				Related topics:
-					|<A HREF="#netrw-cr">netrw-cr</A>|	|<A HREF="#netrw-C">netrw-C</A>|
-					|<A HREF="#g:netrw_alto">g:netrw_alto</A>|	|<A HREF="#g:netrw_altv">g:netrw_altv</A>|
+				    |<A HREF="#g:netrw_alto">g:netrw_alto</A>|	|<A HREF="#g:netrw_altv">g:netrw_altv</A>|
+				    |<A HREF="#netrw-C">netrw-C</A>|		|<A HREF="#netrw-cr">netrw-cr</A>|
+				    |<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>|
 
 
   *<A NAME="g:netrw_browsex_viewer"></A><B>g:netrw_browsex_viewer</B>*	specify user's preference for a viewer:
@@ -2526,7 +2727,7 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 
 
   *<A NAME="g:netrw_cursor"></A><B>g:netrw_cursor</B>*		= 2 (default)
-  				This option controls the use of the
+				This option controls the use of the
 				|<A HREF="options.html#'cursorline'">'cursorline'</A>| (cul) and |<A HREF="options.html#'cursorcolumn'">'cursorcolumn'</A>|
 				(cuc) settings by <A HREF="#netrw">netrw</A>:
 
@@ -2596,7 +2797,7 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 
 
   *<A NAME="g:netrw_ffkeep"></A><B>g:netrw_ffkeep</B>*		(default: doesn't exist)
-  				If this variable exists and is zero, then
+				If this variable exists and is zero, then
 				<A HREF="#netrw">netrw</A> will not <A HREF="diff.html#do">do</A> a save and restore for
 				|<A HREF="options.html#'fileformat'">'fileformat'</A>|.
 
@@ -2645,6 +2846,12 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 				escaped before applying <A HREF="eval.html#glob()">glob()</A>
 
 
+  *<A NAME="g:netrw_gx"></A><B>g:netrw_gx</B>*			=&quot;&lt;cfile&gt;&quot;
+ 				This option controls how gx (|<A HREF="#netrw-gx">netrw-gx</A>|) picks
+				up the text under the cursor.  See |<A HREF="eval.html#expand()">expand()</A>|
+				for possibilities.
+
+
   *<A NAME="g:netrw_hide"></A><B>g:netrw_hide</B>*		Controlled by the &quot;a&quot; map (see |<A HREF="#netrw-a">netrw-a</A>|)
 				=0 : show all
 				=1 : show not-hidden files
@@ -2653,8 +2860,8 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 
 
   *<A NAME="g:netrw_home"></A><B>g:netrw_home</B>*		The home directory for where bookmarks and
-				<A HREF="cmdline.html#history">history</A> are saved (as .netrwbook and
-				.netrwhist).
+				<A HREF="cmdline.html#history">history</A> are saved (as <A HREF="#.netrwbook">.netrwbook</A> and
+				<A HREF="#.netrwhist">.netrwhist</A>).
 				 default: the first directory on the
 				         |<A HREF="options.html#'runtimepath'">'runtimepath'</A>|
 
@@ -2667,9 +2874,23 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 				b:netrw_curdir (also see |<A HREF="#netrw-c">netrw-c</A>|)
 
 
+  *<A NAME="g:netrw_keepj"></A><B>g:netrw_keepj</B>*		=&quot;keepj&quot; (default) <A HREF="#netrw">netrw</A> attempts to keep the
+				         |<A HREF="motion.html#:jumps">:jumps</A>| table unaffected.
+				=&quot;&quot;      <A HREF="#netrw">netrw</A> will not use |<A HREF="motion.html#:keepjumps">:keepjumps</A>| with
+					 exceptions only for the
+					 saving/restoration of position.
+
+
   *<A NAME="g:netrw_list_cmd"></A><B>g:netrw_list_cmd</B>*		command for listing remote directories
 				 default: (if ssh is executable)
 				          &quot;ssh HOSTNAME ls -FLa&quot;
+
+
+ *<A NAME="g:netrw_list_cmd_options"></A><B>g:netrw_list_cmd_options</B>*	If this variable exists, then its contents are
+				appended to the <A HREF="#g:netrw_list_cmd">g:netrw_list_cmd</A>.  For
+				example, use &quot;2&gt;/dev/null&quot; to get rid of banner
+				<A HREF="message.html#messages">messages</A> on <A HREF="os_unix.html#unix">unix</A> systems.
+
 
 
   *<A NAME="g:netrw_liststyle"></A><B>g:netrw_liststyle</B>*		Set the default listing style:
@@ -2690,7 +2911,7 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 
 				Examples:
 				 let g:netrw_list_hide= '.*\.swp$'
-         			 let g:netrw_list_hide= netrw_gitignore#Hide().'.*\.swp$'
+				 let g:netrw_list_hide= netrw_gitignore#Hide().'.*\.swp$'
 				default: &quot;&quot;
 
 
@@ -2698,6 +2919,12 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 				=&quot;copy&quot; Windows
 				Copies marked files (|<A HREF="#netrw-mf">netrw-mf</A>|) to target
 				directory (|<A HREF="#netrw-mt">netrw-mt</A>|, |<A HREF="#netrw-mc">netrw-mc</A>|)
+
+
+ *<A NAME="g:netrw_localcopydircmd"></A><B>g:netrw_localcopydircmd</B>*	=&quot;cp -R&quot;	Linux/Unix/MacOS/Cygwin
+				=&quot;xcopy /e /c /h/ /i /k&quot;	Windows
+				Copies directories to target directory.
+				(|<A HREF="#netrw-mc">netrw-mc</A>|, |<A HREF="#netrw-mt">netrw-mt</A>|)
 
 
   *<A NAME="g:netrw_localmkdir"></A><B>g:netrw_localmkdir</B>*		command for making a local directory
@@ -2728,7 +2955,7 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 
 
   *<A NAME="g:netrw_mousemaps"></A><B>g:netrw_mousemaps</B>*		  =1 (default) enables mouse buttons while
-  				   browsing to:
+				   browsing to:
 				     leftmouse       : open file/directory
 				     shift-leftmouse : <A HREF="motion.html#mark">mark</A> file
 				     middlemouse     : same <A HREF="motion.html#as">as</A> <A HREF="change.html#P">P</A>
@@ -2777,6 +3004,11 @@ your browsing preferences.  (see also: |<A HREF="#netrw-settings">netrw-settings
 
   *<A NAME="g:netrw_rmf_cmd"></A><B>g:netrw_rmf_cmd</B>*		command for removing remote softlinks
 				 default: &quot;ssh USEPORT HOSTNAME rm -f&quot;
+
+
+  *<A NAME="g:netrw_servername"></A><B>g:netrw_servername</B>*		use this variable to provide a name for
+				|<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>| to use for its server.
+				 default: &quot;NETRWSERVER&quot;
 
 
   *<A NAME="g:netrw_sort_by"></A><B>g:netrw_sort_by</B>*		sort by &quot;name&quot;, &quot;time&quot;, or &quot;size&quot;
@@ -2984,7 +3216,7 @@ Related topics:
 
 							*<A NAME="netrw-createfile"></A><B>netrw-createfile</B>*
 
-OPEN A NEW FILE IN NETRW'S CURRENT DIRECTORY		*<A NAME="netrw-&#37;"></A><B>netrw-&#37;</B>*
+OPEN A NEW FILE IN NETRW'S CURRENT DIRECTORY		*<A NAME="netrw-&#37;"></A><B>netrw-&#37;</B>* {{{2
 
 To open a new file in netrw's current directory, press &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;.  This map
 will query the user for a new filename; an empty file by that name will
@@ -2998,9 +3230,9 @@ PREVIEW WINDOW				*<A NAME="netrw-p"></A><B>netrw-p</B>* *<A NAME="netrw-preview
 
 One may use a preview <A HREF="windows.html#window">window</A> by using the &quot;<A HREF="change.html#p">p</A>&quot; key when the cursor is atop the
 desired filename to be previewed.  The display will then split to show both
-the browser (where the cursor will remain) and the file (see |<A HREF="windows.html#:pedit">:pedit</A>|).
-By default, the split will be taken horizontally; one may use vertical
-splitting if one has set |<A HREF="#g:netrw_preview">g:netrw_preview</A>| first.
+the browser (where the cursor will remain) and the file (see |<A HREF="windows.html#:pedit">:pedit</A>|).  By
+default, the split will be taken horizontally; one may use vertical splitting
+if one has set |<A HREF="#g:netrw_preview">g:netrw_preview</A>| first.
 
 An interesting set of <A HREF="#netrw">netrw</A> settings is:
 
@@ -3009,6 +3241,7 @@ An interesting set of <A HREF="#netrw">netrw</A> settings is:
 <B>	let g:netrw_winsize   = 30</B>
 
 These will:
+
 	1. Make vertical splitting the default for previewing files
 	2. Make the default listing style &quot;tree&quot;
 	3. When a vertical preview <A HREF="windows.html#window">window</A> is opened, the directory listing
@@ -3075,6 +3308,17 @@ If there are marked files:  (see |<A HREF="#netrw-mf">netrw-mf</A>|)
     Marked files will be renamed (moved).  You will be queried <A HREF="motion.html#as">as</A> above in
     order to specify where you want the file/directory to be moved.
 
+    If you answer a renaming query with a &quot;s/frompattern/topattern/&quot;, then
+    subsequent files on the marked file <A HREF="eval.html#list">list</A> will be renamed by taking each
+    name, applying that substitute, and renaming each file to the result.
+    As an example :
+
+<B>    	mr  [query: reply with *.c]</B>
+<B>	R   [query: reply with s/^\(.*\)\.c$/\1.cpp/]</B>
+ 
+    This example will <A HREF="motion.html#mark">mark</A> all *.c files and then rename them to *.cpp
+    files.
+
 <B><FONT color="#54A23D">    WARNING:</FONT></B>
 
     Note that moving files is a dangerous operation; copies are safer.  That's
@@ -3103,17 +3347,24 @@ Associated setting <A HREF="eval.html#variables">variables</A>: |<A HREF="#g:net
 
 
 
-SETTING EDITING WINDOW					*<A NAME="netrw-C"></A><B>netrw-C</B>* {{{2
+SETTING EDITING WINDOW				*<A NAME="netrw-C"></A><B>netrw-C</B>* *<A NAME="netrw-:NetrwC"></A><B>netrw-:NetrwC</B>* {{{2
 
-One may select a <A HREF="#netrw">netrw</A> <A HREF="windows.html#window">window</A> for editing with the &quot;<A HREF="change.html#C">C</A>&quot; <A HREF="map.html#mapping">mapping</A>, or by setting
-<A HREF="#g:netrw_chgwin">g:netrw_chgwin</A> to the selected <A HREF="windows.html#window">window</A> number.  Subsequent selection of a file
-to edit (|<A HREF="#netrw-cr">netrw-cr</A>|) will use that <A HREF="windows.html#window">window</A>.
+One may select a <A HREF="#netrw">netrw</A> <A HREF="windows.html#window">window</A> for editing with the &quot;<A HREF="change.html#C">C</A>&quot; <A HREF="map.html#mapping">mapping</A>, using the
+:NetrwC [win#] command, or by setting <A HREF="#g:netrw_chgwin">g:netrw_chgwin</A> to the selected <A HREF="windows.html#window">window</A>
+number.  Subsequent selection of a file to edit (|<A HREF="#netrw-cr">netrw-cr</A>|) will use that
+<A HREF="windows.html#window">window</A>.
 
 	&#42; C  by itself, will select the current <A HREF="windows.html#window">window</A> for editing via
 	  |<A HREF="#netrw-cr">netrw-cr</A>|
 
 	&#42; [count]C the <A HREF="intro.html#count">count</A> will be used <A HREF="motion.html#as">as</A> the <A HREF="windows.html#window">window</A> number to be used
 	  for editing via |<A HREF="#netrw-cr">netrw-cr</A>|.
+
+	&#42; :NetrwC will set |<A HREF="#g:netrw_chgwin">g:netrw_chgwin</A>| to the current <A HREF="windows.html#window">window</A>
+
+	&#42; :NetrwC win#  will set |<A HREF="#g:netrw_chgwin">g:netrw_chgwin</A>| to the specified <A HREF="windows.html#window">window</A>
+	  number
+
 Using
 <B>	let g:netrw_chgwin= -1</B>
 will restore the default editing behavior (ie. use the current <A HREF="windows.html#window">window</A>).
@@ -3382,7 +3633,7 @@ Associated setting <A HREF="eval.html#variables">variables</A>:	|<A HREF="#g:net
  
 
 								*<A NAME="netrw-p14"></A><B>netrw-p14</B>*
-	P14. I'd would like to speed up writes using Nwrite and scp/ssh
+	P14. I would like to speed up writes using Nwrite and scp/ssh
 	     style connections.  How?  (Thomer <A HREF="motion.html#M">M</A>. Gil)
 
 	     Try using ssh's ControlMaster and ControlPath (see the ssh_config
@@ -3432,16 +3683,69 @@ Associated setting <A HREF="eval.html#variables">variables</A>:	|<A HREF="#g:net
 	     directory.  Start if from your <A HREF="options.html#$HOME">$HOME</A> or another writable
 	     directory.
 
+
+								*<A NAME="netrw-p17"></A><B>netrw-p17</B>*
+	P17. Netrw is closing <A HREF="windows.html#buffers">buffers</A> on its own.
+	     What steps will reproduce the problem?
+		1. <A HREF="#:Explore">:Explore</A>, navigate directories, open a file
+		2. <A HREF="#:Explore">:Explore</A>, open another file
+		3. Buffer opened in step 1 will be closed. <A HREF="insert.html#o">o</A>
+	    What is the expected output? What <A HREF="diff.html#do">do</A> you see instead?
+		I expect both <A HREF="windows.html#buffers">buffers</A> to exist, but only the last one does.
+
+	   (Lance) Problem is caused by &quot;set autochdir&quot; in <A HREF="starting.html#.vimrc">.vimrc</A>.
+	   (drchip) I am able to duplicate this problem with |<A HREF="options.html#'acd'">'acd'</A>| set.
+	            It appears that the <A HREF="windows.html#buffers">buffers</A> are not exactly closed;
+		    a &quot;:ls!&quot; will show them (although &quot;<A HREF="windows.html#:ls">:ls</A>&quot; does not).
+
+
+								*<A NAME="netrw-P18"></A><B>netrw-P18</B>*
+	P18. How to locally edit a file that's only available via
+	     another server accessible via ssh?
+ See	<A HREF="http://stackoverflow.com/questions/12469645/">http://stackoverflow.com/questions/12469645/</A>
+	     &quot;Using Vim to Remotely Edit A File on ServerB Only
+	      Accessible From ServerA&quot;
+
 ==============================================================================
 
 11. Debugging Netrw Itself				*<A NAME="netrw-debug"></A><B>netrw-debug</B>* {{{1
 
-The &lt;netrw.vim&gt; <A HREF="usr_41.html#script">script</A> is typically available <A HREF="motion.html#as">as</A> something like:
+Step 1: check that the problem you've encountered hasn't already been resolved
+by obtaining a copy of the latest (often developmental) <A HREF="#netrw">netrw</A> at:
+
+	<A HREF="http://www.drchip.org/astronaut/vim/index.html#NETRW">http://www.drchip.org/astronaut/vim/index.html#NETRW</A>
+
+The &lt;netrw.vim&gt; <A HREF="usr_41.html#script">script</A> is typically installed on systems <A HREF="motion.html#as">as</A> something like:
 
 <B>	/usr/local/share/vim/vim7x/plugin/netrwPlugin.vim</B>
 <B>	/usr/local/share/vim/vim7x/autoload/netrw.vim</B>
+<B>		(see output of :echo &amp;rtp)</B>
  
-which is loaded automatically at <A HREF="starting.html#startup">startup</A> (assuming <A HREF="options.html#:set">:set</A> nocp).
+which is loaded automatically at <A HREF="starting.html#startup">startup</A> (assuming <A HREF="options.html#:set">:set</A> nocp).  If you
+installed a new <A HREF="#netrw">netrw</A>, then <A HREF="motion.html#it">it</A> will be located at
+
+<B>	$HOME/.vim/plugin/netrwPlugin.vim</B>
+<B>	$HOME/.vim/autoload/netrw.vim</B>
+ 
+Step 2: assuming that you've installed the latest version of <A HREF="#netrw">netrw</A>,
+check that your problem is really due to <A HREF="#netrw">netrw</A>.  Create a file
+called netrw.vimrc with the following contents:
+
+<B>	set nocp</B>
+<B>	so $HOME/.vim/plugin/netrwPlugin.vim</B>
+ 
+Then run <A HREF="#netrw">netrw</A> <A HREF="motion.html#as">as</A> follows:
+
+<B>	vim -u netrw.vimrc --noplugins [some path here]</B>
+ 
+Perform whatever <A HREF="#netrw">netrw</A> commands you need to, and check that the problem is
+still present.  This procedure sidesteps any issues due to personal <A HREF="starting.html#.vimrc">.vimrc</A>
+settings and other plugins.  If the problem does not appear, then you need
+to determine what setting in your <A HREF="starting.html#.vimrc">.vimrc</A> is causing the conflict with <A HREF="#netrw">netrw</A>
+or which <A HREF="usr_05.html#plugin">plugin</A>.
+
+Step 3: If the problem still is present, then get a debugging trace from
+<A HREF="#netrw">netrw</A>:
 
 	1. Get the &lt;Decho.vim&gt; <A HREF="usr_41.html#script">script</A>, available <A HREF="motion.html#as">as</A>:
 
@@ -3470,7 +3774,8 @@ which is loaded automatically at <A HREF="starting.html#startup">startup</A> (as
 	3. Then bring up vim and attempt to evoke the problem by doing a
 	   transfer or doing some browsing.  A set of <A HREF="message.html#messages">messages</A> should appear
 	   concerning the steps that &lt;netrw.vim&gt; took in attempting to
-	   read/write your file over the <A HREF="#network">network</A> in a separate <A HREF="intro.html#tab">tab</A>.
+	   read/write your file over the <A HREF="#network">network</A> in a separate <A HREF="intro.html#tab">tab</A> or
+	   server vim <A HREF="windows.html#window">window</A>.
 
 	   To save the file, use
 
@@ -3485,7 +3790,7 @@ which is loaded automatically at <A HREF="starting.html#startup">startup</A> (as
 	   debugging trace is due to which command.
 
 	   Please send that information to &lt;netrw.vim&gt;'s maintainer along
-	   with the o/s you're using and vim version you're using
+	   with the o/s you're using and the vim version that you're using
 	   (see |<A HREF="various.html#:version">:version</A>|)
 <B>		NdrOchip at ScampbellPfamily.AbizM - NOSPAM</B>
  
@@ -3493,7 +3798,75 @@ which is loaded automatically at <A HREF="starting.html#startup">startup</A> (as
 
 12. History						*<A NAME="netrw-history"></A><B>netrw-history</B>* {{{1
 
-	v152:	Apr 08, 2014   	&#42; uses the |<A HREF="options.html#'noswapfile'">'noswapfile'</A>| option (requires
+	v153:	May 13, 2014	&#42; added another |<A HREF="#g:netrw_ffkeep">g:netrw_ffkeep</A>| usage {{{2
+		May 14, 2014	&#42; changed s:PerformListing() so that <A HREF="motion.html#it">it</A>
+				  always sets ft=netrw for <A HREF="#netrw">netrw</A> <A HREF="windows.html#buffers">buffers</A>
+				  (ie. even when <A HREF="syntax.html#syntax">syntax</A> highlighting is
+				  off, not available, etc)
+		May 16, 2014	&#42; introduced the |<A HREF="#netrw-ctrl-r">netrw-ctrl-r</A>| functionality
+		May 17, 2014	&#42; introduced the |<A HREF="#netrw-:NetrwMB">netrw-:NetrwMB</A>| functionality
+				&#42; mb and mB (|<A HREF="#netrw-mb">netrw-mb</A>|, |<A HREF="#netrw-mB">netrw-mB</A>|) will
+				  add/remove marked files from <A HREF="usr_03.html#bookmark">bookmark</A> <A HREF="eval.html#list">list</A>
+		May 20, 2014	&#42; (Enno Nagel) reported that :Lex &lt;dirname&gt;
+				  wasn't working.  Fixed.
+		May 26, 2014	&#42; restored test to prevent leftmouse <A HREF="windows.html#window">window</A>
+				  resizing from causing refresh.
+				  (see s:NetrwLeftmouse())
+				&#42; fixed problem where a refresh caused cursor
+				  to go just under the banner instead of
+				  staying put
+		May 28, 2014	&#42; (László Bimba) provided a patch for opening
+				  the |<A HREF="#:Lexplore">:Lexplore</A>| <A HREF="windows.html#window">window</A> 100&#37; high, optionally
+				  on the right, and will work with remote
+				  files.
+		May 29, 2014	&#42; implemented :NetrwC  (see |<A HREF="#netrw-:NetrwC">netrw-:NetrwC</A>|)
+		Jun 01, 2014	&#42; Removed some &quot;silent&quot;s from commands used
+				  to implemented scp://... and pscp://...
+				  directory listing.  Permits request for
+				  password to appear.
+		Jun 05, 2014	&#42; (Enno Nagel) reported that user maps &quot;<A HREF="pattern.html#/">/</A>&quot;
+				  caused problems with &quot;<A HREF="motion.html#b">b</A>&quot; and &quot;<A HREF="motion.html#w">w</A>&quot;, which
+				  are mapped (for wide listings only) to
+				  skip over files rather than just words.
+		Jun 10, 2014	&#42; |<A HREF="#g:netrw_gx">g:netrw_gx</A>| introduced to allow users to
+				  override default &quot;<A HREF="cmdline.html#&lt;cfile&gt;">&lt;cfile&gt;</A>&quot; with the gx
+				  (|<A HREF="#netrw-gx">netrw-gx</A>|) map
+		Jun 11, 2014	&#42; gx (|<A HREF="#netrw-gx">netrw-gx</A>|), with |<A HREF="options.html#'autowrite'">'autowrite'</A>| set,
+				  will write modified files.  s:NetrwBrowseX()
+				  will now save, turn off, and restore the
+				  |<A HREF="options.html#'autowrite'">'autowrite'</A>| setting.
+		Jun 13, 2014	&#42; added visual map for gx use
+		Jun 15, 2014	&#42; (Enno Nagel) reported that with having hls
+				  set and wide listing style in use, that the
+				  <A HREF="motion.html#b">b</A> and <A HREF="motion.html#w">w</A> maps caused unwanted highlighting.
+		Jul 05, 2014	&#42; |<A HREF="#netrw-mv">netrw-mv</A>| and |<A HREF="#netrw-mX">netrw-mX</A>| commands included
+		Jul 09, 2014	&#42; |<A HREF="#g:netrw_keepj">g:netrw_keepj</A>| included, allowing optional
+				  keepj
+		Jul 09, 2014	&#42; fixing bugs due to previous update
+		Jul 21, 2014	&#42; (Bruno Sutic) provided an updated
+				  netrw_gitignore.vim
+		Jul 30, 2014	&#42; (Yavuz Yetim) reported that editing two
+				  remote files of the same name caused the
+				  second instance to have a &quot;temporary&quot;
+				  name.  Fixed: now they use the same buffer.
+		Sep 18, 2014	&#42; (Yasuhiro Matsumoto) provided a patch which
+				  allows <A HREF="#scp">scp</A> and <A HREF="windows.html#windows">windows</A> local paths to work.
+		Oct 07, 2014	&#42; gx (see |<A HREF="#netrw-gx">netrw-gx</A>|) when atop a directory,
+				  will now <A HREF="diff.html#do">do</A> |<A HREF="editing.html#gf">gf</A>| instead
+		Nov 06, 2014	&#42; For cygwin: cygstart will be available for
+				  netrw#BrowseX() to use if its executable.
+		Nov 07, 2014	&#42; Began support for file://... urls.  Will use
+				  |<A HREF="#g:netrw_file_cmd">g:netrw_file_cmd</A>| (typically elinks or links)
+		Dec 02, 2014	&#42; began work on having mc (|<A HREF="#netrw-mc">netrw-mc</A>|) copy
+				  directories.  Works for linux machines,
+				  cygwin+vim, but not for windows+gvim.
+		Dec 02, 2014	&#42; in tree mode, <A HREF="#netrw">netrw</A> was not opening
+				  directories via symbolic links.
+		Dec 02, 2014	&#42; added resolved link information to
+				  thin and tree modes
+		Dec 30, 2014	&#42; (issue#231) |<A HREF="windows.html#:ls">:ls</A>| was not showing
+				  remote-file <A HREF="windows.html#buffers">buffers</A> reliably.  Fixed.
+	v152:	Apr 08, 2014	&#42; uses the |<A HREF="options.html#'noswapfile'">'noswapfile'</A>| option (requires {{{2
 				  vim 7.4 with patch 213)
 				&#42; (Enno Nagel) turn |<A HREF="options.html#'rnu'">'rnu'</A>| off in <A HREF="#netrw">netrw</A>
 				  <A HREF="windows.html#buffers">buffers</A>.
@@ -3519,7 +3892,7 @@ which is loaded automatically at <A HREF="starting.html#startup">startup</A> (as
 				  chgwin <A HREF="windows.html#window">window</A>.
 		May 09, 2014	&#42; SavePosn was &quot;saving filename under cursor&quot;
 				  from a non-netrw <A HREF="windows.html#window">window</A> when using :Rex.
-	v151:	Jan 22, 2014	&#42; extended <A HREF="#:Rexplore">:Rexplore</A> to return to buffer
+	v151:	Jan 22, 2014	&#42; extended <A HREF="#:Rexplore">:Rexplore</A> to return to buffer {{{2
 				  prior to Explore or editing a directory
 				&#42; (Ken Takata) <A HREF="#netrw">netrw</A> gave error when
 				  <A HREF="gui.html#clipboard">clipboard</A> was disabled.  Sol'n: Placed
@@ -3566,7 +3939,7 @@ which is loaded automatically at <A HREF="starting.html#startup">startup</A> (as
 				  and <A HREF="motion.html#it">it</A> also handles Window's shares
 				&#42; Fixed |<A HREF="#netrw-d">netrw-d</A>| command when applied with ftp
 				&#42; https: support included for netrw#NetRead()
-	v150:	Jul 12, 2013	&#42; removed a &quot;keepalt&quot; to allow &quot;<A HREF="editing.html#:e">:e</A> #&quot; to
+	v150:	Jul 12, 2013	&#42; removed a &quot;keepalt&quot; to allow &quot;<A HREF="editing.html#:e">:e</A> #&quot; to {{{2
 				  return to the <A HREF="#netrw">netrw</A> directory listing
 		Jul 13, 2013	&#42; (Jonas Diemer) suggested <A HREF="change.html#changing">changing</A>
 				  a &lt;cWORD&gt; to <A HREF="cmdline.html#&lt;cfile&gt;">&lt;cfile&gt;</A>.
@@ -3621,7 +3994,7 @@ which is loaded automatically at <A HREF="starting.html#startup">startup</A> (as
 				  style, with a previous <A HREF="windows.html#window">window</A> open, that
 				  the wrong directory was being used to open
 				  a file.  Fixed. (P21)
-	v149:	Apr 18, 2013	&#42; in wide listing format, now have maps for
+	v149:	Apr 18, 2013	&#42; in wide listing format, now have maps for {{{2
 				  <A HREF="motion.html#w">w</A> and <A HREF="motion.html#b">b</A> to move to next/previous file
 		Apr 26, 2013	&#42; one may now copy files in the same
 				  directory; <A HREF="#netrw">netrw</A> will issue requests for
@@ -3635,133 +4008,9 @@ which is loaded automatically at <A HREF="starting.html#startup">startup</A> (as
 				  requested by Paul Domaskis.
 		Jul 03, 2013	&#42; Explore now avoids splitting when a buffer
 				  will be hidden.
-	v148:	Apr 16, 2013	&#42; changed Netrw's Style menu to allow direct
+	v148:	Apr 16, 2013	&#42; changed Netrw's Style menu to allow direct {{{2
 				  choice of listing style, hiding style, and
 				  <A HREF="change.html#sorting">sorting</A> style
-	v147:	Nov 24, 2012	&#42; (James McCoy) Even with <A HREF="#g:netrw_dirhistmax">g:netrw_dirhistmax</A>
-				  at zero, the .vim/ directory would be
-				  created to support history/bookmarks.  I've
-				  gone over <A HREF="#netrw">netrw</A> to suppress <A HREF="cmdline.html#history">history</A> and
-				  bookmarking when <A HREF="#g:netrw_dirhistmax">g:netrw_dirhistmax</A> is zero.
-				  For instance, the <A HREF="gui.html#menus">menus</A> will display
-				  (disabled) when attempts to use
-				  bookmarks/history are made.
-		Nov 29, 2012	&#42; (Kim Jang-hwan) reported that with
-				  g:Align_xstrlen set to 3 that the cursor was
-				  moved (linewise) after invocation.  This
-				  problem also afflicted <A HREF="#netrw">netrw</A>.
-				  (see |<A HREF="#g:netrw_xstrlen">g:netrw_xstrlen</A>|) Fixed.
-		Jan 21, 2013	&#42; (mattn) provided a patch to insert some
-				  endifs needed with the code implementing
-				  |<A HREF="#netrw-O">netrw-O</A>|.
-		Jan 24, 2013	&#42; (John Szakmeister) found that remote file
-				  editing resulted in <A HREF="filetype.html#filetype">filetype</A> <A HREF="options.html#options">options</A> being
-				  overwritten by NetrwOptionRestore().  I
-				  moved <A HREF="filetype.html#filetype">filetype</A> detect from NetrwGetFile()
-				  to NetrwOptionRestore.
-		Feb 17, 2013	&#42; (Yukhiro Nakadaira) provided a patch
-				  correcting some <A HREF="syntax.html#syntax">syntax</A> <A HREF="message.html#errors">errors</A>.
-		Feb 28, 2013	&#42; (Ingo Karkat) provided a patch preventing
-				  receipt of an |<A HREF="message.html#E95">E95</A>| when revisiting a
-				  file://... style url.
-		Mar 18, 2013	&#42; (Gary Johnson) pointed out that <A HREF="change.html#changing">changing</A>
-				  cedit to <A HREF="intro.html#&lt;Esc&gt;">&lt;Esc&gt;</A> caused problems with visincr;
-				  the cedit setting is now bypassed in <A HREF="#netrw">netrw</A> too.
-		Apr 02, 2013	&#42; (Paul Domaskis) reported an undefined
-				  variable error (s:didstarstar) was
-				  occurring.  It is now defined at
-				  <A HREF="starting.html#initialization">initialization</A>.
-				&#42; included additional sanity checking for the
-				  marked file <A HREF="eval.html#functions">functions</A>.
-				&#42; included |<A HREF="#netrw-qF">netrw-qF</A>| and special &quot;<A HREF="motion.html#j">j</A>&quot; option
-				  handling for |<A HREF="#netrw-mg">netrw-mg</A>|
-		Apr 12, 2013	&#42; |<A HREF="#netrw-u">netrw-u</A>| and |<A HREF="#netrw-U">netrw-U</A>| now handle counts
-				&#42; the former <A HREF="map.html#mapping">mapping</A> for &quot;<A HREF="motion.html#T">T</A>&quot; has been removed;
-				  in its place are new maps, |<A HREF="#netrw-Tb">netrw-Tb</A>| and |<A HREF="#netrw-Th">netrw-Th</A>|.
-				&#42; the menu now supports a &quot;Targets&quot; entry for
-				  easier target selection. (see |<A HREF="#netrw-mt">netrw-mt</A>|)
-				&#42; (Paul Domaskis) reported some problems with
-				  moving/copying files under Windows' gvim
-				  (ie. not cygwin).  Fixed.
-				&#42; (Paul Mueller) provided a patch to get
-				  start and rundll working via |<A HREF="#netrw-gx">netrw-gx</A>|
-				  by bypassing the user's |<A HREF="options.html#'shellslash'">'shellslash'</A>| option.
-	v146:	Oct 20, 2012	&#42; (David Kotchan) reported that under Windows,
-				  directories named with unusual characters
-				  such <A HREF="motion.html#as">as</A> &quot;<A HREF="pattern.html##">#</A>&quot; or &quot;<A HREF="motion.html#$">$</A>&quot; were not being listed
-				  properly.
-				&#42; (Kenny Lee) reported that the buffer <A HREF="eval.html#list">list</A>
-				  was being populated by <A HREF="#netrw">netrw</A> <A HREF="windows.html#buffers">buffers</A>.
-				  Netrw will now |<A HREF="windows.html#:bwipe">:bwipe</A>| <A HREF="#netrw">netrw</A> <A HREF="windows.html#buffers">buffers</A>
-				  upon editing a file if <A HREF="#g:netrw_fastbrowse">g:netrw_fastbrowse</A>
-				  is zero and its not in tree listing style.
-				&#42; fixed a bug with s:NetrwInit() that
-				  prevented <A HREF="starting.html#initialization">initialization</A> with |<A HREF="eval.html#Lists">Lists</A>| and
-				  |<A HREF="eval.html#Dictionaries">Dictionaries</A>|.
-				&#42; |<A HREF="#netrw-mu">netrw-mu</A>| now unmarks marked-file lists
-	v145:	Apr 05, 2012	&#42; moved some command from a g:netrw_local_...
-				  format to g:netwr_local... format
-				&#42; included some NOTE level <A HREF="message.html#messages">messages</A> about
-				  commands that aren't executable
-				&#42; |<A HREF="#g:netrw_errorlvl">g:netrw_errorlvl</A>| (default: NOTE=0)
-				  option introduced
-		May 18, 2012	&#42; (Ilya Dogolazky) a scenario where a
-				  |<A HREF="#g:netrw_fastbrowse">g:netrw_fastbrowse</A>| of zero did not
-				  have a local directory refreshed fixed.
-		Jul 10, 2012	&#42; (Donatas) |<A HREF="#netrw-gb">netrw-gb</A>| wasn't working due
-				  to an incorrectly used variable.
-		Aug 09, 2012	&#42; (Bart Baker) <A HREF="#netrw">netrw</A> was doubling
-				  of entries after a split.
-				&#42; (code by Takahiro Yoshihara) implemented
-				  |<A HREF="#g:netrw_dynamic_maxfilenamelen">g:netrw_dynamic_maxfilenamelen</A>|
-		Aug 31, 2012	&#42; (Andrew Wong) <A HREF="#netrw">netrw</A> refresh overwriting
-				  the <A HREF="change.html#yank">yank</A> buffer.
-	v144: Mar 12, 2012	&#42; when |<A HREF="windows.html#CTRL-W_s">CTRL-W_s</A>| or |<A HREF="windows.html#CTRL-W_v">CTRL-W_v</A>| are used,
-				  or their wincmd equivalents, on a <A HREF="#netrw">netrw</A>
-				  buffer, the netrw's <A HREF="eval.html#w:">w:</A> <A HREF="eval.html#variables">variables</A> were
-				  not copied over.  Fixed.
-		Mar 13, 2012	&#42; nbcd_curpos_{bufnr('&#37;')} was commented
-				  out, and was mistakenly used during
-				  RestorePosn.  Unfortunately, I'm not
-				  sure why <A HREF="motion.html#it">it</A> was commented out, so this
-				  &quot;fix&quot; may re-introduce an earlier problem.
-		Mar 21, 2012	&#42; included s:rexposn internally to make
-				  :Rex return the cursor to the same pos'n
-				  upon restoration of <A HREF="#netrw">netrw</A> buffer
-		Mar 27, 2012	&#42; (sjbesse) s:NetrwGetFile() needs to remove
-				  &quot;<A HREF="pattern.html#/">/</A>&quot; from the <A HREF="#netrw">netrw</A> buffer's usual |<A HREF="options.html#'isk'">'isk'</A>|
-				  in order to allow &quot;<A HREF="filetype.html#filetype">filetype</A> detect&quot; to work
-				  properly for scripts.
-	v143: Jun 01, 2011	&#42; |<A HREF="#g:netrw_winsize">g:netrw_winsize</A>| will accept a negative
-				  number; the absolute value of <A HREF="motion.html#it">it</A> will then
-				  be used to specify lines/columns instead of
-				  a percentage.
-		Jul 05, 2011	&#42; the &quot;<A HREF="change.html#d">d</A>&quot; map now supports mkdir via ftp
-				  See |<A HREF="#netrw-d">netrw-d</A>| and |<A HREF="#g:netrw_remote_mkdir">g:netrw_remote_mkdir</A>|
-		Jul 11, 2011	&#42; Changed Explore!, Sexplore!, and Vexplore
-				  to use a percentage of |<A HREF="eval.html#winwidth()">winwidth()</A>| instead
-				  of a percentage of |<A HREF="eval.html#winheight()">winheight()</A>|.
-		Jul 11, 2011	&#42; included support for https://... I'm just
-				  beginning to test this, however.
-		Aug 01, 2011	&#42; changed RestoreOptions to also restore
-				  cursor position in <A HREF="#netrw">netrw</A> <A HREF="windows.html#buffers">buffers</A>.
-		Aug 12, 2011	&#42; added a note about &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot; to the balloon
-		Aug 30, 2011	&#42; if |<A HREF="#g:netrw_nobeval">g:netrw_nobeval</A>| exists, then balloon
-				  evaluation is suppressed.
-		Aug 31, 2011	&#42; (Benjamin <A HREF="change.html#R">R</A> Haskell) provided a patch that
-				  implements non-standard port handling for
-				  files opened via the remote browser.
-		Aug 31, 2011	&#42; Fixed a **//pattern  Explorer bug
-		Sep 15, 2011	&#42; (reported by Francesco Campana) <A HREF="#netrw">netrw</A>
-				  now permits the &quot;<A HREF="repeat.html#@">@</A>&quot; to be part of the
-				  user id (if there's an @ that appears
-				  to the right).
-		Nov 21, 2011	&#42; New option: |<A HREF="#g:netrw_ftp_options">g:netrw_ftp_options</A>|
-		Dec 07, 2011	&#42; (James Sinclair) provided a fix handling
-				  attempts to use a uid and password when
-				  they weren't defined.  This affected
-				  NetWrite (NetRead already had that fix).
-
 
 ==============================================================================
 
@@ -3806,7 +4055,7 @@ Modelines: {{{1
 
     <footer>
       <div class="container">
-        Generated Wed Oct  7 08:19:10 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/7be75a02917b40e5791e3f98d177f833a348df35"><code>7be75a0</code></a>.
+        Generated Fri Oct 16 14:52:39 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/3a970e57dfd48f090f8ccc21567b7974e13d4c68"><code>3a970e5</code></a>.
       </div>
     </footer>
   </body>
