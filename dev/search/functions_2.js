@@ -93,7 +93,7 @@ var searchData=
   ['closefold',['closeFold',['../fold_8c.html#af58a6ea0efda4757a9daa2c29fbe08f1',1,'fold.c']]],
   ['closefoldrecurse',['closeFoldRecurse',['../fold_8c.html#a2be93036f8a6254e49f63f04d6f171e6',1,'fold.c']]],
   ['clr_5fhistory',['clr_history',['../ex__getln_8c.html#a752610b7b80e40252a65bab60c10a835',1,'ex_getln.c']]],
-  ['clrallmarks',['clrallmarks',['../mark_8c.html#afaf0b5625aead27ded661001a7c340c1',1,'mark.c']]],
+  ['clrallmarks',['clrallmarks',['../mark_8c.html#a8556aea9c75f98028c8d053c4679c1c1',1,'mark.c']]],
   ['cmd_5fexists',['cmd_exists',['../ex__docmd_8c.html#a72c162690103f9b02957f61019a8f69f',1,'ex_docmd.c']]],
   ['cmd_5fgchar',['cmd_gchar',['../ex__getln_8c.html#a0b0aab7fed804d7641bd315a973750b9',1,'ex_getln.c']]],
   ['cmd_5fpchar',['cmd_pchar',['../ex__getln_8c.html#ac1f84c61a25e669a23ebb1c537a88dfa',1,'ex_getln.c']]],

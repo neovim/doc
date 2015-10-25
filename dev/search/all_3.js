@@ -196,7 +196,7 @@ var searchData=
   ['closefold',['closeFold',['../fold_8c.html#af58a6ea0efda4757a9daa2c29fbe08f1',1,'fold.c']]],
   ['closefoldrecurse',['closeFoldRecurse',['../fold_8c.html#a2be93036f8a6254e49f63f04d6f171e6',1,'fold.c']]],
   ['clr_5fhistory',['clr_history',['../ex__getln_8c.html#a752610b7b80e40252a65bab60c10a835',1,'ex_getln.c']]],
-  ['clrallmarks',['clrallmarks',['../mark_8c.html#afaf0b5625aead27ded661001a7c340c1',1,'mark.c']]],
+  ['clrallmarks',['clrallmarks',['../mark_8c.html#a8556aea9c75f98028c8d053c4679c1c1',1,'mark.c']]],
   ['cluster_5fadd',['CLUSTER_ADD',['../syntax_8c.html#a109d03238e3692a9bea6cf3f702d701d',1,'syntax.c']]],
   ['cluster_5freplace',['CLUSTER_REPLACE',['../syntax_8c.html#a9d6501d55b45f2f40af69a2ddfdc5929',1,'syntax.c']]],
   ['cluster_5fsubtract',['CLUSTER_SUBTRACT',['../syntax_8c.html#af15ed3453b59c5c04fd76be67eb688ae',1,'syntax.c']]],
