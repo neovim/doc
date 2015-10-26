@@ -72,6 +72,7 @@ var searchData=
   ['foldtext_5fcleanup',['foldtext_cleanup',['../fold_8c.html#ae434a735d4ec384d7b669a9deb064323',1,'fold.c']]],
   ['foldupdate',['foldUpdate',['../fold_8c.html#a24e4b52e8a4b89209e2aac49aabb284b',1,'fold.c']]],
   ['foldupdateall',['foldUpdateAll',['../fold_8c.html#a2e8c67487e90a1d4957853f4e328bbf9',1,'fold.c']]],
+  ['for',['for',['../memline_8c.html#a8b9eb702eb3f9bcba3923532d1e801db',1,'memline.c']]],
   ['format_5flines',['format_lines',['../ops_8c.html#a23a27cb0d4c87b6cd8f1cdc05ba8bf16',1,'ops.c']]],
   ['free_5fbuf_5foptions',['free_buf_options',['../buffer_8c.html#aea1e9e5d6692f59b201aee1e76676042',1,'buffer.c']]],
   ['free_5fbuff',['free_buff',['../getchar_8c.html#a29d4a4fbb400d081f339b147702153eb',1,'getchar.c']]],

@@ -70,6 +70,7 @@ var searchData=
   ['nv_5fsss',['NV_SSS',['../normal_8c.html#ab0a0ab7f6e6fc7379ed91717c0198688',1,'normal.c']]],
   ['nv_5fsts',['NV_STS',['../normal_8c.html#ab21df0e441f00f996a8be425a4c974e2',1,'normal.c']]],
   ['nvim_5fdefault_5ftcp_5fport',['NVIM_DEFAULT_TCP_PORT',['../socket_8c.html#a17a5dfb1cabec2aa37928a8a8f87c7dd',1,'socket.c']]],
+  ['nvim_5fsize',['NVIM_SIZE',['../option_8c.html#a3a8910abbe27662b40fa548ff5922a31',1,'option.c']]],
   ['nvim_5fversion_5flong',['NVIM_VERSION_LONG',['../version_8c.html#a3d79d39fd30e8721ac418bf268d469f0',1,'version.c']]],
   ['nvim_5fversion_5fmedium',['NVIM_VERSION_MEDIUM',['../version_8c.html#a1ce8542315881db1a6fcbff6ffe33cea',1,'version.c']]],
   ['nwhite',['NWHITE',['../regexp_8c.html#a98528b31e0aebb5f1f49e2da00f90f80',1,'regexp.c']]],

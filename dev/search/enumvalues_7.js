@@ -178,5 +178,11 @@ var searchData=
   ['kshelloptsilent',['kShellOptSilent',['../shell_8h.html#a342adb1a4b3f14a94dccedb3f26d9f3aaa0d0d001143ab0b0a2234102bf5255f9',1,'shell.h']]],
   ['kshelloptwrite',['kShellOptWrite',['../shell_8h.html#a342adb1a4b3f14a94dccedb3f26d9f3aa76f45ec9aa7da012a9edb3be89946d57',1,'shell.h']]],
   ['kunknown',['kUnknown',['../globals_8h.html#a4ec64f8310e1f754ab829ff0b95ce86aa8e792321b79a4aa90e75bd3fcc2e4141',1,'globals.h']]],
-  ['kworking',['kWorking',['../globals_8h.html#a4ec64f8310e1f754ab829ff0b95ce86aa7c960dd4e8614cbf137dc84b9a18f958',1,'globals.h']]]
+  ['kworking',['kWorking',['../globals_8h.html#a4ec64f8310e1f754ab829ff0b95ce86aa7c960dd4e8614cbf137dc84b9a18f958',1,'globals.h']]],
+  ['kxdgcachehome',['kXDGCacheHome',['../stdpaths__defs_8h.html#a5309c2029baaae3b91d137589e8bd004adc411c5351c1c8a94b95c7121713bbca',1,'stdpaths_defs.h']]],
+  ['kxdgconfigdirs',['kXDGConfigDirs',['../stdpaths__defs_8h.html#a5309c2029baaae3b91d137589e8bd004afcec0be6d3210ed0f2e2429220f51c94',1,'stdpaths_defs.h']]],
+  ['kxdgconfighome',['kXDGConfigHome',['../stdpaths__defs_8h.html#a5309c2029baaae3b91d137589e8bd004ad62f028be356b82d7de61e99739a4c36',1,'stdpaths_defs.h']]],
+  ['kxdgdatadirs',['kXDGDataDirs',['../stdpaths__defs_8h.html#a5309c2029baaae3b91d137589e8bd004a7f87ce920cf3cd97df814e98e890455e',1,'stdpaths_defs.h']]],
+  ['kxdgdatahome',['kXDGDataHome',['../stdpaths__defs_8h.html#a5309c2029baaae3b91d137589e8bd004a100b2dac7a0db49ba0b1df0fdb2fb67f',1,'stdpaths_defs.h']]],
+  ['kxdgruntimedir',['kXDGRuntimeDir',['../stdpaths__defs_8h.html#a5309c2029baaae3b91d137589e8bd004a5b045da66fb52afb936aa389e910be68',1,'stdpaths_defs.h']]]
 ];

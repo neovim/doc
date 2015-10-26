@@ -277,6 +277,7 @@ var searchData=
   ['bs_5fidx',['bs_idx',['../structbuf__state.html#ad240021c57c6c0d7b481be9d98a6235f',1,'buf_state']]],
   ['bs_5fseqnr',['bs_seqnr',['../structbuf__state.html#ac27ab3baec7a3fa2a17324530f34cfd1',1,'buf_state']]],
   ['buf',['buf',['../structmatch__T.html#afa57795a77761f19f71805f148ca6ead',1,'match_T::buf()'],['../structTUIData.html#a51143b18adfa3660571f1cf8ecd912c7',1,'TUIData::buf()'],['../eval_8c.html#afa2843b78cc2c65c5311037a7e5c6b92',1,'buf():&#160;eval.c']]],
+  ['buf_5ffname',['buf_fname',['../memline_8c.html#a3ec3e2c7e165cf2d281b917b38a8c145',1,'memline.c']]],
   ['buf_5fhandle',['buf_handle',['../structterminal.html#a6827ff04370bed7778721e8c3acd6a39',1,'terminal']]],
   ['buffer',['buffer',['../structobject.html#af9946011065ba3e5963246badf6efc41',1,'object::buffer()'],['../structstream.html#a7e98184ac6a766192d059e8242883683',1,'stream::buffer()'],['../structWRequest.html#a4b6a43b2acf03082971b0181ae9fd984',1,'WRequest::buffer()'],['../structprt__resfile__buffer__S.html#a0bc3dcb8a118aae6907ad206c7d8df4d',1,'prt_resfile_buffer_S::buffer()'],['../structUIData.html#a54bc775c40a36dba24b445747a57d03a',1,'UIData::buffer()'],['../structcontext__sha256__T.html#a243a57d8ab56c5b99f84d1960576b472',1,'context_sha256_T::buffer()']]],
   ['buffer_5flist',['buffer_list',['../structShadaEntry.html#ae24536c3597171546cb71f252d9d2594',1,'ShadaEntry']]],

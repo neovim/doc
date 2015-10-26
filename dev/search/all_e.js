@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['n',['n',['../structnfa__list__T.html#a53709c5c509839e14d70cab7c0029dbf',1,'nfa_list_T']]],
+  ['n',['n',['../structnfa__list__T.html#a53709c5c509839e14d70cab7c0029dbf',1,'nfa_list_T::n()'],['../memline_8c.html#a38e5edb14f404e7a488c479b23d54d9b',1,'n():&#160;memline.c']]],
   ['n_5f',['N_',['../vim_8h.html#aba49c317732ed2f938129061ee53fe32',1,'vim.h']]],
   ['n_5fcollated_5fcopies',['n_collated_copies',['../structprt__settings__T.html#a59969ca6d6cf0f1dca7245d246357b3e',1,'prt_settings_T']]],
   ['n_5fcommands',['n_commands',['../structmparm__T.html#abb55be33e270d2515325ad587519c943',1,'mparm_T']]],
@@ -297,6 +297,7 @@ var searchData=
   ['nv_5fsss',['NV_SSS',['../normal_8c.html#ab0a0ab7f6e6fc7379ed91717c0198688',1,'normal.c']]],
   ['nv_5fsts',['NV_STS',['../normal_8c.html#ab21df0e441f00f996a8be425a4c974e2',1,'normal.c']]],
   ['nvim_5fdefault_5ftcp_5fport',['NVIM_DEFAULT_TCP_PORT',['../socket_8c.html#a17a5dfb1cabec2aa37928a8a8f87c7dd',1,'socket.c']]],
+  ['nvim_5fsize',['NVIM_SIZE',['../option_8c.html#a3a8910abbe27662b40fa548ff5922a31',1,'option.c']]],
   ['nvim_5fversion_5flong',['NVIM_VERSION_LONG',['../version_8c.html#a3d79d39fd30e8721ac418bf268d469f0',1,'version.c']]],
   ['nvim_5fversion_5fmedium',['NVIM_VERSION_MEDIUM',['../version_8c.html#a1ce8542315881db1a6fcbff6ffe33cea',1,'version.c']]],
   ['nwhite',['NWHITE',['../regexp_8c.html#a98528b31e0aebb5f1f49e2da00f90f80',1,'regexp.c']]],

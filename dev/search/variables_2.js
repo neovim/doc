@@ -62,6 +62,7 @@ var searchData=
   ['codepage',['codepage',['../mbyte_8c.html#a166e016281a3501f72dcb52c26e54195',1,'mbyte.c']]],
   ['col',['col',['../structllpos__T.html#af105b731aed6f826e1483a55de3ca9ae',1,'llpos_T::col()'],['../structpos__T.html#a08c5af56d347e155e2cd721d99616ab8',1,'pos_T::col()'],['../structlpos__T.html#ac55b9778bc7f5637ddc87da913a358a8',1,'lpos_T::col()'],['../structterminal.html#a27c2dbd976d532268d74f809d1768305',1,'terminal::col()'],['../structugrid.html#a2ede229848e7918a12ae6ff957518410',1,'ugrid::col()']]],
   ['coladd',['coladd',['../structpos__T.html#a2efcfdd664d0eb30552e17408eb6cd84',1,'pos_T']]],
+  ['colon',['colon',['../env_8c.html#a9ad15d961e0d8f54a34f6e29b2d9f0e4',1,'env.c']]],
   ['color',['color',['../structcolor__name__table__T.html#a419f32c6016940a6846829d5b97ce81c',1,'color_name_table_T']]],
   ['color_5fname_5ftable',['color_name_table',['../syntax_8c.html#a77614f3e0c913668fd9bea9acc4bd5f4',1,'color_name_table():&#160;syntax.c'],['../syntax_8h.html#a77614f3e0c913668fd9bea9acc4bd5f4',1,'color_name_table():&#160;syntax.c']]],
   ['colors',['colors',['../structterminal.html#a90495f393e85a552af64111aed48bf3b',1,'terminal']]],

@@ -2,7 +2,7 @@ var searchData=
 [
   ['edit_5fsubmode_5fhighl',['edit_submode_highl',['../globals_8h.html#a10f4fdf51c11909f54d675d3606b186e',1,'globals.h']]],
   ['edit_5ftype',['edit_type',['../structmparm__T.html#a2f55dd99ef0b0767ce33701a81b781fa',1,'mparm_T']]],
-  ['else',['else',['../eval_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;eval.c'],['../mark_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;mark.c'],['../msgpack__rpc_2helpers_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;helpers.c']]],
+  ['else',['else',['../eval_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;eval.c'],['../mark_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;mark.c'],['../msgpack__rpc_2helpers_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;helpers.c'],['../env_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;env.c']]],
   ['empty',['empty',['../structoparg__S.html#a9b9972a6ece055a3710e438f53efe4b9',1,'oparg_S']]],
   ['en_5fdname',['en_dname',['../structVimMenu.html#add54620a2f0f00c05bc1d63960643a3a',1,'VimMenu']]],
   ['en_5fname',['en_name',['../structVimMenu.html#a7f0fddaa5405a6d04bcb84bf05f74f54',1,'VimMenu']]],

@@ -290,6 +290,7 @@ var searchData=
   ['aft_5flong',['AFT_LONG',['../spell_8c.html#a59fc8519c6f8349b41a0007719feb9f4',1,'spell.c']]],
   ['aft_5fnum',['AFT_NUM',['../spell_8c.html#a46bb7336186c7e4c76e37e2debfe88a9',1,'spell.c']]],
   ['after_5fpathsep',['after_pathsep',['../path_8c.html#a282cb6f7b7ca7e3175d574dc384ae889',1,'path.c']]],
+  ['after_5fsize',['AFTER_SIZE',['../option_8c.html#ad8c5803dffaa92d89e15bc44b504f2d4',1,'option.c']]],
   ['afterfree',['AFTERFREE',['../shada_8c.html#ae7899645f3f37edfc8db727ae4245ac2',1,'shada.c']]],
   ['afterfree_5fdummy',['AFTERFREE_DUMMY',['../shada_8c.html#a80ccb517d0a648ada59b695447821e7c',1,'shada.c']]],
   ['ah_5fcombine',['ah_combine',['../structaffheader__S.html#a4b225fdf09ca2804400b92be38da3f2c',1,'affheader_S']]],

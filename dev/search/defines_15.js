@@ -38,9 +38,6 @@ var searchData=
   ['usectrlv',['USECTRLV',['../ex__cmds__defs_8h.html#a96c125873bb54cba54a97e45225f2c33',1,'ex_cmds_defs.h']]],
   ['user_5fcmd',['USER_CMD',['../ex__docmd_8c.html#a4ac37e1a18ddd00675a51a7a10a70443',1,'ex_docmd.c']]],
   ['user_5fcmd_5fga',['USER_CMD_GA',['../ex__docmd_8c.html#ae99087c289f20393a09f2c019553ef12',1,'ex_docmd.c']]],
-  ['usr_5fexrc_5ffile',['USR_EXRC_FILE',['../unix__defs_8h.html#a64e667bc5e5a33c1a86279e728a36ad0',1,'unix_defs.h']]],
   ['usr_5flog_5ffile',['USR_LOG_FILE',['../log_8c.html#a90af61c26b8d36298079ffac691d1c27',1,'log.c']]],
-  ['usr_5fvimrc_5ffile',['USR_VIMRC_FILE',['../unix__defs_8h.html#a5c4ee922b135b9f2ab30714325c30840',1,'unix_defs.h']]],
-  ['usr_5fvimrc_5ffile2',['USR_VIMRC_FILE2',['../unix__defs_8h.html#a310fba699c69c8fa66f06f98d58aa65c',1,'unix_defs.h']]],
   ['utf_5fcomposinglike',['UTF_COMPOSINGLIKE',['../macros_8h.html#a795b63afecd79354a4e78680765cab84',1,'macros.h']]]
 ];

@@ -30,6 +30,8 @@ var searchData=
   ['vim_5fchange_5fdirectory',['vim_change_directory',['../vim_8c.html#ad369ba1c79130aa4d79ec9e24774cb3f',1,'vim.c']]],
   ['vim_5fchdir',['vim_chdir',['../misc2_8c.html#a05bda11d595c6dd11d5d91b2fa795fe6',1,'misc2.c']]],
   ['vim_5fchdirfile',['vim_chdirfile',['../misc2_8c.html#a5ed23ebe9710b0c7c928cd18de872161',1,'misc2.c']]],
+  ['vim_5fcolon_5fenv_5fiter',['vim_colon_env_iter',['../env_8c.html#a1c24627985a3d07834d19e69c319ec15',1,'env.c']]],
+  ['vim_5fcolon_5fenv_5fiter_5frev',['vim_colon_env_iter_rev',['../env_8c.html#aeed051078ec6b7516667be2c24fbb27e',1,'env.c']]],
   ['vim_5fcommand',['vim_command',['../vim_8c.html#acf09df88a98703fc106023f94b8ad871',1,'vim.c']]],
   ['vim_5fcommand_5foutput',['vim_command_output',['../vim_8c.html#a1ca2f6f0f16d8c7fdadaf80f1f0f052d',1,'vim.c']]],
   ['vim_5fdel_5fcurrent_5fline',['vim_del_current_line',['../vim_8c.html#a9db32b704fc0c6875aa67cf7bcb57434',1,'vim.c']]],
