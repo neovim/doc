@@ -475,6 +475,10 @@ CTRL-\ <A HREF="motion.html#CTRL-O">CTRL-O</A>	like <A HREF="motion.html#CTRL-O"
 
 <A HREF="editing.html#CTRL-G">CTRL-G</A> <A HREF="undo.html#u">u</A>	break <A HREF="undo.html#undo">undo</A> sequence, start new change	     *<A NAME="i_CTRL-G_u"></A><B>i_CTRL-G_u</B>*
 
+<A HREF="editing.html#CTRL-G">CTRL-G</A> <A HREF="undo.html#U">U</A>	don't break <A HREF="undo.html#undo">undo</A> with next left/right cursor *<A NAME="i_CTRL-G_U"></A><B>i_CTRL-G_U</B>*
+		<A HREF="intro.html#movement">movement</A> (but only if the cursor stays
+		within same the line)
+
 Note: If the cursor keys take you out of <A HREF="#Insert">Insert</A> mode, check the <A HREF="options.html#'noesckeys'">'noesckeys'</A>
 option.
 
@@ -511,6 +515,29 @@ that, with <A HREF="motion.html#CTRL-O">CTRL-O</A> <A HREF="undo.html#u">u</A>. 
 
 This breaks <A HREF="undo.html#undo">undo</A> at each line break.  It also expands <A HREF="map.html#abbreviations">abbreviations</A> before
 this.
+
+An example for using <A HREF="editing.html#CTRL-G">CTRL-G</A> <A HREF="undo.html#U">U</A>:
+
+<B>	inoremap &lt;Left&gt;  &lt;C-G&gt;U&lt;Left&gt;</B>
+<B>	inoremap &lt;Right&gt; &lt;C-G&gt;U&lt;Right&gt;</B>
+<B>	inoremap &lt;expr&gt; &lt;Home&gt; col('.') == match(getline('.'), '\S') + 1 ?</B>
+<B>	 \ repeat('&lt;C-G&gt;U&lt;Left&gt;', col('.') - 1) :</B>
+<B>	 \ (col('.') &lt; match(getline('.'), '\S') ?</B>
+<B>	 \     repeat('&lt;C-G&gt;U&lt;Right&gt;', match(getline('.'), '\S') + 0) :</B>
+<B>	 \     repeat('&lt;C-G&gt;U&lt;Left&gt;', col('.') - 1 - match(getline('.'), '\S')))</B>
+<B>	inoremap &lt;expr&gt; &lt;End&gt; repeat('&lt;C-G&gt;U&lt;Right&gt;', col('$') - col('.'))</B>
+<B>	inoremap ( ()&lt;C-G&gt;U&lt;Left&gt;</B>
+
+This makes <A HREF="motion.html#it">it</A> possible to use the cursor keys in <A HREF="#Insert">Insert</A> mode, without breaking
+the <A HREF="undo.html#undo">undo</A> sequence and therefore using |<A HREF="repeat.html#.">.</A>| (redo) will work <A HREF="motion.html#as">as</A> expected. 
+Also entering a text like (with the &quot;<A HREF="motion.html#(">(</A>&quot; <A HREF="map.html#mapping">mapping</A> from above):
+
+<B>   Lorem ipsum (dolor</B>
+
+will be repeatable by the |.|to the expected
+
+   Lorem ipsum (dolor)
+
 
 Using <A HREF="motion.html#CTRL-O">CTRL-O</A> splits <A HREF="undo.html#undo">undo</A>: the text typed before and after <A HREF="motion.html#it">it</A> is undone
 separately.  If you want to avoid this (e.g., in a <A HREF="map.html#mapping">mapping</A>) you might be able
@@ -1411,9 +1438,9 @@ A compiled .exe for <A HREF="os_win32.html#MS-Windows">MS-Windows</A> can be fou
 
 If you want to complete system <A HREF="eval.html#functions">functions</A> you can <A HREF="diff.html#do">do</A> something like this.  Use
 <A HREF="tagsrch.html#ctags">ctags</A> to generate a <A HREF="tagsrch.html#tags">tags</A> file for all the system header files:
-<B>	% ctags -R -f ~/.vim/systags /usr/include /usr/local/include</B>
+<B>	% ctags -R -f ~/.config/nvim/systags /usr/include /usr/local/include</B>
 In your <A HREF="starting.html#vimrc">vimrc</A> file add this <A HREF="tagsrch.html#tags">tags</A> file to the <A HREF="options.html#'tags'">'tags'</A> option:
-<B>	set tags+=~/.vim/systags</B>
+<B>	set tags+=~/.config/nvim/systags</B>
 
 When using <A HREF="change.html#CTRL-X">CTRL-X</A> <A HREF="motion.html#CTRL-O">CTRL-O</A> after a name without any &quot;<A HREF="repeat.html#.">.</A>&quot; or &quot;-&gt;&quot; <A HREF="motion.html#it">it</A> is completed
 from the <A HREF="tagsrch.html#tags">tags</A> file directly.  This works for any identifier, also function
@@ -1621,7 +1648,7 @@ minimal language-sensitive completion.
 To enable <A HREF="syntax.html#syntax">syntax</A> code completion you can run:
 <B>    setlocal omnifunc=syntaxcomplete#Complete</B>
 
-You can automate this by placing the following in your |<A HREF="starting.html#.vimrc">.vimrc</A>| (after any
+You can automate this by placing the following in your |<A HREF="init.html">init.vim</A>| (after any
 &quot;<A HREF="filetype.html#:filetype">:filetype</A>&quot; command):
 <B>    if has("autocmd") &amp;&amp; exists("+omnifunc")</B>
 <B>	autocmd Filetype *</B>
@@ -2145,7 +2172,7 @@ file.  In the table is an explanation for some of the items.  The others are
 
     <footer>
       <div class="container">
-        Generated Sun Oct 25 08:15:50 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/de4cb766ca381c09fd3f938136c1932ebf008f63"><code>de4cb76</code></a>.
+        Generated Mon Oct 26 08:17:17 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/0f9dea2a0e344ded3bd4f8664acfed4fd3381c8e"><code>0f9dea2</code></a>.
       </div>
     </footer>
   </body>
