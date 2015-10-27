@@ -309,6 +309,7 @@ var searchData=
   ['except_5ft',['except_T',['../ex__eval_8h.html#a689b5c954492eb0e90c825fbf265d22f',1,'ex_eval.h']]],
   ['exception',['exception',['../structcleanup__stuff.html#a01ab8b7d3ce077d33535804542eb8adb',1,'cleanup_stuff']]],
   ['exec_5fnormal_5fcmd',['exec_normal_cmd',['../ex__docmd_8c.html#a6d1bfecbeccd1d4b56cde04d5d965de7',1,'ex_docmd.c']]],
+  ['execute',['execute',['../structvim__state.html#a4c4a4664ae27124273bb4f7434b69ec4',1,'vim_state']]],
   ['exflag_5flist',['EXFLAG_LIST',['../ex__cmds__defs_8h.html#a4e221d52988f6d6631e32b3a1557fe76',1,'ex_cmds_defs.h']]],
   ['exflag_5fnr',['EXFLAG_NR',['../ex__cmds__defs_8h.html#aca39eb4a64698483342a05d579f7dcc0',1,'ex_cmds_defs.h']]],
   ['exflag_5fprint',['EXFLAG_PRINT',['../ex__cmds__defs_8h.html#ab5c6495c0f7dfcb1ded6e1d2dcf1dbcf',1,'ex_cmds_defs.h']]],

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['ga_5fappend',['ga_append',['../garray_8c.html#a0dc0d7602d3948d8649713bbf4baeb32',1,'ga_append(garray_T *gap, char c):&#160;garray.c'],['../garray_8h.html#aea3ec97569590fefae0ec717d111def8',1,'GA_APPEND():&#160;garray.h']]],
+  ['ga_5fappend',['GA_APPEND',['../garray_8h.html#aea3ec97569590fefae0ec717d111def8',1,'GA_APPEND():&#160;garray.h'],['../garray_8c.html#a0dc0d7602d3948d8649713bbf4baeb32',1,'ga_append(garray_T *gap, char c):&#160;garray.c']]],
   ['ga_5fappend_5fvia_5fptr',['GA_APPEND_VIA_PTR',['../garray_8h.html#a01e15f392e49be69ab4bf16cc586fe52',1,'garray.h']]],
   ['ga_5fchar',['GA_CHAR',['../charset_8c.html#a5a0d42a20052977b926e8c1fcaa3cdd0',1,'charset.c']]],
   ['ga_5fclear',['ga_clear',['../garray_8c.html#afa822cc3cc70a9a0ee394863bcc0c941',1,'garray.c']]],
@@ -233,7 +233,9 @@ var searchData=
   ['go_5fvleft',['GO_VLEFT',['../option__defs_8h.html#a4eb10d7d1982300acceb99a14c68a4ec',1,'option_defs.h']]],
   ['go_5fvright',['GO_VRIGHT',['../option__defs_8h.html#ab1129419de0523f91b1480b14aa9142f',1,'option_defs.h']]],
   ['goodi',['goodi',['../structlimitscore__T.html#a281d8b8c22a25376b3438852365ab458',1,'limitscore_T']]],
+  ['got_5fbs',['got_bs',['../structterminal__state.html#a6fa259fadeab1e2bb3d1814b21c65a5f',1,'terminal_state']]],
   ['got_5fint',['got_int',['../structdbg__stuff.html#a73705bd16b95fbf0d2b2e7c998ceb9de',1,'dbg_stuff']]],
+  ['gotesc',['gotesc',['../structcommand__line__state.html#a6e9145c8054a046fbfb153b5a7f3461f',1,'command_line_state']]],
   ['goto_5fbuffer',['goto_buffer',['../buffer_8c.html#ab054e54d7861f08302047229e474389a',1,'buffer.c']]],
   ['goto_5fbyte',['goto_byte',['../memline_8c.html#ad55f706f79a7fbd002ea07458e1c1189',1,'memline.c']]],
   ['goto_5fim',['goto_im',['../misc1_8c.html#a2e7fb544c078c2f5f83836c9270c8669',1,'misc1.c']]],

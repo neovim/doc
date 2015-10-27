@@ -109,6 +109,7 @@ var searchData=
   ['wi_5fwin',['wi_win',['../structwininfo__S.html#ac07c601107373406e15d1a54de2db7ba',1,'wininfo_S']]],
   ['width',['width',['../structpty__process.html#ab8e0653f6739f1fbc5e1e10cbe3f4416',1,'pty_process::width()'],['../structprt__mediasize__S.html#a9717207f662cba945bf4b99c1a1646be',1,'prt_mediasize_S::width()'],['../structShadaEntry.html#aaf93e39308485665d269cc3d636737c1',1,'ShadaEntry::width()'],['../structTerminalOptions.html#a733f27896a5f84536c11ec94ac09d109',1,'TerminalOptions::width()'],['../structugrid.html#ad0a95de0a3cbf3ba1741aefc3e67fe18',1,'ugrid::width()'],['../structui__t.html#a8f33fdfd1262721bf757842411a89298',1,'ui_t::width()']]],
   ['wim_5fflags',['wim_flags',['../globals_8h.html#ac7c650bec1a58b93a10e67d8acacf6a4',1,'globals.h']]],
+  ['wim_5findex',['wim_index',['../structcommand__line__state.html#a98a55d463643f582bf5318c2a13016c1',1,'command_line_state']]],
   ['winch_5fhandle',['winch_handle',['../structTUIData.html#affb978b12f42184db88572def6621b4f',1,'TUIData']]],
   ['window',['window',['../structobject.html#aa1cc09bb0fafde46a6e917fe0cbd088d',1,'object']]],
   ['window_5fcount',['window_count',['../structmparm__T.html#aeac0c77dc6feba005a3c2a4cc046de2b',1,'mparm_T']]],

@@ -7,7 +7,6 @@ var searchData=
   ['k_5fc_5fright',['K_C_RIGHT',['../keymap_8h.html#a5540b9f76bc60771114381febd929bb0',1,'keymap.h']]],
   ['k_5fcmdwin',['K_CMDWIN',['../keymap_8h.html#a1261fab11c65abedc50d0622f3177082',1,'keymap.h']]],
   ['k_5fcsi',['K_CSI',['../keymap_8h.html#a05c6031ff6e5cd73c0d036303cc48e72',1,'keymap.h']]],
-  ['k_5fcursorhold',['K_CURSORHOLD',['../keymap_8h.html#a9e1cbf29420bc1532d7795336e9fd145',1,'keymap.h']]],
   ['k_5fdel',['K_DEL',['../keymap_8h.html#a18951969b70b223f52accd54e5609380',1,'keymap.h']]],
   ['k_5fdown',['K_DOWN',['../keymap_8h.html#a8c02e1780491895e1a57851c7eda1b97',1,'keymap.h']]],
   ['k_5fdrop',['K_DROP',['../keymap_8h.html#a40bab75ab611103728d22a999d6c8a74',1,'keymap.h']]],

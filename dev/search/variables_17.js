@@ -11,5 +11,5 @@ var searchData=
   ['xp_5fpattern_5flen',['xp_pattern_len',['../structexpand.html#a13d5591f12edbf617c54827d48bbb821',1,'expand']]],
   ['xp_5fscriptid',['xp_scriptID',['../structexpand.html#ad9d2f89efca93342215c4775e5be5110',1,'expand']]],
   ['xp_5fshell',['xp_shell',['../structexpand.html#ad19ce9c71031f0fb4ba758758ba42013',1,'expand']]],
-  ['xpc',['xpc',['../structcmdline__info.html#a8a6f261656f973324196e3eadeb02162',1,'cmdline_info']]]
+  ['xpc',['xpc',['../structcmdline__info.html#a8a6f261656f973324196e3eadeb02162',1,'cmdline_info::xpc()'],['../structcommand__line__state.html#a1568a0ccc358bd3473339faffd2b259a',1,'command_line_state::xpc()']]]
 ];

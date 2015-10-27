@@ -63,6 +63,7 @@ var searchData=
   ['first',['first',['../structinterval.html#a2bafe26392009bc527f2a4fdc272d3ae',1,'interval::first()'],['../structHMLList.html#a9a927c3e1da320fe517ce1e1c08e1580',1,'HMLList::first()']]],
   ['first_5flnum',['first_lnum',['../structmatch__T.html#a629b3385f64b545641d1b1f5a4af5f1d',1,'match_T']]],
   ['first_5ftabpage',['first_tabpage',['../globals_8h.html#aa16be2e54094211980ee0f23059065a0',1,'globals.h']]],
+  ['firstc',['firstc',['../structcommand__line__state.html#a0e99cbb44465c3dcca35231ca1798463',1,'command_line_state']]],
   ['firstwin',['firstwin',['../globals_8h.html#a9f906679f9a65d9fb5defe869512e36e',1,'globals.h']]],
   ['fixvar',['fixvar',['../structfunccall__S.html#a6c03cb2741dd1c8286d7a548bad6dc09',1,'funccall_S']]],
   ['flag',['flag',['../structname__list.html#ae5c3483b856f867391e1a46ddab930fe',1,'name_list']]],

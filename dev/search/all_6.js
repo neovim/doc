@@ -223,6 +223,7 @@ var searchData=
   ['first_5flnum',['first_lnum',['../structmatch__T.html#a629b3385f64b545641d1b1f5a4af5f1d',1,'match_T']]],
   ['first_5fnl',['FIRST_NL',['../regexp_8c.html#ac474ee84c01e114267b60500b580b038',1,'regexp.c']]],
   ['first_5ftabpage',['first_tabpage',['../globals_8h.html#aa16be2e54094211980ee0f23059065a0',1,'globals.h']]],
+  ['firstc',['firstc',['../structcommand__line__state.html#a0e99cbb44465c3dcca35231ca1798463',1,'command_line_state']]],
   ['firstwin',['firstwin',['../globals_8h.html#a9f906679f9a65d9fb5defe869512e36e',1,'globals.h']]],
   ['fix_5ffname',['fix_fname',['../path_8c.html#af810b6f93d2cd7be0df31527a8ba8e0e',1,'path.c']]],
   ['fix_5ffor_5fboguscols',['FIX_FOR_BOGUSCOLS',['../screen_8c.html#a5330377adcd82af800af6317a6672936',1,'screen.c']]],

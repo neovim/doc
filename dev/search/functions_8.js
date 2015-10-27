@@ -18,6 +18,7 @@ var searchData=
   ['init_5fspell_5fchartab',['init_spell_chartab',['../spell_8c.html#a4ae27fa250e3e75b306f77b17acb7a65',1,'spell.c']]],
   ['init_5fvar_5fdict',['init_var_dict',['../eval_8c.html#ab3b2e9de18d3cf1c9632dcdcb491bae7',1,'eval.c']]],
   ['init_5fyank',['init_yank',['../ops_8c.html#a77abd835ed7da5f3c126359c147e2a19',1,'ops.c']]],
+  ['input_5favailable',['input_available',['../os_2input_8c.html#ac4072cddd08b3acbaf7419c744731aed',1,'input.c']]],
   ['input_5fdisable_5fevents',['input_disable_events',['../os_2input_8c.html#abb0ad5c778f76c7806125a034458709c',1,'input.c']]],
   ['input_5fdone',['input_done',['../os_2input_8c.html#a28e8f7422afbe5bffb7352bc4648a797',1,'input.c']]],
   ['input_5fenable_5fevents',['input_enable_events',['../os_2input_8c.html#af2eb3a6d3b3a19d6fa0f0a4b18b42025',1,'input.c']]],

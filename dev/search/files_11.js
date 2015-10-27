@@ -22,6 +22,8 @@ var searchData=
   ['socket_2eh',['socket.h',['../socket_8h.html',1,'']]],
   ['spell_2ec',['spell.c',['../spell_8c.html',1,'']]],
   ['spell_2eh',['spell.h',['../spell_8h.html',1,'']]],
+  ['state_2ec',['state.c',['../state_8c.html',1,'']]],
+  ['state_2eh',['state.h',['../state_8h.html',1,'']]],
   ['stdpaths_2ec',['stdpaths.c',['../stdpaths_8c.html',1,'']]],
   ['stdpaths_5fdefs_2eh',['stdpaths_defs.h',['../stdpaths__defs_8h.html',1,'']]],
   ['stream_2ec',['stream.c',['../stream_8c.html',1,'']]],

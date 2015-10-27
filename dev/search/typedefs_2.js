@@ -6,6 +6,7 @@ var searchData=
   ['cmdarg_5ft',['cmdarg_T',['../normal_8h.html#a70441635bc55a8ca53dad85894c50c3c',1,'normal.h']]],
   ['colnr_5ft',['colnr_T',['../pos_8h.html#ae79e04a416bd6ce8ffe80e241850c0d2',1,'pos.h']]],
   ['commanddefinition',['CommandDefinition',['../ex__cmds__defs_8h.html#ab0f7c960035ba5e33555aeecdfa3d7f4',1,'ex_cmds_defs.h']]],
+  ['commandlinestate',['CommandLineState',['../ex__getln_8c.html#a65f0cc2f9ce5d92a0166169a265c0b4d',1,'ex_getln.c']]],
   ['compitem_5ft',['compitem_T',['../spell_8c.html#a719a4483ecb86384e262993a61c88051',1,'spell.c']]],
   ['compl_5ft',['compl_T',['../edit_8c.html#adccfe8c86466edb666720eea861731a1',1,'edit.c']]],
   ['completelistitemgetter',['CompleteListItemGetter',['../ex__getln_8h.html#aebc5b9f3c40c127c8717cf3c99da44bd',1,'ex_getln.h']]],

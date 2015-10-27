@@ -218,6 +218,7 @@ var searchData=
   ['wild_5fuse_5fnl',['WILD_USE_NL',['../ex__getln_8h.html#af2ceb08e2e6a2b5a3c5cd7c7c4ec5b82',1,'ex_getln.h']]],
   ['wim_5fflags',['wim_flags',['../globals_8h.html#ac7c650bec1a58b93a10e67d8acacf6a4',1,'globals.h']]],
   ['wim_5ffull',['WIM_FULL',['../option__defs_8h.html#aae71ba6a8330dd37e878131041d95f42',1,'option_defs.h']]],
+  ['wim_5findex',['wim_index',['../structcommand__line__state.html#a98a55d463643f582bf5318c2a13016c1',1,'command_line_state']]],
   ['wim_5flist',['WIM_LIST',['../option__defs_8h.html#a8cd7e6fb4f4e3630b949676d10933ee8',1,'option_defs.h']]],
   ['wim_5flongest',['WIM_LONGEST',['../option__defs_8h.html#a86b58a93d33d60c3c6bf406b8ee656da',1,'option_defs.h']]],
   ['win_5falloc_5faucmd_5fwin',['win_alloc_aucmd_win',['../window_8c.html#a0c2f888202d5f30e915ad4cc4d7f0f34',1,'window.c']]],

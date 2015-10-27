@@ -202,6 +202,7 @@ var searchData=
   ['start_5fredo_5fins',['start_redo_ins',['../getchar_8c.html#a10e1abe30cb31349268631d990b7a7de',1,'getchar.c']]],
   ['start_5fselection',['start_selection',['../normal_8c.html#a95c30abe5b59c5707b9ccc5f83667335',1,'normal.c']]],
   ['startps',['startPS',['../search_8c.html#a8f7a982c3ea9c0d830f199b80c32c612',1,'search.c']]],
+  ['state_5fenter',['state_enter',['../state_8c.html#abe209b23f18a5fda6e0cf334bb9ddec1',1,'state.c']]],
   ['status_5fredraw_5fall',['status_redraw_all',['../screen_8c.html#a19617cd0e75d0a78c281c8c8d8772196',1,'screen.c']]],
   ['status_5fredraw_5fcurbuf',['status_redraw_curbuf',['../screen_8c.html#ad6dc9cd77650ba74bef3b412243f5c35',1,'screen.c']]],
   ['stdpaths_5fget_5fxdg_5fvar',['stdpaths_get_xdg_var',['../stdpaths_8c.html#a024a41673357bdde67227e09c4de7ab3',1,'stdpaths.c']]],

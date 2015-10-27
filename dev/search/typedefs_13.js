@@ -7,6 +7,7 @@ var searchData=
   ['terminal_5fclose_5fcb',['terminal_close_cb',['../terminal_8h.html#a9ec24a9270cbfcfab145b7dc001f798e',1,'terminal.h']]],
   ['terminal_5fresize_5fcb',['terminal_resize_cb',['../terminal_8h.html#a3cf7b603ab2732da7a86d9c3eb7082ea',1,'terminal.h']]],
   ['terminal_5fwrite_5fcb',['terminal_write_cb',['../terminal_8h.html#a9f1d8cfe6bdfe51e57f798145059ddfe',1,'terminal.h']]],
+  ['terminalstate',['TerminalState',['../terminal_8c.html#a1dd344a8a766ae57dfeb6d1e414484d8',1,'terminal.c']]],
   ['terminput',['TermInput',['../tui_2input_8h.html#a50a18bceffc59dcac00a89ba8d7a8bb3',1,'input.h']]],
   ['time_5fcb',['time_cb',['../event_2time_8h.html#a7f7ec46295bbe13b9f6043ec53d467b1',1,'time.h']]],
   ['timestamp',['Timestamp',['../os_2time_8h.html#aadf87d96f6c4ceb92a27fcb0e3fce1cc',1,'time.h']]],

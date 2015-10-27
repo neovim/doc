@@ -7,6 +7,7 @@ var searchData=
   ['tasave_5ft',['tasave_T',['../structtasave__T.html',1,'']]],
   ['term_5finput',['term_input',['../structterm__input.html',1,'']]],
   ['terminal',['terminal',['../structterminal.html',1,'']]],
+  ['terminal_5fstate',['terminal_state',['../structterminal__state.html',1,'']]],
   ['terminaljobdata',['TerminalJobData',['../structTerminalJobData.html',1,'']]],
   ['terminaloptions',['TerminalOptions',['../structTerminalOptions.html',1,'']]],
   ['time_5fentry_5ft',['time_entry_T',['../structtime__entry__T.html',1,'']]],

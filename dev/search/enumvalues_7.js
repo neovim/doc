@@ -12,7 +12,6 @@ var searchData=
   ['ke_5fc_5fright',['KE_C_RIGHT',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a2048e7f01f41b6da55084797607061b6',1,'keymap.h']]],
   ['ke_5fcmdwin',['KE_CMDWIN',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0ade62c3b1894635799343402b815e2627',1,'keymap.h']]],
   ['ke_5fcsi',['KE_CSI',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a8ce6f579992c467cf2336a6c7b05c2f1',1,'keymap.h']]],
-  ['ke_5fcursorhold',['KE_CURSORHOLD',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a09ee93c9ea1d816c83cfc3ff71ded65a',1,'keymap.h']]],
   ['ke_5fdrop',['KE_DROP',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a3d84f21b054bf69eb4a40729995215f9',1,'keymap.h']]],
   ['ke_5fevent',['KE_EVENT',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0a1f86e46e265faedf760ba5df81b31fa4',1,'keymap.h']]],
   ['ke_5ffocusgained',['KE_FOCUSGAINED',['../keymap_8h.html#ad3b67d8346c54154e2aa947f08f4d7b0ada78378c583384df19e33f80d3d0d71d',1,'keymap.h']]],

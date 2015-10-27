@@ -30,6 +30,8 @@ var searchData=
   ['spellinfo_5ft',['spellinfo_T',['../spell_8c.html#abdb9e3e2c1e0e2e061104c13303d61b9',1,'spell.c']]],
   ['spelload_5ft',['spelload_T',['../spell_8c.html#a59a0586f3defe2b22af8c3fea231c257',1,'spell.c']]],
   ['ssize_5ft',['ssize_t',['../win__defs_8h.html#a894c4d58faeee7675b9e7e8244de1386',1,'win_defs.h']]],
+  ['state_5fcheck_5fcallback',['state_check_callback',['../state_8h.html#a30bc6377c69934d62f3809754248cbac',1,'state.h']]],
+  ['state_5fexecute_5fcallback',['state_execute_callback',['../state_8h.html#a1806af633426da662605a371e7f75252',1,'state.h']]],
   ['stateitem_5ft',['stateitem_T',['../syntax_8c.html#a181a4abf75449f799e93e239c35c6043',1,'syntax.c']]],
   ['str_5fint_5ffn',['str_int_fn',['../dl_8c.html#a0cd5175943ac25bb09a4b56e2c5efbad',1,'dl.c']]],
   ['str_5fstr_5ffn',['str_str_fn',['../dl_8c.html#a1e8c6d6bc348687b28f37e18a24e0e99',1,'dl.c']]],

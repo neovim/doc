@@ -1,7 +1,7 @@
 var searchData=
 [
   ['b',['b',['../structdecomp__T.html#aacd3aac354ee475cbc7bd664327950b3',1,'decomp_T']]],
-  ['b0_5fdirty',['b0_dirty',['../memline_8c.html#a31f731b7125114308c0b2e85b10e0bb0',1,'b0_dirty():&#160;memline.c'],['../memline_8c.html#aef48b3fc0252f461c7bce9fb717fc542',1,'B0_DIRTY():&#160;memline.c']]],
+  ['b0_5fdirty',['B0_DIRTY',['../memline_8c.html#aef48b3fc0252f461c7bce9fb717fc542',1,'B0_DIRTY():&#160;memline.c'],['../memline_8c.html#a31f731b7125114308c0b2e85b10e0bb0',1,'b0_dirty():&#160;memline.c']]],
   ['b0_5fff_5fmask',['B0_FF_MASK',['../memline_8c.html#ab299d2ddb4d4be7565b25e8a197e63bb',1,'memline.c']]],
   ['b0_5fflags',['b0_flags',['../memline_8c.html#a035de78041927f925e59c97913c822bf',1,'memline.c']]],
   ['b0_5ffname',['b0_fname',['../structblock0.html#a619635d3effa9f2496dd6662e20b9037',1,'block0']]],
@@ -42,6 +42,7 @@ var searchData=
   ['b_5ffname',['b_fname',['../structfile__buffer.html#a34a7c5a6d702c7ce0181584242976f3e',1,'file_buffer']]],
   ['b_5ffnum',['b_fnum',['../structfile__buffer.html#ae5baea5400f6dbb0dbc24986c4da2f7b',1,'file_buffer']]],
   ['b_5fhelp',['b_help',['../structfile__buffer.html#a7aea3240817be4e49c8389ae28d6b2ff',1,'file_buffer']]],
+  ['b_5fim_5fptr',['b_im_ptr',['../structcommand__line__state.html#ab7a59bda8c5f851324369df56c7c8199',1,'command_line_state']]],
   ['b_5fimode_5flast',['B_IMODE_LAST',['../buffer__defs_8h.html#a82658ac0ec0de060b0669d47019ceb88',1,'buffer_defs.h']]],
   ['b_5fimode_5flmap',['B_IMODE_LMAP',['../buffer__defs_8h.html#a26c45c5313ab7c476bccb8a96fe0485a',1,'buffer_defs.h']]],
   ['b_5fimode_5fnone',['B_IMODE_NONE',['../buffer__defs_8h.html#aa209065235d56c0f64e61b506c050f90',1,'buffer_defs.h']]],
@@ -385,6 +386,7 @@ var searchData=
   ['brace_5flimits',['BRACE_LIMITS',['../regexp_8c.html#aa03074a97afbe46bb7b1ba910daa7edd',1,'regexp.c']]],
   ['brace_5fsimple',['BRACE_SIMPLE',['../regexp_8c.html#a23dae71c1f504e0bbfe83d6c64584d08',1,'regexp.c']]],
   ['branch',['BRANCH',['../regexp_8c.html#a5652aaf0ba5376a02bef5d911095a582',1,'regexp.c']]],
+  ['break_5fctrl_5fc',['break_ctrl_c',['../structcommand__line__state.html#a8e37c3a526180b14075ebf6013dc6f8e',1,'command_line_state']]],
   ['breakat_5fflags',['breakat_flags',['../globals_8h.html#afa12e740685e29874093784d97217929',1,'globals.h']]],
   ['breakcheck_5fskip',['BREAKCHECK_SKIP',['../misc1_8c.html#a4d3e4dfb870786ba369e93c3a5e40955',1,'misc1.c']]],
   ['breakp',['BREAKP',['../ex__cmds2_8c.html#a5b0ee4a93329e250c4cb6a13e851c2d9',1,'ex_cmds2.c']]],
