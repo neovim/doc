@@ -23,8 +23,9 @@ var searchData=
   ['opts',['opts',['../structterminal.html#a603d2575fb7a867cf9d91de2d5dd05fe',1,'terminal']]],
   ['out',['out',['../structTerminalJobData.html#aeffa7abe9f735360dd0936b7019f4586',1,'TerminalJobData::out()'],['../structprocess.html#a7e5763e08b2655df2cfc0c7018c36533',1,'process::out()'],['../structnfa__state.html#a5f6af7a656c2d7f366164db6c349780f',1,'nfa_state::out()'],['../structFrag.html#a857b78b327224ffc647fe2c828b2f347',1,'Frag::out()']]],
   ['out1',['out1',['../structnfa__state.html#a6b5efbc7503e9540cdce968e55f6c62a',1,'nfa_state']]],
+  ['out_5fisatty',['out_isatty',['../structTUIData.html#a8923a10fe4a73826666c557cce3a0e8d',1,'TUIData']]],
   ['outfile',['outfile',['../structprt__settings__T.html#ab26e4b46eb152abd13d282cea9c44d3b',1,'prt_settings_T']]],
-  ['output_5fhandle',['output_handle',['../structTUIData.html#a3be59e50c97a83f2f87468a23b94b177',1,'TUIData']]],
+  ['output_5fhandle',['output_handle',['../structTUIData.html#a94efdf2b858659d3e958801dbe2ba179',1,'TUIData']]],
   ['output_5fisatty',['output_isatty',['../structmparm__T.html#adb0610f895a905db77d2d6fd3bfcc7d3',1,'mparm_T']]],
   ['overstrike',['overstrike',['../structcmdline__info.html#abf1e5be4d11b1905f47bd8ff82039740',1,'cmdline_info']]]
 ];

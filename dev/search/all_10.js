@@ -331,7 +331,7 @@ var searchData=
   ['pfx_5fflags',['PFX_FLAGS',['../spell_8c.html#a610cb32dfc492ab753d1d06403bcd70d',1,'spell.c']]],
   ['pid',['pid',['../structprocess.html#a5d1b4e17490bc7c31d2c5b5dffd81b45',1,'process']]],
   ['pim',['pim',['../structnfa__thread__T.html#ab0c4c4df9239a802b99be7bb2b315843',1,'nfa_thread_T']]],
-  ['pipe',['pipe',['../structsocket__watcher.html#ac64725e6bac313a1bb0c1e796cc4cce8',1,'socket_watcher::pipe()'],['../structstream.html#a389092225f20c3a523fc320523a5c002',1,'stream::pipe()']]],
+  ['pipe',['pipe',['../structsocket__watcher.html#ac64725e6bac313a1bb0c1e796cc4cce8',1,'socket_watcher::pipe()'],['../structstream.html#a389092225f20c3a523fc320523a5c002',1,'stream::pipe()'],['../structTUIData.html#a5cd4aebb3eb141d9d36c89d913507e07',1,'TUIData::pipe()']]],
   ['place_5fcursor_5fat_5fend',['place_cursor_at_end',['../structShadaEntry.html#a62df4edb4b0c3af4dc620c3a0c38c2d0',1,'ShadaEntry']]],
   ['plain_5fvgetc',['plain_vgetc',['../getchar_8c.html#a7560e7cbbb475e7bb561b9469763ad24',1,'getchar.c']]],
   ['plines',['plines',['../misc1_8c.html#a37d65805d95b19be4e44b0b00a6822ab',1,'misc1.c']]],

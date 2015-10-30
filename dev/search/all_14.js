@@ -229,6 +229,7 @@ var searchData=
   ['tsf_5fdiddel',['TSF_DIDDEL',['../spell_8c.html#a10078e463bb831c3aa2c2c8bf08ab836',1,'spell.c']]],
   ['tsf_5fdidsplit',['TSF_DIDSPLIT',['../spell_8c.html#a7f45740ecc508ae57d2706bb5cf4ed04',1,'spell.c']]],
   ['tsf_5fprefixok',['TSF_PREFIXOK',['../spell_8c.html#abf69d885d47c4bfdf78952164f5603c7',1,'spell.c']]],
+  ['tty',['tty',['../structTUIData.html#a184e58b2673bf557eeb8613c67126544',1,'TUIData']]],
   ['tty_5ffd',['tty_fd',['../structpty__process.html#ad60246a2d102e98f30daf4b817aeae5a',1,'pty_process']]],
   ['tui_2ec',['tui.c',['../tui_8c.html',1,'']]],
   ['tui_2eh',['tui.h',['../tui_8h.html',1,'']]],
