@@ -83,7 +83,7 @@ var searchData=
   ['os_5fscandir',['os_scandir',['../fs_8c.html#a95f9ff75faf7e8bdf7359999fc4dc496',1,'fs.c']]],
   ['os_5fscandir_5fnext',['os_scandir_next',['../fs_8c.html#a386fe8ddd974d4e4713571fa74668665',1,'fs.c']]],
   ['os_5fsetenv',['os_setenv',['../env_8c.html#a7c5a977050f7a06e1499d0107fc70913',1,'env.c']]],
-  ['os_5fsetperm',['os_setperm',['../fs_8c.html#a49953c1ffb81c31d749173f685753818',1,'fs.c']]],
+  ['os_5fsetperm',['os_setperm',['../fs_8c.html#a49953c1ffb81c31d749173f685753818',1,'os_setperm(const char_u *name, int perm) FUNC_ATTR_NONNULL_ALL:&#160;fs.c'],['../undo_8c.html#a1d41a79e8dca78ee72b9094e413dca4e',1,'os_setperm((char_u *) file_name, perm):&#160;undo.c']]],
   ['os_5fsystem',['os_system',['../shell_8c.html#a5db7238fbdcf53986f4a1b87ad29b7c7',1,'shell.c']]],
   ['os_5ftime',['os_time',['../os_2time_8c.html#a16f79fd7439b69201d30f29fb196bdb7',1,'time.c']]],
   ['os_5funsetenv',['os_unsetenv',['../env_8c.html#a409588a93cc250f084ade5a895888da4',1,'env.c']]],
