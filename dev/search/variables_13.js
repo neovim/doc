@@ -298,7 +298,7 @@ var searchData=
   ['step',['step',['../structconvertStruct.html#a3cda14469d2322f40d222e97fba48f1d',1,'convertStruct']]],
   ['stop',['stop',['../structTUIData.html#a50163b0cacf26daf3b45371273466906',1,'TUIData::stop()'],['../structui__t.html#ae14b1d6a22763c94715ef38ee25e3187',1,'ui_t::stop()']]],
   ['stop_5finsert_5fmode',['stop_insert_mode',['../globals_8h.html#ad26c03387ba9dc0405df465076a8f890',1,'globals.h']]],
-  ['stopped',['stopped',['../structTerminalJobData.html#ab8e994002e7d655a391a377736a2ee25',1,'TerminalJobData']]],
+  ['stopped',['stopped',['../structTerminalJobData.html#ab8e994002e7d655a391a377736a2ee25',1,'TerminalJobData::stopped()'],['../structui__bridge__data.html#a42ff10f9ecd7d6664b094a2db0e0f08d',1,'ui_bridge_data::stopped()']]],
   ['stopped_5ftime',['stopped_time',['../structprocess.html#a533b18ae7ae330b3edfefe5cd5273a13',1,'process']]],
   ['stream',['stream',['../structsocket__watcher.html#a060c4df7b76074698d7a170979adaefa',1,'socket_watcher::stream()'],['../structWRequest.html#aa56f45872ef94d1df6a57731f3570930',1,'WRequest::stream()']]],
   ['string',['string',['../structobject.html#a1e0cb4d1faa56889500279ca1d445a82',1,'object::string()'],['../structprt__dsc__comment__S.html#a49811b0901ad4d3e002b98a70c615c79',1,'prt_dsc_comment_S::string()'],['../structprt__dsc__line__S.html#a20696b46ce0a3a2ca9449c0b5d57f7f7',1,'prt_dsc_line_S::string()'],['../structoption__table__T.html#adaedf925f2853ff1f67094778169097d',1,'option_table_T::string()'],['../structShadaEntry.html#af4cdb372ebb8651b8c7bfaf58c384567',1,'ShadaEntry::string()']]],

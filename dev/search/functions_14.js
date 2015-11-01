@@ -33,6 +33,7 @@ var searchData=
   ['ui_5fappend_5flines',['ui_append_lines',['../ui_8c.html#ac786ab5c84cc69e789f397953263ab92',1,'ui.c']]],
   ['ui_5fattach',['ui_attach',['../ui_8c.html#ae3b3e05631fa92acfaa4acd8882b9b1c',1,'ui.c']]],
   ['ui_5fbridge_5fattach',['ui_bridge_attach',['../ui__bridge_8c.html#a7f74f82ef786593d8ef1ff7b6114fbc4',1,'ui_bridge.c']]],
+  ['ui_5fbridge_5fstopped',['ui_bridge_stopped',['../ui__bridge_8c.html#a9a8286daaad60172c7ff5f157b8430a4',1,'ui_bridge.c']]],
   ['ui_5fbuiltin_5fstart',['ui_builtin_start',['../ui_8c.html#a9e78fcfd5a8d125efdb25abe1ba5dd0a',1,'ui.c']]],
   ['ui_5fbuiltin_5fstop',['ui_builtin_stop',['../ui_8c.html#a5dc18a143efb0500b3cba94a03389a05',1,'ui.c']]],
   ['ui_5fbusy_5fstart',['ui_busy_start',['../ui_8c.html#a25cfd68deb2dbfed27e946e560a92727',1,'ui.c']]],
