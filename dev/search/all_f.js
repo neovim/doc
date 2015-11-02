@@ -73,7 +73,7 @@ var searchData=
   ['op_5ftilde',['op_tilde',['../ops_8c.html#a382dfbf71cb71f42a9d79ac4a6117834',1,'op_tilde(oparg_T *oap):&#160;ops.c'],['../ops_8h.html#a4c8b61d291592a712922b2d564e54774',1,'OP_TILDE():&#160;ops.h']]],
   ['op_5ftype',['op_type',['../structoparg__S.html#acb9e3c2b4847f0e369552cad973c137e',1,'oparg_S']]],
   ['op_5fupper',['OP_UPPER',['../ops_8h.html#aec2ae0d775d88ac03af2650a8c147ea5',1,'ops.h']]],
-  ['op_5fyank',['op_yank',['../ops_8c.html#a1031933f3119c0a111b893b035e2bbe2',1,'op_yank(oparg_T *oap, bool message) FUNC_ATTR_NONNULL_ALL:&#160;ops.c'],['../ops_8h.html#aa890552a8824de25e0d105b7d8bb3775',1,'OP_YANK():&#160;ops.h']]],
+  ['op_5fyank',['OP_YANK',['../ops_8h.html#aa890552a8824de25e0d105b7d8bb3775',1,'OP_YANK():&#160;ops.h'],['../ops_8c.html#a1031933f3119c0a111b893b035e2bbe2',1,'op_yank(oparg_T *oap, bool message) FUNC_ATTR_NONNULL_ALL:&#160;ops.c']]],
   ['oparg_5fs',['oparg_S',['../structoparg__S.html',1,'']]],
   ['oparg_5ft',['oparg_T',['../normal_8h.html#a0355ffe21ea601a40a864d0346ba75bb',1,'normal.h']]],
   ['opcount',['opcount',['../structcmdarg__S.html#a58f88a02d8bfe611ed941f8950fdf89d',1,'cmdarg_S']]],
