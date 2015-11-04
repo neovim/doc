@@ -33,7 +33,6 @@ var searchData=
   ['mb_5fptr2char',['mb_ptr2char',['../globals_8h.html#ae3e9a5abbb9035d367e064ec5222828d',1,'globals.h']]],
   ['mb_5fptr2len',['mb_ptr2len',['../globals_8h.html#a64ba919d712e1b47360e1d30144829a2',1,'globals.h']]],
   ['mb_5fptr2len_5flen',['mb_ptr2len_len',['../globals_8h.html#a66ff31ffc5db3c9785f572b3574f1a47',1,'globals.h']]],
-  ['mediumversion',['mediumVersion',['../version_8c.html#ae4a2fdfa6c1433647714457e51a7339b',1,'mediumVersion():&#160;version.c'],['../version_8h.html#ae4a2fdfa6c1433647714457e51a7339b',1,'mediumVersion():&#160;version.c']]],
   ['messagepacktype',['MessagePackType',['../eval_8c.html#a44ea440137d171c0b1c0f0336b7fec46',1,'eval.c']]],
   ['messages',['messages',['../structvim__exception.html#a54ffd15f77b98518266bdf6cab6c8ecb',1,'vim_exception']]],
   ['mf_5fblocknr_5fmax',['mf_blocknr_max',['../structmemfile.html#aa0bbdc78a43847cb756129e7fa4d2abc',1,'memfile']]],
