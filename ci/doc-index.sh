@@ -5,7 +5,7 @@ BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source ${BUILD_DIR}/ci/common/common.sh
 source ${BUILD_DIR}/ci/common/doc.sh
 
-DOC_INDEX_PAGE_URL=${DOC_INDEX_PAGE_URL:-http://neovim.io/doc_index}
+DOC_INDEX_PAGE_URL=${DOC_INDEX_PAGE_URL:-https://neovim.io/doc_index}
 
 generate_doc_index() {
   echo "Updating index.html from ${DOC_INDEX_PAGE_URL}."

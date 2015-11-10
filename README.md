@@ -18,12 +18,12 @@ However, you won't find the "Genuine People Personalities" technology here.
  - [Coverity][coverity]
  - [Nightly builds](#nightly-builds)
 
-[doc-index]: http://neovim.io/doc
-[doc-dev]: http://neovim.io/doc/dev
-[doc-user]: http://neovim.io/doc/user
-[clang-report]: http://neovim.io/doc/reports/clang
-[translation-report]: http://neovim.io/doc/reports/translations
-[vimpatch-report]: http://neovim.io/doc/reports/vimpatch
+[doc-index]: https://neovim.io/doc
+[doc-dev]: https://neovim.io/doc/dev
+[doc-user]: https://neovim.io/doc/user
+[clang-report]: https://neovim.io/doc/reports/clang
+[translation-report]: https://neovim.io/doc/reports/translations
+[vimpatch-report]: https://neovim.io/doc/reports/vimpatch
 [coverity]: https://scan.coverity.com/projects/2227
 
 # Building Locally
