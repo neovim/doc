@@ -1934,6 +1934,8 @@ cursor( {lnum}, {col} [, {off}])
 cursor( {list})			<A HREF="#Number">Number</A>	move cursor to position in {list}
 deepcopy( {expr} [, {noref}])	any	make a full copy of {expr}
 delete( {fname})		<A HREF="#Number">Number</A>	delete file {fname}
+dictwatcheradd({dict}, {pattern}, {callback})	Start watching a dictionary
+dictwatcherdel({dict}, {pattern}, {callback})	Stop watching a dictionary
 <A HREF="#did_filetype()">did_filetype()</A>			<A HREF="#Number">Number</A>	TRUE if <A HREF="autocmd.html#FileType">FileType</A> <A HREF="autocmd.html#autocommand">autocommand</A> event used
 diff_filler( {lnum})		<A HREF="#Number">Number</A>	<A HREF="diff.html#diff">diff</A> filler lines about {lnum}
 diff_hlID( {lnum}, {col})	<A HREF="#Number">Number</A>	<A HREF="diff.html#diff">diff</A> highlighting at {lnum}/{col}
@@ -2881,6 +2883,46 @@ delete({fname})							*<A NAME="delete()"></A><B>delete()</B>*
 		Use |<A HREF="#remove()">remove()</A>| to delete an item from a |<A HREF="#List">List</A>|.
 		To delete a line from the buffer use |<A HREF="change.html#:delete">:delete</A>|.  Use |<A HREF="#:exe">:exe</A>|
 		when the line number is in a variable.
+
+
+dictwatcheradd({dict}, {pattern}, {callback})		      *<A NAME="dictwatcheradd()"></A><B>dictwatcheradd()</B>*
+		Adds a watcher to a dictionary. A dictionary watcher is
+		identified by three components:
+
+		- A dictionary({dict});
+		- A key pattern({pattern}).
+		- A function({callback}).
+
+		After this is called, every change on {dict} and on keys
+		matching {pattern} will result in {callback} being invoked.
+
+		For now {pattern} only accepts very simple patterns that can
+		contain a '*' at the end of the <A HREF="#string">string</A>, in which <A HREF="change.html#case">case</A> <A HREF="motion.html#it">it</A> will
+		match every key that begins with the substring before the '*'.
+		That means if '*' is not the last character of {pattern}, only
+		keys that are exactly equal <A HREF="motion.html#as">as</A> {pattern} will be matched.
+
+		The {callback} receives three arguments:
+
+		- The dictionary being watched.
+		- The key which changed.
+		- A dictionary containg the new and old values for the key.
+
+		The type of change can be determined by examining the keys
+		present on the third argument:
+
+		- If contains both `old` and `new`, the key was updated.
+		- If <A HREF="motion.html#it">it</A> contains only `new`, the key was added.
+		- If <A HREF="motion.html#it">it</A> contains only `old`, the key was deleted.
+
+		This function can be used by plugins to implement <A HREF="options.html#options">options</A> with
+		validation and parsing logic.
+
+
+dictwatcherdel({dict}, {pattern}, {callback})		      *<A NAME="dictwatcherdel()"></A><B>dictwatcherdel()</B>*
+		Removes a watcher added  with |<A HREF="#dictwatcheradd()">dictwatcheradd()</A>|. All three
+		arguments must match the ones passed to |<A HREF="#dictwatcheradd()">dictwatcheradd()</A>| in
+		order for the watcher to be successfully deleted.
 
 
 							*<A NAME="did_filetype()"></A><B>did_filetype()</B>*
@@ -9710,7 +9752,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Mon Nov  9 09:17:01 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/f65e7bf30c8a00696d5740e35d0f84b9aa648b99"><code>f65e7bf</code></a>.
+        Generated Tue Nov 10 12:39:33 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/68255df9b93e1b69ac5402d193abfceca04ffb54"><code>68255df</code></a>.
       </div>
     </footer>
   </body>
