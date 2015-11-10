@@ -45,6 +45,7 @@ var searchData=
   ['do_5fecmd_5flnum',['do_ecmd_lnum',['../structexarg.html#a55066c3b58bac67bc45bfd644451e095',1,'exarg']]],
   ['do_5fmerge',['do_merge',['../structHistoryMergerState.html#af5aadf2039c09d544e294d14b9fe837d',1,'HistoryMergerState']]],
   ['do_5fsyntax',['do_syntax',['../structprt__settings__T.html#a1932993f9e83c782f00b5ef8bdeae13d',1,'prt_settings_T']]],
+  ['dumuf',['dumuf',['../eval_8h.html#ad5edcfd305b291a00169e6bbd564409f',1,'eval.h']]],
   ['duplex',['duplex',['../structprt__settings__T.html#a78f9129e78e86ca21070ddb5b1be2689',1,'prt_settings_T']]],
   ['dv_5fcopydict',['dv_copydict',['../structdictvar__S.html#a1d143bcd9a67c3459345f62b4f5978e3',1,'dictvar_S']]],
   ['dv_5fcopyid',['dv_copyID',['../structdictvar__S.html#a7771eca9488a0fe6f2881c232d604788',1,'dictvar_S']]],

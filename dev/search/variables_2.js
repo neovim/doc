@@ -288,6 +288,7 @@ var searchData=
   ['buflocal_5fnr',['buflocal_nr',['../structAutoPat.html#a8ef6b37e5024400aecd1da92e50bae9f',1,'AutoPat']]],
   ['bufpos',['bufpos',['../structTUIData.html#a8d5b8aaf0d930a3af5c142c810dde40e',1,'TUIData']]],
   ['bufsize',['bufsize',['../structTUIData.html#a1acd89d4c781e936d1c784d04951adb9',1,'TUIData']]],
+  ['busy',['busy',['../structdict__watcher.html#a1c9f53f960274f72dd2d179463360552',1,'dict_watcher']]],
   ['busy_5fstart',['busy_start',['../structui__t.html#adf18abc5f40167c0522d4a21c470bec6',1,'ui_t']]],
   ['busy_5fstop',['busy_stop',['../structui__t.html#ad393f2f3a1eb3abaee200e2ad502191b',1,'ui_t']]],
   ['bw_5fbuf',['bw_buf',['../structbw__info.html#a630f6d1ad07316fc09dce9c9f086f1b0',1,'bw_info']]],

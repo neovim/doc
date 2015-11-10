@@ -25,7 +25,7 @@ var searchData=
   ['nextline',['nextline',['../structsource__cookie.html#a0d89487209adee15be463489827292d9',1,'source_cookie']]],
   ['no_5fscs',['no_scs',['../structspat.html#abc725b1f46d13d28364eaf5bdbd69a13',1,'spat']]],
   ['no_5fswap_5ffile',['no_swap_file',['../structmparm__T.html#aa90e5e188aed10bff09b23bcdbd5284c',1,'mparm_T']]],
-  ['node',['node',['../structqueue__item.html#a66eaf24c8cc8a0028ad0e11b8c6d0ffb',1,'queue_item']]],
+  ['node',['node',['../structdict__watcher.html#a90e51ccd68fea64b1fafdf949de96d30',1,'dict_watcher::node()'],['../structqueue__item.html#a66eaf24c8cc8a0028ad0e11b8c6d0ffb',1,'queue_item::node()']]],
   ['noexmode',['noexmode',['../structnormal__state.html#a145455a22fbd365b705e57cbc29a812d',1,'normal_state']]],
   ['nomove',['nomove',['../structinsert__state.html#a1f64aa38df71f201fe2c6e0f15b01ba7',1,'insert_state']]],
   ['nonfull_5fcb',['nonfull_cb',['../structrbuffer.html#a1c1dc217b28e626539af4779f0c1bc7a',1,'rbuffer']]],

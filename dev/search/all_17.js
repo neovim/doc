@@ -151,6 +151,7 @@ var searchData=
   ['was_5fbanned',['WAS_BANNED',['../spell_8c.html#ad490b62d33fa33c33183388ed423ee19',1,'spell.c']]],
   ['was_5fset_5finsecurely',['was_set_insecurely',['../option_8c.html#a28ac3153d8dfbd8e2ea9499cfe9c1784',1,'option.c']]],
   ['watcherptr',['WatcherPtr',['../loop_8h.html#a474c59910b33407ae1ec9b3f504cc717',1,'loop.h']]],
+  ['watchers',['watchers',['../structdictvar__S.html#a8d22251faf931ad7b68a25c32da01004',1,'dictvar_S']]],
   ['waw',['WAW',['../farsi_8h.html#a262a02e786d745d81b4dd473f349d698',1,'farsi.h']]],
   ['waw_5fh',['WAW_H',['../farsi_8h.html#a673799895870f871ccf38bc583ba1122',1,'farsi.h']]],
   ['wbuffer',['wbuffer',['../structwbuffer.html',1,'wbuffer'],['../wstream_8h.html#a1d10d5b56fe7b72af3c9a5fec1993701',1,'WBuffer():&#160;wstream.h']]],

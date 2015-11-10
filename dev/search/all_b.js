@@ -290,6 +290,7 @@ var searchData=
   ['key_5fname_5fchar',['KEY_NAME_CHAR',['../shada_8c.html#a9b66f14c9c749ce530478ff0653cc176',1,'shada.c']]],
   ['key_5fopen_5fback',['KEY_OPEN_BACK',['../edit_8h.html#a1a2ec7c9234012e6123604383e84deff',1,'edit.h']]],
   ['key_5fopen_5fforw',['KEY_OPEN_FORW',['../edit_8h.html#abbc33a7dc4a7ba89b4991b7117ed0040',1,'edit.h']]],
+  ['key_5fpattern',['key_pattern',['../structdict__watcher.html#a808f502f1590803527a69414c3180bfa',1,'dict_watcher']]],
   ['key_5fvalue_5fpair',['key_value_pair',['../structkey__value__pair.html',1,'']]],
   ['keyentry',['keyentry',['../structkeyentry.html',1,'']]],
   ['keyentry_5ft',['keyentry_T',['../syntax__defs_8h.html#a48718a2cf53d63bc89ebdf3cef7e2e5c',1,'syntax_defs.h']]],

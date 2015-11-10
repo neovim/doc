@@ -2,6 +2,7 @@ var searchData=
 [
   ['c',['c',['../structinsert__state.html#a8140b17b215591eaa01ab5fe53973d73',1,'insert_state::c()'],['../structcommand__line__state.html#a362d84f8584a44955301d5272023f973',1,'command_line_state::c()'],['../structnormal__state.html#a1756cb19c1ac8fce03f9cb3961cce426',1,'normal_state::c()'],['../structdecomp__T.html#a1b0e71f8a5ba3d1eac9a79ff6d265751',1,'decomp_T::c()'],['../structnfa__state.html#ab1312b9f7fc41eececb1d1554c7056f6',1,'nfa_state::c()']]],
   ['ca',['ca',['../structinsert__state.html#a2e98ca6879d5601fb744539af3737593',1,'insert_state::ca()'],['../structnormal__state.html#ad1cbd0388c506142bbcec33acacce631',1,'normal_state::ca()']]],
+  ['callback',['callback',['../structdict__watcher.html#a2bfa0876a8f0b6aa6fd7342eda757a11',1,'dict_watcher']]],
   ['called_5femsg',['called_emsg',['../globals_8h.html#a8226ea083c93610f349ca43624d05129',1,'globals.h']]],
   ['caller',['caller',['../structfunccall__S.html#a1ae5751da798f7735ffcd35e6a4ca15c',1,'funccall_S']]],
   ['can_5ffree_5fentry',['can_free_entry',['../structhm__llist__entry.html#a9b30581d8de54f975434843512911d46',1,'hm_llist_entry::can_free_entry()'],['../structPossiblyFreedShadaEntry.html#a38efb156c246204e9a249652343186c2',1,'PossiblyFreedShadaEntry::can_free_entry()']]],

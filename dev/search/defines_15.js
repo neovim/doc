@@ -3,7 +3,7 @@ var searchData=
   ['uc_5fbuffer',['UC_BUFFER',['../ex__docmd_8c.html#a5bbae841d67a67455c7a62163ab8d1a9',1,'ex_docmd.c']]],
   ['ucharat',['UCHARAT',['../regexp_8c.html#a9516e7f9f8711efcb0d381cb09e8f3c5',1,'regexp.c']]],
   ['ue_5fmagic',['UE_MAGIC',['../undo_8c.html#a26f02a295d9e80725b6fb6a6b3565cb6',1,'undo.c']]],
-  ['uf2hikey',['UF2HIKEY',['../eval_8c.html#af23fba400937c109e5e379d2d11ce149',1,'eval.c']]],
+  ['uf2hikey',['UF2HIKEY',['../eval_8h.html#af23fba400937c109e5e379d2d11ce149',1,'eval.h']]],
   ['uf_5fentry_5fend_5fmagic',['UF_ENTRY_END_MAGIC',['../undo_8c.html#aa9876d7b2aa2d957bd6d29ad72e433a4',1,'undo.c']]],
   ['uf_5fentry_5fmagic',['UF_ENTRY_MAGIC',['../undo_8c.html#a9956419fc005fee05f3ff9853e595909',1,'undo.c']]],
   ['uf_5fheader_5fend_5fmagic',['UF_HEADER_END_MAGIC',['../undo_8c.html#ac8c46cd3d07d4f89f355cf1388e5ef71',1,'undo.c']]],
