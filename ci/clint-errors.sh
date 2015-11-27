@@ -13,14 +13,14 @@ source ${BUILD_DIR}/ci/common/neovim.sh
 source ${BUILD_DIR}/ci/common/html.sh
 
 DOC_SUBTREE="/reports/clint/"
+ERRORS_FILE="$DOC_DIR/$DOC_SUBTREE/errors.json"
 
 generate_clint_report() {
   cd ${NEOVIM_DIR}
 
-  local errors_file="$DOC_DIR/$DOC_SUBTREE/errors.json"
   local index_file="$DOC_DIR/$DOC_SUBTREE/index.html"
 
-  ./clint.py --record-errors="$errors_file" \
+  ./clint.py --record-errors="$ERRORS_FILE" \
     src/nvim/**/*.c src/nvim/**/*.h 2> "$index_file" || true
 
   local title="Clint.py errors list"
@@ -33,8 +33,12 @@ download_clint_badge() {
   local errors_number="$(cat "$ERRORS_FILE" | wc -l)"
   local code_quality_color="$(get_code_quality_color ${errors_number})"
   local badge="clint-${errors_number}-${code_quality_color}"
-  wget http://img.shields.io/badge/${badge}.svg \
-    -O ${DOC_DIR}/$DOC_SUBTREE/badge.svg
+  local response
+
+  response=$( 2>&1 wget http://img.shields.io/badge/${badge}.svg \
+    -O ${DOC_DIR}/$DOC_SUBTREE/badge.svg || true )
+  [ -f ${DOC_DIR}/$DOC_SUBTREE/badge.svg ] \
+    || echo "failed to download badge: $response"
 }
 
 # Helper function to get the code quality color based on number of clint errors
