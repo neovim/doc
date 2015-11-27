@@ -71,7 +71,7 @@ of the file and set the <A HREF="options.html#'filetype'">'filetype'</A> option.
 event, which can be used to set the <A HREF="syntax.html#syntax">syntax</A> highlighting, set <A HREF="options.html#options">options</A>, etc.
 
 Detail: The &quot;<A HREF="#:filetype">:filetype</A> on&quot; command will load one of these files:
-		<A HREF="os_mac.html#Mac">Mac</A>	    $VIMRUNTIME/filetype.vim
+		Mac	    $VIMRUNTIME/filetype.vim
 		MS-DOS	    $VIMRUNTIME\filetype.vim
 		Unix	    $VIMRUNTIME/filetype.vim
 	This file is a Vim <A HREF="usr_41.html#script">script</A> that defines autocommands for the
@@ -579,7 +579,7 @@ Local mappings:
 
 MAN							*<A NAME="ft-man-plugin"></A><B>ft-man-plugin</B>* *<A NAME=":Man"></A><B>:Man</B>*
 
-Displays a manual page in a <A HREF="todo.html#nice">nice</A> way.  Also see the user manual
+Displays a manual page in a nice way.  Also see the user manual
 |<A HREF="usr_12.html#find-manpage">find-manpage</A>|.
 
 To start using the &quot;<A HREF="#:Man">:Man</A>&quot; command before any manual page was loaded, source
@@ -627,6 +627,152 @@ file: |<A HREF="pi_spec.html">pi_spec.txt</A>|.
 
 
 
+SHADA							*<A NAME="ft-shada"></A><B>ft-shada</B>*
+
+Allows editing binary |<A HREF="starting.html#shada-file">shada-file</A>|s in a nice way.  Opened binary files are 
+displayed in the following format:
+
+<B>    Type with timestamp YYYY-mm-ddTHH:MM:SS:</B>
+<B>      % Key__  Description___  Value</B>
+<B>      + fooba  foo bar baz fo  {msgpack-value}</B>
+<B>      + abcde  abc def ghi jk  {msgpack-value}</B>
+<B>    Other type with timestamp YYYY-mm-ddTHH:MM:SS:</B>
+<B>      @ Description__  Value</B>
+<B>      - foo bar baz t  {msgpack-value}</B>
+<B>      # Expected more elements in list</B>
+<B>    Some other type with timestamp YYYY-mm-ddTHH:MM:SS:</B>
+<B>      # Unexpected type: type instead of map</B>
+<B>      = {msgpack-value}</B>
+
+Filetype <A HREF="usr_05.html#plugin">plugin</A> defines all |<A HREF="autocmd.html#Cmd-event">Cmd-event</A>|<A HREF="change.html#s">s</A>.  Defined |<A HREF="autocmd.html#SourceCmd">SourceCmd</A>| event makes 
+&quot;source file.shada&quot; be equivalent to &quot;|<A HREF="starting.html#:rshada">:rshada</A>| file.shada&quot;.  |<A HREF="autocmd.html#BufWriteCmd">BufWriteCmd</A>|, 
+|<A HREF="autocmd.html#FileWriteCmd">FileWriteCmd</A>| and |<A HREF="autocmd.html#FileAppendCmd">FileAppendCmd</A>| events are affected by the following 
+settings:
+
+
+*<A NAME="g:shada#keep_old_header"></A><B>g:shada#keep_old_header</B>*	Boolean, if set to false all header entries 
+				are ignored when <A HREF="editing.html#writing">writing</A>.  Defaults to 1.
+
+*<A NAME="g:shada#add_own_header"></A><B>g:shada#add_own_header</B>*	Boolean, if set to true first written entry 
+				will always be header entry with two values in 
+				a map with attached data: |<A HREF="eval.html#v:version">v:version</A>| attached 
+				to &quot;version&quot; key and &quot;shada.vim&quot; attached to 
+				&quot;generator&quot; key.  Defaults to 1.
+
+Format description:
+
+1. `#` starts a comment.  Lines starting with space characters and then `#` 
+   are ignored.  Plugin may only add comment lines to indicate some <A HREF="message.html#errors">errors</A> in 
+   ShaDa format.  Lines containing no non-whitespace characters are also 
+   ignored.
+2. Each entry starts with line that has format &quot;{type} with <A HREF="editing.html#timestamp">timestamp</A> 
+   {timestamp}:&quot;. {timestamp} is |strftime()|-formatted <A HREF="eval.html#string">string</A> representing 
+   actual UNIX <A HREF="editing.html#timestamp">timestamp</A> value. First <A HREF="eval.html#strftime()">strftime()</A> argument is equal to 
+   `&#37;Y-&#37;m-&#37;dT&#37;H:&#37;M:&#37;S`.  When <A HREF="editing.html#writing">writing</A> this <A HREF="editing.html#timestamp">timestamp</A> is parsed using 
+   |<A HREF="pi_msgpack.html#msgpack#strptime()">msgpack#strptime()</A>|, with caching (it remembers which <A HREF="editing.html#timestamp">timestamp</A> produced 
+   particular <A HREF="eval.html#strftime()">strftime()</A> output and uses this value if you did not change 
+   <A HREF="editing.html#timestamp">timestamp</A>). {type} is one of
+    1 - Header
+    2 - Search <A HREF="pattern.html#pattern">pattern</A>
+    3 - Replacement <A HREF="eval.html#string">string</A>
+    4 - History entry
+    5 - Register
+    6 - Variable
+    7 - Global <A HREF="motion.html#mark">mark</A>
+    8 - Jump
+    9 - Buffer <A HREF="eval.html#list">list</A>
+   10 - Local <A HREF="motion.html#mark">mark</A>
+   11 - Change
+    &#42; - Unknown (0x{type-hex})
+
+   Each type may be represented using Unknown entry: &quot;Jump with <A HREF="editing.html#timestamp">timestamp</A> ...&quot; 
+   is the same <A HREF="motion.html#as">as</A> &quot;Unknown (0x8) with <A HREF="editing.html#timestamp">timestamp</A> ....&quot;.
+3. After header there is one of the following lines:
+   1. &quot;  <A HREF="motion.html#&#37;">&#37;</A> Key__  Description__  Value&quot;: map header.  After <A HREF="map.html#mapping">mapping</A> header 
+      follows a table which may contain comments and lines consisting of 
+      &quot;  +&quot;, key, description and |<A HREF="pi_msgpack.html#{msgpack-value}">{msgpack-value}</A>|.  Key is separated by at 
+      least two spaces with description, description is separated by at least 
+      two spaces with the value.  Each key in the map must be at most <A HREF="motion.html#as">as</A> wide 
+      <A HREF="motion.html#as">as</A> &quot;Key__&quot; header: &quot;Key&quot; allows at most 3-byte keys, &quot;Key__&quot; allows at 
+      most 5-byte keys.  If keys actually occupy <A HREF="various.html#less">less</A> bytes then the rest is 
+      filled with spaces.  Keys cannot be empty, end with spaces, contain two 
+      consequent spaces inside of them or contain <A HREF="mbyte.html#multibyte">multibyte</A> characters (use 
+      &quot;<A HREF="change.html#=">=</A>&quot; format if you need this).  Descriptions have the same restrictions 
+      on width and contents, except that empty descriptions are allowed.  
+      Description column may be omitted.
+
+      When <A HREF="editing.html#writing">writing</A> description is ignored.  Keys with values |<A HREF="pi_msgpack.html#msgpack#equal">msgpack#equal</A>| 
+      to default ones are ignored.  Order of keys is preserved.  All keys are 
+      treated <A HREF="motion.html#as">as</A> strings (not binary strings).
+
+      Note: specifically for buffer <A HREF="eval.html#list">list</A> entries <A HREF="motion.html#it">it</A> is allowed to have more 
+      then one map header.  Each map header starts a new map entry inside 
+      buffer <A HREF="eval.html#list">list</A> because ShaDa buffer <A HREF="eval.html#list">list</A> entry is an array of maps.  I.e.
+
+<B>        Buffer list with timestamp 1970-01-01T00:00:00:</B>
+<B>          % Key  Description  Value</B>
+<B>          + f    file name    "/foo"</B>
+<B>          + l    line number  1</B>
+<B>          + c    column       10</B>
+ 
+      is equivalent to
+
+<B>        Buffer list with timestamp 1970-01-01T00:00:00:</B>
+<B>          = [{="f": "/foo", ="c": 10}]</B>
+ 
+      and
+
+<B>        Buffer list with timestamp 1970-01-01T00:00:00:</B>
+<B>          % Key  Description  Value</B>
+<B>          + f    file name    "/foo"</B>
+
+<B>          % Key  Description  Value</B>
+<B>          + f    file name    "/bar"</B>
+ 
+      is equivalent to
+
+<B>        Buffer list with timestamp 1970-01-01T00:00:00:</B>
+<B>          = [{="f": "/foo"}, {="f": "/bar"}]</B>
+ 
+      Note 2: specifically for <A HREF="sponsor.html#register">register</A> entries special <A HREF="syntax.html#syntax">syntax</A> for arrays was 
+      designed:
+
+<B>        Register with timestamp 1970-01-01T00:00:00:</B>
+<B>          % Key  Description  Value</B>
+<B>          + rc   contents     @</B>
+<B>          | - "line1"</B>
+<B>          | - "line2"</B>
+ 
+      This is equivalent to
+
+<B>        Register with timestamp 1970-01-01T00:00:00:</B>
+<B>          % Key  Description  Value</B>
+<B>          + rc   contents     ["line1", "line2"]</B>
+ 
+      Such <A HREF="syntax.html#syntax">syntax</A> is automatically used if array representation appears to be 
+      too lengthy.
+   2. &quot;  @  Description__  Value&quot;: array header.  Same <A HREF="motion.html#as">as</A> map, but key is 
+      omitted and description cannot be omitted.  Array entries start with 
+      &quot;  -&quot;. Example:
+
+<B>        History entry with timestamp 1970-01-01T00:00:00:</B>
+<B>          @ Description_  Value</B>
+<B>          - history type  SEARCH</B>
+<B>          - contents      "foo"</B>
+<B>          - separator     '/'</B>
+ 
+      is equivalent to
+
+<B>        History entry with timestamp 1970-01-01T00:00:00:</B>
+<B>          = [SEARCH, "foo", '/']</B>
+ 
+      Note: special array <A HREF="syntax.html#syntax">syntax</A> for <A HREF="sponsor.html#register">register</A> entries is not recognized here.
+   3. &quot;  = {msgpack-value}&quot;: raw values.  |<A HREF="pi_msgpack.html#{msgpack-value}">{msgpack-value}</A>| in this <A HREF="change.html#case">case</A> may 
+      have absolutely any type.  Special array <A HREF="syntax.html#syntax">syntax</A> for <A HREF="sponsor.html#register">register</A> entries is 
+      not recognized here <A HREF="motion.html#as">as</A> well.
+
+
+
 SQL							*<A NAME="ft-sql"></A><B>ft-sql</B>*
 
 Since the text for this <A HREF="usr_05.html#plugin">plugin</A> is rather long <A HREF="motion.html#it">it</A> has been put in a separate
@@ -655,7 +801,7 @@ Currently no other formats are recognized.
 
     <footer>
       <div class="container">
-        Generated Tue Nov 10 12:39:34 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/68255df9b93e1b69ac5402d193abfceca04ffb54"><code>68255df</code></a>.
+        Generated Fri Nov 27 20:12:56 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/951714ede63beb324c3ffb4d326ba1c5a47a36ea"><code>951714e</code></a>.
       </div>
     </footer>
   </body>

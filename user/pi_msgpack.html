@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: pi_msgpack</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <nav class="navbar">
+          <div class="container-fluid">
+            <div class="navbar-header">
+
+              <a href="/" class="navbar-brand">
+                <img src="/images/logo@2x.png" id="navbar-logo" alt="Neovim">
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: pi_msgpack</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="pi_msgpack.txt"></A><B>pi_msgpack.txt</B>*	For NeoVim version 0.1.
+
+Author: Nikolay Pavlov <A HREF="mailto:kp-pav@yandex.ru">&lt;kp-pav@yandex.ru&gt;</A> 
+Copyright: (c) 2015 by Nikolay Pavlov
+
+The Apache <A HREF="uganda.html#license">license</A> applies to the files in this package, including 
+runtime/autoload/msgpack.vim, runtime/doc/pi_msgpack.txt and 
+test/functional/plugin/msgpack_spec.lua.  Like anything else that's free, 
+msgpack.vim and its associated files are provided *as is* and comes with no 
+warranty of any kind, either expressed or implied.  No guarantees of 
+merchantability.  No guarantees of suitability for any purpose.  By using this 
+<A HREF="usr_05.html#plugin">plugin</A>, you agree that in no event will the <A HREF="uganda.html#copyright">copyright</A> holder be liable for any 
+damages resulting from the use of this software. Use at your own risk!
+
+==============================================================================
+
+1. <A HREF="quickref.html#Contents">Contents</A>				*<A NAME="msgpack.vim-contents"></A><B>msgpack.vim-contents</B>*
+
+	1. Contents..............................: |<A HREF="msgpack.html">msgpack.vim-contents</A>|
+	2. Msgpack.vim introduction..............: |<A HREF="msgpack.html">msgpack.vim-intro</A>|
+	3. Msgpack.vim manual....................: |<A HREF="msgpack.html">msgpack.vim-manual</A>|
+	   Function arguments....................: |<A HREF="msgpack.html">msgpack.vim-arguments</A>|
+	   msgpack#is_int function...............: |<A HREF="#msgpack#is_int()">msgpack#is_int()</A>|
+	   msgpack#is_uint function..............: |<A HREF="#msgpack#is_uint()">msgpack#is_uint()</A>|
+	   msgpack#strftime function.............: |<A HREF="#msgpack#strftime()">msgpack#strftime()</A>|
+	   msgpack#strptime function.............: |<A HREF="#msgpack#strptime()">msgpack#strptime()</A>|
+	   msgpack#int_dict_to_str function......: |<A HREF="#msgpack#int_dict_to_str()">msgpack#int_dict_to_str()</A>|
+	   msgpack#special_type function.........: |<A HREF="#msgpack#special_type()">msgpack#special_type()</A>|
+	   msgpack#type function.................: |<A HREF="#msgpack#type()">msgpack#type()</A>|
+	   msgpack#deepcopy function.............: |<A HREF="#msgpack#deepcopy()">msgpack#deepcopy()</A>|
+	   msgpack#string function...............: |<A HREF="#msgpack#string()">msgpack#string()</A>|
+	   msgpack#eval function.................: |<A HREF="#msgpack#eval()">msgpack#eval()</A>|
+	   msgpack#equal function................: |<A HREF="#msgpack#equal()">msgpack#equal()</A>|
+
+
+==============================================================================
+
+2. Msgpack.vim introduction			*<A NAME="msgpack.vim-intro"></A><B>msgpack.vim-intro</B>*
+
+This <A HREF="usr_05.html#plugin">plugin</A> contains utility <A HREF="eval.html#functions">functions</A> to be used in conjunction with 
+|<A HREF="eval.html#msgpackdump()">msgpackdump()</A>| and |<A HREF="eval.html#msgpackparse()">msgpackparse()</A>| <A HREF="eval.html#functions">functions</A>.
+
+==============================================================================
+
+3. Msgpack.vim manual				*<A NAME="msgpack.vim-manual"></A><B>msgpack.vim-manual</B>*
+
+
+FUNCTION ARGUMENTS				*<A NAME="msgpack.vim-arguments"></A><B>msgpack.vim-arguments</B>*
+
+Disambiguation of arguments described below.  Note: if e.g. function is listed 
+<A HREF="motion.html#as">as</A> accepting |<A HREF="#{msgpack-integer}">{msgpack-integer}</A>| (or anything else) <A HREF="motion.html#it">it</A> means that function 
+does not check whether argument matches its description.
+
+
+*<A NAME="{msgpack-value}"></A><B>{msgpack-value}</B>*	Either |<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| or a regular value, but 
+			not function reference.
+
+*<A NAME="{msgpack-integer}"></A><B>{msgpack-integer}</B>*	Any value for which |<A HREF="intro.html#msgpack#type">msgpack#type</A>| will return 
+			&quot;integer&quot;.
+
+*<A NAME="{msgpack-special-int}"></A><B>{msgpack-special-int}</B>*	|<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| representing integer.
+
+
+msgpack#is_int({msgpack-value})				*<A NAME="msgpack#is_int()"></A><B>msgpack#is_int()</B>*
+	Returns 1 if given <A HREF="#{msgpack-value}">{msgpack-value}</A> is integer value, 0 otherwise.
+
+
+msgpack#is_uint({msgpack-value})			*<A NAME="msgpack#is_uint()"></A><B>msgpack#is_uint()</B>*
+	Returns 1 if given <A HREF="#{msgpack-value}">{msgpack-value}</A> is integer value greater or equal 
+	to zero, 0 otherwise.
+
+
+							*<A NAME="msgpack#strftime"></A><B>msgpack#strftime</B>*
+
+msgpack#strftime({format}, <A HREF="#{msgpack-integer}">{msgpack-integer}</A>)		*<A NAME="msgpack#strftime()"></A><B>msgpack#strftime()</B>*
+	Same <A HREF="motion.html#as">as</A> |<A HREF="eval.html#strftime()">strftime()</A>|, but second argument may be 
+	|<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>|.  Requires |<A HREF="various.html#+python">+python</A>| or |<A HREF="various.html#+python3">+python3</A>| to really 
+	work with |<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>|s.
+
+
+							*<A NAME="msgpack#strptime"></A><B>msgpack#strptime</B>*
+
+msgpack#strptime({format}, {time})			*<A NAME="msgpack#strptime()"></A><B>msgpack#strptime()</B>*
+	Reverse of |msgpack#strptime()|: for any time and format 
+	|msgpack#equal|( |msgpack#strptime|(format, |msgpack#strftime|(format, |||
+	time)), time) be true.  Requires |<A HREF="various.html#+python">+python</A>| or |<A HREF="various.html#+python3">+python3</A>|, without <A HREF="motion.html#it">it</A> 
+	only supports non-|<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| nonnegative times and format 
+	equal to `&#37;Y-&#37;m-&#37;dT&#37;H:&#37;M:&#37;S`.
+
+
+msgpack#int_dict_to_str({msgpack-special-int})	*<A NAME="msgpack#int_dict_to_str()"></A><B>msgpack#int_dict_to_str()</B>*
+	Function which converts |<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| integer value to 
+	a hexadecimal value like 0x1234567890ABCDEF (always returns exactly 16 
+	hexadecimal digits).
+
+
+msgpack#special_type({msgpack-value})		*<A NAME="msgpack#special_type()"></A><B>msgpack#special_type()</B>*
+	Returns zero if <A HREF="#{msgpack-value}">{msgpack-value}</A> is not |<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>|.  If <A HREF="motion.html#it">it</A> 
+	is <A HREF="motion.html#it">it</A> returns name of the key in |<A HREF="eval.html#v:msgpack_types">v:msgpack_types</A>| which represents 
+	<A HREF="#{msgpack-value}">{msgpack-value}</A> type.
+
+
+msgpack#type({msgpack-value})				*<A NAME="msgpack#type()"></A><B>msgpack#type()</B>*
+	Returns name of the key in |<A HREF="eval.html#v:msgpack_types">v:msgpack_types</A>| that represents 
+	<A HREF="#{msgpack-value}">{msgpack-value}</A> type.  Never returns zero: this function returns 
+	msgpack type which will be dumped by |<A HREF="eval.html#msgpackdump()">msgpackdump()</A>| should <A HREF="motion.html#it">it</A> receive 
+	a <A HREF="eval.html#list">list</A> with singe <A HREF="#{msgpack-value}">{msgpack-value}</A> <A HREF="motion.html#as">as</A> input.
+
+
+msgpack#deepcopy({msgpack-value})			*<A NAME="msgpack#deepcopy()"></A><B>msgpack#deepcopy()</B>*
+	Like |<A HREF="eval.html#deepcopy()">deepcopy()</A>|, but works correctly with |<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| 
+	values.  Plain |<A HREF="eval.html#deepcopy()">deepcopy()</A>| will destroy all types in 
+	|<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| values because <A HREF="motion.html#it">it</A> will copy _TYPE key values, 
+	while they should be preserved.
+
+
+msgpack#string({msgpack-value})				*<A NAME="msgpack#string()"></A><B>msgpack#string()</B>*
+	Like |<A HREF="eval.html#string()">string()</A>|, but saves information about msgpack types.  Values 
+	dumped by msgpack#string may be read back by |<A HREF="#msgpack#eval()">msgpack#eval()</A>|.  
+	Returns is the following:
+
+	- <A HREF="eval.html#Dictionaries">Dictionaries</A> are dumped <A HREF="motion.html#as">as</A> &quot;{key1: value1, key2: value2}&quot;. Note: 
+	  msgpack allows any values in keys, so with some 
+	  |<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| values |<A HREF="#msgpack#string()">msgpack#string()</A>| may produce even 
+	  &quot;{{1: 2}: 3, [4]: 5}&quot;.
+	- <A HREF="eval.html#Lists">Lists</A> are dumped <A HREF="motion.html#as">as</A> &quot;[value1, value2]&quot;.
+	- Strings are dumped <A HREF="motion.html#as">as</A>
+	  1. `&quot;abc&quot;`: binary <A HREF="eval.html#string">string</A>.
+	  2. `=&quot;abc&quot;`: <A HREF="eval.html#string">string</A>.
+	  3. `+(10)&quot;ext&quot;`: extension strings (10 may be replaced with any 
+	     8-bit signed integer).
+	  Inside strings the following <A HREF="intro.html#escape">escape</A> sequences may be present: &quot;<A HREF="change.html#\0">\0</A>&quot; 
+	  (represents NUL byte), &quot;\n&quot; (represents line feed) and &quot;\&quot;&quot; 
+	  (represents double <A HREF="change.html#quote">quote</A>).
+	- Floating-point and integer values are dumped using |<A HREF="eval.html#string()">string()</A>| or 
+	  |<A HREF="#msgpack#int_dict_to_str()">msgpack#int_dict_to_str()</A>|.
+	- Booleans are dumped <A HREF="motion.html#as">as</A> &quot;TRUE&quot; or &quot;FALSE&quot;.
+	- Nil values are dumped <A HREF="motion.html#as">as</A> &quot;NIL&quot;.
+
+
+msgpack#eval({string}, {dict})				*<A NAME="msgpack#eval()"></A><B>msgpack#eval()</B>*
+	Transforms string created by |<A HREF="#msgpack#string()">msgpack#string()</A>| into a value suitable 
+	for |<A HREF="eval.html#msgpackdump()">msgpackdump()</A>|.  Second argument allows adding special values 
+	that start with head characters (|<A HREF="pattern.html#/\h">/\h</A>|) and contain only <A HREF="motion.html#word">word</A> 
+	characters (|<A HREF="pattern.html#/\w">/\w</A>|).  Built-in special values are &quot;TRUE&quot;, &quot;FALSE&quot;, 
+	&quot;NIL&quot;, &quot;nan&quot; and &quot;inf&quot; and they cannot be overridden.  Map values are 
+	always evaluated to |<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| values, <A HREF="motion.html#as">as</A> well <A HREF="motion.html#as">as</A> 
+	hexadecimal digits.  When evaluating maps order of keys is preserved.
+
+
+							*<A NAME="msgpack#equal"></A><B>msgpack#equal</B>*
+
+msgpack#equal({msgpack-value}, <A HREF="#{msgpack-value}">{msgpack-value}</A>)		*<A NAME="msgpack#equal()"></A><B>msgpack#equal()</B>*
+	Returns 1 if given values are equal, 0 otherwise.  When comparing 
+	msgpack map values order of keys is ignored.  Comparing 
+	|<A HREF="eval.html#msgpack-special-dict">msgpack-special-dict</A>| with equivalent non-special-dict value 
+	evaluates to 1.
+
+==============================================================================
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Fri Nov 27 20:12:57 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/951714ede63beb324c3ffb4d326ba1c5a47a36ea"><code>951714e</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>

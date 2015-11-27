@@ -52,11 +52,9 @@ This text is important for those who want to be involved in further developing
 Vim.
 
 1. Design goals		|<A HREF="#design-goals">design-goals</A>|
-2. Coding style		|<A HREF="#coding-style">coding-style</A>|
-3. Design decisions	|<A HREF="#design-decisions">design-decisions</A>|
-4. Assumptions		|<A HREF="#design-assumptions">design-assumptions</A>|
+2. Design decisions	|<A HREF="#design-decisions">design-decisions</A>|
 
-See the file README.txt in the &quot;src&quot; directory for an overview of the source
+See the file &quot;src/nvim/README.md&quot; for a high-level overview of the source
 code.
 
 Vim is open source software.  Everybody is encouraged to contribute to help
@@ -71,29 +69,6 @@ Most important things come first (roughly).
 
 Note that quite a few items are contradicting.  This is intentional.  A
 balance must be found between them.
-
-
-
-VIM IS... VI COMPATIBLE					*<A NAME="design-compatible"></A><B>design-compatible</B>*
-
-First of all, <A HREF="motion.html#it">it</A> should be possible to use Vim <A HREF="motion.html#as">as</A> a drop-in replacement for
-<A HREF="intro.html#Vi">Vi</A>.  When the user wants to, he can use Vim in compatible mode and hardly
-notice any difference with the original <A HREF="intro.html#Vi">Vi</A>.
-
-Exceptions:
-- We don't reproduce obvious <A HREF="intro.html#Vi">Vi</A> bugs in Vim.
-- There are different versions of <A HREF="intro.html#Vi">Vi</A>.  I am using Version 3.7 (6/7/85) <A HREF="motion.html#as">as</A> a
-  reference.  But support for other versions is also included when possible.
-  The <A HREF="intro.html#Vi">Vi</A> part of POSIX is not considered a definitive source.
-- Vim adds new commands, you cannot rely on some command to fail because <A HREF="motion.html#it">it</A>
-  didn't exist in <A HREF="intro.html#Vi">Vi</A>.
-- Vim will have a lot of features that <A HREF="intro.html#Vi">Vi</A> doesn't have.  Going back from Vim
-  to <A HREF="intro.html#Vi">Vi</A> will be a problem, this cannot be avoided.
-- Some things are hardly ever used (open mode, sending an e-mail when
-  crashing, etc.).  Those will only be included when someone has a good reason
-  why <A HREF="motion.html#it">it</A> should be included and it's not too much work.
-- For some items <A HREF="motion.html#it">it</A> is debatable whether <A HREF="intro.html#Vi">Vi</A> compatibility should be
-  maintained.  There will be an option flag for these.
 
 
 
@@ -171,7 +146,6 @@ fast.
 VIM IS... MAINTAINABLE					*<A NAME="design-maintain"></A><B>design-maintain</B>*
 
 - The source code should not become a mess.  It should be reliable code.
-- Use the same layout in all files to make <A HREF="motion.html#it">it</A> easy to read |<A HREF="#coding-style">coding-style</A>|.
 - Use comments in a useful way!  Quoting the function name and argument names
   is NOT useful.  Do explain what they are for.
 - Porting to another platform should be made easy, without having to change
@@ -201,209 +175,7 @@ for plumbing.&quot;
 
 ==============================================================================
 
-2. Coding style						*<A NAME="coding-style"></A><B>coding-style</B>*
-
-These are the rules to use when making changes to the Vim source code.  Please
-stick to these rules, to keep the sources readable and maintainable.
-
-This <A HREF="eval.html#list">list</A> is not complete.  Look in the source code for more examples.
-
-
-
-MAKING CHANGES						*<A NAME="style-changes"></A><B>style-changes</B>*
-
-The basic steps to make changes to the code:
-1. Adjust the documentation.  Doing this first gives you an impression of how
-   your changes affect the user.
-2. Make the source code changes.
-3. Check ../doc/todo.txt if the change affects any listed item.
-4. Make a patch with &quot;<A HREF="diff.html#diff">diff</A> -c&quot; against the unmodified code and docs.
-5. Make a note about what changed and include <A HREF="motion.html#it">it</A> with the patch.
-
-
-
-USE OF COMMON FUNCTIONS					*<A NAME="style-functions"></A><B>style-functions</B>*
-
-Some <A HREF="eval.html#functions">functions</A> that are common to use, have a special Vim version.  Always
-consider using the Vim version, because they were introduced with a reason.
-
-NORMAL NAME	VIM NAME	DIFFERENCE OF VIM VERSION
-free()		vim_free()	Checks for freeing NULL
-malloc()	alloc()		Checks for out of memory situation
-malloc()	lalloc()	Like alloc(), but has long argument
-strcpy()	STRCPY()	Includes cast to (char *), for char_u &#42; args
-<A HREF="eval.html#strchr()">strchr()</A>	vim_strchr()	Accepts special characters
-<A HREF="eval.html#strrchr()">strrchr()</A>	vim_strrchr()	Accepts special characters
-isspace()	ascii_isspace()	Can handle characters <A HREF="change.html#&gt;">&gt;</A> 128
-iswhite()	ascii_iswhite()	Only true for <A HREF="intro.html#tab">tab</A> and space
-memcpy()	mch_memmove()	Handles overlapped copies
-bcopy()		mch_memmove()	Handles overlapped copies
-memset()	vim_memset()	Uniform for all systems
-
-
-
-NAMES							*<A NAME="style-names"></A><B>style-names</B>*
-
-Function names can not be more than 31 characters long (because of VMS).
-
-Don't use &quot;delete&quot; <A HREF="motion.html#as">as</A> a variable name, C++ doesn't like <A HREF="motion.html#it">it</A>.
-
-Because of the requirement that Vim runs on <A HREF="motion.html#as">as</A> many systems <A HREF="motion.html#as">as</A> possible, we
-need to avoid using names that are already defined by the system.  This is a
-<A HREF="eval.html#list">list</A> of names that are known to cause trouble.  The name is given <A HREF="motion.html#as">as</A> a <A HREF="pattern.html#regexp">regexp</A>
-<A HREF="pattern.html#pattern">pattern</A>.
-
-is.*()		POSIX, ctype.h
-to.*()		POSIX, ctype.h
-
-d_.*		POSIX, dirent.h
-l_.*		POSIX, fcntl.h
-gr_.*		POSIX, grp.h
-pw_.*		POSIX, pwd.h
-sa_.*		POSIX, signal.h
-mem.*		POSIX, string.h
-str.*		POSIX, string.h
-wcs.*		POSIX, string.h
-st_.*		POSIX, stat.h
-tms_.*		POSIX, times.h
-tm_.*		POSIX, time.h
-c_.*		POSIX, termios.h
-MAX.*		POSIX, limits.h
-__.*		POSIX, system
-_[A-Z].*	POSIX, system
-E[A-Z0-9]*	POSIX, errno.h
-
-.*_t		POSIX, for typedefs.  Use .*_T instead.
-
-wait		don't use <A HREF="motion.html#as">as</A> argument to a function, conflicts with types.h
-index		shadows global declaration
-time		shadows global declaration
-new		C++ reserved keyword
-try		Borland C++ doesn't like <A HREF="motion.html#it">it</A> to be used <A HREF="motion.html#as">as</A> a variable.
-
-clear		<A HREF="os_mac.html#Mac">Mac</A> curses.h
-echo		<A HREF="os_mac.html#Mac">Mac</A> curses.h
-instr		<A HREF="os_mac.html#Mac">Mac</A> curses.h
-<A HREF="intro.html#meta">meta</A>		<A HREF="os_mac.html#Mac">Mac</A> curses.h
-newwin		<A HREF="os_mac.html#Mac">Mac</A> curses.h
-nl		<A HREF="os_mac.html#Mac">Mac</A> curses.h
-overwrite	<A HREF="os_mac.html#Mac">Mac</A> curses.h
-refresh		<A HREF="os_mac.html#Mac">Mac</A> curses.h
-scroll		<A HREF="os_mac.html#Mac">Mac</A> curses.h
-typeahead	<A HREF="os_mac.html#Mac">Mac</A> curses.h
-
-basename()	GNU <A HREF="eval.html#string">string</A> function
-dirname()	GNU <A HREF="eval.html#string">string</A> function
-get_env_value()	Linux system function
-
-
-
-VARIOUS							*<A NAME="style-various"></A><B>style-various</B>*
-
-Typedef'ed names should end in &quot;_T&quot;:
-<B>    typedef int some_T;</B>
-Define'ed names should be <A HREF="change.html#uppercase">uppercase</A>:
-<B>    #define SOME_THING</B>
-Features always start with &quot;FEAT_&quot;:
-<B>    #define FEAT_FOO</B>
-
-Don't use '\&quot;', some compilers can't handle <A HREF="motion.html#it">it</A>.  &#39;&#34;'' works fine.
-
-Don't use:
-    #if HAVE_SOME
-Some compilers can't handle that and complain that &quot;HAVE_SOME&quot; is not defined.
-Use
-    #ifdef HAVE_SOME
-or
-    #if defined(HAVE_SOME)
-
-
-
-STYLE							*<A NAME="style-examples"></A><B>style-examples</B>*
-
-General rule: One statement per line.
-
-Wrong:	    if (cond) a = 1;
-
-OK:	    if (cond)
-		a = 1;
-
-Wrong:	    while (cond);
-
-OK:	    while (cond)
-		;
-
-Wrong:	    <A HREF="diff.html#do">do</A> a = 1; while (cond);
-
-OK:	    <A HREF="diff.html#do">do</A>
-		a = 1;
-	    while (cond);
-
-
-Functions start with:
-
-Wrong:	int function_name(int arg1, int arg2)
-
-OK:	/*
-	 &#42; Explanation of what this function is used for.
-	 *
-	 &#42; Return value explanation.
-	 */
-	    int
-	function_name(arg1, arg2)
-	    int		arg1;		/* short comment about arg1 */
-	    int		arg2;		/* short comment about arg2 */
-	{
-	    int		local;		/* comment about local */
-
-	    local = arg1 &#42; arg2;
-
-NOTE: Don't use ANSI style function declarations.  A few people still have to
-use a compiler that doesn't support <A HREF="motion.html#it">it</A>.
-
-
-
-SPACES AND PUNCTUATION					*<A NAME="style-spaces"></A><B>style-spaces</B>*
-
-No space between a function name and the bracket:
-
-Wrong:  func (arg);
-OK:	func(arg);
-
-Do use a space after if, while, switch, etc.
-
-Wrong:	if(arg)		for(;;)
-OK:	if (arg)	for (;;)
-
-Use a space after a comma and semicolon:
-
-Wrong:  func(arg1,arg2);	for (i = 0;i <A HREF="change.html#&lt;">&lt;</A> 2;++i)
-OK:	func(arg1, arg2);	for (i = 0; <A HREF="insert.html#i">i</A> <A HREF="change.html#&lt;">&lt;</A> 2; ++i)
-
-Use a space before and after '<A HREF="change.html#=">=</A>', '<A HREF="motion.html#+">+</A>', '<A HREF="pattern.html#/">/</A>', etc.
-
-Wrong:	var=a*5;
-OK:	var = a &#42; 5;
-
-In general: Use empty lines to group lines of code together.  Put a comment
-just above the group of lines.  This makes <A HREF="motion.html#it">it</A> easier to quickly see what is
-being done.
-
-OK:	/* Prepare for building the table. */
-	get_first_item();
-	table_idx = 0;
-
-	/* Build the table */
-	while (has_item())
-	    table[table_idx++] = next_item();
-
-	/* Finish up. */
-	cleanup_items();
-	generate_hash(table);
-
-==============================================================================
-
-3. Design decisions					*<A NAME="design-decisions"></A><B>design-decisions</B>*
+2. Design decisions					*<A NAME="design-decisions"></A><B>design-decisions</B>*
 
 <A HREF="fold.html#Folding">Folding</A>
 
@@ -528,7 +300,7 @@ For <A HREF="change.html#sorting">sorting</A> suggestions <A HREF="motion.html#i
 could store a <A HREF="motion.html#word">word</A> frequency with the <A HREF="motion.html#word">word</A> in the dictionary.  However, this
 requires storing a <A HREF="intro.html#count">count</A> per <A HREF="motion.html#word">word</A>.  That degrades <A HREF="motion.html#word">word</A> tree compression a lot.
 And maintaining the <A HREF="motion.html#word">word</A> frequency for all languages will be a heavy task.
-Also, <A HREF="motion.html#it">it</A> would be <A HREF="todo.html#nice">nice</A> to prefer words that are already in the text.  This way
+Also, <A HREF="motion.html#it">it</A> would be nice to prefer words that are already in the text.  This way
 the words that appear in the specific text are preferred for suggestions.
 
 What has been implemented is to <A HREF="intro.html#count">count</A> words that have been seen during
@@ -540,27 +312,13 @@ This isn't ideal, because the longer Vim is running the higher the counts
 become.  But in practice <A HREF="motion.html#it">it</A> is a noticeable improvement over not using the <A HREF="motion.html#word">word</A>
 <A HREF="intro.html#count">count</A>.
 
-==============================================================================
-
-4. Assumptions						*<A NAME="design-assumptions"></A><B>design-assumptions</B>*
-
-Size of <A HREF="eval.html#variables">variables</A>:
-char	    8 bit signed
-char_u	    8 bit unsigned
-int	    32 or 64 bit signed (16 might be possible with limited features)
-unsigned    32 or 64 bit unsigned (16 <A HREF="motion.html#as">as</A> with ints)
-long	    32 or 64 bit signed, can hold a pointer
-
-Note that some compilers cannot handle long lines or strings.  The C89
-standard specifies a limit of 509 characters.
-
 <A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
 </PRE>
     </div>
 
     <footer>
       <div class="container">
-        Generated Tue Nov 10 12:39:33 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/68255df9b93e1b69ac5402d193abfceca04ffb54"><code>68255df</code></a>.
+        Generated Fri Nov 27 20:12:56 UTC 2015 from <a href="https://github.com/neovim/neovim/commit/951714ede63beb324c3ffb4d326ba1c5a47a36ea"><code>951714e</code></a>.
       </div>
     </footer>
   </body>
