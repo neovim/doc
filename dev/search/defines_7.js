@@ -43,7 +43,5 @@ var searchData=
   ['go_5ftoolbar',['GO_TOOLBAR',['../option__defs_8h.html#a67246f62bfde052c575f1097cc854004',1,'option_defs.h']]],
   ['go_5fvertical',['GO_VERTICAL',['../option__defs_8h.html#a63a83218b0beac9d65891d4a6cf9a335',1,'option_defs.h']]],
   ['go_5fvleft',['GO_VLEFT',['../option__defs_8h.html#a4eb10d7d1982300acceb99a14c68a4ec',1,'option_defs.h']]],
-  ['go_5fvright',['GO_VRIGHT',['../option__defs_8h.html#ab1129419de0523f91b1480b14aa9142f',1,'option_defs.h']]],
-  ['gui_5fmch_5ffind_5fdialog',['gui_mch_find_dialog',['../ex__docmd_8c.html#a6acc443ef144f9d8e908f04e0cffd500',1,'ex_docmd.c']]],
-  ['gui_5fmch_5freplace_5fdialog',['gui_mch_replace_dialog',['../ex__docmd_8c.html#a28239f5e92ea9d7569b84052d40e2a5c',1,'ex_docmd.c']]]
+  ['go_5fvright',['GO_VRIGHT',['../option__defs_8h.html#ab1129419de0523f91b1480b14aa9142f',1,'option_defs.h']]]
 ];

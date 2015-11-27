@@ -45,6 +45,7 @@ var searchData=
   ['scroll',['scroll',['../structui__t.html#a8384e18a9d3c2ed826e5941f8278e42a',1,'ui_t']]],
   ['sd_5fconv',['sd_conv',['../structsd__read__def.html#a36fb1b339fc0400d5776db9f412cf9db',1,'sd_read_def::sd_conv()'],['../structsd__write__def.html#ae000a773a44df57c26e3f3e7bddc9207',1,'sd_write_def::sd_conv()']]],
   ['se_5fu',['se_u',['../structsave__se__T.html#a1a2a4299a34af334399da35d1c777771',1,'save_se_T']]],
+  ['search_5fbackward',['search_backward',['../structShadaEntry.html#a75142c7fe83f06ec7a4e8581a71dedd5',1,'ShadaEntry']]],
   ['search_5fmatch_5fendcol',['search_match_endcol',['../globals_8h.html#a931a3d1164bdd67353f54f03216b817c',1,'globals.h']]],
   ['search_5fmatch_5flines',['search_match_lines',['../globals_8h.html#a8ec139e3de92c14ccbaadc0541f11102',1,'globals.h']]],
   ['search_5fpattern',['search_pattern',['../structShadaEntry.html#aa3f83203c137998d17f94a9349398e98',1,'ShadaEntry::search_pattern()'],['../structWriteMergerState.html#ac5af91a1b78c21b270f52ac1cee45b63',1,'WriteMergerState::search_pattern()']]],

@@ -62,6 +62,7 @@ var searchData=
   ['search_5fhis',['SEARCH_HIS',['../search_8h.html#a5580a47dedd8bd9fa5fadca28ee2b376',1,'search.h']]],
   ['search_5fhl_5fpriority',['SEARCH_HL_PRIORITY',['../screen_8c.html#acc255d852e00525da32284b4bb00fe2a',1,'screen.c']]],
   ['search_5fkeep',['SEARCH_KEEP',['../search_8h.html#a9933061829db5d6ffbc2468d1ac51757',1,'search.h']]],
+  ['search_5fkey_5fbackward',['SEARCH_KEY_BACKWARD',['../shada_8c.html#a134bc7c3e9cbe41b6f2d3eda8cf13668',1,'shada.c']]],
   ['search_5fkey_5fhas_5fline_5foffset',['SEARCH_KEY_HAS_LINE_OFFSET',['../shada_8c.html#aeee28d562142af947a6a69b6a9bb0a9b',1,'shada.c']]],
   ['search_5fkey_5fhighlighted',['SEARCH_KEY_HIGHLIGHTED',['../shada_8c.html#aefa2fa1628c5b42a5df1ecd537043e32',1,'shada.c']]],
   ['search_5fkey_5fis_5flast_5fused',['SEARCH_KEY_IS_LAST_USED',['../shada_8c.html#a8f14f3afc1b0908bfd958407580d4ba3',1,'shada.c']]],

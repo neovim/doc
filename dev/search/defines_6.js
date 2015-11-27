@@ -137,6 +137,8 @@ var searchData=
   ['fo_5fwhite_5fpar',['FO_WHITE_PAR',['../option__defs_8h.html#abc9a118de99d4923d600a313eaf73a83',1,'option_defs.h']]],
   ['fo_5fwrap',['FO_WRAP',['../option__defs_8h.html#a7d4031c6345a87fa91d6bedf0efb7a73',1,'option_defs.h']]],
   ['fo_5fwrap_5fcoms',['FO_WRAP_COMS',['../option__defs_8h.html#ab55eb23c5d4d653c94de5501364f756f',1,'option_defs.h']]],
+  ['focusgained_5fkey',['FOCUSGAINED_KEY',['../tui_2input_8c.html#a14b0edca1082033659cd9fcfe85850fb',1,'input.c']]],
+  ['focuslost_5fkey',['FOCUSLOST_KEY',['../tui_2input_8c.html#ae3308360fca0b63a00e97c4cd23018a4',1,'input.c']]],
   ['for_5fall_5fbuffers',['FOR_ALL_BUFFERS',['../globals_8h.html#ab2dfc04411a40f8bcaf0f45b0d16f482',1,'globals.h']]],
   ['for_5fall_5ftab_5fwindows',['FOR_ALL_TAB_WINDOWS',['../globals_8h.html#a7ec3ef1eaaad38a0f6b3b1965c6d1624',1,'globals.h']]],
   ['for_5fall_5ftabs',['FOR_ALL_TABS',['../globals_8h.html#a87576879e89a11905d64d1a9c687ab0f',1,'globals.h']]],

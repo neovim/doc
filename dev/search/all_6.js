@@ -286,6 +286,8 @@ var searchData=
   ['fo_5fwhite_5fpar',['FO_WHITE_PAR',['../option__defs_8h.html#abc9a118de99d4923d600a313eaf73a83',1,'option_defs.h']]],
   ['fo_5fwrap',['FO_WRAP',['../option__defs_8h.html#a7d4031c6345a87fa91d6bedf0efb7a73',1,'option_defs.h']]],
   ['fo_5fwrap_5fcoms',['FO_WRAP_COMS',['../option__defs_8h.html#ab55eb23c5d4d653c94de5501364f756f',1,'option_defs.h']]],
+  ['focusgained_5fkey',['FOCUSGAINED_KEY',['../tui_2input_8c.html#a14b0edca1082033659cd9fcfe85850fb',1,'input.c']]],
+  ['focuslost_5fkey',['FOCUSLOST_KEY',['../tui_2input_8c.html#ae3308360fca0b63a00e97c4cd23018a4',1,'input.c']]],
   ['fold_2ec',['fold.c',['../fold_8c.html',1,'']]],
   ['fold_2eh',['fold.h',['../fold_8h.html',1,'']]],
   ['fold_5ft',['fold_T',['../structfold__T.html',1,'']]],

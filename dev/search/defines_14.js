@@ -24,7 +24,6 @@ var searchData=
   ['term_5fstr',['term_str',['../vim_8h.html#a40bb20d0855d869e16ce55af407d3b18',1,'vim.h']]],
   ['term_5ftimeout',['TERM_TIMEOUT',['../process_8c.html#a98c00711b9567ed2d037a5f19be4c87a',1,'process.c']]],
   ['termcap2key',['TERMCAP2KEY',['../keymap_8h.html#a4c8c96cf912db168274f81915674e40e',1,'keymap.h']]],
-  ['terminal_5foptions_5finit',['TERMINAL_OPTIONS_INIT',['../terminal_8h.html#a6bca266afee4cf909e20ff720ce3e1a4',1,'terminal.h']]],
   ['textdomain',['textdomain',['../vim_8h.html#a4aff4edc09ea9fa224a467bd1e43bb78',1,'vim.h']]],
   ['tfn_5fint',['TFN_INT',['../eval_8c.html#a48f6c3488dc842467706cccee2492ee8',1,'eval.c']]],
   ['tfn_5fno_5fautoload',['TFN_NO_AUTOLOAD',['../eval_8c.html#a0b8ba311861c931fb7e3ddb22a3123be',1,'eval.c']]],

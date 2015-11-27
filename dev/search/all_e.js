@@ -287,6 +287,7 @@ var searchData=
   ['num_5fsaved_5fregisters',['NUM_SAVED_REGISTERS',['../ops_8h.html#a8e1d99eee21e537feee910c893d1a15f',1,'ops.h']]],
   ['number',['number',['../structprt__settings__T.html#a21095a0e7eed29ff2be781ee9f87fe1f',1,'prt_settings_T::number()'],['../structoption__table__T.html#acbec49bb9294ee3b5557657d8baa8cf8',1,'option_table_T::number()']]],
   ['number_5fwidth',['number_width',['../screen_8c.html#a9c404f9aed34a4bdceb3df25c2d80d33',1,'screen.c']]],
+  ['numberbase',['NumberBase',['../buffer_8c.html#add1b6bdcdf831d4f9fb9b8cf6e9583cd',1,'buffer.c']]],
   ['numbuflen',['NUMBUFLEN',['../vim_8h.html#ad75d86d19ee3c309a6db13026d35e357',1,'vim.h']]],
   ['nupper',['NUPPER',['../regexp_8c.html#a8d01ace080cbaf498a5adeb8894a3ecd',1,'regexp.c']]],
   ['nv_5fcmds_5fsize',['NV_CMDS_SIZE',['../normal_8c.html#ad1048508eb62abc4ee64429e57a61fc8',1,'normal.c']]],
