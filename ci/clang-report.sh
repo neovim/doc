@@ -76,8 +76,12 @@ download_clang_badge() {
   local all_bugs_number="$(find_all_bugs_number ${BUILD_DIR}/scan-build.out)"
   local code_quality_color="$(get_code_quality_color ${all_bugs_number})"
   local badge="clang_analysis-${all_bugs_number}-${code_quality_color}"
-  wget http://img.shields.io/badge/${badge}.svg \
-    -O ${DOC_DIR}/reports/clang/badge.svg
+  local response
+
+  response=$( 2>&1 wget http://img.shields.io/badge/${badge}.svg \
+    -O ${DOC_DIR}/reports/clang/badge.svg || true )
+  [ -f ${DOC_DIR}/reports/clang/badge.svg ] \
+    || echo "failed to download badge: $response"
 }
 
 # Helper function to find number of all bugs in build-scan output
