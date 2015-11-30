@@ -90,7 +90,7 @@ var searchData=
   ['exflags',['EXFLAGS',['../ex__cmds__defs_8h.html#aa1cec13bb419bc53e2c9f36048d942d9',1,'ex_cmds_defs.h']]],
   ['exmode_5fnormal',['EXMODE_NORMAL',['../ex__docmd_8h.html#ad7948b7ac59c79e409e8d0e6d4ff7884',1,'ex_docmd.h']]],
   ['exmode_5fvim',['EXMODE_VIM',['../ex__docmd_8h.html#a0136e4beeb40e50aab767f8d0c7ad1d4',1,'ex_docmd.h']]],
-  ['exrc_5ffile',['EXRC_FILE',['../unix__defs_8h.html#a832080ca216663539fa7feabb1441aaf',1,'unix_defs.h']]],
+  ['exrc_5ffile',['EXRC_FILE',['../globals_8h.html#a832080ca216663539fa7feabb1441aaf',1,'globals.h']]],
   ['extern',['EXTERN',['../globals_8h.html#a77366c1bd428629dc898e188bfd182a3',1,'EXTERN():&#160;globals.h'],['../main_8c.html#a77366c1bd428629dc898e188bfd182a3',1,'EXTERN():&#160;main.c']]],
   ['externcmd',['EXTERNCMD',['../vim_8h.html#a653d6ac8281dd9d05020eb6d9b844175',1,'vim.h']]],
   ['extra',['EXTRA',['../ex__cmds__defs_8h.html#af4d98da13b92f926914c4a759759b393',1,'ex_cmds_defs.h']]],

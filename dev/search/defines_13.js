@@ -381,7 +381,7 @@ var searchData=
   ['synspl_5fdefault',['SYNSPL_DEFAULT',['../buffer__defs_8h.html#ae8ca6b51b150fd5b5c40b592ec413d68',1,'buffer_defs.h']]],
   ['synspl_5fnotop',['SYNSPL_NOTOP',['../buffer__defs_8h.html#ae111a5867ec15294949a6b9c18096d36',1,'buffer_defs.h']]],
   ['synspl_5ftop',['SYNSPL_TOP',['../buffer__defs_8h.html#a48d61d4bc8d229a18a9debbe3f91d32b',1,'buffer_defs.h']]],
-  ['syntax_5ffname',['SYNTAX_FNAME',['../unix__defs_8h.html#ab663aef9993732c249d0ef9c39acfd04',1,'unix_defs.h']]],
+  ['syntax_5ffname',['SYNTAX_FNAME',['../globals_8h.html#ab663aef9993732c249d0ef9c39acfd04',1,'globals.h']]],
   ['sys_5foptwin_5ffile',['SYS_OPTWIN_FILE',['../vim_8h.html#aedf80e092c18b4fc7c1c5d4d0650d203',1,'vim.h']]],
-  ['sys_5fvimrc_5ffile',['SYS_VIMRC_FILE',['../unix__defs_8h.html#a1911c62ae289848a368895b7bbf06ef5',1,'unix_defs.h']]]
+  ['sys_5fvimrc_5ffile',['SYS_VIMRC_FILE',['../globals_8h.html#a1911c62ae289848a368895b7bbf06ef5',1,'globals.h']]]
 ];

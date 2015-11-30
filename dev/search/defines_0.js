@@ -34,6 +34,7 @@ var searchData=
   ['_5fmim',['_MIM',['../farsi_8h.html#a6837a9089f99b0790265111c97d839c3',1,'farsi.h']]],
   ['_5fnoon',['_NOON',['../farsi_8h.html#a24888144bae262b13bb62a0afe429ead',1,'farsi.h']]],
   ['_5fnoop',['_noop',['../loop_8h.html#a42c4d1b67a82e90a542f977f38eb3b77',1,'loop.h']]],
+  ['_5fpathsepstr',['_PATHSEPSTR',['../globals_8h.html#afff8a89601e4b33bbc68f1b1a6f7c69a',1,'globals.h']]],
   ['_5fpe',['_PE',['../farsi_8h.html#aa42f3aa8b1e8b1b8778f2830a6a588b0',1,'farsi.h']]],
   ['_5fringbuf_5flength',['_RINGBUF_LENGTH',['../ringbuf_8h.html#ade377266d745a746145b86b24036dc99',1,'ringbuf.h']]],
   ['_5fringbuf_5fnext',['_RINGBUF_NEXT',['../ringbuf_8h.html#a7568e6716a76726a539dd1000f544d6a',1,'ringbuf.h']]],

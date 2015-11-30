@@ -389,7 +389,7 @@ var searchData=
   ['expandsettings',['ExpandSettings',['../option_8c.html#a72f0e469ec2c02096e05f25380be0068',1,'option.c']]],
   ['expr',['expr',['../structregengine.html#a705cea9ce7786614e33c89823a5d4bca',1,'regengine']]],
   ['exptype_5ft',['exptype_T',['../eval_8c.html#adecc3b73314d5f82a3225b15ccc6dd1f',1,'eval.c']]],
-  ['exrc_5ffile',['EXRC_FILE',['../unix__defs_8h.html#a832080ca216663539fa7feabb1441aaf',1,'unix_defs.h']]],
+  ['exrc_5ffile',['EXRC_FILE',['../globals_8h.html#a832080ca216663539fa7feabb1441aaf',1,'globals.h']]],
   ['extern',['EXTERN',['../globals_8h.html#a77366c1bd428629dc898e188bfd182a3',1,'EXTERN():&#160;globals.h'],['../main_8c.html#a77366c1bd428629dc898e188bfd182a3',1,'EXTERN():&#160;main.c']]],
   ['externcmd',['EXTERNCMD',['../vim_8h.html#a653d6ac8281dd9d05020eb6d9b844175',1,'vim.h']]],
   ['extra',['EXTRA',['../ex__cmds__defs_8h.html#af4d98da13b92f926914c4a759759b393',1,'ex_cmds_defs.h']]],

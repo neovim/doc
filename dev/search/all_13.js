@@ -1099,9 +1099,9 @@ var searchData=
   ['syntax_5fclear',['syntax_clear',['../syntax_8c.html#ab5a23f684040171a492bc1803634f9ea',1,'syntax.c']]],
   ['syntax_5fdefs_2eh',['syntax_defs.h',['../syntax__defs_8h.html',1,'']]],
   ['syntax_5fend_5fparsing',['syntax_end_parsing',['../syntax_8c.html#ade8516c3b02978609b00278838eb1913',1,'syntax.c']]],
-  ['syntax_5ffname',['SYNTAX_FNAME',['../unix__defs_8h.html#ab663aef9993732c249d0ef9c39acfd04',1,'unix_defs.h']]],
+  ['syntax_5ffname',['SYNTAX_FNAME',['../globals_8h.html#ab663aef9993732c249d0ef9c39acfd04',1,'globals.h']]],
   ['syntax_5fpresent',['syntax_present',['../syntax_8c.html#a2d58114d0eee1bdd1fcf096622d5f52e',1,'syntax.c']]],
   ['syntax_5fstart',['syntax_start',['../syntax_8c.html#a560238fd259b657707c82c1722e8cdc5',1,'syntax.c']]],
   ['sys_5foptwin_5ffile',['SYS_OPTWIN_FILE',['../vim_8h.html#aedf80e092c18b4fc7c1c5d4d0650d203',1,'vim.h']]],
-  ['sys_5fvimrc_5ffile',['SYS_VIMRC_FILE',['../unix__defs_8h.html#a1911c62ae289848a368895b7bbf06ef5',1,'unix_defs.h']]]
+  ['sys_5fvimrc_5ffile',['SYS_VIMRC_FILE',['../globals_8h.html#a1911c62ae289848a368895b7bbf06ef5',1,'globals.h']]]
 ];

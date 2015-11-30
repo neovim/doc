@@ -57,7 +57,7 @@ var searchData=
   ['vim_5fwarning',['VIM_WARNING',['../message_8h.html#a816f77cc520622266f75542017a6f828',1,'message.h']]],
   ['vim_5fyes',['VIM_YES',['../message_8h.html#af1863c45793e854c30c2bbee1ed256e0',1,'message.h']]],
   ['vimpackage',['VIMPACKAGE',['../vim_8h.html#acf9ae7c8ef93a3f73d53585e1ecd84b3',1,'vim.h']]],
-  ['vimrc_5ffile',['VIMRC_FILE',['../unix__defs_8h.html#a3e6951b8ad5d2c4158eaaa57f2544443',1,'unix_defs.h']]],
+  ['vimrc_5ffile',['VIMRC_FILE',['../globals_8h.html#a3e6951b8ad5d2c4158eaaa57f2544443',1,'globals.h']]],
   ['vimspellmagic',['VIMSPELLMAGIC',['../spell_8c.html#a61632758251b5c94a4dbfce2e925b85e',1,'spell.c']]],
   ['vimspellmagicl',['VIMSPELLMAGICL',['../spell_8c.html#aadbfeabf9ad93f3af191d1691b52877d',1,'spell.c']]],
   ['vimspellversion',['VIMSPELLVERSION',['../spell_8c.html#a63fd6ec74f41035cf5a75215d3cc92cb',1,'spell.c']]],
