@@ -602,7 +602,7 @@ var searchData=
   ['cur_5fmatch',['cur_match',['../structtaggy.html#afdfa0e6e039129268ad06c9edb1e2c4b',1,'taggy']]],
   ['cur_5fstate',['CUR_STATE',['../syntax_8c.html#a670baa85116a684a429ec90d45bb97e6',1,'syntax.c']]],
   ['curbuf_5flocked',['curbuf_locked',['../ex__getln_8c.html#ae74004f6ed7ef6d7dadf94fa073799fb',1,'ex_getln.c']]],
-  ['curbufischanged',['curbufIsChanged',['../undo_8c.html#a99b7fd898257eca4128a28d3e7e60d75',1,'undo.c']]],
+  ['curbufischanged',['curbufIsChanged',['../undo_8c.html#aad50918d28c5e14f9086e5267c1ca3de',1,'undo.c']]],
   ['curmem',['curmem',['../structstream.html#a773bc3f14acafd6d13b5c977317d8264',1,'stream']]],
   ['curpat',['curpat',['../structAutoPatCmd.html#a021e7a27d0d3ccbd6daccda9064b07a6',1,'AutoPatCmd']]],
   ['current_5fblock',['current_block',['../search_8c.html#a69b3200bdb52b854d4917aaa9f6acee8',1,'search.c']]],

@@ -134,7 +134,7 @@ var searchData=
   ['cstr_5fas_5fstring',['cstr_as_string',['../api_2private_2helpers_8c.html#af2ce604f03e07380f037c9886b021003',1,'helpers.c']]],
   ['cstr_5fto_5fstring',['cstr_to_string',['../api_2private_2helpers_8c.html#a5b30f07edebe989a67d6f1faaf615228',1,'helpers.c']]],
   ['curbuf_5flocked',['curbuf_locked',['../ex__getln_8c.html#ae74004f6ed7ef6d7dadf94fa073799fb',1,'ex_getln.c']]],
-  ['curbufischanged',['curbufIsChanged',['../undo_8c.html#a99b7fd898257eca4128a28d3e7e60d75',1,'undo.c']]],
+  ['curbufischanged',['curbufIsChanged',['../undo_8c.html#aad50918d28c5e14f9086e5267c1ca3de',1,'undo.c']]],
   ['current_5fblock',['current_block',['../search_8c.html#a69b3200bdb52b854d4917aaa9f6acee8',1,'search.c']]],
   ['current_5ffunc_5freturned',['current_func_returned',['../eval_8c.html#aa43969a0494decc553ff9620c60faacd',1,'eval.c']]],
   ['current_5fpar',['current_par',['../search_8c.html#a4b6dbfd80360298e5d3d74374deee3df',1,'search.c']]],

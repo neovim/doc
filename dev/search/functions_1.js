@@ -54,7 +54,7 @@ var searchData=
   ['buffer_5fset_5fname',['buffer_set_name',['../api_2buffer_8c.html#afcff309896ab0cdfe1fd53c2b283e32c',1,'buffer.c']]],
   ['buffer_5fset_5foption',['buffer_set_option',['../api_2buffer_8c.html#a2b39e6bf01ab93119249bca32f20e415',1,'buffer.c']]],
   ['buffer_5fset_5fvar',['buffer_set_var',['../api_2buffer_8c.html#a64181f2300aaf15502532f450d75dcb6',1,'buffer.c']]],
-  ['bufischanged',['bufIsChanged',['../undo_8c.html#a56fe60092b6057c7cc3a38c785048841',1,'undo.c']]],
+  ['bufischanged',['bufIsChanged',['../undo_8c.html#a5a83fb38e5d960c983381f084108702e',1,'undo.c']]],
   ['buflist_5fadd',['buflist_add',['../buffer_8c.html#ad4e076f445a9776c07f36158be249699',1,'buffer.c']]],
   ['buflist_5faltfpos',['buflist_altfpos',['../buffer_8c.html#a62466341f0462dbe52d4b6e72ea7d24f',1,'buffer.c']]],
   ['buflist_5ffindfpos',['buflist_findfpos',['../buffer_8c.html#a70e9ba3d1aa998fa7379870485f959cb',1,'buffer.c']]],

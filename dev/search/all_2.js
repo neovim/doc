@@ -467,7 +467,7 @@ var searchData=
   ['buffheader',['buffheader',['../structbuffheader.html',1,'']]],
   ['buffheader_5ft',['buffheader_T',['../buffer__defs_8h.html#a28007ece67130ce304154580204bc7d0',1,'buffer_defs.h']]],
   ['bufinfo_5ft',['bufinfo_T',['../structbufinfo__T.html',1,'']]],
-  ['bufischanged',['bufIsChanged',['../undo_8c.html#a56fe60092b6057c7cc3a38c785048841',1,'undo.c']]],
+  ['bufischanged',['bufIsChanged',['../undo_8c.html#a5a83fb38e5d960c983381f084108702e',1,'undo.c']]],
   ['buflist_5fadd',['buflist_add',['../buffer_8c.html#ad4e076f445a9776c07f36158be249699',1,'buffer.c']]],
   ['buflist_5faltfpos',['buflist_altfpos',['../buffer_8c.html#a62466341f0462dbe52d4b6e72ea7d24f',1,'buffer.c']]],
   ['buflist_5ffindfpos',['buflist_findfpos',['../buffer_8c.html#a70e9ba3d1aa998fa7379870485f959cb',1,'buffer.c']]],

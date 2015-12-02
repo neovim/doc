@@ -176,7 +176,7 @@ var searchData=
   ['underline',['underline',['../structprt__text__attr__T.html#a634e9c7f3be5ab7d46188d0211134a6c',1,'prt_text_attr_T::underline()'],['../structHlAttrs.html#aab317c1060499e14a417c4edc376a51f',1,'HlAttrs::underline()']]],
   ['undo_2ec',['undo.c',['../undo_8c.html',1,'']]],
   ['undo_2eh',['undo.h',['../undo_8h.html',1,'']]],
-  ['undo_5fallowed',['undo_allowed',['../undo_8c.html#abb772774673bcc2d48da8a6142f2c1e6',1,'undo.c']]],
+  ['undo_5fallowed',['undo_allowed',['../undo_8c.html#acee47ab3622614719057d8a0f04e65ee',1,'undo.c']]],
   ['undo_5fdefs_2eh',['undo_defs.h',['../undo__defs_8h.html',1,'']]],
   ['undo_5fhash_5fsize',['UNDO_HASH_SIZE',['../vim_8h.html#a5996531431e7f6cb912e7dbc9671c6c3',1,'vim.h']]],
   ['unibi_5fext',['unibi_ext',['../structTUIData.html#af2a12eaf672627950d02fc49aad3288a',1,'TUIData']]],

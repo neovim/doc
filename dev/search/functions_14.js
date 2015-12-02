@@ -65,7 +65,7 @@ var searchData=
   ['ui_5fvisual_5fbell',['ui_visual_bell',['../ui_8c.html#a771a58a8f911b94e38084c7233d34eec',1,'ui.c']]],
   ['unblock_5fautocmds',['unblock_autocmds',['../fileio_8c.html#a2e2dd688ce595d92b43473059d292768',1,'fileio.c']]],
   ['unchanged',['unchanged',['../misc1_8c.html#a511355dd46cc940c14851aaf49859d33',1,'misc1.c']]],
-  ['undo_5fallowed',['undo_allowed',['../undo_8c.html#abb772774673bcc2d48da8a6142f2c1e6',1,'undo.c']]],
+  ['undo_5fallowed',['undo_allowed',['../undo_8c.html#acee47ab3622614719057d8a0f04e65ee',1,'undo.c']]],
   ['unputcmdline',['unputcmdline',['../ex__getln_8c.html#a4a943b6415c7a28d071187f428ad5e95',1,'ex_getln.c']]],
   ['unref_5fextmatch',['unref_extmatch',['../regexp_8c.html#a14a2522cb2782f01fde6ec96eb70e25a',1,'regexp.c']]],
   ['unref_5fvar_5fdict',['unref_var_dict',['../eval_8c.html#ae24342456f2e2b4a742228a8fa4ee170',1,'eval.c']]],
