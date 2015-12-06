@@ -4,6 +4,7 @@ import os
 import sys
 from urllib import urlencode
 import urllib2
+import datetime
 
 def travis_request(endpoint, post_data=None, travis_token=None):
     url = 'https://api.travis-ci.org/{0}'.format(endpoint)
@@ -61,12 +62,12 @@ def get_or_request_travis_token(gh_token):
 def lambda_handler(event, context):
     repo_slug = 'neovim/bot-ci'
     branch = 'master'
-    job = event.get('job', None)
+    job = "ALL" if 20 == datetime.datetime.utcnow().hour else "assign-labels"
     travis_token = get_or_request_travis_token('31145f68a61ac39cf48d6e3ad5ab54a9ce725c73')
 
-    print('Restarting "{0}" build on {1}:{2}:'.format(job if job else "ALL", repo_slug, branch))
+    print('Restarting "{0}" build on {1}:{2}:'.format(job, repo_slug, branch))
     build_id = get_latest_build_id(repo_slug, branch)
-    if (job):
+    if (job != "ALL"):
         job_id = get_latest_job_id(build_id, job)
         print('https://travis-ci.org/{0}/jobs/{1}'.format(repo_slug, job_id))
         message = restart('job', job_id, travis_token)
