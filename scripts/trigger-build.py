@@ -63,7 +63,7 @@ def lambda_handler(event, context):
     repo_slug = 'neovim/bot-ci'
     branch = 'master'
     job = "ALL" if 20 == datetime.datetime.utcnow().hour else "assign-labels"
-    travis_token = get_or_request_travis_token('31145f68a61ac39cf48d6e3ad5ab54a9ce725c73')
+    travis_token = get_or_request_travis_token('XXX')
 
     print('Restarting "{0}" build on {1}:{2}:'.format(job, repo_slug, branch))
     build_id = get_latest_build_id(repo_slug, branch)
