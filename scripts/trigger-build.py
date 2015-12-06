@@ -8,7 +8,7 @@ import datetime
 
 def travis_request(endpoint, post_data=None, travis_token=None):
     url = 'https://api.travis-ci.org/{0}'.format(endpoint)
-    data = urlencode(post_data) if post_data else None
+    data = urlencode(post_data) if not post_data is None else None
     headers = {'Accept': 'application/vnd.travis-ci.2+json',
                'User-Agent': 'Travis-justinmk-aws/1.0.0'}
 
@@ -44,7 +44,7 @@ def get_latest_job_id(build_id, job_substring):
 def restart(entity_type, build_id, travis_token):
     assert(entity_type == 'job' or entity_type == 'build')
     response = travis_request('{0}s/{1}/restart'.format(entity_type, build_id),
-                              post_data={'foo': 'bar'}, #force urllib2 to POST.
+                              post_data="", #force urllib2 to POST.
                               travis_token=travis_token)
     return os.linesep.join(response['flash'][0].values())
 
@@ -69,10 +69,8 @@ def lambda_handler(event, context):
     build_id = get_latest_build_id(repo_slug, branch)
     if (job != "ALL"):
         job_id = get_latest_job_id(build_id, job)
-        print('https://travis-ci.org/{0}/jobs/{1}'.format(repo_slug, job_id))
         message = restart('job', job_id, travis_token)
     else:
-        print('https://travis-ci.org/{0}/builds/{1}'.format(repo_slug, build_id))
         message = restart('build', build_id, travis_token)
     print(message)
     return message
