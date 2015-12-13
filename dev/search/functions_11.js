@@ -52,6 +52,7 @@ var searchData=
   ['reset_5fmodifiable',['reset_modifiable',['../option_8c.html#a8246cba8650c41f2c3b09f36cd16e660',1,'option.c']]],
   ['reset_5fsearch_5fdir',['reset_search_dir',['../search_8c.html#a4e4ed9509328173f29072a26c4377128',1,'search.c']]],
   ['reset_5fsynblock',['reset_synblock',['../syntax_8c.html#ae1937b40ff1800302bfe91bc7cc293fd',1,'syntax.c']]],
+  ['reset_5fv_5foption_5fvars',['reset_v_option_vars',['../eval_8c.html#a11e2b4cf387aecfa12ba34f9392b675a',1,'eval.c']]],
   ['reset_5fvisual',['reset_VIsual',['../normal_8c.html#ae435eb0476b2fb75c7a4cf32b2c5517d',1,'normal.c']]],
   ['reset_5fvisual_5fand_5fresel',['reset_VIsual_and_resel',['../normal_8c.html#a2d96a9deb324aef61b400859bf219f97',1,'normal.c']]],
   ['resetredobuff',['ResetRedobuff',['../getchar_8c.html#ae2bf5846772fc579ea03d5d5cc06ec81',1,'getchar.c']]],

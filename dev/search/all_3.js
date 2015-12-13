@@ -437,6 +437,7 @@ var searchData=
   ['cpo_5fvi',['CPO_VI',['../option__defs_8h.html#ae8ef2db231de72d25ec7bfac17bc7ae7',1,'option_defs.h']]],
   ['cpo_5fvim',['CPO_VIM',['../option__defs_8h.html#a28891f5ced43da317a27d48ad7789044',1,'option_defs.h']]],
   ['cpo_5fyank',['CPO_YANK',['../option__defs_8h.html#a66267d110386ccb5f8745c8e7530e447',1,'option_defs.h']]],
+  ['cpp_5fbaseclass_5fcache_5ft',['cpp_baseclass_cache_T',['../structcpp__baseclass__cache__T.html',1,'']]],
   ['cpt_5fabbr',['CPT_ABBR',['../edit_8h.html#a21cbf1bfd69cf055337fea221429e85e',1,'edit.h']]],
   ['cpt_5fcount',['CPT_COUNT',['../edit_8h.html#a235f9fa18af4b355fd30894da1d10f71',1,'edit.h']]],
   ['cpt_5finfo',['CPT_INFO',['../edit_8h.html#a0933ac2ab90aa4673881cc92b102d0f9',1,'edit.h']]],

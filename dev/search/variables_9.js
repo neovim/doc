@@ -27,7 +27,6 @@ var searchData=
   ['internal_5fclose_5fcb',['internal_close_cb',['../structprocess.html#ab7479366e7316f5502dd6452f31fa0a0',1,'process::internal_close_cb()'],['../structstream.html#a8641d200719e6f5039f99c87518e32fd',1,'stream::internal_close_cb()']]],
   ['internal_5fdata',['internal_data',['../structstream.html#a99f670b23555851f68acdaf9849a738e',1,'stream']]],
   ['internal_5fexit_5fcb',['internal_exit_cb',['../structprocess.html#acc01e33b90d0bc0ea822666ac963b688',1,'process']]],
-  ['internal_5frefcount',['internal_refcount',['../structdictvar__S.html#af1c6cd0bcb1b683f7eaa1ec96629b042',1,'dictvar_S']]],
   ['invalid_5fend',['invalid_end',['../structterminal.html#a6e766a913547b2f9d8b8f83061673ff3',1,'terminal']]],
   ['invalid_5fstart',['invalid_start',['../structterminal.html#a31c0a284a139ff4e2c0450a919ef4193',1,'terminal']]],
   ['iobuff',['IObuff',['../globals_8h.html#a25dd1dca05697b8974eb48c2f50f1f9e',1,'globals.h']]],

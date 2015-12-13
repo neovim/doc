@@ -193,7 +193,6 @@ var searchData=
   ['internal_5fdata',['internal_data',['../structstream.html#a99f670b23555851f68acdaf9849a738e',1,'stream']]],
   ['internal_5fexit_5fcb',['internal_exit_cb',['../structprocess.html#acc01e33b90d0bc0ea822666ac963b688',1,'process']]],
   ['internal_5fprocess_5fcb',['internal_process_cb',['../process_8h.html#a858fc4198288a1219d3298c7e2f141a3',1,'process.h']]],
-  ['internal_5frefcount',['internal_refcount',['../structdictvar__S.html#af1c6cd0bcb1b683f7eaa1ec96629b042',1,'dictvar_S']]],
   ['interval',['interval',['../structinterval.html',1,'']]],
   ['intro_5fmessage',['intro_message',['../version_8c.html#adc94ae3e8797bd98124ca5f6004611be',1,'version.c']]],
   ['invalid_5fend',['invalid_end',['../structterminal.html#a6e766a913547b2f9d8b8f83061673ff3',1,'terminal']]],

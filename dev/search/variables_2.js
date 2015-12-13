@@ -126,6 +126,7 @@ var searchData=
   ['b_5fp_5ffex',['b_p_fex',['../structfile__buffer.html#ae16dbcb2796ba8bc7ced789d54c82e1f',1,'file_buffer']]],
   ['b_5fp_5ffex_5fflags',['b_p_fex_flags',['../structfile__buffer.html#aae51220b30c85fdbf1c9bc59b6a61434',1,'file_buffer']]],
   ['b_5fp_5fff',['b_p_ff',['../structfile__buffer.html#aeaaccf1dd6446a9d0758f7818a51215a',1,'file_buffer']]],
+  ['b_5fp_5ffixeol',['b_p_fixeol',['../structfile__buffer.html#a5ceacad82bc1498a6f10f027449fe9a0',1,'file_buffer']]],
   ['b_5fp_5fflp',['b_p_flp',['../structfile__buffer.html#a0ce7f8b8bf9e346088dc89766e8aebd9',1,'file_buffer']]],
   ['b_5fp_5ffo',['b_p_fo',['../structfile__buffer.html#acf68993c7bdf3b4bc8db45fdd14fbe1e',1,'file_buffer']]],
   ['b_5fp_5fft',['b_p_ft',['../structfile__buffer.html#ab33ec5fd5c4b872b33657b8cbad22844',1,'file_buffer']]],

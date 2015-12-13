@@ -15,6 +15,7 @@ var searchData=
   ['condstack',['condstack',['../structcondstack.html',1,'']]],
   ['context_5fsha256_5ft',['context_sha256_T',['../structcontext__sha256__T.html',1,'']]],
   ['convertstruct',['convertStruct',['../structconvertStruct.html',1,'']]],
+  ['cpp_5fbaseclass_5fcache_5ft',['cpp_baseclass_cache_T',['../structcpp__baseclass__cache__T.html',1,'']]],
   ['cscmd_5ft',['cscmd_T',['../structcscmd__T.html',1,'']]],
   ['csi',['csi',['../structcsi.html',1,'']]],
   ['cursor_5fentry',['cursor_entry',['../structcursor__entry.html',1,'']]]

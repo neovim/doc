@@ -35,6 +35,7 @@ var searchData=
   ['bv_5ffenc',['BV_FENC',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4ac923a21e928e919fdae2c46bf09df21d',1,'option_defs.h']]],
   ['bv_5ffex',['BV_FEX',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4a0ac683a967b39b56571d14fc92476913',1,'option_defs.h']]],
   ['bv_5fff',['BV_FF',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4aebb4027e65a02076bee51496b2d20b27',1,'option_defs.h']]],
+  ['bv_5ffixeol',['BV_FIXEOL',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4ae1944b96a27d4f2605d6b8db8cc120fb',1,'option_defs.h']]],
   ['bv_5fflp',['BV_FLP',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4a91f24cc40ab38b6d23f6f54679985c5e',1,'option_defs.h']]],
   ['bv_5ffo',['BV_FO',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4a8b6bf69c1256ba7726f7bb39c94d4764',1,'option_defs.h']]],
   ['bv_5fft',['BV_FT',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4a4dfc0a878ecd386257c38beca56a2289',1,'option_defs.h']]],
