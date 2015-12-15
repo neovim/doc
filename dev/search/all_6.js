@@ -260,6 +260,7 @@ var searchData=
   ['fname_5fexp',['FNAME_EXP',['../window_8h.html#a25dad9998146d199f00542d8a7cb4125',1,'window.h']]],
   ['fname_5fexpand',['fname_expand',['../buffer_8c.html#ae44449ebd40d33c27e7b2e418b9b3eb3',1,'buffer.c']]],
   ['fname_5fhyp',['FNAME_HYP',['../window_8h.html#a9527d190d739cd984e92b86fc689d705',1,'window.h']]],
+  ['fname_5fillegal',['FNAME_ILLEGAL',['../win__defs_8h.html#a99aa873d9f4bcc7a13e6e07157e234ee',1,'win_defs.h']]],
   ['fname_5fincl',['FNAME_INCL',['../window_8h.html#a72582fa6b0814fd69c64cc3fc322de58',1,'window.h']]],
   ['fname_5fmess',['FNAME_MESS',['../window_8h.html#a41ee29d7e05a52bc4e6933b63711eb0d',1,'window.h']]],
   ['fname_5frel',['FNAME_REL',['../window_8h.html#a96699be0ef5bff2130fbca6abd4a6100',1,'window.h']]],
