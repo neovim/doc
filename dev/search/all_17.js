@@ -160,6 +160,7 @@ var searchData=
   ['wc_5fkey_5foff',['WC_KEY_OFF',['../spell_8c.html#a3e7fe01bada89e54f8ab828d5f9dcc6a',1,'spell.c']]],
   ['wc_5fword',['wc_word',['../structwordcount__S.html#a25e74c229805c7be025560d81f62f673',1,'wordcount_S']]],
   ['wcmd_5ft',['wcmd_T',['../structwcmd__T.html',1,'']]],
+  ['werr',['WERR',['../shada_8c.html#a467128bafe4e7792957e218dd44c37c8',1,'shada.c']]],
   ['wf_5fafx',['WF_AFX',['../spell_8c.html#a466faaeaf1e77dcde20819553ed5e052',1,'spell.c']]],
   ['wf_5fallcap',['WF_ALLCAP',['../spell_8c.html#aa87092e5fa2fafb7a7723519a31092f7',1,'spell.c']]],
   ['wf_5fbanned',['WF_BANNED',['../spell_8c.html#a58298540f77a4ea894f7f6c2b1292fff',1,'spell.c']]],

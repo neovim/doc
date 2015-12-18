@@ -165,6 +165,7 @@ var searchData=
   ['ksdreadunknown',['kSDReadUnknown',['../shada_8c.html#abad222a39b61bd4918d773cba03465caa2c95b0e9115ca0b846c6e72a994a6af6',1,'shada.c']]],
   ['ksdreadvariables',['kSDReadVariables',['../shada_8c.html#abad222a39b61bd4918d773cba03465caa02e3349a3d0bf642d1ee22350e75d3f2',1,'shada.c']]],
   ['ksdwritefailed',['kSDWriteFailed',['../shada_8c.html#a81f0f7fe7629fb47ae0507f0b15cabf8af8e22bc4dc9855d92eb006b3338fee04',1,'shada.c']]],
+  ['ksdwriteignerror',['kSDWriteIgnError',['../shada_8c.html#a81f0f7fe7629fb47ae0507f0b15cabf8a8106bd0a1fabbdc65e3d64c9d8dbe218',1,'shada.c']]],
   ['ksdwritereadnotshada',['kSDWriteReadNotShada',['../shada_8c.html#a81f0f7fe7629fb47ae0507f0b15cabf8a3b8352312f9e126efbd21f230dadb100',1,'shada.c']]],
   ['ksdwritesuccessfull',['kSDWriteSuccessfull',['../shada_8c.html#a81f0f7fe7629fb47ae0507f0b15cabf8a06a9579e3a9983d4a95f62c4540629c6',1,'shada.c']]],
   ['kshadaforceit',['kShaDaForceit',['../shada_8c.html#ae4e1150a734638173c9d1b2c38da2d0bad42dfee5d744c0236f24ee1fe9f20f3e',1,'shada.c']]],
