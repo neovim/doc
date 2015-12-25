@@ -225,6 +225,7 @@ var searchData=
   ['addr_5fbuffers',['ADDR_BUFFERS',['../ex__cmds__defs_8h.html#a7323b45555e1eeb71c4761189bdd9a71',1,'ex_cmds_defs.h']]],
   ['addr_5flines',['ADDR_LINES',['../ex__cmds__defs_8h.html#a5744a34777a643d670f206482095e119',1,'ex_cmds_defs.h']]],
   ['addr_5floaded_5fbuffers',['ADDR_LOADED_BUFFERS',['../ex__cmds__defs_8h.html#a3307ddd01e102ec4186b7789620b90d7',1,'ex_cmds_defs.h']]],
+  ['addr_5fquickfix',['ADDR_QUICKFIX',['../ex__cmds__defs_8h.html#ae46fdc07bfd8ba3ba52cbc047809dfff',1,'ex_cmds_defs.h']]],
   ['addr_5ftabs',['ADDR_TABS',['../ex__cmds__defs_8h.html#ac30d16e51501da1c404126827bf0e2ff',1,'ex_cmds_defs.h']]],
   ['addr_5fwindows',['ADDR_WINDOWS',['../ex__cmds__defs_8h.html#adbbcd613a3154e9b244136438291fdff',1,'ex_cmds_defs.h']]],
   ['address_5fmax_5fsize',['ADDRESS_MAX_SIZE',['../socket_8h.html#ae8b7400e2f7f9d2a73365ebe2b7f0935',1,'socket.h']]],
