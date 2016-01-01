@@ -62,7 +62,7 @@ var searchData=
   ['buflist_5ffindname',['buflist_findname',['../buffer_8c.html#a3cd4e72cb843808a67735893415f10f7',1,'buffer.c']]],
   ['buflist_5ffindname_5fexp',['buflist_findname_exp',['../buffer_8c.html#a5b878a3ec0d187671fb5ac180bafc08d',1,'buffer.c']]],
   ['buflist_5ffindnr',['buflist_findnr',['../buffer_8c.html#ae1c125b4d8b13929d8a54a2466570c62',1,'buffer.c']]],
-  ['buflist_5ffindpat',['buflist_findpat',['../buffer_8c.html#a8f9443e42712690feccae9449d238b1b',1,'buffer.c']]],
+  ['buflist_5ffindpat',['buflist_findpat',['../buffer_8c.html#a3901feebd744bc7b75cf12f7cddc257f',1,'buffer.c']]],
   ['buflist_5fgetfile',['buflist_getfile',['../buffer_8c.html#a3a07dc3c7e23cb364d813bdac9b7e22c',1,'buffer.c']]],
   ['buflist_5fgetfpos',['buflist_getfpos',['../buffer_8c.html#a295fb478426834179adffec2431dc708',1,'buffer.c']]],
   ['buflist_5flist',['buflist_list',['../buffer_8c.html#a79672def3a6561eefd38ac2d0a1a16b8',1,'buffer.c']]],

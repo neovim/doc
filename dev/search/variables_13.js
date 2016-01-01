@@ -16,7 +16,7 @@ var searchData=
   ['save_5freadbuf1',['save_readbuf1',['../structtasave__T.html#a7d83c38c4c0f1e978b41ab28ef4c8ac0',1,'tasave_T']]],
   ['save_5freadbuf2',['save_readbuf2',['../structtasave__T.html#a61176adb74d99cb4ced9c0a5801754b2',1,'tasave_T']]],
   ['save_5fstart',['save_start',['../structregbehind__S.html#a4e4ebb71c63efaa07b9c250f1b1b6628',1,'regbehind_S']]],
-  ['save_5fstate',['save_State',['../structcommand__line__state.html#ad61ed896aae39b1d22158cd714ee3dee',1,'command_line_state::save_State()'],['../structterminal__state.html#ac227faa40efed50469a1624e21e27fde',1,'terminal_state::save_state()']]],
+  ['save_5fstate',['save_state',['../structterminal__state.html#ac227faa40efed50469a1624e21e27fde',1,'terminal_state::save_state()'],['../structcommand__line__state.html#ad61ed896aae39b1d22158cd714ee3dee',1,'command_line_state::save_State()']]],
   ['save_5ftypebuf',['save_typebuf',['../structtasave__T.html#ae09e528ac30f2ed066885cc2756211e1',1,'tasave_T']]],
   ['saved_5fcursor',['saved_cursor',['../globals_8h.html#abde9cc8d092172ba1ba073cdd626f789',1,'globals.h']]],
   ['saved_5femsg_5fsilent',['saved_emsg_silent',['../structeslist__elem.html#af8c99fd025f1086fe587259565001ad3',1,'eslist_elem']]],

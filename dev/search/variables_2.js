@@ -263,7 +263,6 @@ var searchData=
   ['blinkoff',['blinkoff',['../structcursor__entry.html#a82bd3b51eb29a394d3819fcfd7249544',1,'cursor_entry']]],
   ['blinkon',['blinkon',['../structcursor__entry.html#a40e18c8dd751477364ccebaa8c6a95eb',1,'cursor_entry']]],
   ['blinkwait',['blinkwait',['../structcursor__entry.html#a4c8eb21f42868d5dc1531e1deca36a61',1,'cursor_entry']]],
-  ['block_5fmode',['block_mode',['../structoparg__S.html#aebc5b03de61816eb235a14e09bcc103c',1,'oparg_S']]],
   ['bo_5fflags',['bo_flags',['../option__defs_8h.html#a62900133648009b84f59d78f4a527904',1,'option_defs.h']]],
   ['bold',['bold',['../structprt__text__attr__T.html#ab37f5ca4915973f9817871b3c7f51cb4',1,'prt_text_attr_T::bold()'],['../structHlAttrs.html#a9ea269365e96d51ca4e40fc0fb1698fa',1,'HlAttrs::bold()']]],
   ['boolean',['boolean',['../structobject.html#a0996cc24bc84e42db0699ffd53857f10',1,'object']]],

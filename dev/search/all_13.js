@@ -38,7 +38,7 @@ var searchData=
   ['save_5fse_5ft',['save_se_T',['../structsave__se__T.html',1,'']]],
   ['save_5fsearch_5fpatterns',['save_search_patterns',['../search_8c.html#a4aa9e6e7337f708b750e2ded5cab78bc',1,'search.c']]],
   ['save_5fstart',['save_start',['../structregbehind__S.html#a4e4ebb71c63efaa07b9c250f1b1b6628',1,'regbehind_S']]],
-  ['save_5fstate',['save_State',['../structcommand__line__state.html#ad61ed896aae39b1d22158cd714ee3dee',1,'command_line_state::save_State()'],['../structterminal__state.html#ac227faa40efed50469a1624e21e27fde',1,'terminal_state::save_state()']]],
+  ['save_5fstate',['save_state',['../structterminal__state.html#ac227faa40efed50469a1624e21e27fde',1,'terminal_state::save_state()'],['../structcommand__line__state.html#ad61ed896aae39b1d22158cd714ee3dee',1,'command_line_state::save_State()']]],
   ['save_5ftypeahead',['save_typeahead',['../getchar_8c.html#a27014cd8194a4a4351a5a3385177a3a1',1,'getchar.c']]],
   ['save_5ftypebuf',['save_typebuf',['../structtasave__T.html#ae09e528ac30f2ed066885cc2756211e1',1,'tasave_T::save_typebuf()'],['../getchar_8c.html#a7efe4ed1a421d6ddf21f97307d37bc9d',1,'save_typebuf():&#160;getchar.c']]],
   ['saved_5fcursor',['saved_cursor',['../globals_8h.html#abde9cc8d092172ba1ba073cdd626f789',1,'globals.h']]],
