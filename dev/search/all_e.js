@@ -225,6 +225,8 @@ var searchData=
   ['nhead',['NHEAD',['../regexp_8c.html#aa72954cb3acd1a50163440e792139edb',1,'regexp.c']]],
   ['nhex',['NHEX',['../regexp_8c.html#a8aee802d2acc7eeb8d23f5e84a6d7a70',1,'regexp.c']]],
   ['nil',['NIL',['../api_2private_2helpers_8h.html#a263efce0e5cda1d387a1a43f94715445',1,'helpers.h']]],
+  ['nindexhigh',['nIndexHigh',['../structcsi.html#a8b7655be63842c26ade7e7aa48836f32',1,'csi']]],
+  ['nindexlow',['nIndexLow',['../structcsi.html#af2565ce8d8d25cfed4a8d957b7879de0',1,'csi']]],
   ['nl',['NL',['../ascii_8h.html#a4fc34b120ed3bd1120c1eb36abbcd6af',1,'ascii.h']]],
   ['nl_5fstr',['NL_STR',['../ascii_8h.html#a59fb4e32d297f7a8fea023375f143330',1,'ascii.h']]],
   ['nlocalmarks',['NLOCALMARKS',['../mark__defs_8h.html#a73412c7115c2393e713a2064b3539ed9',1,'mark_defs.h']]],
@@ -307,6 +309,7 @@ var searchData=
   ['nvim_5fsize',['NVIM_SIZE',['../option_8c.html#a3a8910abbe27662b40fa548ff5922a31',1,'option.c']]],
   ['nvim_5fversion_5flong',['NVIM_VERSION_LONG',['../version_8c.html#a3d79d39fd30e8721ac418bf268d469f0',1,'version.c']]],
   ['nvim_5fversion_5fmedium',['NVIM_VERSION_MEDIUM',['../version_8c.html#a1ce8542315881db1a6fcbff6ffe33cea',1,'version.c']]],
+  ['nvolume',['nVolume',['../structcsi.html#a13eb576244cc81b53206990f03496c84',1,'csi']]],
   ['nwhite',['NWHITE',['../regexp_8c.html#a98528b31e0aebb5f1f49e2da00f90f80',1,'regexp.c']]],
   ['nword',['NWORD',['../regexp_8c.html#abf0dfc8479e7a526b8191efde6942daf',1,'regexp.c']]]
 ];

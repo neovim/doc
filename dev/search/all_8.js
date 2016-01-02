@@ -225,6 +225,7 @@ var searchData=
   ['home_5freplace',['home_replace',['../shada_8c.html#a8a9bf78cf6599333ab30ddbccce9abce',1,'home_replace():&#160;shada.c'],['../env_8c.html#a7983ea1a4f661527f9a3149b33fa0bec',1,'home_replace(buf_T *buf, char_u *src, char_u *dst, int dstlen, bool one):&#160;env.c']]],
   ['home_5freplace_5fsave',['home_replace_save',['../shada_8c.html#a29dff9ae5f74771d2a4b443f5d9c0c34',1,'home_replace_save():&#160;shada.c'],['../env_8c.html#a68f47832f215f5684376e9ec557c6778',1,'home_replace_save(buf_T *buf, char_u *src) FUNC_ATTR_NONNULL_RET:&#160;env.c']]],
   ['hotk_5flen',['HOTK_LEN',['../message_8c.html#a056803a14e4032e4f7031c2e0bda3417',1,'message.c']]],
+  ['hproc',['hProc',['../structcsi.html#ad7523d16a6d689ecdc805b1c2871e467',1,'csi']]],
   ['ht',['ht',['../structht__stack__S.html#a724466fda2af87cc586b366744caf0c8',1,'ht_stack_S']]],
   ['ht_5farray',['ht_array',['../structhashtable__S.html#a7cfd4386f392f78cfca0fec4e1188156',1,'hashtable_S']]],
   ['ht_5ffilled',['ht_filled',['../structhashtable__S.html#acbcd23d4bbef3b8dd63b1aee6a918cfd',1,'hashtable_S']]],

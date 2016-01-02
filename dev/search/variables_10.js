@@ -254,7 +254,7 @@ var searchData=
   ['pending_5fresize',['pending_resize',['../structterminal.html#af7447520730774d324d64e5f1489d1b2',1,'terminal']]],
   ['percentage',['percentage',['../structcursor__entry.html#acab43e60c124829b8f099bca54701720',1,'cursor_entry']]],
   ['perm',['perm',['../undo_8c.html#ad4904214e86107d3afb6bf2f977236f6',1,'undo.c']]],
-  ['pid',['pid',['../structprocess.html#a5d1b4e17490bc7c31d2c5b5dffd81b45',1,'process']]],
+  ['pid',['pid',['../structprocess.html#a5d1b4e17490bc7c31d2c5b5dffd81b45',1,'process::pid()'],['../structcsi.html#adf6cb5216854291975a320afa6beba24',1,'csi::pid()']]],
   ['pim',['pim',['../structnfa__thread__T.html#ab0c4c4df9239a802b99be7bb2b315843',1,'nfa_thread_T']]],
   ['pipe',['pipe',['../structsocket__watcher.html#ac64725e6bac313a1bb0c1e796cc4cce8',1,'socket_watcher::pipe()'],['../structstream.html#a389092225f20c3a523fc320523a5c002',1,'stream::pipe()'],['../structTUIData.html#a5cd4aebb3eb141d9d36c89d913507e07',1,'TUIData::pipe()']]],
   ['place_5fcursor_5fat_5fend',['place_cursor_at_end',['../structShadaEntry.html#a62df4edb4b0c3af4dc620c3a0c38c2d0',1,'ShadaEntry']]],
