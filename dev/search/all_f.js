@@ -70,7 +70,7 @@ var searchData=
   ['op_5frot13',['OP_ROT13',['../ops_8h.html#a321c70edb1501e75553e914580db697d',1,'ops.h']]],
   ['op_5frshift',['OP_RSHIFT',['../ops_8h.html#a1ad284d8a779cb7a688bc5d42734b84d',1,'ops.h']]],
   ['op_5fshift',['op_shift',['../ops_8c.html#aa25d03dd468935d47f2090236878a1f1',1,'ops.c']]],
-  ['op_5ftilde',['op_tilde',['../ops_8c.html#a382dfbf71cb71f42a9d79ac4a6117834',1,'op_tilde(oparg_T *oap):&#160;ops.c'],['../ops_8h.html#a4c8b61d291592a712922b2d564e54774',1,'OP_TILDE():&#160;ops.h']]],
+  ['op_5ftilde',['OP_TILDE',['../ops_8h.html#a4c8b61d291592a712922b2d564e54774',1,'OP_TILDE():&#160;ops.h'],['../ops_8c.html#a382dfbf71cb71f42a9d79ac4a6117834',1,'op_tilde(oparg_T *oap):&#160;ops.c']]],
   ['op_5ftype',['op_type',['../structoparg__S.html#acb9e3c2b4847f0e369552cad973c137e',1,'oparg_S']]],
   ['op_5fupper',['OP_UPPER',['../ops_8h.html#aec2ae0d775d88ac03af2650a8c147ea5',1,'ops.h']]],
   ['op_5fyank',['OP_YANK',['../ops_8h.html#aa890552a8824de25e0d105b7d8bb3775',1,'OP_YANK():&#160;ops.h'],['../ops_8c.html#a1031933f3119c0a111b893b035e2bbe2',1,'op_yank(oparg_T *oap, bool message) FUNC_ATTR_NONNULL_ALL:&#160;ops.c']]],
