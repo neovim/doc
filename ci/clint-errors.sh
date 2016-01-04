@@ -35,8 +35,8 @@ download_clint_badge() {
   local badge="clint-${errors_number}-${code_quality_color}"
   local response
 
-  response=$( 2>&1 wget http://img.shields.io/badge/${badge}.svg \
-    -O ${DOC_DIR}/$DOC_SUBTREE/badge.svg || true )
+  response=$( 2>&1 curl --tlsv1 http://img.shields.io/badge/${badge}.svg \
+    > ${DOC_DIR}/$DOC_SUBTREE/badge.svg || true )
   [ -f ${DOC_DIR}/$DOC_SUBTREE/badge.svg ] \
     || echo "failed to download badge: $response"
 }

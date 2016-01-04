@@ -9,7 +9,7 @@ DOC_INDEX_PAGE_URL=${DOC_INDEX_PAGE_URL:-https://neovim.io/doc_index}
 
 generate_doc_index() {
   echo "Updating index.html from ${DOC_INDEX_PAGE_URL}."
-  wget -q ${DOC_INDEX_PAGE_URL} -O ${DOC_DIR}/index.html
+  curl -L --tlsv1 ${DOC_INDEX_PAGE_URL} > ${DOC_DIR}/index.html
 }
 
 DOC_SUBTREE="/index.html"

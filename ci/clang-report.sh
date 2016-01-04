@@ -78,8 +78,8 @@ download_clang_badge() {
   local badge="clang_analysis-${all_bugs_number}-${code_quality_color}"
   local response
 
-  response=$( 2>&1 wget http://img.shields.io/badge/${badge}.svg \
-    -O ${DOC_DIR}/reports/clang/badge.svg || true )
+  response=$( 2>&1 curl --tlsv1 https://img.shields.io/badge/${badge}.svg \
+    > ${DOC_DIR}/reports/clang/badge.svg || true )
   [ -f ${DOC_DIR}/reports/clang/badge.svg ] \
     || echo "failed to download badge: $response"
 }
