@@ -53,7 +53,6 @@ var searchData=
   ['lnum_5fsave',['lnum_save',['../structfline__T.html#a60bd75e9f893f7f6e2519b6ca70afa2b',1,'fline_T']]],
   ['lockmarks',['lockmarks',['../structcmdmod__T.html#ab78263dde1751c230262b84fa76e2547',1,'cmdmod_T']]],
   ['longversion',['longVersion',['../version_8c.html#affa69dca4fb1b33f5e8c3ca27f0f087d',1,'longVersion():&#160;version.c'],['../version_8h.html#affa69dca4fb1b33f5e8c3ca27f0f087d',1,'longVersion():&#160;version.c']]],
-  ['longversionwithdate',['longVersionWithDate',['../version_8c.html#a5e66109b0fc1ec290ec0b7f7e5c7271f',1,'version.c']]],
   ['lookfor',['lookfor',['../structcommand__line__state.html#a5835cab0730bdbf3bdcaeec1c4d47fd2',1,'command_line_state']]],
   ['loop',['loop',['../structprocess.html#a9acec035b31eb669a45d0736e7932bcf',1,'process::loop()'],['../structterm__input.html#ad20e5c54202f7a953fff1353fd839094',1,'term_input::loop()'],['../structTUIData.html#a5b9be972ece68ce6d5929fc4c18a7ba5',1,'TUIData::loop()'],['../globals_8h.html#a6ee1b744eaef17cbb6e6cbb56e7421c9',1,'loop():&#160;globals.h']]],
   ['lp_5fregion',['lp_region',['../structlangp__S.html#aea968f863f8c8ab7bab001b9c15d5ac9',1,'langp_S']]],

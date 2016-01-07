@@ -154,7 +154,6 @@ var searchData=
   ['log_5funlock',['log_unlock',['../log_8c.html#a661a1be4a5a85a896f36007319b39807',1,'log.c']]],
   ['long_5fkey',['LONG_KEY',['../shada_8c.html#aab4b758090524a91da6404566b25b5a6',1,'shada.c']]],
   ['longversion',['longVersion',['../version_8c.html#affa69dca4fb1b33f5e8c3ca27f0f087d',1,'longVersion():&#160;version.c'],['../version_8h.html#affa69dca4fb1b33f5e8c3ca27f0f087d',1,'longVersion():&#160;version.c']]],
-  ['longversionwithdate',['longVersionWithDate',['../version_8c.html#a5e66109b0fc1ec290ec0b7f7e5c7271f',1,'version.c']]],
   ['lookfor',['lookfor',['../structcommand__line__state.html#a5835cab0730bdbf3bdcaeec1c4d47fd2',1,'command_line_state']]],
   ['lookfor_5fany',['LOOKFOR_ANY',['../indent__c_8c.html#a80c72cb0ff1406fc6c7af23fe2c06ae6',1,'indent_c.c']]],
   ['lookfor_5fcase',['LOOKFOR_CASE',['../indent__c_8c.html#aaf6ab358b42fa83314dd5065878a6c26',1,'indent_c.c']]],
