@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2015 Jan 29
+*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2015 Nov 30
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -1503,6 +1503,16 @@ Predefined Vim <A HREF="#variables">variables</A>:			*<A NAME="vim-variable"></A
  		&quot;errmsg&quot; also works, for backwards compatibility.
 
 
+					*<A NAME="v:errors"></A><B>v:errors</B>* *<A NAME="errors-variable"></A><B>errors-variable</B>*
+<A HREF="#v:errors">v:errors</A>	Errors found by assert <A HREF="#functions">functions</A>, such as |<A HREF="#assert_true()">assert_true()</A>|.
+		This is a <A HREF="#list">list</A> of strings.
+		The assert <A HREF="#functions">functions</A> append an item when an assert fails.
+		To remove old results make <A HREF="motion.html#it">it</A> empty:
+<B>	:let v:errors = []</B>
+ 		If <A HREF="#v:errors">v:errors</A> is set to anything but a <A HREF="#list">list</A> <A HREF="motion.html#it">it</A> is made an empty
+		<A HREF="#list">list</A> by the assert function.
+
+
 					*<A NAME="v:exception"></A><B>v:exception</B>* *<A NAME="exception-variable"></A><B>exception-variable</B>*
 <A HREF="#v:exception">v:exception</A>	The value of the exception most recently caught and not
 		finished.  See also |<A HREF="#v:throwpoint">v:throwpoint</A>| and |<A HREF="#throw-variables">throw-variables</A>|.
@@ -1902,10 +1912,13 @@ append( {lnum}, {string})	<A HREF="#Number">Number</A>	append {string} below lin
 append( {lnum}, {list})		<A HREF="#Number">Number</A>	append lines {list} below line {lnum}
 <A HREF="#argc()">argc()</A>				<A HREF="#Number">Number</A>	number of files in the argument <A HREF="#list">list</A>
 <A HREF="#argidx()">argidx()</A>			<A HREF="#Number">Number</A>	current index in the argument <A HREF="#list">list</A>
-arglistid( [{winnr}, [ {tabnr}]])
+arglistid( [{winnr} [, {tabnr}]])
 				<A HREF="#Number">Number</A>	argument <A HREF="#list">list</A> id
 argv( {nr})			String	{nr} entry of the argument <A HREF="#list">list</A>
 argv( )				<A HREF="#List">List</A>	the argument <A HREF="#list">list</A>
+assert_equal( {exp}, {act} [, {msg}]) none    assert that {exp} equals {act}
+assert_false( {actual} [, {msg}])     none    assert that {actual} is false
+assert_true( {actual} [, {msg}])      none    assert that {actual} is true
 asin( {expr})			<A HREF="#Float">Float</A>	arc sine of {expr}
 atan( {expr})			<A HREF="#Float">Float</A>	arc tangent of {expr}
 atan2( {expr}, {expr})		<A HREF="#Float">Float</A>   arc tangent of {expr1} / {expr2}
@@ -2343,6 +2356,40 @@ argv([{nr}])	The result is the {nr}th file in the argument <A HREF="#list">list<
 <B>	:endwhile</B>
  		Without the {nr} argument a |<A HREF="#List">List</A>| with the whole |<A HREF="editing.html#arglist">arglist</A>| is
 		returned.
+
+
+							*<A NAME="assert_equal()"></A><B>assert_equal()</B>*
+assert_equal({expected}, {actual}, [, {msg}])
+		When {expected} and {actual} are not equal an error message is
+		added to |<A HREF="#v:errors">v:errors</A>|.
+		There is no automatic conversion, the String &quot;4&quot; is different
+		from the <A HREF="#Number">Number</A> 4.  And the number 4 is different from the
+		<A HREF="#Float">Float</A> 4.0.  The value of <A HREF="options.html#'ignorecase'">'ignorecase'</A> is not used here, <A HREF="change.html#case">case</A>
+		always matters.
+		When {msg} is omitted an error in the form &quot;Expected
+		{expected} but got {actual}&quot; is produced.
+		Example:
+<B>	assert_equal('foo', 'bar')</B>
+ 		Will result in a <A HREF="#string">string</A> to be added to YXXYv:errors|:
+<B><FONT color="#54A23D">	test.vim line 12: Expected 'foo' but got 'bar' </FONT></B>
+
+
+assert_false({actual}, [, {msg}])				*<A NAME="assert_false()"></A><B>assert_false()</B>*
+		When {actual} is not false an error message is added to
+		|<A HREF="#v:errors">v:errors</A>|, like with |<A HREF="#assert_equal()">assert_equal()</A>|..
+		A value is false when <A HREF="motion.html#it">it</A> is zero. When &quot;{actual}&quot; is not a
+		number the assert fails.
+		When {msg} is omitted an error in the form &quot;Expected False but
+		got {actual}&quot; is produced.
+
+
+assert_true({actual}, [, {msg}])				*<A NAME="assert_true()"></A><B>assert_true()</B>*
+		When {actual} is not true an error message is added to
+		|<A HREF="#v:errors">v:errors</A>|, like with |<A HREF="#assert_equal()">assert_equal()</A>|..
+		A value is true when <A HREF="motion.html#it">it</A> is a non-zeron number.  When {actual}
+		is not a number the assert fails.
+		When {msg} is omitted an error in the form &quot;Expected True but
+		got {actual}&quot; is produced.
 
 
 asin({expr})						*<A NAME="asin()"></A><B>asin()</B>*
@@ -9772,7 +9819,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sun Jan 10 04:10:35 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/50db0312f941ba489466d7d6b21088f1870429ee"><code>50db031</code></a>.
+        Generated Sun Jan 10 20:07:48 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/dd8812c7cbb8bb3ab884c0f1198dd1fd9a4a26c5"><code>dd8812c</code></a>.
       </div>
     </footer>
   </body>
