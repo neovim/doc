@@ -5828,11 +5828,33 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	If the name of the shell contains a space, you might need to enclose
 	<A HREF="motion.html#it">it</A> in <A HREF="quotes.html#quotes">quotes</A>.  Example:
 <B>		:set shell=\"c:\program\ files\unix\sh.exe\"\ -f</B>
- 	Note the <A HREF="intro.html#backslash">backslash</A> before each <A HREF="change.html#quote">quote</A> (to avoid starting a comment) and
-	each space (to avoid ending the option value).  Also note that the
-	&quot;-f&quot; is not inside the <A HREF="quotes.html#quotes">quotes</A>, because <A HREF="motion.html#it">it</A> is not part of the command
-	name.  And Vim automagically recognizes the backslashes that are path
-	separators.
+ 	Note the <A HREF="intro.html#backslash">backslash</A> before each <A HREF="change.html#quote">quote</A> (to avoid starting a comment) and 
+	each space (to avoid ending the option value), so better use |<A HREF="eval.html#:let-&amp;">:let-&amp;</A>| 
+	like this:
+<B>		:let &amp;shell='"C:\Program Files\unix\sh.exe" -f'</B>
+ 	Also note that the &quot;-f&quot; is not inside the <A HREF="quotes.html#quotes">quotes</A>, because <A HREF="motion.html#it">it</A> is not 
+	part of the command name.
+
+							*<A NAME="shell-unquoting"></A><B>shell-unquoting</B>*
+	Rules regarding <A HREF="quotes.html#quotes">quotes</A>:
+	1. Option is split on space and <A HREF="intro.html#tab">tab</A> characters that are not inside 
+	   <A HREF="quotes.html#quotes">quotes</A>: &quot;abc def&quot; runs shell named &quot;abc&quot; with additional argument 
+	   &quot;def&quot;, &#39;&#34;'abc def&quot;' runs shell named &quot;abc def&quot; with no additional 
+	   arguments (here and below: additional means “additional to 
+	   'shellcmdflag'”).
+	2. Quotes in option may be present in any position and any number: 
+	   &#39;&#34;'abc&quot;', &#39;&#34;'a&quot;bc', 'a&quot;b&quot;c', 'ab&quot;c&quot;' and &#39;&#34;'a&quot;b&quot;c&quot;' are all equivalent 
+	   to just &quot;abc&quot;.
+	3. Inside <A HREF="quotes.html#quotes">quotes</A> <A HREF="intro.html#backslash">backslash</A> preceding <A HREF="intro.html#backslash">backslash</A> means one <A HREF="intro.html#backslash">backslash</A>.  
+	   Backslash preceding <A HREF="change.html#quote">quote</A> means one <A HREF="change.html#quote.">quote.</A> Backslash preceding 
+	   anything else means <A HREF="intro.html#backslash">backslash</A> and next character literally: 
+	   &#39;&#34;'a\\b&quot;' is the same <A HREF="motion.html#as">as</A> &quot;a\b&quot;, &#39;&#34;'a\\&quot;b&quot;' runs shell named literally 
+	   'a&quot;b', &#39;&#34;'a\b&quot;' is the same <A HREF="motion.html#as">as</A> &quot;a\b&quot; again.
+	4. Outside of <A HREF="quotes.html#quotes">quotes</A> <A HREF="intro.html#backslash">backslash</A> always means itself, <A HREF="motion.html#it">it</A> cannot be used 
+	   to <A HREF="intro.html#escape">escape</A> <A HREF="change.html#quote:">quote:</A> 'a\&quot;b&quot;' is the same <A HREF="motion.html#as">as</A> &quot;a\b&quot;.
+	Note that such processing is done after |<A HREF="#:set">:set</A>| did its own round of 
+	unescaping, so to keep yourself sane use |<A HREF="eval.html#:let-&amp;">:let-&amp;</A>| like shown above.
+
 	This option cannot be set from a |<A HREF="#modeline">modeline</A>| or in the |<A HREF="eval.html#sandbox">sandbox</A>|, for
 	security reasons.
 
@@ -5849,6 +5871,8 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	On Unix <A HREF="motion.html#it">it</A> can have more than one flag.  Each white space separated
 	part is passed <A HREF="motion.html#as">as</A> an argument to the shell command.
 	See |<A HREF="#option-backslash">option-backslash</A>| about including spaces and backslashes.
+	See |<A HREF="#shell-unquoting">shell-unquoting</A>| which talks about separating this option into 
+	multiple arguments.
 	Also see |<A HREF="os_dos.html#dos-shell">dos-shell</A>| for MS-DOS and <A HREF="os_win32.html#MS-Windows">MS-Windows</A>.
 	This option cannot be set from a |<A HREF="#modeline">modeline</A>| or in the |<A HREF="eval.html#sandbox">sandbox</A>|, for
 	security reasons.
@@ -7739,7 +7763,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
     <footer>
       <div class="container">
-        Generated Sun Jan 10 20:07:49 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/dd8812c7cbb8bb3ab884c0f1198dd1fd9a4a26c5"><code>dd8812c</code></a>.
+        Generated Mon Jan 11 20:05:31 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/3b94756feb39ad269104b2f765c6c56ff2360203"><code>3b94756</code></a>.
       </div>
     </footer>
   </body>
