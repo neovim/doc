@@ -112,6 +112,7 @@ var searchData=
   ['vim_5fstricmp',['vim_stricmp',['../strings_8c.html#a61d999a2eb8b489b24f986da938076f9',1,'strings.c']]],
   ['vim_5fstrnicmp',['vim_strnicmp',['../strings_8c.html#a0714af62b8bdf862219662cc5dff1724',1,'strings.c']]],
   ['vim_5fstrnsave',['vim_strnsave',['../strings_8c.html#afcf99dbab0f6a5bff0a0227d6dd34bcc',1,'strings.c']]],
+  ['vim_5fstrnsave_5funquoted',['vim_strnsave_unquoted',['../strings_8c.html#a87389ec89b218c413d0130595cad5f65',1,'strings.c']]],
   ['vim_5fstrnsave_5fup',['vim_strnsave_up',['../strings_8c.html#a8e8f06f7f671607f167f87aeb082fb1f',1,'strings.c']]],
   ['vim_5fstrnsize',['vim_strnsize',['../charset_8c.html#ac58f2b235192879e481787179b74cf00',1,'charset.c']]],
   ['vim_5fstrrchr',['vim_strrchr',['../strings_8c.html#a11089e68ba5e29ecf8b91c4ec6915f67',1,'strings.c']]],

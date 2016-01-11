@@ -182,6 +182,5 @@ var searchData=
   ['expandmappings',['ExpandMappings',['../getchar_8c.html#aec6eb5bffb9cfe9c983f4bb071b6a705',1,'getchar.c']]],
   ['expandoldsetting',['ExpandOldSetting',['../option_8c.html#a50d04f6057021ecfe869f4e4e461a8b4',1,'option.c']]],
   ['expandone',['ExpandOne',['../ex__getln_8c.html#ad068b22619e5ec66417e52bea02b5647',1,'ex_getln.c']]],
-  ['expandsettings',['ExpandSettings',['../option_8c.html#a72f0e469ec2c02096e05f25380be0068',1,'option.c']]],
-  ['extract_5fmodifiers',['extract_modifiers',['../keymap_8c.html#a79e3c138b4277bf07150004590d9f1bc',1,'keymap.c']]]
+  ['expandsettings',['ExpandSettings',['../option_8c.html#a72f0e469ec2c02096e05f25380be0068',1,'option.c']]]
 ];

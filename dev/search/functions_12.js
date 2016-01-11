@@ -127,7 +127,7 @@ var searchData=
   ['shada_5fread_5feverything',['shada_read_everything',['../shada_8c.html#a2104bb27391accc6916aeefe376ee162',1,'shada.c']]],
   ['shada_5fread_5fmarks',['shada_read_marks',['../shada_8c.html#a1f892ea462b53130fb571b5150e81788',1,'shada.c']]],
   ['shada_5fwrite_5ffile',['shada_write_file',['../shada_8c.html#ade6c9871eaa28710c163fb4a51a350d5',1,'shada.c']]],
-  ['shell_5fbuild_5fargv',['shell_build_argv',['../shell_8c.html#ac12375a4b60c03eb14d3116e91f2bf68',1,'shell.c']]],
+  ['shell_5fbuild_5fargv',['shell_build_argv',['../shell_8c.html#a47fb2e24fb7283f86eef63bda916a899',1,'shell.c']]],
   ['shell_5ffree_5fargv',['shell_free_argv',['../shell_8c.html#a1d996002927a165a25250c95795674a5',1,'shell.c']]],
   ['shell_5fnew_5fcolumns',['shell_new_columns',['../window_8c.html#abc4887fa4ba44413ebd69ba761912d34',1,'window.c']]],
   ['shell_5fnew_5frows',['shell_new_rows',['../window_8c.html#a127cd05152b8428180ac082471f441d8',1,'window.c']]],

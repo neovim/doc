@@ -66,6 +66,7 @@ var searchData=
   ['esc_5fstr',['ESC_STR',['../ascii_8h.html#aa4f46ce527cb69190ff58bdd9ea9f15f',1,'ascii.h']]],
   ['esc_5fstr_5fnc',['ESC_STR_nc',['../ascii_8h.html#a9c387eee97490d1dbcfdbdcf508aaac5',1,'ascii.h']]],
   ['escape_5fchars',['ESCAPE_CHARS',['../ex__docmd_8c.html#a3570a2eacaaf55953cd87214c563cbd9',1,'ex_docmd.c']]],
+  ['escape_5fcond',['ESCAPE_COND',['../strings_8c.html#a30ed21a30a71bf8f10ff7c5ceace7c69',1,'strings.c']]],
   ['et_5ferror',['ET_ERROR',['../ex__eval_8h.html#a8cc5b8905e28f2d7e363c15ff8a3c4ec',1,'ex_eval.h']]],
   ['et_5finterrupt',['ET_INTERRUPT',['../ex__eval_8h.html#a4caceff12b4cf3308b4eb273ae9b82c4',1,'ex_eval.h']]],
   ['et_5fuser',['ET_USER',['../ex__eval_8h.html#a16ee87f07fa8ab3ebec2a25e2e401300',1,'ex_eval.h']]],

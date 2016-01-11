@@ -117,6 +117,7 @@ var searchData=
   ['esc_5fstr',['ESC_STR',['../ascii_8h.html#aa4f46ce527cb69190ff58bdd9ea9f15f',1,'ascii.h']]],
   ['esc_5fstr_5fnc',['ESC_STR_nc',['../ascii_8h.html#a9c387eee97490d1dbcfdbdcf508aaac5',1,'ascii.h']]],
   ['escape_5fchars',['ESCAPE_CHARS',['../ex__docmd_8c.html#a3570a2eacaaf55953cd87214c563cbd9',1,'ex_docmd.c']]],
+  ['escape_5fcond',['ESCAPE_COND',['../strings_8c.html#a30ed21a30a71bf8f10ff7c5ceace7c69',1,'strings.c']]],
   ['eslist_5felem',['eslist_elem',['../structeslist__elem.html',1,'']]],
   ['eslist_5ft',['eslist_T',['../ex__eval_8h.html#a66e06df6dc3125c9627bf19867c3ed5a',1,'ex_eval.h']]],
   ['et_5ferror',['ET_ERROR',['../ex__eval_8h.html#a8cc5b8905e28f2d7e363c15ff8a3c4ec',1,'ex_eval.h']]],
@@ -394,6 +395,5 @@ var searchData=
   ['externcmd',['EXTERNCMD',['../vim_8h.html#a653d6ac8281dd9d05020eb6d9b844175',1,'vim.h']]],
   ['extra',['EXTRA',['../ex__cmds__defs_8h.html#af4d98da13b92f926914c4a759759b393',1,'ex_cmds_defs.h']]],
   ['extra_5fchar',['extra_char',['../structcmdarg__S.html#a2a40234a723a0bc67a687982eb51d9bf',1,'cmdarg_S']]],
-  ['extra_5fmarks',['EXTRA_MARKS',['../mark__defs_8h.html#a123165f22654403d56a151e7db9da1ee',1,'mark_defs.h']]],
-  ['extract_5fmodifiers',['extract_modifiers',['../keymap_8c.html#a79e3c138b4277bf07150004590d9f1bc',1,'keymap.c']]]
+  ['extra_5fmarks',['EXTRA_MARKS',['../mark__defs_8h.html#a123165f22654403d56a151e7db9da1ee',1,'mark_defs.h']]]
 ];
