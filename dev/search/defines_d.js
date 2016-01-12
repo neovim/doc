@@ -45,7 +45,6 @@ var searchData=
   ['maxlinelen',['MAXLINELEN',['../spell_8c.html#a624dbcb8b6ccc24c9bf891c174f60b6d',1,'spell.c']]],
   ['maxlnum',['MAXLNUM',['../pos_8h.html#ad31a3a5ea9363a1d0fd66864cfed4f8e',1,'pos.h']]],
   ['maxmaplen',['MAXMAPLEN',['../vim_8h.html#a7e782acb9d7eeb61f5809c725987ff2d',1,'vim.h']]],
-  ['maxnamlen',['MAXNAMLEN',['../os__defs_8h.html#ab347d7e5c2fdca2d28e693b2a508d76a',1,'os_defs.h']]],
   ['maxpathl',['MAXPATHL',['../globals_8h.html#a9b75f9db03a33bb3d2d613923647d0cf',1,'MAXPATHL():&#160;globals.h'],['../os__defs_8h.html#a9b75f9db03a33bb3d2d613923647d0cf',1,'MAXPATHL():&#160;os_defs.h']]],
   ['maxposmatch',['MAXPOSMATCH',['../buffer__defs_8h.html#a9ecc6264f474342a9c3ea751f2640903',1,'buffer_defs.h']]],
   ['maxscore',['MAXSCORE',['../spell_8c.html#a3b484b7f3d5b7b969db2722fc9ae5e77',1,'spell.c']]],

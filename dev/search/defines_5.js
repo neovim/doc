@@ -45,6 +45,7 @@ var searchData=
   ['enc_5fucsbom',['ENC_UCSBOM',['../option__defs_8h.html#a7c47cc9210934c64398dc963de9f26cb',1,'option_defs.h']]],
   ['enc_5funicode',['ENC_UNICODE',['../mbyte_8h.html#a2ae12437355b3cd581d7ddcd813738fe',1,'mbyte.h']]],
   ['end',['END',['../regexp_8c.html#a29fd18bed01c4d836c7ebfe73a125c3f',1,'regexp.c']]],
+  ['env_5fsepchar',['ENV_SEPCHAR',['../unix__defs_8h.html#a4561b5fadd4bbfa2c45c0c775709989f',1,'ENV_SEPCHAR():&#160;unix_defs.h'],['../win__defs_8h.html#a4561b5fadd4bbfa2c45c0c775709989f',1,'ENV_SEPCHAR():&#160;win_defs.h']]],
   ['envnamelen',['ENVNAMELEN',['../env_8c.html#a6edceae4a221309e39b2cbdb4d413b79',1,'env.c']]],
   ['eol',['EOL',['../regexp_8c.html#a4e67e9429d48a2ba8f833ee3b1dceb5d',1,'regexp.c']]],
   ['eol_5fdos',['EOL_DOS',['../option__defs_8h.html#aecddef423586bfbf192adca96adec2e6',1,'option_defs.h']]],

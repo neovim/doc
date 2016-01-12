@@ -2,6 +2,7 @@ var searchData=
 [
   ['n_5f',['N_',['../vim_8h.html#aba49c317732ed2f938129061ee53fe32',1,'vim.h']]],
   ['nalpha',['NALPHA',['../regexp_8c.html#acc0c49f53c687249293224ae8de419ed',1,'regexp.c']]],
+  ['name_5fmax',['NAME_MAX',['../win__defs_8h.html#ac64541bdd81c961304b9babef1402640',1,'win_defs.h']]],
   ['nclose',['NCLOSE',['../regexp_8c.html#ae09f2a4a3528cc47727191e4b5fcb751',1,'regexp.c']]],
   ['ndigit',['NDIGIT',['../regexp_8c.html#ab4cc8b2ad1e8ac570a62a59aa155ebf8',1,'regexp.c']]],
   ['needarg',['NEEDARG',['../ex__cmds__defs_8h.html#a969c114febbebf43ce323783ad0a61b0',1,'ex_cmds_defs.h']]],
