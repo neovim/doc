@@ -91,6 +91,7 @@ var searchData=
   ['b_5flast_5fcursor',['b_last_cursor',['../structfile__buffer.html#a29ba806bfd130bbec977b92e5f88f1d5',1,'file_buffer']]],
   ['b_5flast_5finsert',['b_last_insert',['../structfile__buffer.html#ab512997c81dc8e9445830bbddf5c1dfe',1,'file_buffer']]],
   ['b_5fmaphash',['b_maphash',['../structfile__buffer.html#a966e0c35cb140705cac9ca8782c3ba35',1,'file_buffer']]],
+  ['b_5fmapped_5fctrl_5fc',['b_mapped_ctrl_c',['../structfile__buffer.html#ac86bec01235f5dd3e1f7b53999df67d6',1,'file_buffer']]],
   ['b_5fmarks_5fread',['b_marks_read',['../structfile__buffer.html#a02775c720897520dc5ca8d4414455094',1,'file_buffer']]],
   ['b_5fmay_5fswap',['b_may_swap',['../structfile__buffer.html#a43c0b02cc15b1d9a1d5a13f6f35f9fd0',1,'file_buffer']]],
   ['b_5fml',['b_ml',['../structfile__buffer.html#aee73f43424bc86e09983b73d139589f3',1,'file_buffer']]],
