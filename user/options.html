@@ -561,11 +561,11 @@ number can be specified where &quot;<A HREF="#vim:">vim:</A>&quot; or &quot;Vim:
 	vim&lt;{vers}:	version before {vers}
 	vim={vers}:	version {vers}
 	vim&gt;{vers}:	version after {vers}
-{vers} is 600 for Vim 6.0 (hundred times the major version plus minor).
-For example, to use a <A HREF="#modeline">modeline</A> only for Vim 6.0 and later:
-<B><FONT color="#54A23D">	/* vim600: set foldmethod=marker: */ </FONT></B>
-To use a <A HREF="#modeline">modeline</A> for Vim before version 5.7:
-<B><FONT color="#54A23D">	/* vim&lt;570: set sw=4: */ </FONT></B>
+{vers} is 700 for Vim 7.0 (hundred times the major version plus minor).
+For example, to use a <A HREF="#modeline">modeline</A> only for Vim 7.0:
+<B><FONT color="#54A23D">	/* vim700: set foldmethod=marker */ </FONT></B>
+To use a <A HREF="#modeline">modeline</A> for Vim after version 7.2:
+<B><FONT color="#54A23D">	/* vim&gt;702: set cole=2: */ </FONT></B>
 There can be no blanks between &quot;vim&quot; and the &quot;<A HREF="cmdline.html#:">:</A>&quot;.
 
 
@@ -1218,7 +1218,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 						*<A NAME="'browsedir'"></A><B>'browsedir'</B>* *<A NAME="'bsdir'"></A><B>'bsdir'</B>*
 <A HREF="#'browsedir'">'browsedir'</A> <A HREF="#'bsdir'">'bsdir'</A>	<A HREF="eval.html#string">string</A>	(default: &quot;last&quot;)
 			global
-			{only for Motif, GTK, Mac and <A HREF="os_win32.html#Win32">Win32</A> GUI}
+			{only for Mac and <A HREF="os_win32.html#Win32">Win32</A> GUI}
 	Which directory to use for the file browser:
 	   last		Use same directory <A HREF="motion.html#as">as</A> with last file browser, where a
 			file was opened or saved.
@@ -1304,8 +1304,9 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	nofile only:	The buffer name is fixed, <A HREF="motion.html#it">it</A> is not handled like a
 			file name.  It is not modified in response to a |<A HREF="editing.html#:cd">:cd</A>|
 			command.
-	nofile only:	When using &quot;<A HREF="editing.html#:e">:e</A> bufname&quot; and already editing &quot;bufname&quot;
-			nothing changes, since there is no file to edit.
+	both:		When using &quot;<A HREF="editing.html#:e">:e</A> bufname&quot; and already editing &quot;bufname&quot;
+			the buffer is made empty and autocommands are
+			triggered <A HREF="motion.html#as">as</A> usual for |<A HREF="editing.html#:edit">:edit</A>|.
 
 							*<A NAME="E676"></A><B>E676</B>*
 	&quot;acwrite&quot; implies that the buffer name is not related to a file, like
@@ -2665,8 +2666,8 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	  2. If a <A HREF="motion.html#&lt;NL&gt;">&lt;NL&gt;</A> is found and <A HREF="#'fileformats'">'fileformats'</A> includes &quot;unix&quot;, <A HREF="#'fileformat'">'fileformat'</A>
 	     is set to &quot;unix&quot;.  Note that when a <A HREF="motion.html#&lt;NL&gt;">&lt;NL&gt;</A> is found without a
 	     preceding <A HREF="motion.html#&lt;CR&gt;">&lt;CR&gt;</A>, &quot;unix&quot; is preferred over &quot;<A HREF="os_dos.html#dos">dos</A>&quot;.
-	  3. If <A HREF="#'fileformat'">'fileformat'</A> has not yet been set, and if <A HREF="#'fileformats'">'fileformats'</A>
-	     includes &quot;mac&quot;, <A HREF="#'fileformat'">'fileformat'</A> is set to &quot;mac&quot;.
+	  3. If <A HREF="#'fileformat'">'fileformat'</A> has not yet been set, and if a <A HREF="motion.html#&lt;CR&gt;">&lt;CR&gt;</A> is found, and
+	     if <A HREF="#'fileformats'">'fileformats'</A> includes &quot;mac&quot;, <A HREF="#'fileformat'">'fileformat'</A> is set to &quot;mac&quot;.
 	     This means that &quot;mac&quot; is only chosen when:
 	      &quot;unix&quot; is not present or no <A HREF="motion.html#&lt;NL&gt;">&lt;NL&gt;</A> is found in the file, and
 	      &quot;<A HREF="os_dos.html#dos">dos</A>&quot; is not present or no &lt;CR&gt;&lt;NL&gt; is found in the file.
@@ -3063,7 +3064,6 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	will force the harddrive to spin up on Linux systems running in laptop
 	mode, so <A HREF="motion.html#it">it</A> may be undesirable in some situations.  Be warned that
 	turning this off increases the chances of data loss after a crash.
-	Also see <A HREF="#'swapsync'">'swapsync'</A> for controlling fsync() on swap files.
 
 
 				   *<A NAME="'gdefault'"></A><B>'gdefault'</B>* *<A NAME="'gd'"></A><B>'gd'</B>* *<A NAME="'nogdefault'"></A><B>'nogdefault'</B>* *<A NAME="'nogd'"></A><B>'nogd'</B>*
@@ -3229,29 +3229,19 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	the <A HREF="change.html#case">case</A> of X).  The font names given should be &quot;normal&quot; fonts.  Vim
 	will try to find the related <A HREF="syntax.html#bold">bold</A> and <A HREF="syntax.html#italic">italic</A> fonts.
 
-	For <A HREF="os_win32.html#Win32">Win32</A>, GTK, Motif, and Mac OS:
+	For <A HREF="os_win32.html#Win32">Win32</A> and Mac OS:
 <B>	    :set guifont=*</B>
  	will bring up a font requester, where you can pick the font you want.
 
 	The font name depends on the <A HREF="gui.html#GUI">GUI</A> used.  See |<A HREF="gui.html#setting-guifont">setting-guifont</A>| for a
 	way to set <A HREF="#'guifont'">'guifont'</A> for various systems.
 
-	For the GTK+ 2 <A HREF="gui.html#GUI">GUI</A> the font name looks like this:
-<B>	    :set guifont=Andale\ Mono\ 11</B>
- 	That's all.  XLFDs are not used.  For <A HREF="mbyte.html#Chinese">Chinese</A> this is reported to work
-	well:
-<B>	    if has("gui_gtk2")</B>
-<B>	      set guifont=Bitstream\ Vera\ Sans\ Mono\ 12,Fixed\ 12</B>
-<B>	      set guifontwide=Microsoft\ Yahei\ 12,WenQuanYi\ Zen\ Hei\ 12</B>
-<B>	    endif</B>
- 
 	For Mac OSX you can use something like this:
 <B>	    :set guifont=Monaco:h10</B>
 
  								*<A NAME="E236"></A><B>E236</B>*
 	Note that the fonts must be mono-spaced (all characters have the same
-	width).  An exception is GTK 2: all fonts are accepted, but
-	mono-spaced fonts look best.
+	width).
 
 	To preview a font on X11, you might be able to use the &quot;xfontsel&quot;
 	program.  The &quot;xlsfonts&quot; program gives a <A HREF="eval.html#list">list</A> of all available fonts.
@@ -3287,7 +3277,6 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 			global
 			{only available when compiled with <A HREF="gui.html#GUI">GUI</A> enabled and
 			with the |<A HREF="various.html#+xfontset">+xfontset</A>| feature}
-			{not available in the GTK+ 2 GUI}
 	When not empty, specifies two (or more) fonts to be used.  The first
 	one for normal English, the second one for your special language.  See
 	|<A HREF="mbyte.html#xfontset">xfontset</A>|.
@@ -3316,24 +3305,11 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	Note: The size of these fonts must be exactly <A HREF="if_cscop.html#twice">twice</A> <A HREF="motion.html#as">as</A> wide <A HREF="motion.html#as">as</A> the one
 	specified with <A HREF="#'guifont'">'guifont'</A> and the same height.
 
-	All <A HREF="gui.html#GUI">GUI</A> versions but GTK+ 2:
-
 	<A HREF="#'guifontwide'">'guifontwide'</A> is only used when <A HREF="#'encoding'">'encoding'</A> is set to &quot;<A HREF="mbyte.html#utf-8">utf-8</A>&quot; and
 	<A HREF="#'guifontset'">'guifontset'</A> is empty or invalid.
 	When <A HREF="#'guifont'">'guifont'</A> is set and a valid font is found in <A HREF="motion.html#it">it</A> and
 	<A HREF="#'guifontwide'">'guifontwide'</A> is empty Vim will attempt to find a matching
 	double-width font and set <A HREF="#'guifontwide'">'guifontwide'</A> to <A HREF="motion.html#it">it</A>.
-
-
-	GTK+ 2 <A HREF="gui.html#GUI">GUI</A> only:			*<A NAME="guifontwide_gtk2"></A><B>guifontwide_gtk2</B>*
-
-	If set and valid, <A HREF="#'guifontwide'">'guifontwide'</A> is always used for double width
-	characters, even if <A HREF="#'encoding'">'encoding'</A> is not set to &quot;<A HREF="mbyte.html#utf-8">utf-8</A>&quot;.
-	Vim does not attempt to find an appropriate value for <A HREF="#'guifontwide'">'guifontwide'</A>
-	automatically.  If <A HREF="#'guifontwide'">'guifontwide'</A> is empty Pango/Xft will choose the
-	font for characters not available in <A HREF="#'guifont'">'guifont'</A>.  Thus you <A HREF="diff.html#do">do</A> not need
-	to set <A HREF="#'guifontwide'">'guifontwide'</A> at all unless you want to override the choice
-	made by Pango/Xft.
 
 
 	Windows +multibyte only:		*<A NAME="guifontwide_win_mbyte"></A><B>guifontwide_win_mbyte</B>*
@@ -3344,7 +3320,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 						*<A NAME="'guiheadroom'"></A><B>'guiheadroom'</B>* *<A NAME="'ghr'"></A><B>'ghr'</B>*
 <A HREF="#'guiheadroom'">'guiheadroom'</A> <A HREF="#'ghr'">'ghr'</A>	number	(default 50)
 			global
-			{only for GTK and X11 GUI}
+			{only for X11 GUI}
 	The number of pixels subtracted from the screen height when fitting
 	the <A HREF="gui.html#GUI">GUI</A> <A HREF="windows.html#window">window</A> on the screen.  Set this before the <A HREF="gui.html#GUI">GUI</A> is started,
 	e.g., in your |<A HREF="gui.html#gvimrc">gvimrc</A>| file.  When zero, the whole screen height will
@@ -3355,8 +3331,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
 
 						*<A NAME="'guioptions'"></A><B>'guioptions'</B>* *<A NAME="'go'"></A><B>'go'</B>*
-<A HREF="#'guioptions'">'guioptions'</A> <A HREF="#'go'">'go'</A>	<A HREF="eval.html#string">string</A>	(default &quot;egmrLT&quot;   (MS-Windows),
-					 &quot;aegimrLT&quot; (GTK and Motif))
+<A HREF="#'guioptions'">'guioptions'</A> <A HREF="#'go'">'go'</A>	<A HREF="eval.html#string">string</A>	(default &quot;egmrLT&quot;   (MS-Windows))
 			global
 			{only available when compiled with <A HREF="gui.html#GUI">GUI</A> enabled}
 	This option only has an effect in the <A HREF="gui.html#GUI">GUI</A> version of Vim.  It is a
@@ -3407,11 +3382,10 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 		<A HREF="#'guitablabel'">'guitablabel'</A> can be used to change the text in the labels.
 		When '<A HREF="motion.html#e">e</A>' is missing a non-GUI <A HREF="intro.html#tab">tab</A> pages line may be used.
 		The <A HREF="gui.html#GUI">GUI</A> tabs are only supported on some systems, currently
-		GTK, Motif, Mac OS/X and <A HREF="os_win32.html#MS-Windows">MS-Windows</A>.
+		Mac OS/X and <A HREF="os_win32.html#MS-Windows">MS-Windows</A>.
 
 								*<A NAME="'go-i'"></A><B>'go-i'</B>*
-	  '<A HREF="insert.html#i">i</A>'	Use a Vim icon.  For GTK with KDE <A HREF="motion.html#it">it</A> is used in the left-upper
-		corner of the <A HREF="windows.html#window">window</A>.
+	  '<A HREF="insert.html#i">i</A>'	Use a Vim icon.
 
 								*<A NAME="'go-m'"></A><B>'go-m'</B>*
 	  '<A HREF="motion.html#m">m</A>'	Menu <A HREF="motion.html#bar">bar</A> is present.
@@ -3428,8 +3402,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 		'<A HREF="vimindex.html#g">g</A>' is not included inactive menu items are not shown at all.
 
 								*<A NAME="'go-T'"></A><B>'go-T'</B>*
-	  '<A HREF="motion.html#T">T</A>'	Include Toolbar.  Currently only in <A HREF="os_win32.html#Win32">Win32</A>, GTK+, and
-		Motif GUIs.
+	  '<A HREF="motion.html#T">T</A>'	Include Toolbar.  Currently only in <A HREF="os_win32.html#Win32">Win32</A> <A HREF="gui.html#GUI">GUI</A>.
 
 								*<A NAME="'go-r'"></A><B>'go-r'</B>*
 	  '<A HREF="change.html#r">r</A>'	Right-hand scrollbar is always present.
@@ -3737,56 +3710,11 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
 
 						*<A NAME="'imactivatefunc'"></A><B>'imactivatefunc'</B>* *<A NAME="'imaf'"></A><B>'imaf'</B>*
-<A HREF="#'imactivatefunc'">'imactivatefunc'</A> <A HREF="#'imaf'">'imaf'</A>	<A HREF="eval.html#string">string</A> (default &quot;&quot;)
-			global
-			{only available when compiled with |<A HREF="various.html#+xim">+xim</A>| and
-			YXXY+GUI_GTK|}
-	This option specifies a function that will be called to
-	activate/inactivate Input Method.
+<A HREF="#'imactivatefunc'">'imactivatefunc'</A> <A HREF="#'imaf'">'imaf'</A>	Removed. |<A HREF="vim_diff.html#vim-differences">vim-differences</A>| {Nvim}
 
-	Example:
-<B>		function ImActivateFunc(active)</B>
-<B>		  if a:active</B>
-<B>		    ... do something</B>
-<B>		  else</B>
-<B>		    ... do something</B>
-<B>		  endif</B>
-<B>		  " return value is not used</B>
-<B>		endfunction</B>
-<B>		set imactivatefunc=ImActivateFunc</B>
- 
 
 						*<A NAME="'imactivatekey'"></A><B>'imactivatekey'</B>* *<A NAME="'imak'"></A><B>'imak'</B>*
-<A HREF="#'imactivatekey'">'imactivatekey'</A> <A HREF="#'imak'">'imak'</A>	<A HREF="eval.html#string">string</A> (default &quot;&quot;)
-			global
-			{only available when compiled with |<A HREF="various.html#+xim">+xim</A>| and
-
-			YXXY+GUI_GTK|}				*<A NAME="E599"></A><B>E599</B>*
-	Specifies the key that your Input Method in X-Windows uses for
-	activation.  When this is specified correctly, vim can fully <A HREF="intro.html#control">control</A>
-	IM with <A HREF="#'imcmdline'">'imcmdline'</A>, <A HREF="#'iminsert'">'iminsert'</A> and <A HREF="#'imsearch'">'imsearch'</A>.
-	You can't use this option to change the activation key, the option
-	tells Vim what the key is.
-	Format:
-		[MODIFIER_FLAG-]KEY_STRING
-
-	These characters can be used for MODIFIER_FLAG (case is ignored):
-		<A HREF="change.html#S">S</A>	    Shift key
-		<A HREF="motion.html#L">L</A>	    Lock key
-		C	    Control key
-		1	    Mod1 key
-		2	    Mod2 key
-		3	    Mod3 key
-		4	    Mod4 key
-		5	    Mod5 key
-	Combinations are allowed, for example &quot;S-C-space&quot; or &quot;SC-space&quot; are
-	both shift+ctrl+space.
-	See &lt;X11/keysymdef.h&gt; and XStringToKeysym for KEY_STRING.
-
-	Example:
-<B>		:set imactivatekey=S-space</B>
- 	&quot;S-space&quot; means shift+space.  This is the activation key for kinput2 +
-	canna (Japanese), and ami (Korean).
+<A HREF="#'imactivatekey'">'imactivatekey'</A> <A HREF="#'imak'">'imak'</A>	Removed. |<A HREF="vim_diff.html#vim-differences">vim-differences</A>| {Nvim}
 
 
 				*<A NAME="'imcmdline'"></A><B>'imcmdline'</B>* *<A NAME="'imc'"></A><B>'imc'</B>* *<A NAME="'noimcmdline'"></A><B>'noimcmdline'</B>* *<A NAME="'noimc'"></A><B>'noimc'</B>*
@@ -3850,21 +3778,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
 
 						*<A NAME="'imstatusfunc'"></A><B>'imstatusfunc'</B>* *<A NAME="'imsf'"></A><B>'imsf'</B>*
-<A HREF="#'imstatusfunc'">'imstatusfunc'</A> <A HREF="#'imsf'">'imsf'</A>	<A HREF="eval.html#string">string</A> (default &quot;&quot;)
-			global
-			{only available when compiled with |<A HREF="various.html#+xim">+xim</A>| and
-			YXXY+GUI_GTK|}
-	This option specifies a function that is called to obtain the status
-	of Input Method.  It must return a positive number when <A HREF="mbyte.html#IME">IME</A> is active.
-
-	Example:
-<B>		function ImStatusFunc()</B>
-<B>		  let is_active = ...do something</B>
-<B>		  return is_active ? 1 : 0</B>
-<B>		endfunction</B>
-<B>		set imstatusfunc=ImStatusFunc</B>
- 
-	NOTE: This function is invoked very often.  Keep <A HREF="motion.html#it">it</A> fast.
+<A HREF="#'imstatusfunc'">'imstatusfunc'</A> <A HREF="#'imsf'">'imsf'</A>	Removed. |<A HREF="vim_diff.html#vim-differences">vim-differences</A>| {Nvim}
 
 
 						*<A NAME="'include'"></A><B>'include'</B>* *<A NAME="'inc'"></A><B>'inc'</B>*
@@ -6167,8 +6081,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	Use the '<A HREF="motion.html#M">M</A>' flag in <A HREF="#'highlight'">'highlight'</A> to set the type of highlighting for
 	this message.
 	When |<A HREF="mbyte.html#XIM">XIM</A>| may be used the message will include &quot;XIM&quot;.  But this
-	doesn't mean <A HREF="mbyte.html#XIM">XIM</A> is really active, especially when <A HREF="#'imactivatekey'">'imactivatekey'</A> is
-	not set.
+	doesn't mean <A HREF="mbyte.html#XIM">XIM</A> is really active.
 
 
 						*<A NAME="'showtabline'"></A><B>'showtabline'</B>* *<A NAME="'stal'"></A><B>'stal'</B>*
@@ -6686,7 +6599,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	When <A HREF="#'swapfile'">'swapfile'</A> is reset, the swap file for the current buffer is
 	immediately deleted.  When <A HREF="#'swapfile'">'swapfile'</A> is set, and <A HREF="#'updatecount'">'updatecount'</A> is
 	non-zero, a swap file is immediately created.
-	Also see |<A HREF="recover.html#swap-file">swap-file</A>| and |<A HREF="#'swapsync'">'swapsync'</A>|.
+	Also see |<A HREF="recover.html#swap-file">swap-file</A>|.
 	If you want to open a new buffer without creating a swap file for <A HREF="motion.html#it">it</A>,
 	use the |<A HREF="recover.html#:noswapfile">:noswapfile</A>| modifier.
 
@@ -6695,16 +6608,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
 
 						*<A NAME="'swapsync'"></A><B>'swapsync'</B>* *<A NAME="'sws'"></A><B>'sws'</B>*
-<A HREF="#'swapsync'">'swapsync'</A> <A HREF="#'sws'">'sws'</A>	<A HREF="eval.html#string">string</A>	(default &quot;fsync&quot;)
-			global
-	When this option is not empty a swap file is synced to disk after
-	<A HREF="editing.html#writing">writing</A> to <A HREF="motion.html#it">it</A>.  This takes some time, especially on busy Unix systems.
-	When this option is empty parts of the swap file may be in memory and
-	not written to disk.  When the system crashes you may lose more work.
-	On Unix the system does a sync now and then without Vim asking for <A HREF="motion.html#it">it</A>,
-	so the disadvantage of setting this option off is small.  On some
-	systems the swap file will not be written at all. 
-	The <A HREF="#'fsync'">'fsync'</A> option is used for the actual file.
+<A HREF="#'swapsync'">'swapsync'</A> <A HREF="#'sws'">'sws'</A>	Removed. |<A HREF="vim_diff.html#vim-differences">vim-differences</A>| {Nvim}
 
 
 						*<A NAME="'switchbuf'"></A><B>'switchbuf'</B>* *<A NAME="'swb'"></A><B>'swb'</B>*
@@ -7230,7 +7134,6 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 	When <A HREF="#'updatecount'">'updatecount'</A> is set from zero to non-zero, swap files are
 	created for all <A HREF="windows.html#buffers">buffers</A> that have <A HREF="#'swapfile'">'swapfile'</A> set.  When <A HREF="#'updatecount'">'updatecount'</A>
 	is set to zero, existing swap files are not deleted.
-	Also see |<A HREF="#'swapsync'">'swapsync'</A>|.
 	This option has no meaning in <A HREF="windows.html#buffers">buffers</A> where |<A HREF="#'buftype'">'buftype'</A>| is &quot;nofile&quot;
 	or &quot;nowrite&quot;.
 
@@ -7553,7 +7456,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 						*<A NAME="'winaltkeys'"></A><B>'winaltkeys'</B>* *<A NAME="'wak'"></A><B>'wak'</B>*
 <A HREF="#'winaltkeys'">'winaltkeys'</A> <A HREF="#'wak'">'wak'</A>	<A HREF="eval.html#string">string</A>	(default &quot;menu&quot;)
 			global
-			{only used in <A HREF="os_win32.html#Win32">Win32</A>, Motif, and GTK}
+			{only used in Win32}
 	Some <A HREF="gui.html#GUI">GUI</A> versions allow the access to menu entries by using the ALT
 	key in combination with a character that appears underlined in the
 	menu.  This conflicts with the use of the ALT key for mappings and
@@ -7568,8 +7471,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 		keys can be mapped.
 	If the menu is disabled by excluding '<A HREF="motion.html#m">m</A>' from <A HREF="#'guioptions'">'guioptions'</A>, the ALT
 	key is never used for the menu.
-	This option is not used for <A HREF="term.html#&lt;F10&gt;">&lt;F10&gt;</A>; on <A HREF="os_win32.html#Win32">Win32</A> and with GTK <A HREF="term.html#&lt;F10&gt;">&lt;F10&gt;</A> will
-	select the menu, unless <A HREF="motion.html#it">it</A> has been mapped.
+	This option is not used for <A HREF="term.html#&lt;F10&gt;">&lt;F10&gt;</A>; on <A HREF="os_win32.html#Win32">Win32</A>.
 
 
 						*<A NAME="'window'"></A><B>'window'</B>* *<A NAME="'wi'"></A><B>'wi'</B>*
@@ -7760,7 +7662,7 @@ A jump table for the <A HREF="#options">options</A> with a short description can
 
     <footer>
       <div class="container">
-        Generated Thu Jan 14 20:05:33 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/bf7bc4dcf0023eb493c0b1d7860e72f3dcd04d78"><code>bf7bc4d</code></a>.
+        Generated Fri Jan 15 20:04:50 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/dddbf9c5fa061cb03d6b6240ac6610b68b9304f5"><code>dddbf9c</code></a>.
       </div>
     </footer>
   </body>
