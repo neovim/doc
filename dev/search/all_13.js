@@ -193,8 +193,6 @@ var searchData=
   ['searchit',['searchit',['../search_8c.html#a5faf5ecb453b03e5c3697a220fc4cf02',1,'search.c']]],
   ['searchoffset',['SearchOffset',['../search_8h.html#aaa78800d6bf6378ca437fd2b6968434f',1,'search.h']]],
   ['searchpattern',['SearchPattern',['../search_8h.html#acf1036570eb963c3a1d7a8a872013335',1,'search.h']]],
-  ['seek_5fend',['SEEK_END',['../misc1_8c.html#ad2a2e6c114780c3071efd24f16c7f7d8',1,'SEEK_END():&#160;misc1.c'],['../os__unix_8c.html#ad2a2e6c114780c3071efd24f16c7f7d8',1,'SEEK_END():&#160;os_unix.c']]],
-  ['seek_5fset',['SEEK_SET',['../misc1_8c.html#a0d112bae8fd35be772185b6ec6bcbe64',1,'SEEK_SET():&#160;misc1.c'],['../os__unix_8c.html#a0d112bae8fd35be772185b6ec6bcbe64',1,'SEEK_SET():&#160;os_unix.c']]],
   ['select_5fnth',['SELECT_NTH',['../ui_8c.html#a9fbb99984776342d2b89262373bd6ae7',1,'ui.c']]],
   ['selectmode',['SELECTMODE',['../vim_8h.html#a1a494303c1f194480adadd34a07588a3',1,'vim.h']]],
   ['self',['self',['../structTerminalJobData.html#a953e9f882fb2e50a55ddbf2f0d12e0c4',1,'TerminalJobData']]],

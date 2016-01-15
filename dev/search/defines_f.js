@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['o_5fnofollow',['O_NOFOLLOW',['../vim_8h.html#a82d4d551b214905742c9e045185d352a',1,'vim.h']]],
   ['object_5finit',['OBJECT_INIT',['../api_2private_2defs_8h.html#adb292545e8d39ad1892f3b4c622935da',1,'defs.h']]],
   ['object_5fobj',['OBJECT_OBJ',['../api_2private_2helpers_8h.html#a15ead2c26c4b19e7067e41b8e93942b2',1,'helpers.h']]],
   ['octal',['OCTAL',['../regexp_8c.html#a5cd8b22af5187daa3d34709d3b516851',1,'regexp.c']]],

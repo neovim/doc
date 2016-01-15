@@ -180,7 +180,6 @@ var searchData=
   ['p_5fstmp',['p_stmp',['../option__defs_8h.html#a405b2dd0b713a7e5e6e4ba5299e298af',1,'option_defs.h']]],
   ['p_5fsu',['p_su',['../option__defs_8h.html#a2f7d2e9e97840d8a0c4de128dc206a80',1,'option_defs.h']]],
   ['p_5fswb',['p_swb',['../option__defs_8h.html#a83eea827a0ee2af81c20f102b7c9cdf8',1,'option_defs.h']]],
-  ['p_5fsws',['p_sws',['../option__defs_8h.html#a6224a9f43817dd53f95a279bc5054e81',1,'option_defs.h']]],
   ['p_5fsxe',['p_sxe',['../option__defs_8h.html#aab78f9f2bd9226598d314617bd61632f',1,'option_defs.h']]],
   ['p_5fsxq',['p_sxq',['../option__defs_8h.html#a4fb8710ca350cfe4d84582645264dfe5',1,'option_defs.h']]],
   ['p_5ftags',['p_tags',['../option__defs_8h.html#a187e0b65fc6e97e7fe1d9c8831cfb288',1,'option_defs.h']]],

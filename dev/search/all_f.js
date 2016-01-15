@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['o_5fnofollow',['O_NOFOLLOW',['../vim_8h.html#a82d4d551b214905742c9e045185d352a',1,'vim.h']]],
   ['oa',['oa',['../structnormal__state.html#a2ccba895b87e76a320ad48b74c8207fd',1,'normal_state']]],
   ['oap',['oap',['../structcmdarg__S.html#a977734dc80074a0a55e43e20a0203a8e',1,'cmdarg_S']]],
   ['object',['object',['../structobject.html',1,'object'],['../api_2private_2defs_8h.html#ac1d573b78381906e7299e87cab9152bc',1,'Object():&#160;defs.h']]],
@@ -39,7 +38,7 @@ var searchData=
   ['op_5fappend',['OP_APPEND',['../ops_8h.html#aa257e5f97877dd14dc37355a3f399dc9',1,'ops.h']]],
   ['op_5fchange',['OP_CHANGE',['../ops_8h.html#a377c11894a7badab6bfe21ef7bebda09',1,'OP_CHANGE():&#160;ops.h'],['../ops_8c.html#a419b73b5fa28ab0acf629fe27306de70',1,'op_change(oparg_T *oap):&#160;ops.c']]],
   ['op_5fcolon',['OP_COLON',['../ops_8h.html#aa237977ec8ec22304c7430cc8b28ee47',1,'ops.h']]],
-  ['op_5fdelete',['OP_DELETE',['../ops_8h.html#a753e792a4508dbc3edc42e4aa2bf9d9a',1,'OP_DELETE():&#160;ops.h'],['../ops_8c.html#afe8903bc49a7fe3a2503ca6eda1e4727',1,'op_delete(oparg_T *oap):&#160;ops.c']]],
+  ['op_5fdelete',['op_delete',['../ops_8c.html#afe8903bc49a7fe3a2503ca6eda1e4727',1,'op_delete(oparg_T *oap):&#160;ops.c'],['../ops_8h.html#a753e792a4508dbc3edc42e4aa2bf9d9a',1,'OP_DELETE():&#160;ops.h']]],
   ['op_5ffilter',['OP_FILTER',['../ops_8h.html#ad5079f9b0ece753ba8d7ace3b4145188',1,'ops.h']]],
   ['op_5ffold',['OP_FOLD',['../ops_8h.html#ac7798a02a6749e56505162275a165b16',1,'ops.h']]],
   ['op_5ffoldclose',['OP_FOLDCLOSE',['../ops_8h.html#a0a1ed88901825bfe9ac249550a4b0acc',1,'ops.h']]],
@@ -48,7 +47,7 @@ var searchData=
   ['op_5ffolddelrec',['OP_FOLDDELREC',['../ops_8h.html#ad14a314ff0ce04864624fa9559d47b51',1,'ops.h']]],
   ['op_5ffoldopen',['OP_FOLDOPEN',['../ops_8h.html#a1616b41ec2dabcb4a5caf0d1c1f42c8b',1,'ops.h']]],
   ['op_5ffoldopenrec',['OP_FOLDOPENREC',['../ops_8h.html#a1765abe3edf065a4f02558cfd7f245fd',1,'ops.h']]],
-  ['op_5fformat',['op_format',['../ops_8c.html#a1181ca289c5f7abd1589a080b2e1937d',1,'op_format(oparg_T *oap, int keep_cursor):&#160;ops.c'],['../ops_8h.html#a24cd0ab7c48683860091f753d5fd1a44',1,'OP_FORMAT():&#160;ops.h']]],
+  ['op_5fformat',['OP_FORMAT',['../ops_8h.html#a24cd0ab7c48683860091f753d5fd1a44',1,'OP_FORMAT():&#160;ops.h'],['../ops_8c.html#a1181ca289c5f7abd1589a080b2e1937d',1,'op_format(oparg_T *oap, int keep_cursor):&#160;ops.c']]],
   ['op_5fformat2',['OP_FORMAT2',['../ops_8h.html#a7c4f694de2251e0cd7ee208480139e39',1,'ops.h']]],
   ['op_5fformatexpr',['op_formatexpr',['../ops_8c.html#a50357880bd18267d82dfb5d2858c3efc',1,'ops.c']]],
   ['op_5ffunction',['OP_FUNCTION',['../ops_8h.html#a7128082abfd9a473175349e33e0c0d6b',1,'ops.h']]],

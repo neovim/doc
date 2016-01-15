@@ -80,8 +80,6 @@ var searchData=
   ['search_5fpeek',['SEARCH_PEEK',['../search_8h.html#aa46b25e2656aab3825a3d5a8f0260304',1,'search.h']]],
   ['search_5frev',['SEARCH_REV',['../search_8h.html#a07a38090abb13f7f92ae438370d8cbad',1,'search.h']]],
   ['search_5fstart',['SEARCH_START',['../search_8h.html#a2e199ef5fb21516212933ce629fbb35c',1,'search.h']]],
-  ['seek_5fend',['SEEK_END',['../misc1_8c.html#ad2a2e6c114780c3071efd24f16c7f7d8',1,'SEEK_END():&#160;misc1.c'],['../os__unix_8c.html#ad2a2e6c114780c3071efd24f16c7f7d8',1,'SEEK_END():&#160;os_unix.c']]],
-  ['seek_5fset',['SEEK_SET',['../misc1_8c.html#a0d112bae8fd35be772185b6ec6bcbe64',1,'SEEK_SET():&#160;misc1.c'],['../os__unix_8c.html#a0d112bae8fd35be772185b6ec6bcbe64',1,'SEEK_SET():&#160;os_unix.c']]],
   ['select_5fnth',['SELECT_NTH',['../ui_8c.html#a9fbb99984776342d2b89262373bd6ae7',1,'ui.c']]],
   ['selectmode',['SELECTMODE',['../vim_8h.html#a1a494303c1f194480adadd34a07588a3',1,'vim.h']]],
   ['serr',['SERR',['../shada_8c.html#a3b28ee4a7e0e86401873af66643535cc',1,'shada.c']]],
