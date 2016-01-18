@@ -42,7 +42,7 @@ var searchData=
   ['vim_5ferr_5fwrite',['vim_err_write',['../vim_8c.html#a53e0717a2dc85789a662a9e461c6f51b',1,'vim.c']]],
   ['vim_5feval',['vim_eval',['../vim_8c.html#afee5ba466cb02c072a306878720801e3',1,'vim.c']]],
   ['vim_5ffeedkeys',['vim_feedkeys',['../vim_8c.html#a14ec70cfc535abb477ce58039dbf8273',1,'vim.c']]],
-  ['vim_5ffgets',['vim_fgets',['../fileio_8c.html#a5db19ca608e2af8356b6808c8e355bbb',1,'fileio.c']]],
+  ['vim_5ffgets',['vim_fgets',['../fileio_8c.html#a457c950782cd872eb94c07ed1b49453f',1,'fileio.c']]],
   ['vim_5ffindfile',['vim_findfile',['../file__search_8c.html#af95864d052ae99e73ba971678025053a',1,'file_search.c']]],
   ['vim_5ffindfile_5fcleanup',['vim_findfile_cleanup',['../file__search_8c.html#a191b4c74df03558af4c7cd7926d5dda6',1,'file_search.c']]],
   ['vim_5ffindfile_5ffree_5fvisited',['vim_findfile_free_visited',['../file__search_8c.html#ad06e097ebf9fd4cef08b15d52c36d94d',1,'file_search.c']]],

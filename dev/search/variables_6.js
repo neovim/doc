@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['false',['false',['../fileio_8c.html#a5df37b7f02e5cdc7d9412b7f872b8e01',1,'fileio.c']]],
   ['farsi_5ftext_5f1',['farsi_text_1',['../farsi_8c.html#a24d9aaf3acb5ee2e3bd088ffe815c1b4',1,'farsi_text_1():&#160;farsi.c'],['../farsi_8h.html#a24d9aaf3acb5ee2e3bd088ffe815c1b4',1,'farsi_text_1():&#160;farsi.c']]],
   ['farsi_5ftext_5f2',['farsi_text_2',['../farsi_8c.html#abacaae9b79fc2d0ed10c1dd59119378a',1,'farsi_text_2():&#160;farsi.c'],['../farsi_8h.html#abacaae9b79fc2d0ed10c1dd59119378a',1,'farsi_text_2():&#160;farsi.c']]],
   ['farsi_5ftext_5f3',['farsi_text_3',['../farsi_8c.html#a29453749fd8985cf1db739552798af98',1,'farsi_text_3():&#160;farsi.c'],['../farsi_8h.html#a29453749fd8985cf1db739552798af98',1,'farsi_text_3():&#160;farsi.c']]],

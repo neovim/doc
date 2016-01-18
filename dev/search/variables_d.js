@@ -16,7 +16,7 @@ var searchData=
   ['mark',['mark',['../structfilemark.html#a1a2f2983576f4696075eec5809c3c8dc',1,'filemark::mark()'],['../structShadaEntry.html#a39319e88f3b9c411c7c1d8e6a154970c',1,'ShadaEntry::mark()'],['../undo_8c.html#aac673f4dbac79922838901b5974a419a',1,'mark():&#160;undo.c']]],
   ['mark_5fname',['mark_name',['../mark_8c.html#acfe9d221c5cb59074a0b86b8a13b2fdc',1,'mark.c']]],
   ['marks',['marks',['../structFileMarks.html#a18074032291d25d78641185edf4f6842',1,'FileMarks']]],
-  ['match',['match',['../structsyn__time__T.html#a673fa9f7d833e9a6259740ac60973948',1,'syn_time_T::match()'],['../structmatchitem.html#af028026cfe5235c85224ec04dd75e9cd',1,'matchitem::match()'],['../structtime__entry__T.html#a341a13df411706b6041759ae12dff78b',1,'time_entry_T::match()']]],
+  ['match',['match',['../structsyn__time__T.html#a673fa9f7d833e9a6259740ac60973948',1,'syn_time_T::match()'],['../structmatchitem.html#af028026cfe5235c85224ec04dd75e9cd',1,'matchitem::match()'],['../structtime__entry__T.html#a341a13df411706b6041759ae12dff78b',1,'time_entry_T::match()'],['../fileio_8c.html#accb9e3891f1b5e10699e8048d6762923',1,'match():&#160;fileio.c']]],
   ['match_5ftext',['match_text',['../structnfa__regprog__T.html#a533b14763f3ebfa4c7fbb59fdd11a8a2',1,'nfa_regprog_T']]],
   ['matched',['matched',['../structSearchedFile.html#a7d67d11c8b49f7493e1f48f5cc3ff5b1',1,'SearchedFile']]],
   ['matches',['matches',['../structreg__extmatch__T.html#a37bc6d5e3d3cbf48d30d178d54afb5f7',1,'reg_extmatch_T']]],

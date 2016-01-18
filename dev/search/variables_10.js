@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['p',['p',['../fileio_8c.html#a4c3cc73420e5866312929634a8de9f0e',1,'fileio.c']]],
   ['p_5facd',['p_acd',['../option__defs_8h.html#a63b575d361b4b4ef34bb665dd678bf51',1,'option_defs.h']]],
   ['p_5faleph',['p_aleph',['../option__defs_8h.html#ac114606ee3126205617efa00d20527ce',1,'option_defs.h']]],
   ['p_5faltkeymap',['p_altkeymap',['../option__defs_8h.html#a7078784abd579474de10f9207e5bbe30',1,'option_defs.h']]],

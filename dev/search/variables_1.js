@@ -45,7 +45,7 @@ var searchData=
   ['al_5fga',['al_ga',['../structarglist.html#a3feae17336b5931fdfd198873708cd4b',1,'arglist']]],
   ['al_5frefcount',['al_refcount',['../structarglist.html#ae7f6f1a5cfdf15002ea85b8e1da2d714',1,'arglist']]],
   ['allocated_5fsize',['allocated_size',['../memory_8c.html#af31444d597c4a2dfb5e543712cb57d3d',1,'memory.c']]],
-  ['allow_5fdirs',['allow_dirs',['../structAutoPat.html#af0fba23e108129b46e59ccfd46e6046a',1,'AutoPat']]],
+  ['allow_5fdirs',['allow_dirs',['../structAutoPat.html#af0fba23e108129b46e59ccfd46e6046a',1,'AutoPat::allow_dirs()'],['../fileio_8c.html#a59699feab37e670ebd9a6c8fa4621a4e',1,'allow_dirs():&#160;fileio.c']]],
   ['amount',['amount',['../structexarg.html#a7e7dc0f18f093975cc871ab38e6104e4',1,'exarg']]],
   ['append',['append',['../structexarg.html#a4a11bed5908196f1dcedb2cf75deaa80',1,'exarg']]],
   ['arg',['arg',['../structexarg.html#a0475c81a28af8ee0b13887cd159fa21c',1,'exarg::arg()'],['../structcmdarg__S.html#a906225e6ec0125888b3af52dcbbc6734',1,'cmdarg_S::arg()']]],

@@ -39,7 +39,7 @@ var searchData=
   ['f_5fstar',['F_STAR',['../farsi_8h.html#a09a2d1229b0b5e1abac043aa1898361f',1,'farsi.h']]],
   ['f_5funderline',['F_UNDERLINE',['../farsi_8h.html#a312bb8cd20b6a58c74887e93b197ac94',1,'farsi.h']]],
   ['fail',['FAIL',['../vim_8h.html#abb508ea8227673f419e9fe3a86c30d8e',1,'vim.h']]],
-  ['false',['FALSE',['../vim_8h.html#aa93f0eb578d23995850d61f7d61c55c1',1,'vim.h']]],
+  ['false',['FALSE',['../vim_8h.html#aa93f0eb578d23995850d61f7d61c55c1',1,'FALSE():&#160;vim.h'],['../fileio_8c.html#a5df37b7f02e5cdc7d9412b7f872b8e01',1,'false():&#160;fileio.c']]],
   ['farsi_2ec',['farsi.c',['../farsi_8c.html',1,'']]],
   ['farsi_2eh',['farsi.h',['../farsi_8h.html',1,'']]],
   ['farsi_5f0',['FARSI_0',['../farsi_8h.html#a17ea4cab380da66339c8df5e44f926f6',1,'farsi.h']]],

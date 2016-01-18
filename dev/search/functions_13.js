@@ -48,7 +48,7 @@ var searchData=
   ['transchar_5fnonprint',['transchar_nonprint',['../charset_8c.html#a9e509b73b4ded6e2f9192cfed60cfc76',1,'charset.c']]],
   ['translated_5ffunction_5fexists',['translated_function_exists',['../eval_8c.html#a52486eccdcd1af346e2630c22fa3f1ee',1,'eval.c']]],
   ['transstr',['transstr',['../charset_8c.html#aa6cd69a6bf19b8313271c363bef99e68',1,'charset.c']]],
-  ['trigger_5fcursorhold',['trigger_cursorhold',['../fileio_8c.html#a9d64dd270633eb23211034eaaa2e2955',1,'fileio.c']]],
+  ['trigger_5fcursorhold',['trigger_cursorhold',['../fileio_8c.html#af6c72322b24b9fb81e4778dc8fb2fb91',1,'fileio.c']]],
   ['trunc_5fstring',['trunc_string',['../message_8c.html#ada41b9374b5cf03bf7e8d164025b15ba',1,'message.c']]],
   ['truncate_5fline',['truncate_line',['../misc1_8c.html#ab1611ae8b3fff29992a3968e0a713e44',1,'misc1.c']]],
   ['truncate_5fspaces',['truncate_spaces',['../edit_8c.html#a6f8bd267f6f8f04fc4f5c10f44422440',1,'edit.c']]],

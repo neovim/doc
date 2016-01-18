@@ -9,7 +9,6 @@ var searchData=
   ['l_5fvars_5fvar',['l_vars_var',['../structfunccall__S.html#a9661e59bf1bce5f0b0f581f554b9c508',1,'funccall_S']]],
   ['langmap_5fmapchar',['langmap_mapchar',['../globals_8h.html#a06e0c0a1d802605e04e6df8755346e9f',1,'globals.h']]],
   ['last',['last',['../structAutoCmd.html#adba198825256be7ba7ac057c334f4711',1,'AutoCmd::last()'],['../structAutoPat.html#a4e378cae5b1c4f68b9f7f481691c5805',1,'AutoPat::last()'],['../structinterval.html#ab6099a65f757b6ca9207bbe761004a85',1,'interval::last()'],['../structHMLList.html#aaba2fc75b8687b7a2a141c97b5a065b1',1,'HMLList::last()']]],
-  ['last_5fcursormoved',['last_cursormoved',['../globals_8h.html#a1805d43a8d9caf59e41d92911f82a47c',1,'globals.h']]],
   ['last_5ffree_5fentry',['last_free_entry',['../structHMLList.html#a8d9a25dc62bef0825d82ed20e69070d2',1,'HMLList']]],
   ['last_5fhist_5fentry',['last_hist_entry',['../structHistoryMergerState.html#aaa67d73ffec4e8b213f72f2cdd5a2679',1,'HistoryMergerState']]],
   ['lastc',['lastc',['../structinsert__state.html#a1a35052388b2b6794ffc5a800b6ae7a1',1,'insert_state']]],

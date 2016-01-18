@@ -115,7 +115,7 @@ var searchData=
   ['check_5fmark',['check_mark',['../mark_8c.html#a585f7546c30b5ef64a6bb8eae6ea9131',1,'mark.c']]],
   ['check_5fneed_5fswap',['check_need_swap',['../memline_8c.html#a6a6a68ff0366721a068693b1a8752a1c',1,'memline.c']]],
   ['check_5fnextcmd',['check_nextcmd',['../ex__docmd_8c.html#a55354ea0205ec9ad5b42ae52c1352edd',1,'ex_docmd.c']]],
-  ['check_5fnomodeline',['check_nomodeline',['../fileio_8c.html#a14041093e5609ef669b2b8cc053d1dd7',1,'fileio.c']]],
+  ['check_5fnomodeline',['check_nomodeline',['../fileio_8c.html#a2499b1f09040c0eeb2c409c46a4050d0',1,'fileio.c']]],
   ['check_5foptions',['check_options',['../option_8c.html#ad190771568b0991cf2d104675cdcb305',1,'option.c']]],
   ['check_5foverwrite',['check_overwrite',['../ex__cmds_8c.html#ad29eb349a3f1439950736dfa0d4fd7a1',1,'ex_cmds.c']]],
   ['check_5fpath',['CHECK_PATH',['../search_8h.html#adb6f101173bcdff98b8a834cdd97fe65',1,'search.h']]],

@@ -6,7 +6,7 @@ var searchData=
   ['xfile',['XFILE',['../ex__cmds__defs_8h.html#ac24922843682a0947847063be3180b12',1,'ex_cmds_defs.h']]],
   ['xfilemark',['xfilemark',['../structxfilemark.html',1,'']]],
   ['xfmark_5ft',['xfmark_T',['../mark__defs_8h.html#a9be7fc3eb3c4e7926c9cb1a4c7f8b3eb',1,'mark_defs.h']]],
-  ['xfree',['xfree',['../memline_8c.html#a9b2bf7d2538a7cffa3a8c8960f1d4528',1,'xfree(dir_name):&#160;memline.c'],['../memory_8c.html#a976e14808b9247ec952c262553f09f8f',1,'xfree(void *ptr):&#160;memory.c']]],
+  ['xfree',['xfree',['../fileio_8c.html#a14429458c03b9ba5d28054fe4c098324',1,'xfree(regpat):&#160;fileio.c'],['../memline_8c.html#a9b2bf7d2538a7cffa3a8c8960f1d4528',1,'xfree(dir_name):&#160;memline.c'],['../memory_8c.html#a976e14808b9247ec952c262553f09f8f',1,'xfree(void *ptr):&#160;memory.c']]],
   ['xmalloc',['xmalloc',['../memory_8c.html#aa946fb0a1f9e3d380d37d3fc77b085e4',1,'memory.c']]],
   ['xmallocz',['xmallocz',['../memory_8c.html#a219302c1a427e6037a2c88fb06536470',1,'memory.c']]],
   ['xmemdup',['xmemdup',['../memory_8c.html#a40f83fec2046a44aa9c75ddb259a551d',1,'memory.c']]],

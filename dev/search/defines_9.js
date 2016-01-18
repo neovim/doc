@@ -84,7 +84,7 @@ var searchData=
   ['index_5fsize',['INDEX_SIZE',['../memline_8c.html#a33bdc994ac7c8cda7d0df1a3369ab965',1,'memline.c']]],
   ['indoff_5ffile',['INDOFF_FILE',['../globals_8h.html#aff96af6b88fc52d92fd2ba5c301a73b9',1,'globals.h']]],
   ['info_5flog_5flevel',['INFO_LOG_LEVEL',['../log_8h.html#a8fa6c5ec8254575a940cf0a632310a95',1,'log.h']]],
-  ['init',['INIT',['../globals_8h.html#a6964dec5207b7152ab40ad9402b46727',1,'globals.h']]],
+  ['init',['INIT',['../globals_8h.html#afb8d9d5b560c7c17181409c6a43b6c21',1,'globals.h']]],
   ['init_5fpos_5ft',['INIT_POS_T',['../pos_8h.html#ad3aa329e09b00bea4fb5a256461e476f',1,'pos.h']]],
   ['init_5fspecial_5fdict',['INIT_SPECIAL_DICT',['../eval_8c.html#a675a519871829c5d7da1c74b0a08b0ef',1,'eval.c']]],
   ['initializer',['INITIALIZER',['../map_8c.html#aa2bffdb71a5868e5d31b6318d68da954',1,'map.c']]],

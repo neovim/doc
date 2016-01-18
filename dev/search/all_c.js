@@ -23,7 +23,6 @@ var searchData=
   ['last_5fcsearch',['last_csearch',['../search_8c.html#a8dde058b173be984026d663ddd29999a',1,'search.c']]],
   ['last_5fcsearch_5fforward',['last_csearch_forward',['../search_8c.html#a864f93b492776e84fa22e74f4cc1c048',1,'search.c']]],
   ['last_5fcsearch_5funtil',['last_csearch_until',['../search_8c.html#ac831f957fc26841aa74b917913fda4f2',1,'search.c']]],
-  ['last_5fcursormoved',['last_cursormoved',['../globals_8h.html#a1805d43a8d9caf59e41d92911f82a47c',1,'globals.h']]],
   ['last_5ffree_5fentry',['last_free_entry',['../structHMLList.html#a8d9a25dc62bef0825d82ed20e69070d2',1,'HMLList']]],
   ['last_5fhist_5fentry',['last_hist_entry',['../structHistoryMergerState.html#aaa67d73ffec4e8b213f72f2cdd5a2679',1,'HistoryMergerState']]],
   ['last_5fnl',['LAST_NL',['../regexp_8c.html#aca1237a4f196d8689749024a6ef630d2',1,'regexp.c']]],

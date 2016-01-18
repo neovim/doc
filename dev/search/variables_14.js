@@ -8,7 +8,7 @@ var searchData=
   ['tagkind_5fend',['tagkind_end',['../structtag__pointers.html#a4b5eedf1b5f10b1068bff053b4bb46a7',1,'tag_pointers']]],
   ['tagname',['tagname',['../structtaggy.html#aee308aeb12b65dcdd7798dadd2c8ced3',1,'taggy::tagname()'],['../structmparm__T.html#a0cf3d2ff9d7d59a02e6694116e6f8d5c',1,'mparm_T::tagname()'],['../structtag__pointers.html#ad886aca883599e0a9134e8bfa41bd10c',1,'tag_pointers::tagname()']]],
   ['tagname_5fend',['tagname_end',['../structtag__pointers.html#a66a59748a681e8bc7c9dc4676738906d',1,'tag_pointers']]],
-  ['tail',['tail',['../structAutoPatCmd.html#acb7dbef76629d904e8c367223de49042',1,'AutoPatCmd']]],
+  ['tail',['tail',['../structAutoPatCmd.html#acb7dbef76629d904e8c367223de49042',1,'AutoPatCmd::tail()'],['../fileio_8c.html#ab4d38fad34e8766bd378a7c72fcc7093',1,'tail():&#160;fileio.c']]],
   ['tb_5fbuf',['tb_buf',['../structtypebuf__T.html#a28ee0fa5db7faf6303cdd27ed59ea6e7',1,'typebuf_T']]],
   ['tb_5fbuflen',['tb_buflen',['../structtypebuf__T.html#a31858ffef6dabbe26b565d127c210fa0',1,'typebuf_T']]],
   ['tb_5fchange_5fcnt',['tb_change_cnt',['../structtypebuf__T.html#a885d8e1711c7e42c4aa4a024a3255816',1,'typebuf_T']]],
@@ -91,7 +91,6 @@ var searchData=
   ['tty',['tty',['../structTUIData.html#a184e58b2673bf557eeb8613c67126544',1,'TUIData']]],
   ['tty_5ffd',['tty_fd',['../structpty__process.html#ad60246a2d102e98f30daf4b817aeae5a',1,'pty_process']]],
   ['type',['type',['../structError.html#a4d9ef9fdc894088985e42ccda181ece7',1,'Error::type()'],['../structobject.html#a604599eed152e854882bc42dd2d2e1c8',1,'object::type()'],['../structMPConvStackVal.html#a2d49fb6f7018083fda80241a5078841c',1,'MPConvStackVal::type()'],['../structprocess.html#a3c14102b9af8a3252a698020ca281ef4',1,'process::type()'],['../structvim__exception.html#adaecf14218ac2f99cd1605ba53de270a',1,'vim_exception::type()'],['../structprt__ps__resource__S.html#a126067dae10ce91db799cbb1cb612788',1,'prt_ps_resource_S::type()'],['../structprt__dsc__comment__S.html#a79b9d6809e65705201ed47e5ef606474',1,'prt_dsc_comment_S::type()'],['../structprt__dsc__line__S.html#a2735854c832ab5fb4ab083752c4e2b8d',1,'prt_dsc_line_S::type()'],['../structShadaEntry.html#a03a007a32b18f2768a7ee74723fd1c57',1,'ShadaEntry::type()'],['../structShadaEntry.html#a7031bb68df0e0cfda12f7d24be3118de',1,'ShadaEntry::type()'],['../structShadaEntry.html#a148909fd9c86351e30f483a7dd9abc1c',1,'ShadaEntry::type()']]],
-  ['typebuf',['typebuf',['../globals_8h.html#a4e9012cf977e9e267c5abc7d35ad8c2b',1,'globals.h']]],
   ['typebuf_5fvalid',['typebuf_valid',['../structtasave__T.html#a2cdb997dd06793e153cdf8c8b1ce938a',1,'tasave_T']]],
   ['typenr',['typenr',['../structsignlist.html#aabc72a70d2cc4ab53c8d801be741a427',1,'signlist']]]
 ];
