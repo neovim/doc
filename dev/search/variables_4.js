@@ -18,6 +18,7 @@ var searchData=
   ['def_5fval',['def_val',['../structvimoption.html#a02080f31d3828e1dc17c7c302f530ae3',1,'vimoption']]],
   ['defcs',['defcs',['../structprt__ps__mbfont__S.html#ad77571933a5b85451fc7e170ae234fee',1,'prt_ps_mbfont_S']]],
   ['destroy',['destroy',['../structterminal.html#ad785a1239a104c85eebc4c3df0d3816e',1,'terminal']]],
+  ['detach',['detach',['../structprocess.html#a6325e6b3e7fb9750539d068d3c2d8d3c',1,'process']]],
   ['df_5fcount',['df_count',['../structdiffblock__S.html#a6938c69f7e8e19010a770057e65d0435',1,'diffblock_S']]],
   ['df_5flnum',['df_lnum',['../structdiffblock__S.html#a82f970d5ad78238ad763c9d8a4383626',1,'diffblock_S']]],
   ['df_5fnext',['df_next',['../structdiffblock__S.html#aefdb1f7cdeacf248226030fc73acf504',1,'diffblock_S']]],
