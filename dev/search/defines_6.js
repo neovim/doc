@@ -116,6 +116,7 @@ var searchData=
   ['fname_5fincl',['FNAME_INCL',['../window_8h.html#a72582fa6b0814fd69c64cc3fc322de58',1,'window.h']]],
   ['fname_5fmess',['FNAME_MESS',['../window_8h.html#a41ee29d7e05a52bc4e6933b63711eb0d',1,'window.h']]],
   ['fname_5frel',['FNAME_REL',['../window_8h.html#a96699be0ef5bff2130fbca6abd4a6100',1,'window.h']]],
+  ['fname_5funesc',['FNAME_UNESC',['../window_8h.html#aa20a9a609a7a18ee61b20f697a696b5d',1,'window.h']]],
   ['fnamecmp',['fnamecmp',['../vim_8h.html#a74e72b20fdc634f1981f0e0b503368e9',1,'vim.h']]],
   ['fnamencmp',['fnamencmp',['../vim_8h.html#a9be62a551d4fba0ca6f627386c3ccbe8',1,'vim.h']]],
   ['fne_5fcheck_5fstart',['FNE_CHECK_START',['../eval_8c.html#a85d47bb3b1c8299f77d3c8c16dc65a2d',1,'eval.c']]],
