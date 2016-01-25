@@ -46,7 +46,7 @@ var searchData=
   ['win_5fsize_5fsave',['win_size_save',['../window_8c.html#aed1b8fb5cc87b15ba602f74e0151bcc5',1,'window.c']]],
   ['win_5fsplit',['win_split',['../window_8c.html#a150cb04cf7d8e9a194bb077c05bd11c1',1,'window.c']]],
   ['win_5fsplit_5fins',['win_split_ins',['../window_8c.html#a51607554402719a3abe0dc993ee92624',1,'window.c']]],
-  ['win_5fvalid',['win_valid',['../window_8c.html#aedbaa2cf18d8324ccc43328f703a9555',1,'window.c']]],
+  ['win_5fvalid',['win_valid',['../window_8c.html#a66b1d63770a5e8163ddbcd7dbd7e6174',1,'window.c']]],
   ['window_5fget_5fbuffer',['window_get_buffer',['../api_2window_8c.html#aa38f629d604ea528ddcc7e1193b98783',1,'window.c']]],
   ['window_5fget_5fheight',['window_get_height',['../api_2window_8c.html#a693e312cb354237f27610ebb2603741b',1,'window.c']]],
   ['window_5fget_5foption',['window_get_option',['../api_2window_8c.html#a573b38cf3ae5ec6326afc3e322744f4b',1,'window.c']]],

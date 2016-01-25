@@ -152,6 +152,7 @@ var searchData=
   ['event_5fteardown',['event_teardown',['../main_8c.html#a06c6aabcc3dd02f9fb072c93292120e2',1,'main.c']]],
   ['events',['events',['../structTerminalJobData.html#aabe888190bb4c208cca4560db7ceecff',1,'TerminalJobData::events()'],['../structloop.html#a5e081a83e6b27d44d10d40e7f8f83a53',1,'loop::events()'],['../structprocess.html#a952dd568334a57bad9cb45b8d5be0f2e',1,'process::events()'],['../structsignal__watcher.html#a7b1f48487db7162cff827931f84ef266',1,'signal_watcher::events()'],['../structsocket__watcher.html#a1ae468c06d45d265684808b86827bf47',1,'socket_watcher::events()'],['../structstream.html#aa297db6d2b78bb79aa73de167da9415a',1,'stream::events()'],['../structtime__watcher.html#aa7a4d95e73dc1d8191cb6d313103ddc6',1,'time_watcher::events()']]],
   ['ew_5faddslash',['EW_ADDSLASH',['../path_8h.html#a4e1bfb7673109c5c7ac197d496f08b41',1,'path.h']]],
+  ['ew_5falllinks',['EW_ALLLINKS',['../path_8h.html#a4c92c12993cfe6942f165d8196f32083',1,'path.h']]],
   ['ew_5fdir',['EW_DIR',['../path_8h.html#abe0224d3c1e7766623f8b9a1c3728b7d',1,'path.h']]],
   ['ew_5fexec',['EW_EXEC',['../path_8h.html#ad7df52712403033a595fa4d53cbbe8b1',1,'path.h']]],
   ['ew_5ffile',['EW_FILE',['../path_8h.html#aa97249d6f36568a65ef1b11aa3db1aa2',1,'path.h']]],
