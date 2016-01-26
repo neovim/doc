@@ -111,6 +111,7 @@ var searchData=
   ['pslf',['PSLF',['../hardcopy_8c.html#a38c85019a302991f57fcf9e0a6069ae8',1,'hardcopy.c']]],
   ['ptr2char',['PTR2CHAR',['../macros_8h.html#a078820ab9a769596a2903f67dc8211d4',1,'macros.h']]],
   ['ptr2int',['PTR2INT',['../ui__bridge_8c.html#a5c737be4e7ff27de89c1df1bd2e099eb',1,'ui_bridge.c']]],
+  ['ptr2len',['PTR2LEN',['../regexp__nfa_8c.html#a46955d7ff956ab0f11f73776726502b0',1,'regexp_nfa.c']]],
   ['ptr_5fid',['PTR_ID',['../memline_8c.html#a23d0125357ec4465a50f841f634c9214',1,'memline.c']]],
   ['pum_5fdef_5fheight',['PUM_DEF_HEIGHT',['../popupmnu_8c.html#a0f3ee6117b87bb47c85260f599f0d9dd',1,'popupmnu.c']]],
   ['pum_5fdef_5fwidth',['PUM_DEF_WIDTH',['../popupmnu_8c.html#a458040f96c51b2f709647c5588946d88',1,'popupmnu.c']]],
