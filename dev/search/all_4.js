@@ -102,6 +102,7 @@ var searchData=
   ['dflt_5frows',['DFLT_ROWS',['../globals_8h.html#a1fb8133cc0ac465a3b8414923a5fe59e',1,'globals.h']]],
   ['di2hikey',['DI2HIKEY',['../eval__defs_8h.html#ac56f1d8eb3176f30f192eabf7961e504',1,'eval_defs.h']]],
   ['di_5fflags',['di_flags',['../structdictitem__S.html#af62f94636a49f241dec930a1f0221639',1,'dictitem_S']]],
+  ['di_5fflags_5falloc',['DI_FLAGS_ALLOC',['../eval__defs_8h.html#acb8f1360394c6d119bbee47ece62d2d1',1,'eval_defs.h']]],
   ['di_5fflags_5ffix',['DI_FLAGS_FIX',['../eval__defs_8h.html#abd160561e02e77bd1dcaeb134e57732e',1,'eval_defs.h']]],
   ['di_5fflags_5flock',['DI_FLAGS_LOCK',['../eval__defs_8h.html#a84da1cb7b5fbef50a23b3c98f81ca1bf',1,'eval_defs.h']]],
   ['di_5fflags_5fro',['DI_FLAGS_RO',['../eval__defs_8h.html#ae0c626ccf1ee8fae352bfd2e406b245f',1,'eval_defs.h']]],
