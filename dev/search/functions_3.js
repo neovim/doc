@@ -66,7 +66,7 @@ var searchData=
   ['discard_5fpending_5freturn',['discard_pending_return',['../eval_8c.html#a93183836efa78e55c54c2d730089bbc2',1,'eval.c']]],
   ['display_5fconfirm_5fmsg',['display_confirm_msg',['../message_8c.html#a4c4d5b17a4702f7b201dd19b8745cecf',1,'message.c']]],
   ['display_5fdollar',['display_dollar',['../edit_8c.html#a7e377c5d04aac75d3d7f67eec42242bc',1,'edit.c']]],
-  ['do_5faddsub',['do_addsub',['../ops_8c.html#a92b03a8820dd951d211cf610b63ebcbc',1,'ops.c']]],
+  ['do_5faddsub',['do_addsub',['../ops_8c.html#a2fa268d184a9a69180267467367cab16',1,'ops.c']]],
   ['do_5farg_5fall',['do_arg_all',['../buffer_8c.html#a826d8e94df20a821d12d6a51cb769948',1,'buffer.c']]],
   ['do_5fargfile',['do_argfile',['../ex__cmds2_8c.html#a79e124d37832db5655cd83269eabb37c',1,'ex_cmds2.c']]],
   ['do_5fascii',['do_ascii',['../ex__cmds_8c.html#ac25ed2f06deea757e7e43b33100e4014',1,'ex_cmds.c']]],

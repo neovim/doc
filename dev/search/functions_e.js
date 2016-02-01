@@ -6,6 +6,7 @@ var searchData=
   ['onepage',['onepage',['../move_8c.html#a56f6d7a5ad408f32065c6a12abc6f4a1',1,'move.c']]],
   ['oneright',['oneright',['../edit_8c.html#a014d27f2c69f9b35397c4c363c4a9a8f',1,'edit.c']]],
   ['only_5fone_5fwindow',['only_one_window',['../window_8c.html#a47b211ef092f4710496c33e0f8043f19',1,'window.c']]],
+  ['op_5faddsub',['op_addsub',['../ops_8c.html#a36bd271a2b8c18b831e7e4f7cb3c6149',1,'ops.c']]],
   ['op_5fchange',['op_change',['../ops_8c.html#a419b73b5fa28ab0acf629fe27306de70',1,'ops.c']]],
   ['op_5fdelete',['op_delete',['../ops_8c.html#afe8903bc49a7fe3a2503ca6eda1e4727',1,'ops.c']]],
   ['op_5fformat',['op_format',['../ops_8c.html#a1181ca289c5f7abd1589a080b2e1937d',1,'ops.c']]],

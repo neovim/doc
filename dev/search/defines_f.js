@@ -32,6 +32,8 @@ var searchData=
   ['op_5flower',['OP_LOWER',['../ops_8h.html#a876d4b3e005bdf09ca4e58d26a78e1dd',1,'ops.h']]],
   ['op_5flshift',['OP_LSHIFT',['../ops_8h.html#acbab52d1cf23ff9e9e0f7ba7754ee0d1',1,'ops.h']]],
   ['op_5fnop',['OP_NOP',['../ops_8h.html#a470b039eb8cfe27a1810bb01c2f4ac30',1,'ops.h']]],
+  ['op_5fnr_5fadd',['OP_NR_ADD',['../ops_8h.html#a491b49e1bb53f4a96d4a9db11bab4108',1,'ops.h']]],
+  ['op_5fnr_5fsub',['OP_NR_SUB',['../ops_8h.html#a3362d9b537929d434ff680ffb71c0c09',1,'ops.h']]],
   ['op_5fpending',['OP_PENDING',['../vim_8h.html#a495a0a463d2403303bd8c1966ac1439d',1,'vim.h']]],
   ['op_5freplace',['OP_REPLACE',['../ops_8h.html#a1c9f7fa8adab4bfb91c97d58f3d6990d',1,'ops.h']]],
   ['op_5frot13',['OP_ROT13',['../ops_8h.html#a321c70edb1501e75553e914580db697d',1,'ops.h']]],

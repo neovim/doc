@@ -207,7 +207,7 @@ var searchData=
   ['dlogn',['DLOGN',['../log_8h.html#a6c02857379d5dea6c2a034560525f83e',1,'log.h']]],
   ['dname',['dname',['../structVimMenu.html#a30b8838977b0d98a099850959514c786',1,'VimMenu']]],
   ['do_5fabbr',['do_abbr',['../structcommand__line__state.html#abb9c19b814b89466cb1a78d93833c63b',1,'command_line_state']]],
-  ['do_5faddsub',['do_addsub',['../ops_8c.html#a92b03a8820dd951d211cf610b63ebcbc',1,'ops.c']]],
+  ['do_5faddsub',['do_addsub',['../ops_8c.html#a2fa268d184a9a69180267467367cab16',1,'ops.c']]],
   ['do_5farg_5fall',['do_arg_all',['../buffer_8c.html#a826d8e94df20a821d12d6a51cb769948',1,'buffer.c']]],
   ['do_5fargfile',['do_argfile',['../ex__cmds2_8c.html#a79e124d37832db5655cd83269eabb37c',1,'ex_cmds2.c']]],
   ['do_5fascii',['do_ascii',['../ex__cmds_8c.html#ac25ed2f06deea757e7e43b33100e4014',1,'ex_cmds.c']]],
