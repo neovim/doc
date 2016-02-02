@@ -28,6 +28,8 @@ var searchData=
   ['spelltab_5ft',['spelltab_T',['../structspelltab__T.html',1,'']]],
   ['state_5fitem',['state_item',['../structstate__item.html',1,'']]],
   ['stl_5fhlrec',['stl_hlrec',['../structstl__hlrec.html',1,'']]],
+  ['stlclickdefinition',['StlClickDefinition',['../structStlClickDefinition.html',1,'']]],
+  ['stlclickrecord',['StlClickRecord',['../structStlClickRecord.html',1,'']]],
   ['stream',['stream',['../structstream.html',1,'']]],
   ['string',['String',['../structString.html',1,'']]],
   ['subcommand',['subcommand',['../structsubcommand.html',1,'']]],

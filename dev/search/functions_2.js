@@ -83,6 +83,7 @@ var searchData=
   ['clear_5fsb_5ftext',['clear_sb_text',['../message_8c.html#a9f6be00cfba941a309091cfdbddbc9bf',1,'message.c']]],
   ['clear_5fshowcmd',['clear_showcmd',['../normal_8c.html#a82ce96d55071328f8bba55da9a004c46',1,'normal.c']]],
   ['clear_5fstring_5foption',['clear_string_option',['../option_8c.html#a240b18e25b182721c6fa5467413a5383',1,'option.c']]],
+  ['clear_5ftab_5fpage_5fclick_5fdefs',['clear_tab_page_click_defs',['../screen_8c.html#a6ffc9377233727d7218afb1fc2e1f3ad',1,'screen.c']]],
   ['clear_5ftv',['clear_tv',['../eval_8c.html#a0305cc6241b38e6e49c48da0de1b560c',1,'eval.c']]],
   ['clear_5fwinopt',['clear_winopt',['../option_8c.html#aaf552b83a8b0efc26cdbb0e9cb74093e',1,'option.c']]],
   ['clearfolding',['clearFolding',['../fold_8c.html#acf12395a164cac77795ae1df759b2b29',1,'fold.c']]],
