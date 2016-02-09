@@ -337,6 +337,7 @@ var searchData=
   ['swb_5fsplit',['SWB_SPLIT',['../option__defs_8h.html#a83d74843a8c8f187268688cbea0a7c58',1,'option_defs.h']]],
   ['swb_5fuseopen',['SWB_USEOPEN',['../option__defs_8h.html#a043b24a9d186d65caeb2870a17f248e8',1,'option_defs.h']]],
   ['swb_5fusetab',['SWB_USETAB',['../option__defs_8h.html#ad652a0526c758adb3747654c8a188f9c',1,'option_defs.h']]],
+  ['swb_5fvsplit',['SWB_VSPLIT',['../option__defs_8h.html#af5e26e3b8d8d366afdf8fb18667a3ff5',1,'option_defs.h']]],
   ['sy_5fmaxlen',['SY_MAXLEN',['../spell_8c.html#ae2c3417666c4eb575875c84411aa0432',1,'spell.c']]],
   ['syn_5fclstr',['SYN_CLSTR',['../syntax_8c.html#a76796d29327e8a26a17c5f4ca37724cd',1,'syntax.c']]],
   ['syn_5fitems',['SYN_ITEMS',['../syntax_8c.html#a3981b10bad2a8bbdf9b57a6a640da814',1,'syntax.c']]],
