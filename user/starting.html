@@ -395,9 +395,10 @@ argument.
 		When {vimrc} is equal to &quot;NONE&quot; (all uppercase), all
 		initializations from files and environment <A HREF="eval.html#variables">variables</A> are
 		skipped, including reading the |<A HREF="ginit.html">ginit.vim</A>| file when the <A HREF="gui.html#GUI">GUI</A>
-		starts.  Loading plugins is also skipped.
+		starts.  Plugins and <A HREF="syntax.html#syntax">syntax</A> highlighting are also skipped.
 		When {vimrc} is equal to &quot;NORC&quot; (all uppercase), this has the
-		same effect <A HREF="motion.html#as">as</A> &quot;NONE&quot;, but loading plugins is not skipped.
+		same effect <A HREF="motion.html#as">as</A> &quot;NONE&quot;, but plugins and <A HREF="syntax.html#syntax">syntax</A> highlighting are
+		not skipped.
 
 
 							*<A NAME="-i"></A><B>-i</B>*
@@ -479,7 +480,8 @@ accordingly.  Vim proceeds in this order:
 	All following initializations until 4. are skipped. <A HREF="#$MYVIMRC">$MYVIMRC</A> is not
 	set.
 	&quot;vim <A HREF="#-u">-u</A> NORC&quot; can be used to skip these initializations without
-	reading a file.  &quot;vim -u NONE&quot; also skips loading plugins.  |<A HREF="#-u">-u</A>|
+	reading a file.  &quot;vim <A HREF="#-u">-u</A> NONE&quot; also skips plugins and <A HREF="syntax.html#syntax">syntax</A>
+	highlighting.  |<A HREF="#-u">-u</A>|
 
 	If Vim was started in <A HREF="intro.html#Ex">Ex</A> mode with the &quot;<A HREF="#-s">-s</A>&quot; argument, all following
 	initializations until 4. are skipped.  Only the &quot;<A HREF="#-u">-u</A>&quot; option is
@@ -514,8 +516,23 @@ accordingly.  Vim proceeds in this order:
 	-  The file &quot;.exrc&quot;  (for Unix)
 		    &quot;_exrc&quot;  (for <A HREF="os_win32.html#Win32">Win32</A>)
 
+4. Enable <A HREF="filetype.html#filetype">filetype</A> and indent plugins.
+	This does the same <A HREF="motion.html#as">as</A> the commands:
+<B>		:runtime! filetype.vim</B>
+<B>		:runtime! ftplugin.vim</B>
+<B>		:runtime! indent.vim</B>
+ 	This step is skipped if &quot;<A HREF="filetype.html#:filetype">:filetype</A> ...&quot; was called before now or if
+	the &quot;<A HREF="#-u">-u</A> NONE&quot; command line argument was given.
 
-4. Load the <A HREF="usr_05.html#plugin">plugin</A> scripts.					*<A NAME="load-plugins"></A><B>load-plugins</B>*
+5. Enable <A HREF="syntax.html#syntax">syntax</A> highlighting.
+	This does the same <A HREF="motion.html#as">as</A> the command:
+<B>		:runtime! syntax/syntax.vim</B>
+ 	Note: This enables <A HREF="filetype.html#filetype">filetype</A> detection even if &quot;<A HREF="filetype.html#:filetype">:filetype</A> off&quot; was
+	called before now.
+	This step is skipped if the &quot;<A HREF="#-u">-u</A> NONE&quot; command line argument was given.
+
+
+6. Load the <A HREF="usr_05.html#plugin">plugin</A> scripts.					*<A NAME="load-plugins"></A><B>load-plugins</B>*
 	This does the same <A HREF="motion.html#as">as</A> the command:
 <B>		:runtime! plugin/**/*.vim</B>
  	The result is that all directories in the <A HREF="options.html#'runtimepath'">'runtimepath'</A> option will be
@@ -531,31 +548,30 @@ accordingly.  Vim proceeds in this order:
 	commands from the command line have not been executed yet.  You can
 	use &quot;--cmd 'set noloadplugins&#39;&#34;' |<A HREF="#--cmd">--cmd</A>|.
 
-5. Set <A HREF="options.html#'shellpipe'">'shellpipe'</A> and <A HREF="options.html#'shellredir'">'shellredir'</A>
+7. Set <A HREF="options.html#'shellpipe'">'shellpipe'</A> and <A HREF="options.html#'shellredir'">'shellredir'</A>
 	The <A HREF="options.html#'shellpipe'">'shellpipe'</A> and <A HREF="options.html#'shellredir'">'shellredir'</A> <A HREF="options.html#options">options</A> are set according to the
 	value of the <A HREF="options.html#'shell'">'shell'</A> option, unless they have been set before.
 	This means that Vim will figure out the values of <A HREF="options.html#'shellpipe'">'shellpipe'</A> and
 	<A HREF="options.html#'shellredir'">'shellredir'</A> for you, unless you have set them yourself.
 
-6. Set <A HREF="options.html#'updatecount'">'updatecount'</A> to zero, if &quot;<A HREF="#-n">-n</A>&quot; command argument used
+8. Set <A HREF="options.html#'updatecount'">'updatecount'</A> to zero, if &quot;<A HREF="#-n">-n</A>&quot; command argument used
 
-7. Set binary <A HREF="options.html#options">options</A>
+9. Set binary <A HREF="options.html#options">options</A>
 	If the &quot;<A HREF="#-b">-b</A>&quot; flag was given to Vim, the <A HREF="options.html#options">options</A> for binary editing will
 	be set now.  See |<A HREF="#-b">-b</A>|.
 
-8. Perform <A HREF="gui.html#GUI">GUI</A> initializations
+10. Perform <A HREF="gui.html#GUI">GUI</A> initializations
 	Only when starting &quot;gvim&quot;, the <A HREF="gui.html#GUI">GUI</A> initializations will be done.  See
 	|<A HREF="gui.html#gui-init">gui-init</A>|.
 
-9. Read the ShaDa file
-	If the <A HREF="options.html#'shada'">'shada'</A> option is not empty, the ShaDa file is read.  See
-	|<A HREF="#shada-file">shada-file</A>|.
+11. Read the ShaDa file
+	See |<A HREF="#shada-file">shada-file</A>|.
 
-10. Read the <A HREF="quickfix.html#quickfix">quickfix</A> file
+12. Read the <A HREF="quickfix.html#quickfix">quickfix</A> file
 	If the &quot;<A HREF="#-q">-q</A>&quot; flag was given to Vim, the <A HREF="quickfix.html#quickfix">quickfix</A> file is read.  If this
 	fails, Vim exits.
 
-11. Open all <A HREF="windows.html#windows">windows</A>
+13. Open all <A HREF="windows.html#windows">windows</A>
 	When the |<A HREF="#-o">-o</A>| flag was given, <A HREF="windows.html#windows">windows</A> will be opened (but not
 	displayed yet).
 	When the |<A HREF="#-p">-p</A>| flag was given, <A HREF="intro.html#tab">tab</A> pages will be created (but not
@@ -564,7 +580,7 @@ accordingly.  Vim proceeds in this order:
 	If the &quot;<A HREF="#-q">-q</A>&quot; flag was given to Vim, the first error is jumped to.
 	Buffers for all <A HREF="windows.html#windows">windows</A> will be loaded.
 
-12. Execute <A HREF="#startup">startup</A> commands
+14. Execute <A HREF="#startup">startup</A> commands
 	If a &quot;<A HREF="#-t">-t</A>&quot; flag was given to Vim, the <A HREF="tagsrch.html#tag">tag</A> is jumped to.
 	The commands given with the |<A HREF="#-c">-c</A>| and |<A HREF="editing.html#+cmd">+cmd</A>| arguments are executed.
 	The starting flag is reset, has(&quot;vim_starting&quot;) will now return zero.
@@ -1463,7 +1479,7 @@ file when reading and include:
 
     <footer>
       <div class="container">
-        Generated Sun Feb 14 20:07:05 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/75f6817a5161949ca2ab08e36b8e0772b8d7da16"><code>75f6817</code></a>.
+        Generated Mon Feb 15 20:04:29 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/089368c15f0252d69bc63f34dea74866bed3ff09"><code>089368c</code></a>.
       </div>
     </footer>
   </body>
