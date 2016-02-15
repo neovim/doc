@@ -76,6 +76,7 @@ var searchData=
   ['command_5fend',['command_end',['../structtag__pointers.html#a97a79c57c80e981b9f4d7139cd08dfa4',1,'tag_pointers']]],
   ['command_5ffinished',['command_finished',['../structnormal__state.html#aaddc0c07c487a2d4515159754dd12c49',1,'normal_state']]],
   ['commands',['commands',['../structmparm__T.html#ae5d28efaae13f0ccdc8afc6656438438',1,'mparm_T']]],
+  ['conceal_5fchar',['conceal_char',['../structmatchitem.html#a2c58900c977ad8769e64d071427f1d7b',1,'matchitem']]],
   ['conceal_5fnew_5fcursor_5fline',['conceal_new_cursor_line',['../structnormal__state.html#a6a485e122e5409bbef7d07f6221cc6dd',1,'normal_state']]],
   ['conceal_5fold_5fcursor_5fline',['conceal_old_cursor_line',['../structnormal__state.html#af5fea00429c3cd051426fbc33a17830f',1,'normal_state']]],
   ['conceal_5fupdate_5flines',['conceal_update_lines',['../structnormal__state.html#aaf459e57483813355c251022bee29c46',1,'normal_state']]],

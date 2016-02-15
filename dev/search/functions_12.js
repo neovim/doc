@@ -250,6 +250,7 @@ var searchData=
   ['syn_5fget_5fsub_5fchar',['syn_get_sub_char',['../syntax_8c.html#a77cf992455cac4708706756b11304aa6',1,'syntax.c']]],
   ['syn_5fid2attr',['syn_id2attr',['../syntax_8c.html#afafe84f1574c1ec7912ea682445f13dc',1,'syntax.c']]],
   ['syn_5fid2name',['syn_id2name',['../syntax_8c.html#a453301a0803cdd006df65350a2a79546',1,'syntax.c']]],
+  ['syn_5fmaybe_5fon',['syn_maybe_on',['../syntax_8c.html#a47b74d1a5a50a5e5b16b62bfbe8e3ae6',1,'syntax.c']]],
   ['syn_5fname2id',['syn_name2id',['../syntax_8c.html#a81568cefb6df0f84da039d8a8faf5c8b',1,'syntax.c']]],
   ['syn_5fnamen2id',['syn_namen2id',['../syntax_8c.html#a2f9b2efcb1e456bb15ce7f751f5951ff',1,'syntax.c']]],
   ['syn_5fstack_5fapply_5fchanges',['syn_stack_apply_changes',['../syntax_8c.html#a9d196d850c1b47ab815f60d1d3e93430',1,'syntax.c']]],

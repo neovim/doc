@@ -21,7 +21,7 @@ var searchData=
   ['mark_5fglobal_5fiter',['mark_global_iter',['../mark_8c.html#a0f7e12c3ebc6680196d32ad9c319b4ef',1,'mark.c']]],
   ['mark_5fjumplist_5fiter',['mark_jumplist_iter',['../mark_8c.html#aa2730091b19f32e108dc2c648290abcd',1,'mark.c']]],
   ['mark_5fset_5flocal',['mark_set_local',['../mark_8c.html#abfbc5a2f28459c6ac5e2b58d4479d551',1,'mark.c']]],
-  ['match_5fadd',['match_add',['../window_8c.html#a50bfc75e037ae31a343d0b46437db47d',1,'window.c']]],
+  ['match_5fadd',['match_add',['../window_8c.html#a80cdeee98608117287b0651625ba1b39',1,'window.c']]],
   ['match_5fdelete',['match_delete',['../window_8c.html#af9cbde92fb248a3fa829c388d8d570ac',1,'window.c']]],
   ['match_5ffile_5flist',['match_file_list',['../fileio_8c.html#a80d28de1c4aa521129ab724734a801df',1,'fileio.c']]],
   ['match_5fsuffix',['match_suffix',['../path_8c.html#a4a700c7e25e49ac5bec896b041948b25',1,'path.c']]],

@@ -165,6 +165,7 @@ var searchData=
   ['filename',['filename',['../structprt__ps__resource__S.html#a6e4fb858ac12dd77ee2eede64e7b72b2',1,'prt_ps_resource_S']]],
   ['files',['FILES',['../ex__cmds__defs_8h.html#af0c578eddb61211eb823c0079fe0b943',1,'ex_cmds_defs.h']]],
   ['filetype_5ffile',['FILETYPE_FILE',['../globals_8h.html#af6c8ebb2dda2a6c6306770ccdf8bcc47',1,'globals.h']]],
+  ['filetype_5fmaybe_5fenable',['filetype_maybe_enable',['../ex__docmd_8c.html#ae46675b34c8850e9a458b8e3febce948',1,'ex_docmd.c']]],
   ['fill',['fill',['../structlineoff__T.html#aa5d8491a318ec7a0b316625ce1cceb19',1,'lineoff_T']]],
   ['find',['Find',['../if__cscope__defs_8h.html#a4749f14dd57f1e60c59d120789a81738a12d06b8b02c21b503fcc0f97df71c33c',1,'if_cscope_defs.h']]],
   ['find_5fany',['FIND_ANY',['../search_8h.html#a78448061a6330e915f18a7f1cf7a68e4',1,'search.h']]],
