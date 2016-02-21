@@ -22294,283 +22294,282 @@
 <tr><td class="num" id="LN22199">22199</td><td class="line">    <span class='keyword'>char</span> msg[22];</td></tr>
 <tr><td class="num" id="LN22200">22200</td><td class="line">    snprintf(msg, <span class='keyword'>sizeof</span> msg, <span class='string_literal'>"\r\n[Process exited %d]"</span>, proc-&gt;status);</td></tr>
 <tr><td class="num" id="LN22201">22201</td><td class="line">    terminal_close(data-&gt;term, msg);</td></tr>
-<tr><td class="num" id="LN22202">22202</td><td class="line">    apply_autocmds(EVENT_TERMCLOSE, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, <span class='macro'>false<span class='expansion'>0</span></span>, curbuf);</td></tr>
-<tr><td class="num" id="LN22203">22203</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22204">22204</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22205">22205</td><td class="line">  <span class='keyword'>if</span> (data-&gt;status_ptr) {</td></tr>
-<tr><td class="num" id="LN22206">22206</td><td class="line">    *data-&gt;status_ptr = status;</td></tr>
-<tr><td class="num" id="LN22207">22207</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22208">22208</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22209">22209</td><td class="line">  process_job_event(data, data-&gt;on_exit, <span class='string_literal'>"exit"</span>, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, 0, status);</td></tr>
-<tr><td class="num" id="LN22210">22210</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22211">22211</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22212">22212</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> term_write(<span class='keyword'>char</span> *buf, size_t size, <span class='keyword'>void</span> *d)</td></tr>
-<tr><td class="num" id="LN22213">22213</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22214">22214</td><td class="line">  TerminalJobData *data = d;</td></tr>
-<tr><td class="num" id="LN22215">22215</td><td class="line">  WBuffer *wbuf = wstream_new_buffer(xmemdup(buf, size), size, 1, xfree);</td></tr>
-<tr><td class="num" id="LN22216">22216</td><td class="line">  wstream_write(&amp;data-&gt;in, wbuf);</td></tr>
-<tr><td class="num" id="LN22217">22217</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22218">22218</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22219">22219</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> term_resize(uint16_t width, uint16_t height, <span class='keyword'>void</span> *d)</td></tr>
-<tr><td class="num" id="LN22220">22220</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22221">22221</td><td class="line">  TerminalJobData *data = d;</td></tr>
-<tr><td class="num" id="LN22222">22222</td><td class="line">  pty_process_resize(&amp;data-&gt;proc.pty, width, height);</td></tr>
-<tr><td class="num" id="LN22223">22223</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22224">22224</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22225">22225</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> term_close(<span class='keyword'>void</span> *d)</td></tr>
-<tr><td class="num" id="LN22226">22226</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22227">22227</td><td class="line">  TerminalJobData *data = d;</td></tr>
-<tr><td class="num" id="LN22228">22228</td><td class="line">  <span class='keyword'>if</span> (!data-&gt;exited) {</td></tr>
-<tr><td class="num" id="LN22229">22229</td><td class="line">    data-&gt;exited = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN22230">22230</td><td class="line">    process_stop((Process *)&amp;data-&gt;proc);</td></tr>
-<tr><td class="num" id="LN22231">22231</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22232">22232</td><td class="line">  terminal_destroy(data-&gt;term);</td></tr>
-<tr><td class="num" id="LN22233">22233</td><td class="line">  term_job_data_decref(d);</td></tr>
-<tr><td class="num" id="LN22234">22234</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22235">22235</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22236">22236</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> term_job_data_decref(TerminalJobData *data)</td></tr>
-<tr><td class="num" id="LN22237">22237</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22238">22238</td><td class="line">  <span class='keyword'>if</span> (!(--data-&gt;refcount)) {</td></tr>
-<tr><td class="num" id="LN22239">22239</td><td class="line">    free_term_job_data(data);</td></tr>
-<tr><td class="num" id="LN22240">22240</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22241">22241</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22242">22242</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22243">22243</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_event(JobEvent *ev)</td></tr>
-<tr><td class="num" id="LN22244">22244</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22245">22245</td><td class="line">  <span class='keyword'>if</span> (!ev-&gt;callback) {</td></tr>
-<tr><td class="num" id="LN22246">22246</td><td class="line">    <span class='keyword'>goto</span> end;</td></tr>
-<tr><td class="num" id="LN22247">22247</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22248">22248</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22249">22249</td><td class="line">  typval_T argv[3];</td></tr>
-<tr><td class="num" id="LN22250">22250</td><td class="line">  <span class='keyword'>int</span> argc = ev-&gt;callback-&gt;uf_args.ga_len;</td></tr>
-<tr><td class="num" id="LN22251">22251</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22252">22252</td><td class="line">  <span class='keyword'>if</span> (argc &gt; 0) {</td></tr>
-<tr><td class="num" id="LN22253">22253</td><td class="line">    argv[0].v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN22254">22254</td><td class="line">    argv[0].v_lock = 0;</td></tr>
-<tr><td class="num" id="LN22255">22255</td><td class="line">    argv[0].vval.v_number = ev-&gt;data-&gt;id;</td></tr>
-<tr><td class="num" id="LN22256">22256</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22257">22257</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22258">22258</td><td class="line">  <span class='keyword'>if</span> (argc &gt; 1) {</td></tr>
-<tr><td class="num" id="LN22259">22259</td><td class="line">    <span class='keyword'>if</span> (ev-&gt;received) {</td></tr>
-<tr><td class="num" id="LN22260">22260</td><td class="line">      argv[1].v_type = <span class='macro'>VAR_LIST<span class='expansion'>4</span></span>;</td></tr>
-<tr><td class="num" id="LN22261">22261</td><td class="line">      argv[1].v_lock = 0;</td></tr>
-<tr><td class="num" id="LN22262">22262</td><td class="line">      argv[1].vval.v_list = ev-&gt;received;</td></tr>
-<tr><td class="num" id="LN22263">22263</td><td class="line">      argv[1].vval.v_list-&gt;lv_refcount++;</td></tr>
-<tr><td class="num" id="LN22264">22264</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN22265">22265</td><td class="line">      argv[1].v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN22266">22266</td><td class="line">      argv[1].v_lock = 0;</td></tr>
-<tr><td class="num" id="LN22267">22267</td><td class="line">      argv[1].vval.v_number = ev-&gt;status;</td></tr>
-<tr><td class="num" id="LN22268">22268</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN22269">22269</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22270">22270</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22271">22271</td><td class="line">  <span class='keyword'>if</span> (argc &gt; 2) {</td></tr>
-<tr><td class="num" id="LN22272">22272</td><td class="line">    argv[2].v_type = <span class='macro'>VAR_STRING<span class='expansion'>2</span></span>;</td></tr>
-<tr><td class="num" id="LN22273">22273</td><td class="line">    argv[2].v_lock = 0;</td></tr>
-<tr><td class="num" id="LN22274">22274</td><td class="line">    argv[2].vval.v_string = (uint8_t *)ev-&gt;type;</td></tr>
-<tr><td class="num" id="LN22275">22275</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22276">22276</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22277">22277</td><td class="line">  typval_T rettv;</td></tr>
-<tr><td class="num" id="LN22278">22278</td><td class="line">  init_tv(&amp;rettv);</td></tr>
-<tr><td class="num" id="LN22279">22279</td><td class="line">  call_user_func(ev-&gt;callback, argc, argv, &amp;rettv, curwin-&gt;w_cursor.lnum,</td></tr>
-<tr><td class="num" id="LN22280">22280</td><td class="line">      curwin-&gt;w_cursor.lnum, ev-&gt;data-&gt;self);</td></tr>
-<tr><td class="num" id="LN22281">22281</td><td class="line">  clear_tv(&amp;rettv);</td></tr>
-<tr><td class="num" id="LN22282">22282</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22283">22283</td><td class="line">end:</td></tr>
-<tr><td class="num" id="LN22284">22284</td><td class="line">  <span class='keyword'>if</span> (!ev-&gt;received) {</td></tr>
-<tr><td class="num" id="LN22285">22285</td><td class="line">    <span class='comment'>// exit event, safe to free job data now</span></td></tr>
-<tr><td class="num" id="LN22286">22286</td><td class="line">    <span class='macro'>pmap_del(uint64_t)<span class='expansion'>map_uint64_t_ptr_t_del</span></span>(jobs, ev-&gt;data-&gt;id);</td></tr>
-<tr><td class="num" id="LN22287">22287</td><td class="line">    term_job_data_decref(ev-&gt;data);</td></tr>
-<tr><td class="num" id="LN22288">22288</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22289">22289</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22290">22290</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22291">22291</td><td class="line"><span class='keyword'>static</span> TerminalJobData *find_job(uint64_t id)</td></tr>
-<tr><td class="num" id="LN22292">22292</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22293">22293</td><td class="line">  TerminalJobData *data = <span class='macro'>pmap_get(uint64_t)<span class='expansion'>map_uint64_t_ptr_t_get</span></span>(jobs, id);</td></tr>
-<tr><td class="num" id="LN22294">22294</td><td class="line">  <span class='keyword'>if</span> (!data || data-&gt;stopped) {</td></tr>
-<tr><td class="num" id="LN22295">22295</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
-<tr><td class="num" id="LN22296">22296</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22297">22297</td><td class="line">  <span class='keyword'>return</span> data;</td></tr>
-<tr><td class="num" id="LN22298">22298</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22299">22299</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22300">22300</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> script_host_eval(<span class='keyword'>char</span> *name, typval_T *argvars, typval_T *rettv)</td></tr>
-<tr><td class="num" id="LN22301">22301</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22302">22302</td><td class="line">  <span class='keyword'>if</span> (check_restricted() || check_secure()) {</td></tr>
-<tr><td class="num" id="LN22303">22303</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
-<tr><td class="num" id="LN22304">22304</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22305">22305</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22306">22306</td><td class="line">  <span class='keyword'>if</span> (argvars[0].v_type != <span class='macro'>VAR_STRING<span class='expansion'>2</span></span>) {</td></tr>
-<tr><td class="num" id="LN22307">22307</td><td class="line">    <span class='macro'>EMSG(_(e_invarg))<span class='expansion'>emsg((char_u *)(gettext((char *)(e_invarg))))</span></span>;</td></tr>
-<tr><td class="num" id="LN22308">22308</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22309">22309</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22310">22310</td><td class="line">  list_T *args = list_alloc();</td></tr>
-<tr><td class="num" id="LN22311">22311</td><td class="line">  list_append_string(args, argvars[0].vval.v_string, -1);</td></tr>
-<tr><td class="num" id="LN22312">22312</td><td class="line">  *rettv = eval_call_provider(name, <span class='string_literal'>"eval"</span>, args);</td></tr>
-<tr><td class="num" id="LN22313">22313</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22314">22314</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22315">22315</td><td class="line">typval_T eval_call_provider(<span class='keyword'>char</span> *provider, <span class='keyword'>char</span> *method, list_T *arguments)</td></tr>
-<tr><td class="num" id="LN22316">22316</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22317">22317</td><td class="line">  <span class='keyword'>char</span> func[256];</td></tr>
-<tr><td class="num" id="LN22318">22318</td><td class="line">  <span class='keyword'>int</span> name_len = snprintf(func, <span class='keyword'>sizeof</span>(func), <span class='string_literal'>"provider#%s#Call"</span>, provider);</td></tr>
-<tr><td class="num" id="LN22319">22319</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22320">22320</td><td class="line">  <span class='comment'>// Save caller scope information</span></td></tr>
-<tr><td class="num" id="LN22321">22321</td><td class="line">  <span class='keyword'>struct</span> caller_scope saved_provider_caller_scope = provider_caller_scope;</td></tr>
-<tr><td class="num" id="LN22322">22322</td><td class="line">  provider_caller_scope = (<span class='keyword'>struct</span> caller_scope) {</td></tr>
-<tr><td class="num" id="LN22323">22323</td><td class="line">    .SID = current_SID,</td></tr>
-<tr><td class="num" id="LN22324">22324</td><td class="line">    .sourcing_name = sourcing_name,</td></tr>
-<tr><td class="num" id="LN22325">22325</td><td class="line">    .sourcing_lnum = sourcing_lnum,</td></tr>
-<tr><td class="num" id="LN22326">22326</td><td class="line">    .autocmd_fname = autocmd_fname,</td></tr>
-<tr><td class="num" id="LN22327">22327</td><td class="line">    .autocmd_match = autocmd_match,</td></tr>
-<tr><td class="num" id="LN22328">22328</td><td class="line">    .autocmd_fname_full = autocmd_fname_full,</td></tr>
-<tr><td class="num" id="LN22329">22329</td><td class="line">    .autocmd_bufnr = autocmd_bufnr,</td></tr>
-<tr><td class="num" id="LN22330">22330</td><td class="line">    .funccalp = save_funccal()</td></tr>
-<tr><td class="num" id="LN22331">22331</td><td class="line">  };</td></tr>
-<tr><td class="num" id="LN22332">22332</td><td class="line">  provider_call_nesting++;</td></tr>
-<tr><td class="num" id="LN22333">22333</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22334">22334</td><td class="line">  typval_T argvars[3] = {</td></tr>
-<tr><td class="num" id="LN22335">22335</td><td class="line">    {.v_type = <span class='macro'>VAR_STRING<span class='expansion'>2</span></span>, .vval.v_string = (uint8_t *)method, .v_lock = 0},</td></tr>
-<tr><td class="num" id="LN22336">22336</td><td class="line">    {.v_type = <span class='macro'>VAR_LIST<span class='expansion'>4</span></span>, .vval.v_list = arguments, .v_lock = 0},</td></tr>
-<tr><td class="num" id="LN22337">22337</td><td class="line">    {.v_type = <span class='macro'>VAR_UNKNOWN<span class='expansion'>0</span></span>}</td></tr>
-<tr><td class="num" id="LN22338">22338</td><td class="line">  };</td></tr>
-<tr><td class="num" id="LN22339">22339</td><td class="line">  typval_T rettv = {.v_type = <span class='macro'>VAR_UNKNOWN<span class='expansion'>0</span></span>, .v_lock = 0};</td></tr>
-<tr><td class="num" id="LN22340">22340</td><td class="line">  arguments-&gt;lv_refcount++;</td></tr>
-<tr><td class="num" id="LN22341">22341</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22342">22342</td><td class="line">  <span class='keyword'>int</span> dummy;</td></tr>
-<tr><td class="num" id="LN22343">22343</td><td class="line">  (<span class='keyword'>void</span>)call_func((uint8_t *)func,</td></tr>
-<tr><td class="num" id="LN22344">22344</td><td class="line">                  name_len,</td></tr>
-<tr><td class="num" id="LN22345">22345</td><td class="line">                  &amp;rettv,</td></tr>
-<tr><td class="num" id="LN22346">22346</td><td class="line">                  2,</td></tr>
-<tr><td class="num" id="LN22347">22347</td><td class="line">                  argvars,</td></tr>
+<tr><td class="num" id="LN22202">22202</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22203">22203</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22204">22204</td><td class="line">  <span class='keyword'>if</span> (data-&gt;status_ptr) {</td></tr>
+<tr><td class="num" id="LN22205">22205</td><td class="line">    *data-&gt;status_ptr = status;</td></tr>
+<tr><td class="num" id="LN22206">22206</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22207">22207</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22208">22208</td><td class="line">  process_job_event(data, data-&gt;on_exit, <span class='string_literal'>"exit"</span>, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, 0, status);</td></tr>
+<tr><td class="num" id="LN22209">22209</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22210">22210</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22211">22211</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> term_write(<span class='keyword'>char</span> *buf, size_t size, <span class='keyword'>void</span> *d)</td></tr>
+<tr><td class="num" id="LN22212">22212</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22213">22213</td><td class="line">  TerminalJobData *data = d;</td></tr>
+<tr><td class="num" id="LN22214">22214</td><td class="line">  WBuffer *wbuf = wstream_new_buffer(xmemdup(buf, size), size, 1, xfree);</td></tr>
+<tr><td class="num" id="LN22215">22215</td><td class="line">  wstream_write(&amp;data-&gt;in, wbuf);</td></tr>
+<tr><td class="num" id="LN22216">22216</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22217">22217</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22218">22218</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> term_resize(uint16_t width, uint16_t height, <span class='keyword'>void</span> *d)</td></tr>
+<tr><td class="num" id="LN22219">22219</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22220">22220</td><td class="line">  TerminalJobData *data = d;</td></tr>
+<tr><td class="num" id="LN22221">22221</td><td class="line">  pty_process_resize(&amp;data-&gt;proc.pty, width, height);</td></tr>
+<tr><td class="num" id="LN22222">22222</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22223">22223</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22224">22224</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> term_close(<span class='keyword'>void</span> *d)</td></tr>
+<tr><td class="num" id="LN22225">22225</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22226">22226</td><td class="line">  TerminalJobData *data = d;</td></tr>
+<tr><td class="num" id="LN22227">22227</td><td class="line">  <span class='keyword'>if</span> (!data-&gt;exited) {</td></tr>
+<tr><td class="num" id="LN22228">22228</td><td class="line">    data-&gt;exited = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN22229">22229</td><td class="line">    process_stop((Process *)&amp;data-&gt;proc);</td></tr>
+<tr><td class="num" id="LN22230">22230</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22231">22231</td><td class="line">  terminal_destroy(data-&gt;term);</td></tr>
+<tr><td class="num" id="LN22232">22232</td><td class="line">  term_job_data_decref(d);</td></tr>
+<tr><td class="num" id="LN22233">22233</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22234">22234</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22235">22235</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> term_job_data_decref(TerminalJobData *data)</td></tr>
+<tr><td class="num" id="LN22236">22236</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22237">22237</td><td class="line">  <span class='keyword'>if</span> (!(--data-&gt;refcount)) {</td></tr>
+<tr><td class="num" id="LN22238">22238</td><td class="line">    free_term_job_data(data);</td></tr>
+<tr><td class="num" id="LN22239">22239</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22240">22240</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22241">22241</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22242">22242</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> on_job_event(JobEvent *ev)</td></tr>
+<tr><td class="num" id="LN22243">22243</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22244">22244</td><td class="line">  <span class='keyword'>if</span> (!ev-&gt;callback) {</td></tr>
+<tr><td class="num" id="LN22245">22245</td><td class="line">    <span class='keyword'>goto</span> end;</td></tr>
+<tr><td class="num" id="LN22246">22246</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22247">22247</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22248">22248</td><td class="line">  typval_T argv[3];</td></tr>
+<tr><td class="num" id="LN22249">22249</td><td class="line">  <span class='keyword'>int</span> argc = ev-&gt;callback-&gt;uf_args.ga_len;</td></tr>
+<tr><td class="num" id="LN22250">22250</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22251">22251</td><td class="line">  <span class='keyword'>if</span> (argc &gt; 0) {</td></tr>
+<tr><td class="num" id="LN22252">22252</td><td class="line">    argv[0].v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN22253">22253</td><td class="line">    argv[0].v_lock = 0;</td></tr>
+<tr><td class="num" id="LN22254">22254</td><td class="line">    argv[0].vval.v_number = ev-&gt;data-&gt;id;</td></tr>
+<tr><td class="num" id="LN22255">22255</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22256">22256</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22257">22257</td><td class="line">  <span class='keyword'>if</span> (argc &gt; 1) {</td></tr>
+<tr><td class="num" id="LN22258">22258</td><td class="line">    <span class='keyword'>if</span> (ev-&gt;received) {</td></tr>
+<tr><td class="num" id="LN22259">22259</td><td class="line">      argv[1].v_type = <span class='macro'>VAR_LIST<span class='expansion'>4</span></span>;</td></tr>
+<tr><td class="num" id="LN22260">22260</td><td class="line">      argv[1].v_lock = 0;</td></tr>
+<tr><td class="num" id="LN22261">22261</td><td class="line">      argv[1].vval.v_list = ev-&gt;received;</td></tr>
+<tr><td class="num" id="LN22262">22262</td><td class="line">      argv[1].vval.v_list-&gt;lv_refcount++;</td></tr>
+<tr><td class="num" id="LN22263">22263</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN22264">22264</td><td class="line">      argv[1].v_type = <span class='macro'>VAR_NUMBER<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN22265">22265</td><td class="line">      argv[1].v_lock = 0;</td></tr>
+<tr><td class="num" id="LN22266">22266</td><td class="line">      argv[1].vval.v_number = ev-&gt;status;</td></tr>
+<tr><td class="num" id="LN22267">22267</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN22268">22268</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22269">22269</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22270">22270</td><td class="line">  <span class='keyword'>if</span> (argc &gt; 2) {</td></tr>
+<tr><td class="num" id="LN22271">22271</td><td class="line">    argv[2].v_type = <span class='macro'>VAR_STRING<span class='expansion'>2</span></span>;</td></tr>
+<tr><td class="num" id="LN22272">22272</td><td class="line">    argv[2].v_lock = 0;</td></tr>
+<tr><td class="num" id="LN22273">22273</td><td class="line">    argv[2].vval.v_string = (uint8_t *)ev-&gt;type;</td></tr>
+<tr><td class="num" id="LN22274">22274</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22275">22275</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22276">22276</td><td class="line">  typval_T rettv;</td></tr>
+<tr><td class="num" id="LN22277">22277</td><td class="line">  init_tv(&amp;rettv);</td></tr>
+<tr><td class="num" id="LN22278">22278</td><td class="line">  call_user_func(ev-&gt;callback, argc, argv, &amp;rettv, curwin-&gt;w_cursor.lnum,</td></tr>
+<tr><td class="num" id="LN22279">22279</td><td class="line">      curwin-&gt;w_cursor.lnum, ev-&gt;data-&gt;self);</td></tr>
+<tr><td class="num" id="LN22280">22280</td><td class="line">  clear_tv(&amp;rettv);</td></tr>
+<tr><td class="num" id="LN22281">22281</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22282">22282</td><td class="line">end:</td></tr>
+<tr><td class="num" id="LN22283">22283</td><td class="line">  <span class='keyword'>if</span> (!ev-&gt;received) {</td></tr>
+<tr><td class="num" id="LN22284">22284</td><td class="line">    <span class='comment'>// exit event, safe to free job data now</span></td></tr>
+<tr><td class="num" id="LN22285">22285</td><td class="line">    <span class='macro'>pmap_del(uint64_t)<span class='expansion'>map_uint64_t_ptr_t_del</span></span>(jobs, ev-&gt;data-&gt;id);</td></tr>
+<tr><td class="num" id="LN22286">22286</td><td class="line">    term_job_data_decref(ev-&gt;data);</td></tr>
+<tr><td class="num" id="LN22287">22287</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22288">22288</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22289">22289</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22290">22290</td><td class="line"><span class='keyword'>static</span> TerminalJobData *find_job(uint64_t id)</td></tr>
+<tr><td class="num" id="LN22291">22291</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22292">22292</td><td class="line">  TerminalJobData *data = <span class='macro'>pmap_get(uint64_t)<span class='expansion'>map_uint64_t_ptr_t_get</span></span>(jobs, id);</td></tr>
+<tr><td class="num" id="LN22293">22293</td><td class="line">  <span class='keyword'>if</span> (!data || data-&gt;stopped) {</td></tr>
+<tr><td class="num" id="LN22294">22294</td><td class="line">    <span class='keyword'>return</span> <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN22295">22295</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22296">22296</td><td class="line">  <span class='keyword'>return</span> data;</td></tr>
+<tr><td class="num" id="LN22297">22297</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22298">22298</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22299">22299</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> script_host_eval(<span class='keyword'>char</span> *name, typval_T *argvars, typval_T *rettv)</td></tr>
+<tr><td class="num" id="LN22300">22300</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22301">22301</td><td class="line">  <span class='keyword'>if</span> (check_restricted() || check_secure()) {</td></tr>
+<tr><td class="num" id="LN22302">22302</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN22303">22303</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22304">22304</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22305">22305</td><td class="line">  <span class='keyword'>if</span> (argvars[0].v_type != <span class='macro'>VAR_STRING<span class='expansion'>2</span></span>) {</td></tr>
+<tr><td class="num" id="LN22306">22306</td><td class="line">    <span class='macro'>EMSG(_(e_invarg))<span class='expansion'>emsg((char_u *)(gettext((char *)(e_invarg))))</span></span>;</td></tr>
+<tr><td class="num" id="LN22307">22307</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22308">22308</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22309">22309</td><td class="line">  list_T *args = list_alloc();</td></tr>
+<tr><td class="num" id="LN22310">22310</td><td class="line">  list_append_string(args, argvars[0].vval.v_string, -1);</td></tr>
+<tr><td class="num" id="LN22311">22311</td><td class="line">  *rettv = eval_call_provider(name, <span class='string_literal'>"eval"</span>, args);</td></tr>
+<tr><td class="num" id="LN22312">22312</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22313">22313</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22314">22314</td><td class="line">typval_T eval_call_provider(<span class='keyword'>char</span> *provider, <span class='keyword'>char</span> *method, list_T *arguments)</td></tr>
+<tr><td class="num" id="LN22315">22315</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22316">22316</td><td class="line">  <span class='keyword'>char</span> func[256];</td></tr>
+<tr><td class="num" id="LN22317">22317</td><td class="line">  <span class='keyword'>int</span> name_len = snprintf(func, <span class='keyword'>sizeof</span>(func), <span class='string_literal'>"provider#%s#Call"</span>, provider);</td></tr>
+<tr><td class="num" id="LN22318">22318</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22319">22319</td><td class="line">  <span class='comment'>// Save caller scope information</span></td></tr>
+<tr><td class="num" id="LN22320">22320</td><td class="line">  <span class='keyword'>struct</span> caller_scope saved_provider_caller_scope = provider_caller_scope;</td></tr>
+<tr><td class="num" id="LN22321">22321</td><td class="line">  provider_caller_scope = (<span class='keyword'>struct</span> caller_scope) {</td></tr>
+<tr><td class="num" id="LN22322">22322</td><td class="line">    .SID = current_SID,</td></tr>
+<tr><td class="num" id="LN22323">22323</td><td class="line">    .sourcing_name = sourcing_name,</td></tr>
+<tr><td class="num" id="LN22324">22324</td><td class="line">    .sourcing_lnum = sourcing_lnum,</td></tr>
+<tr><td class="num" id="LN22325">22325</td><td class="line">    .autocmd_fname = autocmd_fname,</td></tr>
+<tr><td class="num" id="LN22326">22326</td><td class="line">    .autocmd_match = autocmd_match,</td></tr>
+<tr><td class="num" id="LN22327">22327</td><td class="line">    .autocmd_fname_full = autocmd_fname_full,</td></tr>
+<tr><td class="num" id="LN22328">22328</td><td class="line">    .autocmd_bufnr = autocmd_bufnr,</td></tr>
+<tr><td class="num" id="LN22329">22329</td><td class="line">    .funccalp = save_funccal()</td></tr>
+<tr><td class="num" id="LN22330">22330</td><td class="line">  };</td></tr>
+<tr><td class="num" id="LN22331">22331</td><td class="line">  provider_call_nesting++;</td></tr>
+<tr><td class="num" id="LN22332">22332</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22333">22333</td><td class="line">  typval_T argvars[3] = {</td></tr>
+<tr><td class="num" id="LN22334">22334</td><td class="line">    {.v_type = <span class='macro'>VAR_STRING<span class='expansion'>2</span></span>, .vval.v_string = (uint8_t *)method, .v_lock = 0},</td></tr>
+<tr><td class="num" id="LN22335">22335</td><td class="line">    {.v_type = <span class='macro'>VAR_LIST<span class='expansion'>4</span></span>, .vval.v_list = arguments, .v_lock = 0},</td></tr>
+<tr><td class="num" id="LN22336">22336</td><td class="line">    {.v_type = <span class='macro'>VAR_UNKNOWN<span class='expansion'>0</span></span>}</td></tr>
+<tr><td class="num" id="LN22337">22337</td><td class="line">  };</td></tr>
+<tr><td class="num" id="LN22338">22338</td><td class="line">  typval_T rettv = {.v_type = <span class='macro'>VAR_UNKNOWN<span class='expansion'>0</span></span>, .v_lock = 0};</td></tr>
+<tr><td class="num" id="LN22339">22339</td><td class="line">  arguments-&gt;lv_refcount++;</td></tr>
+<tr><td class="num" id="LN22340">22340</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22341">22341</td><td class="line">  <span class='keyword'>int</span> dummy;</td></tr>
+<tr><td class="num" id="LN22342">22342</td><td class="line">  (<span class='keyword'>void</span>)call_func((uint8_t *)func,</td></tr>
+<tr><td class="num" id="LN22343">22343</td><td class="line">                  name_len,</td></tr>
+<tr><td class="num" id="LN22344">22344</td><td class="line">                  &amp;rettv,</td></tr>
+<tr><td class="num" id="LN22345">22345</td><td class="line">                  2,</td></tr>
+<tr><td class="num" id="LN22346">22346</td><td class="line">                  argvars,</td></tr>
+<tr><td class="num" id="LN22347">22347</td><td class="line">                  curwin-&gt;w_cursor.lnum,</td></tr>
 <tr><td class="num" id="LN22348">22348</td><td class="line">                  curwin-&gt;w_cursor.lnum,</td></tr>
-<tr><td class="num" id="LN22349">22349</td><td class="line">                  curwin-&gt;w_cursor.lnum,</td></tr>
-<tr><td class="num" id="LN22350">22350</td><td class="line">                  &amp;dummy,</td></tr>
-<tr><td class="num" id="LN22351">22351</td><td class="line">                  <span class='macro'>true<span class='expansion'>1</span></span>,</td></tr>
-<tr><td class="num" id="LN22352">22352</td><td class="line">                  <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
-<tr><td class="num" id="LN22353">22353</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22354">22354</td><td class="line">  list_unref(arguments);</td></tr>
-<tr><td class="num" id="LN22355">22355</td><td class="line">  <span class='comment'>// Restore caller scope information</span></td></tr>
-<tr><td class="num" id="LN22356">22356</td><td class="line">  restore_funccal(provider_caller_scope.funccalp);</td></tr>
-<tr><td class="num" id="LN22357">22357</td><td class="line">  provider_caller_scope = saved_provider_caller_scope;</td></tr>
-<tr><td class="num" id="LN22358">22358</td><td class="line">  provider_call_nesting--;</td></tr>
-<tr><td class="num" id="LN22359">22359</td><td class="line">  </td></tr>
-<tr><td class="num" id="LN22360">22360</td><td class="line">  <span class='keyword'>return</span> rettv;</td></tr>
-<tr><td class="num" id="LN22361">22361</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22362">22362</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22363">22363</td><td class="line"><span class='macro'>bool<span class='expansion'>_Bool</span></span> eval_has_provider(<span class='keyword'>char</span> *name)</td></tr>
-<tr><td class="num" id="LN22364">22364</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22365">22365</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22366">22366</td><td class="line"><span class='directive'>#define <span class='macro'>check_provider(name)<span class='expansion'>if (has_name == -1) { has_name = !!find_func((uint8_t *)"provider#"<br> "name" "#Call"); if (!has_name) { script_autoload((uint8_t *<br>)"provider#" "name" "#Call", 0); has_name = !!find_func((uint8_t<br> *)"provider#" "name" "#Call"); } }</span></span>                                              \</span></td></tr>
-<tr><td class="num" id="LN22367">22367</td><td class="line">  <span class='directive'>if (has_##name == -1) {                                                 \</span></td></tr>
-<tr><td class="num" id="LN22368">22368</td><td class="line">    <span class='directive'>has_##name = !!find_func((uint8_t *)"provider#" #name "#Call");       \</span></td></tr>
-<tr><td class="num" id="LN22369">22369</td><td class="line">    <span class='directive'>if (!has_##name) {                                                    \</span></td></tr>
-<tr><td class="num" id="LN22370">22370</td><td class="line">      <span class='directive'>script_autoload((uint8_t *)"provider#" #name "#Call", <span class='macro'>false<span class='expansion'>0</span></span>);       \</span></td></tr>
-<tr><td class="num" id="LN22371">22371</td><td class="line">      <span class='directive'>has_##name = !!find_func((uint8_t *)"provider#" #name "#Call");     \</span></td></tr>
-<tr><td class="num" id="LN22372">22372</td><td class="line">    <span class='directive'>}                                                                     \</span></td></tr>
-<tr><td class="num" id="LN22373">22373</td><td class="line">  <span class='directive'>}</span></td></tr>
-<tr><td class="num" id="LN22374">22374</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22375">22375</td><td class="line">  <span class='keyword'>static</span> <span class='keyword'>int</span> has_clipboard = -1, has_python = -1, has_python3 = -1;</td></tr>
-<tr><td class="num" id="LN22376">22376</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22377">22377</td><td class="line">  <span class='keyword'>if</span> (!strcmp(name, <span class='string_literal'>"clipboard"</span>)) {</td></tr>
-<tr><td class="num" id="LN22378">22378</td><td class="line">    <span class='macro'>check_provider(clipboard)<span class='expansion'>if (has_clipboard == -1) { has_clipboard = !!find_func((uint8_t<br> *)"provider#" "clipboard" "#Call"); if (!has_clipboard) { script_autoload<br>((uint8_t *)"provider#" "clipboard" "#Call", 0); has_clipboard<br> = !!find_func((uint8_t *)"provider#" "clipboard" "#Call"); }<br> }</span></span>;</td></tr>
-<tr><td class="num" id="LN22379">22379</td><td class="line">    <span class='keyword'>return</span> has_clipboard;</td></tr>
-<tr><td class="num" id="LN22380">22380</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (!strcmp(name, <span class='string_literal'>"python3"</span>)) {</td></tr>
-<tr><td class="num" id="LN22381">22381</td><td class="line">    <span class='macro'>check_provider(python3)<span class='expansion'>if (has_python3 == -1) { has_python3 = !!find_func((uint8_t *<br>)"provider#" "python3" "#Call"); if (!has_python3) { script_autoload<br>((uint8_t *)"provider#" "python3" "#Call", 0); has_python3 = !<br>!find_func((uint8_t *)"provider#" "python3" "#Call"); } }</span></span>;</td></tr>
-<tr><td class="num" id="LN22382">22382</td><td class="line">    <span class='keyword'>return</span> has_python3;</td></tr>
-<tr><td class="num" id="LN22383">22383</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (!strcmp(name, <span class='string_literal'>"python"</span>)) {</td></tr>
-<tr><td class="num" id="LN22384">22384</td><td class="line">    <span class='macro'>check_provider(python)<span class='expansion'>if (has_python == -1) { has_python = !!find_func((uint8_t *)"provider#"<br> "python" "#Call"); if (!has_python) { script_autoload((uint8_t<br> *)"provider#" "python" "#Call", 0); has_python = !!find_func<br>((uint8_t *)"provider#" "python" "#Call"); } }</span></span>;</td></tr>
-<tr><td class="num" id="LN22385">22385</td><td class="line">    <span class='keyword'>return</span> has_python;</td></tr>
-<tr><td class="num" id="LN22386">22386</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22387">22387</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22388">22388</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN22389">22389</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22390">22390</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22391">22391</td><td class="line"><span class='comment'>// Compute the `DictWatcher` address from a QUEUE node. This only exists because</span></td></tr>
-<tr><td class="num" id="LN22392">22392</td><td class="line"><span class='comment'>// ASAN doesn't handle `QUEUE_DATA` pointer arithmetic, and we blacklist this</span></td></tr>
-<tr><td class="num" id="LN22393">22393</td><td class="line"><span class='comment'>// function on .asan-blacklist.</span></td></tr>
-<tr><td class="num" id="LN22394">22394</td><td class="line"><span class='keyword'>static</span> DictWatcher *dictwatcher_node_data(QUEUE *q)</td></tr>
-<tr><td class="num" id="LN22395">22395</td><td class="line">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_NONNULL_RET</td></tr>
-<tr><td class="num" id="LN22396">22396</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22397">22397</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>QUEUE_DATA(q, DictWatcher, node)<span class='expansion'>((DictWatcher *) ((char *) (q) - ((char *) &amp;((DictWatcher<br> *) 0)-&gt;node)))</span></span>;</td></tr>
-<tr><td class="num" id="LN22398">22398</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22399">22399</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22400">22400</td><td class="line"><span class='comment'>// Send a change notification to all `dict` watchers that match `key`.</span></td></tr>
-<tr><td class="num" id="LN22401">22401</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> dictwatcher_notify(dict_T *dict, <span class='keyword'>const</span> <span class='keyword'>char</span> *key, typval_T *newtv,</td></tr>
-<tr><td class="num" id="LN22402">22402</td><td class="line">    typval_T *oldtv)</td></tr>
-<tr><td class="num" id="LN22403">22403</td><td class="line">  FUNC_ATTR_NONNULL_ARG(1) FUNC_ATTR_NONNULL_ARG(2)</td></tr>
-<tr><td class="num" id="LN22404">22404</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22405">22405</td><td class="line">  typval_T argv[3];</td></tr>
-<tr><td class="num" id="LN22406">22406</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; <span class='macro'>ARRAY_SIZE(argv)<span class='expansion'>((sizeof(argv)/sizeof((argv)[0])) / ((size_t)(!(sizeof(argv) %<br> sizeof((argv)[0])))))</span></span>; i++) {</td></tr>
-<tr><td class="num" id="LN22407">22407</td><td class="line">    init_tv(argv + i);</td></tr>
-<tr><td class="num" id="LN22408">22408</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22409">22409</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22410">22410</td><td class="line">  argv[0].v_type = <span class='macro'>VAR_DICT<span class='expansion'>5</span></span>;</td></tr>
-<tr><td class="num" id="LN22411">22411</td><td class="line">  argv[0].vval.v_dict = dict;</td></tr>
-<tr><td class="num" id="LN22412">22412</td><td class="line">  argv[1].v_type = <span class='macro'>VAR_STRING<span class='expansion'>2</span></span>;</td></tr>
-<tr><td class="num" id="LN22413">22413</td><td class="line">  argv[1].vval.v_string = (char_u *)xstrdup(key);</td></tr>
-<tr><td class="num" id="LN22414">22414</td><td class="line">  argv[2].v_type = <span class='macro'>VAR_DICT<span class='expansion'>5</span></span>;</td></tr>
-<tr><td class="num" id="LN22415">22415</td><td class="line">  argv[2].vval.v_dict = dict_alloc();</td></tr>
-<tr><td class="num" id="LN22416">22416</td><td class="line">  argv[2].vval.v_dict-&gt;dv_refcount++;</td></tr>
-<tr><td class="num" id="LN22417">22417</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22418">22418</td><td class="line">  <span class='keyword'>if</span> (newtv) {</td></tr>
-<tr><td class="num" id="LN22419">22419</td><td class="line">    dictitem_T *v = dictitem_alloc((char_u *)<span class='string_literal'>"new"</span>);</td></tr>
-<tr><td class="num" id="LN22420">22420</td><td class="line">    copy_tv(newtv, &amp;v-&gt;di_tv);</td></tr>
-<tr><td class="num" id="LN22421">22421</td><td class="line">    dict_add(argv[2].vval.v_dict, v);</td></tr>
-<tr><td class="num" id="LN22422">22422</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22423">22423</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22424">22424</td><td class="line">  <span class='keyword'>if</span> (oldtv) {</td></tr>
-<tr><td class="num" id="LN22425">22425</td><td class="line">    dictitem_T *v = dictitem_alloc((char_u *)<span class='string_literal'>"old"</span>);</td></tr>
-<tr><td class="num" id="LN22426">22426</td><td class="line">    copy_tv(oldtv, &amp;v-&gt;di_tv);</td></tr>
-<tr><td class="num" id="LN22427">22427</td><td class="line">    dict_add(argv[2].vval.v_dict, v);</td></tr>
-<tr><td class="num" id="LN22428">22428</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22429">22429</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22430">22430</td><td class="line">  typval_T rettv;</td></tr>
-<tr><td class="num" id="LN22431">22431</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22432">22432</td><td class="line">  QUEUE *w;</td></tr>
-<tr><td class="num" id="LN22433">22433</td><td class="line">  <span class='macro'>QUEUE_FOREACH(w, &amp;dict-&gt;watchers)<span class='expansion'>for ((w) = (*(QUEUE **) &amp;((*(&amp;dict-&gt;watchers))[0])<br>); (w) != (&amp;dict-&gt;watchers); (w) = (*(QUEUE **) &amp;(<br>(*(w))[0])))</span></span> {</td></tr>
-<tr><td class="num" id="LN22434">22434</td><td class="line">    DictWatcher *watcher = dictwatcher_node_data(w);</td></tr>
-<tr><td class="num" id="LN22435">22435</td><td class="line">    <span class='keyword'>if</span> (!watcher-&gt;busy &amp;&amp; dictwatcher_matches(watcher, key)) {</td></tr>
-<tr><td class="num" id="LN22436">22436</td><td class="line">      init_tv(&amp;rettv);</td></tr>
-<tr><td class="num" id="LN22437">22437</td><td class="line">      watcher-&gt;busy = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
-<tr><td class="num" id="LN22438">22438</td><td class="line">      call_user_func(watcher-&gt;callback, <span class='macro'>ARRAY_SIZE(argv)<span class='expansion'>((sizeof(argv)/sizeof((argv)[0])) / ((size_t)(!(sizeof(argv) %<br> sizeof((argv)[0])))))</span></span>, argv, &amp;rettv,</td></tr>
-<tr><td class="num" id="LN22439">22439</td><td class="line">          curwin-&gt;w_cursor.lnum, curwin-&gt;w_cursor.lnum, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
-<tr><td class="num" id="LN22440">22440</td><td class="line">      watcher-&gt;busy = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
-<tr><td class="num" id="LN22441">22441</td><td class="line">      clear_tv(&amp;rettv);</td></tr>
-<tr><td class="num" id="LN22442">22442</td><td class="line">    }</td></tr>
-<tr><td class="num" id="LN22443">22443</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22444">22444</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22445">22445</td><td class="line">  <span class='keyword'>for</span> (size_t i = 1; i &lt; <span class='macro'>ARRAY_SIZE(argv)<span class='expansion'>((sizeof(argv)/sizeof((argv)[0])) / ((size_t)(!(sizeof(argv) %<br> sizeof((argv)[0])))))</span></span>; i++) {</td></tr>
-<tr><td class="num" id="LN22446">22446</td><td class="line">    clear_tv(argv + i);</td></tr>
-<tr><td class="num" id="LN22447">22447</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22448">22448</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22449">22449</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22450">22450</td><td class="line"><span class='comment'>// Test if `key` matches with with `watcher-&gt;key_pattern`</span></td></tr>
-<tr><td class="num" id="LN22451">22451</td><td class="line"><span class='keyword'>static</span> <span class='macro'>bool<span class='expansion'>_Bool</span></span> dictwatcher_matches(DictWatcher *watcher, <span class='keyword'>const</span> <span class='keyword'>char</span> *key)</td></tr>
-<tr><td class="num" id="LN22452">22452</td><td class="line">  FUNC_ATTR_NONNULL_ALL</td></tr>
-<tr><td class="num" id="LN22453">22453</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22454">22454</td><td class="line">  <span class='comment'>// For now only allow very simple globbing in key patterns: a '*' at the end</span></td></tr>
-<tr><td class="num" id="LN22455">22455</td><td class="line">  <span class='comment'>// of the string means it should match everything up to the '*' instead of the</span></td></tr>
-<tr><td class="num" id="LN22456">22456</td><td class="line">  <span class='comment'>// whole string.</span></td></tr>
-<tr><td class="num" id="LN22457">22457</td><td class="line">  <span class='keyword'>char</span> *nul = strchr(watcher-&gt;key_pattern, <span class='macro'>NUL<span class='expansion'>'\000'</span></span>);</td></tr>
-<tr><td class="num" id="LN22458">22458</td><td class="line">  size_t len = nul - watcher-&gt;key_pattern;</td></tr>
-<tr><td class="num" id="LN22459">22459</td><td class="line">  <span class='keyword'>if</span> (*(nul - 1) == '*') {</td></tr>
-<tr><td class="num" id="LN22460">22460</td><td class="line">    <span class='keyword'>return</span> !strncmp(key, watcher-&gt;key_pattern, len - 1);</td></tr>
-<tr><td class="num" id="LN22461">22461</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
-<tr><td class="num" id="LN22462">22462</td><td class="line">    <span class='keyword'>return</span> !strcmp(key, watcher-&gt;key_pattern);</td></tr>
-<tr><td class="num" id="LN22463">22463</td><td class="line">  }</td></tr>
-<tr><td class="num" id="LN22464">22464</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22465">22465</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22466">22466</td><td class="line"><span class='comment'>// Perform all necessary cleanup for a `DictWatcher` instance.</span></td></tr>
-<tr><td class="num" id="LN22467">22467</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> dictwatcher_free(DictWatcher *watcher)</td></tr>
-<tr><td class="num" id="LN22468">22468</td><td class="line">  FUNC_ATTR_NONNULL_ALL</td></tr>
-<tr><td class="num" id="LN22469">22469</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22470">22470</td><td class="line">  user_func_unref(watcher-&gt;callback);</td></tr>
-<tr><td class="num" id="LN22471">22471</td><td class="line">  xfree(watcher-&gt;key_pattern);</td></tr>
-<tr><td class="num" id="LN22472">22472</td><td class="line">  xfree(watcher);</td></tr>
-<tr><td class="num" id="LN22473">22473</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22474">22474</td><td class="line"> </td></tr>
-<tr><td class="num" id="LN22475">22475</td><td class="line"><span class='comment'>// Check if `d` has at least one watcher.</span></td></tr>
-<tr><td class="num" id="LN22476">22476</td><td class="line"><span class='keyword'>static</span> <span class='macro'>bool<span class='expansion'>_Bool</span></span> is_watched(dict_T *d)</td></tr>
-<tr><td class="num" id="LN22477">22477</td><td class="line">{</td></tr>
-<tr><td class="num" id="LN22478">22478</td><td class="line">  <span class='keyword'>return</span> d &amp;&amp; !<span class='macro'>QUEUE_EMPTY(&amp;d-&gt;watchers)<span class='expansion'>((const QUEUE *) (&amp;d-&gt;watchers) == (const QUEUE *) (*(<br>QUEUE **) &amp;((*(&amp;d-&gt;watchers))[0])))</span></span>;</td></tr>
-<tr><td class="num" id="LN22479">22479</td><td class="line">}</td></tr>
-<tr><td class="num" id="LN22480">22480</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22349">22349</td><td class="line">                  &amp;dummy,</td></tr>
+<tr><td class="num" id="LN22350">22350</td><td class="line">                  <span class='macro'>true<span class='expansion'>1</span></span>,</td></tr>
+<tr><td class="num" id="LN22351">22351</td><td class="line">                  <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN22352">22352</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22353">22353</td><td class="line">  list_unref(arguments);</td></tr>
+<tr><td class="num" id="LN22354">22354</td><td class="line">  <span class='comment'>// Restore caller scope information</span></td></tr>
+<tr><td class="num" id="LN22355">22355</td><td class="line">  restore_funccal(provider_caller_scope.funccalp);</td></tr>
+<tr><td class="num" id="LN22356">22356</td><td class="line">  provider_caller_scope = saved_provider_caller_scope;</td></tr>
+<tr><td class="num" id="LN22357">22357</td><td class="line">  provider_call_nesting--;</td></tr>
+<tr><td class="num" id="LN22358">22358</td><td class="line">  </td></tr>
+<tr><td class="num" id="LN22359">22359</td><td class="line">  <span class='keyword'>return</span> rettv;</td></tr>
+<tr><td class="num" id="LN22360">22360</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22361">22361</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22362">22362</td><td class="line"><span class='macro'>bool<span class='expansion'>_Bool</span></span> eval_has_provider(<span class='keyword'>char</span> *name)</td></tr>
+<tr><td class="num" id="LN22363">22363</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22364">22364</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22365">22365</td><td class="line"><span class='directive'>#define <span class='macro'>check_provider(name)<span class='expansion'>if (has_name == -1) { has_name = !!find_func((uint8_t *)"provider#"<br> "name" "#Call"); if (!has_name) { script_autoload((uint8_t *<br>)"provider#" "name" "#Call", 0); has_name = !!find_func((uint8_t<br> *)"provider#" "name" "#Call"); } }</span></span>                                              \</span></td></tr>
+<tr><td class="num" id="LN22366">22366</td><td class="line">  <span class='directive'>if (has_##name == -1) {                                                 \</span></td></tr>
+<tr><td class="num" id="LN22367">22367</td><td class="line">    <span class='directive'>has_##name = !!find_func((uint8_t *)"provider#" #name "#Call");       \</span></td></tr>
+<tr><td class="num" id="LN22368">22368</td><td class="line">    <span class='directive'>if (!has_##name) {                                                    \</span></td></tr>
+<tr><td class="num" id="LN22369">22369</td><td class="line">      <span class='directive'>script_autoload((uint8_t *)"provider#" #name "#Call", <span class='macro'>false<span class='expansion'>0</span></span>);       \</span></td></tr>
+<tr><td class="num" id="LN22370">22370</td><td class="line">      <span class='directive'>has_##name = !!find_func((uint8_t *)"provider#" #name "#Call");     \</span></td></tr>
+<tr><td class="num" id="LN22371">22371</td><td class="line">    <span class='directive'>}                                                                     \</span></td></tr>
+<tr><td class="num" id="LN22372">22372</td><td class="line">  <span class='directive'>}</span></td></tr>
+<tr><td class="num" id="LN22373">22373</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22374">22374</td><td class="line">  <span class='keyword'>static</span> <span class='keyword'>int</span> has_clipboard = -1, has_python = -1, has_python3 = -1;</td></tr>
+<tr><td class="num" id="LN22375">22375</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22376">22376</td><td class="line">  <span class='keyword'>if</span> (!strcmp(name, <span class='string_literal'>"clipboard"</span>)) {</td></tr>
+<tr><td class="num" id="LN22377">22377</td><td class="line">    <span class='macro'>check_provider(clipboard)<span class='expansion'>if (has_clipboard == -1) { has_clipboard = !!find_func((uint8_t<br> *)"provider#" "clipboard" "#Call"); if (!has_clipboard) { script_autoload<br>((uint8_t *)"provider#" "clipboard" "#Call", 0); has_clipboard<br> = !!find_func((uint8_t *)"provider#" "clipboard" "#Call"); }<br> }</span></span>;</td></tr>
+<tr><td class="num" id="LN22378">22378</td><td class="line">    <span class='keyword'>return</span> has_clipboard;</td></tr>
+<tr><td class="num" id="LN22379">22379</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (!strcmp(name, <span class='string_literal'>"python3"</span>)) {</td></tr>
+<tr><td class="num" id="LN22380">22380</td><td class="line">    <span class='macro'>check_provider(python3)<span class='expansion'>if (has_python3 == -1) { has_python3 = !!find_func((uint8_t *<br>)"provider#" "python3" "#Call"); if (!has_python3) { script_autoload<br>((uint8_t *)"provider#" "python3" "#Call", 0); has_python3 = !<br>!find_func((uint8_t *)"provider#" "python3" "#Call"); } }</span></span>;</td></tr>
+<tr><td class="num" id="LN22381">22381</td><td class="line">    <span class='keyword'>return</span> has_python3;</td></tr>
+<tr><td class="num" id="LN22382">22382</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (!strcmp(name, <span class='string_literal'>"python"</span>)) {</td></tr>
+<tr><td class="num" id="LN22383">22383</td><td class="line">    <span class='macro'>check_provider(python)<span class='expansion'>if (has_python == -1) { has_python = !!find_func((uint8_t *)"provider#"<br> "python" "#Call"); if (!has_python) { script_autoload((uint8_t<br> *)"provider#" "python" "#Call", 0); has_python = !!find_func<br>((uint8_t *)"provider#" "python" "#Call"); } }</span></span>;</td></tr>
+<tr><td class="num" id="LN22384">22384</td><td class="line">    <span class='keyword'>return</span> has_python;</td></tr>
+<tr><td class="num" id="LN22385">22385</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22386">22386</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22387">22387</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN22388">22388</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22389">22389</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22390">22390</td><td class="line"><span class='comment'>// Compute the `DictWatcher` address from a QUEUE node. This only exists because</span></td></tr>
+<tr><td class="num" id="LN22391">22391</td><td class="line"><span class='comment'>// ASAN doesn't handle `QUEUE_DATA` pointer arithmetic, and we blacklist this</span></td></tr>
+<tr><td class="num" id="LN22392">22392</td><td class="line"><span class='comment'>// function on .asan-blacklist.</span></td></tr>
+<tr><td class="num" id="LN22393">22393</td><td class="line"><span class='keyword'>static</span> DictWatcher *dictwatcher_node_data(QUEUE *q)</td></tr>
+<tr><td class="num" id="LN22394">22394</td><td class="line">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_NONNULL_RET</td></tr>
+<tr><td class="num" id="LN22395">22395</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22396">22396</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>QUEUE_DATA(q, DictWatcher, node)<span class='expansion'>((DictWatcher *) ((char *) (q) - ((char *) &amp;((DictWatcher<br> *) 0)-&gt;node)))</span></span>;</td></tr>
+<tr><td class="num" id="LN22397">22397</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22398">22398</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22399">22399</td><td class="line"><span class='comment'>// Send a change notification to all `dict` watchers that match `key`.</span></td></tr>
+<tr><td class="num" id="LN22400">22400</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> dictwatcher_notify(dict_T *dict, <span class='keyword'>const</span> <span class='keyword'>char</span> *key, typval_T *newtv,</td></tr>
+<tr><td class="num" id="LN22401">22401</td><td class="line">    typval_T *oldtv)</td></tr>
+<tr><td class="num" id="LN22402">22402</td><td class="line">  FUNC_ATTR_NONNULL_ARG(1) FUNC_ATTR_NONNULL_ARG(2)</td></tr>
+<tr><td class="num" id="LN22403">22403</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22404">22404</td><td class="line">  typval_T argv[3];</td></tr>
+<tr><td class="num" id="LN22405">22405</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; <span class='macro'>ARRAY_SIZE(argv)<span class='expansion'>((sizeof(argv)/sizeof((argv)[0])) / ((size_t)(!(sizeof(argv) %<br> sizeof((argv)[0])))))</span></span>; i++) {</td></tr>
+<tr><td class="num" id="LN22406">22406</td><td class="line">    init_tv(argv + i);</td></tr>
+<tr><td class="num" id="LN22407">22407</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22408">22408</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22409">22409</td><td class="line">  argv[0].v_type = <span class='macro'>VAR_DICT<span class='expansion'>5</span></span>;</td></tr>
+<tr><td class="num" id="LN22410">22410</td><td class="line">  argv[0].vval.v_dict = dict;</td></tr>
+<tr><td class="num" id="LN22411">22411</td><td class="line">  argv[1].v_type = <span class='macro'>VAR_STRING<span class='expansion'>2</span></span>;</td></tr>
+<tr><td class="num" id="LN22412">22412</td><td class="line">  argv[1].vval.v_string = (char_u *)xstrdup(key);</td></tr>
+<tr><td class="num" id="LN22413">22413</td><td class="line">  argv[2].v_type = <span class='macro'>VAR_DICT<span class='expansion'>5</span></span>;</td></tr>
+<tr><td class="num" id="LN22414">22414</td><td class="line">  argv[2].vval.v_dict = dict_alloc();</td></tr>
+<tr><td class="num" id="LN22415">22415</td><td class="line">  argv[2].vval.v_dict-&gt;dv_refcount++;</td></tr>
+<tr><td class="num" id="LN22416">22416</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22417">22417</td><td class="line">  <span class='keyword'>if</span> (newtv) {</td></tr>
+<tr><td class="num" id="LN22418">22418</td><td class="line">    dictitem_T *v = dictitem_alloc((char_u *)<span class='string_literal'>"new"</span>);</td></tr>
+<tr><td class="num" id="LN22419">22419</td><td class="line">    copy_tv(newtv, &amp;v-&gt;di_tv);</td></tr>
+<tr><td class="num" id="LN22420">22420</td><td class="line">    dict_add(argv[2].vval.v_dict, v);</td></tr>
+<tr><td class="num" id="LN22421">22421</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22422">22422</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22423">22423</td><td class="line">  <span class='keyword'>if</span> (oldtv) {</td></tr>
+<tr><td class="num" id="LN22424">22424</td><td class="line">    dictitem_T *v = dictitem_alloc((char_u *)<span class='string_literal'>"old"</span>);</td></tr>
+<tr><td class="num" id="LN22425">22425</td><td class="line">    copy_tv(oldtv, &amp;v-&gt;di_tv);</td></tr>
+<tr><td class="num" id="LN22426">22426</td><td class="line">    dict_add(argv[2].vval.v_dict, v);</td></tr>
+<tr><td class="num" id="LN22427">22427</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22428">22428</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22429">22429</td><td class="line">  typval_T rettv;</td></tr>
+<tr><td class="num" id="LN22430">22430</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22431">22431</td><td class="line">  QUEUE *w;</td></tr>
+<tr><td class="num" id="LN22432">22432</td><td class="line">  <span class='macro'>QUEUE_FOREACH(w, &amp;dict-&gt;watchers)<span class='expansion'>for ((w) = (*(QUEUE **) &amp;((*(&amp;dict-&gt;watchers))[0])<br>); (w) != (&amp;dict-&gt;watchers); (w) = (*(QUEUE **) &amp;(<br>(*(w))[0])))</span></span> {</td></tr>
+<tr><td class="num" id="LN22433">22433</td><td class="line">    DictWatcher *watcher = dictwatcher_node_data(w);</td></tr>
+<tr><td class="num" id="LN22434">22434</td><td class="line">    <span class='keyword'>if</span> (!watcher-&gt;busy &amp;&amp; dictwatcher_matches(watcher, key)) {</td></tr>
+<tr><td class="num" id="LN22435">22435</td><td class="line">      init_tv(&amp;rettv);</td></tr>
+<tr><td class="num" id="LN22436">22436</td><td class="line">      watcher-&gt;busy = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN22437">22437</td><td class="line">      call_user_func(watcher-&gt;callback, <span class='macro'>ARRAY_SIZE(argv)<span class='expansion'>((sizeof(argv)/sizeof((argv)[0])) / ((size_t)(!(sizeof(argv) %<br> sizeof((argv)[0])))))</span></span>, argv, &amp;rettv,</td></tr>
+<tr><td class="num" id="LN22438">22438</td><td class="line">          curwin-&gt;w_cursor.lnum, curwin-&gt;w_cursor.lnum, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>);</td></tr>
+<tr><td class="num" id="LN22439">22439</td><td class="line">      watcher-&gt;busy = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN22440">22440</td><td class="line">      clear_tv(&amp;rettv);</td></tr>
+<tr><td class="num" id="LN22441">22441</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN22442">22442</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22443">22443</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22444">22444</td><td class="line">  <span class='keyword'>for</span> (size_t i = 1; i &lt; <span class='macro'>ARRAY_SIZE(argv)<span class='expansion'>((sizeof(argv)/sizeof((argv)[0])) / ((size_t)(!(sizeof(argv) %<br> sizeof((argv)[0])))))</span></span>; i++) {</td></tr>
+<tr><td class="num" id="LN22445">22445</td><td class="line">    clear_tv(argv + i);</td></tr>
+<tr><td class="num" id="LN22446">22446</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22447">22447</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22448">22448</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22449">22449</td><td class="line"><span class='comment'>// Test if `key` matches with with `watcher-&gt;key_pattern`</span></td></tr>
+<tr><td class="num" id="LN22450">22450</td><td class="line"><span class='keyword'>static</span> <span class='macro'>bool<span class='expansion'>_Bool</span></span> dictwatcher_matches(DictWatcher *watcher, <span class='keyword'>const</span> <span class='keyword'>char</span> *key)</td></tr>
+<tr><td class="num" id="LN22451">22451</td><td class="line">  FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN22452">22452</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22453">22453</td><td class="line">  <span class='comment'>// For now only allow very simple globbing in key patterns: a '*' at the end</span></td></tr>
+<tr><td class="num" id="LN22454">22454</td><td class="line">  <span class='comment'>// of the string means it should match everything up to the '*' instead of the</span></td></tr>
+<tr><td class="num" id="LN22455">22455</td><td class="line">  <span class='comment'>// whole string.</span></td></tr>
+<tr><td class="num" id="LN22456">22456</td><td class="line">  <span class='keyword'>char</span> *nul = strchr(watcher-&gt;key_pattern, <span class='macro'>NUL<span class='expansion'>'\000'</span></span>);</td></tr>
+<tr><td class="num" id="LN22457">22457</td><td class="line">  size_t len = nul - watcher-&gt;key_pattern;</td></tr>
+<tr><td class="num" id="LN22458">22458</td><td class="line">  <span class='keyword'>if</span> (*(nul - 1) == '*') {</td></tr>
+<tr><td class="num" id="LN22459">22459</td><td class="line">    <span class='keyword'>return</span> !strncmp(key, watcher-&gt;key_pattern, len - 1);</td></tr>
+<tr><td class="num" id="LN22460">22460</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN22461">22461</td><td class="line">    <span class='keyword'>return</span> !strcmp(key, watcher-&gt;key_pattern);</td></tr>
+<tr><td class="num" id="LN22462">22462</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN22463">22463</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22464">22464</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22465">22465</td><td class="line"><span class='comment'>// Perform all necessary cleanup for a `DictWatcher` instance.</span></td></tr>
+<tr><td class="num" id="LN22466">22466</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> dictwatcher_free(DictWatcher *watcher)</td></tr>
+<tr><td class="num" id="LN22467">22467</td><td class="line">  FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN22468">22468</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22469">22469</td><td class="line">  user_func_unref(watcher-&gt;callback);</td></tr>
+<tr><td class="num" id="LN22470">22470</td><td class="line">  xfree(watcher-&gt;key_pattern);</td></tr>
+<tr><td class="num" id="LN22471">22471</td><td class="line">  xfree(watcher);</td></tr>
+<tr><td class="num" id="LN22472">22472</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22473">22473</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN22474">22474</td><td class="line"><span class='comment'>// Check if `d` has at least one watcher.</span></td></tr>
+<tr><td class="num" id="LN22475">22475</td><td class="line"><span class='keyword'>static</span> <span class='macro'>bool<span class='expansion'>_Bool</span></span> is_watched(dict_T *d)</td></tr>
+<tr><td class="num" id="LN22476">22476</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN22477">22477</td><td class="line">  <span class='keyword'>return</span> d &amp;&amp; !<span class='macro'>QUEUE_EMPTY(&amp;d-&gt;watchers)<span class='expansion'>((const QUEUE *) (&amp;d-&gt;watchers) == (const QUEUE *) (*(<br>QUEUE **) &amp;((*(&amp;d-&gt;watchers))[0])))</span></span>;</td></tr>
+<tr><td class="num" id="LN22478">22478</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN22479">22479</td><td class="line"> </td></tr>
 </table></body></html>
