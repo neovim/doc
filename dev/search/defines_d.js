@@ -132,6 +132,7 @@ var searchData=
   ['mod_5fmask_5f3click',['MOD_MASK_3CLICK',['../keymap_8h.html#a9914b348d3341e103746117da1c8ee0d',1,'keymap.h']]],
   ['mod_5fmask_5f4click',['MOD_MASK_4CLICK',['../keymap_8h.html#a26c7bbdead225045aaf9515a78712a75',1,'keymap.h']]],
   ['mod_5fmask_5falt',['MOD_MASK_ALT',['../keymap_8h.html#ade674c526d854892e2057e9709a249a7',1,'keymap.h']]],
+  ['mod_5fmask_5fcmd',['MOD_MASK_CMD',['../keymap_8h.html#a30884149655090ee18494935f5989d40',1,'keymap.h']]],
   ['mod_5fmask_5fctrl',['MOD_MASK_CTRL',['../keymap_8h.html#a798bd9177e28d551a11843671e505ee0',1,'keymap.h']]],
   ['mod_5fmask_5fmeta',['MOD_MASK_META',['../keymap_8h.html#a79128fd1f0fc41fb6b90789818921ffd',1,'keymap.h']]],
   ['mod_5fmask_5fmulti_5fclick',['MOD_MASK_MULTI_CLICK',['../keymap_8h.html#a7065e3978ddc1728db2450710f309630',1,'keymap.h']]],
