@@ -39,6 +39,7 @@ var searchData=
   ['histtype',['histtype',['../structShadaEntry.html#a86a94489ab8c74d9df8351e13dc3e332',1,'ShadaEntry']]],
   ['histype',['histype',['../structcommand__line__state.html#a299aad7289e720f36956e6cfe206a3ba',1,'command_line_state']]],
   ['hl',['hl',['../structmatchitem.html#a7597c71db2076e347f9144da3f0acaf1',1,'matchitem']]],
+  ['hl_5fid',['hl_id',['../structbufhl__hl__item.html#ab924ea8ddfe74a0a4ca4d86a5296f436',1,'bufhl_hl_item']]],
   ['hlg_5fid',['hlg_id',['../structmatchitem.html#a8c26e7c04d279fa354ce9eb03acd16d4',1,'matchitem']]],
   ['hmll',['hmll',['../structHistoryMergerState.html#a6c8aabdc2d6aeae230f4e6b37a4141a8',1,'HistoryMergerState']]],
   ['hms',['hms',['../structWriteMergerState.html#ae38920c045cf2070f59f434f6f4e2b1a',1,'WriteMergerState']]],

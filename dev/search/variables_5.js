@@ -22,7 +22,7 @@ var searchData=
   ['endpos',['endpos',['../structregmmatch__T.html#a4ed865acdfb2bc1973fef6a66a49a049',1,'regmmatch_T']]],
   ['endspaces',['endspaces',['../structblock__def.html#ab5bcc7fa3bebee72b7d7d872ef7d44ba',1,'block_def']]],
   ['engine',['engine',['../structregprog.html#a17b35a10bf140540d03cd127c8c68a9d',1,'regprog::engine()'],['../structbt__regprog__T.html#a6607596028b18bddae6834c40fb8ff4d',1,'bt_regprog_T::engine()'],['../structnfa__regprog__T.html#a26ab276d8a2883f4a1ef45480da0bdd6',1,'nfa_regprog_T::engine()']]],
-  ['entries',['entries',['../structHMLList.html#aa23ec4b0da6006084a2f181c92de50d6',1,'HMLList']]],
+  ['entries',['entries',['../structbufhl__lineinfo__T.html#a51e1d05442f96bd7447627dd5900f18b',1,'bufhl_lineinfo_T::entries()'],['../structHMLList.html#aa23ec4b0da6006084a2f181c92de50d6',1,'HMLList::entries()']]],
   ['eof',['eof',['../structsd__read__def.html#a887c6cfaf58763f93a4d9444c9f68885',1,'sd_read_def']]],
   ['eol_5fclear',['eol_clear',['../structui__t.html#a448c71609ee85ab9bb642f9aec3ec70d',1,'ui_t']]],
   ['err',['err',['../structTerminalJobData.html#a3d0a4fd24cc932190b23f2519cf0556a',1,'TerminalJobData::err()'],['../structprocess.html#aff4abf9946020e8137a1102c07eeccd9',1,'process::err()']]],

@@ -86,7 +86,7 @@ var searchData=
   ['engine',['engine',['../structregprog.html#a17b35a10bf140540d03cd127c8c68a9d',1,'regprog::engine()'],['../structbt__regprog__T.html#a6607596028b18bddae6834c40fb8ff4d',1,'bt_regprog_T::engine()'],['../structnfa__regprog__T.html#a26ab276d8a2883f4a1ef45480da0bdd6',1,'nfa_regprog_T::engine()']]],
   ['enter_5fbuffer',['enter_buffer',['../buffer_8c.html#a8657d61226755aef8223d9bd10704f32',1,'buffer.c']]],
   ['enter_5fcleanup',['enter_cleanup',['../ex__eval_8c.html#a65761ba8b2aeb35157d133e73720b457',1,'ex_eval.c']]],
-  ['entries',['entries',['../structHMLList.html#aa23ec4b0da6006084a2f181c92de50d6',1,'HMLList']]],
+  ['entries',['entries',['../structbufhl__lineinfo__T.html#a51e1d05442f96bd7447627dd5900f18b',1,'bufhl_lineinfo_T::entries()'],['../structHMLList.html#aa23ec4b0da6006084a2f181c92de50d6',1,'HMLList::entries()']]],
   ['env_2ec',['env.c',['../env_8c.html',1,'']]],
   ['env_5fsepchar',['ENV_SEPCHAR',['../unix__defs_8h.html#a4561b5fadd4bbfa2c45c0c775709989f',1,'ENV_SEPCHAR():&#160;unix_defs.h'],['../win__defs_8h.html#a4561b5fadd4bbfa2c45c0c775709989f',1,'ENV_SEPCHAR():&#160;win_defs.h']]],
   ['envnamelen',['ENVNAMELEN',['../env_8c.html#a6edceae4a221309e39b2cbdb4d413b79',1,'env.c']]],

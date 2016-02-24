@@ -124,6 +124,7 @@ var searchData=
   ['cur_5fmatch',['cur_match',['../structtaggy.html#afdfa0e6e039129268ad06c9edb1e2c4b',1,'taggy']]],
   ['curmem',['curmem',['../structstream.html#a773bc3f14acafd6d13b5c977317d8264',1,'stream']]],
   ['curpat',['curpat',['../structAutoPatCmd.html#a021e7a27d0d3ccbd6daccda9064b07a6',1,'AutoPatCmd']]],
+  ['current',['current',['../structbufhl__lineinfo__T.html#a776faa1f5a7773358d45c0e3ca49e7bc',1,'bufhl_lineinfo_T']]],
   ['current_5fexception',['current_exception',['../structdbg__stuff.html#a091f59954dbec3c336ee06c8f2800d0c',1,'dbg_stuff::current_exception()'],['../globals_8h.html#a99f8616af5c83a419348439aa77f6c99',1,'current_exception():&#160;globals.h']]],
   ['current_5ffunccal',['current_funccal',['../eval_8c.html#acf7e7ea83c7c9c632394605024c3992e',1,'eval.c']]],
   ['current_5fline',['current_line',['../structloop__cookie.html#aacf606407f0fd47c651ac6f277973b8a',1,'loop_cookie']]],

@@ -20,6 +20,7 @@ var searchData=
   ['valid_5fpath',['VALID_PATH',['../ex__docmd_8h.html#a0c4afc90e761bd59f4351c04e7189577',1,'ex_docmd.h']]],
   ['valid_5fstate',['VALID_STATE',['../syntax_8c.html#a73bb559ac3864010e170ef6cb5f48ef5',1,'syntax.c']]],
   ['valid_5ftabpage',['valid_tabpage',['../window_8c.html#acb1cbba2eb0a6a9bea3c973761439762',1,'window.c']]],
+  ['valid_5fto',['valid_to',['../structbufhl__lineinfo__T.html#a91f2945c0eab87b7a856bb6958b326c6',1,'bufhl_lineinfo_T']]],
   ['valid_5ftopline',['VALID_TOPLINE',['../buffer__defs_8h.html#aa7bb6a612ec34638345fdff842e74a92',1,'buffer_defs.h']]],
   ['valid_5fvirtcol',['VALID_VIRTCOL',['../buffer__defs_8h.html#ab1b4500a33d5b44af31a6b77a0a1340c',1,'buffer_defs.h']]],
   ['valid_5fwcol',['VALID_WCOL',['../buffer__defs_8h.html#a0230f9e62e6ae070276bce97f73aca6b',1,'buffer_defs.h']]],

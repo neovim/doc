@@ -21,6 +21,7 @@ var searchData=
   ['map_5fimpl',['MAP_IMPL',['../map_8c.html#ac6d2bdfd4767080a4e5170de98d17183',1,'map.c']]],
   ['map_5fnew',['map_new',['../map_8h.html#a3b36f62c194ef533fc33da666f645a3c',1,'map.h']]],
   ['map_5fput',['map_put',['../map_8h.html#a2ed001f8b4df69280db9f5eea36cc86d',1,'map.h']]],
+  ['map_5fref',['map_ref',['../map_8h.html#a3ef5dad892a2c80f00f6e6cfb2d1eec7',1,'map.h']]],
   ['match',['MATCH',['../regexp_8c.html#a6fbd908903ad34f115e0726001be8753',1,'regexp.c']]],
   ['mauto',['MAUTO',['../vim_8h.html#a0a0641f07c2d012af8af0ebc1c706a5a',1,'vim.h']]],
   ['max',['MAX',['../macros_8h.html#aff9931d7524c88e07743af6535b20761',1,'macros.h']]],

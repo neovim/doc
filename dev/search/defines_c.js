@@ -15,6 +15,8 @@ var searchData=
   ['lbuflen',['LBUFLEN',['../diff_8c.html#ac570af6781e9b5c073b2e2702fc4a92a',1,'diff.c']]],
   ['line_5fbuffer_5fsize',['LINE_BUFFER_SIZE',['../vim_8c.html#afa0499dcb85922b683da3918f512adb6',1,'vim.c']]],
   ['lineempty',['lineempty',['../macros_8h.html#ad7981a4627e42d1e51ff57915944be5e',1,'macros.h']]],
+  ['linenr_5ft_5feq',['linenr_T_eq',['../map_8c.html#ab3a12341b73d09f920987c9ac1a26683',1,'map.c']]],
+  ['linenr_5ft_5fhash',['linenr_T_hash',['../map_8c.html#acce0138422e47fd6fa247098cb2f6517',1,'map.c']]],
   ['lispword_5fvalue',['LISPWORD_VALUE',['../option__defs_8h.html#aa5238a7eecd24bdd9b9d5125dd6de89e',1,'option_defs.h']]],
   ['list_5fattr',['LIST_ATTR',['../syntax_8c.html#a2cfbc3ef7b7034aab8baaf863f8f0662',1,'syntax.c']]],
   ['list_5fint',['LIST_INT',['../syntax_8c.html#a8dbd58c2fab2a928da97297f3f832344',1,'syntax.c']]],

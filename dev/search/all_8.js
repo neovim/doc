@@ -144,6 +144,7 @@ var searchData=
   ['hl_5ffold',['HL_FOLD',['../syntax_8h.html#a160b17641f10d6e04dcf83ae594bbebd',1,'syntax.h']]],
   ['hl_5fgroup',['hl_group',['../structhl__group.html',1,'']]],
   ['hl_5fhas_5feol',['HL_HAS_EOL',['../syntax_8h.html#a30e27bf02e8eadf4c1c68494389cab71',1,'syntax.h']]],
+  ['hl_5fid',['hl_id',['../structbufhl__hl__item.html#ab924ea8ddfe74a0a4ca4d86a5296f436',1,'bufhl_hl_item']]],
   ['hl_5finverse',['HL_INVERSE',['../syntax_8h.html#aa840e9ad59e0b3b4f4af847102963076',1,'syntax.h']]],
   ['hl_5fitalic',['HL_ITALIC',['../syntax_8h.html#a6110a6dcf2f8642947bccb4a653e1013',1,'syntax.h']]],
   ['hl_5fkeepend',['HL_KEEPEND',['../syntax_8h.html#a04f64a338ccd1fcf00b7501b6acf159f',1,'syntax.h']]],

@@ -8,6 +8,7 @@ var searchData=
   ['v_5fstring',['v_string',['../structtypval__T.html#ad5403b6cf230c7f663901d46079b9ac3',1,'typval_T']]],
   ['v_5ftype',['v_type',['../structtypval__T.html#ac92d1a1a04d2400d6622252b82857385',1,'typval_T']]],
   ['val',['val',['../structnfa__state.html#a49a1ded2b94a5386f574977862b121c5',1,'nfa_state']]],
+  ['valid_5fto',['valid_to',['../structbufhl__lineinfo__T.html#a91f2945c0eab87b7a856bb6958b326c6',1,'bufhl_lineinfo_T']]],
   ['value',['value',['../structkey__value__pair.html#a695ec5055b3fa3b7fb4f219f84a0a1c0',1,'key_value_pair::value()'],['../structvim__exception.html#af2a3350a66ea67c23125adf0b93c7c7f',1,'vim_exception::value()'],['../structShadaEntry.html#a7b35967a23f2254f0ea8386a02cdc229',1,'ShadaEntry::value()']]],
   ['var',['var',['../structfunccall__S.html#a2da17673198c34c20c1fb84f4ae603c3',1,'funccall_S::var()'],['../structvimoption.html#a7a4602548515b399450854cc3c7bb2b0',1,'vimoption::var()']]],
   ['varlen',['varlen',['../env_8c.html#a8f5696e525c49b3d80faa2f2783e5591',1,'env.c']]],

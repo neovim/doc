@@ -16,6 +16,7 @@ var searchData=
   ['b0_5fversion',['b0_version',['../structblock0.html#a5f6ec025350776e0dbe8d0ab54daadc3',1,'block0']]],
   ['b_5fbad_5fchar',['b_bad_char',['../structfile__buffer.html#a95896934797bf69eb94fbb61d99a83d5',1,'file_buffer']]],
   ['b_5fbkc_5fflags',['b_bkc_flags',['../structfile__buffer.html#a3ead5ca112a6fa49749e8e499f5e0fd7',1,'file_buffer']]],
+  ['b_5fbufhl_5finfo',['b_bufhl_info',['../structfile__buffer.html#aae94ccc77491d881ae0ebde5964093cf',1,'file_buffer']]],
   ['b_5fbufvar',['b_bufvar',['../structfile__buffer.html#abb5f5de9003fe704808ab9192f2207b0',1,'file_buffer']]],
   ['b_5fcap_5fprog',['b_cap_prog',['../structsynblock__T.html#a92252020c20b430dfc4885fecea8ba13',1,'synblock_T']]],
   ['b_5fchanged',['b_changed',['../structfile__buffer.html#a9bd31190db2911a321c9404741d6a463',1,'file_buffer']]],

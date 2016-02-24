@@ -84,6 +84,8 @@ var searchData=
   ['linegetter',['LineGetter',['../ex__cmds__defs_8h.html#a523220ff41715f2590ff32879f9b775b',1,'ex_cmds_defs.h']]],
   ['linenr',['linenr',['../structfunccall__S.html#a86dcf22edb5afebfdf08a047bd31166e',1,'funccall_S']]],
   ['linenr_5ft',['linenr_T',['../pos_8h.html#a934ce754d29a8aee92b71e970b7e2ae4',1,'pos.h']]],
+  ['linenr_5ft_5feq',['linenr_T_eq',['../map_8c.html#ab3a12341b73d09f920987c9ac1a26683',1,'map.c']]],
+  ['linenr_5ft_5fhash',['linenr_T_hash',['../map_8c.html#acce0138422e47fd6fa247098cb2f6517',1,'map.c']]],
   ['lineoff_5ft',['lineoff_T',['../structlineoff__T.html',1,'']]],
   ['lines_5fgap',['lines_gap',['../structloop__cookie.html#adfcb2c58dfcd5573964058b86f1f0aea',1,'loop_cookie']]],
   ['lines_5fper_5fpage',['lines_per_page',['../structprt__settings__T.html#a3d2b5820c41507ea81db92f4a1313a97',1,'prt_settings_T']]],

@@ -266,6 +266,7 @@ var searchData=
   ['kv_5fresize',['kv_resize',['../kvec_8h.html#a26b7d82301afb9448e9986d2ea0b4c66',1,'kvec.h']]],
   ['kv_5froundup32',['kv_roundup32',['../kvec_8h.html#a453ac1f9bf61a43d5cbb30eb2e630109',1,'kvec.h']]],
   ['kv_5fsize',['kv_size',['../kvec_8h.html#a59990a38a9dc0867b4b5070835e16428',1,'kvec.h']]],
+  ['kvec_5finitializer',['KVEC_INITIALIZER',['../map_8c.html#aab2f0cf52adf052a13bff931db5346f7',1,'map.c']]],
   ['kvec_5ft',['kvec_t',['../kvec_8h.html#ab6db37a37face44420d5afaee75182b0',1,'kvec.h']]],
   ['kword',['KWORD',['../regexp_8c.html#a00d86c4174c236cce841cee0e901f01a',1,'regexp.c']]]
 ];
