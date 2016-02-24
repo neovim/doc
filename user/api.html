@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: api</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <nav class="navbar">
+          <div class="container-fluid">
+            <div class="navbar-header">
+
+              <a href="/" class="navbar-brand">
+                <img src="/images/logo@2x.png" id="navbar-logo" alt="Neovim">
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: api</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="api.txt"></A><B>api.txt</B>*    For Nvim.							 {Nvim}
+
+
+		 NVIM REFERENCE MANUAL    by Thiago de Arruda
+
+
+The C API of Nvim						     *<A NAME="nvim-api"></A><B>nvim-api</B>*
+
+1. Introduction			|<A HREF="#nvim-api-intro">nvim-api-intro</A>|
+2. API Types			|<A HREF="#nvim-api-types">nvim-api-types</A>|
+3. API metadata			|<A HREF="#nvim-api-metadata">nvim-api-metadata</A>|
+4. Buffer highlighting		|<A HREF="#nvim-api-highlights">nvim-api-highlights</A>|
+
+==============================================================================
+
+1. Introduction			*<A NAME="nvim-api-intro"></A><B>nvim-api-intro</B>*
+
+Nvim defines a C API <A HREF="motion.html#as">as</A> the primary way for external code to interact with
+the NVim core. In the present version of Nvim the API is primarily used by
+external processes to interact with Nvim using the <A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A> protocol, see
+|<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>|. The API will also be used from vimscript to access new Nvim core
+features, but this is not implemented yet. Later on, Nvim might be embeddable
+in C applications <A HREF="motion.html#as">as</A> libnvim, and the application will then <A HREF="intro.html#control">control</A> the
+embedded instance by calling the C API directly.
+
+==============================================================================
+
+2. API Types						       *<A NAME="nvim-api-types"></A><B>nvim-api-types</B>*
+
+Nvim's C API uses custom types for all <A HREF="eval.html#functions">functions</A>. Some are just typedefs
+around C99 standard types, and some are Nvim defined data structures.
+
+Boolean				  -&gt; bool
+Integer (signed 64-bit integer)	  -&gt; int64_t
+<A HREF="eval.html#Float">Float</A> (IEEE 754 double precision) -&gt; double
+<A HREF="eval.html#String">String</A>				  -&gt; {char* data, size_t size} struct
+
+Additionally, the following data structures are defined:
+
+Array
+<A HREF="eval.html#Dictionary">Dictionary</A>
+Object
+
+The following handle types are defined <A HREF="motion.html#as">as</A> integer typedefs, but are
+discriminated <A HREF="motion.html#as">as</A> separate types in an Object:
+
+Buffer				  -&gt; enum value kObjectTypeBuffer
+Window				  -&gt; enum value kObjectTypeWindow
+Tabpage				  -&gt; enum value kObjectTypeTabpage
+
+==============================================================================
+
+3. API metadata						    *<A NAME="nvim-api-metadata"></A><B>nvim-api-metadata</B>*
+
+Nvim exposes metadata about the API <A HREF="motion.html#as">as</A> a <A HREF="eval.html#Dictionary">Dictionary</A> with the following keys:
+
+<A HREF="eval.html#functions">functions</A>  	calling signature of the API <A HREF="eval.html#functions">functions</A>
+types		The custom handle types defined by Nvim
+error_types	The possible kinds of <A HREF="message.html#errors">errors</A> an API function can exit with.
+
+This metadata is mostly useful for external programs accessing the api over
+msgpack-api, see |<A HREF="msgpack_rpc.html#msgpack-rpc-api">msgpack-rpc-api</A>|.
+
+==============================================================================
+
+4. Buffer highlighting					  *<A NAME="nvim-api-highlights"></A><B>nvim-api-highlights</B>*
+
+Nvim allows plugins to add position-based highlights to <A HREF="windows.html#buffers">buffers</A>. This is
+similar to |<A HREF="eval.html#matchaddpos()">matchaddpos()</A>| but with some key differences. The added highlights
+are associated with a buffer and adapts to line insertions and deletions,
+similar to <A HREF="sign.html#signs">signs</A>. It is also possible to manage a set of highlights <A HREF="motion.html#as">as</A> a group
+and delete or replace all at once.
+
+The intended use <A HREF="change.html#case">case</A> are linter or semantic highlighter plugins that monitor
+a buffer for changes, and in the background compute highlights to the buffer.
+Another use <A HREF="change.html#case">case</A> are plugins that show output in an append-only buffer, and
+want to add highlights to the outputs. Highlight data cannot be preserved
+on <A HREF="editing.html#writing">writing</A> and loading a buffer to file, nor in undo/redo cycles.
+
+Highlights are registered using the |<A HREF="intro.html#buffer_add_highlight">buffer_add_highlight</A>| function, see the
+generated API documentation for details. If an external highlighter <A HREF="usr_05.html#plugin">plugin</A> is
+adding a large number of highlights in a batch, performance can be improved by
+calling |<A HREF="intro.html#buffer_add_highlight">buffer_add_highlight</A>| <A HREF="motion.html#as">as</A> an asynchronous notification, after first
+(synchronously) reqesting a source id. Here is an example using wrapper
+<A HREF="eval.html#functions">functions</A> in the <A HREF="if_pyth.html#python">python</A> client:
+
+<B>    src = vim.new_highlight_source()</B>
+
+<B>    buf = vim.current.buffer</B>
+<B>    for i in range(5):</B>
+<B>        buf.add_highlight("String",i,0,-1,src_id=src)</B>
+
+<B>    # some time later</B>
+
+<B>    buf.clear_highlight(src)</B>
+ 
+If the highlights don't need to be deleted or updated, just pass -1 <A HREF="motion.html#as">as</A>
+src_id (this is the default in <A HREF="if_pyth.html#python">python</A>). |<A HREF="intro.html#buffer_clear_highlight">buffer_clear_highlight</A>| can be used
+to clear highligts from a specific source, in a specific line range or the
+entire buffer by passing in the line range 0, -1 (the later is the default
+in <A HREF="if_pyth.html#python">python</A> <A HREF="motion.html#as">as</A> used above).
+
+==============================================================================
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Wed Feb 24 20:05:49 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/8160e875a0d25c881bf6aa61254b40fff1db4f67"><code>8160e87</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>
