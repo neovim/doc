@@ -37,7 +37,7 @@ var searchData=
   ['throw_5fname',['throw_name',['../structvim__exception.html#a48be7c536a9c513028442117928be692',1,'vim_exception']]],
   ['timer_5fhandle',['timer_handle',['../structterm__input.html#a1268e7de8d9e579a97b165d865da56b9',1,'term_input']]],
   ['timestamp',['timestamp',['../structSubReplacementString.html#a0661d343e4c42dc965cbb9f62b346e27',1,'SubReplacementString::timestamp()'],['../structhist__entry.html#a291033e649c921b6147796976bdc1e1e',1,'hist_entry::timestamp()'],['../structfilemark.html#ad5ac3b1e8d6242e6fb4008f30e5dde76',1,'filemark::timestamp()'],['../structyankreg.html#ae0edcc86754778af06fee3214b62af0d',1,'yankreg::timestamp()'],['../structspat.html#a52fa83474ab630855af6de49aa0e2716',1,'spat::timestamp()'],['../structShadaEntry.html#a599cd4cd3d71f8447a076cf1951bed6f',1,'ShadaEntry::timestamp()']]],
-  ['title',['title',['../structprt__ps__resource__S.html#abf1a7cb15460ae4fd584bdb1b1df3ab6',1,'prt_ps_resource_S']]],
+  ['title',['title',['../structprt__ps__resource__S.html#abf1a7cb15460ae4fd584bdb1b1df3ab6',1,'prt_ps_resource_S::title()'],['../eval_8c.html#a09070a177680cd43dbbefb9786e075c3',1,'title():&#160;eval.c']]],
   ['tk',['tk',['../structterm__input.html#a8c4b1c3241003d2f3f506e6861c5069a',1,'term_input']]],
   ['tm',['tm',['../structmatch__T.html#acbe19a09886335d3db942f694225961e',1,'match_T']]],
   ['tn_5fdid_5ffilefind_5finit',['tn_did_filefind_init',['../structtagname__T.html#a2b4551a8e7e060aa926146e47488cab1',1,'tagname_T']]],

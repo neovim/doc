@@ -69,7 +69,6 @@ var searchData=
   ['colon',['colon',['../env_8c.html#a9ad15d961e0d8f54a34f6e29b2d9f0e4',1,'env.c']]],
   ['color',['color',['../structcolor__name__table__T.html#a419f32c6016940a6846829d5b97ce81c',1,'color_name_table_T']]],
   ['color_5fname_5ftable',['color_name_table',['../syntax_8c.html#a77614f3e0c913668fd9bea9acc4bd5f4',1,'color_name_table():&#160;syntax.c'],['../syntax_8h.html#a77614f3e0c913668fd9bea9acc4bd5f4',1,'color_name_table():&#160;syntax.c']]],
-  ['colors',['colors',['../structterminal.html#a90495f393e85a552af64111aed48bf3b',1,'terminal']]],
   ['cols',['cols',['../structScrollbackLine.html#a70be8e25d3c49e5d83722ec8cc836227',1,'ScrollbackLine']]],
   ['column',['column',['../structprt__pos__T.html#a0db438b8ac1ecc0c0e21319c88e55ea2',1,'prt_pos_T']]],
   ['command',['command',['../structtag__pointers.html#ad43f988638d893e76196c232cb5a337d',1,'tag_pointers']]],

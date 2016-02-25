@@ -2,6 +2,7 @@ var searchData=
 [
   ['a',['a',['../structdecomp__T.html#abe4253441cff78e3fd3abc3ef99dac2a',1,'decomp_T']]],
   ['actext',['actext',['../structVimMenu.html#abfbc45899445a759fc001a7abfeeb80c',1,'VimMenu']]],
+  ['action',['action',['../eval_8c.html#abb9c49dcc9147ebbc95ceb7099ac8398',1,'eval.c']]],
   ['additional_5fdata',['additional_data',['../structfile__buffer.html#a2c563408ae6a71f377c36551f623d57a',1,'file_buffer::additional_data()'],['../structfilemark.html#a43f1bec1d39a45a70ad81da0487ff2e6',1,'filemark::additional_data()'],['../structyankreg.html#a8d92c1c01fd59249b284c0ad618697c6',1,'yankreg::additional_data()'],['../structspat.html#a19934a6328302183374de0ebc95bdeed',1,'spat::additional_data()'],['../structShadaEntry.html#a6f5fc008459ce15804ceb9aa9cc1b829',1,'ShadaEntry::additional_data()']]],
   ['additional_5felements',['additional_elements',['../structSubReplacementString.html#acd6feb1041e6d23d69db1898aeb62944',1,'SubReplacementString::additional_elements()'],['../structhist__entry.html#ad053c98c764dab17a42e4c7580d55887',1,'hist_entry::additional_elements()'],['../structShadaEntry.html#afef322d858ba41ab6acdadabcefdc238',1,'ShadaEntry::additional_elements()']]],
   ['additional_5fmarks',['additional_marks',['../structFileMarks.html#a340b517ee9b94b8cde03bdcf0e0be993',1,'FileMarks']]],
