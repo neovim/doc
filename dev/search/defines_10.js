@@ -74,6 +74,7 @@ var searchData=
   ['prof_5fnone',['PROF_NONE',['../globals_8h.html#ac3ebeea66f4deb8f9c1aa46707f2c8b3',1,'globals.h']]],
   ['prof_5fpaused',['PROF_PAUSED',['../globals_8h.html#af2170f900505410d5bed7f29aa470243',1,'globals.h']]],
   ['prof_5fyes',['PROF_YES',['../globals_8h.html#a5115ba52a929a0a5443f11433b99a96c',1,'globals.h']]],
+  ['proto',['PROTO',['../main_8c.html#aa57068f1a1168488891bcde099da7322',1,'main.c']]],
   ['prt_5fcid_5fprolog_5fversion',['PRT_CID_PROLOG_VERSION',['../hardcopy_8c.html#ab92f199bce450bac8d1f00fe7aaa7f1a',1,'hardcopy.c']]],
   ['prt_5fdsc_5fatend',['prt_dsc_atend',['../hardcopy_8c.html#a002976b991a2bee3e6ee19cf98cb6114',1,'hardcopy.c']]],
   ['prt_5fdsc_5fendcomments',['PRT_DSC_ENDCOMMENTS',['../hardcopy_8c.html#a804670a8bfddcdb58d3280fdf5554109',1,'hardcopy.c']]],
