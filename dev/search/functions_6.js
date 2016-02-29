@@ -93,7 +93,7 @@ var searchData=
   ['get_5freal_5fstate',['get_real_state',['../misc2_8c.html#afe85edbc7e89028f3458139f134226aa',1,'misc2.c']]],
   ['get_5frecorded',['get_recorded',['../getchar_8c.html#a8a2d798ac22e29e4d47765b8bd5ecc0d',1,'getchar.c']]],
   ['get_5freg_5fcontents',['get_reg_contents',['../ops_8c.html#a1115c5b8cdd811ec357f39df35f5f1e3',1,'ops.c']]],
-  ['get_5freg_5ftype',['get_reg_type',['../ops_8c.html#a5e15de3d039d39448f8c24166a486f1f',1,'ops.c']]],
+  ['get_5freg_5ftype',['get_reg_type',['../ops_8c.html#aa7e3cc40c3e3284cee73edb2cdf43b94',1,'ops.c']]],
   ['get_5fregister_5fname',['get_register_name',['../ops_8c.html#a03d9b2e6cc2a84d5e367105634c4eca5',1,'ops.c']]],
   ['get_5frel_5fpos',['get_rel_pos',['../buffer_8c.html#a882a1430480c7b4319fe818c0cfa118a',1,'buffer.c']]],
   ['get_5freturn_5fcmd',['get_return_cmd',['../eval_8c.html#a1fba064d81d456ce8cf1111c0022cbd7',1,'eval.c']]],

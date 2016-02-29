@@ -68,6 +68,7 @@ var searchData=
   ['pound',['POUND',['../ascii_8h.html#ad37a6c788f8b04228b5c9085be7f0957',1,'ascii.h']]],
   ['prcolor_5fblack',['PRCOLOR_BLACK',['../hardcopy_8c.html#a4d334013865dcef7fa4e639690b1c1f5',1,'hardcopy.c']]],
   ['prcolor_5fwhite',['PRCOLOR_WHITE',['../hardcopy_8c.html#a224a2873193ad4d4c0c6eb6b79480cc9',1,'hardcopy.c']]],
+  ['pridcolnr',['PRIdCOLNR',['../pos_8h.html#af2c950e6c9b3d573c14d48037624b04f',1,'pos.h']]],
   ['print',['PRINT',['../regexp_8c.html#a8b43bafee90b30676faae508c21cb8d7',1,'regexp.c']]],
   ['print_5fnumber_5fwidth',['PRINT_NUMBER_WIDTH',['../hardcopy_8h.html#a43b368177951ebc0ac63e47ddb35aef8',1,'hardcopy.h']]],
   ['prl_5fitem',['PRL_ITEM',['../ex__cmds2_8c.html#a1688a3ebf833a058069780d97528329a',1,'ex_cmds2.c']]],
