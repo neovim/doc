@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['l',['l',['../structMPConvStackVal.html#ad452e205463a5f22ce4088dc5480cc31',1,'MPConvStackVal']]],
+  ['l',['l',['../structMPConvStackVal.html#ad452e205463a5f22ce4088dc5480cc31',1,'MPConvStackVal::l()'],['../eval_8c.html#a8f446ed3599b30c7483977e0c08f1771',1,'l():&#160;eval.c']]],
   ['l_5favars',['l_avars',['../structfunccall__S.html#a4419352f327dff91a0322146b547bdc3',1,'funccall_S']]],
   ['l_5favars_5fvar',['l_avars_var',['../structfunccall__S.html#a37fa561aa2305d95948df51719be94c8',1,'funccall_S']]],
   ['l_5flistitems',['l_listitems',['../structfunccall__S.html#a1c0cfa5b196282c65038f40b21ed426c',1,'funccall_S']]],
@@ -70,7 +70,7 @@ var searchData=
   ['libuvprocess',['LibuvProcess',['../libuv__process_8h.html#a62eebc6c2747a94dc227c93c2feac915',1,'libuv_process.h']]],
   ['limit_5fscreen_5fsize',['limit_screen_size',['../screen_8c.html#a28bf5d095bf3f881a9902cfdf4ad5def',1,'screen.c']]],
   ['limitscore_5ft',['limitscore_T',['../structlimitscore__T.html',1,'']]],
-  ['line',['line',['../structwcmd__T.html#a2c0a065fec5f861454be9798b188fa3a',1,'wcmd_T::line()'],['../structregsub__T.html#a45088d81e7d4962a23882e430cd7a540',1,'regsub_T::line()'],['../structsoffset.html#aafb4f46a1b58ca32d9dea14da6e048ce',1,'soffset::line()']]],
+  ['line',['line',['../structwcmd__T.html#a2c0a065fec5f861454be9798b188fa3a',1,'wcmd_T::line()'],['../structregsub__T.html#ab16b249871f8aa097af3c31cb89672fb',1,'regsub_T::line()'],['../structsoffset.html#aafb4f46a1b58ca32d9dea14da6e048ce',1,'soffset::line()']]],
   ['line1',['line1',['../structexarg.html#af6bf73309e827c986153201b24f79d82',1,'exarg']]],
   ['line2',['line2',['../structexarg.html#a9845f3bfa01ba13b4136e82b21fb72bf',1,'exarg']]],
   ['line_5fbreakcheck',['line_breakcheck',['../misc1_8c.html#a8703516dc56663f759f265915d1acc2d',1,'misc1.c']]],
@@ -94,7 +94,7 @@ var searchData=
   ['linewhite',['linewhite',['../search_8c.html#ace396871a3c15e0ac9d80c6f93a1e3e7',1,'search.c']]],
   ['link',['link',['../structqueue__item.html#a3911b3a6f4c34fa0d45b6367adcbff2f',1,'queue_item']]],
   ['lispword_5fvalue',['LISPWORD_VALUE',['../option__defs_8h.html#aa5238a7eecd24bdd9b9d5125dd6de89e',1,'option_defs.h']]],
-  ['list',['list',['../structMPConvStackVal.html#a0755881a5a6d150cea6de25279003974',1,'MPConvStackVal::list()'],['../structlist__stack__S.html#a98b87f117ccb316ca1eecb0fc29b67f7',1,'list_stack_S::list()'],['../structregsub__T.html#ab3d13e52bfefb0d614562096e01958c3',1,'regsub_T::list()']]],
+  ['list',['list',['../structMPConvStackVal.html#a0755881a5a6d150cea6de25279003974',1,'MPConvStackVal::list()'],['../structlist__stack__S.html#a98b87f117ccb316ca1eecb0fc29b67f7',1,'list_stack_S::list()'],['../structregsub__T.html#ae3ea779d4482209b0908957d1cc223f7',1,'regsub_T::list()']]],
   ['list_5fadd_5fwatch',['list_add_watch',['../eval_8c.html#a8ee4114c39e8e90bb1b611c542c8bb85',1,'eval.c']]],
   ['list_5falloc',['list_alloc',['../eval_8c.html#aa256fec511705ecf729a14faa62030ae',1,'eval.c']]],
   ['list_5fappend',['list_append',['../eval_8c.html#a75152e92000b66c81eff7e15f7b492f6',1,'eval.c']]],
@@ -104,6 +104,7 @@ var searchData=
   ['list_5fappend_5fnumber',['list_append_number',['../eval_8c.html#aa950f46569b7154f6b61a894b420166c',1,'eval.c']]],
   ['list_5fappend_5fstring',['list_append_string',['../eval_8c.html#a56d0c35c5153c333c7f2a61d44cdf360',1,'eval.c']]],
   ['list_5fappend_5ftv',['list_append_tv',['../eval_8c.html#a770bf8af8e96c3746d8dea82a37e8178',1,'eval.c']]],
+  ['list_5farg',['list_arg',['../eval_8c.html#aa28993568effc63078be6698c2679c62',1,'eval.c']]],
   ['list_5fattr',['LIST_ATTR',['../syntax_8c.html#a2cfbc3ef7b7034aab8baaf863f8f0662',1,'syntax.c']]],
   ['list_5ffind',['list_find',['../eval_8c.html#ac09dd73c9ac71ae39dea5ab4e3d99190',1,'eval.c']]],
   ['list_5ffind_5fstr',['list_find_str',['../eval_8c.html#afbd864bed1afd4bf4f404459177bf709',1,'eval.c']]],

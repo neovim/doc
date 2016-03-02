@@ -31,7 +31,7 @@ var searchData=
   ['win_5fmove_5fafter',['win_move_after',['../window_8c.html#a095ba5a7b154045ba4f6ceed42eacbbb',1,'window.c']]],
   ['win_5fnew_5fheight',['win_new_height',['../window_8c.html#a2ccec05494db23b3726b2ccab8f6e298',1,'window.c']]],
   ['win_5fnew_5fshellsize',['win_new_shellsize',['../screen_8c.html#ab95157ea7f89bca9ec40650978b8de60',1,'screen.c']]],
-  ['win_5fnew_5ftabpage',['win_new_tabpage',['../window_8c.html#a0af9c7a377ee000c16928b2c6eae9912',1,'window.c']]],
+  ['win_5fnew_5ftabpage',['win_new_tabpage',['../window_8c.html#a13ccf971b7c12fb9131b20a59d9ed36a',1,'window.c']]],
   ['win_5fnew_5fwidth',['win_new_width',['../window_8c.html#aef7fa3236e3f06f5e7d62fc0fe6bb09c',1,'window.c']]],
   ['win_5fredr_5fstatus',['win_redr_status',['../screen_8c.html#a45e1625fa6424ae9c6b266ee047149e5',1,'screen.c']]],
   ['win_5fredr_5fstatus_5fmatches',['win_redr_status_matches',['../screen_8c.html#a9c42e29c91c1ab9205a1b0b9f2aa6b93',1,'screen.c']]],

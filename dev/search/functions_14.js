@@ -70,7 +70,7 @@ var searchData=
   ['unref_5fextmatch',['unref_extmatch',['../regexp_8c.html#a14a2522cb2782f01fde6ec96eb70e25a',1,'regexp.c']]],
   ['unref_5fvar_5fdict',['unref_var_dict',['../eval_8c.html#ae24342456f2e2b4a742228a8fa4ee170',1,'eval.c']]],
   ['unset_5fglobal_5flocal_5foption',['unset_global_local_option',['../option_8c.html#ac921a764f41e47c8ab14996fb2e5996f',1,'option.c']]],
-  ['unshowmode',['unshowmode',['../screen_8c.html#ae21a8974ccb3d03690cb2ef0ca51c77c',1,'screen.c']]],
+  ['unshowmode',['unshowmode',['../screen_8c.html#a30365cf54c32f7837e27d5350e4fbe3e',1,'screen.c']]],
   ['update_5fcurbuf',['update_curbuf',['../screen_8c.html#ae03064e2071abb1a745786242487bfe0',1,'screen.c']]],
   ['update_5fcurswant',['update_curswant',['../move_8c.html#a1db499c4a52db445ef6bc1a7964ac6fa',1,'move.c']]],
   ['update_5fdebug_5fsign',['update_debug_sign',['../screen_8c.html#ae6ec4a533f0db31a5c8cbe4b3a8b1dfa',1,'screen.c']]],

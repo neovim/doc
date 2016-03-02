@@ -63,7 +63,7 @@ var searchData=
   ['vim_5fgetenv',['vim_getenv',['../env_8c.html#adb11eb56837ed66f27d95cb1486632ba',1,'env.c']]],
   ['vim_5fgettempdir',['vim_gettempdir',['../tempfile_8c.html#ac1bd273a39cd42e96408b3ed87ab44fe',1,'tempfile.c']]],
   ['vim_5finput',['vim_input',['../vim_8c.html#a19151cf27a66506e4cafef65a8b6a87c',1,'vim.c']]],
-  ['vim_5fis_5fctrl_5fx_5fkey',['vim_is_ctrl_x_key',['../edit_8c.html#a98750b14f1d452561a33afe1d1cf2a3d',1,'edit.c']]],
+  ['vim_5fis_5fctrl_5fx_5fkey',['vim_is_ctrl_x_key',['../edit_8c.html#a90a7f372c999e840d63026584d5f6c91',1,'edit.c']]],
   ['vim_5fisabsname',['vim_isAbsName',['../path_8c.html#a4eb32201f33fcfb7c589b9cb5b2a8b9c',1,'path.c']]],
   ['vim_5fisblankline',['vim_isblankline',['../charset_8c.html#a81699f05d44b8581eb166a9dee886cf1',1,'charset.c']]],
   ['vim_5fisfilec',['vim_isfilec',['../charset_8c.html#ae988168bff862f21b82f22941ffbc6ab',1,'charset.c']]],

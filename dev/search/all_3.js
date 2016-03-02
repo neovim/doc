@@ -623,7 +623,7 @@ var searchData=
   ['current_5fwin_5fnr',['CURRENT_WIN_NR',['../ex__docmd_8c.html#a3cb5772e8891432a08411639b582c4ba',1,'ex_docmd.c']]],
   ['current_5fword',['current_word',['../search_8c.html#ad045e718760bcecd409840963471d3d2',1,'search.c']]],
   ['curs_5fcolumns',['curs_columns',['../move_8c.html#a3f07a20b94c85190ae135378012f74e6',1,'move.c']]],
-  ['cursor',['cursor',['../structterminal.html#ae22c544a5f621045901db83a6d5a57ce',1,'terminal::cursor()'],['../regexp_8c.html#ae67dffdc8e496c16aff7e8903a3f2117',1,'CURSOR():&#160;regexp.c']]],
+  ['cursor',['cursor',['../structterminal.html#a56dd0218b0e80db42da0c4ea97b6628e',1,'terminal::cursor()'],['../regexp_8c.html#ae67dffdc8e496c16aff7e8903a3f2117',1,'CURSOR():&#160;regexp.c']]],
   ['cursor_2ec',['cursor.c',['../cursor_8c.html',1,'']]],
   ['cursor_2eh',['cursor.h',['../cursor_8h.html',1,'']]],
   ['cursor_5fbar_5fright',['CURSOR_BAR_RIGHT',['../macros_8h.html#a2d7b717cc8f01428e26b6e8850664d7e',1,'macros.h']]],
