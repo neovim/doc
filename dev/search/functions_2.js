@@ -100,7 +100,7 @@ var searchData=
   ['cmd_5fgchar',['cmd_gchar',['../ex__getln_8c.html#a0b0aab7fed804d7641bd315a973750b9',1,'ex_getln.c']]],
   ['cmd_5fpchar',['cmd_pchar',['../ex__getln_8c.html#ac1f84c61a25e669a23ebb1c537a88dfa',1,'ex_getln.c']]],
   ['cmdl_5ffkmap',['cmdl_fkmap',['../farsi_8c.html#a28ca9da811b061612ffd6f672392cbb6',1,'farsi.c']]],
-  ['cmdline_5fpaste_5freg',['cmdline_paste_reg',['../ops_8c.html#a35cc8477eb26c60f8af9e9d384dfd489',1,'ops.c']]],
+  ['cmdline_5fpaste_5freg',['cmdline_paste_reg',['../ops_8c.html#a8e877a04cfd68bab9e0c278fea948d9b',1,'ops.c']]],
   ['cmdline_5fpaste_5fstr',['cmdline_paste_str',['../ex__getln_8c.html#a57fbf4fe588494d54ab5ff4a247146d0',1,'ex_getln.c']]],
   ['col_5fprint',['col_print',['../buffer_8c.html#aa32a6cf2027615c2c8dd31947819a23c',1,'buffer.c']]],
   ['coladvance',['coladvance',['../cursor_8c.html#a93b6e3a7993e6c4273dd8ebfea0fdc14',1,'cursor.c']]],

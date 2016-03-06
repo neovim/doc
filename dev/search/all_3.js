@@ -234,7 +234,7 @@ var searchData=
   ['cmdlen',['cmdlen',['../structcmdline__info.html#aac1dfb94ec139efa8495d0739350a6d3',1,'cmdline_info']]],
   ['cmdline',['CMDLINE',['../vim_8h.html#a17cfc132230dcbede6802a80d600b2b2',1,'vim.h']]],
   ['cmdline_5finfo',['cmdline_info',['../structcmdline__info.html',1,'']]],
-  ['cmdline_5fpaste_5freg',['cmdline_paste_reg',['../ops_8c.html#a35cc8477eb26c60f8af9e9d384dfd489',1,'ops.c']]],
+  ['cmdline_5fpaste_5freg',['cmdline_paste_reg',['../ops_8c.html#a8e877a04cfd68bab9e0c278fea948d9b',1,'ops.c']]],
   ['cmdline_5fpaste_5fstr',['cmdline_paste_str',['../ex__getln_8c.html#a57fbf4fe588494d54ab5ff4a247146d0',1,'ex_getln.c']]],
   ['cmdline_5frow',['cmdline_row',['../globals_8h.html#ad239f2bb11982175ed2389134c8f3669',1,'globals.h']]],
   ['cmdlinep',['cmdlinep',['../structexarg.html#aa595ad2757e347fe3d3af323099074b2',1,'exarg']]],
