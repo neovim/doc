@@ -29,7 +29,7 @@ var searchData=
   ['api_5ffree_5fstring',['api_free_string',['../api_2private_2helpers_8c.html#a06eb4634ea1e46c2067cefa821d1f2db',1,'helpers.c']]],
   ['api_5fmetadata',['api_metadata',['../api_2private_2helpers_8c.html#a3e97553b8e92c0d4e940c8293a86d3d8',1,'helpers.c']]],
   ['append_5fpath',['append_path',['../path_8c.html#a8d2bc3efc811483acbbee93b18fd64e8',1,'path.c']]],
-  ['append_5fredir',['append_redir',['../ex__cmds_8c.html#a2082eaf74fbe9db7acaea063afb25b2f',1,'ex_cmds.c']]],
+  ['append_5fredir',['append_redir',['../ex__cmds_8c.html#a84aa10793309c9c9849a4ac2796d5412',1,'ex_cmds.c']]],
   ['appendchartoredobuff',['AppendCharToRedobuff',['../getchar_8c.html#a28ce387f3d104fad5b86abb68dd11a15',1,'getchar.c']]],
   ['appended_5flines',['appended_lines',['../misc1_8c.html#ad3b09c47fc9d987ca3d026f199168404',1,'misc1.c']]],
   ['appended_5flines_5fmark',['appended_lines_mark',['../misc1_8c.html#a48a4a58c8187614306bb16f0eee54e7f',1,'misc1.c']]],

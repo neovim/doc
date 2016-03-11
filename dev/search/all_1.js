@@ -359,7 +359,7 @@ var searchData=
   ['api_5fset_5ferror',['api_set_error',['../api_2private_2helpers_8h.html#aaf14608fa9fd6079c93366e4158f5c04',1,'helpers.h']]],
   ['append',['append',['../structexarg.html#a4a11bed5908196f1dcedb2cf75deaa80',1,'exarg']]],
   ['append_5fpath',['append_path',['../path_8c.html#a8d2bc3efc811483acbbee93b18fd64e8',1,'path.c']]],
-  ['append_5fredir',['append_redir',['../ex__cmds_8c.html#a2082eaf74fbe9db7acaea063afb25b2f',1,'ex_cmds.c']]],
+  ['append_5fredir',['append_redir',['../ex__cmds_8c.html#a84aa10793309c9c9849a4ac2796d5412',1,'ex_cmds.c']]],
   ['appendbin',['APPENDBIN',['../macros_8h.html#ae8f0a606e2a75c496b47cd0dd05a4c8b',1,'macros.h']]],
   ['appendchartoredobuff',['AppendCharToRedobuff',['../getchar_8c.html#a28ce387f3d104fad5b86abb68dd11a15',1,'getchar.c']]],
   ['appended_5flines',['appended_lines',['../misc1_8c.html#ad3b09c47fc9d987ca3d026f199168404',1,'misc1.c']]],
