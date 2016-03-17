@@ -384,6 +384,7 @@ var searchData=
   ['shm_5fattention',['SHM_ATTENTION',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4ae4725ca480aec381ad5f6d30574696db',1,'option_defs.h']]],
   ['shm_5fcompletionmenu',['SHM_COMPLETIONMENU',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4a80ffda823be296e62703203ee287b150',1,'option_defs.h']]],
   ['shm_5ffile',['SHM_FILE',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4a6b4040eefc5f60a2689b07526ecb96f4',1,'option_defs.h']]],
+  ['shm_5ffileinfo',['SHM_FILEINFO',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4ab4d13a5167a6ec70bef92e7b7d7de0a7',1,'option_defs.h']]],
   ['shm_5fintro',['SHM_INTRO',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4acf01930e28241e3e5f3865702ce6000a',1,'option_defs.h']]],
   ['shm_5flast',['SHM_LAST',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4a0a3dfc6d2197f4d3cd28378e38902179',1,'option_defs.h']]],
   ['shm_5flines',['SHM_LINES',['../option__defs_8h.html#aaf8fd5f0e57d456151c951e0f3715fc4af8620f2555e8934b84058238f46ffdaf',1,'option_defs.h']]],
