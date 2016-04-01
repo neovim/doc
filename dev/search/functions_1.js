@@ -53,6 +53,7 @@ var searchData=
   ['buffer_5fline_5fcount',['buffer_line_count',['../api_2buffer_8c.html#a5be00c4952f523bd7ea2c5c38967a7e7',1,'buffer.c']]],
   ['buffer_5fset_5fline',['buffer_set_line',['../api_2buffer_8c.html#a1547906b335ed23a11dffb97ba1d7f94',1,'buffer.c']]],
   ['buffer_5fset_5fline_5fslice',['buffer_set_line_slice',['../api_2buffer_8c.html#a3668d6e896a7f42663cb1e06c1b1d2a2',1,'buffer.c']]],
+  ['buffer_5fset_5flines',['buffer_set_lines',['../api_2buffer_8c.html#ab31ace27819acf3d6a90700f22a4a4a2',1,'buffer.c']]],
   ['buffer_5fset_5fname',['buffer_set_name',['../api_2buffer_8c.html#afcff309896ab0cdfe1fd53c2b283e32c',1,'buffer.c']]],
   ['buffer_5fset_5foption',['buffer_set_option',['../api_2buffer_8c.html#a2b39e6bf01ab93119249bca32f20e415',1,'buffer.c']]],
   ['buffer_5fset_5fvar',['buffer_set_var',['../api_2buffer_8c.html#a64181f2300aaf15502532f450d75dcb6',1,'buffer.c']]],
