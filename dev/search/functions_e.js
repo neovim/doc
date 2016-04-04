@@ -89,5 +89,5 @@ var searchData=
   ['os_5fsystem',['os_system',['../shell_8c.html#a5db7238fbdcf53986f4a1b87ad29b7c7',1,'shell.c']]],
   ['os_5ftime',['os_time',['../os_2time_8c.html#a16f79fd7439b69201d30f29fb196bdb7',1,'time.c']]],
   ['os_5funsetenv',['os_unsetenv',['../env_8c.html#a409588a93cc250f084ade5a895888da4',1,'env.c']]],
-  ['otherfile',['otherfile',['../buffer_8c.html#aac13c3cf91629ec59eb1dda6748c8ea1',1,'buffer.c']]]
+  ['otherfile',['otherfile',['../buffer_8c.html#a516d89ecaf743edcde9dc4fecbbc69df',1,'buffer.c']]]
 ];

@@ -200,7 +200,7 @@ var searchData=
   ['os_5funix_2ec',['os_unix.c',['../os__unix_8c.html',1,'']]],
   ['os_5funix_2eh',['os_unix.h',['../os__unix_8h.html',1,'']]],
   ['os_5funsetenv',['os_unsetenv',['../env_8c.html#a409588a93cc250f084ade5a895888da4',1,'env.c']]],
-  ['otherfile',['otherfile',['../buffer_8c.html#aac13c3cf91629ec59eb1dda6748c8ea1',1,'buffer.c']]],
+  ['otherfile',['otherfile',['../buffer_8c.html#a516d89ecaf743edcde9dc4fecbbc69df',1,'buffer.c']]],
   ['out',['out',['../structTerminalJobData.html#aeffa7abe9f735360dd0936b7019f4586',1,'TerminalJobData::out()'],['../structprocess.html#a7e5763e08b2655df2cfc0c7018c36533',1,'process::out()'],['../structnfa__state.html#a5f6af7a656c2d7f366164db6c349780f',1,'nfa_state::out()'],['../structFrag.html#a857b78b327224ffc647fe2c828b2f347',1,'Frag::out()']]],
   ['out1',['out1',['../structnfa__state.html#a6b5efbc7503e9540cdce968e55f6c62a',1,'nfa_state']]],
   ['out_5fisatty',['out_isatty',['../structTUIData.html#a8923a10fe4a73826666c557cce3a0e8d',1,'TUIData']]],
