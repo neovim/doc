@@ -33,7 +33,7 @@ var searchData=
   ['b_5fchangedtick',['b_changedtick',['../structfile__buffer.html#a7d48ca3e185b3d34a5402167795c5514',1,'file_buffer']]],
   ['b_5fchangelist',['b_changelist',['../structfile__buffer.html#aa40d1cf9658a121484bcbbd2eeb192c9',1,'file_buffer']]],
   ['b_5fchangelistlen',['b_changelistlen',['../structfile__buffer.html#a5505c41e115e541709a5e81f7d5cb342',1,'file_buffer']]],
-  ['b_5fchartab',['b_chartab',['../structfile__buffer.html#aeb884f581842b2a829d1995efb9c3bda',1,'file_buffer']]],
+  ['b_5fchartab',['b_chartab',['../structfile__buffer.html#a8211471a8ee7899c61978378f9a5938c',1,'file_buffer']]],
   ['b_5fcjk',['b_cjk',['../structsynblock__T.html#a2887218b22cd1036e11079c194fd10f7',1,'synblock_T']]],
   ['b_5fclosing',['b_closing',['../structfile__buffer.html#a89e465e60f69cf414f1871d26bde6e63',1,'file_buffer']]],
   ['b_5fdid_5fwarn',['b_did_warn',['../structfile__buffer.html#a47f98c8af16ba2e02b9473a839b4ce95',1,'file_buffer']]],
