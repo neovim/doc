@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2015 Jun 26
+*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2015 Jul 21
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -1637,7 +1637,9 @@ Predefined Vim <A HREF="#variables">variables</A>:			*<A NAME="vim-variable"></A
 		this variable to zero acts like the |<A HREF="pattern.html#:nohlsearch">:nohlsearch</A>| command,
 		setting <A HREF="motion.html#it">it</A> to one acts like
 <B>			let &amp;hlsearch = &amp;hlsearch</B>
- 
+ 		Note that the value is restored when returning from a
+		function. |<A HREF="#function-search-undo">function-search-undo</A>|.
+
 
 					*<A NAME="v:insertmode"></A><B>v:insertmode</B>* *<A NAME="insertmode-variable"></A><B>insertmode-variable</B>*
 <A HREF="#v:insertmode">v:insertmode</A>	Used for the |<A HREF="autocmd.html#InsertEnter">InsertEnter</A>| and |<A HREF="autocmd.html#InsertChange">InsertChange</A>| <A HREF="autocmd.html#autocommand">autocommand</A>
@@ -4949,7 +4951,7 @@ match({expr}, {pat}[, {start}[, {count}]])			*<A NAME="match()"></A><B>match()</
 
 
 					*<A NAME="matchadd()"></A><B>matchadd()</B>* *<A NAME="E798"></A><B>E798</B>* *<A NAME="E799"></A><B>E799</B>* *<A NAME="E801"></A><B>E801</B>*
-matchadd({group}, {pattern}[, {priority}[, {id}]])
+matchadd({group}, {pattern}[, {priority}[, {id} [, {dict}]]])
 		Defines a <A HREF="pattern.html#pattern">pattern</A> to be highlighted in the current <A HREF="windows.html#window">window</A> (a
 		&quot;match&quot;).  It will be highlighted with {group}.  Returns an
 		identification number (ID), which can be used to delete the
@@ -4957,6 +4959,8 @@ matchadd({group}, {pattern}[, {priority}[, {id}]])
 		Matching is <A HREF="change.html#case">case</A> sensitive and magic, unless <A HREF="change.html#case">case</A> sensitivity
 		or magicness are explicitly overridden in {pattern}.  The
 		<A HREF="options.html#'magic'">'magic'</A>, <A HREF="options.html#'smartcase'">'smartcase'</A> and <A HREF="options.html#'ignorecase'">'ignorecase'</A> <A HREF="options.html#options">options</A> are not used.
+		The &quot;Conceal&quot; value is special, <A HREF="motion.html#it">it</A> causes the match to be
+		concealed.
 
 		The optional {priority} argument assigns a priority to the
 		match.	A match with a high priority will have its
@@ -5571,7 +5575,7 @@ readfile({fname} [, {binary} [, {max}]])
 		separated with CR will result in a single long line (unless a
 		NL appears somewhere).
 		All NUL characters are replaced with a NL character.
-		When {binary/append} contains &quot;<A HREF="motion.html#b">b</A>&quot; binary mode is used:
+		When {binary} contains &quot;<A HREF="motion.html#b">b</A>&quot; binary mode is used:
 		- When the last line ends in a NL an extra empty <A HREF="#list">list</A> item is
 		  added.
 		- No CR characters are removed.
@@ -6655,6 +6659,24 @@ strchars({expr} [, {skipcc}])					*<A NAME="strchars()"></A><B>strchars()</B>*
 		counted separately.
 		When {skipcc} set to 1, Composing characters are ignored.
 		Also see |<A HREF="#strlen()">strlen()</A>|, |<A HREF="#strdisplaywidth()">strdisplaywidth()</A>| and |<A HREF="#strwidth()">strwidth()</A>|.
+
+		
+		{skipcc} is only available after 7.4.755.  For backward
+		compatibility, you can define a wrapper function:
+<B>		    if has("patch-7.4.755")</B>
+<B>		      function s:strchars(str, skipcc)</B>
+<B>			return strchars(a:str, a:skipcc)</B>
+<B>		      endfunction</B>
+<B>		    else</B>
+<B>		      function s:strchars(str, skipcc)</B>
+<B>			if a:skipcc</B>
+<B>			  return strlen(substitute(a:str, ".", "x", "g"))</B>
+<B>			else</B>
+<B>			  return strchars(a:str)</B>
+<B>			endif</B>
+<B>		      endfunction</B>
+<B>		    endif</B>
+ 
 
 
 strdisplaywidth({expr}[, {col}])			*<A NAME="strdisplaywidth()"></A><B>strdisplaywidth()</B>*
@@ -9883,7 +9905,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sat Apr  9 20:05:24 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/bf2c2b34cf2314a03236c692b02778eb964dcccb"><code>bf2c2b3</code></a>.
+        Generated Sun Apr 10 20:07:17 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/91c5005da82e6f9ab6bb2f46b27cb82b188b0391"><code>91c5005</code></a>.
       </div>
     </footer>
   </body>
