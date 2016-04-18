@@ -259,6 +259,7 @@ var searchData=
   ['kv_5fcopy',['kv_copy',['../kvec_8h.html#ab232cb8a8b80d46eabd06f57d6695b27',1,'kvec.h']]],
   ['kv_5fdestroy',['kv_destroy',['../kvec_8h.html#a597e8ac3c319a24e73c474498016cd67',1,'kvec.h']]],
   ['kv_5finit',['kv_init',['../kvec_8h.html#a4a671ac1834fd07b44c20b76ef01c707',1,'kvec.h']]],
+  ['kv_5flast',['kv_last',['../kvec_8h.html#ad956ccd09c49cf7143a1c7d4ae98be3d',1,'kvec.h']]],
   ['kv_5fmax',['kv_max',['../kvec_8h.html#aae0f34547c1792869066c3ec1d1ffad0',1,'kvec.h']]],
   ['kv_5fpop',['kv_pop',['../kvec_8h.html#a6f28f6709fae1b0430b5080ae644ab4c',1,'kvec.h']]],
   ['kv_5fpush',['kv_push',['../kvec_8h.html#ae2291cc2dec0e99cfedf3df20ed789a8',1,'kvec.h']]],

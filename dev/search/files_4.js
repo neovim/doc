@@ -2,6 +2,8 @@ var searchData=
 [
   ['edit_2ec',['edit.c',['../edit_8c.html',1,'']]],
   ['edit_2eh',['edit.h',['../edit_8h.html',1,'']]],
+  ['encode_2ec',['encode.c',['../encode_8c.html',1,'']]],
+  ['encode_2eh',['encode.h',['../encode_8h.html',1,'']]],
   ['env_2ec',['env.c',['../env_8c.html',1,'']]],
   ['eval_2ec',['eval.c',['../eval_8c.html',1,'']]],
   ['eval_2eh',['eval.h',['../eval_8h.html',1,'']]],

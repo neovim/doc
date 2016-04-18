@@ -3,6 +3,7 @@ var searchData=
   ['ga_5fappend',['GA_APPEND',['../garray_8h.html#aea3ec97569590fefae0ec717d111def8',1,'garray.h']]],
   ['ga_5fappend_5fvia_5fptr',['GA_APPEND_VIA_PTR',['../garray_8h.html#a01e15f392e49be69ab4bf16cc586fe52',1,'garray.h']]],
   ['ga_5fchar',['GA_CHAR',['../charset_8c.html#a5a0d42a20052977b926e8c1fcaa3cdd0',1,'charset.c']]],
+  ['ga_5fconcat',['ga_concat',['../encode_8c.html#aea95cbbc412f3582fdfd4e1a07f376bd',1,'encode.c']]],
   ['ga_5fdeep_5fclear',['GA_DEEP_CLEAR',['../garray_8h.html#a4c074fb7e6fd8ce4fe312158abb1db23',1,'garray.h']]],
   ['ga_5fdeep_5fclear_5fptr',['GA_DEEP_CLEAR_PTR',['../garray_8h.html#aeee1a9d58ae1ccf4b414f5e738e7d7f6',1,'garray.h']]],
   ['ga_5fempty',['GA_EMPTY',['../garray_8h.html#a926996e0580a88006dba9742e539dc4a',1,'garray.h']]],

@@ -3,11 +3,12 @@ var searchData=
   ['v_5fdict',['v_dict',['../structtypval__T.html#a3e158fa0e1ba87a1a739a476845dc6fc',1,'typval_T']]],
   ['v_5ffloat',['v_float',['../structtypval__T.html#a9cece71110442dfcc80455bc77a1a98e',1,'typval_T']]],
   ['v_5flist',['v_list',['../structtypval__T.html#a886659f986c150dab284f1d5ef64ee00',1,'typval_T']]],
-  ['v_5flock',['v_lock',['../structtypval__T.html#a4a1c1cd367944881762335a1593a986b',1,'typval_T']]],
+  ['v_5flock',['v_lock',['../structtypval__T.html#a1da8dd2efdd15f2b78d71cf2b085bf44',1,'typval_T']]],
   ['v_5fnumber',['v_number',['../structtypval__T.html#aa8615bd53291928fc5adceff07d5e5bc',1,'typval_T::v_number()'],['../eval_8c.html#a24deba0837a73245cc0b413af22d7208',1,'v_number():&#160;eval.c']]],
+  ['v_5fspecial',['v_special',['../structtypval__T.html#ac868de4dd1df2e46d4a5fdfee8d5bd62',1,'typval_T']]],
   ['v_5fstring',['v_string',['../structtypval__T.html#ad5403b6cf230c7f663901d46079b9ac3',1,'typval_T']]],
-  ['v_5ftype',['v_type',['../structtypval__T.html#ac92d1a1a04d2400d6622252b82857385',1,'typval_T']]],
-  ['val',['val',['../structnfa__state.html#a49a1ded2b94a5386f574977862b121c5',1,'nfa_state']]],
+  ['v_5ftype',['v_type',['../structtypval__T.html#ae8bf8f1bbe623ebccf498d92042f2f74',1,'typval_T']]],
+  ['val',['val',['../structValuesStackItem.html#ac51a7ad20d8b7efa9bd29818d700c895',1,'ValuesStackItem::val()'],['../structnfa__state.html#a49a1ded2b94a5386f574977862b121c5',1,'nfa_state::val()']]],
   ['valid_5fto',['valid_to',['../structbufhl__lineinfo__T.html#a91f2945c0eab87b7a856bb6958b326c6',1,'bufhl_lineinfo_T']]],
   ['value',['value',['../structkey__value__pair.html#a695ec5055b3fa3b7fb4f219f84a0a1c0',1,'key_value_pair::value()'],['../structvim__exception.html#af2a3350a66ea67c23125adf0b93c7c7f',1,'vim_exception::value()'],['../structShadaEntry.html#a7b35967a23f2254f0ea8386a02cdc229',1,'ShadaEntry::value()']]],
   ['var',['var',['../structfunccall__S.html#a2da17673198c34c20c1fb84f4ae603c3',1,'funccall_S::var()'],['../structvimoption.html#a7a4602548515b399450854cc3c7bb2b0',1,'vimoption::var()']]],
@@ -33,5 +34,5 @@ var searchData=
   ['vts',['vts',['../structterminal.html#ab33698998f9e6e636d83d902aabe88cd',1,'terminal']]],
   ['vv_5fexception',['vv_exception',['../structdbg__stuff.html#ae214d0d3eb51e908d88eff000eee7240',1,'dbg_stuff']]],
   ['vv_5fthrowpoint',['vv_throwpoint',['../structdbg__stuff.html#af51ae41ed949f3b44be4a1fce396ae38',1,'dbg_stuff']]],
-  ['vval',['vval',['../structtypval__T.html#a1cc78afa3e3638fa1236f390f1489add',1,'typval_T']]]
+  ['vval',['vval',['../structtypval__T.html#afa9f950a390a05b809ef8b6a64f9b424',1,'typval_T']]]
 ];

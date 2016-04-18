@@ -3,6 +3,7 @@ var searchData=
   ['tabline_5fheight',['tabline_height',['../window_8c.html#aeb34215e11d8d1ff9c8b896c64330ddc',1,'window.c']]],
   ['tabpage_5fclose',['tabpage_close',['../ex__docmd_8c.html#a827c1c198e8dcf140b0294615e03cf29',1,'ex_docmd.c']]],
   ['tabpage_5fclose_5fother',['tabpage_close_other',['../ex__docmd_8c.html#ac1e0425f1005ff68866125efb726471a',1,'ex_docmd.c']]],
+  ['tabpage_5fdel_5fvar',['tabpage_del_var',['../tabpage_8c.html#aa51c05bd2b0ea012dfddd90a2fd90776',1,'tabpage.c']]],
   ['tabpage_5fget_5fvar',['tabpage_get_var',['../tabpage_8c.html#a7816e7ba25d2cfa68b051505782b2a16',1,'tabpage.c']]],
   ['tabpage_5fget_5fwindow',['tabpage_get_window',['../tabpage_8c.html#ad132d7e92d4f7d3145a204d935756331',1,'tabpage.c']]],
   ['tabpage_5findex',['tabpage_index',['../window_8c.html#a18a5017e016b3bdd246ccd079bce4915',1,'window.c']]],

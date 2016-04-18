@@ -1,6 +1,7 @@
 var searchData=
 [
   ['o_5fnofollow',['O_NOFOLLOW',['../win__defs_8h.html#a82d4d551b214905742c9e045185d352a',1,'win_defs.h']]],
+  ['obj',['OBJ',['../decode_8c.html#a7f8f1af08fb3dbc77bc75a6715525829',1,'decode.c']]],
   ['object_5finit',['OBJECT_INIT',['../api_2private_2defs_8h.html#adb292545e8d39ad1892f3b4c622935da',1,'defs.h']]],
   ['object_5fobj',['OBJECT_OBJ',['../api_2private_2helpers_8h.html#a15ead2c26c4b19e7067e41b8e93942b2',1,'helpers.h']]],
   ['octal',['OCTAL',['../regexp_8c.html#a5cd8b22af5187daa3d34709d3b516851',1,'regexp.c']]],
@@ -85,8 +86,6 @@ var searchData=
   ['os_5fgetperm',['os_getperm',['../shada_8c.html#a6dc12315991fa8a0e24b999ffc677d85',1,'shada.c']]],
   ['os_5fisdir',['os_isdir',['../shada_8c.html#a66bd1d4b3563ad10995f96107645d0f3',1,'shada.c']]],
   ['os_5fstrerror',['os_strerror',['../fs__defs_8h.html#a337322a2a03d31e8ac5a9077f490da09',1,'os_strerror():&#160;fs_defs.h'],['../os__defs_8h.html#a337322a2a03d31e8ac5a9077f490da09',1,'os_strerror():&#160;os_defs.h']]],
-  ['out_5fstr',['OUT_STR',['../vim_8h.html#a14fbed0d0794f553388498bffb71bec4',1,'vim.h']]],
-  ['out_5fstr_5fnf',['OUT_STR_NF',['../vim_8h.html#ae1f9e2ae33cccf61215e81802d315225',1,'vim.h']]],
   ['outbuf_5fsize',['OUTBUF_SIZE',['../tui_8c.html#a3df829d6427c2cd4fbd387268040cc65',1,'tui.c']]],
   ['ow',['OW',['../farsi_8h.html#a8eb9cc7ad8a25ec4c4c104fc5f302032',1,'farsi.h']]],
   ['ow_5fow',['OW_OW',['../farsi_8h.html#a803b2f3480503526d6abad8ec30bb246',1,'farsi.h']]]

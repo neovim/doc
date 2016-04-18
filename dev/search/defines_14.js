@@ -52,6 +52,7 @@ var searchData=
   ['tsf_5fdiddel',['TSF_DIDDEL',['../spell_8c.html#a10078e463bb831c3aa2c2c8bf08ab836',1,'spell.c']]],
   ['tsf_5fdidsplit',['TSF_DIDSPLIT',['../spell_8c.html#a7f45740ecc508ae57d2706bb5cf4ed04',1,'spell.c']]],
   ['tsf_5fprefixok',['TSF_PREFIXOK',['../spell_8c.html#abf69d885d47c4bfdf78952164f5603c7',1,'spell.c']]],
+  ['tv_5fstrlen',['TV_STRLEN',['../encode_8c.html#af306499bdc25c5f39e854a75e6146f00',1,'encode.c']]],
   ['typed_5fkey',['TYPED_KEY',['../shada_8c.html#a8efdfcc950d93d5b509603fe70bd5c6f',1,'shada.c']]],
   ['typelen_5finit',['TYPELEN_INIT',['../getchar_8c.html#a680c20fd7df5225194f1a2f958be8bf3',1,'getchar.c']]]
 ];

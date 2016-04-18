@@ -13,6 +13,7 @@ var searchData=
   ['compitem_5fs',['compitem_S',['../structcompitem__S.html',1,'']]],
   ['compl_5fs',['compl_S',['../structcompl__S.html',1,'']]],
   ['condstack',['condstack',['../structcondstack.html',1,'']]],
+  ['containerstackitem',['ContainerStackItem',['../structContainerStackItem.html',1,'']]],
   ['context_5fsha256_5ft',['context_sha256_T',['../structcontext__sha256__T.html',1,'']]],
   ['convertstruct',['convertStruct',['../structconvertStruct.html',1,'']]],
   ['cpp_5fbaseclass_5fcache_5ft',['cpp_baseclass_cache_T',['../structcpp__baseclass__cache__T.html',1,'']]],

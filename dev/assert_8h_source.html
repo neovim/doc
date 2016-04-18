@@ -100,76 +100,101 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="comment">// defined(__has_feature) &amp;&amp; __has_feature(...). Therefore we define Clang&#39;s</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="comment">// __has_feature and __has_extension macro&#39;s before referring to them.</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#ifndef __has_feature</span></div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="assert_8h.html#af989845e24678c452b9222afdac95e7f">   11</a></span>&#160;<span class="preprocessor">  #define __has_feature(x) 0</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="assert_8h.html#af989845e24678c452b9222afdac95e7f">   11</a></span>&#160;<span class="preprocessor"># define __has_feature(x) 0</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#ifndef __has_extension</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="assert_8h.html#aea1c4f7b66a67b78ad863176338dae8d">   15</a></span>&#160;<span class="preprocessor">  #define __has_extension __has_feature</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="assert_8h.html#aea1c4f7b66a67b78ad863176338dae8d">   15</a></span>&#160;<span class="preprocessor"># define __has_extension __has_feature</span></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="comment">// define STATIC_ASSERT as C11&#39;s _Static_assert whenever either C11 mode is</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="comment">// detected or the compiler is known to support it. Note that Clang in C99</span></div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="comment">// mode defines __has_feature(c_static_assert) as false and</span></div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="comment">// __has_extension(c_static_assert) as true. Meaning it does support it, but</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// warns. A similar thing goes for gcc, which warns when it&#39;s not compiling</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// as C11 but does support _Static_assert since 4.6. Since we prefer the</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// clearer messages we get from _Static_assert, we suppress the warnings</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// temporarily.</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="comment">// the easiest case, when the mode is C11 (generic compiler) or Clang</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// advertises explicit support for c_static_assert, meaning it won&#39;t warn.</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#if __STDC_VERSION__ &gt;= 201112L || __has_feature(c_static_assert)</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="preprocessor">  #define STATIC_ASSERT(cond, msg) _Static_assert(cond, msg)</span></div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="comment">// if we&#39;re dealing with gcc &gt;= 4.6 in C99 mode, we can still use</span></div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// _Static_assert but we need to suppress warnings, this is pretty ugly.</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#elif (!defined(__clang__) &amp;&amp; !defined(__INTEL_COMPILER)) &amp;&amp; \</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="preprocessor">  (__GNUC__ &gt; 4 || (__GNUC__ == 4 &amp;&amp; __GNUC_MINOR__ &gt;= 6))</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">  #define STATIC_ASSERT(cond, msg) \</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">    _Pragma(&quot;GCC diagnostic push&quot;) \</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">    _Pragma(&quot;GCC diagnostic ignored \&quot;-pedantic\&quot;&quot;) \</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">    _Static_assert(cond, msg); \</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor">    _Pragma(&quot;GCC diagnostic pop&quot;) \</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">// the same goes for clang in C99 mode, but we suppress a different warning</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">#elif defined(__clang__) &amp;&amp; __has_extension(c_static_assert)</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">  #define STATIC_ASSERT(cond, msg) \</span></div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="preprocessor">    _Pragma(&quot;clang diagnostic push&quot;) \</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">    _Pragma(&quot;clang diagnostic ignored \&quot;-Wc11-extensions\&quot;&quot;) \</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">    _Static_assert(cond, msg); \</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">    _Pragma(&quot;clang diagnostic pop&quot;) \</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// TODO(aktau): verify that this works, don&#39;t have MSVC on hand.</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#elif _MSC_VER &gt;= 1600</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">  #define STATIC_ASSERT(cond, msg) static_assert(cond, msg)</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// fallback for compilers that don&#39;t support _Static_assert or static_assert</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// not as pretty but gets the job done. Credit goes to Pádraig Brady and</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// contributors.</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="assert_8h.html#ac41c7fb1ca72aa1768dbc146fe1921c6">   62</a></span>&#160;<span class="preprocessor">  #define ASSERT_CONCAT_(a, b) a##b</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="assert_8h.html#a9fad378d3538885ffce2b40a29334fbb">   63</a></span>&#160;<span class="preprocessor">  #define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  <span class="comment">// These can&#39;t be used after statements in c89.</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">  #ifdef __COUNTER__</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">    #define STATIC_ASSERT(e,m) \</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">      { enum { ASSERT_CONCAT(static_assert_, __COUNTER__) = 1/(!!(e)) }; }</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">  #else</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// This can&#39;t be used twice on the same line so ensure if using in headers</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// that the headers are not included twice (by wrapping in #ifndef...#endif)</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="comment">// Note it doesn&#39;t cause an issue when used on same line of separate modules</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="comment">// compiled with gcc -combine -fwhole-program.</span></div>
-<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="assert_8h.html#a83ea8d74b1ef7e6d8257a70dcd848a67">   73</a></span>&#160;<span class="preprocessor">    #define STATIC_ASSERT(e,m) \</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">      { enum { ASSERT_CONCAT(assert_line_, __LINE__) = 1/(!!(e)) }; }</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">  #endif</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">#endif  // NVIM_ASSERT_H</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// define STATIC_ASSERT as C11&#39;s _Static_assert whenever either C11 mode is</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// detected or the compiler is known to support it. Note that Clang in C99</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// mode defines __has_feature(c_static_assert) as false and</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// __has_extension(c_static_assert) as true. Meaning it does support it, but</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="comment">// warns. A similar thing goes for gcc, which warns when it&#39;s not compiling</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// as C11 but does support _Static_assert since 4.6. Since we prefer the</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// clearer messages we get from _Static_assert, we suppress the warnings</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// temporarily.</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="assert_8h.html#a4a129c2df81ae138f23a83c615a6ebf9">   47</a></span>&#160;<span class="preprocessor">#define STATIC_ASSERT_PRAGMA_START</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="assert_8h.html#a4922181523f814f21ac28475b9ec919a">   48</a></span>&#160;<span class="preprocessor">#define STATIC_ASSERT_PRAGMA_END</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="assert_8h.html#a231e52085e88eff48375e8982841999a">   49</a></span>&#160;<span class="preprocessor">#define STATIC_ASSERT(...) \</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="preprocessor">    do { \</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">      STATIC_ASSERT_PRAGMA_START \</span></div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">      STATIC_ASSERT_STATEMENT(__VA_ARGS__); \</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">      STATIC_ASSERT_PRAGMA_END \</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">    } while (0)</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="comment">// the easiest case, when the mode is C11 (generic compiler) or Clang</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="comment">// advertises explicit support for c_static_assert, meaning it won&#39;t warn.</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">#if __STDC_VERSION__ &gt;= 201112L || __has_feature(c_static_assert)</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_STATEMENT(cond, msg) _Static_assert(cond, msg)</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// if we&#39;re dealing with gcc &gt;= 4.6 in C99 mode, we can still use</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="comment">// _Static_assert but we need to suppress warnings, this is pretty ugly.</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#elif (!defined(__clang__) &amp;&amp; !defined(__INTEL_COMPILER)) &amp;&amp; \</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">  (__GNUC__ &gt; 4 || (__GNUC__ == 4 &amp;&amp; __GNUC_MINOR__ &gt;= 6))</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_STATEMENT(cond, msg) _Static_assert(cond, msg)</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor"># undef STATIC_ASSERT_PRAGMA_START</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_PRAGMA_START \</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">    _Pragma(&quot;GCC diagnostic push&quot;) \</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">    _Pragma(&quot;GCC diagnostic ignored \&quot;-pedantic\&quot;&quot;) \</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor"># undef STATIC_ASSERT_PRAGMA_END</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_PRAGMA_END \</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">    _Pragma(&quot;GCC diagnostic pop&quot;) \</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">// the same goes for clang in C99 mode, but we suppress a different warning</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">#elif defined(__clang__) &amp;&amp; __has_extension(c_static_assert)</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_STATEMENT(cond, msg) _Static_assert(cond, msg)</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor"># undef STATIC_ASSERT_PRAGMA_START</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_PRAGMA_START \</span></div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">    _Pragma(&quot;clang diagnostic push&quot;) \</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">    _Pragma(&quot;clang diagnostic ignored \&quot;-Wc11-extensions\&quot;&quot;) \</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor"># undef STATIC_ASSERT_PRAGMA_END</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_PRAGMA_END \</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">    _Pragma(&quot;clang diagnostic pop&quot;) \</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">// TODO(aktau): verify that this works, don&#39;t have MSVC on hand.</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#elif _MSC_VER &gt;= 1600</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_STATEMENT(cond, msg) static_assert(cond, msg)</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="comment">// fallback for compilers that don&#39;t support _Static_assert or static_assert</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="comment">// not as pretty but gets the job done. Credit goes to Pádraig Brady and</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="comment">// contributors.</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="assert_8h.html#a01d05a32263c890f386290c7a1561bcb">   99</a></span>&#160;<span class="preprocessor"># define STATIC_ASSERT_STATEMENT STATIC_ASSERT_EXPR</span></div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;</div>
+<div class="line"><a name="l00102"></a><span class="lineno"><a class="line" href="assert_8h.html#ac41c7fb1ca72aa1768dbc146fe1921c6">  102</a></span>&#160;<span class="preprocessor">#define ASSERT_CONCAT_(a, b) a##b</span></div>
+<div class="line"><a name="l00103"></a><span class="lineno"><a class="line" href="assert_8h.html#a9fad378d3538885ffce2b40a29334fbb">  103</a></span>&#160;<span class="preprocessor">#define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)</span></div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="comment">// These can&#39;t be used after statements in c89.</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#ifdef __COUNTER__</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor"># define STATIC_ASSERT_EXPR(e, m) \</span></div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">    ((enum { ASSERT_CONCAT(static_assert_, __COUNTER__) = 1/(!!(e)) }) 0)</span></div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="comment">// This can&#39;t be used twice on the same line so ensure if using in headers</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="comment">// that the headers are not included twice (by wrapping in #ifndef...#endif)</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="comment">// Note it doesn&#39;t cause an issue when used on same line of separate modules</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="comment">// compiled with gcc -combine -fwhole-program.</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno"><a class="line" href="assert_8h.html#a9f4bb20d43b36524a24397db8d9e1fca">  113</a></span>&#160;<span class="preprocessor"># define STATIC_ASSERT_EXPR(e, m) \</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">    ((enum { ASSERT_CONCAT(assert_line_, __LINE__) = 1/(!!(e)) }) 0)</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#endif  // NVIM_ASSERT_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <footer>
   <div class="container">
-    Generated on Sun Apr 17 2016 20:01:51 for Neovim by
+    Generated on Mon Apr 18 2016 20:01:50 for Neovim by
     <a href="http://www.doxygen.org/index.html">Doxygen</a>
     1.8.7
   </div>
