@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2015 Sep 19
+*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2016 Jan 16
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -2009,7 +2009,7 @@ cursor( {lnum}, {col} [, {off}])
 				<A HREF="#Number">Number</A>	move cursor to {lnum}, {col}, {off}
 cursor( {list})			<A HREF="#Number">Number</A>	move cursor to position in {list}
 deepcopy( {expr} [, {noref}])	any	make a full copy of {expr}
-delete( {fname})		<A HREF="#Number">Number</A>	delete file {fname}
+delete( {fname} [, {flags}])	<A HREF="#Number">Number</A>	delete the file or directory {fname}
 dictwatcheradd( {dict}, {pattern}, {callback})
 				Start watching a dictionary
 dictwatcherdel( {dict}, {pattern}, {callback})
@@ -2065,7 +2065,7 @@ getcharmod( )			<A HREF="#Number">Number</A>	modifiers for the last typed charac
 <A HREF="#getcmdtype()">getcmdtype()</A>			<A HREF="#String">String</A>	return current command-line type
 <A HREF="#getcmdwintype()">getcmdwintype()</A>			<A HREF="#String">String</A>	return current command-line <A HREF="windows.html#window">window</A> type
 <A HREF="#getcurpos()">getcurpos()</A>			<A HREF="#List">List</A>	position of the cursor
-<A HREF="#getcwd()">getcwd()</A>			<A HREF="#String">String</A>	the current working directory
+getcwd( [{scope}])		<A HREF="#String">String</A>	the current working directory
 getfontname( [{name}])		<A HREF="#String">String</A>	name of font being used
 getfperm( {fname})		<A HREF="#String">String</A>	file permissions of file {fname}
 getfsize( {fname})		<A HREF="#Number">Number</A>	size in bytes of file {fname}
@@ -2999,13 +2999,19 @@ deepcopy({expr}[, {noref}])				*<A NAME="deepcopy()"></A><B>deepcopy()</B>* *<A 
 		Also see |<A HREF="#copy()">copy()</A>|.
 
 
-delete({fname})							*<A NAME="delete()"></A><B>delete()</B>*
-		Deletes the file by the name {fname}.  The result is a <A HREF="#Number">Number</A>,
-		which is 0 if the file was deleted successfully, and non-zero
-		when the deletion failed.
-		Use |<A HREF="#remove()">remove()</A>| to delete an item from a |<A HREF="#List">List</A>|.
-		To delete a line from the buffer use |<A HREF="change.html#:delete">:delete</A>|.  Use |<A HREF="#:exe">:exe</A>|
-		when the line number is in a variable.
+delete({fname} [, {flags}])					*<A NAME="delete()"></A><B>delete()</B>*
+		Without {flags} or with {flags} empty: Deletes the file by the
+		name {fname}.  This also works when {fname} is a symbolic link.
+		A symbolic link itself is deleted, not what <A HREF="motion.html#it">it</A> points to.
+
+		When {flags} is &quot;<A HREF="change.html#d">d</A>&quot;: Deletes the directory by the name
+		{fname}.  This fails when directory {fname} is not empty.
+
+		When {flags} is &quot;rf&quot;: Deletes the directory by the name
+		{fname} and everything in <A HREF="motion.html#it">it</A>, recursively.  BE CAREFUL!
+
+		The result is a <A HREF="#Number">Number</A>, which is 0 if the delete operation was
+		successful and -1 when the deletion failed or partly failed.
 
 
 dictwatcheradd({dict}, {pattern}, {callback})		      *<A NAME="dictwatcheradd()"></A><B>dictwatcheradd()</B>*
@@ -3837,9 +3843,18 @@ getchar([expr])						*<A NAME="getchar()"></A><B>getchar()</B>*
 <B>			call setpos('.', save_cursor)</B>
  
 
-							*<A NAME="getcwd()"></A><B>getcwd()</B>*
-<A HREF="#getcwd()">getcwd()</A>	The result is a <A HREF="#String">String</A>, which is the name of the current
-		working directory.
+getcwd([{window}[, {tab}]])				*<A NAME="getcwd()"></A><B>getcwd()</B>*
+		With no arguments the result is a <A HREF="#String">String</A>, which is the name of
+		the current effective working directory. With {window} or
+		{tab} the working directory of that scope is returned.
+		Tabs and <A HREF="windows.html#windows">windows</A> are identified by their respective numbers,
+		0 means current <A HREF="intro.html#tab">tab</A> or <A HREF="windows.html#window">window</A>. Missing argument implies 0.
+		Thus the following are equivalent:
+<B>			getcwd()</B>
+<B>			getcwd(0)</B>
+<B>			getcwd(0, 0)</B>
+ 		If {window} is -1 <A HREF="motion.html#it">it</A> is ignored, only the <A HREF="intro.html#tab">tab</A> is resolved.
+
 
 
 getfsize({fname})					*<A NAME="getfsize()"></A><B>getfsize()</B>*
@@ -4198,9 +4213,18 @@ has_key({dict}, {key})					*<A NAME="has_key()"></A><B>has_key()</B>*
 		an entry with key {key}.  Zero otherwise.
 
 
-<A HREF="#haslocaldir()">haslocaldir()</A>						*<A NAME="haslocaldir()"></A><B>haslocaldir()</B>*
-		The result is a <A HREF="#Number">Number</A>, which is 1 when the current
-		<A HREF="windows.html#window">window</A> has set a local path via |<A HREF="editing.html#:lcd">:lcd</A>|, and 0 otherwise.
+haslocaldir([{window}[, {tab}]])			*<A NAME="haslocaldir()"></A><B>haslocaldir()</B>*
+		The result is a <A HREF="#Number">Number</A>, which is 1 when the specified <A HREF="tabpage.html#tabpage">tabpage</A>
+		or <A HREF="windows.html#window">window</A> has a local path set via |<A HREF="editing.html#:lcd">:lcd</A>| or |<A HREF="editing.html#:tcd">:tcd</A>|, and
+		0 otherwise.
+
+		Tabs and <A HREF="windows.html#windows">windows</A> are identified by their respective numbers,
+		0 means current <A HREF="intro.html#tab">tab</A> or <A HREF="windows.html#window">window</A>. Missing argument implies 0.
+		Thus the following are equivalent:
+<B>			haslocaldir()</B>
+<B>			haslocaldir(0)</B>
+<B>			haslocaldir(0, 0)</B>
+ 		If {window} is -1 <A HREF="motion.html#it">it</A> is ignored, only the <A HREF="intro.html#tab">tab</A> is resolved.
 
 
 hasmapto({what} [, {mode} [, {abbr}]])			*<A NAME="hasmapto()"></A><B>hasmapto()</B>*
@@ -9988,7 +10012,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Thu Apr 21 20:21:10 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/cef624ee9e14bf15598219d96f65a6e4932eb935"><code>cef624e</code></a>.
+        Generated Fri Apr 22 20:09:14 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/3d7a6e4d54cbb6cb3cd7e35b604b956de9f0c950"><code>3d7a6e4</code></a>.
       </div>
     </footer>
   </body>
