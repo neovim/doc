@@ -151,6 +151,7 @@ var searchData=
   ['lnum',['lnum',['../structmatch__T.html#a9eb51cde78cbad8497d2b93e8ec0b845',1,'match_T::lnum()'],['../structllpos__T.html#ac7950461fa95eb71a4d95b8600bf450e',1,'llpos_T::lnum()'],['../structsorti__T.html#a398829daca21d6476d98b22dee916a77',1,'sorti_T::lnum()'],['../structwcmd__T.html#aabd2fce99565a373f72e39ae1657af41',1,'wcmd_T::lnum()'],['../structfline__T.html#a2828a085f90b5556a30e0771ed81cde0',1,'fline_T::lnum()'],['../structlineoff__T.html#a0c4ede3a8ecd287fb962490eca42aa9a',1,'lineoff_T::lnum()'],['../structpos__T.html#abff612ea21a47084625b593756153b3e',1,'pos_T::lnum()'],['../structlpos__T.html#a7e68ccf9d05571c35b6edf554826eecc',1,'lpos_T::lnum()'],['../structSearchedFile.html#a7a024b2254d2ce11770a729b9bc9af99',1,'SearchedFile::lnum()'],['../structsignlist.html#a12531dc6629192a82685d16290cfd0d3',1,'signlist::lnum()']]],
   ['lnum_5fsave',['lnum_save',['../structfline__T.html#a60bd75e9f893f7f6e2519b6ca70afa2b',1,'fline_T']]],
   ['load_5fcolors',['load_colors',['../syntax_8c.html#a38018f9210ee892d32152184634dbd8e',1,'syntax.c']]],
+  ['localdir',['localdir',['../structtabpage__S.html#a90fda0c8d94817941e24cb50597197e6',1,'tabpage_S']]],
   ['lockmarks',['lockmarks',['../structcmdmod__T.html#ab78263dde1751c230262b84fa76e2547',1,'cmdmod_T']]],
   ['log_2ec',['log.c',['../log_8c.html',1,'']]],
   ['log_2eh',['log.h',['../log_8h.html',1,'']]],

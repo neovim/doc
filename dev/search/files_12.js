@@ -4,8 +4,6 @@ var searchData=
   ['tabpage_2eh',['tabpage.h',['../tabpage_8h.html',1,'']]],
   ['tag_2ec',['tag.c',['../tag_8c.html',1,'']]],
   ['tag_2eh',['tag.h',['../tag_8h.html',1,'']]],
-  ['tempfile_2ec',['tempfile.c',['../tempfile_8c.html',1,'']]],
-  ['tempfile_2eh',['tempfile.h',['../tempfile_8h.html',1,'']]],
   ['terminal_2ec',['terminal.c',['../terminal_8c.html',1,'']]],
   ['terminal_2eh',['terminal.h',['../terminal_8h.html',1,'']]],
   ['time_2ec',['time.c',['../os_2time_8c.html',1,'']]],

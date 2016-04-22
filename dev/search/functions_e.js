@@ -72,6 +72,7 @@ var searchData=
   ['os_5finchar',['os_inchar',['../os_2input_8c.html#a7fb3e7139bad17693930f4806f591e76',1,'input.c']]],
   ['os_5fisatty',['os_isatty',['../os_2input_8c.html#ac6af798928664831c1bf6714bca71363',1,'input.c']]],
   ['os_5fisdir',['os_isdir',['../fs_8c.html#a3f245be34c582b94dee41d393a50d503',1,'fs.c']]],
+  ['os_5fisrealdir',['os_isrealdir',['../fs_8c.html#a55959b554f76afce0c05349facb6287d',1,'fs.c']]],
   ['os_5flibcall',['os_libcall',['../dl_8c.html#a0a9bca0f32738e8f7c04a0f0837f0dcf',1,'dl.c']]],
   ['os_5flocaltime_5fr',['os_localtime_r',['../os_2time_8c.html#ab8cff4f6a19fd0fa5f62d6655f7f538f',1,'time.c']]],
   ['os_5fmicrodelay',['os_microdelay',['../os_2time_8c.html#aaa177a6c2a2c7be9738c24392a31095d',1,'time.c']]],

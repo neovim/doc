@@ -26,6 +26,7 @@ var searchData=
   ['mauto',['MAUTO',['../vim_8h.html#a0a0641f07c2d012af8af0ebc1c706a5a',1,'vim.h']]],
   ['max',['MAX',['../macros_8h.html#aff9931d7524c88e07743af6535b20761',1,'macros.h']]],
   ['max_5farg_5fcmds',['MAX_ARG_CMDS',['../main_8c.html#a3077f70001d969fe82c7c7c92d30d334',1,'main.c']]],
+  ['max_5fcd_5fscope',['MAX_CD_SCOPE',['../ex__docmd_8h.html#ae5a2689bfe7677ad175c176e9e04a805',1,'ex_docmd.h']]],
   ['max_5fcluster_5fid',['MAX_CLUSTER_ID',['../syntax_8c.html#a9288ec6aebc1219f9f8bd901d3c5abc7',1,'syntax.c']]],
   ['max_5fconnections',['MAX_CONNECTIONS',['../server_8c.html#a053b7859476cc9867ec62c49e68d3fa1',1,'server.c']]],
   ['max_5ffunc_5fargs',['MAX_FUNC_ARGS',['../eval_8h.html#a37518bc74bd0a87c02ca65a1fe8a5842',1,'eval.h']]],

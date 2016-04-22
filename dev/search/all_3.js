@@ -37,6 +37,7 @@ var searchData=
   ['ccgd_5fexcmd',['CCGD_EXCMD',['../ex__cmds2_8h.html#a9cf94f238075f1a38becfcfdd8496e7b',1,'ex_cmds2.h']]],
   ['ccgd_5fforceit',['CCGD_FORCEIT',['../ex__cmds2_8h.html#a6035494c5f7dfa11d158dac37d20422e',1,'ex_cmds2.h']]],
   ['ccgd_5fmultwin',['CCGD_MULTWIN',['../ex__cmds2_8h.html#aeb0b502ee575478fa6827031872ddc99',1,'ex_cmds2.h']]],
+  ['cdscope',['CdScope',['../ex__docmd_8h.html#a91cbe92d75f10405beaffa819a7fc8af',1,'ex_docmd.h']]],
   ['cells',['cells',['../structScrollbackLine.html#a596c11895daa293a702836b0b2904dd6',1,'ScrollbackLine::cells()'],['../structugrid.html#ae6456c57ea9da639da9eac1fd5a326ec',1,'ugrid::cells()']]],
   ['cf_5fupper',['CF_UPPER',['../spell_8c.html#a7c9ce45c91817be15b4e0df67b87e8b6',1,'spell.c']]],
   ['cf_5fword',['CF_WORD',['../spell_8c.html#a81a2b090be2ee85e9dd29c239395a9c0',1,'spell.c']]],

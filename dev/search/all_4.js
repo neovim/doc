@@ -78,6 +78,7 @@ var searchData=
   ['del_5ftypebuf',['del_typebuf',['../getchar_8c.html#a3fd3b11860db7a0a9d863585465c25da',1,'getchar.c']]],
   ['delete_5ffirst_5fmsg',['delete_first_msg',['../message_8c.html#aa4126a2c3996cddd65da5621ebd3df4c',1,'message.c']]],
   ['delete_5ffold_5fnested',['DELETE_FOLD_NESTED',['../fold_8c.html#a7659f348504f79eefdf704a75c4e7253',1,'fold.c']]],
+  ['delete_5frecursive',['delete_recursive',['../fileio_8c.html#a7b71862d7fa9ded04ac0662b8a899e01',1,'fileio.c']]],
   ['deleted_5flines',['deleted_lines',['../misc1_8c.html#a27dadabe44d461913b091e10980f35ba',1,'misc1.c']]],
   ['deleted_5flines_5fmark',['deleted_lines_mark',['../misc1_8c.html#a3d93e91e21dfae9934eac20bc6402b62',1,'misc1.c']]],
   ['deletefold',['deleteFold',['../fold_8c.html#a3a978d2e098d5c2ed46b08cc3c4559b1',1,'fold.c']]],

@@ -33,7 +33,7 @@ var searchData=
   ['plines_5fwin_5fnofold',['plines_win_nofold',['../misc1_8c.html#a68829d27f69f4852403095c62fd6b0ac',1,'misc1.c']]],
   ['pmap',['PMap',['../structChannel.html#a9a0813187a207f59c0d311729e244616',1,'Channel']]],
   ['pop_5fshowcmd',['pop_showcmd',['../normal_8c.html#a95c4d750dae8eaae486afc79b062fd9b',1,'normal.c']]],
-  ['post_5fchdir',['post_chdir',['../ex__docmd_8c.html#abe1259258171aa6b6bc6c3d68bd68153',1,'ex_docmd.c']]],
+  ['post_5fchdir',['post_chdir',['../ex__docmd_8c.html#aec2073c8ffa9aa6bbcfbec2f38e0b5e8',1,'ex_docmd.c']]],
   ['prep_5fexarg',['prep_exarg',['../fileio_8c.html#a21e458ac34423762385b1fd34bed7d58',1,'fileio.c']]],
   ['prepare_5ftagpreview',['prepare_tagpreview',['../ex__cmds_8c.html#a311f03b167f1f72f9a6c8f3fe4aec88c',1,'ex_cmds.c']]],
   ['preprocs_5fleft',['preprocs_left',['../ops_8c.html#a98f0964c240574a1a83cfd2cabe57695',1,'ops.c']]],
