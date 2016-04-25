@@ -122,6 +122,7 @@ var searchData=
   ['mouse_5fcomp_5fpos',['mouse_comp_pos',['../mouse_8c.html#afc736b5d09e09febcb2539d48ac22642',1,'mouse.c']]],
   ['mouse_5ffind_5fwin',['mouse_find_win',['../mouse_8c.html#aa4bcbbec1786380497d0dd427619e441',1,'mouse.c']]],
   ['mouse_5fhas',['mouse_has',['../mouse_8c.html#a9dcf10e948e1528b2eba6cab3ad3f3bd',1,'mouse.c']]],
+  ['mouse_5fscroll_5fhoriz',['mouse_scroll_horiz',['../mouse_8c.html#aa284e4b0513671872929ebf217ceb465',1,'mouse.c']]],
   ['movechangelist',['movechangelist',['../mark_8c.html#aa2c5715b54e5dca22e6919d42c6459e5',1,'mark.c']]],
   ['movemark',['movemark',['../mark_8c.html#a80b0bb41868d51f86fd70d560b5cd7fe',1,'mark.c']]],
   ['msg',['msg',['../message_8c.html#afa4f4ebcd5ff62aed702f21291042823',1,'message.c']]],

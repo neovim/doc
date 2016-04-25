@@ -17,7 +17,7 @@ var searchData=
   ['recursive',['recursive',['../structloop.html#af78d6073fc1eb0709f277ebb3bf5253f',1,'loop']]],
   ['refcnt',['refcnt',['../structreg__extmatch__T.html#abb0946f16ec7489b59022c64f7ecc22e',1,'reg_extmatch_T']]],
   ['refcount',['refcount',['../structTerminalJobData.html#a46f73b4ae0c743f8bdaaa2e25d11d0bd',1,'TerminalJobData::refcount()'],['../structprocess.html#afe28212c5f296002cf6ba8fe605bf369',1,'process::refcount()'],['../structwbuffer.html#a106eeb826a586037de17e77cd18527b1',1,'wbuffer::refcount()'],['../structChannel.html#ae9cd14f738958e78ee3cf2826753ae2f',1,'Channel::refcount()'],['../structterminal.html#a8ec4571d74b2164811d9e7cc7ccf70f7',1,'terminal::refcount()']]],
-  ['reg',['reg',['../structShadaEntry.html#a371b25c4d93c440c1404c411c21b121e',1,'ShadaEntry::reg()'],['../ops_8c.html#a8f98296ba569c52ca478365ee2aa99c9',1,'reg():&#160;ops.c']]],
+  ['reg',['reg',['../structShadaEntry.html#aca2dd21705c5e271fc2ab96ea33d9718',1,'ShadaEntry::reg()'],['../ops_8c.html#a8f98296ba569c52ca478365ee2aa99c9',1,'reg():&#160;ops.c']]],
   ['reg_5fprog',['reg_prog',['../structAutoPat.html#a2c46743cf6036ab5ec84eb1c82cf243b',1,'AutoPat']]],
   ['reganch',['reganch',['../structbt__regprog__T.html#a41ebdd5b54875a7c6e7ab6e094788ba2',1,'bt_regprog_T::reganch()'],['../structnfa__regprog__T.html#a5d74d7f03c44a62b342666af3c652e23',1,'nfa_regprog_T::reganch()']]],
   ['regcomp',['regcomp',['../structregengine.html#af22ef5bd7c4608eb28bd22928ca15da4',1,'regengine']]],
@@ -65,8 +65,8 @@ var searchData=
   ['rs_5fno',['rs_no',['../structregitem__S.html#aac8d53873b83742d43607298e7eb858b',1,'regitem_S']]],
   ['rs_5fscan',['rs_scan',['../structregitem__S.html#a38046a147ce25f4387bdb3e38b2514ef',1,'regitem_S']]],
   ['rs_5fstate',['rs_state',['../structregitem__S.html#ab28a5071e21a12f26ba1c9bc917b9604',1,'regitem_S']]],
-  ['rs_5fu',['rs_u',['../structregsave__T.html#afde0b90d700de14d30703d50665d46a3',1,'regsave_T']]],
-  ['rs_5fun',['rs_un',['../structregitem__S.html#a8644bd74dc08b086e0224247908c67a9',1,'regitem_S']]],
+  ['rs_5fu',['rs_u',['../structregsave__T.html#a7062abf27bc556bbf2f96ee84e3f7a21',1,'regsave_T']]],
+  ['rs_5fun',['rs_un',['../structregitem__S.html#aa33f5ff94469012038876552c61e0e22',1,'regitem_S']]],
   ['ru_5fcol',['ru_col',['../globals_8h.html#a52643f37faefff5ae72ca6ea328b4e5f',1,'globals.h']]],
   ['ru_5fwid',['ru_wid',['../globals_8h.html#a15ff3a4d1261883be5090ddce9c15507',1,'globals.h']]]
 ];
