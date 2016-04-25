@@ -134,11 +134,13 @@ changed, to avoid confusion when using &quot;<A HREF="#:tnext">:tnext</A>&quot;.
 &quot;<A HREF="#:tag">:tag</A> {ident}&quot;.
 
 The ignore-case matches are not found for a &quot;<A HREF="#:tag">:tag</A>&quot; command when the
-<A HREF="options.html#'ignorecase'">'ignorecase'</A> option is off.  They are found when a <A HREF="pattern.html#pattern">pattern</A> is used (starting
-with a &quot;<A HREF="pattern.html#/">/</A>&quot;) and for &quot;<A HREF="#:tselect">:tselect</A>&quot;, also when <A HREF="options.html#'ignorecase'">'ignorecase'</A> is off.  Note that
-using ignore-case <A HREF="#tag">tag</A> searching disables binary searching in the <A HREF="#tags">tags</A> file,
-which causes a slowdown.  This can be avoided by fold-case <A HREF="change.html#sorting">sorting</A> the <A HREF="#tag">tag</A>
-file.  See the <A HREF="options.html#'tagbsearch'">'tagbsearch'</A> option for an explanation.
+<A HREF="options.html#'ignorecase'">'ignorecase'</A> option is off and <A HREF="options.html#'tagcase'">'tagcase'</A> is &quot;followic&quot; or when <A HREF="options.html#'tagcase'">'tagcase'</A> is
+&quot;match&quot;.  They are found when a <A HREF="pattern.html#pattern">pattern</A> is used (starting with a &quot;<A HREF="pattern.html#/">/</A>&quot;) and for
+&quot;<A HREF="#:tselect">:tselect</A>&quot;, also when <A HREF="options.html#'ignorecase'">'ignorecase'</A> is off and <A HREF="options.html#'tagcase'">'tagcase'</A> is &quot;followic&quot; or when
+<A HREF="options.html#'tagcase'">'tagcase'</A> is &quot;match&quot;.  Note that using ignore-case <A HREF="#tag">tag</A> searching disables
+binary searching in the <A HREF="#tags">tags</A> file, which causes a slowdown.  This can be
+avoided by fold-case <A HREF="change.html#sorting">sorting</A> the <A HREF="#tag">tag</A> file.  See the <A HREF="options.html#'tagbsearch'">'tagbsearch'</A> option for an
+explanation.
 
 ==============================================================================
 
@@ -507,12 +509,13 @@ file &quot;<A HREF="#tags">tags</A>&quot;.  It can also be used to access a comm
 The next file in the <A HREF="eval.html#list">list</A> is not used when:
 - A matching static <A HREF="#tag">tag</A> for the current buffer has been found.
 - A matching global <A HREF="#tag">tag</A> has been found.
-This also depends on the <A HREF="options.html#'ignorecase'">'ignorecase'</A> option.  If <A HREF="motion.html#it">it</A> is off, and the <A HREF="#tags">tags</A> file
-only has a match without matching <A HREF="change.html#case">case</A>, the next <A HREF="#tags">tags</A> file is searched for a
-match with matching <A HREF="change.html#case">case</A>.  If no <A HREF="#tag">tag</A> with matching <A HREF="change.html#case">case</A> is found, the first
-match without matching <A HREF="change.html#case">case</A> is used.  If <A HREF="options.html#'ignorecase'">'ignorecase'</A> is on, and a matching
-global <A HREF="#tag">tag</A> with or without matching <A HREF="change.html#case">case</A> is found, this one is used, no
-further <A HREF="#tags">tags</A> files are searched.
+This also depends on whether <A HREF="change.html#case">case</A> is ignored.  Case is ignored when
+<A HREF="options.html#'ignorecase'">'ignorecase'</A> is set and <A HREF="options.html#'tagcase'">'tagcase'</A> is &quot;followic&quot;, or when <A HREF="options.html#'tagcase'">'tagcase'</A> is
+&quot;ignore&quot;.  If <A HREF="change.html#case">case</A> is not ignored, and the <A HREF="#tags">tags</A> file only has a match without
+matching <A HREF="change.html#case">case</A>, the next <A HREF="#tags">tags</A> file is searched for a match with matching <A HREF="change.html#case">case</A>.
+If no <A HREF="#tag">tag</A> with matching <A HREF="change.html#case">case</A> is found, the first match without matching <A HREF="change.html#case">case</A>
+is used.  If <A HREF="change.html#case">case</A> is ignored, and a matching global <A HREF="#tag">tag</A> with or without
+matching <A HREF="change.html#case">case</A> is found, this one is used, no further <A HREF="#tags">tags</A> files are searched.
 
 When a <A HREF="#tag">tag</A> file name starts with &quot;./&quot;, the '<A HREF="repeat.html#.">.</A>' is replaced with the path of
 the current file.  This makes <A HREF="motion.html#it">it</A> possible to use a <A HREF="#tags">tags</A> file in the directory
@@ -650,8 +653,10 @@ that indicates if the file was sorted.  When this line is found, Vim uses
 binary searching for the <A HREF="#tags">tags</A> file:
 <B><FONT color="#54A23D">	!_TAG_FILE_SORTED&lt;Tab&gt;1&lt;Tab&gt;{anything} </FONT></B>
 
-A <A HREF="#tag">tag</A> file may be case-fold sorted to avoid a linear search when <A HREF="options.html#'ignorecase'">'ignorecase'</A>
-is on.  See <A HREF="options.html#'tagbsearch'">'tagbsearch'</A> for details.  The value '2' should be used then:
+A <A HREF="#tag">tag</A> file may be case-fold sorted to avoid a linear search when <A HREF="change.html#case">case</A> is
+ignored.  (Case is ignored when <A HREF="options.html#'ignorecase'">'ignorecase'</A> is set and <A HREF="options.html#'tagcase'">'tagcase'</A> is
+&quot;followic&quot;, or when <A HREF="options.html#'tagcase'">'tagcase'</A> is &quot;ignore&quot;.)  See <A HREF="options.html#'tagbsearch'">'tagbsearch'</A> for details.
+The value '2' should be used then:
 <B><FONT color="#54A23D">	!_TAG_FILE_SORTED&lt;Tab&gt;2&lt;Tab&gt;{anything} </FONT></B>
 
 The other <A HREF="#tag">tag</A> that Vim recognizes, but only when compiled with the
@@ -932,7 +937,7 @@ Common arguments for the commands above:
 
     <footer>
       <div class="container">
-        Generated Sun Apr 24 20:09:58 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/ab63f5d93436094393b0d42d36b69b28e87252f6"><code>ab63f5d</code></a>.
+        Generated Mon Apr 25 20:16:01 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/ef205c3851fda637af49b5517bee60e6a62275ed"><code>ef205c3</code></a>.
       </div>
     </footer>
   </body>
