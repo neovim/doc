@@ -395,7 +395,7 @@ var searchData=
   ['expand_5fuser_5flist',['EXPAND_USER_LIST',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a3556afe16f18a33cb983a1804345248e',1,'vim.h']]],
   ['expand_5fuser_5fnargs',['EXPAND_USER_NARGS',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a55ee2f760a7ebc941e184c0cb5b7c233',1,'vim.h']]],
   ['expand_5fuser_5fvars',['EXPAND_USER_VARS',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a53195e3140936963b68ec7248332ed56',1,'vim.h']]],
-  ['expand_5fwildcards',['expand_wildcards',['../path_8c.html#ad998415afb1828f66411db5c52403e80',1,'path.c']]],
+  ['expand_5fwildcards',['expand_wildcards',['../path_8c.html#a3b361a1f7b0ca7d64f669e56cf543782',1,'path.c']]],
   ['expand_5fwildcards_5feval',['expand_wildcards_eval',['../path_8c.html#a6e32f791effd001b96ff88a69100c315',1,'path.c']]],
   ['expandbufnames',['ExpandBufnames',['../buffer_8c.html#a2d17a87e2244370a32178a9859d4abc7',1,'buffer.c']]],
   ['expandcleanup',['ExpandCleanup',['../ex__getln_8c.html#ab46a2f221952afa7e8d4202959dc2af1',1,'ex_getln.c']]],

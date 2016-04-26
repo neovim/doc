@@ -177,7 +177,7 @@ var searchData=
   ['expand_5fsfile',['expand_sfile',['../ex__docmd_8c.html#a221fbf2dc02462483ab83d448a09d2d3',1,'ex_docmd.c']]],
   ['expand_5fspelling',['expand_spelling',['../spell_8c.html#abf7efbe146f3fab230fedb0ab882aa85',1,'spell.c']]],
   ['expand_5ftags',['expand_tags',['../tag_8c.html#a64eb08ad12ac695d149f6b79738639fe',1,'tag.c']]],
-  ['expand_5fwildcards',['expand_wildcards',['../path_8c.html#ad998415afb1828f66411db5c52403e80',1,'path.c']]],
+  ['expand_5fwildcards',['expand_wildcards',['../path_8c.html#a3b361a1f7b0ca7d64f669e56cf543782',1,'path.c']]],
   ['expand_5fwildcards_5feval',['expand_wildcards_eval',['../path_8c.html#a6e32f791effd001b96ff88a69100c315',1,'path.c']]],
   ['expandbufnames',['ExpandBufnames',['../buffer_8c.html#a2d17a87e2244370a32178a9859d4abc7',1,'buffer.c']]],
   ['expandcleanup',['ExpandCleanup',['../ex__getln_8c.html#ab46a2f221952afa7e8d4202959dc2af1',1,'ex_getln.c']]],
