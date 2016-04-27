@@ -106,7 +106,7 @@ var searchData=
   ['vim_5fsetenv',['vim_setenv',['../env_8c.html#a7109897e408c4251a19e0f834f8c0a0b',1,'env.c']]],
   ['vim_5fsnprintf',['vim_snprintf',['../message_8c.html#a3fb83ee5435e868683ecb3e44020f3b2',1,'message.c']]],
   ['vim_5fsnprintf_5fadd',['vim_snprintf_add',['../message_8c.html#ae5c9561b4f5740ddb6248889a1c4f415',1,'message.c']]],
-  ['vim_5fstr2nr',['vim_str2nr',['../charset_8c.html#a9584c0f4623396f0230d2f0952f2a677',1,'charset.c']]],
+  ['vim_5fstr2nr',['vim_str2nr',['../charset_8c.html#a87f1704bb2af5df20842ebfb22c899cf',1,'charset.c']]],
   ['vim_5fstrbyte',['vim_strbyte',['../strings_8c.html#abef2e59c2c1b7a597363bbe473e537b7',1,'strings.c']]],
   ['vim_5fstrcat',['vim_strcat',['../strings_8c.html#a10a8ef50156b08e15f12b0b3d5d21f47',1,'strings.c']]],
   ['vim_5fstrchr',['vim_strchr',['../strings_8c.html#aa7309cf381f677e076fa51ed6e1518ee',1,'strings.c']]],

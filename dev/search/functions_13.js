@@ -42,7 +42,7 @@ var searchData=
   ['time_5fwatcher_5fstop',['time_watcher_stop',['../event_2time_8c.html#a7c541635708bb01ae20eb3dff14c8915',1,'time.c']]],
   ['tof_5ftya',['toF_TyA',['../farsi_8c.html#a64992a4feb2bb49defdad21deaa44dc2',1,'farsi.c']]],
   ['trans_5fcharacters',['trans_characters',['../charset_8c.html#a6d67caad5fd16a174af7f12aa02b21c6',1,'charset.c']]],
-  ['trans_5fspecial',['trans_special',['../keymap_8c.html#aec74d150a6e19a8c34c012e215633b3a',1,'keymap.c']]],
+  ['trans_5fspecial',['trans_special',['../keymap_8c.html#af2132e82951d96345e18df9616704641',1,'keymap.c']]],
   ['transchar',['transchar',['../charset_8c.html#a5a523b7cb242e6806569ff08138ac16e',1,'charset.c']]],
   ['transchar_5fbyte',['transchar_byte',['../charset_8c.html#a27fcc90e5dc2f18452341f006b08a9af',1,'charset.c']]],
   ['transchar_5fhex',['transchar_hex',['../charset_8c.html#a7bbdf2a298f87a04771a2425306604e3',1,'charset.c']]],

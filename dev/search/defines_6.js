@@ -103,6 +103,8 @@ var searchData=
   ['first_5fnl',['FIRST_NL',['../regexp_8c.html#ac474ee84c01e114267b60500b580b038',1,'regexp.c']]],
   ['fix_5ffor_5fboguscols',['FIX_FOR_BOGUSCOLS',['../screen_8c.html#a5330377adcd82af800af6317a6672936',1,'screen.c']]],
   ['fixvar_5fcnt',['FIXVAR_CNT',['../eval_8c.html#a8f7613466369d81e1004604ca8a197f1',1,'eval.c']]],
+  ['flag_5fcpo_5fbslash',['FLAG_CPO_BSLASH',['../keymap_8h.html#a8a3daa9b7a0e9681778e4b3b8c8407a7',1,'keymap.h']]],
+  ['flag_5fcpo_5fspeci',['FLAG_CPO_SPECI',['../keymap_8h.html#acb70fa3a5d38c22ee45e2695177e3c85',1,'keymap.h']]],
   ['flen_5ffixed',['FLEN_FIXED',['../eval_8c.html#a44f474a07cdc476663eda0a4437dd112',1,'eval.c']]],
   ['fm_5fbackward',['FM_BACKWARD',['../search_8h.html#ad9f969d97e609fe6cb729391ed4fbcaa',1,'search.h']]],
   ['fm_5fblockstop',['FM_BLOCKSTOP',['../search_8h.html#ab248c901bd62f4ae72bb8696f0a8b04a',1,'search.h']]],

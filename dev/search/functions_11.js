@@ -43,7 +43,7 @@ var searchData=
   ['repeat_5fmessage',['repeat_message',['../message_8c.html#a3053c0dc755b2ceb29413e86ceb85c71',1,'message.c']]],
   ['replace_5fpush',['replace_push',['../edit_8c.html#a09a4611d8e814d1d78494e58837b678f',1,'edit.c']]],
   ['replace_5fpush_5fmb',['replace_push_mb',['../edit_8c.html#ae7ce52ca92c77fafe2ff143cdb2dcccf',1,'edit.c']]],
-  ['replace_5ftermcodes',['replace_termcodes',['../keymap_8c.html#a0ae46fee0955b4d0329f4ac9b8d7bae5',1,'keymap.c']]],
+  ['replace_5ftermcodes',['replace_termcodes',['../keymap_8c.html#ad421fac3b850b291584b7ebf12807a67',1,'keymap.c']]],
   ['report_5fdiscard_5fpending',['report_discard_pending',['../ex__eval_8c.html#af0a87982019cf7b9f7e5b5baff0d8693',1,'ex_eval.c']]],
   ['report_5fmake_5fpending',['report_make_pending',['../ex__eval_8c.html#a1fc765319d2c88e592e1c3dd0acfb537',1,'ex_eval.c']]],
   ['report_5fresume_5fpending',['report_resume_pending',['../ex__eval_8c.html#afba2bba67be594311254b0ad6ce0b780',1,'ex_eval.c']]],
