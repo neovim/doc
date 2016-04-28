@@ -105,6 +105,7 @@ var searchData=
   ['mht_5flog_5fload_5ffactor',['MHT_LOG_LOAD_FACTOR',['../memfile_8c.html#a2bf2e78467751df711fd24a951a26c6f',1,'memfile.c']]],
   ['mim',['MIM',['../farsi_8h.html#a96a21df39b2ff3ceb1c2be3c90c6d08d',1,'farsi.h']]],
   ['min',['MIN',['../macros_8h.html#ad2f3678bf5eae3684fc497130b946eae',1,'macros.h']]],
+  ['min_5fcd_5fscope',['MIN_CD_SCOPE',['../ex__docmd_8h.html#a24eeabe2fe63a669757b5358f8f204fe',1,'ex_docmd.h']]],
   ['min_5fcolumns',['MIN_COLUMNS',['../window_8h.html#a359791a95390262089840e5f232aac44',1,'window.h']]],
   ['min_5flines',['MIN_LINES',['../window_8h.html#a50fb761199e8a95d4e856e4139af452b',1,'window.h']]],
   ['min_5flog_5flevel',['MIN_LOG_LEVEL',['../log_8h.html#a4d87af61376292afbd0c2332a697174f',1,'log.h']]],
