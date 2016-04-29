@@ -167,7 +167,6 @@ var searchData=
   ['mch_5fexpand_5fwildcards',['mch_expand_wildcards',['../os__unix_8c.html#afbcf86ec79bbeddad0e4a2994676ebd5',1,'os_unix.c']]],
   ['mch_5ffopen',['mch_fopen',['../macros_8h.html#a39270c09da591696b813487160e6450f',1,'macros.h']]],
   ['mch_5fmsg',['mch_msg',['../vim_8h.html#a4ab228a86c2d3353000c9e5cf1a8b8f3',1,'vim.h']]],
-  ['mch_5fnodetype',['mch_nodetype',['../os__unix_8c.html#a8a6f9270d0f73ddd78beb56b587cb247',1,'os_unix.c']]],
   ['mch_5fopen_5frw',['mch_open_rw',['../macros_8h.html#a06cefeb085cb44bd960567445ae3766a',1,'macros.h']]],
   ['mch_5fprint_5fbegin',['mch_print_begin',['../hardcopy_8c.html#a78dd21072b4f859b9b7ec82599867ac0',1,'hardcopy.c']]],
   ['mch_5fprint_5fbegin_5fpage',['mch_print_begin_page',['../hardcopy_8c.html#a0659a1178cfb4d8888f61ab33a5dcc9c',1,'hardcopy.c']]],

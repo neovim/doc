@@ -79,6 +79,7 @@ var searchData=
   ['os_5fmkdir',['os_mkdir',['../fs_8c.html#acf057cc3c02baf87c5221269239dc051',1,'fs.c']]],
   ['os_5fmkdir_5frecurse',['os_mkdir_recurse',['../fs_8c.html#a420cef78d08fd85db6e741f8570dd556',1,'fs.c']]],
   ['os_5fmkdtemp',['os_mkdtemp',['../fs_8c.html#ab210820f2d5f3315c9a91a9c2b07cac9',1,'fs.c']]],
+  ['os_5fnodetype',['os_nodetype',['../fs_8c.html#ab9b5d475ae2653ddb61287b8d3d280d8',1,'fs.c']]],
   ['os_5fopen',['os_open',['../fs_8c.html#a7e97601d22c41d71e231e5a7cb7f9b6e',1,'fs.c']]],
   ['os_5fremove',['os_remove',['../fs_8c.html#aaf1a8e0d3793e6e444856b798f2dfa7a',1,'fs.c']]],
   ['os_5frename',['os_rename',['../fs_8c.html#a75a3db9369b46c686fd177d1cda0e29b',1,'fs.c']]],
