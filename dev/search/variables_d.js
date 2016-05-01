@@ -102,7 +102,7 @@ var searchData=
   ['modes',['modes',['../structVimMenu.html#a322360d3b21473b062c6fddf6514067e',1,'VimMenu']]],
   ['modified_5fwas_5fset',['modified_was_set',['../globals_8h.html#a6d4a8e450cebb9157bba2742eb67c0ed',1,'globals.h']]],
   ['motion_5fforce',['motion_force',['../structoparg__S.html#a698e54e0d3dada0523dee842e70f8817',1,'oparg_S']]],
-  ['motion_5ftype',['motion_type',['../structoparg__S.html#a297a5162c8e7897949199f11ef7e4573',1,'oparg_S']]],
+  ['motion_5ftype',['motion_type',['../structoparg__S.html#a755200ff38c4621767f6d831813d2639',1,'oparg_S']]],
   ['mouse_5fcol',['mouse_col',['../globals_8h.html#a92f686072574b4d5748baee8b430f53d',1,'globals.h']]],
   ['mouse_5foff',['mouse_off',['../structui__t.html#a015adfb225cd3572859c44bc4a2ee48a',1,'ui_t']]],
   ['mouse_5fon',['mouse_on',['../structui__t.html#ae1288e030f409c0be80850df5e3d40df',1,'ui_t']]],

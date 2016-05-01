@@ -335,7 +335,7 @@ var searchData=
   ['foreground',['foreground',['../structHlAttrs.html#a6003bd45a13f51ccde7d0a9f52d40aad',1,'HlAttrs']]],
   ['forinfo_5ft',['forinfo_T',['../structforinfo__T.html',1,'']]],
   ['format_5flines',['format_lines',['../ops_8c.html#a23a27cb0d4c87b6cd8f1cdc05ba8bf16',1,'ops.c']]],
-  ['format_5freg_5ftype',['format_reg_type',['../ops_8c.html#ab0155e516e1a90a66e7288a36322ae6c',1,'ops.c']]],
+  ['format_5freg_5ftype',['format_reg_type',['../ops_8c.html#a429bb3e397451a41d75078cc17bd4ddc',1,'ops.c']]],
   ['forward',['FORWARD',['../vim_8h.html#a6ddfdda7a062d10cff4a72b76b44aeb8',1,'vim.h']]],
   ['forward_5ffile',['FORWARD_FILE',['../vim_8h.html#a0a4ee5acc312853d0dcc187c28ba9dbf',1,'vim.h']]],
   ['forward_5fmouse',['forward_mouse',['../structterminal.html#aa952741b8bad69223c02e81f9b68a72b',1,'terminal']]],
