@@ -140,9 +140,9 @@ These are the conditions with which the <A HREF="eval.html#expression">expressio
 			lowest.
   &quot;<A HREF="change.html#=">=</A>&quot;			use fold level from the previous line
   &quot;a1&quot;, &quot;a2&quot;, ..	add one, two, .. to the fold level of the previous
-			line
+			line, use the result for the current line
   &quot;s1&quot;, &quot;s2&quot;, ..	subtract one, two, .. from the fold level of the
-			previous line
+			previous line, use the result for the next line
   &quot;&lt;1&quot;, &quot;&lt;2&quot;, ..	a fold with this level ends at this line
   &quot;&gt;1&quot;, &quot;&gt;2&quot;, ..	a fold with this level starts at this line
 
@@ -164,6 +164,18 @@ method can be very slow!
 
 Try to avoid the &quot;<A HREF="change.html#=">=</A>&quot;, &quot;<A HREF="insert.html#a">a</A>&quot; and &quot;<A HREF="change.html#s">s</A>&quot; return values, since Vim often has to search
 backwards for a line for which the fold level is defined.  This can be slow.
+
+An example of using &quot;a1&quot; and &quot;s1&quot;: For a multi-line C comment, a line
+containing &quot;/*&quot; would return &quot;a1&quot; to start a fold, and a line containing &quot;*/&quot;
+would return &quot;s1&quot; to end the fold after that line:
+<B>  if match(thisline, '/\*') &gt;= 0</B>
+<B>    return 'a1'</B>
+<B>  elseif match(thisline, '\*/') &gt;= 0</B>
+<B>    return 's1'</B>
+<B>  else</B>
+<B>    return '='</B>
+<B>  endif</B>
+However, this won't work for single line comments, strings, etc.
 
 |<A HREF="eval.html#foldlevel()">foldlevel()</A>| can be useful to compute a fold level relative to a previous
 fold level.  But note that <A HREF="eval.html#foldlevel()">foldlevel()</A> may return -1 if the level is not known
@@ -680,7 +692,7 @@ are used.
 
     <footer>
       <div class="container">
-        Generated Tue May  3 20:18:10 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/490804ed33a5da70ba14bc54bceea5decb62874a"><code>490804e</code></a>.
+        Generated Wed May  4 20:13:33 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/e2cc3f98fb3ca771d9bd108ae9c37c19bea8025b"><code>e2cc3f9</code></a>.
       </div>
     </footer>
   </body>
