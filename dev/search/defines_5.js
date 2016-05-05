@@ -87,6 +87,7 @@ var searchData=
   ['ew_5fnotfound',['EW_NOTFOUND',['../path_8h.html#aab899ead82d96e27e61df70dac2a4d6f',1,'path.h']]],
   ['ew_5fnotwild',['EW_NOTWILD',['../path_8h.html#a66530b1b04ece8c4ff7e4ab86d13a282',1,'path.h']]],
   ['ew_5fpath',['EW_PATH',['../path_8h.html#a169617d85640de63d62a13a546d7a12e',1,'path.h']]],
+  ['ew_5fshellcmd',['EW_SHELLCMD',['../path_8h.html#a0c774ce4d929afaa70393b14f2e8ec9c',1,'path.h']]],
   ['ew_5fsilent',['EW_SILENT',['../path_8h.html#a70c2e1c93622f9cc806906ebe68fe5cf',1,'path.h']]],
   ['ex_5flanguage',['ex_language',['../ex__docmd_8c.html#ac91658df45781f57d31a4fd8e046823f',1,'ex_docmd.c']]],
   ['exactly',['EXACTLY',['../regexp_8c.html#a890d15966e77fa04ad67b047ff027bb2',1,'regexp.c']]],

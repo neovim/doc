@@ -33,7 +33,7 @@ var searchData=
   ['option_5fwas_5fset',['option_was_set',['../option_8c.html#a8c73fdd78d4c90be54269772604552ce',1,'option.c']]],
   ['os_5fbreakcheck',['os_breakcheck',['../os_2input_8c.html#a32e12278d8bc8b11669377905baa662e',1,'input.c']]],
   ['os_5fcall_5fshell',['os_call_shell',['../shell_8c.html#a360e8d1add3ef5c50d995ec06513b5f6',1,'shell.c']]],
-  ['os_5fcan_5fexe',['os_can_exe',['../fs_8c.html#a15d142eccaff58a09984ebff0ff384a6',1,'fs.c']]],
+  ['os_5fcan_5fexe',['os_can_exe',['../fs_8c.html#a77d4eb2e2bdfa4acc220b8ceea8364ef',1,'fs.c']]],
   ['os_5fchar_5favail',['os_char_avail',['../os_2input_8c.html#a1bd21dc37589da99f55f8558099ef745',1,'input.c']]],
   ['os_5fchdir',['os_chdir',['../fs_8c.html#a85dbc6ea8f857cb3178703b13c526ade',1,'fs.c']]],
   ['os_5fclosedir',['os_closedir',['../fs_8c.html#aa412854c40a7a1c96b439ffa576fe975',1,'fs.c']]],

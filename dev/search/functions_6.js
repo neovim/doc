@@ -157,6 +157,7 @@ var searchData=
   ['getnextmark',['getnextmark',['../mark_8c.html#a907b0f5b6a3d3516af6a5fdd38b0cd72',1,'mark.c']]],
   ['getout',['getout',['../main_8c.html#ac1f9aa0153be96581e7f01eddf1c32e0',1,'main.c']]],
   ['getsourceline',['getsourceline',['../ex__cmds2_8c.html#a5479e135f024133c96e89da1e5d62f04',1,'ex_cmds2.c']]],
+  ['gettail_5fdir',['gettail_dir',['../path_8c.html#ac8c83fea284f56e1c6f95691d57d9945',1,'path.c']]],
   ['getvcol',['getvcol',['../charset_8c.html#af8799452369989ed7633a83f90d04ab5',1,'charset.c']]],
   ['getvcol_5fnolist',['getvcol_nolist',['../charset_8c.html#a20eb69acb73c1eedbb3d527ee6d3fe62',1,'charset.c']]],
   ['getvcols',['getvcols',['../charset_8c.html#a47a74ea45988b8fbbcaa186d9f66b920',1,'charset.c']]],
