@@ -22,6 +22,7 @@ var searchData=
   ['back',['BACK',['../regexp_8c.html#ab303ee384877c80cb8855bf0113faf88',1,'regexp.c']]],
   ['backpos_5finitial',['BACKPOS_INITIAL',['../regexp_8c.html#a25ab427a9603fb865ca23dcd9d86b3dd',1,'regexp.c']]],
   ['backref',['BACKREF',['../regexp_8c.html#aa654094ba4eb1157d9ec6b4b1a3eb0fb',1,'regexp.c']]],
+  ['backslash_5fin_5ffilename',['BACKSLASH_IN_FILENAME',['../win__defs_8h.html#a12d6a70f34df1d36f4be7c3a5e63c162',1,'win_defs.h']]],
   ['backspace_5fchar',['BACKSPACE_CHAR',['../edit_8c.html#aee113dc8fbaa71eff09f2dd8575d62b7',1,'edit.c']]],
   ['backspace_5fline',['BACKSPACE_LINE',['../edit_8c.html#adecba2e676cf03edb595cf965f720bb7',1,'edit.c']]],
   ['backspace_5fword',['BACKSPACE_WORD',['../edit_8c.html#acc15ce4c6c0c2ba33ef702fa38084ace',1,'edit.c']]],

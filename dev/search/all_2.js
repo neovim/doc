@@ -265,6 +265,7 @@ var searchData=
   ['backref',['BACKREF',['../regexp_8c.html#aa654094ba4eb1157d9ec6b4b1a3eb0fb',1,'regexp.c']]],
   ['backslash_5fhalve',['backslash_halve',['../charset_8c.html#a74d604263782fd1a0d27d51b81ffcd5f',1,'charset.c']]],
   ['backslash_5fhalve_5fsave',['backslash_halve_save',['../charset_8c.html#a3b148d24d20145d82c318ecfa80d0baa',1,'charset.c']]],
+  ['backslash_5fin_5ffilename',['BACKSLASH_IN_FILENAME',['../win__defs_8h.html#a12d6a70f34df1d36f4be7c3a5e63c162',1,'win_defs.h']]],
   ['backspace_5fchar',['BACKSPACE_CHAR',['../edit_8c.html#aee113dc8fbaa71eff09f2dd8575d62b7',1,'edit.c']]],
   ['backspace_5fline',['BACKSPACE_LINE',['../edit_8c.html#adecba2e676cf03edb595cf965f720bb7',1,'edit.c']]],
   ['backspace_5funtil_5fcolumn',['backspace_until_column',['../edit_8c.html#a3b16d96417c0a429ff8eccc3b707d3e9',1,'edit.c']]],
