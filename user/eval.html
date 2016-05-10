@@ -2188,6 +2188,7 @@ range( {expr} [, {max} [, {stride}]])
 readfile( {fname} [, {binary} [, {max}]])
 				<A HREF="#List">List</A>	get <A HREF="#list">list</A> of lines from file {fname}
 reltime( [{start} [, {end}]])	<A HREF="#List">List</A>	get time value
+reltimefloat( {time})		<A HREF="#Float">Float</A>	turn the time value into a <A HREF="#Float">Float</A>
 reltimestr( {time})		<A HREF="#String">String</A>	turn time value into a <A HREF="#String">String</A>
 remote_expr( {server}, {string} [, {idvar}])
 				<A HREF="#String">String</A>	send <A HREF="#expression">expression</A>
@@ -2318,6 +2319,7 @@ winnr( [{expr}])		<A HREF="#Number">Number</A>	number of current <A HREF="window
 winrestview( {dict})		none	restore view of current <A HREF="windows.html#window">window</A>
 <A HREF="#winsaveview()">winsaveview()</A>			<A HREF="#Dict">Dict</A>	save view of current <A HREF="windows.html#window">window</A>
 winwidth( {nr})			<A HREF="#Number">Number</A>	width of <A HREF="windows.html#window">window</A> {nr}
+<A HREF="#wordcount()">wordcount()</A>			<A HREF="#Dict">Dict</A>	get byte/char/word statistics
 writefile( {list}, {fname} [, {flags}])
 				<A HREF="#Number">Number</A>	write <A HREF="#list">list</A> of lines to file {fname}
 xor( {expr}, {expr})		<A HREF="#Number">Number</A>  bitwise XOR
@@ -5716,7 +5718,8 @@ readfile({fname} [, {binary} [, {max}]])
 reltime([{start} [, {end}]])				*<A NAME="reltime()"></A><B>reltime()</B>*
 		Return an item that represents a time value.  The format of
 		the item depends on the system.  It can be passed to
-		|<A HREF="#reltimestr()">reltimestr()</A>| to convert <A HREF="motion.html#it">it</A> to a <A HREF="#string">string</A>.
+		|<A HREF="#reltimestr()">reltimestr()</A>| to convert <A HREF="motion.html#it">it</A> to a <A HREF="#string">string</A> or |<A HREF="#reltimefloat()">reltimefloat()</A>| 
+		to convert to a float.
 		Without an argument <A HREF="motion.html#it">it</A> returns the current time.
 		With one argument is returns the time passed since the time
 		specified in the argument.
@@ -5724,7 +5727,17 @@ reltime([{start} [, {end}]])				*<A NAME="reltime()"></A><B>reltime()</B>*
 		and {end}.
 		The {start} and {end} arguments must be values returned by
 		<A HREF="#reltime()">reltime()</A>.
-		{only available when compiled with the |<A HREF="various.html#+reltime">+reltime</A>| feature}
+
+
+reltimefloat({time})				*<A NAME="reltimefloat()"></A><B>reltimefloat()</B>*
+		Return a <A HREF="#Float">Float</A> that represents the time value of {time}.
+		Unit of time is seconds.
+		Example:
+			let start = <A HREF="#reltime()">reltime()</A>
+			call MyFunction()
+			let seconds = reltimefloat(reltime(start))
+		See the note of <A HREF="#reltimestr()">reltimestr()</A> about overhead.
+ 		Also see |<A HREF="repeat.html#profiling">profiling</A>|.
 
 
 reltimestr({time})				*<A NAME="reltimestr()"></A><B>reltimestr()</B>*
@@ -5735,12 +5748,10 @@ reltimestr({time})				*<A NAME="reltimestr()"></A><B>reltimestr()</B>*
 <B>			call MyFunction()</B>
 <B>			echo reltimestr(reltime(start))</B>
  		Note that overhead for the commands will be added to the time.
-		The accuracy depends on the system.
 		Leading spaces are used to make the <A HREF="#string">string</A> align nicely.  You
 		can use <A HREF="#split()">split()</A> to remove <A HREF="motion.html#it">it</A>.
 <B>			echo split(reltimestr(reltime(start)))[0]</B>
  		Also see |<A HREF="repeat.html#profiling">profiling</A>|.
-		{only available when compiled with the |<A HREF="various.html#+reltime">+reltime</A>| feature}
 
 
 							*<A NAME="remote_expr()"></A><B>remote_expr()</B>* *<A NAME="E449"></A><B>E449</B>*
@@ -7621,6 +7632,29 @@ winwidth({nr})						*<A NAME="winwidth()"></A><B>winwidth()</B>*
 <B>  :  exe "normal 50\&lt;C-W&gt;|"</B>
 <B>  :endif</B>
  
+
+<A HREF="#wordcount()">wordcount()</A>						*<A NAME="wordcount()"></A><B>wordcount()</B>*
+		The result is a dictionary of byte/chars/word statistics for
+		the current buffer.  This is the same info <A HREF="motion.html#as">as</A> provided by
+		|<A HREF="editing.html#g_CTRL-G">g_CTRL-G</A>|
+		The return value includes:
+			bytes		<A HREF="#Number">Number</A> of bytes in the buffer
+			chars		<A HREF="#Number">Number</A> of chars in the buffer
+			words		<A HREF="#Number">Number</A> of words in the buffer
+			cursor_bytes    <A HREF="#Number">Number</A> of bytes before cursor position
+					(not in <A HREF="visual.html#Visual">Visual</A> mode)
+			cursor_chars    <A HREF="#Number">Number</A> of chars before cursor position
+					(not in <A HREF="visual.html#Visual">Visual</A> mode)
+			cursor_words    <A HREF="#Number">Number</A> of words before cursor position
+					(not in <A HREF="visual.html#Visual">Visual</A> mode)
+			visual_bytes    <A HREF="#Number">Number</A> of bytes visually selected
+			                (only in <A HREF="visual.html#Visual">Visual</A> mode)
+			visual_chars    <A HREF="#Number">Number</A> of chars visually selected
+			                (only in <A HREF="visual.html#Visual">Visual</A> mode)
+			visual_words    <A HREF="#Number">Number</A> of chars visually selected
+			                (only in <A HREF="visual.html#Visual">Visual</A> mode)
+
+
 
 							*<A NAME="writefile()"></A><B>writefile()</B>*
 writefile({list}, {fname} [, {flags}])
@@ -10038,7 +10072,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Mon May  9 20:10:20 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/31373e400d77a944586e43888f698841148ec7f8"><code>31373e4</code></a>.
+        Generated Tue May 10 20:15:01 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/0bfc1f33a02e2ea405a2df7eee67f093b56fa997"><code>0bfc1f3</code></a>.
       </div>
     </footer>
   </body>
