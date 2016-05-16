@@ -170,7 +170,7 @@ var searchData=
   ['exec_5fnormal_5fcmd',['exec_normal_cmd',['../ex__docmd_8c.html#a6d1bfecbeccd1d4b56cde04d5d965de7',1,'ex_docmd.c']]],
   ['expand_5fcmdline',['expand_cmdline',['../ex__getln_8c.html#aa29b91f609507ab355b9f73258a689cd',1,'ex_getln.c']]],
   ['expand_5fenv',['expand_env',['../env_8c.html#aa192be148db96758033a23beacbd8ffe',1,'env.c']]],
-  ['expand_5fenv_5fesc',['expand_env_esc',['../env_8c.html#ab66c939a9548db5c1fc780b006285fe4',1,'env.c']]],
+  ['expand_5fenv_5fesc',['expand_env_esc',['../env_8c.html#a3bb0f462e4952e2d9d052cd8e5563fa6',1,'env.c']]],
   ['expand_5fenv_5fsave',['expand_env_save',['../env_8c.html#acab705ee8d48b4e102ee9d5154e39f9c',1,'env.c']]],
   ['expand_5fenv_5fsave_5fopt',['expand_env_save_opt',['../env_8c.html#ac3bd05bef789be4536de72a4acbded48',1,'env.c']]],
   ['expand_5ffilename',['expand_filename',['../ex__docmd_8c.html#aeae76fa20276fbb3acf67bb21b80c1a4',1,'ex_docmd.c']]],

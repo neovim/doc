@@ -39,7 +39,7 @@ var searchData=
   ['check_5farg_5fidx',['check_arg_idx',['../ex__cmds2_8c.html#a6a531ccfa2cd86d38338f2de0f8a2a76',1,'ex_cmds2.c']]],
   ['check_5fbuf_5foptions',['check_buf_options',['../option_8c.html#aa16ea80b5eedf0db0eaf2d46d507ff6f',1,'option.c']]],
   ['check_5fchanged',['check_changed',['../ex__cmds2_8c.html#ad039c97f01e3fa333961580ec670868a',1,'ex_cmds2.c']]],
-  ['check_5fchanged_5fany',['check_changed_any',['../ex__cmds2_8c.html#a32af4b9eb8460f37f042b4487bff51f2',1,'ex_cmds2.c']]],
+  ['check_5fchanged_5fany',['check_changed_any',['../ex__cmds2_8c.html#adf6315043b4e6c5e03f400abce9b1c84',1,'ex_cmds2.c']]],
   ['check_5fcolorcolumn',['check_colorcolumn',['../option_8c.html#ad56804fd276856c60ed109071a1d315c',1,'option.c']]],
   ['check_5fcursor',['check_cursor',['../cursor_8c.html#a94e32797eb3ef299b193daf4c7974c56',1,'cursor.c']]],
   ['check_5fcursor_5fcol',['check_cursor_col',['../cursor_8c.html#a6d034b93fba20c656100aa167d19454e',1,'cursor.c']]],
