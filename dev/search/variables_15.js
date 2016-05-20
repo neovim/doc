@@ -63,6 +63,7 @@ var searchData=
   ['update_5fbg',['update_bg',['../structui__t.html#a13da8a533920abc0e4ddaf168f94db0c',1,'ui_t']]],
   ['update_5ffg',['update_fg',['../structui__t.html#afc47dbc2cb4923e7223d0808e768a51d',1,'ui_t']]],
   ['update_5fmenu',['update_menu',['../structui__t.html#af0e0769822e1d7aa09556c340ef333f1',1,'ui_t']]],
+  ['update_5fsp',['update_sp',['../structui__t.html#a72cf2b3a074997ffde0030c1fb8a77a9',1,'ui_t']]],
   ['usage',['usage',['../structcscmd__T.html#a90918df3d469fe836cb9412b2e580dc6',1,'cscmd_T']]],
   ['use_5faucmd_5fwin',['use_aucmd_win',['../structaco__save__T.html#a26bd9a638bbcbd0f8c28443f3c3dabd1',1,'aco_save_T']]],
   ['use_5fdebug_5fbreak_5flevel',['use_debug_break_level',['../structmparm__T.html#a3e2eaace0f2a42ab80fd5b9ce709a5b6',1,'mparm_T']]],
