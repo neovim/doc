@@ -12,6 +12,7 @@ var searchData=
   ['terminaloptions',['TerminalOptions',['../structTerminalOptions.html',1,'']]],
   ['time_5fentry_5ft',['time_entry_T',['../structtime__entry__T.html',1,'']]],
   ['time_5fwatcher',['time_watcher',['../structtime__watcher.html',1,'']]],
+  ['timer_5ft',['timer_T',['../structtimer__T.html',1,'']]],
   ['trystate_5fs',['trystate_S',['../structtrystate__S.html',1,'']]],
   ['tuidata',['TUIData',['../structTUIData.html',1,'']]],
   ['typebuf_5ft',['typebuf_T',['../structtypebuf__T.html',1,'']]],

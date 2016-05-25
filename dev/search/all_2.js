@@ -354,6 +354,7 @@ var searchData=
   ['block0_5fid1',['BLOCK0_ID1',['../memline_8c.html#a19b014ee9a087900435acfa5166c2bea',1,'memline.c']]],
   ['block_5fautocmds',['block_autocmds',['../fileio_8c.html#a72d96ea10a9b77765cf2f19cdc82a12a',1,'fileio.c']]],
   ['block_5fdef',['block_def',['../structblock__def.html',1,'']]],
+  ['blockable',['blockable',['../structtime__watcher.html#a310ecd442a2ba0c05c9259060fd4124a',1,'time_watcher']]],
   ['blocknr_5ft',['blocknr_T',['../memfile__defs_8h.html#a533663bf2130c33647183f293b1c83e9',1,'memfile_defs.h']]],
   ['bo_5fall',['BO_ALL',['../option__defs_8h.html#acbd9201c38a5cf03976c25c898042b13',1,'option_defs.h']]],
   ['bo_5fbs',['BO_BS',['../option__defs_8h.html#ac19434452f3353611179b4dba0d2017e',1,'option_defs.h']]],

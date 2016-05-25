@@ -35,6 +35,7 @@ var searchData=
   ['regprog',['regprog',['../structregmatch__T.html#a4126fc3ca4f2ff6fcde03a5b41fd6c0c',1,'regmatch_T::regprog()'],['../structregmmatch__T.html#abfe61429c29ab593fdb68551fcd7c90a',1,'regmmatch_T::regprog()']]],
   ['regsave',['regsave',['../structregitem__S.html#a0a10c7b2a44c67f4831a9c13960a1412',1,'regitem_S']]],
   ['regstart',['regstart',['../structbt__regprog__T.html#aaf52833a86c2b509bef79d8b404cd64e',1,'bt_regprog_T::regstart()'],['../structnfa__regprog__T.html#a874dbbd58182a4060862ca5122faf309',1,'nfa_regprog_T::regstart()']]],
+  ['repeat_5fcount',['repeat_count',['../structtimer__T.html#a20ae82ab7dd636bddc447e00f2ac1dd8',1,'timer_T']]],
   ['repeating',['repeating',['../structloop__cookie.html#a1be7e25dac4cdf92f8f79a13c89ba646',1,'loop_cookie']]],
   ['replacement',['replacement',['../structWriteMergerState.html#a0d99c39ff1b157d014590f1bb8db2205',1,'WriteMergerState']]],
   ['replacestate',['replaceState',['../structinsert__state.html#a3c0272986daf2f1fc80ab26e50877317',1,'insert_state']]],

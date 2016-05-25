@@ -170,6 +170,7 @@ var searchData=
   ['sn_5fmap',['SN_MAP',['../spell_8c.html#aed9e5e0fa7d806cc467a02962deecc59',1,'spell.c']]],
   ['sn_5fmidword',['SN_MIDWORD',['../spell_8c.html#ae278b28e2a2e28a0a0f38a12eb7d5c48',1,'spell.c']]],
   ['sn_5fnobreak',['SN_NOBREAK',['../spell_8c.html#a2ecd2ce5723d0cd0be909ecbfed36072',1,'spell.c']]],
+  ['sn_5fnocompoundsugs',['SN_NOCOMPOUNDSUGS',['../spell_8c.html#ab006a8f31524d22da00f50460492660e',1,'spell.c']]],
   ['sn_5fnosplitsugs',['SN_NOSPLITSUGS',['../spell_8c.html#a73f8a4130a4ea9c88a9230dc17279be3',1,'spell.c']]],
   ['sn_5fprefcond',['SN_PREFCOND',['../spell_8c.html#ae5ad26da2691c3253008a2dc4b31a990',1,'spell.c']]],
   ['sn_5fregion',['SN_REGION',['../spell_8c.html#a5b74c963fa645868a0e5039cc8e43d37',1,'spell.c']]],
