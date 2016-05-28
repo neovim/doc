@@ -448,7 +448,7 @@ var searchData=
   ['bufempty',['bufempty',['../macros_8h.html#a262dc06774ba50c32f44a35fe0571c11',1,'macros.h']]],
   ['buffblock',['buffblock',['../structbuffblock.html',1,'']]],
   ['buffblock_5ft',['buffblock_T',['../buffer__defs_8h.html#a759db03893c912b54eabe18dcb0cfdfb',1,'buffer_defs.h']]],
-  ['buffer',['buffer',['../structobject.html#af9946011065ba3e5963246badf6efc41',1,'object::buffer()'],['../structstream.html#a7e98184ac6a766192d059e8242883683',1,'stream::buffer()'],['../structWRequest.html#a4b6a43b2acf03082971b0181ae9fd984',1,'WRequest::buffer()'],['../structprt__resfile__buffer__S.html#a0bc3dcb8a118aae6907ad206c7d8df4d',1,'prt_resfile_buffer_S::buffer()'],['../structUIData.html#a54bc775c40a36dba24b445747a57d03a',1,'UIData::buffer()'],['../structcontext__sha256__T.html#a243a57d8ab56c5b99f84d1960576b472',1,'context_sha256_T::buffer()']]],
+  ['buffer',['buffer',['../structobject.html#af9946011065ba3e5963246badf6efc41',1,'object::buffer()'],['../structUIData.html#a54bc775c40a36dba24b445747a57d03a',1,'UIData::buffer()'],['../structstream.html#a7e98184ac6a766192d059e8242883683',1,'stream::buffer()'],['../structWRequest.html#a4b6a43b2acf03082971b0181ae9fd984',1,'WRequest::buffer()'],['../structprt__resfile__buffer__S.html#a0bc3dcb8a118aae6907ad206c7d8df4d',1,'prt_resfile_buffer_S::buffer()'],['../structcontext__sha256__T.html#a243a57d8ab56c5b99f84d1960576b472',1,'context_sha256_T::buffer()']]],
   ['buffer_2ec',['buffer.c',['../buffer_8c.html',1,'']]],
   ['buffer_2ec',['buffer.c',['../api_2buffer_8c.html',1,'']]],
   ['buffer_2eh',['buffer.h',['../buffer_8h.html',1,'']]],

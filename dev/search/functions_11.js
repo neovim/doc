@@ -37,7 +37,7 @@ var searchData=
   ['regtilde',['regtilde',['../regexp_8c.html#a80efb6fd97eb3e63e7e3ccb7b63832a5',1,'regexp.c']]],
   ['rem_5fbackslash',['rem_backslash',['../charset_8c.html#a2e3e49d8282fe6cde6593e1f6b7eaf5c',1,'charset.c']]],
   ['remote_5ftype',['REMOTE_TYPE',['../api_2private_2defs_8h.html#af73c7df3b77c0c955771d34299dc5a15',1,'REMOTE_TYPE(Buffer):&#160;defs.h'],['../api_2private_2defs_8h.html#aa2f5ae6f6d6e21022b20e5652ade7b05',1,'REMOTE_TYPE(Window):&#160;defs.h'],['../api_2private_2defs_8h.html#a3bb34984edf6ee6e8afd6d71d1512612',1,'REMOTE_TYPE(Tabpage):&#160;defs.h']]],
-  ['remote_5fui_5fdisconnect',['remote_ui_disconnect',['../remote__ui_8c.html#acb439b5de1182f5f64fce9a30e4f5e60',1,'remote_ui.c']]],
+  ['remote_5fui_5fdisconnect',['remote_ui_disconnect',['../api_2ui_8c.html#aeb2c8bda10a45b5d8ed094e612f1caa2',1,'ui.c']]],
   ['remove_5fbom',['remove_bom',['../mbyte_8c.html#a7c4ee2f66d29916123fe2bfdb8562107',1,'mbyte.c']]],
   ['rename_5fbuffer',['rename_buffer',['../ex__cmds_8c.html#a7ded35ec9b87796a6e64ba77855c7b82',1,'ex_cmds.c']]],
   ['repeat_5fmessage',['repeat_message',['../message_8c.html#a3053c0dc755b2ceb29413e86ceb85c71',1,'message.c']]],
