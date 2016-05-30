@@ -1,15 +1,14 @@
 var searchData=
 [
-  ['backpos_5fs',['backpos_S',['../structbackpos__S.html',1,'']]],
-  ['bhdr',['bhdr',['../structbhdr.html',1,'']]],
-  ['block0',['block0',['../structblock0.html',1,'']]],
-  ['block_5fdef',['block_def',['../structblock__def.html',1,'']]],
-  ['bt_5fregprog_5ft',['bt_regprog_T',['../structbt__regprog__T.html',1,'']]],
-  ['buf_5fstate',['buf_state',['../structbuf__state.html',1,'']]],
-  ['buffblock',['buffblock',['../structbuffblock.html',1,'']]],
-  ['buffheader',['buffheader',['../structbuffheader.html',1,'']]],
-  ['bufhl_5fhl_5fitem',['bufhl_hl_item',['../structbufhl__hl__item.html',1,'']]],
-  ['bufhl_5flineinfo_5ft',['bufhl_lineinfo_T',['../structbufhl__lineinfo__T.html',1,'']]],
-  ['bufinfo_5ft',['bufinfo_T',['../structbufinfo__T.html',1,'']]],
-  ['bw_5finfo',['bw_info',['../structbw__info.html',1,'']]]
+  ['aco_5fsave_5ft',['aco_save_T',['../structaco__save__T.html',1,'']]],
+  ['affentry_5fs',['affentry_S',['../structaffentry__S.html',1,'']]],
+  ['afffile_5fs',['afffile_S',['../structafffile__S.html',1,'']]],
+  ['affheader_5fs',['affheader_S',['../structaffheader__S.html',1,'']]],
+  ['argentry',['argentry',['../structargentry.html',1,'']]],
+  ['arglist',['arglist',['../structarglist.html',1,'']]],
+  ['array',['Array',['../structArray.html',1,'']]],
+  ['attr_5fentry',['attr_entry',['../structattr__entry.html',1,'']]],
+  ['autocmd',['AutoCmd',['../structAutoCmd.html',1,'']]],
+  ['autopat',['AutoPat',['../structAutoPat.html',1,'']]],
+  ['autopatcmd',['AutoPatCmd',['../structAutoPatCmd.html',1,'']]]
 ];

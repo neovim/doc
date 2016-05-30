@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['yankreg',['yankreg',['../structyankreg.html',1,'']]]
+  ['xfilemark',['xfilemark',['../structxfilemark.html',1,'']]]
 ];
