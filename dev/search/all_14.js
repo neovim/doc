@@ -143,6 +143,7 @@ var searchData=
   ['timer_5fhandle',['timer_handle',['../structterm__input.html#a1268e7de8d9e579a97b165d865da56b9',1,'term_input']]],
   ['timer_5fid',['timer_id',['../structtimer__T.html#a58eb69ed98e7c93207bcb1f9b8a6da8e',1,'timer_T']]],
   ['timer_5ft',['timer_T',['../structtimer__T.html',1,'']]],
+  ['timer_5fteardown',['timer_teardown',['../eval_8c.html#a11d756918cee5c2d8456ed18f449dfad',1,'eval.c']]],
   ['timestamp',['timestamp',['../structSubReplacementString.html#a0661d343e4c42dc965cbb9f62b346e27',1,'SubReplacementString::timestamp()'],['../structhist__entry.html#a291033e649c921b6147796976bdc1e1e',1,'hist_entry::timestamp()'],['../structfilemark.html#ad5ac3b1e8d6242e6fb4008f30e5dde76',1,'filemark::timestamp()'],['../structyankreg.html#ae0edcc86754778af06fee3214b62af0d',1,'yankreg::timestamp()'],['../structspat.html#a52fa83474ab630855af6de49aa0e2716',1,'spat::timestamp()'],['../structShadaEntry.html#a599cd4cd3d71f8447a076cf1951bed6f',1,'ShadaEntry::timestamp()'],['../os_2time_8h.html#aadf87d96f6c4ceb92a27fcb0e3fce1cc',1,'Timestamp():&#160;time.h']]],
   ['timewatcher',['TimeWatcher',['../event_2time_8h.html#a8a6f97fa20ff0cf54b6ec69a783677c4',1,'time.h']]],
   ['title',['title',['../structprt__ps__resource__S.html#abf1a7cb15460ae4fd584bdb1b1df3ab6',1,'prt_ps_resource_S::title()'],['../eval_8c.html#a051e403214cb6872ad3fe4e50302a6ee',1,'title():&#160;eval.c']]],

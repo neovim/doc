@@ -40,6 +40,7 @@ var searchData=
   ['time_5fwatcher_5finit',['time_watcher_init',['../event_2time_8c.html#a2152375c31be38a689b2e53976976a4e',1,'time.c']]],
   ['time_5fwatcher_5fstart',['time_watcher_start',['../event_2time_8c.html#a812818fd6774e5d99a61a3bc8e8f2f40',1,'time.c']]],
   ['time_5fwatcher_5fstop',['time_watcher_stop',['../event_2time_8c.html#a7c541635708bb01ae20eb3dff14c8915',1,'time.c']]],
+  ['timer_5fteardown',['timer_teardown',['../eval_8c.html#a11d756918cee5c2d8456ed18f449dfad',1,'eval.c']]],
   ['tof_5ftya',['toF_TyA',['../farsi_8c.html#a64992a4feb2bb49defdad21deaa44dc2',1,'farsi.c']]],
   ['trans_5fcharacters',['trans_characters',['../charset_8c.html#a6d67caad5fd16a174af7f12aa02b21c6',1,'charset.c']]],
   ['trans_5fspecial',['trans_special',['../keymap_8c.html#af2132e82951d96345e18df9616704641',1,'keymap.c']]],
