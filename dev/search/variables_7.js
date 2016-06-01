@@ -8,7 +8,7 @@ var searchData=
   ['getline',['getline',['../structexarg.html#a569632c37c5cfc359711a51eb7fd52ab',1,'exarg::getline()'],['../structloop__cookie.html#a388f05573192d543f1169df28e2bf15a',1,'loop_cookie::getline()']]],
   ['global_5falist',['global_alist',['../globals_8h.html#a5ad902bd6d0455a0473c1d8490369979',1,'globals.h']]],
   ['global_5fmarks',['global_marks',['../structWriteMergerState.html#a8ce232537109c1daf76b6c2572d4b829',1,'WriteMergerState']]],
-  ['global_5fvar',['global_var',['../structShadaEntry.html#ac7fec399f24fe928714da5269a8785cd',1,'ShadaEntry']]],
+  ['global_5fvar',['global_var',['../structShadaEntry.html#a8261089d373c54f9257f49428e1b4fa6',1,'ShadaEntry']]],
   ['globaldir',['globaldir',['../structaco__save__T.html#aac59471518e29fcbdade5f4e2e5c7028',1,'aco_save_T']]],
   ['globvardict',['globvardict',['../globals_8h.html#aa1e3b6594df899f03e14287849995349',1,'globals.h']]],
   ['goodi',['goodi',['../structlimitscore__T.html#a281d8b8c22a25376b3438852365ab458',1,'limitscore_T']]],

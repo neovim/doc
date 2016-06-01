@@ -130,72 +130,139 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="preprocessor">#define NVIM_LIB_KVEC_H</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#include &lt;stdlib.h&gt;</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="memory_8h.html">nvim/memory.h</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno"><a class="line" href="kvec_8h.html#a453ac1f9bf61a43d5cbb30eb2e630109">   44</a></span>&#160;<span class="preprocessor">#define kv_roundup32(x) \</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="preprocessor">    ((--(x)), \</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">     ((x)|=(x)&gt;&gt;1, (x)|=(x)&gt;&gt;2, (x)|=(x)&gt;&gt;4, (x)|=(x)&gt;&gt;8, (x)|=(x)&gt;&gt;16), \</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">     (++(x)))</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="kvec_8h.html#af1e62fb841458516a827138ece7bc15e">   49</a></span>&#160;<span class="preprocessor">#define KV_INITIAL_VALUE { .size = 0, .capacity = 0, .items = NULL }</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;</div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="kvec_8h.html#ab6db37a37face44420d5afaee75182b0">   51</a></span>&#160;<span class="preprocessor">#define kvec_t(type) \</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">    struct { \</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">      size_t size; \</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">      size_t capacity; \</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">      type *items; \</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">    }</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="kvec_8h.html#a4a671ac1834fd07b44c20b76ef01c707">   58</a></span>&#160;<span class="preprocessor">#define kv_init(v) ((v).size = (v).capacity = 0, (v).items = 0)</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="kvec_8h.html#a597e8ac3c319a24e73c474498016cd67">   59</a></span>&#160;<span class="preprocessor">#define kv_destroy(v) xfree((v).items)</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="kvec_8h.html#aed803844669c465658789c41da65ff7b">   60</a></span>&#160;<span class="preprocessor">#define kv_A(v, i) ((v).items[(i)])</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="kvec_8h.html#a6f28f6709fae1b0430b5080ae644ab4c">   61</a></span>&#160;<span class="preprocessor">#define kv_pop(v) ((v).items[--(v).size])</span></div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="kvec_8h.html#a59990a38a9dc0867b4b5070835e16428">   62</a></span>&#160;<span class="preprocessor">#define kv_size(v) ((v).size)</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="kvec_8h.html#aae0f34547c1792869066c3ec1d1ffad0">   63</a></span>&#160;<span class="preprocessor">#define kv_max(v) ((v).capacity)</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="kvec_8h.html#ad956ccd09c49cf7143a1c7d4ae98be3d">   64</a></span>&#160;<span class="preprocessor">#define kv_last(v) kv_A(v, kv_size(v) - 1)</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
-<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="kvec_8h.html#af739166fdfb2e5cf23c684735acd9b0e">   66</a></span>&#160;<span class="preprocessor">#define kv_resize(v, s) \</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">    ((v).capacity = (s), \</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">     (v).items = xrealloc((v).items, sizeof((v).items[0]) * (v).capacity))</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
-<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="kvec_8h.html#a5c460a864e354f2ac2df11bfb473aee4">   70</a></span>&#160;<span class="preprocessor">#define kv_resize_full(v) \</span></div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">    kv_resize(v, (v).capacity ? (v).capacity &lt;&lt; 1 : 8)</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;</div>
-<div class="line"><a name="l00073"></a><span class="lineno"><a class="line" href="kvec_8h.html#ac01e85794e4ae7ca6b435555d24d3d92">   73</a></span>&#160;<span class="preprocessor">#define kv_copy(v1, v0) \</span></div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">    do { \</span></div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">      if ((v1).capacity &lt; (v0).size) { \</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">        kv_resize(v1, (v0).size); \</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">      } \</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">      (v1).size = (v0).size; \</span></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">      memcpy((v1).items, (v0).items, sizeof((v1).items[0]) * (v0).size); \</span></div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">    } while (0) \</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="kvec_8h.html#aef1d9b2240eaf2ac2673fe34ff72e750">   82</a></span>&#160;<span class="preprocessor">#define kv_pushp(v) \</span></div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="preprocessor">    ((((v).size == (v).capacity) ? (kv_resize_full(v), 0) : 0), \</span></div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">     ((v).items + ((v).size++)))</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;</div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="kvec_8h.html#adda0234931dbc10b0fec51bfc80866c1">   86</a></span>&#160;<span class="preprocessor">#define kv_push(v, x) \</span></div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">    (*kv_pushp(v) = (x))</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;</div>
-<div class="line"><a name="l00089"></a><span class="lineno"><a class="line" href="kvec_8h.html#ae64e09a303c0b7d8185ebf2529f35277">   89</a></span>&#160;<span class="preprocessor">#define kv_a(v, i) \</span></div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="preprocessor">    (((v).capacity &lt;= (size_t) (i) \</span></div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">      ? ((v).capacity = (v).size = (i) + 1, \</span></div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">         kv_roundup32((v).capacity), \</span></div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">         kv_resize((v), (v).capacity), 0) \</span></div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">      : ((v).size &lt;= (size_t) (i) \</span></div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">         ? (v).size = (i) + 1 \</span></div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">         : 0)), \</span></div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">     (v).items[(i)])</span></div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="preprocessor">#endif  // NVIM_LIB_KVEC_H</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &lt;string.h&gt;</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="memory_8h.html">nvim/memory.h</a>&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="kvec_8h.html#a453ac1f9bf61a43d5cbb30eb2e630109">   45</a></span>&#160;<span class="preprocessor">#define kv_roundup32(x) \</span></div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="preprocessor">    ((--(x)), \</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="preprocessor">     ((x)|=(x)&gt;&gt;1, (x)|=(x)&gt;&gt;2, (x)|=(x)&gt;&gt;4, (x)|=(x)&gt;&gt;8, (x)|=(x)&gt;&gt;16), \</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="preprocessor">     (++(x)))</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="kvec_8h.html#af1e62fb841458516a827138ece7bc15e">   50</a></span>&#160;<span class="preprocessor">#define KV_INITIAL_VALUE { .size = 0, .capacity = 0, .items = NULL }</span></div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="kvec_8h.html#ab6db37a37face44420d5afaee75182b0">   52</a></span>&#160;<span class="preprocessor">#define kvec_t(type) \</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">    struct { \</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">      size_t size; \</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">      size_t capacity; \</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">      type *items; \</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="kvec_8h.html#a4a671ac1834fd07b44c20b76ef01c707">   59</a></span>&#160;<span class="preprocessor">#define kv_init(v) ((v).size = (v).capacity = 0, (v).items = 0)</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="kvec_8h.html#a597e8ac3c319a24e73c474498016cd67">   60</a></span>&#160;<span class="preprocessor">#define kv_destroy(v) xfree((v).items)</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="kvec_8h.html#aed803844669c465658789c41da65ff7b">   61</a></span>&#160;<span class="preprocessor">#define kv_A(v, i) ((v).items[(i)])</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="kvec_8h.html#a6f28f6709fae1b0430b5080ae644ab4c">   62</a></span>&#160;<span class="preprocessor">#define kv_pop(v) ((v).items[--(v).size])</span></div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="kvec_8h.html#a59990a38a9dc0867b4b5070835e16428">   63</a></span>&#160;<span class="preprocessor">#define kv_size(v) ((v).size)</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="kvec_8h.html#aae0f34547c1792869066c3ec1d1ffad0">   64</a></span>&#160;<span class="preprocessor">#define kv_max(v) ((v).capacity)</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="kvec_8h.html#ad956ccd09c49cf7143a1c7d4ae98be3d">   65</a></span>&#160;<span class="preprocessor">#define kv_last(v) kv_A(v, kv_size(v) - 1)</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="kvec_8h.html#af739166fdfb2e5cf23c684735acd9b0e">   67</a></span>&#160;<span class="preprocessor">#define kv_resize(v, s) \</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">    ((v).capacity = (s), \</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">     (v).items = xrealloc((v).items, sizeof((v).items[0]) * (v).capacity))</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="kvec_8h.html#a5c460a864e354f2ac2df11bfb473aee4">   71</a></span>&#160;<span class="preprocessor">#define kv_resize_full(v) \</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">    kv_resize(v, (v).capacity ? (v).capacity &lt;&lt; 1 : 8)</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="kvec_8h.html#ac01e85794e4ae7ca6b435555d24d3d92">   74</a></span>&#160;<span class="preprocessor">#define kv_copy(v1, v0) \</span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">    do { \</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="preprocessor">      if ((v1).capacity &lt; (v0).size) { \</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="preprocessor">        kv_resize(v1, (v0).size); \</span></div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="preprocessor">      } \</span></div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="preprocessor">      (v1).size = (v0).size; \</span></div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">      memcpy((v1).items, (v0).items, sizeof((v1).items[0]) * (v0).size); \</span></div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="preprocessor">    } while (0) \</span></div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="kvec_8h.html#aef1d9b2240eaf2ac2673fe34ff72e750">   83</a></span>&#160;<span class="preprocessor">#define kv_pushp(v) \</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">    ((((v).size == (v).capacity) ? (kv_resize_full(v), 0) : 0), \</span></div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="preprocessor">     ((v).items + ((v).size++)))</span></div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;</div>
+<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="kvec_8h.html#adda0234931dbc10b0fec51bfc80866c1">   87</a></span>&#160;<span class="preprocessor">#define kv_push(v, x) \</span></div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">    (*kv_pushp(v) = (x))</span></div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00090"></a><span class="lineno"><a class="line" href="kvec_8h.html#ae64e09a303c0b7d8185ebf2529f35277">   90</a></span>&#160;<span class="preprocessor">#define kv_a(v, i) \</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">    (((v).capacity &lt;= (size_t) (i) \</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">      ? ((v).capacity = (v).size = (i) + 1, \</span></div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="preprocessor">         kv_roundup32((v).capacity), \</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;<span class="preprocessor">         kv_resize((v), (v).capacity), 0) \</span></div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="preprocessor">      : ((v).size &lt;= (size_t) (i) \</span></div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;<span class="preprocessor">         ? (v).size = (i) + 1 \</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;<span class="preprocessor">         : 0)), \</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">     (v).items[(i)])</span></div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;</div>
+<div class="line"><a name="l00108"></a><span class="lineno"><a class="line" href="kvec_8h.html#a5b1591a42862901a7ef33019d212770d">  108</a></span>&#160;<span class="preprocessor">#define kvec_withinit_t(type, INIT_SIZE) \</span></div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="preprocessor">    struct { \</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">      size_t size; \</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor">      size_t capacity; \</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">      type *items; \</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor">      type init_array[INIT_SIZE]; \</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;</div>
+<div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="kvec_8h.html#a9e9fe826c01c6bd6c8dbb9391d309328">  119</a></span>&#160;<span class="preprocessor">#define kvi_init(v) \</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;<span class="preprocessor">    ((v).capacity = ARRAY_SIZE((v).init_array), \</span></div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;<span class="preprocessor">     (v).size = 0, \</span></div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;<span class="preprocessor">     (v).items = (v).init_array)</span></div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;<span class="keyword">static</span> <span class="keyword">inline</span> <span class="keywordtype">void</span> *_memcpy_free(<span class="keywordtype">void</span> *<span class="keyword">const</span> restrict dest,</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                                 <span class="keywordtype">void</span> *<span class="keyword">const</span> restrict src,</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                                 <span class="keyword">const</span> <span class="keywordtype">size_t</span> size)</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  <a class="code" href="func__attr_8h.html#af3e3213c74ef64e937451086d9127460">FUNC_ATTR_NONNULL_ALL</a> <a class="code" href="memory_8c.html#aa77008ac38bc6da28fd13edc0a1d3f72">FUNC_ATTR_NONNULL_RET</a> <a class="code" href="func__attr_8h.html#ac0dcfe77d91b88378384f89e2283b0c8">FUNC_ATTR_ALWAYS_INLINE</a></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;{</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  memcpy(dest, src, size);</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  <a class="code" href="fileio_8c.html#a14429458c03b9ba5d28054fe4c098324">xfree</a>(src);</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  <span class="keywordflow">return</span> dest;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;</div>
+<div class="line"><a name="l00139"></a><span class="lineno"><a class="line" href="kvec_8h.html#a5396d8946e5e815a41ab884648eafa80">  139</a></span>&#160;<span class="preprocessor">#define kvi_resize(v, s) \</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;<span class="preprocessor">    ((v).capacity = ((s) &gt; ARRAY_SIZE((v).init_array) \</span></div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="preprocessor">                     ? (s) \</span></div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="preprocessor">                     : ARRAY_SIZE((v).init_array)), \</span></div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;<span class="preprocessor">     (v).items = ((v).capacity == ARRAY_SIZE((v).init_array) \</span></div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;<span class="preprocessor">                  ? ((v).items == (v).init_array \</span></div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor">                     ? (v).items \</span></div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;<span class="preprocessor">                     : _memcpy_free((v).init_array, (v).items, \</span></div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;<span class="preprocessor">                                    (v).size * sizeof((v).items[0]))) \</span></div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">                  : ((v).items == (v).init_array \</span></div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="preprocessor">                     ? memcpy(xmalloc((v).capacity * sizeof((v).items[0])), \</span></div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="preprocessor">                              (v).items, \</span></div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="preprocessor">                              (v).size * sizeof((v).items[0])) \</span></div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="preprocessor">                     : xrealloc((v).items, \</span></div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor">                                (v).capacity * sizeof((v).items[0])))))</span></div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;</div>
+<div class="line"><a name="l00158"></a><span class="lineno"><a class="line" href="kvec_8h.html#a4e644c13f3944f94342493508e7761d2">  158</a></span>&#160;<span class="preprocessor">#define kvi_resize_full(v) \</span></div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="preprocessor">    </span><span class="comment">/* ARRAY_SIZE((v).init_array) is the minimal capacity of this vector. */</span><span class="preprocessor"> \</span></div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;<span class="preprocessor">    </span><span class="comment">/* Thus when vector is full capacity may not be zero and it is safe */</span><span class="preprocessor"> \</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="preprocessor">    </span><span class="comment">/* not to bother with checking whether (v).capacity is 0. But now */</span><span class="preprocessor"> \</span></div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="preprocessor">    </span><span class="comment">/* capacity is not guaranteed to have size that is a power of 2. */</span><span class="preprocessor"> \</span></div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;<span class="preprocessor">    kvi_resize(v, ((v).capacity == ARRAY_SIZE((v).init_array) \</span></div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;<span class="preprocessor">                   ? ((v).capacity++, kv_roundup32((v).capacity)) \</span></div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<span class="preprocessor">                   : (v).capacity &lt;&lt; 1))</span></div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;</div>
+<div class="line"><a name="l00172"></a><span class="lineno"><a class="line" href="kvec_8h.html#a87329c43d4cf3e69fbaf2193c803778c">  172</a></span>&#160;<span class="preprocessor">#define kvi_pushp(v) \</span></div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;<span class="preprocessor">    ((((v).size == (v).capacity) ? (kvi_resize_full(v), 0) : 0), \</span></div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;<span class="preprocessor">     ((v).items + ((v).size++)))</span></div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;</div>
+<div class="line"><a name="l00180"></a><span class="lineno"><a class="line" href="kvec_8h.html#a09b6ff16be7f387d9fdd169ae2c3733d">  180</a></span>&#160;<span class="preprocessor">#define kvi_push(v, x) \</span></div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;<span class="preprocessor">    (*kvi_pushp(v) = (x))</span></div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;</div>
+<div class="line"><a name="l00186"></a><span class="lineno"><a class="line" href="kvec_8h.html#adc9de2435b297fdd6085d7c15202ea9a">  186</a></span>&#160;<span class="preprocessor">#define kvi_destroy(v) \</span></div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;<span class="preprocessor">    do { \</span></div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;<span class="preprocessor">      if ((v).items != (v).init_array) { \</span></div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;<span class="preprocessor">        xfree((v).items); \</span></div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;<span class="preprocessor">      } \</span></div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="preprocessor">    } while (0)</span></div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;<span class="preprocessor">#endif  // NVIM_LIB_KVEC_H</span></div>
 <div class="ttc" id="memory_8h_html"><div class="ttname"><a href="memory_8h.html">memory.h</a></div></div>
+<div class="ttc" id="fileio_8c_html_a14429458c03b9ba5d28054fe4c098324"><div class="ttname"><a href="fileio_8c.html#a14429458c03b9ba5d28054fe4c098324">xfree</a></div><div class="ttdeci">xfree(regpat)</div></div>
+<div class="ttc" id="func__attr_8h_html_ac0dcfe77d91b88378384f89e2283b0c8"><div class="ttname"><a href="func__attr_8h.html#ac0dcfe77d91b88378384f89e2283b0c8">FUNC_ATTR_ALWAYS_INLINE</a></div><div class="ttdeci">#define FUNC_ATTR_ALWAYS_INLINE</div><div class="ttdef"><b>Definition:</b> func_attr.h:204</div></div>
+<div class="ttc" id="memory_8c_html_aa77008ac38bc6da28fd13edc0a1d3f72"><div class="ttname"><a href="memory_8c.html#aa77008ac38bc6da28fd13edc0a1d3f72">FUNC_ATTR_NONNULL_RET</a></div><div class="ttdeci">void FUNC_ATTR_NONNULL_RET</div><div class="ttdef"><b>Definition:</b> memory.c:116</div></div>
+<div class="ttc" id="func__attr_8h_html_af3e3213c74ef64e937451086d9127460"><div class="ttname"><a href="func__attr_8h.html#af3e3213c74ef64e937451086d9127460">FUNC_ATTR_NONNULL_ALL</a></div><div class="ttdeci">#define FUNC_ATTR_NONNULL_ALL</div><div class="ttdef"><b>Definition:</b> func_attr.h:206</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.6-->
 <!-- start footer part -->
 <footer>
   <div class="container">
-    Generated on Mon May 30 2016 20:04:42 for Neovim by
+    Generated on Wed Jun 1 2016 05:45:59 for Neovim by
     <a href="http://www.doxygen.org/index.html">Doxygen</a>
     1.8.7
   </div>

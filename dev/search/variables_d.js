@@ -12,6 +12,7 @@ var searchData=
   ['m_5fsilent',['m_silent',['../structmapblock.html#a99beebbef7bbf209579091f1b97f38d1',1,'mapblock']]],
   ['m_5fstr',['m_str',['../structmapblock.html#a74232e18b0dc882d97c4bb745fdd95ea',1,'mapblock']]],
   ['magic',['magic',['../structspat.html#a3e067fbaf974de8d17ef4058f14004d7',1,'spat::magic()'],['../structShadaEntry.html#a0afc7c07d360c9d2dbedaaf1d0f39dd1',1,'ShadaEntry::magic()']]],
+  ['main_5floop',['main_loop',['../main_8c.html#a162cc5c0c831830f9f6c6ac18fd90f92',1,'main_loop():&#160;main.c'],['../main_8h.html#a162cc5c0c831830f9f6c6ac18fd90f92',1,'main_loop():&#160;main.c']]],
   ['mapped_5flen',['mapped_len',['../structnormal__state.html#a15b88603ec906e54bd3155ac14653ee5',1,'normal_state']]],
   ['mark',['mark',['../structfilemark.html#a1a2f2983576f4696075eec5809c3c8dc',1,'filemark::mark()'],['../structShadaEntry.html#a39319e88f3b9c411c7c1d8e6a154970c',1,'ShadaEntry::mark()'],['../undo_8c.html#aac673f4dbac79922838901b5974a419a',1,'mark():&#160;undo.c']]],
   ['mark_5fname',['mark_name',['../mark_8c.html#acfe9d221c5cb59074a0b86b8a13b2fdc',1,'mark.c']]],
@@ -114,6 +115,6 @@ var searchData=
   ['msg_5fscrolled',['msg_scrolled',['../globals_8h.html#a0b03bc5fdd1ab38b00bf9264b8c7275b',1,'globals.h']]],
   ['msgbuf',['msgbuf',['../undo_8c.html#a41cc1d682b67486c9a0032da681ba2f2',1,'undo.c']]],
   ['mshape',['mshape',['../structcursor__entry.html#af618354b5410e23249775766ce5f94d3',1,'cursor_entry']]],
-  ['multi',['multi',['../structregsub__T.html#abaa83ffb63583eefd0969c0a0980f8c4',1,'regsub_T']]],
+  ['multi',['multi',['../structregsub__T.html#a46ef8b0c64ef2392bcdb6ec25f0d3889',1,'regsub_T']]],
   ['mutex',['mutex',['../structloop.html#a7baab27d53c837067bccf898ba446d3c',1,'loop::mutex()'],['../structui__bridge__data.html#aa0cfd6a936eeef414402a48074ec09f8',1,'ui_bridge_data::mutex()']]]
 ];

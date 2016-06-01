@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['ga_5fappend',['ga_append',['../garray_8c.html#a0dc0d7602d3948d8649713bbf4baeb32',1,'ga_append(garray_T *gap, char c):&#160;garray.c'],['../garray_8h.html#aea3ec97569590fefae0ec717d111def8',1,'GA_APPEND():&#160;garray.h']]],
+  ['ga_5fappend',['GA_APPEND',['../garray_8h.html#aea3ec97569590fefae0ec717d111def8',1,'GA_APPEND():&#160;garray.h'],['../garray_8c.html#a0dc0d7602d3948d8649713bbf4baeb32',1,'ga_append(garray_T *gap, char c):&#160;garray.c']]],
   ['ga_5fappend_5fvia_5fptr',['GA_APPEND_VIA_PTR',['../garray_8h.html#a01e15f392e49be69ab4bf16cc586fe52',1,'garray.h']]],
   ['ga_5fchar',['GA_CHAR',['../charset_8c.html#a5a0d42a20052977b926e8c1fcaa3cdd0',1,'charset.c']]],
   ['ga_5fclear',['ga_clear',['../garray_8c.html#afa822cc3cc70a9a0ee394863bcc0c941',1,'garray.c']]],
@@ -204,7 +204,7 @@ var searchData=
   ['global_5falist',['global_alist',['../globals_8h.html#a5ad902bd6d0455a0473c1d8490369979',1,'globals.h']]],
   ['global_5fexe',['global_exe',['../ex__cmds_8c.html#af5c1bd486735bb3a20cd9b04acbdc15c',1,'ex_cmds.c']]],
   ['global_5fmarks',['global_marks',['../structWriteMergerState.html#a8ce232537109c1daf76b6c2572d4b829',1,'WriteMergerState']]],
-  ['global_5fvar',['global_var',['../structShadaEntry.html#ac7fec399f24fe928714da5269a8785cd',1,'ShadaEntry']]],
+  ['global_5fvar',['global_var',['../structShadaEntry.html#a8261089d373c54f9257f49428e1b4fa6',1,'ShadaEntry']]],
   ['global_5fwo',['GLOBAL_WO',['../buffer__defs_8h.html#a3a494d9abbb64e276b40da3a0e9f22bf',1,'buffer_defs.h']]],
   ['globaldir',['globaldir',['../structaco__save__T.html#aac59471518e29fcbdade5f4e2e5c7028',1,'aco_save_T']]],
   ['globals_2eh',['globals.h',['../globals_8h.html',1,'']]],

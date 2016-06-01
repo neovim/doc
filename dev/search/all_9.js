@@ -225,7 +225,7 @@ var searchData=
   ['is_5fvisual',['is_VIsual',['../structoparg__S.html#a0bfdee9aacb2a3f44395f910ed560a4e',1,'oparg_S']]],
   ['isspecial',['ISSPECIAL',['../edit_8c.html#a728a5b7916fcf21dc800a8ecddb524d4',1,'edit.c']]],
   ['italic',['italic',['../structprt__text__attr__T.html#aacdac715511f322d0e4c5d4c6560ce0d',1,'prt_text_attr_T::italic()'],['../structHlAttrs.html#a022bc22cfeeb5a410482507b89ffa900',1,'HlAttrs::italic()']]],
-  ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T::item()'],['../structqueue__item.html#a806e19b347a73720a035678dacaf57d4',1,'queue_item::item()']]],
+  ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T::item()'],['../structqueue__item.html#a1b7380f51e4115a419081354ad888dbb',1,'queue_item::item()']]],
   ['item_5fcompare_5ffail',['ITEM_COMPARE_FAIL',['../eval_8c.html#a217b1295a530ebffccda298a42a842a7',1,'eval.c']]],
   ['item_5fend',['ITEM_END',['../syntax_8c.html#ac1d13525cefe15dfdab8ce33841fa2ed',1,'syntax.c']]],
   ['item_5fmatchgroup',['ITEM_MATCHGROUP',['../syntax_8c.html#a2deb74d81c46e18bcb9e052ecfe00bf8',1,'syntax.c']]],

@@ -24,7 +24,6 @@ var searchData=
   ['default_5finitializer',['DEFAULT_INITIALIZER',['../map_8c.html#a915b77a93c39d150a9f0d06f66c8d8e6',1,'map.c']]],
   ['default_5fmaxmem',['DEFAULT_MAXMEM',['../wstream_8c.html#a30044fe3de8646b508f2b1a2d4cfabce',1,'wstream.c']]],
   ['default_5fpos',['DEFAULT_POS',['../shada_8c.html#ab4216805d384322b72dbb0a8e45cb27b',1,'shada.c']]],
-  ['define_5fviml_5fconv_5ffunctions',['DEFINE_VIML_CONV_FUNCTIONS',['../encode_8c.html#a1b4169d538b0a4c61af3db8f33cd96c9',1,'encode.c']]],
   ['del',['DEL',['../ascii_8h.html#ad1e508e805e4ddbc05119be4bb260985',1,'ascii.h']]],
   ['del_5fstr',['DEL_STR',['../ascii_8h.html#ace7a3df2689fdc10f9e697c8552cd3c9',1,'ascii.h']]],
   ['delete_5ffold_5fnested',['DELETE_FOLD_NESTED',['../fold_8c.html#a7659f348504f79eefdf704a75c4e7253',1,'fold.c']]],
