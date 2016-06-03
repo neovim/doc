@@ -11,7 +11,7 @@ generate_doxygen() {
   cd ${NEOVIM_DIR}
 
   mkdir -p build
-  doxygen
+  doxygen src/Doxyfile
 
   rm -rf ${DOC_DIR}/dev
   mv build/doxygen/html ${DOC_DIR}/dev
