@@ -3,6 +3,7 @@ var searchData=
   ['kbothfilesmissing',['kBothFilesMissing',['../path_8h.html#ad979f31688a4e58ba10df1788b8a7512a9eb155c4b46a1f643c373038e71640e1',1,'path.h']]],
   ['kbroken',['kBroken',['../globals_8h.html#a4ec64f8310e1f754ab829ff0b95ce86aa4958fa140f79b3902e375fb7e37f10af',1,'globals.h']]],
   ['kcdscopeglobal',['kCdScopeGlobal',['../ex__docmd_8h.html#a91cbe92d75f10405beaffa819a7fc8afa0572ebb9ef7df9c882cebaf78e56dca4',1,'ex_docmd.h']]],
+  ['kcdscopeinvalid',['kCdScopeInvalid',['../ex__docmd_8h.html#a91cbe92d75f10405beaffa819a7fc8afa36e3ac60a6e883cf8704c28a765c002e',1,'ex_docmd.h']]],
   ['kcdscopetab',['kCdScopeTab',['../ex__docmd_8h.html#a91cbe92d75f10405beaffa819a7fc8afa3c60530f531c992f155c4dac4ccef434',1,'ex_docmd.h']]],
   ['kcdscopewindow',['kCdScopeWindow',['../ex__docmd_8h.html#a91cbe92d75f10405beaffa819a7fc8afa88328a43c267297e56ab8eaf28916283',1,'ex_docmd.h']]],
   ['kchanneltypeproc',['kChannelTypeProc',['../channel_8c.html#a19a96edeeb9d37072c4ce9f862d19ba8ac0ceed05bd6084ac5be39319e499f5a0',1,'channel.c']]],
