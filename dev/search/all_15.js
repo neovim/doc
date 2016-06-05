@@ -232,6 +232,7 @@ var searchData=
   ['users_2ec',['users.c',['../users_8c.html',1,'']]],
   ['using_5fscript',['using_script',['../getchar_8c.html#ab29ff5db05498fa455d5b86e5688fd33',1,'getchar.c']]],
   ['usr_5flog_5ffile',['USR_LOG_FILE',['../log_8c.html#a90af61c26b8d36298079ffac691d1c27',1,'log.c']]],
+  ['usr_5flog_5ffile_5f2',['USR_LOG_FILE_2',['../log_8c.html#af2dc49b306dbc3ead50e05b378933ff5',1,'log.c']]],
   ['ut',['ut',['../structTUIData.html#aa07b131befaf96d760f2afa651124701',1,'TUIData']]],
   ['utf_5fbyte2len',['utf_byte2len',['../mbyte_8c.html#a017670c8d005b2f38de65c666ca11c5f',1,'mbyte.c']]],
   ['utf_5fchar2bytes',['utf_char2bytes',['../mbyte_8c.html#a7d36274c4fe31f3e8c447d33cfdbdb7a',1,'mbyte.c']]],

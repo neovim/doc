@@ -25,7 +25,7 @@ var searchData=
   ['tcp',['tcp',['../structsocket__watcher.html#ae4b023443a3f86b3df6e648c2174c983',1,'socket_watcher::tcp()'],['../structstream.html#ac3ad5659881c4b790a3b8ee3d614c824',1,'stream::tcp()']]],
   ['temp',['temp',['../structrbuffer.html#a5bc04f80d9bc7df43b7d40305380fa7a',1,'rbuffer']]],
   ['term',['term',['../structTerminalJobData.html#ad98354a2ce8966aad25cad04ad318fae',1,'TerminalJobData::term()'],['../structterminal__state.html#a1171d7c0c717a9fa7be3aada9d4b0a76',1,'terminal_state::term()']]],
-  ['term_5fname',['term_name',['../structpty__process.html#abac2ef931eff97184bf84b7019466388',1,'pty_process']]],
+  ['term_5fname',['term_name',['../structpty__process.html#a5e31628dbbb0a8049c09fceb20302d12',1,'pty_process']]],
   ['term_5fsent',['term_sent',['../structprocess.html#a6d79a1defd42893ce3b33db93dc5e6bc',1,'process']]],
   ['terminal',['terminal',['../structfile__buffer.html#a15bf37f02655068bd49d71d4c0fa9126',1,'file_buffer']]],
   ['textbuf',['textbuf',['../structterminal.html#acc4b59ee89c7f2c33776942d40cb5e36',1,'terminal']]],
