@@ -11,13 +11,18 @@ generate_user_docu() {
   require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable MAKE_CMD "${BASH_SOURCE[0]}" ${LINENO}
 
-  cd ${NEOVIM_DIR}/runtime/doc
-  ${MAKE_CMD} html
+  # Generate CMake files
+  cd ${NEOVIM_DIR}
+  make cmake
+
+  # Build user manual HTML
+  cd build
+  ${MAKE_CMD} -v doc_html
 
   # Copy to doc repository
   rm -rf ${DOC_DIR}/user
   mkdir -p ${DOC_DIR}/user
-  cp -r *.html ${DOC_DIR}/user
+  cp -r runtime/doc/*.html ${DOC_DIR}/user
 
   # Modify HTML to match Neovim's layout
   modify_user_docu

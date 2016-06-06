@@ -58,8 +58,9 @@ clone_subtree() {(
   require_environment_variable ${repo} "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable ${branch} "${BASH_SOURCE[0]}" ${LINENO}
 
-  git init "${!dir}"
-  cd "${!dir}"
+  [ -d "${!dir}" ] && cd "${!dir}" || git init "${!dir}"
+  git rev-parse HEAD >/dev/null && git reset --hard HEAD
+
   is_ci_build "Git subtree" && {
     git config core.sparsecheckout true
     echo "${!subtree}" > .git/info/sparse-checkout

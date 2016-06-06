@@ -7,7 +7,10 @@ DOC_REPO=${DOC_REPO:-neovim/doc}
 DOC_BRANCH=${DOC_BRANCH:-gh-pages}
 
 clone_doc() {
-  rm -rf ${DOC_DIR}
+  if is_ci_build ; then
+    rm -rf ${DOC_DIR}
+  fi
+
   clone_subtree DOC
 }
 

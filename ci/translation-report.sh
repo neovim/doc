@@ -12,7 +12,7 @@ generate_translation_report() {
   cd ${NEOVIM_DIR}
 
   # Generate CMake files
-  ${MAKE_CMD} cmake
+  make cmake
 
   # Update .po & generate .mo files
   cd build
