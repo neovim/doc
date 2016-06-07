@@ -58,7 +58,8 @@ clone_subtree() {(
   require_environment_variable ${repo} "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable ${branch} "${BASH_SOURCE[0]}" ${LINENO}
 
-  [ -d "${!dir}" ] && cd "${!dir}" || git init "${!dir}"
+  [ -d "${!dir}" ] || git init "${!dir}"
+  cd "${!dir}" 
   git rev-parse HEAD >/dev/null && git reset --hard HEAD
 
   is_ci_build "Git subtree" && {
