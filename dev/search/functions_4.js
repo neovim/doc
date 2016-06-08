@@ -167,6 +167,7 @@ var searchData=
   ['ex_5fwnext',['ex_wnext',['../ex__cmds_8c.html#a1da89db966ece64b0e80aff54953af1f',1,'ex_cmds.c']]],
   ['ex_5fwrite',['ex_write',['../ex__cmds_8c.html#a16f89d4ea09ee8777d9c2b86434ca907',1,'ex_cmds.c']]],
   ['ex_5fz',['ex_z',['../ex__cmds_8c.html#ac3b7f8fff7f3a25b59561284703368f6',1,'ex_cmds.c']]],
+  ['exec_5fnormal',['exec_normal',['../ex__docmd_8c.html#a5010d972e76de931b005d965b4bc670a',1,'ex_docmd.c']]],
   ['exec_5fnormal_5fcmd',['exec_normal_cmd',['../ex__docmd_8c.html#a6d1bfecbeccd1d4b56cde04d5d965de7',1,'ex_docmd.c']]],
   ['expand_5fcmdline',['expand_cmdline',['../ex__getln_8c.html#aa29b91f609507ab355b9f73258a689cd',1,'ex_getln.c']]],
   ['expand_5fenv',['expand_env',['../env_8c.html#aa192be148db96758033a23beacbd8ffe',1,'env.c']]],
