@@ -22,7 +22,7 @@ generate_user_docu() {
   # Copy to doc repository
   rm -rf ${DOC_DIR}/user
   mkdir -p ${DOC_DIR}/user
-  cp ${NEOVIM_DIR}/build/runtime/doc/*.html ${DOC_DIR}/user
+  cp runtime/doc/*.html ${DOC_DIR}/user
 
   # Modify HTML to match Neovim's layout
   modify_user_docu
