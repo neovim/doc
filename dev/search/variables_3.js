@@ -132,5 +132,6 @@ var searchData=
   ['cursor_5fgoto',['cursor_goto',['../structui__t.html#a39a6953a06b354b831b8a784c153f00a',1,'ui_t']]],
   ['cursor_5fstart',['cursor_start',['../structoparg__S.html#a0857162e7c3adec7b5555426416debae',1,'oparg_S']]],
   ['curtab',['curtab',['../globals_8h.html#aec8a130381d8276a622222a7479a08fe',1,'globals.h']]],
-  ['curwin',['curwin',['../globals_8h.html#a1440aee39ae90077fff5aeb23c8a3764',1,'globals.h']]]
+  ['curwin',['curwin',['../globals_8h.html#a1440aee39ae90077fff5aeb23c8a3764',1,'globals.h']]],
+  ['cwd',['cwd',['../structprocess.html#a35242cda48ff7234775527aea1d47f89',1,'process']]]
 ];

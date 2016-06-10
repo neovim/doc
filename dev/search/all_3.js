@@ -630,5 +630,6 @@ var searchData=
   ['curwin',['curwin',['../globals_8h.html#a1440aee39ae90077fff5aeb23c8a3764',1,'globals.h']]],
   ['curwin_5fcol_5foff',['curwin_col_off',['../move_8c.html#ace4722e41251ac7e3aed63d97b33d224',1,'move.c']]],
   ['curwin_5fcol_5foff2',['curwin_col_off2',['../move_8c.html#ad53d13426d5e0280672428a2cb8a6d31',1,'move.c']]],
-  ['curwin_5finit',['curwin_init',['../window_8c.html#aec59203281ef0eb9380636fc15a17edb',1,'window.c']]]
+  ['curwin_5finit',['curwin_init',['../window_8c.html#aec59203281ef0eb9380636fc15a17edb',1,'window.c']]],
+  ['cwd',['cwd',['../structprocess.html#a35242cda48ff7234775527aea1d47f89',1,'process']]]
 ];
