@@ -698,6 +698,7 @@ var searchData=
   ['sopt_5fwin',['SOPT_WIN',['../option__defs_8h.html#a940ceea18b9c2d8add5afa5db51dc6be',1,'option_defs.h']]],
   ['sort_5fstrings',['sort_strings',['../strings_8c.html#a244aab09ef974dcb878468b9be5907d7',1,'strings.c']]],
   ['sorti_5ft',['sorti_T',['../structsorti__T.html',1,'']]],
+  ['sortinfo_5ft',['sortinfo_T',['../structsortinfo__T.html',1,'']]],
   ['sortitem_5ft',['sortItem_T',['../structsortItem__T.html',1,'']]],
   ['source_5fbreakpoint',['source_breakpoint',['../ex__cmds2_8c.html#a1404260e6cfc9d44b40de988cd7436b8',1,'ex_cmds2.c']]],
   ['source_5fcookie',['source_cookie',['../structsource__cookie.html',1,'']]],

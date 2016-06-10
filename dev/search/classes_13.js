@@ -19,6 +19,7 @@ var searchData=
   ['socket_5fwatcher',['socket_watcher',['../structsocket__watcher.html',1,'']]],
   ['soffset',['soffset',['../structsoffset.html',1,'']]],
   ['sorti_5ft',['sorti_T',['../structsorti__T.html',1,'']]],
+  ['sortinfo_5ft',['sortinfo_T',['../structsortinfo__T.html',1,'']]],
   ['sortitem_5ft',['sortItem_T',['../structsortItem__T.html',1,'']]],
   ['source_5fcookie',['source_cookie',['../structsource__cookie.html',1,'']]],
   ['sp_5fsyn',['sp_syn',['../structsp__syn.html',1,'']]],
