@@ -149,7 +149,7 @@ var searchData=
   ['os_5fdelay',['os_delay',['../os_2time_8c.html#a38ba6f7625c0f588da79ea8f334d4138',1,'time.c']]],
   ['os_5fdirname',['os_dirname',['../fs_8c.html#a6209a54a8e312dd52d93c2ae977c286d',1,'fs.c']]],
   ['os_5fenv_5fexists',['os_env_exists',['../env_8c.html#a0c4df7825a41f8b19167ba1ef56b1abe',1,'env.c']]],
-  ['os_5ffchown',['os_fchown',['../fs_8c.html#ac79fce6e901555324895469e38fcc9cc',1,'fs.c']]],
+  ['os_5ffchown',['os_fchown',['../fs_8c.html#a2d3a68a0e4542c8de6bc142a0df7df2c',1,'fs.c']]],
   ['os_5ffile_5fexists',['os_file_exists',['../fs_8c.html#ae11b9b57daaf48300f78aa9c8dbe26bc',1,'fs.c']]],
   ['os_5ffile_5fis_5freadable',['os_file_is_readable',['../fs_8c.html#a9549610c0709a5c1aff7e0d3ecbd8932',1,'fs.c']]],
   ['os_5ffile_5fis_5fwritable',['os_file_is_writable',['../fs_8c.html#a362c00174a68645c46019e71702ccd82',1,'fs.c']]],
