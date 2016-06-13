@@ -247,7 +247,7 @@ var searchData=
   ['do_5fhighlight',['do_highlight',['../syntax_8c.html#a4fae7fb8cabc56a554a6d69d8fddb44a',1,'syntax.c']]],
   ['do_5fin_5fruntimepath',['do_in_runtimepath',['../ex__cmds2_8c.html#afc57edd36cb7ef7c53c12ef9678bd205',1,'ex_cmds2.c']]],
   ['do_5fintthrow',['do_intthrow',['../ex__eval_8c.html#a632fcd6bb6855205fb31b3eaa7a566a9',1,'ex_eval.c']]],
-  ['do_5fjoin',['do_join',['../ops_8c.html#a3c286cac8efd324346627d83aba87d56',1,'ops.c']]],
+  ['do_5fjoin',['do_join',['../ops_8c.html#aabc73d8fe6c318327976a8b71816bfba',1,'ops.c']]],
   ['do_5flog',['do_log',['../log_8c.html#a11fce5c95aab155068d60ffd64de8fc5',1,'log.c']]],
   ['do_5fmap',['do_map',['../getchar_8c.html#a305996ce33f2f4e8bc396aa23eeafe29',1,'getchar.c']]],
   ['do_5fmarks',['do_marks',['../mark_8c.html#aa7c039977bf66b1958acbc3365a2800a',1,'mark.c']]],
