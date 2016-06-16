@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="spell.txt"></A><B>spell.txt</B>*	For Vim version 7.4.  Last change: 2016 Jan 08
+*<A NAME="spell.txt"></A><B>spell.txt</B>*
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -52,10 +52,6 @@ Spell checking						*<A NAME="spell"></A><B>spell</B>*
 2. Remarks on spell checking	|<A HREF="#spell-remarks">spell-remarks</A>|
 3. Generating a spell file	|<A HREF="#spell-mkspell">spell-mkspell</A>|
 4. Spell file format		|<A HREF="#spell-file-format">spell-file-format</A>|
-
-Note: There also is a vimspell <A HREF="usr_05.html#plugin">plugin</A>.  If you have <A HREF="motion.html#it">it</A> you can <A HREF="diff.html#do">do</A> &quot;<A HREF="helphelp.html#:help">:help</A>
-vimspell&quot; to find about <A HREF="motion.html#it">it</A>.  But you will probably want to get rid of the
-<A HREF="usr_05.html#plugin">plugin</A> and use the <A HREF="options.html#'spell'">'spell'</A> option instead, <A HREF="motion.html#it">it</A> works better.
 
 ==============================================================================
 
@@ -1790,13 +1786,122 @@ WORDCHARS	(Hunspell)				*<A NAME="spell-WORDCHARS"></A><B>spell-WORDCHARS</B>*
 		is no need to separate words before checking them (using a
 		trie instead of a hashtable).
 
+==============================================================================
+
+5. Spell checker design					*<A NAME="develop-spell"></A><B>develop-spell</B>*
+
+When <A HREF="#spell">spell</A> checking was going to be added to Vim a survey was done over the
+available <A HREF="#spell">spell</A> checking libraries and programs.  Unfortunately, the result
+was that none of them provided sufficient capabilities to be used <A HREF="motion.html#as">as</A> the <A HREF="#spell">spell</A>
+checking engine in Vim, for various reasons:
+
+- Missing support for <A HREF="mbyte.html#multi-byte">multi-byte</A> encodings.  At least <A HREF="mbyte.html#UTF-8">UTF-8</A> must be supported,
+  so that more than one language can be used in the same file.
+  Doing on-the-fly conversion is not always possible (would require iconv
+  support).
+- For the programs and libraries: Using them as-is would require installing
+  them separately from Vim.  That's mostly not impossible, but a drawback.
+- Performance: A few tests showed that it's possible to check spelling on the
+  fly (while redrawing), just like <A HREF="syntax.html#syntax">syntax</A> highlighting.  But the mechanisms
+  used by other code are much slower.  <A HREF="#Myspell">Myspell</A> uses a hashtable, for example.
+  The affix compression that most <A HREF="#spell">spell</A> checkers use makes <A HREF="motion.html#it">it</A> slower too.
+- For using an external program like aspell a communication mechanism would
+  have to be setup.  That's complicated to <A HREF="diff.html#do">do</A> in a portable way (Unix-only
+  would be relatively simple, but that's not good enough).  And performance
+  will become a problem (lots of process switching involved).
+- Missing support for words with non-word characters, such <A HREF="motion.html#as">as</A> &quot;Etten-Leur&quot; and
+  &quot;et al.&quot;, would require marking the pieces of them OK, lowering the
+  reliability.
+- Missing support for regions or dialects.  Makes <A HREF="motion.html#it">it</A> difficult to accept
+  all English words and highlight non-Canadian words differently.
+- Missing support for rare words.  Many words are correct but hardly ever used
+  and could be a misspelled often-used <A HREF="motion.html#word">word</A>.
+- For making suggestions the speed is <A HREF="various.html#less">less</A> important and requiring to install
+  another program or library would be acceptable.  But the <A HREF="motion.html#word">word</A> lists probably
+  differ, the suggestions may be wrong words.
+
+
+
+Spelling suggestions				*<A NAME="develop-spell-suggestions"></A><B>develop-spell-suggestions</B>*
+
+For making suggestions there are two basic mechanisms:
+1. Try <A HREF="change.html#changing">changing</A> the bad <A HREF="motion.html#word">word</A> a little bit and check for a match with a good
+   <A HREF="motion.html#word">word</A>.  Or go through the <A HREF="eval.html#list">list</A> of good words, change them a little bit and
+   check for a match with the bad <A HREF="motion.html#word">word</A>.  The changes are <A HREF="change.html#deleting">deleting</A> a character,
+   <A HREF="insert.html#inserting">inserting</A> a character, swapping two characters, etc.
+2. Perform soundfolding on both the bad <A HREF="motion.html#word">word</A> and the good words and then find
+   matches, possibly with a few changes like with the first mechanism.
+
+The first is good for finding typing mistakes.  After experimenting with
+hashtables and looking at solutions from other <A HREF="#spell">spell</A> checkers the conclusion
+was that a trie (a kind of tree structure) is ideal for this.  Both for
+reducing memory use and being able to try sensible changes.  For example, when
+<A HREF="insert.html#inserting">inserting</A> a character only characters that lead to good words need to be
+tried.  Other mechanisms (with hashtables) need to try all possible letters at
+every position in the <A HREF="motion.html#word">word</A>.  Also, a hashtable has the requirement that <A HREF="motion.html#word">word</A>
+boundaries are identified separately, while a trie does not require this.
+That makes the mechanism a lot simpler.
+
+Soundfolding is useful when someone knows how the words sounds but doesn't
+know how <A HREF="motion.html#it">it</A> is spelled.  For example, the <A HREF="motion.html#word">word</A> &quot;dictionary&quot; might be written
+<A HREF="motion.html#as">as</A> &quot;daktonerie&quot;.  The number of changes that the first method would need to
+try is very big, it's hard to find the good <A HREF="motion.html#word">word</A> that way.  After soundfolding
+the words become &quot;tktnr&quot; and &quot;tkxnry&quot;, these differ by only two letters.
+
+To find words by their soundfolded equivalent (soundalike <A HREF="motion.html#word">word</A>) we need a <A HREF="eval.html#list">list</A>
+of all soundfolded words.  A few experiments have been done to find out what
+the best method is.  Alternatives:
+1. Do the sound <A HREF="fold.html#folding">folding</A> on the fly when looking for suggestions.  This means
+   walking through the trie of good words, soundfolding each <A HREF="motion.html#word">word</A> and
+   checking how different <A HREF="motion.html#it">it</A> is from the bad <A HREF="motion.html#word">word</A>.  This is very efficient for
+   memory use, but takes a long time.  On a fast PC <A HREF="motion.html#it">it</A> takes a couple of
+   seconds for English, which can be acceptable for interactive use.  But for
+   some languages <A HREF="motion.html#it">it</A> takes more than ten seconds (e.g., German, Catalan),
+   which is unacceptable slow.  For batch processing (automatic corrections)
+   it's too slow for all languages.
+2. Use a trie for the soundfolded words, so that searching can be done just
+   like how <A HREF="motion.html#it">it</A> works without soundfolding.  This requires remembering a <A HREF="eval.html#list">list</A>
+   of good words for each soundfolded <A HREF="motion.html#word">word</A>.  This makes finding matches very
+   fast but requires quite a lot of memory, in the order of 1 to 10 Mbyte.
+   For some languages more than the original <A HREF="motion.html#word">word</A> <A HREF="eval.html#list">list</A>.
+3. Like the second alternative, but reduce the amount of memory by using affix
+   compression and store only the soundfolded basic <A HREF="motion.html#word">word</A>.  This is what Aspell
+   does.  Disadvantage is that affixes need to be stripped from the bad <A HREF="motion.html#word">word</A>
+   before soundfolding <A HREF="motion.html#it">it</A>, which means that mistakes at the start and/or end
+   of the <A HREF="motion.html#word">word</A> will cause the mechanism to fail.  Also, this becomes slow when
+   the bad <A HREF="motion.html#word">word</A> is quite different from the good <A HREF="motion.html#word">word</A>.
+
+The choice made is to use the second mechanism and use a separate file.  This
+way a user with sufficient memory can get very good suggestions while a user
+who is short of memory or just wants the <A HREF="#spell">spell</A> checking and no suggestions
+doesn't use so much memory.
+
+
+Word frequency
+
+For <A HREF="change.html#sorting">sorting</A> suggestions <A HREF="motion.html#it">it</A> helps to know which words are common.  In theory we
+could store a <A HREF="motion.html#word">word</A> frequency with the <A HREF="motion.html#word">word</A> in the dictionary.  However, this
+requires storing a <A HREF="intro.html#count">count</A> per <A HREF="motion.html#word">word</A>.  That degrades <A HREF="motion.html#word">word</A> tree compression a lot.
+And maintaining the <A HREF="motion.html#word">word</A> frequency for all languages will be a heavy task.
+Also, <A HREF="motion.html#it">it</A> would be nice to prefer words that are already in the text.  This way
+the words that appear in the specific text are preferred for suggestions.
+
+What has been implemented is to <A HREF="intro.html#count">count</A> words that have been seen during
+displaying.  A hashtable is used to quickly find the <A HREF="motion.html#word">word</A> <A HREF="intro.html#count">count</A>.  The <A HREF="intro.html#count">count</A> is
+initialized from words listed in COMMON items in the affix file, so that <A HREF="motion.html#it">it</A>
+also works when starting a new file.
+
+This isn't ideal, because the longer Vim is running the higher the counts
+become.  But in practice <A HREF="motion.html#it">it</A> is a noticeable improvement over not using the <A HREF="motion.html#word">word</A>
+<A HREF="intro.html#count">count</A>.
+
 <A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
 </PRE>
     </div>
 
     <footer>
       <div class="container">
-        Generated Mon Jun  6 20:09:52 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/999590b313ef32ca29c4ddba20c5b719730ee7ff"><code>999590b</code></a>.
+        Generated Thu Jun 16 07:47:13 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/51fe40a03389a9a6fa81d149f135527efcb3f722"><code>51fe40a</code></a>.
       </div>
     </footer>
   </body>
