@@ -60,14 +60,14 @@ clone_subtree() {(
 
   [ -d "${!dir}/.git" ] || git init "${!dir}"
   cd "${!dir}" 
-  git rev-parse HEAD >/dev/null && git reset --hard HEAD
+  git rev-parse HEAD >/dev/null 2>&1 && git reset --hard HEAD
 
   is_ci_build "Git subtree" && {
     git config core.sparsecheckout true
     echo "${!subtree}" > .git/info/sparse-checkout
   }
   git checkout -B ${!branch}
-  git pull --depth 1 --force git://github.com/${!repo} ${!branch}
+  git pull --rebase --force git://github.com/${!repo} ${!branch}
 )}
 
 # Prompt the user to press a key to continue for local builds.

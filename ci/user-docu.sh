@@ -13,11 +13,12 @@ generate_user_docu() {
 
   # Generate CMake files
   cd ${NEOVIM_DIR}
-  make cmake
+  ${MAKE_CMD} cmake
 
   # Build user manual HTML
   cd build
-  ${MAKE_CMD} -v doc_html
+  echo "CWD: $(pwd)"
+  ${MAKE_CMD} doc_html
 
   # Copy to doc repository
   rm -rf ${DOC_DIR}/user
