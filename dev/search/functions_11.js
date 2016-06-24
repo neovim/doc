@@ -12,7 +12,7 @@ var searchData=
   ['rbuffer_5freset',['rbuffer_reset',['../rbuffer_8c.html#a5d111441fdb65a12ae19a9308dd73f0a',1,'rbuffer.c']]],
   ['rbuffer_5fsize',['rbuffer_size',['../rbuffer_8c.html#a8aa0f4242c2522ff8da11e335feb02ce',1,'rbuffer.c']]],
   ['rbuffer_5fspace',['rbuffer_space',['../rbuffer_8c.html#a07585f0aebded24d439787a08a8c0d18',1,'rbuffer.c']]],
-  ['rbuffer_5fwrite',['rbuffer_write',['../rbuffer_8c.html#a8800877d441ac9d81c50504067c0db75',1,'rbuffer.c']]],
+  ['rbuffer_5fwrite',['rbuffer_write',['../rbuffer_8c.html#a55c28607e21133bdb028bbacc42876f5',1,'rbuffer.c']]],
   ['rbuffer_5fwrite_5fptr',['rbuffer_write_ptr',['../rbuffer_8c.html#a3a7c2a2e21888adbb08e0753eac1a10c',1,'rbuffer.c']]],
   ['re_5fmultiline',['re_multiline',['../regexp_8c.html#ab9e61b1216aafbd3d353948cb8f5c6e4',1,'regexp.c']]],
   ['read_5fstring',['read_string',['../misc2_8c.html#afd6b1e01f309a8c00257d4c8a20a75dd',1,'misc2.c']]],

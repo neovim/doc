@@ -5,6 +5,7 @@ var searchData=
   ['ff_5fvisited',['ff_visited',['../structff__visited.html',1,'']]],
   ['ff_5fvisited_5flist_5fhdr',['ff_visited_list_hdr',['../structff__visited__list__hdr.html',1,'']]],
   ['file_5fbuffer',['file_buffer',['../structfile__buffer.html',1,'']]],
+  ['filedescriptor',['FileDescriptor',['../structFileDescriptor.html',1,'']]],
   ['fileid',['FileID',['../structFileID.html',1,'']]],
   ['fileinfo',['FileInfo',['../structFileInfo.html',1,'']]],
   ['filemark',['filemark',['../structfilemark.html',1,'']]],

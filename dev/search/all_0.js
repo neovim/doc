@@ -20,6 +20,7 @@ var searchData=
   ['_5fayn_5f',['_AYN_',['../farsi_8h.html#a2b58670c16f23c3180ea6a7f6f99a9fb',1,'farsi.h']]],
   ['_5fbe',['_BE',['../farsi_8h.html#aee98f201e500ad2fc1853cbf059bc16a',1,'farsi.h']]],
   ['_5fche',['_CHE',['../farsi_8h.html#a32825f1ca6515f065f5c1bf2b2632678',1,'farsi.h']]],
+  ['_5ferror',['_error',['../structFileDescriptor.html#aa5abfd0a7a04185698fd0afc3f47ca84',1,'FileDescriptor']]],
   ['_5ffe',['_FE',['../farsi_8h.html#a01f81d2c13a1f06772137d20c6bd024f',1,'farsi.h']]],
   ['_5fgaf',['_GAF',['../farsi_8h.html#ad01dda2e61306d592669bde4158260e1',1,'farsi.h']]],
   ['_5fghaf',['_GHAF',['../farsi_8h.html#ab948cdaae90de8f8c67ead038bfa1ee6',1,'farsi.h']]],

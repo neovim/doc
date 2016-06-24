@@ -34,7 +34,7 @@ var searchData=
   ['hiscnt',['hiscnt',['../structcommand__line__state.html#afc49edd9b65bfad38049d27e558794ab',1,'command_line_state']]],
   ['hisnum',['hisnum',['../structhist__entry.html#a91f908ca49d30b29e03cdf53132c3255',1,'hist_entry']]],
   ['hisstr',['hisstr',['../structhist__entry.html#a1511f236a3a54ce649b838c099d2f1e7',1,'hist_entry']]],
-  ['history_5fitem',['history_item',['../structShadaEntry.html#a3f292c22df9203957fbeffafefff0305',1,'ShadaEntry']]],
+  ['history_5fitem',['history_item',['../structShadaEntry.html#a04d0d4557c9357b38c78d0f56b44b692',1,'ShadaEntry']]],
   ['history_5ftype',['history_type',['../structHistoryMergerState.html#afcc170e34744cb0f62ffe85bf20d7e3e',1,'HistoryMergerState']]],
   ['histtype',['histtype',['../structShadaEntry.html#a86a94489ab8c74d9df8351e13dc3e332',1,'ShadaEntry']]],
   ['histype',['histype',['../structcommand__line__state.html#a299aad7289e720f36956e6cfe206a3ba',1,'command_line_state']]],

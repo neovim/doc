@@ -128,7 +128,7 @@ var searchData=
   ['current_5fexception',['current_exception',['../structdbg__stuff.html#a091f59954dbec3c336ee06c8f2800d0c',1,'dbg_stuff::current_exception()'],['../globals_8h.html#a99f8616af5c83a419348439aa77f6c99',1,'current_exception():&#160;globals.h']]],
   ['current_5ffunccal',['current_funccal',['../eval_8c.html#acf7e7ea83c7c9c632394605024c3992e',1,'eval.c']]],
   ['current_5fline',['current_line',['../structloop__cookie.html#aacf606407f0fd47c651ac6f277973b8a',1,'loop_cookie']]],
-  ['cursor',['cursor',['../structterminal.html#a56dd0218b0e80db42da0c4ea97b6628e',1,'terminal']]],
+  ['cursor',['cursor',['../structterminal.html#ac299d3328ced1847cdaa66c7654a3388',1,'terminal']]],
   ['cursor_5fgoto',['cursor_goto',['../structui__t.html#a39a6953a06b354b831b8a784c153f00a',1,'ui_t']]],
   ['cursor_5fstart',['cursor_start',['../structoparg__S.html#a0857162e7c3adec7b5555426416debae',1,'oparg_S']]],
   ['curtab',['curtab',['../globals_8h.html#aec8a130381d8276a622222a7479a08fe',1,'globals.h']]],
