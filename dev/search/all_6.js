@@ -260,6 +260,7 @@ var searchData=
   ['float',['Float',['../api_2private_2defs_8h.html#a74e8443ef1ba64fac1dbb8f9f2c32eef',1,'defs.h']]],
   ['float_5ft',['float_T',['../eval__defs_8h.html#a1bc927468f7b9d69dd867331ab3365dd',1,'eval_defs.h']]],
   ['floating',['floating',['../structobject.html#a0e0678eb8c9e4ee175d26a6991a389c0',1,'object']]],
+  ['floating_5fobj',['FLOATING_OBJ',['../api_2private_2helpers_8h.html#add47ca6c80f27ba2e07d5749bbc98a5f',1,'helpers.h']]],
   ['flush',['flush',['../structui__t.html#aabba6da1d837b1047e6ce8a9e2446783',1,'ui_t']]],
   ['flush_5fbuffers',['flush_buffers',['../getchar_8c.html#a118441579c7c7a24603d74c85abe38e0',1,'getchar.c']]],
   ['fm',['fm',['../mark_8c.html#a0c53a2ca15996c6f4aff0dfd18100c5b',1,'mark.c']]],

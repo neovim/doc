@@ -4,6 +4,7 @@ var searchData=
   ['affentry_5fs',['affentry_S',['../structaffentry__S.html',1,'']]],
   ['afffile_5fs',['afffile_S',['../structafffile__S.html',1,'']]],
   ['affheader_5fs',['affheader_S',['../structaffheader__S.html',1,'']]],
+  ['apitompobjectstackitem',['APIToMPObjectStackItem',['../structAPIToMPObjectStackItem.html',1,'']]],
   ['argentry',['argentry',['../structargentry.html',1,'']]],
   ['arglist',['arglist',['../structarglist.html',1,'']]],
   ['array',['Array',['../structArray.html',1,'']]],

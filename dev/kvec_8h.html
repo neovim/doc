@@ -630,7 +630,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">((((v).size == (v).capacity) ? (<a class="code" href="kvec_8h.html#a4e644c13f3944f94342493508e7761d2">kvi_resize_full</a>(v), 0) : 0), \</div>
 <div class="line">     ((v).items + ((v).size++)))</div>
-<div class="ttc" id="kvec_8h_html_a4e644c13f3944f94342493508e7761d2"><div class="ttname"><a href="kvec_8h.html#a4e644c13f3944f94342493508e7761d2">kvi_resize_full</a></div><div class="ttdeci">#define kvi_resize_full(v)</div><div class="ttdef"><b>Definition:</b> kvec.h:158</div></div>
+<div class="ttc" id="kvec_8h_html_a4e644c13f3944f94342493508e7761d2"><div class="ttname"><a href="kvec_8h.html#a4e644c13f3944f94342493508e7761d2">kvi_resize_full</a></div><div class="ttdeci">#define kvi_resize_full(v)</div><div class="ttdef"><b>Definition:</b> kvec.h:161</div></div>
 </div><!-- fragment --><p>Get location where to store new element to a vector with preallocated array</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -683,6 +683,7 @@ Macros</h2></td></tr>
 <div class="ttc" id="memory_8c_html_aa946fb0a1f9e3d380d37d3fc77b085e4"><div class="ttname"><a href="memory_8c.html#aa946fb0a1f9e3d380d37d3fc77b085e4">xmalloc</a></div><div class="ttdeci">void * xmalloc(size_t size) FUNC_ATTR_MALLOC FUNC_ATTR_ALLOC_SIZE(1) FUNC_ATTR_NONNULL_RET</div><div class="ttdef"><b>Definition:</b> memory.c:90</div></div>
 <div class="ttc" id="macros_8h_html_a3c7c6a69f690fc8d2abf0e385280a532"><div class="ttname"><a href="macros_8h.html#a3c7c6a69f690fc8d2abf0e385280a532">ARRAY_SIZE</a></div><div class="ttdeci">#define ARRAY_SIZE(arr)</div><div class="ttdef"><b>Definition:</b> macros.h:165</div></div>
 </div><!-- fragment --><p>Resize vector with preallocated array</p>
+<dl class="section note"><dt>Note</dt><dd>May not resize to an array smaller then init_array: if requested, init_array will be used.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[out]</td><td class="paramname">v</td><td>Vector to resize. </td></tr>
@@ -709,13 +710,11 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><span class="comment">/* ARRAY_SIZE((v).init_array) is the minimal capacity of this vector. */</span> \</div>
 <div class="line">    <span class="comment">/* Thus when vector is full capacity may not be zero and it is safe */</span> \</div>
 <div class="line">    <span class="comment">/* not to bother with checking whether (v).capacity is 0. But now */</span> \</div>
-<div class="line">    <span class="comment">/* capacity is not guaranteed to have size that is a power of 2. */</span> <a class="code" href="kvec_8h.html#a5396d8946e5e815a41ab884648eafa80">\</a></div>
-<div class="line"><a class="code" href="kvec_8h.html#a5396d8946e5e815a41ab884648eafa80">    kvi_resize</a>(v, ((v).capacity == <a class="code" href="macros_8h.html#a3c7c6a69f690fc8d2abf0e385280a532">ARRAY_SIZE</a>((v).init_array) \</div>
-<div class="line">                   ? ((v).capacity++, <a class="code" href="kvec_8h.html#a453ac1f9bf61a43d5cbb30eb2e630109">kv_roundup32</a>((v).capacity)) \</div>
-<div class="line">                   : (v).capacity &lt;&lt; 1))</div>
-<div class="ttc" id="kvec_8h_html_a453ac1f9bf61a43d5cbb30eb2e630109"><div class="ttname"><a href="kvec_8h.html#a453ac1f9bf61a43d5cbb30eb2e630109">kv_roundup32</a></div><div class="ttdeci">#define kv_roundup32(x)</div><div class="ttdef"><b>Definition:</b> kvec.h:45</div></div>
-<div class="ttc" id="kvec_8h_html_a5396d8946e5e815a41ab884648eafa80"><div class="ttname"><a href="kvec_8h.html#a5396d8946e5e815a41ab884648eafa80">kvi_resize</a></div><div class="ttdeci">#define kvi_resize(v, s)</div><div class="ttdef"><b>Definition:</b> kvec.h:139</div></div>
-<div class="ttc" id="macros_8h_html_a3c7c6a69f690fc8d2abf0e385280a532"><div class="ttname"><a href="macros_8h.html#a3c7c6a69f690fc8d2abf0e385280a532">ARRAY_SIZE</a></div><div class="ttdeci">#define ARRAY_SIZE(arr)</div><div class="ttdef"><b>Definition:</b> macros.h:165</div></div>
+<div class="line">    <span class="comment">/* capacity is not guaranteed to have size that is a power of 2, it is */</span> \</div>
+<div class="line">    <span class="comment">/* hard to fix this here and is not very necessary if users will use */</span> \</div>
+<div class="line">    <span class="comment">/* 2^x initial array size. */</span> <a class="code" href="kvec_8h.html#a5396d8946e5e815a41ab884648eafa80">\</a></div>
+<div class="line"><a class="code" href="kvec_8h.html#a5396d8946e5e815a41ab884648eafa80">    kvi_resize</a>(v, (v).capacity &lt;&lt; 1)</div>
+<div class="ttc" id="kvec_8h_html_a5396d8946e5e815a41ab884648eafa80"><div class="ttname"><a href="kvec_8h.html#a5396d8946e5e815a41ab884648eafa80">kvi_resize</a></div><div class="ttdeci">#define kvi_resize(v, s)</div><div class="ttdef"><b>Definition:</b> kvec.h:142</div></div>
 </div><!-- fragment --><p>Resize vector with preallocated array when it is full</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -731,7 +730,7 @@ Macros</h2></td></tr>
 <!-- start footer part -->
 <footer>
   <div class="container">
-    Generated on Fri Jun 24 2016 20:03:50 for Neovim by
+    Generated on Sat Jun 25 2016 20:06:01 for Neovim by
     <a href="http://www.doxygen.org/index.html">Doxygen</a>
     1.8.7
   </div>

@@ -33,6 +33,7 @@ var searchData=
   ['hikey2uf',['HIKEY2UF',['../eval_8h.html#aefa3247eddb3378b6d68e47f410572d6',1,'eval.h']]],
   ['hist_5fcount',['HIST_COUNT',['../ex__getln_8h.html#a008ceb524f02ac64249eefbf44780ed2',1,'ex_getln.h']]],
   ['hitreturn',['HITRETURN',['../vim_8h.html#a67a3598c9421f88776e9ea717ca9a6dc',1,'vim.h']]],
+  ['hival2di',['HIVAL2DI',['../eval__defs_8h.html#aee5be584b3e5970a387d01abfca2d67b',1,'eval_defs.h']]],
   ['hl_5fattr',['hl_attr',['../vim_8h.html#a6acdd6f258567b79da889e4c6ab0e067',1,'vim.h']]],
   ['hl_5fbold',['HL_BOLD',['../syntax_8h.html#a88dd1027e5027c0d58a30ed31fc8e7eb',1,'syntax.h']]],
   ['hl_5fconceal',['HL_CONCEAL',['../syntax_8h.html#a7a53ef4d1f4ae1fc55063861cd757192',1,'syntax.h']]],

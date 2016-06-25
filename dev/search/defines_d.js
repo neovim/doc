@@ -194,5 +194,6 @@ var searchData=
   ['mt_5fst_5foth',['MT_ST_OTH',['../tag_8c.html#a4b72f97476cf930b2ee33ccc37ffb530',1,'tag.c']]],
   ['multi_5fmult',['MULTI_MULT',['../regexp_8c.html#a56cd45f8ad6a13f958427ad4bf7ed7a1',1,'regexp.c']]],
   ['multi_5fone',['MULTI_ONE',['../regexp_8c.html#a17de9a9aceb1d9fa93139afe29230769',1,'regexp.c']]],
-  ['multibytecode',['MULTIBYTECODE',['../regexp_8c.html#ac3879eed53b9ae2b4f2823987bb5f6ec',1,'regexp.c']]]
+  ['multibytecode',['MULTIBYTECODE',['../regexp_8c.html#ac3879eed53b9ae2b4f2823987bb5f6ec',1,'regexp.c']]],
+  ['mur_5foff',['MUR_OFF',['../channel_8c.html#a5628acd45e4993c4058a35045835697b',1,'channel.c']]]
 ];

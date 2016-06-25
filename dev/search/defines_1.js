@@ -270,6 +270,8 @@ var searchData=
   ['api_5finit_5fstring',['api_init_string',['../api_2private_2helpers_8h.html#afb24091f8356d71ed420ff6d942a8681',1,'helpers.h']]],
   ['api_5finit_5ftabpage',['api_init_tabpage',['../api_2private_2helpers_8h.html#a75a6c8e16ba01310fd232dd37243c976',1,'helpers.h']]],
   ['api_5finit_5fwindow',['api_init_window',['../api_2private_2helpers_8h.html#a02879bb5701485e933f9521fec75c1bf',1,'helpers.h']]],
+  ['api_5finteger_5fmax',['API_INTEGER_MAX',['../api_2private_2defs_8h.html#af049adf0496a46e73452781f3d5cbc21',1,'defs.h']]],
+  ['api_5finteger_5fmin',['API_INTEGER_MIN',['../api_2private_2defs_8h.html#a630cf1c604e63694434624664caf781d',1,'defs.h']]],
   ['api_5fset_5ferror',['api_set_error',['../api_2private_2helpers_8h.html#aaf14608fa9fd6079c93366e4158f5c04',1,'helpers.h']]],
   ['appendbin',['APPENDBIN',['../macros_8h.html#ae8f0a606e2a75c496b47cd0dd05a4c8b',1,'macros.h']]],
   ['argcount',['ARGCOUNT',['../buffer__defs_8h.html#a331aeae5f6aef36e5c79a58ba28e1d9c',1,'buffer_defs.h']]],
