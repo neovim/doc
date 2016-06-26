@@ -12,7 +12,7 @@ var searchData=
   ['has_5fnon_5fascii',['has_non_ascii',['../strings_8c.html#a494b6bd6ac8b293b6ab9969feee99979',1,'strings.c']]],
   ['has_5fnon_5fascii_5flen',['has_non_ascii_len',['../strings_8c.html#a550b8ff6a5becb6fc10b13dc341adaba',1,'strings.c']]],
   ['has_5fpatch',['has_patch',['../version_8c.html#a876f0fd40b88cd44ab5bff41a05c7464',1,'version.c']]],
-  ['has_5fprofiling',['has_profiling',['../ex__cmds2_8c.html#ac8bc71017a79c3c00f9631a63f251555',1,'ex_cmds2.c']]],
+  ['has_5fprofiling',['has_profiling',['../ex__cmds2_8c.html#af2594624931dfe603dd18895f1d1bf58',1,'ex_cmds2.c']]],
   ['hasanyfolding',['hasAnyFolding',['../fold_8c.html#a41a580ed50496a70be4996e2063643f8',1,'fold.c']]],
   ['hasfolding',['hasFolding',['../fold_8c.html#a6b177a2a86b372851b714ec60e40d691',1,'fold.c']]],
   ['hasfoldingwin',['hasFoldingWin',['../fold_8c.html#a72f0c28d23e3a07319f6fd0f3d69103b',1,'fold.c']]],

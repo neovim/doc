@@ -86,6 +86,7 @@ var searchData=
   ['os_5fgetperm',['os_getperm',['../shada_8c.html#a6dc12315991fa8a0e24b999ffc677d85',1,'shada.c']]],
   ['os_5fisdir',['os_isdir',['../shada_8c.html#a66bd1d4b3563ad10995f96107645d0f3',1,'shada.c']]],
   ['os_5fstrerror',['os_strerror',['../fs__defs_8h.html#a337322a2a03d31e8ac5a9077f490da09',1,'os_strerror():&#160;fs_defs.h'],['../os__defs_8h.html#a337322a2a03d31e8ac5a9077f490da09',1,'os_strerror():&#160;os_defs.h']]],
+  ['os_5fstrtok',['os_strtok',['../os__defs_8h.html#a543cd6503d78221b99fa169fc1102386',1,'os_defs.h']]],
   ['outbuf_5fsize',['OUTBUF_SIZE',['../tui_8c.html#a3df829d6427c2cd4fbd387268040cc65',1,'tui.c']]],
   ['ow',['OW',['../farsi_8h.html#a8eb9cc7ad8a25ec4c4c104fc5f302032',1,'farsi.h']]],
   ['ow_5fow',['OW_OW',['../farsi_8h.html#a803b2f3480503526d6abad8ec30bb246',1,'farsi.h']]]

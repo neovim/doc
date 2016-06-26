@@ -283,6 +283,7 @@ var searchData=
   ['nt_5fold_5fbnum',['nt_old_bnum',['../memfile__defs_8h.html#ab92990050e32ae3547789c209c810c52',1,'memfile_defs.h']]],
   ['nul',['NUL',['../ascii_8h.html#af19d48b9f61047a668649a2f9dc317ff',1,'ascii.h']]],
   ['null',['NULL',['../eval_8c.html#a1a05ede2ad100bf5de5dfa7ccdfa4397',1,'NULL():&#160;eval.c'],['../mark_8c.html#a1a05ede2ad100bf5de5dfa7ccdfa4397',1,'NULL():&#160;mark.c'],['../ops_8c.html#a1a05ede2ad100bf5de5dfa7ccdfa4397',1,'NULL():&#160;ops.c']]],
+  ['num_5fbytes',['num_bytes',['../structstream.html#a0eadc3c2926247afd7040731e6f9a4ed',1,'stream']]],
   ['num_5fcharsets',['num_charsets',['../structprt__ps__mbfont__S.html#ab2c55ceaf25e322e3300d6cc6b360c1a',1,'prt_ps_mbfont_S']]],
   ['num_5fencodings',['num_encodings',['../structprt__ps__mbfont__S.html#a8dacff23d13ca6258e96bf51d2d35041',1,'prt_ps_mbfont_S']]],
   ['num_5fentries',['num_entries',['../structHMLList.html#acbfa568610749f9d955009a51870fbe5',1,'HMLList']]],

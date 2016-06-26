@@ -183,7 +183,7 @@ var searchData=
   ['sort_5fstrings',['sort_strings',['../strings_8c.html#a244aab09ef974dcb878468b9be5907d7',1,'strings.c']]],
   ['source_5fbreakpoint',['source_breakpoint',['../ex__cmds2_8c.html#a1404260e6cfc9d44b40de988cd7436b8',1,'ex_cmds2.c']]],
   ['source_5fdbg_5ftick',['source_dbg_tick',['../ex__cmds2_8c.html#a66c6ecfcd9cac2e1ddbcb86cb6f90fc6',1,'ex_cmds2.c']]],
-  ['source_5ffinished',['source_finished',['../ex__cmds2_8c.html#a3b3f6a7bb3da33331ac9d00169d899b2',1,'ex_cmds2.c']]],
+  ['source_5ffinished',['source_finished',['../ex__cmds2_8c.html#a8c4b6cab72415b49f120f9cf7d7d248e',1,'ex_cmds2.c']]],
   ['source_5flevel',['source_level',['../ex__cmds2_8c.html#abce6cae1c5a9e58327d40f22de821891',1,'ex_cmds2.c']]],
   ['source_5fruntime',['source_runtime',['../ex__cmds2_8c.html#af86b707acc72fe435ec297c3f50dcc2a',1,'ex_cmds2.c']]],
   ['spell_5fadd_5fword',['spell_add_word',['../spell_8c.html#a8b2d7a9cc5904f8b6a17c4cc43921e59',1,'spell.c']]],

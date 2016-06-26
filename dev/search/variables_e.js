@@ -39,6 +39,7 @@ var searchData=
   ['nt_5fhashitem',['nt_hashitem',['../structmf__blocknr__trans__item.html#a39f82297a3c829835e5e70437e8b246a',1,'mf_blocknr_trans_item']]],
   ['nt_5fnew_5fbnum',['nt_new_bnum',['../structmf__blocknr__trans__item.html#aa9b068fa0c51782d216a09ce745d4d96',1,'mf_blocknr_trans_item']]],
   ['null',['NULL',['../eval_8c.html#a1a05ede2ad100bf5de5dfa7ccdfa4397',1,'NULL():&#160;eval.c'],['../mark_8c.html#a1a05ede2ad100bf5de5dfa7ccdfa4397',1,'NULL():&#160;mark.c'],['../ops_8c.html#a1a05ede2ad100bf5de5dfa7ccdfa4397',1,'NULL():&#160;ops.c']]],
+  ['num_5fbytes',['num_bytes',['../structstream.html#a0eadc3c2926247afd7040731e6f9a4ed',1,'stream']]],
   ['num_5fcharsets',['num_charsets',['../structprt__ps__mbfont__S.html#ab2c55ceaf25e322e3300d6cc6b360c1a',1,'prt_ps_mbfont_S']]],
   ['num_5fencodings',['num_encodings',['../structprt__ps__mbfont__S.html#a8dacff23d13ca6258e96bf51d2d35041',1,'prt_ps_mbfont_S']]],
   ['num_5fentries',['num_entries',['../structHMLList.html#acbfa568610749f9d955009a51870fbe5',1,'HMLList']]],
