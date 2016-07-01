@@ -36,6 +36,7 @@ var searchData=
   ['throw_5flnum',['throw_lnum',['../structvim__exception.html#a33ab2a38b355eabf300ff1f3c13242e9',1,'vim_exception']]],
   ['throw_5fmsg',['throw_msg',['../structmsglist.html#a3d49c3a63c338a424d19c51eabf1cdb7',1,'msglist']]],
   ['throw_5fname',['throw_name',['../structvim__exception.html#a48be7c536a9c513028442117928be692',1,'vim_exception']]],
+  ['timeout',['timeout',['../structtimer__T.html#aa4081b7d7fbfb827dc9a552fdb0f5e3c',1,'timer_T']]],
   ['timer_5fhandle',['timer_handle',['../structterm__input.html#a1268e7de8d9e579a97b165d865da56b9',1,'term_input']]],
   ['timer_5fid',['timer_id',['../structtimer__T.html#a58eb69ed98e7c93207bcb1f9b8a6da8e',1,'timer_T']]],
   ['timestamp',['timestamp',['../structSubReplacementString.html#a0661d343e4c42dc965cbb9f62b346e27',1,'SubReplacementString::timestamp()'],['../structhist__entry.html#a291033e649c921b6147796976bdc1e1e',1,'hist_entry::timestamp()'],['../structfilemark.html#ad5ac3b1e8d6242e6fb4008f30e5dde76',1,'filemark::timestamp()'],['../structyankreg.html#ae0edcc86754778af06fee3214b62af0d',1,'yankreg::timestamp()'],['../structspat.html#a52fa83474ab630855af6de49aa0e2716',1,'spat::timestamp()'],['../structShadaEntry.html#a599cd4cd3d71f8447a076cf1951bed6f',1,'ShadaEntry::timestamp()']]],
