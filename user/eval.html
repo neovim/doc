@@ -2723,11 +2723,9 @@ capture({command})					*<A NAME="capture()"></A><B>capture()</B>*
 <B>			echo capture(['echon "foo"', 'echon "bar"'])</B>
  			foobar
 		This function is not available in the |<A HREF="#sandbox">sandbox</A>|.
-		Note: {command}s run <A HREF="motion.html#as">as</A> if prepended with |<A HREF="various.html#:silent">:silent</A>| (output is
-		captured, but not displayed).  If multiple <A HREF="#capture()">capture()</A> calls are
-		nested, the outer <A HREF="#capture()">capture()</A> will not catch the command output
-		of the inner <A HREF="#capture()">capture()</A>; the inner capture will not cancel the
-		outer.
+		Note: {command} executes <A HREF="motion.html#as">as</A> if prepended with |<A HREF="various.html#:silent">:silent</A>|
+		(output is collected, but not displayed).  If nested, an outer
+		<A HREF="#capture()">capture()</A> will not observe the output of inner calls.
 		Note: Text attributes (highlights) are not captured.
 
 
@@ -3083,6 +3081,13 @@ dictwatcheradd({dict}, {pattern}, {callback})		      *<A NAME="dictwatcheradd()"
 		After this is called, every change on {dict} and on keys
 		matching {pattern} will result in {callback} being invoked.
 
+		For example, to watch all global <A HREF="#variables">variables</A>:
+<B>			silent! call dictwatcherdel(g:, '*', 'OnDictChanged')</B>
+<B>			function! OnDictChanged(d,k,z)</B>
+<B>			  echomsg string(a:k) string(a:z)</B>
+<B>			endfunction</B>
+<B>			call dictwatcheradd(g:, '*', 'OnDictChanged')</B>
+ 
 		For now {pattern} only accepts very simple patterns that can
 		contain a '*' at the end of the <A HREF="#string">string</A>, in which <A HREF="change.html#case">case</A> <A HREF="motion.html#it">it</A> will
 		match every key that begins with the substring before the '*'.
@@ -3093,7 +3098,7 @@ dictwatcheradd({dict}, {pattern}, {callback})		      *<A NAME="dictwatcheradd()"
 
 		- The dictionary being watched.
 		- The key which changed.
-		- A dictionary containg the new and old values for the key.
+		- A dictionary containing the new and old values for the key.
 
 		The type of change can be determined by examining the keys
 		present on the third argument:
@@ -4663,19 +4668,18 @@ jobsend({job}, {data})					{Nvim} *<A NAME="jobsend()"></A><B>jobsend()</B>*
 
 
 jobstart({cmd}[, {opts}])				{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
-		Spawns {cmd} <A HREF="motion.html#as">as</A> a job.  If {cmd} is a |<A HREF="#List">List</A>|, <A HREF="motion.html#it">it</A> will be run
-		directly.  If {cmd} is a |<A HREF="#string">string</A>|, <A HREF="motion.html#it">it</A> will be roughly 
-		equivalent to
-<B>			:call jobstart(split(&amp;shell) + split(&amp;shellcmdflag) + ['{cmd}'])</B>
+		Spawns {cmd} <A HREF="motion.html#as">as</A> a job.  If {cmd} is a |<A HREF="#List">List</A>| <A HREF="motion.html#it">it</A> is run
+		directly.  If {cmd} is a |<A HREF="#String">String</A>| <A HREF="motion.html#it">it</A> is processed like this:
+<B>		  :call jobstart(split(&amp;shell) + split(&amp;shellcmdflag) + ['{cmd}'])</B>
  		NOTE: read |<A HREF="options.html#shell-unquoting">shell-unquoting</A>| before constructing any lists 
 		with <A HREF="options.html#'shell'">'shell'</A> or <A HREF="options.html#'shellcmdflag'">'shellcmdflag'</A> <A HREF="options.html#options">options</A>.  The above call is 
 		only written to show the idea, one needs to perform unquoting 
 		and <A HREF="diff.html#do">do</A> split taking <A HREF="quotes.html#quotes">quotes</A> into account.
 
 		{opts} is a dictionary with these keys:
-		  on_stdout: stdout event handler
-		  on_stderr: stderr event handler
-		  on_exit  : exit event handler
+		  on_stdout: stdout event handler (function name or |<A HREF="#Funcref">Funcref</A>|)
+		  on_stderr: stderr event handler (function name or |<A HREF="#Funcref">Funcref</A>|)
+		  on_exit  : exit event handler (function name or |<A HREF="#Funcref">Funcref</A>|)
 		  cwd      : Working directory of the job; defaults to
 		             |<A HREF="editing.html#current-directory">current-directory</A>|.
 		  pty      : If set, the job will be connected to a new pseudo
@@ -4689,17 +4693,12 @@ jobstart({cmd}[, {opts}])				{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
 			     when <A HREF="nvim.html#nvim">nvim</A> exits. If the process dies before
 			     <A HREF="nvim.html#nvim">nvim</A> exits, on_exit will still be invoked.
 
-		Either funcrefs or function names can be passed <A HREF="motion.html#as">as</A> event
-		handlers. The {opts} object is also used <A HREF="motion.html#as">as</A> the &quot;<A HREF="#self">self</A>&quot;
-		argument for the callback, so the caller may pass arbitrary
-		data by setting other key.(see |<A HREF="#Dictionary-function">Dictionary-function</A>| for more
-		information).
+		{opts} is passed <A HREF="motion.html#as">as</A> |<A HREF="#self">self</A>| to the callback; the caller may
+		pass arbitrary data by setting other keys.
 		Returns:
-		  - The job ID on success, which is used by |<A HREF="#jobsend()">jobsend()</A>| and
-		    |<A HREF="#jobstop()">jobstop()</A>|
-		  - 0 when the job table is full or on invalid arguments
-		  - -1 when {cmd}[0] is not executable.  Will never fail if
-		    {cmd} is a <A HREF="#string">string</A> unless <A HREF="options.html#'shell'">'shell'</A> is not executable.
+		  - job ID on success, used by |<A HREF="#jobsend()">jobsend()</A>| and |<A HREF="#jobstop()">jobstop()</A>|
+		  - 0 on invalid arguments or if the job table is full
+		  - -1 if {cmd}[0] is not executable.
 		See |<A HREF="job_control.html#job-control">job-control</A>| for more information.
 
 
@@ -10179,7 +10178,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sat Jul  2 20:08:37 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/c6eff87a25020032d089a0e40ae1a809d1b72bac"><code>c6eff87</code></a>.
+        Generated Sun Jul  3 20:08:00 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/a5358688bc91b2d72bf4eddea7938003d1fcde93"><code>a535868</code></a>.
       </div>
     </footer>
   </body>

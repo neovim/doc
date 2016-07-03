@@ -84,7 +84,7 @@ for details.
 Job <A HREF="intro.html#control">control</A> is achieved by calling a combination of the |<A HREF="eval.html#jobstart()">jobstart()</A>|,
 |<A HREF="eval.html#jobsend()">jobsend()</A>| and |<A HREF="eval.html#jobstop()">jobstop()</A>| <A HREF="eval.html#functions">functions</A>. Here's an example:
 
-<B>    function s:JobHandler(job_id, data, event)</B>
+<B>    function! s:JobHandler(job_id, data, event)</B>
 <B>      if a:event == 'stdout'</B>
 <B>        let str = self.shell.' stdout: '.join(a:data)</B>
 <B>      elseif a:event == 'stderr'</B>
@@ -127,6 +127,19 @@ Here's what is happening:
      corresponding stream. For &quot;exit&quot;, <A HREF="motion.html#it">it</A> is the status returned by the
      program.
   2: The event type, which is &quot;stdout&quot;, &quot;stderr&quot; or &quot;exit&quot;.
+
+  Note: Buffered stdout/stderr data which has not been flushed by the sender
+        will not trigger the &quot;stdout&quot; callback (but if the process ends, the
+        &quot;exit&quot; callback will be triggered).
+        For example, &quot;ruby -e&quot; <A HREF="windows.html#buffers">buffers</A> output, so small strings will be
+        buffered unless &quot;auto-flushing&quot; ($stdout.sync=true) is enabled.
+<B>          function! Receive(job_id, data, event)</B>
+<B>            echom printf('%s: %s',a:event,string(a:data))</B>
+<B>          endfunction</B>
+<B>          call jobstart(['ruby', '-e',</B>
+<B>            \ '$stdout.sync = true; 5.times do sleep 1 and puts "Hello Ruby!" end'],</B>
+<B>            \ {'on_stdout': 'Receive'})</B>
+        https://github.com/neovim/neovim/issues/1592
 
 The <A HREF="options.html#options">options</A> dictionary is passed <A HREF="motion.html#as">as</A> the &quot;<A HREF="eval.html#self">self</A>&quot; variable to the callback
 function. Here's a more object-oriented version of the above:
@@ -184,7 +197,7 @@ not exit after 2 seconds, `SIGKILL` will be sent.
 
     <footer>
       <div class="container">
-        Generated Sat Jul  2 20:08:38 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/c6eff87a25020032d089a0e40ae1a809d1b72bac"><code>c6eff87</code></a>.
+        Generated Sun Jul  3 20:08:00 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/a5358688bc91b2d72bf4eddea7938003d1fcde93"><code>a535868</code></a>.
       </div>
     </footer>
   </body>
