@@ -38,6 +38,7 @@ var searchData=
   ['expand_5fok',['EXPAND_OK',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a01c73a3a92af34f6862f62e9c80be1a2',1,'vim.h']]],
   ['expand_5fold_5fsetting',['EXPAND_OLD_SETTING',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a29ad6a8ebb45f56f67b94cd78dea200d',1,'vim.h']]],
   ['expand_5fownsyntax',['EXPAND_OWNSYNTAX',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0aca090017507a0ccac03d96ec4d02d9d4',1,'vim.h']]],
+  ['expand_5fpackadd',['EXPAND_PACKADD',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a61e0b6b6442f118f81880384dcc446dc',1,'vim.h']]],
   ['expand_5fprofile',['EXPAND_PROFILE',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a7101d4ac0c7f977bc675c701b4e2423b',1,'vim.h']]],
   ['expand_5fsettings',['EXPAND_SETTINGS',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a03c190b144a27274b138bdc502906918',1,'vim.h']]],
   ['expand_5fshellcmd',['EXPAND_SHELLCMD',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a192d2229a4e9838f69deb37e76a34657',1,'vim.h']]],

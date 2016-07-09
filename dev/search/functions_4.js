@@ -131,6 +131,8 @@ var searchData=
   ['ex_5foldfiles',['ex_oldfiles',['../eval_8c.html#a535a55bbe756f6406d1607464006d0fa',1,'eval.c']]],
   ['ex_5foptions',['ex_options',['../ex__cmds2_8c.html#afec5b6947ba5fd519dbbd76f0fe81e11',1,'ex_cmds2.c']]],
   ['ex_5fownsyntax',['ex_ownsyntax',['../syntax_8c.html#a56196f95fc324ec516628508daf367b4',1,'syntax.c']]],
+  ['ex_5fpackadd',['ex_packadd',['../ex__cmds2_8c.html#ae9cdc1c06699e77af6014fcf9dcacf1b',1,'ex_cmds2.c']]],
+  ['ex_5fpackloadall',['ex_packloadall',['../ex__cmds2_8c.html#afc00eb605d72b6c24842868de3ca9f12',1,'ex_cmds2.c']]],
   ['ex_5fprevious',['ex_previous',['../ex__cmds2_8c.html#ae9b5c6e6b8dd59a116172c32edb44ac6',1,'ex_cmds2.c']]],
   ['ex_5fprofile',['ex_profile',['../ex__cmds2_8c.html#a7c2b106e7d7cb80e4b90dd137a6b3aae',1,'ex_cmds2.c']]],
   ['ex_5fpy3file',['ex_py3file',['../ex__cmds2_8c.html#a02395d47d9d0fd45cb5e19e0dcac25bf',1,'ex_cmds2.c']]],
