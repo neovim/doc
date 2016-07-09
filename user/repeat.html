@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="repeat.txt"></A><B>repeat.txt</B>*    For Vim version 7.4.  Last change: 2016 Feb 12
+*<A NAME="repeat.txt"></A><B>repeat.txt</B>*    For Vim version 7.4.  Last change: 2016 Apr 05
 
 
 		  VIM REFERENCE MANUAL    by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -50,12 +50,14 @@ Repeating commands, Vim scripts and debugging			*<A NAME="repeating"></A><B>repe
 
 Chapter 26 of the user manual introduces <A HREF="#repeating">repeating</A> |<A HREF="usr_26.html">usr_26.txt</A>|.
 
-1. Single repeats	|<A HREF="#single-repeat">single-repeat</A>|
-2. Multiple repeats	|<A HREF="#multi-repeat">multi-repeat</A>|
-3. Complex repeats	|<A HREF="#complex-repeat">complex-repeat</A>|
-4. Using Vim scripts	|<A HREF="#using-scripts">using-scripts</A>|
-5. Debugging scripts	|<A HREF="#debug-scripts">debug-scripts</A>|
-6. Profiling		|<A HREF="#profiling">profiling</A>|
+1. Single repeats		|<A HREF="#single-repeat">single-repeat</A>|
+2. Multiple repeats		|<A HREF="#multi-repeat">multi-repeat</A>|
+3. Complex repeats		|<A HREF="#complex-repeat">complex-repeat</A>|
+4. Using Vim scripts		|<A HREF="#using-scripts">using-scripts</A>|
+5. Using Vim packages		|<A HREF="#packages">packages</A>|
+6. Creating Vim <A HREF="#packages">packages</A>	|<A HREF="#package-create">package-create</A>|
+7. Debugging scripts		|<A HREF="#debug-scripts">debug-scripts</A>|
+8. Profiling			|<A HREF="#profiling">profiling</A>|
 
 ==============================================================================
 
@@ -116,8 +118,8 @@ examples.
 The global commands work by first scanning through the <A HREF="cmdline.html#[range]">[range]</A> lines and
 marking each line where a match occurs (for a multi-line <A HREF="pattern.html#pattern">pattern</A>, only the
 start of the match matters).
-In a second scan the [cmd] is executed for each marked line with its line
-number prepended.  For &quot;<A HREF="#:v">:v</A>&quot; and &quot;:g!&quot; the command is executed for each not
+In a second scan the [cmd] is executed for each marked line, <A HREF="motion.html#as">as</A> if the cursor
+was in that line.  For &quot;<A HREF="#:v">:v</A>&quot; and &quot;:g!&quot; the command is executed for each not
 marked line.  If a line is deleted its <A HREF="motion.html#mark">mark</A> disappears.
 The default for <A HREF="cmdline.html#[range]">[range]</A> is the whole buffer (1,$).  Use &quot;<A HREF="pattern.html#CTRL-C">CTRL-C</A>&quot; to interrupt
 the command.  If an error message is given for a line, the command for that
@@ -231,10 +233,12 @@ For <A HREF="editing.html#writing">writing</A> a Vim <A HREF="usr_41.html#script
 
 
 							*<A NAME=":ru"></A><B>:ru</B>* *<A NAME=":runtime"></A><B>:runtime</B>*
-:ru[ntime][!] <A HREF="editing.html#{file}">{file}</A> ..
+:ru[ntime][!] [where] <A HREF="editing.html#{file}">{file}</A> ..
 			Read <A HREF="intro.html#Ex">Ex</A> commands from <A HREF="editing.html#{file}">{file}</A> in each directory given
-			by <A HREF="options.html#'runtimepath'">'runtimepath'</A>.  There is no error for non-existing
-			files.  Example:
+			by <A HREF="options.html#'runtimepath'">'runtimepath'</A> and/or <A HREF="options.html#'packpath'">'packpath'</A>.  There is no error
+			for non-existing files.
+			
+			Example:
 <B>				:runtime syntax/c.vim</B>
 
  			There can be multiple <A HREF="editing.html#{file}">{file}</A> arguments, separated by
@@ -248,6 +252,15 @@ For <A HREF="editing.html#writing">writing</A> a Vim <A HREF="usr_41.html#script
 			When <A HREF="motion.html#it">it</A> is not included only the first found file is
 			sourced.
 
+			When [where] is omitted only <A HREF="options.html#'runtimepath'">'runtimepath'</A> is used.
+			Other values:
+				START	search under &quot;start&quot; in <A HREF="options.html#'packpath'">'packpath'</A>
+				OPT 	search under &quot;opt&quot; in <A HREF="options.html#'packpath'">'packpath'</A>
+				PACK	search under &quot;start&quot; and &quot;opt&quot; in
+					<A HREF="options.html#'packpath'">'packpath'</A>
+				ALL	first use <A HREF="options.html#'runtimepath'">'runtimepath'</A>, then search
+					under &quot;start&quot; and &quot;opt&quot; in <A HREF="options.html#'packpath'">'packpath'</A>
+
 			When <A HREF="editing.html#{file}">{file}</A> contains <A HREF="editing.html#wildcards">wildcards</A> <A HREF="motion.html#it">it</A> is expanded to all
 			matching files.  Example:
 <B>				:runtime! plugin/*.vim</B>
@@ -260,6 +273,59 @@ For <A HREF="editing.html#writing">writing</A> a Vim <A HREF="usr_41.html#script
 			when no file could be found.
 			When <A HREF="options.html#'verbose'">'verbose'</A> is two or higher, there is a message
 			about each searched file.
+
+
+							*<A NAME=":pa"></A><B>:pa</B>* *<A NAME=":packadd"></A><B>:packadd</B>* *<A NAME="E919"></A><B>E919</B>*
+:pa[ckadd][!] {name}	Search for an optional <A HREF="usr_05.html#plugin">plugin</A> directory in <A HREF="options.html#'packpath'">'packpath'</A>
+			and source any <A HREF="usr_05.html#plugin">plugin</A> files found.  The directory must
+			match:
+<B><FONT color="#54A23D">				pack/*/opt/{name} </FONT></B>
+			The directory is added to <A HREF="options.html#'runtimepath'">'runtimepath'</A> if <A HREF="motion.html#it">it</A> wasn't
+			there yet.
+
+			Note that {name} is the directory name, not the name
+			of the .vim file.  All the files matching the <A HREF="pattern.html#pattern">pattern</A>
+<B><FONT color="#54A23D">				pack/*/opt/{name}/plugin/**/*.vim </FONT></B>
+			will be sourced.  This allows for using subdirectories
+			below &quot;<A HREF="usr_05.html#plugin">plugin</A>&quot;, just like with plugins in
+			<A HREF="options.html#'runtimepath'">'runtimepath'</A>.
+
+			If the <A HREF="filetype.html#filetype">filetype</A> detection was not enabled yet (this
+			is usually done with a &quot;<A HREF="syntax.html#syntax">syntax</A> enable&quot; or &quot;<A HREF="filetype.html#filetype">filetype</A>
+			on&quot; command in your .vimrc file), this will also look
+			for &quot;{name}/ftdetect/*.vim&quot; files.
+
+			When the optional ! is added no <A HREF="usr_05.html#plugin">plugin</A> files or
+			<A HREF="filetype.html#ftdetect">ftdetect</A> scripts are loaded, only the matching
+			directories are added to <A HREF="options.html#'runtimepath'">'runtimepath'</A>.  This is
+			useful in your .vimrc.  The plugins will then be
+			loaded during <A HREF="starting.html#initialization">initialization</A>, see |<A HREF="starting.html#load-plugins">load-plugins</A>|.
+
+			Also see |<A HREF="#pack-add">pack-add</A>|.
+
+
+						*<A NAME=":packl"></A><B>:packl</B>* *<A NAME=":packloadall"></A><B>:packloadall</B>*
+:packl[oadall][!]	Load all <A HREF="#packages">packages</A> in the &quot;start&quot; directory under each
+			entry in <A HREF="options.html#'packpath'">'packpath'</A>.
+			
+			First all the directories found are added to
+			<A HREF="options.html#'runtimepath'">'runtimepath'</A>, then the plugins found in the
+			directories are sourced.  This allows for a <A HREF="usr_05.html#plugin">plugin</A> to
+			depend on something of another <A HREF="usr_05.html#plugin">plugin</A>, e.g. an
+			&quot;<A HREF="eval.html#autoload">autoload</A>&quot; directory.  See |<A HREF="#packload-two-steps">packload-two-steps</A>| for
+			how this can be useful.
+
+			This is normally done automatically during <A HREF="starting.html#startup">startup</A>,
+			after loading your .vimrc file.  With this command <A HREF="motion.html#it">it</A>
+			can be done earlier.
+
+			Packages will be loaded only once.  After this command
+			<A HREF="motion.html#it">it</A> won't happen again.  When the optional ! is added
+			this command will load <A HREF="#packages">packages</A> even when done before.
+
+			An error only causes sourcing the <A HREF="usr_41.html#script">script</A> where <A HREF="motion.html#it">it</A>
+			happens to be aborted, further plugins will be loaded.
+			See |<A HREF="#packages">packages</A>|.
 
 
 :scripte[ncoding] [encoding]		*<A NAME=":scripte"></A><B>:scripte</B>* *<A NAME=":scriptencoding"></A><B>:scriptencoding</B>* *<A NAME="E167"></A><B>E167</B>*
@@ -437,7 +503,190 @@ Rationale:
 
 ==============================================================================
 
-5. Debugging scripts					*<A NAME="debug-scripts"></A><B>debug-scripts</B>*
+5. Using Vim <A HREF="#packages">packages</A>					*<A NAME="packages"></A><B>packages</B>*
+
+A Vim package is a directory that contains one or more plugins.  The
+advantages over normal plugins:
+- A package can be downloaded <A HREF="motion.html#as">as</A> an archive and unpacked in its own directory.
+  Thus the files are not mixed with files of other plugins.  That makes <A HREF="motion.html#it">it</A>
+  easy to update and remove.
+- A package can be a git, mercurial, etc. repository.  That makes <A HREF="motion.html#it">it</A> really
+  easy to update.
+- A package can contain multiple plugins that depend on each other.
+- A package can contain plugins that are automatically loaded on <A HREF="starting.html#startup">startup</A> and
+  ones that are only loaded when needed with `:packadd`.
+
+
+<B><FONT color="#54A23D">Using a package and loading automatically </FONT></B>
+
+Let's assume your Vim files are in the &quot;~/.local/share/nvim/site&quot; directory
+and you want to add a package from a <A HREF="pi_zip.html#zip">zip</A> archive &quot;/tmp/foopack.zip&quot;:
+	<A HREF="motion.html#&#37;">&#37;</A> mkdir <A HREF="starting.html#-p">-p</A> ~/.local/share/nvim/site/pack/foo
+	<A HREF="motion.html#&#37;">&#37;</A> cd ~/.local/share/nvim/site/pack/foo
+	<A HREF="motion.html#&#37;">&#37;</A> unzip /tmp/foopack.zip
+
+The directory name &quot;foo&quot; is arbitrary, you can pick anything you like.
+
+You would now have these files under ~/.local/share/nvim/site:
+	pack/foo/README.txt
+	pack/foo/start/foobar/plugin/foo.vim
+	pack/foo/start/foobar/syntax/some.vim
+	pack/foo/opt/foodebug/plugin/debugger.vim
+
+When Vim starts up, after processing your .vimrc, <A HREF="motion.html#it">it</A> scans all directories in
+<A HREF="options.html#'packpath'">'packpath'</A> for plugins under the &quot;pack/*/start&quot; directory.  First all those
+directories are added to <A HREF="options.html#'runtimepath'">'runtimepath'</A>.  Then all the plugins are loaded.
+See |<A HREF="#packload-two-steps">packload-two-steps</A>| for how these two steps can be useful.
+
+In the example Vim will find &quot;pack/foo/start/foobar/plugin/foo.vim&quot; and adds 
+&quot;~/.local/share/nvim/site/pack/foo/start/foobar&quot; to <A HREF="options.html#'runtimepath'">'runtimepath'</A>.
+
+If the &quot;foobar&quot; <A HREF="usr_05.html#plugin">plugin</A> kicks in and sets the <A HREF="options.html#'filetype'">'filetype'</A> to &quot;some&quot;, Vim will
+find the syntax/some.vim file, because its directory is in <A HREF="options.html#'runtimepath'">'runtimepath'</A>.
+
+Vim will also load <A HREF="filetype.html#ftdetect">ftdetect</A> files, if there are any.
+
+Note that the files under &quot;pack/foo/opt&quot; are not loaded automatically, only the
+ones under &quot;pack/foo/start&quot;.  See |<A HREF="#pack-add">pack-add</A>| below for how the &quot;opt&quot; directory
+is used.
+
+Loading <A HREF="#packages">packages</A> automatically will not happen if loading plugins is disabled,
+see |<A HREF="starting.html#load-plugins">load-plugins</A>|.
+
+To load <A HREF="#packages">packages</A> earlier, so that <A HREF="options.html#'runtimepath'">'runtimepath'</A> gets updated:
+<B>	:packloadall</B>
+This also works when loading plugins is disabled.  The automatic loading will
+only happen once.
+
+
+<B><FONT color="#54A23D">Using a single plugin and loading it automatically </FONT></B>
+
+If you don't have a package but a single <A HREF="usr_05.html#plugin">plugin</A>, you need to create the extra
+directory level:
+	<A HREF="motion.html#&#37;">&#37;</A> mkdir <A HREF="starting.html#-p">-p</A> ~/.local/share/nvim/site/pack/foo/start/foobar
+	<A HREF="motion.html#&#37;">&#37;</A> cd ~/.local/share/nvim/site/pack/foo/start/foobar
+	<A HREF="motion.html#&#37;">&#37;</A> unzip /tmp/someplugin.zip
+
+You would now have these files:
+	pack/foo/start/foobar/plugin/foo.vim
+	pack/foo/start/foobar/syntax/some.vim
+
+From here <A HREF="motion.html#it">it</A> works like above.
+
+
+<B><FONT color="#54A23D">Optional plugins </FONT></B>
+
+							*<A NAME="pack-add"></A><B>pack-add</B>*
+To load an optional <A HREF="usr_05.html#plugin">plugin</A> from a pack use the `:packadd` command:
+<B>	:packadd foodebug</B>
+This searches for &quot;pack/*/opt/foodebug&quot; in <A HREF="options.html#'packpath'">'packpath'</A> and will find
+~/.local/share/nvim/site/pack/foo/opt/foodebug/plugin/debugger.vim and source
+<A HREF="motion.html#it">it</A>.
+
+This could be done if some conditions are met.  For example, depending on
+whether Vim supports a feature or a dependency is missing.
+
+You can also load an optional <A HREF="usr_05.html#plugin">plugin</A> at <A HREF="starting.html#startup">startup</A>, by putting this command in
+your YXXY.vimrc|:
+<B>	:packadd! foodebug</B>
+The extra &quot;<A HREF="change.html#!">!</A>&quot; is so that the <A HREF="usr_05.html#plugin">plugin</A> isn't loaded with Vim was started with
+|<A HREF="starting.html#--noplugin">--noplugin</A>|.
+
+It is perfectly normal for a package to only have files in the &quot;opt&quot;
+directory.  You then need to load each <A HREF="usr_05.html#plugin">plugin</A> when you want to use <A HREF="motion.html#it">it</A>.
+
+
+<B><FONT color="#54A23D">Where to put what </FONT></B>
+
+Since color schemes, loaded with `:colorscheme`, are found below
+&quot;pack/*/start&quot; and &quot;pack/*/opt&quot;, you could put them anywhere.  We recommend
+you put them below &quot;pack/*/opt&quot;, for example
+&quot;.vim/pack/mycolors/opt/dark/colors/very_dark.vim&quot;.
+
+Filetype plugins should go under &quot;pack/*/start&quot;, so that they are always
+found.  Unless you have more than one <A HREF="usr_05.html#plugin">plugin</A> for a file type and want to
+select which one to load with `:packadd`.  E.g. depending on the compiler
+version:
+<B>	if foo_compiler_version &gt; 34</B>
+<B>	  packadd foo_new</B>
+<B>	else</B>
+<B>	  packadd foo_old</B>
+<B>	endif</B>
+
+The &quot;after&quot; directory is most likely not useful in a package.  It's not
+disallowed though.
+
+==============================================================================
+
+6. Creating Vim <A HREF="#packages">packages</A>				*<A NAME="package-create"></A><B>package-create</B>*
+
+This assumes you write one or more plugins that you distribute <A HREF="motion.html#as">as</A> a package.
+
+If you have two unrelated plugins you would use two <A HREF="#packages">packages</A>, so that Vim
+users can chose what they include or not.  Or you can decide to use one
+package with optional plugins, and tell the user to add the ones he wants with
+`:packadd`.
+
+Decide how you want to distribute the package.  You can create an archive or
+you could use a repository.  An archive can be used by more users, but is a
+bit harder to update to a new version.  A repository can usually be kept
+up-to-date easily, but <A HREF="motion.html#it">it</A> requires a program like &quot;git&quot; to be available.
+You can <A HREF="diff.html#do">do</A> both, github can automatically create an archive for a release.
+
+Your directory layout would be like this:
+   start/foobar/plugin/foo.vim    	&quot; always loaded, defines commands
+   start/foobar/plugin/bar.vim    	&quot; always loaded, defines commands
+   start/foobar/autoload/foo.vim  	&quot; loaded when foo command used
+   start/foobar/doc/foo.txt       	&quot; help for foo.vim
+   start/foobar/doc/tags          	&quot; help <A HREF="tagsrch.html#tags">tags</A>
+   opt/fooextra/plugin/extra.vim  	&quot; optional <A HREF="usr_05.html#plugin">plugin</A>, defines commands
+   opt/fooextra/autoload/extra.vim  	&quot; loaded when extra command used
+   opt/fooextra/doc/extra.txt  	        &quot; help for extra.vim
+   opt/fooextra/doc/tags  	        &quot; help <A HREF="tagsrch.html#tags">tags</A>
+
+This allows for the user to <A HREF="diff.html#do">do</A>:
+<B>	mkdir ~/.local/share/nvim/site/pack/myfoobar</B>
+<B>	cd ~/.local/share/nvim/site/pack/myfoobar</B>
+<B>	git clone https://github.com/you/foobar.git</B>
+
+Here &quot;myfoobar&quot; is a name that the user can choose, the only condition is that
+<A HREF="motion.html#it">it</A> differs from other <A HREF="#packages">packages</A>.
+
+In your documentation you explain what the plugins <A HREF="diff.html#do">do</A>, and tell the user how
+to load the optional <A HREF="usr_05.html#plugin">plugin</A>:
+<B>	:packadd! fooextra</B>
+
+You could add this packadd command in one of your plugins, to be executed when
+the optional <A HREF="usr_05.html#plugin">plugin</A> is needed.
+
+Run the `:helptags` command to generate the doc/tags file.  Including this
+generated file in the package means that the user can drop the package in his
+pack directory and the help command works right away.  Don't forget to re-run
+the command after <A HREF="change.html#changing">changing</A> the <A HREF="usr_05.html#plugin">plugin</A> help:
+<B>	:helptags path/start/foobar/doc</B>
+<B>	:helptags path/opt/fooextra/doc</B>
+
+
+<B><FONT color="#54A23D">Dependencies between plugins </FONT></B>
+
+							*<A NAME="packload-two-steps"></A><B>packload-two-steps</B>*
+Suppose you have a two plugins that depend on the same functionality. You can
+put the common functionality in an <A HREF="eval.html#autoload">autoload</A> directory, so that <A HREF="motion.html#it">it</A> will be
+found automatically.  Your package would have these files:
+
+	pack/foo/start/one/plugin/one.vim 
+<B>		call foolib#getit()</B>
+ 	pack/foo/start/two/plugin/two.vim
+<B>		call foolib#getit()</B>
+ 	pack/foo/start/lib/autoload/foolib.vim
+<B>		func foolib#getit()</B>
+
+This works, because loading <A HREF="#packages">packages</A> will first add all found directories to
+<A HREF="options.html#'runtimepath'">'runtimepath'</A> before sourcing the plugins.
+
+==============================================================================
+
+7. Debugging scripts					*<A NAME="debug-scripts"></A><B>debug-scripts</B>*
 
 Besides the obvious <A HREF="message.html#messages">messages</A> that you can add to your scripts to find out what
 they are doing, Vim offers a debug mode.  This allows you to step through a
@@ -562,7 +811,7 @@ Additionally, these commands can be used:
 About the additional commands in debug mode:
 - There is no command-line completion for them, you get the completion for the
   normal <A HREF="intro.html#Ex">Ex</A> commands only.
-- You can shorten them, up to a single character, unless more then one command
+- You can shorten them, up to a single character, unless more than one command
   starts with the same <A HREF="print.html#letter">letter</A>.  &quot;<A HREF="motion.html#f">f</A>&quot; stands for &quot;finish&quot;, use &quot;fr&quot; for &quot;frame&quot;.
 - Hitting <A HREF="motion.html#&lt;CR&gt;">&lt;CR&gt;</A> will repeat the previous one.  When doing another command, this
   is reset (because it's not clear what you want to repeat).
@@ -681,7 +930,7 @@ OBSCURE
 
 ==============================================================================
 
-6. Profiling						*<A NAME="profile"></A><B>profile</B>* *<A NAME="profiling"></A><B>profiling</B>*
+8. Profiling						*<A NAME="profile"></A><B>profile</B>* *<A NAME="profiling"></A><B>profiling</B>*
 
 Profiling means that Vim measures the time that is spent on executing
 <A HREF="eval.html#functions">functions</A> and/or scripts.  The |<A HREF="various.html#+profile">+profile</A>| feature is required for this.
@@ -807,7 +1056,7 @@ mind there are various things that may clobber the results:
 
     <footer>
       <div class="container">
-        Generated Fri Jul  8 20:15:23 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/6cee9d1a17177f4ccdf34283c6ed3ffaa98b32cc"><code>6cee9d1</code></a>.
+        Generated Sat Jul  9 20:13:02 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/ef72303a1ff862fde6d9399941c091c0a0692cce"><code>ef72303</code></a>.
       </div>
     </footer>
   </body>

@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2016 Feb 19
+*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2016 Apr 12
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -475,7 +475,8 @@ only appear once.  Examples:
 A key is always a <A HREF="#String">String</A>.  You can use a <A HREF="#Number">Number</A>, <A HREF="motion.html#it">it</A> will be converted to a
 <A HREF="#String">String</A> automatically.  Thus the <A HREF="#String">String</A> '4' and the number 4 will find the same
 entry.	Note that the <A HREF="#String">String</A> '04' and the <A HREF="#Number">Number</A> 04 are different, since the
-<A HREF="#Number">Number</A> will be converted to the <A HREF="#String">String</A> '4'.
+<A HREF="#Number">Number</A> will be converted to the <A HREF="#String">String</A> '4'.  The empty <A HREF="#string">string</A> can be used <A HREF="motion.html#as">as</A> a
+key.
 
 A value can be any <A HREF="#expression">expression</A>.	Using a <A HREF="#Dictionary">Dictionary</A> for a value creates a
 nested <A HREF="#Dictionary">Dictionary</A>:
@@ -954,10 +955,12 @@ These three can be repeated and mixed.	Examples:
 
 expr8[expr1]		item of <A HREF="#String">String</A> or |<A HREF="#List">List</A>|	*<A NAME="expr-[]"></A><B>expr-[]</B>* *<A NAME="E111"></A><B>E111</B>*
 
+							*<A NAME="subscript"></A><B>subscript</B>*
+
 If <A HREF="#expr8">expr8</A> is a <A HREF="#Number">Number</A> or <A HREF="#String">String</A> this results in a <A HREF="#String">String</A> that contains the
 expr1'th single byte from <A HREF="#expr8">expr8</A>.  <A HREF="#expr8">expr8</A> is used <A HREF="motion.html#as">as</A> a <A HREF="#String">String</A>, <A HREF="#expr1">expr1</A> <A HREF="motion.html#as">as</A> a
 <A HREF="#Number">Number</A>.  This doesn't recognize <A HREF="mbyte.html#multi-byte">multi-byte</A> encodings, see |<A HREF="#byteidx()">byteidx()</A>| for
-an alternative.
+an alternative, or use `split()` to turn the <A HREF="#string">string</A> into a <A HREF="#list">list</A> of characters.
 
 Index zero gives the first byte.  This is like <A HREF="motion.html#it">it</A> works in C.  Careful:
 text column numbers start with one!  Example, to get the byte under the
@@ -2337,6 +2340,7 @@ writefile({list}, {fname} [, {flags}])
 xor({expr}, {expr})		<A HREF="#Number">Number</A>  bitwise XOR
 
 
+
 abs({expr})							*<A NAME="abs()"></A><B>abs()</B>*
 		Return the absolute value of {expr}.  When {expr} evaluates to
 		a |<A HREF="#Float">Float</A>| <A HREF="#abs()">abs()</A> returns a |<A HREF="#Float">Float</A>|.  When {expr} can be
@@ -3011,6 +3015,7 @@ cursor({list})
 
 		When there is one argument {list} this is used <A HREF="motion.html#as">as</A> a |<A HREF="#List">List</A>|
 		with two, three or four item:
+			[{lnum}, {col}]
 			[{lnum}, {col}, {off}]
 			[{lnum}, {col}, {off}, {curswant}]
 		This is like the return value of |<A HREF="#getpos()">getpos()</A>| or |<A HREF="#getcurpos()">getcurpos()</A>|,
@@ -3460,7 +3465,10 @@ feedkeys({string} [, {mode}])				*<A NAME="feedkeys()"></A><B>feedkeys()</B>*
 			similar to using &quot;:normal!&quot;.  You can call <A HREF="#feedkeys()">feedkeys()</A>
 			several times without '<A HREF="change.html#x">x</A>' and then one time with '<A HREF="change.html#x">x</A>'
 			(possibly with an empty {string}) to execute all the
-			typeahead.
+			typeahead.  Note that when Vim ends in <A HREF="insert.html#Insert">Insert</A> mode <A HREF="motion.html#it">it</A>
+			will behave <A HREF="motion.html#as">as</A> if <A HREF="intro.html#&lt;Esc&gt;">&lt;Esc&gt;</A> is typed, to avoid getting
+			stuck, waiting for a character to be typed before the
+			<A HREF="usr_41.html#script">script</A> continues.
 		Return value is always 0.
 
 
@@ -7406,7 +7414,7 @@ timer_start({time}, {callback} [, {options}])
 <B>				\ {'repeat': 3})</B>
  		This will invoke MyHandler() three times at 500 msec
 		intervals.
-		{only available when compiled with the |<A HREF="intro.html#+timers">+timers</A>| feature}
+		{only available when compiled with the |<A HREF="various.html#+timers">+timers</A>| feature}
 
 
 timer_stop({timer})					*<A NAME="timer_stop()"></A><B>timer_stop()</B>*
@@ -7929,7 +7937,9 @@ toolbar			Compiled with support for |<A HREF="gui.html#gui-toolbar">gui-toolbar<
 unix			Unix version of Vim.
 user_commands		User-defined commands.
 vertsplit		Compiled with vertically split <A HREF="windows.html#windows">windows</A> |<A HREF="windows.html#:vsplit">:vsplit</A>|.
-vim_starting		True while initial source'ing takes place. |<A HREF="starting.html#startup">startup</A>|
+<A HREF="#vim_starting">vim_starting</A>		True while initial source'ing takes place. |<A HREF="starting.html#startup">startup</A>|
+
+			*<A NAME="vim_starting"></A><B>vim_starting</B>*
 virtualedit		Compiled with <A HREF="options.html#'virtualedit'">'virtualedit'</A> option.
 visual			Compiled with <A HREF="visual.html#Visual">Visual</A> mode.
 visualextra		Compiled with extra <A HREF="visual.html#Visual">Visual</A> mode commands.
@@ -8302,7 +8312,7 @@ other and vice versa, before the used function is defined, <A HREF="motion.html#
 Avoid using the <A HREF="#autoload">autoload</A> functionality at the toplevel.
 
 Hint: If you distribute a bunch of scripts you can pack them together with the
-|<A HREF="pi_vimball.html#vimball">vimball</A>| utility.  Also read the user manual |<A HREF="usr_41.html#distribute-script">distribute-script</A>|.
+|<A HREF="intro.html#vimball">vimball</A>| utility.  Also read the user manual |<A HREF="usr_41.html#distribute-script">distribute-script</A>|.
 
 ==============================================================================
 
@@ -10178,7 +10188,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Fri Jul  8 20:15:22 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/6cee9d1a17177f4ccdf34283c6ed3ffaa98b32cc"><code>6cee9d1</code></a>.
+        Generated Sat Jul  9 20:13:01 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/ef72303a1ff862fde6d9399941c091c0a0692cce"><code>ef72303</code></a>.
       </div>
     </footer>
   </body>
