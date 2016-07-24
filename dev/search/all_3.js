@@ -146,7 +146,7 @@ var searchData=
   ['cin_5fiscase',['cin_iscase',['../indent__c_8c.html#a739dd83be00a79cd65db98a89a74c1fe',1,'indent_c.c']]],
   ['cin_5fislabel',['cin_islabel',['../indent__c_8c.html#a565a33ca457d6077df7cf37508dfcaba',1,'indent_c.c']]],
   ['cin_5fisscopedecl',['cin_isscopedecl',['../indent__c_8c.html#a2d152734970a5aacdc583d3972d305af',1,'indent_c.c']]],
-  ['class_5faf',['CLASS_AF',['../regexp__nfa_8c.html#a93b7555c21697736d6a66ed632185fed',1,'CLASS_AF():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a5c793cdfe74fd6bd1380beee6cb7d8e5',1,'CLASS_af():&#160;regexp_nfa.c']]],
+  ['class_5faf',['CLASS_af',['../regexp__nfa_8c.html#a5c793cdfe74fd6bd1380beee6cb7d8e5',1,'CLASS_af():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a93b7555c21697736d6a66ed632185fed',1,'CLASS_AF():&#160;regexp_nfa.c']]],
   ['class_5falnum',['CLASS_ALNUM',['../regexp_8c.html#ac36a2a434a059004e19f7a94f18e9a7f',1,'regexp.c']]],
   ['class_5falpha',['CLASS_ALPHA',['../regexp_8c.html#ab557ed08a4c70a972afdeefc5031e092',1,'regexp.c']]],
   ['class_5faz',['CLASS_az',['../regexp__nfa_8c.html#aa1f2c8336a09c1e26a84ec9e65edc6d4',1,'CLASS_az():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#aeed2b6d764035da2c8d01ed8c224473d',1,'CLASS_AZ():&#160;regexp_nfa.c']]],

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['dobuf_5faction_5fvalues',['dobuf_action_values',['../buffer_8h.html#ae8ba7bfe4b1c00b0ebc5e4936142df0e',1,'buffer.h']]],
-  ['dobuf_5fstart_5fvalues',['dobuf_start_values',['../buffer_8h.html#acde7d5356df45324dd895a47ae96fdc6',1,'buffer.h']]]
+  ['cdscope',['CdScope',['../ex__docmd_8h.html#a91cbe92d75f10405beaffa819a7fc8af',1,'ex_docmd.h']]],
+  ['channeltype',['ChannelType',['../channel_8c.html#a19a96edeeb9d37072c4ce9f862d19ba8',1,'channel.c']]],
+  ['csid_5fe',['csid_e',['../if__cscope__defs_8h.html#a4749f14dd57f1e60c59d120789a81738',1,'if_cscope_defs.h']]]
 ];

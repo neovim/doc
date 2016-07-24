@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xdgvartype',['XDGVarType',['../stdpaths__defs_8h.html#a5309c2029baaae3b91d137589e8bd004',1,'stdpaths_defs.h']]]
+  ['workingstatus',['WorkingStatus',['../globals_8h.html#a4ec64f8310e1f754ab829ff0b95ce86a',1,'globals.h']]]
 ];

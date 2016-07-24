@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['getf_5fvalues',['getf_values',['../buffer_8h.html#ac96334ce9e91c5c4ae8c4e2a92a2c2b1',1,'buffer.h']]],
-  ['gregflags',['GRegFlags',['../ops_8h.html#a6cd6ec9dcabe7f3d09924962c836312d',1,'ops.h']]]
+  ['file_5fcomparison',['file_comparison',['../path_8h.html#ad979f31688a4e58ba10df1788b8a7512',1,'path.h']]],
+  ['fileopenflags',['FileOpenFlags',['../os_2fileio_8h.html#a849e6736902cd46f7e79ff6f98eb2d28',1,'fileio.h']]]
 ];
