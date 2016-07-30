@@ -35,6 +35,7 @@ setup_ssh_id() {
     # Private key encrypted by travis encrypt-file
     openssl aes-256-cbc -K ${encrypted_0b2795149c16_key} -iv ${encrypted_0b2795149c16_iv} \
       -in "${BUILD_DIR}/ssh/id_rsa.enc" -out "${SSH_KEY_FILE}" -d
+    chmod 0600 "${SSH_KEY_FILE}"
     trap clean_ssh_id EXIT
   fi
   export GIT_SSH=${BUILD_DIR}/ssh/ssh_wrapper.sh
