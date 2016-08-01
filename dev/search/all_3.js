@@ -229,6 +229,7 @@ var searchData=
   ['cmdbufflen',['cmdbufflen',['../structcmdline__info.html#a6eb0eb3f790c9d2cb91e86c891a66bf2',1,'cmdline_info']]],
   ['cmdbuffsize',['CMDBUFFSIZE',['../os__defs_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;os_defs.h'],['../vim_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;vim.h']]],
   ['cmdchar',['cmdchar',['../structinsert__state.html#a372add259905bef8bc3cbfcf3bbc3ca6',1,'insert_state::cmdchar()'],['../structcmdarg__S.html#a529a1135862402adc4588f86e3f3f632',1,'cmdarg_S::cmdchar()']]],
+  ['cmdcomplete_5fstr_5fto_5ftype',['cmdcomplete_str_to_type',['../ex__docmd_8c.html#a082697ef706517f332d3cd13c4d2888b',1,'ex_docmd.c']]],
   ['cmdfirstc',['cmdfirstc',['../structcmdline__info.html#a94c610d5c86f24b406bbfb6ce9dcd387',1,'cmdline_info']]],
   ['cmdidx',['cmdidx',['../structexarg.html#a2ef28498b904f9bd9127f7fc1b962d67',1,'exarg']]],
   ['cmdindent',['cmdindent',['../structcmdline__info.html#a00eb22aa3e0ecd419c1a05294a32afe5',1,'cmdline_info']]],

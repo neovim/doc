@@ -99,6 +99,7 @@ var searchData=
   ['cmd_5fexists',['cmd_exists',['../ex__docmd_8c.html#a72c162690103f9b02957f61019a8f69f',1,'ex_docmd.c']]],
   ['cmd_5fgchar',['cmd_gchar',['../ex__getln_8c.html#a0b0aab7fed804d7641bd315a973750b9',1,'ex_getln.c']]],
   ['cmd_5fpchar',['cmd_pchar',['../ex__getln_8c.html#ac1f84c61a25e669a23ebb1c537a88dfa',1,'ex_getln.c']]],
+  ['cmdcomplete_5fstr_5fto_5ftype',['cmdcomplete_str_to_type',['../ex__docmd_8c.html#a082697ef706517f332d3cd13c4d2888b',1,'ex_docmd.c']]],
   ['cmdl_5ffkmap',['cmdl_fkmap',['../farsi_8c.html#a28ca9da811b061612ffd6f672392cbb6',1,'farsi.c']]],
   ['cmdline_5fpaste_5freg',['cmdline_paste_reg',['../ops_8c.html#a8e877a04cfd68bab9e0c278fea948d9b',1,'ops.c']]],
   ['cmdline_5fpaste_5fstr',['cmdline_paste_str',['../ex__getln_8c.html#a57fbf4fe588494d54ab5ff4a247146d0',1,'ex_getln.c']]],
