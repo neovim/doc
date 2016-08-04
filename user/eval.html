@@ -835,13 +835,23 @@ expressions are referring to the same |<A HREF="#List">List</A>| or |<A HREF="#D
 of a |<A HREF="#List">List</A>| is different from the original |<A HREF="#List">List</A>|.  When using &quot;is&quot; without
 a |<A HREF="#List">List</A>| or a |<A HREF="#Dictionary">Dictionary</A>| <A HREF="motion.html#it">it</A> is equivalent to using &quot;equal&quot;, using &quot;isnot&quot;
 equivalent to using &quot;not equal&quot;.  Except that a different type means the
-values are different: &quot;4 <A HREF="change.html#==">==</A> '4&#39;&#34;' is true, &quot;4 is '4&#39;&#34;' is false and &quot;<A HREF="motion.html#0">0</A> is []&quot; is
-false and not an error. &quot;is#&quot;/&quot;isnot#&quot; and &quot;is?&quot;/&quot;isnot?&quot; can be used to match
-and ignore <A HREF="change.html#case">case</A>.
+values are different:
+<B>	echo 4 == '4'</B>
+<B>	1</B>
+<B>	echo 4 is '4'</B>
+<B>	0</B>
+<B>	echo 0 is []</B>
+<B>	0</B>
+&quot;is#&quot;/&quot;isnot#&quot; and &quot;is?&quot;/&quot;isnot?&quot; can be used to match and ignore <A HREF="change.html#case">case</A>.
 
 When comparing a <A HREF="#String">String</A> with a <A HREF="#Number">Number</A>, the <A HREF="#String">String</A> is converted to a <A HREF="#Number">Number</A>,
-and the comparison is done on Numbers.	This means that &quot;<A HREF="motion.html#0">0</A> <A HREF="change.html#==">==</A> 'x&#39;&#34;' is TRUE,
-because '<A HREF="change.html#x">x</A>' converted to a <A HREF="#Number">Number</A> is zero.
+and the comparison is done on Numbers. This means that:
+<B>	echo 0 == 'x'</B>
+<B>	1</B>
+because '<A HREF="change.html#x">x</A>' converted to a <A HREF="#Number">Number</A> is zero. However:
+<B>	echo 0 == 'x'</B>
+<B>	0</B>
+Inside a <A HREF="#List">List</A> or <A HREF="#Dictionary">Dictionary</A> this conversion is not used.
 
 When comparing two Strings, this is done with strcmp() or stricmp().  This
 results in the mathematical difference (comparing byte values), not
@@ -2320,6 +2330,10 @@ values({dict})			<A HREF="#List">List</A>	values in {dict}
 virtcol({expr})		<A HREF="#Number">Number</A>	screen column of cursor or <A HREF="motion.html#mark">mark</A>
 visualmode([expr])		<A HREF="#String">String</A>	last visual mode used
 <A HREF="#wildmenumode()">wildmenumode()</A>			<A HREF="#Number">Number</A>	whether <A HREF="options.html#'wildmenu'">'wildmenu'</A> mode is active
+win_getid( [{win} [, {tab}]])   <A HREF="#Number">Number</A>  get <A HREF="windows.html#window">window</A> ID for {win} in {tab}
+win_gotoid( {expr})             <A HREF="#Number">Number</A>  go to <A HREF="windows.html#window">window</A> with ID {expr}
+win_id2tabwin( {expr})          <A HREF="#List">List</A>    get <A HREF="intro.html#tab">tab</A> <A HREF="windows.html#window">window</A> nr from <A HREF="windows.html#window">window</A> ID
+win_id2win( {expr})             <A HREF="#Number">Number</A>  get <A HREF="windows.html#window">window</A> nr from <A HREF="windows.html#window">window</A> ID
 winbufnr({nr})			<A HREF="#Number">Number</A>	buffer number of <A HREF="windows.html#window">window</A> {nr}
 <A HREF="#wincol()">wincol()</A>			<A HREF="#Number">Number</A>	<A HREF="windows.html#window">window</A> column of the cursor
 winheight({nr})		<A HREF="#Number">Number</A>	height of <A HREF="windows.html#window">window</A> {nr}
@@ -7706,6 +7720,33 @@ visualmode([expr])						*<A NAME="visualmode()"></A><B>visualmode()</B>*
 
 
 
+win_getid([{win} [, {tab}]])				*<A NAME="win_getid()"></A><B>win_getid()</B>*
+		Get the <A HREF="windows.html#window">window</A> ID for the specified <A HREF="windows.html#window">window</A>.
+		When {win} is missing use the current <A HREF="windows.html#window">window</A>.
+		With {win} this is the <A HREF="windows.html#window">window</A> number.  The top <A HREF="windows.html#window">window</A> has
+		number 1.
+		Without {tab} use the current <A HREF="intro.html#tab">tab</A>, otherwise the <A HREF="intro.html#tab">tab</A> with
+		number {tab}.  The first <A HREF="intro.html#tab">tab</A> has number one.
+		Return zero if the <A HREF="windows.html#window">window</A> cannot be found.
+
+
+win_gotoid({expr})					*<A NAME="win_gotoid()"></A><B>win_gotoid()</B>*
+		Go to <A HREF="windows.html#window">window</A> with ID {expr}.  This may also change the current
+		<A HREF="tabpage.html#tabpage">tabpage</A>.
+		Return 1 if successful, 0 if the <A HREF="windows.html#window">window</A> cannot be found.
+
+
+win_id2tabwin({expr}					*<A NAME="win_id2tabwin()"></A><B>win_id2tabwin()</B>*
+		Return a <A HREF="#list">list</A> with the <A HREF="intro.html#tab">tab</A> number and <A HREF="windows.html#window">window</A> number of <A HREF="windows.html#window">window</A>
+		with ID {expr}: [tabnr, winnr].
+		Return [0, 0] if the <A HREF="windows.html#window">window</A> cannot be found.
+
+
+win_id2win({expr})					*<A NAME="win_id2win()"></A><B>win_id2win()</B>*
+		Return the <A HREF="windows.html#window">window</A> number of <A HREF="windows.html#window">window</A> with ID {expr}.
+		Return 0 if the <A HREF="windows.html#window">window</A> cannot be found in the current <A HREF="tabpage.html#tabpage">tabpage</A>.
+
+
 							*<A NAME="winbufnr()"></A><B>winbufnr()</B>*
 winbufnr({nr})	The result is a <A HREF="#Number">Number</A>, which is the number of the buffer
 		associated with <A HREF="windows.html#window">window</A> {nr}.  When {nr} is zero, the number of
@@ -10260,7 +10301,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Wed Aug  3 20:12:09 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/08d11bd42f3cacc66f3d6097ff18c50059079f14"><code>08d11bd</code></a>.
+        Generated Thu Aug  4 20:13:33 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/5a8ae8d3fe983e53ec2806e4fefc48d55e3415b9"><code>5a8ae8d</code></a>.
       </div>
     </footer>
   </body>
