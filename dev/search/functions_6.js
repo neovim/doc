@@ -119,6 +119,7 @@ var searchData=
   ['get_5ftags',['get_tags',['../tag_8c.html#a917253021b3473d4cce029be257256c2',1,'tag.c']]],
   ['get_5ftrans_5fbufname',['get_trans_bufname',['../screen_8c.html#a9ab9536ce6bdf4a3b21adb6389575a34',1,'screen.c']]],
   ['get_5ftty_5foption',['get_tty_option',['../option_8c.html#a22ed3a509fce4ce463247c34a725f4ad',1,'option.c']]],
+  ['get_5ftv_5fnumber',['get_tv_number',['../eval_8c.html#a694d0f84417cf644666652b71e32e69a',1,'eval.c']]],
   ['get_5ftv_5fnumber_5fchk',['get_tv_number_chk',['../eval_8c.html#a6aae64fa854b21abf482e712f097fe1a',1,'eval.c']]],
   ['get_5ftv_5fstring_5fchk',['get_tv_string_chk',['../eval_8c.html#a3d3bf3d45f69910679a6eadd7da2d003',1,'eval.c']]],
   ['get_5fuser_5fcmd_5faddr_5ftype',['get_user_cmd_addr_type',['../ex__docmd_8c.html#a688a42e263c2a7c9637febab37216c41',1,'ex_docmd.c']]],
