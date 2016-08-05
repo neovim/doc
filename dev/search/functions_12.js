@@ -211,7 +211,7 @@ var searchData=
   ['status_5fredraw_5fcurbuf',['status_redraw_curbuf',['../screen_8c.html#ad6dc9cd77650ba74bef3b412243f5c35',1,'screen.c']]],
   ['stdpaths_5fget_5fxdg_5fvar',['stdpaths_get_xdg_var',['../stdpaths_8c.html#a024a41673357bdde67227e09c4de7ab3',1,'stdpaths.c']]],
   ['stdpaths_5fuser_5fconf_5fsubpath',['stdpaths_user_conf_subpath',['../stdpaths_8c.html#af21229d3e68bef6233785c16b898f148',1,'stdpaths.c']]],
-  ['stdpaths_5fuser_5fdata_5fsubpath',['stdpaths_user_data_subpath',['../stdpaths_8c.html#aa850e881f04ad9e5ab6b37f4ce730892',1,'stdpaths.c']]],
+  ['stdpaths_5fuser_5fdata_5fsubpath',['stdpaths_user_data_subpath',['../stdpaths_8c.html#ae79fddd02e09484a5c414fa0bea7829e',1,'stdpaths.c']]],
   ['stl_5fconnected',['stl_connected',['../screen_8c.html#a8a284f0cd2834bf8bc7d5d383a8c5df6',1,'screen.c']]],
   ['stop_5farrow',['stop_arrow',['../edit_8c.html#ac7aeb48fc982ae1e6d43f6a511542b1d',1,'edit.c']]],
   ['stop_5fredo_5fins',['stop_redo_ins',['../getchar_8c.html#a1cc4c14a89199e66bd4f2be949016bff',1,'getchar.c']]],

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['p',['p',['../fileio_8c.html#a4c3cc73420e5866312929634a8de9f0e',1,'p():&#160;fileio.c'],['../sha256_8c.html#a8e8a14b8da1459bd6fd0b55b3171ab06',1,'P():&#160;sha256.c']]],
+  ['p',['P',['../sha256_8c.html#a8e8a14b8da1459bd6fd0b55b3171ab06',1,'P():&#160;sha256.c'],['../fileio_8c.html#a4c3cc73420e5866312929634a8de9f0e',1,'p():&#160;fileio.c']]],
   ['p_5facd',['p_acd',['../option__defs_8h.html#a63b575d361b4b4ef34bb665dd678bf51',1,'option_defs.h']]],
   ['p_5faleph',['p_aleph',['../option__defs_8h.html#ac114606ee3126205617efa00d20527ce',1,'option_defs.h']]],
   ['p_5falloced',['P_ALLOCED',['../option_8c.html#a0956753108d9c20acbe7525c1cbd74ee',1,'option.c']]],
@@ -132,6 +132,7 @@ var searchData=
   ['p_5fmp',['p_mp',['../option__defs_8h.html#a03f61259a7289945b0e836304f60cf64',1,'option_defs.h']]],
   ['p_5fmsm',['p_msm',['../option__defs_8h.html#a8047e4bf20dcdb5b60e514796eafc2bf',1,'option_defs.h']]],
   ['p_5fnfname',['P_NFNAME',['../option_8c.html#a5baa4ef75b1e0c9f030239bc67a19a2b',1,'option.c']]],
+  ['p_5fno_5fdef_5fexp',['P_NO_DEF_EXP',['../option_8c.html#af61806dd1e5b18e681d659f2ea4701d0',1,'option.c']]],
   ['p_5fno_5fmkrc',['P_NO_MKRC',['../option_8c.html#ac40608eb66378075f276c6114ae5276c',1,'option.c']]],
   ['p_5fno_5fml',['P_NO_ML',['../option_8c.html#acc3c76e5d30c1c19d8d7b1b12152cd7f',1,'option.c']]],
   ['p_5fnodefault',['P_NODEFAULT',['../option_8c.html#acadfc7c0e2c1049872d471fba96eae18',1,'option.c']]],
@@ -177,7 +178,7 @@ var searchData=
   ['p_5fsc',['p_sc',['../option__defs_8h.html#a78d578f8a1711adb0cced21bf3afae46',1,'option_defs.h']]],
   ['p_5fscs',['p_scs',['../option__defs_8h.html#a8b2fd122c817cc6bf4f0e0d9d5a0b98d',1,'option_defs.h']]],
   ['p_5fsections',['p_sections',['../option__defs_8h.html#a356b5a09926dd95870ddc6673cb45ea2',1,'option_defs.h']]],
-  ['p_5fsecure',['P_SECURE',['../option_8c.html#ac892fc4fabcac0160e59c4f33e5b7c8a',1,'P_SECURE():&#160;option.c'],['../option__defs_8h.html#a6e07d83ec16d32bc5c6dec679f4833d5',1,'p_secure():&#160;option_defs.h']]],
+  ['p_5fsecure',['p_secure',['../option__defs_8h.html#a6e07d83ec16d32bc5c6dec679f4833d5',1,'p_secure():&#160;option_defs.h'],['../option_8c.html#ac892fc4fabcac0160e59c4f33e5b7c8a',1,'P_SECURE():&#160;option.c']]],
   ['p_5fsel',['p_sel',['../option__defs_8h.html#a4d3414c2fee9cab576dfcae3e05c8b2b',1,'option_defs.h']]],
   ['p_5fsft',['p_sft',['../option__defs_8h.html#a958855566dfe0521eb036a5599be9acb',1,'option_defs.h']]],
   ['p_5fsh',['p_sh',['../option__defs_8h.html#a282f3a73a693abd64d9c8a39349b4d8e',1,'option_defs.h']]],

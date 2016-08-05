@@ -12,6 +12,7 @@ var searchData=
   ['p_5fhid',['P_HID',['../option__defs_8h.html#aa385bac96df7c0023e45c862b1961ef6',1,'option_defs.h']]],
   ['p_5finsecure',['P_INSECURE',['../option_8c.html#a69eb7e5381c095ebb305cba0cffeac97',1,'option.c']]],
   ['p_5fnfname',['P_NFNAME',['../option_8c.html#a5baa4ef75b1e0c9f030239bc67a19a2b',1,'option.c']]],
+  ['p_5fno_5fdef_5fexp',['P_NO_DEF_EXP',['../option_8c.html#af61806dd1e5b18e681d659f2ea4701d0',1,'option.c']]],
   ['p_5fno_5fmkrc',['P_NO_MKRC',['../option_8c.html#ac40608eb66378075f276c6114ae5276c',1,'option.c']]],
   ['p_5fno_5fml',['P_NO_ML',['../option_8c.html#acc3c76e5d30c1c19d8d7b1b12152cd7f',1,'option.c']]],
   ['p_5fnodefault',['P_NODEFAULT',['../option_8c.html#acadfc7c0e2c1049872d471fba96eae18',1,'option.c']]],
