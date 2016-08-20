@@ -53,7 +53,6 @@
 3. Connecting			|<A HREF="#rpc-connecting">rpc-connecting</A>|
 4. Clients			|<A HREF="#rpc-api-client">rpc-api-client</A>|
 5. Types			|<A HREF="#rpc-types">rpc-types</A>|
-6. Vimscript functions		|<A HREF="#rpc-vim-functions">rpc-vim-functions</A>|
 
 ==============================================================================
 
@@ -111,12 +110,16 @@ To get a formatted dump of the <A HREF="api.html#API">API</A> using <A HREF="if_
 
 3. Connecting						      *<A NAME="rpc-connecting"></A><B>rpc-connecting</B>*
 
-There are several ways to open a <A HREF="#msgpack-rpc">msgpack-rpc</A> stream to an Nvim server:
+There are several ways to open a <A HREF="#msgpack-rpc">msgpack-rpc</A> channel to an Nvim instance:
 
   1. Through stdin/stdout when `nvim` is started with `--embed`. This is how
      applications can embed Nvim.
 
-  2. Through stdin/stdout of some other process spawned by |<A HREF="eval.html#rpcstart()">rpcstart()</A>|.
+  2. Through stdin/stdout of some other process spawned by |<A HREF="eval.html#jobstart()">jobstart()</A>|.
+     Set the &quot;<A HREF="#rpc">rpc</A>&quot; key to |<A HREF="eval.html#v:true">v:true</A>| in the <A HREF="options.html#options">options</A> <A HREF="eval.html#dict">dict</A> to use the job's stdin
+     and stdout <A HREF="motion.html#as">as</A> a single msgpack channel that is processed directly by
+     Nvim.  Then <A HREF="motion.html#it">it</A> is not possible to process raw data to or from the
+     process's stdin and stdout. stderr can still be used, though.
 
   3. Through the socket automatically created with each instance. The socket
      location is stored in |<A HREF="eval.html#v:servername">v:servername</A>|.
@@ -155,11 +158,12 @@ A better way is to use the <A HREF="if_pyth.html#Python">Python</A> REPL with th
 <B>    &gt;&gt;&gt; nvim = attach('socket', path='[address]')</B>
 <B>    &gt;&gt;&gt; nvim.command('echo "hello world!"')</B>
  
-You can also embed an Nvim instance via |<A HREF="eval.html#rpcstart()">rpcstart()</A>|
+You can also embed an Nvim instance via |<A HREF="eval.html#jobstart()">jobstart()</A>|, and communicate using
+|<A HREF="eval.html#rpcrequest()">rpcrequest()</A>| and |<A HREF="eval.html#rpcnotify()">rpcnotify()</A>|:
 
-<B>    let vim = rpcstart('nvim', ['--embed'])</B>
+<B>    let vim = jobstart(['nvim', '--embed'], {'rpc': v:true})</B>
 <B>    echo rpcrequest(vim, 'vim_eval', '"Hello " . "world!"')</B>
-<B>    call rpcstop(vim)</B>
+<B>    call jobstop(vim)</B>
  
 ==============================================================================
 
@@ -281,32 +285,13 @@ the type codes, because a client may be built against one Nvim version but
 connect to another with different type codes.
 
 ==============================================================================
-
-6. Vimscript <A HREF="eval.html#functions">functions</A>				           *<A NAME="rpc-vim-functions"></A><B>rpc-vim-functions</B>*
-
-<A HREF="#RPC">RPC</A> <A HREF="eval.html#functions">functions</A> are available in Vimscript:
-
-  1. |<A HREF="eval.html#rpcstart()">rpcstart()</A>|: Similarly to |<A HREF="eval.html#jobstart()">jobstart()</A>|, this will spawn a co-process
-     with its standard handles connected to Nvim. The difference is that it's
-     not possible to process raw data to or from the process's stdin, stdout,
-     or stderr.  This is because the job's stdin and stdout are used <A HREF="motion.html#as">as</A>
-     a single msgpack channel that is processed directly by Nvim.
-  2. |<A HREF="eval.html#rpcstop()">rpcstop()</A>|: Same <A HREF="motion.html#as">as</A> |<A HREF="eval.html#jobstop()">jobstop()</A>|, but operates on handles returned by
-     |<A HREF="eval.html#rpcstart()">rpcstart()</A>|.
-  3. |rpcrequest()|: Sends a <A HREF="#msgpack-rpc">msgpack-rpc</A> request to the process.
-  4. |rpcnotify()|: Sends a <A HREF="#msgpack-rpc">msgpack-rpc</A> notification to the process.
-
-|<A HREF="eval.html#rpcrequest()">rpcrequest()</A>| and |<A HREF="eval.html#rpcnotify()">rpcnotify()</A>| can also be used with channels connected to
-a <A HREF="nvim.html#nvim">nvim</A> server. |<A HREF="eval.html#v:servername">v:servername</A>|
-
-==============================================================================
 <A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
 </PRE>
     </div>
 
     <footer>
       <div class="container">
-        Generated Fri Aug 19 20:14:15 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/6f0f8e7f4abd7a238250b71f8de208ff81e78d9c"><code>6f0f8e7</code></a>.
+        Generated Sat Aug 20 20:08:22 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/71b3e20d0fba20d4957c1949352bde1744a0a947"><code>71b3e20</code></a>.
       </div>
     </footer>
   </body>

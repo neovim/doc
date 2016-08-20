@@ -2225,7 +2225,6 @@ rpcnotify({channel}, {event}[, {args}...])
 				Sends an |<A HREF="msgpack_rpc.html#RPC">RPC</A>| notification to {channel}
 rpcrequest({channel}, {method}[, {args}...])
 				Sends an |<A HREF="msgpack_rpc.html#RPC">RPC</A>| request to {channel}
-rpcstart({prog}[, {argv}])	Spawns {prog} and opens an |<A HREF="msgpack_rpc.html#RPC">RPC</A>| channel
 rpcstop({channel})		Closes an |<A HREF="msgpack_rpc.html#RPC">RPC</A>| {channel}
 screenattr({row}, {col})	<A HREF="#Number">Number</A>	attribute at screen position
 screenchar({row}, {col})	<A HREF="#Number">Number</A>	character at screen position
@@ -4734,8 +4733,10 @@ items({dict})						*<A NAME="items()"></A><B>items()</B>*
 
 
 jobclose({job}[, {stream}])				{Nvim} *<A NAME="jobclose()"></A><B>jobclose()</B>*
-		Close {job}'s {stream}, which can be one &quot;stdin&quot;, &quot;stdout&quot; or
-		&quot;stderr&quot;. If {stream} is omitted, all streams are closed.
+		Close {job}'s {stream}, which can be one of &quot;stdin&quot;, &quot;stdout&quot;,
+		&quot;stderr&quot; or &quot;<A HREF="msgpack_rpc.html#rpc">rpc</A>&quot; (closes the <A HREF="msgpack_rpc.html#rpc">rpc</A> channel for a job started
+		with the &quot;<A HREF="msgpack_rpc.html#rpc">rpc</A>&quot; option.) If {stream} is omitted, all streams
+		are closed.
 
 
 jobpid({job})						{Nvim} *<A NAME="jobpid()"></A><B>jobpid()</B>*
@@ -4760,6 +4761,10 @@ jobsend({job}, {data})					{Nvim} *<A NAME="jobsend()"></A><B>jobsend()</B>*
 <B>			:call jobsend(j, ["abc", "123\n456", ""])</B>
   		will send &quot;abc&lt;NL&gt;123&lt;NUL&gt;456&lt;NL&gt;&quot;.
 
+		If the job was started with the <A HREF="msgpack_rpc.html#rpc">rpc</A> option this function
+		cannot be used, instead use |<A HREF="#rpcnotify()">rpcnotify()</A>| and |<A HREF="#rpcrequest()">rpcrequest()</A>|
+		to communicate with the job.
+
 
 jobstart({cmd}[, {opts}])				{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
 		Spawns {cmd} <A HREF="motion.html#as">as</A> a job.  If {cmd} is a |<A HREF="#List">List</A>| <A HREF="motion.html#it">it</A> is run
@@ -4776,9 +4781,14 @@ jobstart({cmd}[, {opts}])				{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
 		  on_exit  : exit event handler (function name or |<A HREF="#Funcref">Funcref</A>|)
 		  cwd      : Working directory of the job; defaults to
 		             |<A HREF="editing.html#current-directory">current-directory</A>|.
+		  rpc      : If set, |<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>| will be used to communicate
+			     with the job over stdin and stdout. &quot;on_stdout&quot; is
+			     then ignored, but &quot;on_stderr&quot; can still be used.
 		  pty      : If set, the job will be connected to a new pseudo
-		             terminal, and the job streams are connected to
-		             the master file descriptor.
+			     terminal, and the job streams are connected to
+			     the master file descriptor. &quot;on_stderr&quot; is ignored
+			     <A HREF="motion.html#as">as</A> all output will be received on stdout.
+
 		  width    : (pty only) Width of the terminal screen
 		  height   : (pty only) Height of the terminal screen
 		  <A HREF="starting.html#TERM">TERM</A>     : (pty only) $TERM environment variable
@@ -4790,10 +4800,12 @@ jobstart({cmd}[, {opts}])				{Nvim} *<A NAME="jobstart()"></A><B>jobstart()</B>*
 		{opts} is passed <A HREF="motion.html#as">as</A> |<A HREF="#self">self</A>| to the callback; the caller may
 		pass arbitrary data by setting other keys.
 		Returns:
-		  - job ID on success, used by |<A HREF="#jobsend()">jobsend()</A>| and |<A HREF="#jobstop()">jobstop()</A>|
+		  - The job ID on success, which is used by |<A HREF="#jobsend()">jobsend()</A>| (or
+		    |<A HREF="#rpcnotify()">rpcnotify()</A>| and |<A HREF="#rpcrequest()">rpcrequest()</A>| if &quot;rpc&quot; option was used)
+		    and |<A HREF="#jobstop()">jobstop()</A>|
 		  - 0 on invalid arguments or if the job table is full
 		  - -1 if {cmd}[0] is not executable.
-		See |<A HREF="job_control.html#job-control">job-control</A>| for more information.
+		See |<A HREF="job_control.html#job-control">job-control</A>| and |<A HREF="msgpack_rpc.html#msgpack-rpc">msgpack-rpc</A>| for more information.
 
 
 jobstop({job})						{Nvim} *<A NAME="jobstop()"></A><B>jobstop()</B>*
@@ -6072,20 +6084,21 @@ rpcrequest({channel}, {method}[, {args}...])		 {Nvim} *<A NAME="rpcrequest()"></
 
 
 rpcstart({prog}[, {argv}])				   {Nvim} *<A NAME="rpcstart()"></A><B>rpcstart()</B>*
-		Spawns {prog} <A HREF="motion.html#as">as</A> a job (optionally passing the <A HREF="#list">list</A> {argv}),
-		and opens an |<A HREF="msgpack_rpc.html#RPC">RPC</A>| channel with the spawned process's
-		stdin/stdout. Returns:
-		  - channel id on success, which is used by |<A HREF="#rpcrequest()">rpcrequest()</A>|,
-		    |<A HREF="#rpcnotify()">rpcnotify()</A>| and |<A HREF="#rpcstop()">rpcstop()</A>|
-		  - 0 on failure
-		Example:
-<B>			:let rpc_chan = rpcstart('prog', ['arg1', 'arg2'])</B>
+		Deprecated. <A HREF="insert.html#Replace">Replace</A> 
+<B>			:let id = rpcstart('prog', ['arg1', 'arg2'])</B>
+ 		with
+<B>			:let id = jobstart(['prog', 'arg1', 'arg2'],</B>
+<B>					   {'rpc': v:true})</B>
 
 
 rpcstop({channel})					    {Nvim} *<A NAME="rpcstop()"></A><B>rpcstop()</B>*
-		Closes an |<A HREF="msgpack_rpc.html#RPC">RPC</A>| {channel}, possibly created via
-		|<A HREF="#rpcstart()">rpcstart()</A>|. Also closes channels created by connections to
-		|<A HREF="#v:servername">v:servername</A>|.
+		Closes an |<A HREF="msgpack_rpc.html#RPC">RPC</A>| {channel}.  If the channel is a job
+		started with |<A HREF="#jobstart()">jobstart()</A>|  the job is killed.
+		It is better to use |<A HREF="#jobstop()">jobstop()</A>| in this <A HREF="change.html#case">case</A>, or use
+		|jobclose|(id, &quot;<A HREF="msgpack_rpc.html#rpc">rpc</A>&quot;) to only close the channel without
+		killing the job.
+		Closes the socket connection if the channel was opened by
+		connecting to |<A HREF="#v:servername">v:servername</A>|.
 
 
 screenattr(row, col)						*<A NAME="screenattr()"></A><B>screenattr()</B>*
@@ -10301,7 +10314,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Fri Aug 19 20:14:15 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/6f0f8e7f4abd7a238250b71f8de208ff81e78d9c"><code>6f0f8e7</code></a>.
+        Generated Sat Aug 20 20:08:21 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/71b3e20d0fba20d4957c1949352bde1744a0a947"><code>71b3e20</code></a>.
       </div>
     </footer>
   </body>
