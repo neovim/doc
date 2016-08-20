@@ -63,6 +63,7 @@ var searchData=
   ['rmm_5fmaxcol',['rmm_maxcol',['../structregmmatch__T.html#a7d6d95860861cfca1f7720dd40340fbf',1,'regmmatch_T']]],
   ['room',['room',['../structfunccall__S.html#a8e2324220b100325040986686d911576',1,'funccall_S']]],
   ['row',['row',['../structterminal.html#a934c82d30ba9933cf7fd7217311af4d4',1,'terminal::row()'],['../structugrid.html#add41abff660af20b0c8c9da15e3dc1ff',1,'ugrid::row()']]],
+  ['rpc',['rpc',['../structTerminalJobData.html#ae928779eb915a32391d467e307de47b6',1,'TerminalJobData']]],
   ['rs_5flen',['rs_len',['../structregsave__T.html#a2d7cd067656b3a4a86dc9d00130c7447',1,'regsave_T']]],
   ['rs_5fno',['rs_no',['../structregitem__S.html#aac8d53873b83742d43607298e7eb858b',1,'regitem_S']]],
   ['rs_5fscan',['rs_scan',['../structregitem__S.html#a38046a147ce25f4387bdb3e38b2514ef',1,'regitem_S']]],

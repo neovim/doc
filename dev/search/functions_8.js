@@ -9,7 +9,7 @@ var searchData=
   ['inchar',['inchar',['../getchar_8c.html#aa124065252fb794e1e0904b2e15535b8',1,'getchar.c']]],
   ['incl',['incl',['../misc2_8c.html#aa0e44dcb0b1fe6e77d6ce3b5b8a879b4',1,'misc2.c']]],
   ['inindent',['inindent',['../indent_8c.html#a2705b12f4d0970023193b6d86d5d74f1',1,'indent.c']]],
-  ['init',['INIT',['../globals_8h.html#a4f24892868138693b08decfb15ba32f7',1,'globals.h']]],
+  ['init',['INIT',['../globals_8h.html#a3a8ecb61498e77d762a5d040f49418f7',1,'globals.h']]],
   ['init_5fchartab',['init_chartab',['../charset_8c.html#a8751e2d3c8738c511e4eddc27161e18f',1,'charset.c']]],
   ['init_5fhighlight',['init_highlight',['../syntax_8c.html#a2ea133fa4b192c5bf37ecea68a3fc39b',1,'syntax.c']]],
   ['init_5fhistory',['init_history',['../ex__getln_8c.html#a3b9830ecbd98de7ce0be571922d58286',1,'ex_getln.c']]],
