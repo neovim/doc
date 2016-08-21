@@ -1065,6 +1065,8 @@ var searchData=
   ['sub_5fset_5freplacement',['sub_set_replacement',['../ex__cmds_8c.html#a9d76f315daff54ddb78e121980a2dd89',1,'ex_cmds.c']]],
   ['sub_5fstring',['sub_string',['../structShadaEntry.html#a4060fdad05398ea1cea94a40b376395c',1,'ShadaEntry']]],
   ['subcommand',['subcommand',['../structsubcommand.html',1,'']]],
+  ['subflags_5ft',['subflags_T',['../structsubflags__T.html',1,'']]],
+  ['subignoretype',['SubIgnoreType',['../ex__cmds_8c.html#a3408c9306d835a115bd4a8b27258c5cf',1,'ex_cmds.c']]],
   ['subpat',['SUBPAT',['../regexp_8c.html#a0e1acdf94b0aeb301c8b451c6b890fd3',1,'regexp.c']]],
   ['subreplacementstring',['SubReplacementString',['../structSubReplacementString.html',1,'']]],
   ['subs',['subs',['../structnfa__pim__S.html#a764d78972e7bca21a3b6acd2e9492282',1,'nfa_pim_S::subs()'],['../structnfa__thread__T.html#a694c629e71dc80b4bd463005fb9dde0a',1,'nfa_thread_T::subs()']]],

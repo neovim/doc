@@ -34,6 +34,7 @@ var searchData=
   ['stream',['stream',['../structstream.html',1,'']]],
   ['string',['String',['../structString.html',1,'']]],
   ['subcommand',['subcommand',['../structsubcommand.html',1,'']]],
+  ['subflags_5ft',['subflags_T',['../structsubflags__T.html',1,'']]],
   ['subreplacementstring',['SubReplacementString',['../structSubReplacementString.html',1,'']]],
   ['suggest_5ft',['suggest_T',['../structsuggest__T.html',1,'']]],
   ['suginfo_5fs',['suginfo_S',['../structsuginfo__S.html',1,'']]],
