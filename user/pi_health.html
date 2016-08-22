@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: pi_health</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <nav class="navbar">
+          <div class="container-fluid">
+            <div class="navbar-header">
+
+              <a href="/" class="navbar-brand">
+                <img src="/images/logo@2x.png" id="navbar-logo" alt="Neovim">
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: pi_health</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="pi_health.txt"></A><B>pi_health.txt</B>*   Healthcheck framework
+
+Author: TJ DeVries <A HREF="mailto:devries.timothyj@gmail.com">&lt;devries.timothyj@gmail.com&gt;</A> 
+
+==============================================================================
+1. Introduction				|<A HREF="health.html">health.vim-intro</A>|
+2. Commands and <A HREF="eval.html#functions">functions</A>		|<A HREF="health.html">health.vim-manual</A>|
+3. Create a <A HREF="#healthcheck">healthcheck</A>			|<A HREF="health.html">health.vim-dev</A>|
+
+==============================================================================
+
+Introduction				*<A NAME="healthcheck"></A><B>healthcheck</B>* *<A NAME="health.vim-intro"></A><B>health.vim-intro</B>*
+
+Troubleshooting user configuration problems is a time-consuming task that
+developers want to minimize. health.vim provides a simple framework for <A HREF="usr_05.html#plugin">plugin</A>
+authors to hook into, and for users to invoke, to check and report the user's
+configuration and environment. Type this command to try <A HREF="motion.html#it">it</A>:
+
+<B>        :CheckHealth</B>
+ 
+For example, some users have broken or unusual <A HREF="if_pyth.html#Python">Python</A> setups, which breaks the
+|<A HREF="if_pyth.html#:python">:python</A>| command. |<A HREF="#:CheckHealth">:CheckHealth</A>| detects several common <A HREF="if_pyth.html#Python">Python</A> configuration
+problems and reports them. If the Neovim <A HREF="if_pyth.html#Python">Python</A> module is not installed, <A HREF="motion.html#it">it</A>
+shows a warning:
+
+<B>	You have not installed the Neovim Python module</B>
+<B>	You might want to try `pip install Neovim`</B>
+  
+Plugin authors are encouraged to add healthchecks, see |<A HREF="health.html">health.vim-dev</A>|.
+
+==============================================================================
+
+Commands and <A HREF="eval.html#functions">functions</A>			*<A NAME="health.vim-manual"></A><B>health.vim-manual</B>*
+
+Commands
+------------------------------------------------------------------------------
+
+							*<A NAME=":CheckHealth"></A><B>:CheckHealth</B>*
+<A HREF="#:CheckHealth">:CheckHealth</A>          Run all healthchecks and show the output in a new
+                      <A HREF="tabpage.html#tabpage">tabpage</A>. These healthchecks are included by default:
+                        - python2
+                        - <A HREF="if_pyth.html#python3">python3</A>
+                        - <A HREF="if_ruby.html#ruby">ruby</A>
+                        - remote <A HREF="usr_05.html#plugin">plugin</A>
+
+<A HREF="#:CheckHealth">:CheckHealth</A> {plugins}
+                      Run healthchecks for one or more plugins. E.g. to run
+                      only the standard Nvim <A HREF="#healthcheck">healthcheck</A>:
+<B>                        :CheckHealth nvim</B>
+                       To run the healthchecks for the &quot;foo&quot; and &quot;<A HREF="motion.html#bar">bar</A>&quot; plugins
+                      (assuming these plugins are on your <A HREF="options.html#'runtimepath'">'runtimepath'</A> and
+                      they have implemented health#foo#check() and
+                      health#bar#check(), respectively):
+<B>                        :CheckHealth foo bar</B>
+ 
+Functions
+------------------------------------------------------------------------------
+
+health.vim <A HREF="eval.html#functions">functions</A> are for creating new healthchecks. They mostly just <A HREF="diff.html#do">do</A>
+some layout and <A HREF="change.html#formatting">formatting</A>, to give users a consistent presentation.
+
+
+health#report_start({name})				*<A NAME="health#report_start"></A><B>health#report_start</B>*
+	Starts a new report. Most plugins should call this only once, but if
+        you want different sections to appear in your report, call this once
+        per section.
+
+
+health#report_info({msg})				*<A NAME="health#report_info"></A><B>health#report_info</B>*
+	Displays an informational message.
+
+
+health#report_ok({msg})					*<A NAME="health#report_ok"></A><B>health#report_ok</B>*
+	Displays a &quot;success&quot; message.
+
+
+health#report_warn({msg}, [{suggestions}])		*<A NAME="health#report_warn"></A><B>health#report_warn</B>*
+        Displays a warning. {suggestions} is an optional <A HREF="eval.html#List">List</A> of suggestions.
+
+
+health#report_error({msg}, [{suggestions}])		*<A NAME="health#report_error"></A><B>health#report_error</B>*
+        Displays an error. {suggestions} is an optional <A HREF="eval.html#List">List</A> of suggestions.
+
+
+health#{plugin}#check()					*<A NAME="health.user_checker"></A><B>health.user_checker</B>*
+        This is the form of a <A HREF="#healthcheck">healthcheck</A> definition. Call the above <A HREF="eval.html#functions">functions</A>
+        from this function, then |<A HREF="#:CheckHealth">:CheckHealth</A>| does the rest. Example:
+
+<B>                function! health#my_plug#check() abort</B>
+<B>                  silent call s:check_environment_vars()</B>
+<B>                  silent call s:check_python_configuration()</B>
+<B>                endfunction</B>
+ 
+        The function will be found and called automatically when the user
+        invokes |<A HREF="#:CheckHealth">:CheckHealth</A>|.
+
+	All output will be captured from the <A HREF="#healthcheck">healthcheck</A>. Use the
+        health#report_* <A HREF="eval.html#functions">functions</A> so that your <A HREF="#healthcheck">healthcheck</A> has a format
+        consistent with the standard healthchecks.
+
+==============================================================================
+
+Create a <A HREF="#healthcheck">healthcheck</A>			*<A NAME="health.vim-dev"></A><B>health.vim-dev</B>*
+
+Healthchecks are <A HREF="eval.html#functions">functions</A> that check the health of the system. Neovim has
+built-in checkers, found in $VIMRUNTIME/autoload/health/.
+
+To add a new checker for your own <A HREF="usr_05.html#plugin">plugin</A>, simply define a
+health#{plugin}#check() function in autoload/health/{plugin}.vim.
+|<A HREF="#:CheckHealth">:CheckHealth</A>| automatically finds and invokes such <A HREF="eval.html#functions">functions</A>.
+
+If your <A HREF="usr_05.html#plugin">plugin</A> is named &quot;jslint&quot;, then its <A HREF="#healthcheck">healthcheck</A> function must be
+
+<B>        health#jslint#check()</B>
+ 
+defined in this file on <A HREF="options.html#'runtimepath'">'runtimepath'</A>:
+
+<B>        autoload/health/jslint.vim</B>
+ 
+Here's a sample to get started:
+
+<B>        function! health#jslint#check() abort</B>
+<B>          call health#report_start('sanity checks')</B>
+<B>          " perform arbitrary checks</B>
+<B>          " ...</B>
+
+<B>          if looks_good</B>
+<B>            call health#report_ok('found required dependencies')</B>
+<B>          else</B>
+<B>            call health#report_error('cannot find jslint', </B>
+<B>              \ ['npm install --save jslint'])</B>
+<B>          endif</B>
+<B>        endfunction</B>
+ 
+==============================================================================
+
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Mon Aug 22 20:13:46 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/46475a102123e6abcd7954fd9f710b8295a852f7"><code>46475a1</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>
