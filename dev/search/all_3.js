@@ -323,7 +323,7 @@ var searchData=
   ['condit_5fcomb',['CONDIT_COMB',['../spell_8c.html#aac8025451925dfc937fe6cc9fb6dcc2e',1,'spell.c']]],
   ['condit_5fsuf',['CONDIT_SUF',['../spell_8c.html#aef30d48290c62ce3150332a3a76a30fa',1,'spell.c']]],
   ['condstack',['condstack',['../structcondstack.html',1,'']]],
-  ['confirm',['confirm',['../structcmdmod__T.html#a95d6fd02409267f313294f39018c171f',1,'cmdmod_T::confirm()'],['../vim_8h.html#abfa2162bb08cc734980561b5e8a6d2df',1,'CONFIRM():&#160;vim.h']]],
+  ['confirm',['confirm',['../structcmdmod__T.html#a5e9b46a252091cb739b80559dc6966b9',1,'cmdmod_T::confirm()'],['../vim_8h.html#abfa2162bb08cc734980561b5e8a6d2df',1,'CONFIRM():&#160;vim.h']]],
   ['cont_5fadding',['CONT_ADDING',['../globals_8h.html#a9c566198d30c9ae240b0dfab3ded8e0e',1,'globals.h']]],
   ['cont_5fhandle',['cont_handle',['../structTUIData.html#ab089844b2b5db57005d7d79422d9f5dc',1,'TUIData']]],
   ['cont_5fin_5flist',['cont_in_list',['../structsyn__opt__arg__T.html#a74a1ccaf0c5b4588f4a3fb41a83519c6',1,'syn_opt_arg_T::cont_in_list()'],['../structsp__syn.html#afcf440c7b6c44920b2844af78c691a55',1,'sp_syn::cont_in_list()']]],

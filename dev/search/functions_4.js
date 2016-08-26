@@ -21,7 +21,7 @@ var searchData=
   ['encode_5fvim_5flist_5fto_5fbuf',['encode_vim_list_to_buf',['../encode_8c.html#a7e34eae91946c2eedf939bd8a223c378',1,'encode.c']]],
   ['encode_5fvim_5fto_5fecho',['encode_vim_to_echo',['../encode_8h.html#a4aed464d7f69b4062db1ed7a2729c739',1,'encode.h']]],
   ['encode_5fvim_5fto_5fmsgpack',['encode_vim_to_msgpack',['../encode_8h.html#ad44dad9f4ec1c9bb39dcabaaa3c3decb',1,'encode.h']]],
-  ['end_5fglobal_5fchanges',['end_global_changes',['../ops_8c.html#a1755f92bdd8349ee3bb63283f0485654',1,'ops.c']]],
+  ['end_5fbatch_5fchanges',['end_batch_changes',['../ops_8c.html#a75d35969cf6f7b47ca87f77c26d34638',1,'ops.c']]],
   ['end_5fvisual_5fmode',['end_visual_mode',['../normal_8c.html#a8f74875f4dd3322be33dd207d22762e0',1,'normal.c']]],
   ['end_5fword',['end_word',['../search_8c.html#af00b2b062ad84ed4d6a326fcf7f37458',1,'search.c']]],
   ['ends_5fexcmd',['ends_excmd',['../ex__docmd_8c.html#a5f2b00d2fc3b7225ddce914f6d10cc37',1,'ex_docmd.c']]],

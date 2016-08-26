@@ -81,7 +81,7 @@ var searchData=
   ['conceal_5fold_5fcursor_5fline',['conceal_old_cursor_line',['../structnormal__state.html#af5fea00429c3cd051426fbc33a17830f',1,'normal_state']]],
   ['conceal_5fupdate_5flines',['conceal_update_lines',['../structnormal__state.html#aaf459e57483813355c251022bee29c46',1,'normal_state']]],
   ['cond',['cond',['../structui__bridge__data.html#a52fdd357524f17d9ee9a35b1207ab174',1,'ui_bridge_data']]],
-  ['confirm',['confirm',['../structcmdmod__T.html#a95d6fd02409267f313294f39018c171f',1,'cmdmod_T']]],
+  ['confirm',['confirm',['../structcmdmod__T.html#a5e9b46a252091cb739b80559dc6966b9',1,'cmdmod_T']]],
   ['cont_5fhandle',['cont_handle',['../structTUIData.html#ab089844b2b5db57005d7d79422d9f5dc',1,'TUIData']]],
   ['cont_5fin_5flist',['cont_in_list',['../structsyn__opt__arg__T.html#a74a1ccaf0c5b4588f4a3fb41a83519c6',1,'syn_opt_arg_T::cont_in_list()'],['../structsp__syn.html#afcf440c7b6c44920b2844af78c691a55',1,'sp_syn::cont_in_list()']]],
   ['cont_5flist',['cont_list',['../structsyn__opt__arg__T.html#aeff53591c9161429c1425815c9fe97d5',1,'syn_opt_arg_T']]],

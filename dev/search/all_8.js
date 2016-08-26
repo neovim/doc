@@ -91,7 +91,7 @@ var searchData=
   ['hi_5fhash',['hi_hash',['../structhashitem__S.html#a98386bbaac6d9ddf227b2750d8f97a60',1,'hashitem_S']]],
   ['hi_5fkey',['hi_key',['../structhashitem__S.html#a87f4dbc4f9d02097b5146746bb8327c6',1,'hashitem_S']]],
   ['hi_5fkey_5fremoved',['HI_KEY_REMOVED',['../hashtab_8h.html#aa7b771a5887a558072e5fe1e9a73baba',1,'hashtab.h']]],
-  ['hide',['hide',['../structcmdmod__T.html#af3ac33eadb21e331020023b828407d8e',1,'cmdmod_T']]],
+  ['hide',['hide',['../structcmdmod__T.html#aa0d7d350b8720e4d3e340efd2642f210',1,'cmdmod_T']]],
   ['hifirst',['hifirst',['../eval_8c.html#aad809109aedf39b2cde849b385abddfd',1,'eval.c']]],
   ['highlight_5fattr',['highlight_attr',['../globals_8h.html#ac7732bec98810c862faa164caa080a8b',1,'globals.h']]],
   ['highlight_5fchanged',['highlight_changed',['../syntax_8c.html#ac380bbba026d274d3417d414c3683757',1,'syntax.c']]],

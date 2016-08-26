@@ -152,7 +152,7 @@ var searchData=
   ['lnum_5fsave',['lnum_save',['../structfline__T.html#a60bd75e9f893f7f6e2519b6ca70afa2b',1,'fline_T']]],
   ['load_5fcolors',['load_colors',['../syntax_8c.html#a38018f9210ee892d32152184634dbd8e',1,'syntax.c']]],
   ['localdir',['localdir',['../structtabpage__S.html#a90fda0c8d94817941e24cb50597197e6',1,'tabpage_S']]],
-  ['lockmarks',['lockmarks',['../structcmdmod__T.html#ab78263dde1751c230262b84fa76e2547',1,'cmdmod_T']]],
+  ['lockmarks',['lockmarks',['../structcmdmod__T.html#aaf25fa8e554f5a7ae89485d9ce9fc7b7',1,'cmdmod_T']]],
   ['log_2ec',['log.c',['../log_8c.html',1,'']]],
   ['log_2eh',['log.h',['../log_8h.html',1,'']]],
   ['log_5finit',['log_init',['../log_8c.html#a2508fad025e49f9746b6c178dce6917e',1,'log.c']]],
