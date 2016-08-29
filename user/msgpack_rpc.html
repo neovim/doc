@@ -53,6 +53,7 @@
 3. Connecting			|<A HREF="#rpc-connecting">rpc-connecting</A>|
 4. Clients			|<A HREF="#rpc-api-client">rpc-api-client</A>|
 5. Types			|<A HREF="#rpc-types">rpc-types</A>|
+6. Remote UIs			|<A HREF="#rpc-remote-ui">rpc-remote-ui</A>|
 
 ==============================================================================
 
@@ -285,13 +286,179 @@ the type codes, because a client may be built against one Nvim version but
 connect to another with different type codes.
 
 ==============================================================================
+
+6. Remote UIs					           *<A NAME="rpc-remote-ui"></A><B>rpc-remote-ui</B>*
+
+Nvim allows Graphical user interfaces to be implemented by separate processes
+communicating with Nvim over the <A HREF="#RPC">RPC</A> <A HREF="api.html#API">API</A>. Currently the ui model conists of a
+terminal-like grid with one single, monospace font size, with a few elements
+that could be drawn separately from the grid (for the momemnt only the popup
+menu)
+
+After connecting to a <A HREF="nvim.html#nvim">nvim</A> instance (typically a spawned, embedded instance)
+use the |nvim_ui_attach|(width, height, <A HREF="options.html#options">options</A>) <A HREF="api.html#API">API</A> method to tell <A HREF="nvim.html#nvim">nvim</A> that your
+program wants to draw the <A HREF="nvim.html#nvim">nvim</A> screen on a grid with &quot;width&quot; times
+&quot;height&quot; cells. &quot;<A HREF="options.html#options">options</A>&quot; should be a dictionary with the following (all
+optional) keys:
+	`rgb`:			Controls what color format to use.
+				Set to true (default) to use 24-bit rgb
+				colors.
+				Set to false to use terminal color codes (at
+				most 256 different colors).
+	`popupmenu_external`:	Instead of drawing the completion popupmenu on
+				the grid, Nvim will send higher-level events to
+				the ui and let <A HREF="motion.html#it">it</A> draw the popupmenu.
+				Defaults to false.
+
+Nvim will then send <A HREF="#msgpack-rpc">msgpack-rpc</A> notifications, with the method name &quot;redraw&quot;
+and a single argument, an array of screen updates (described below).
+These should be processed in order. Preferably the user should only be able to
+see the screen state after all updates are processed (not any intermediate
+state after processing only a part of the array).
+
+Screen updates are arrays. The first element a <A HREF="eval.html#string">string</A> describing the kind
+of update.
+
+[&quot;resize&quot;, width, height]
+	The grid is resized to `width` and `height` cells.
+
+[&quot;clear&quot;]
+	Clear the screen.
+
+[&quot;eol_clear&quot;]
+	Clear from the cursor position to the end of the current line.
+
+[&quot;cursor_goto&quot;, row, col]
+	Move the cursor to position (row, col). Currently, the same cursor is
+	used to define the position for text insertion and the visible cursor.
+	However, only the last cursor position, after processing the entire
+	array in the &quot;redraw&quot; event, is intended to be a visible cursor
+	position.
+
+[&quot;update_fg&quot;, color]
+[&quot;update_bg&quot;, color]
+[&quot;update_sp&quot;, color]
+	Set the default foreground, background and special colors
+	respectively.
+
+[&quot;highlight_set&quot;, attrs]
+	Set the attributes that the next text put on the screen will have.
+	`attrs` is a <A HREF="eval.html#dict">dict</A> with the keys below. Any absent key is reset
+	to its default value. Color defaults are set by the `update_fg` etc
+	updates. All <A HREF="options.html#boolean">boolean</A> keys default to false.
+
+	`foreground`:	foreground color.
+	`background`:	backround color.
+	`special`:	color to use for <A HREF="syntax.html#underline">underline</A> and <A HREF="syntax.html#undercurl">undercurl</A>, when present.
+	`reverse`:	reverse video. Foreground and background colors are
+			switched.
+	`italic`:	<A HREF="syntax.html#italic">italic</A> text.
+	`bold`:		<A HREF="syntax.html#bold">bold</A> text.
+	`underline`:	underlined text. The line has `special` color.
+	`undercurl`:	undercurled text. The curl has `special` color.
+
+[&quot;put&quot;, text]
+	The (utf-8 encoded) <A HREF="eval.html#string">string</A> `text` is put at the cursor position
+	(and the cursor is advanced), with the highlights <A HREF="motion.html#as">as</A> set by the
+	last `highlight_set` update.
+
+[&quot;set_scroll_region&quot;, top, bot, left, right]
+	Define the scroll region used by `scroll` below.
+
+[&quot;scroll&quot;, count]
+	Scroll the text in the scroll region. The diagrams below illustrate
+	what will happen, depending on the scroll direction. &quot;<A HREF="change.html#=">=</A>&quot; is used to
+	represent the SR(scroll region) boundaries and &quot;<A HREF="motion.html#-">-</A>&quot; the moved rectangles.
+	Note that dst and src share a common region.
+
+	If <A HREF="intro.html#count">count</A> is bigger than 0, move a rectangle in the SR up, this can
+	happen while <A HREF="scroll.html#scrolling">scrolling</A> down.
+
+<B>		+-------------------------+</B>
+<B>		| (clipped above SR)      |            ^</B>
+<B>		|=========================| dst_top    |</B>
+<B>		| dst (still in SR)       |            |</B>
+<B>		+-------------------------+ src_top    |</B>
+<B>		| src (moved up) and dst  |            |</B>
+<B>		|-------------------------| dst_bot    |</B>
+<B>		| src (cleared)           |            |</B>
+<B>		+=========================+ src_bot</B>
+ 
+	If <A HREF="intro.html#count">count</A> is <A HREF="various.html#less">less</A> than zero, move a rectangle in the SR down, this can
+	happen while <A HREF="scroll.html#scrolling">scrolling</A> up.
+
+<B>		+=========================+ src_top</B>
+<B>		| src (cleared)           |            |</B>
+<B>		|------------------------ | dst_top    |</B>
+<B>		| src (moved down) and dst|            |</B>
+<B>		+-------------------------+ src_bot    |</B>
+<B>		| dst (still in SR)       |            |</B>
+<B>		|=========================| dst_bot    |</B>
+<B>		| (clipped below SR)      |            v</B>
+<B>		+-------------------------+</B>
+ 
+[&quot;set_title&quot;, title]
+[&quot;set_icon&quot;, icon]
+	Set the <A HREF="windows.html#window">window</A> title, and icon (minimized) <A HREF="windows.html#window">window</A> title, respectively.
+	In windowing systems not distinguishing between the two, &quot;set_icon&quot;
+	can be ignored.
+
+[&quot;mouse_on&quot;]
+[&quot;mouse_off&quot;]
+	Tells the client whether mouse support, <A HREF="motion.html#as">as</A> determined by |<A HREF="options.html#'mouse'">'mouse'</A>|
+	option, is considered to be active in the current mode. This is mostly
+	useful for a terminal frontend, or other situations where <A HREF="nvim.html#nvim">nvim</A> mouse
+	would conflict with other usages of the mouse. It is safe for a client
+	to ignore this and always send mouse events.
+
+[&quot;busy_on&quot;]
+[&quot;busy_off&quot;]
+	Nvim started or stopped being busy, and possibly not responsible to user
+	input. This could be indicated to the user by hiding the cursor.
+
+[&quot;suspend&quot;]
+	|<A HREF="starting.html#:suspend">:suspend</A>| command or |<A HREF="intro.html#Ctrl-Z">Ctrl-Z</A>| <A HREF="map.html#mapping">mapping</A> is used. A terminal client (or other
+	client where <A HREF="motion.html#it">it</A> makes sense) could <A HREF="starting.html#suspend">suspend</A> itself.  Other clients can
+	safely ignore <A HREF="motion.html#it">it</A>.
+
+[&quot;bell&quot;]
+[&quot;visual_bell&quot;]
+	Notify the user with an audible or visual bell, respectively.
+
+[&quot;update_menu&quot;]
+	The menu mappings changed.
+
+[&quot;mode_change&quot;, mode]
+	The mode changed. Currently sent when &quot;insert&quot;, &quot;replace&quot; and &quot;normal&quot;
+	modes are entered. A client could for instance change the cursor shape.
+
+[&quot;popupmenu_show&quot;, items, selected, row, col]
+	When `popupmenu_external` is set to true, <A HREF="nvim.html#nvim">nvim</A> will not draw the
+	popupmenu on the grid, instead when the popupmenu is to be displayed
+	this update is sent. `items` is an array of the items to show, the
+	items are themselves arrays of the form [word, kind, menu, info]
+	<A HREF="motion.html#as">as</A> defined at |<A HREF="insert.html#complete-items">complete-items</A>|, except that `word` is replaced by
+	`abbr` if present.  `selected` is the initially selected item, either a
+	zero-based index into the array of items, or -1 if no item is
+	selected. `row` and `col` is the anchor position, where the first
+	character of the completed <A HREF="motion.html#word">word</A> will be.
+
+[&quot;popupmenu_select&quot;, selected]
+	An item in the currently displayed popupmenu is selected. `selected`
+	is either a zero-based index into the array of items from the last
+	`popupmenu_show` event, or -1 if no item is selected.
+
+[&quot;popupmenu_hide&quot;]
+	The popupmenu is hidden.
+
+==============================================================================
 <A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
 </PRE>
     </div>
 
     <footer>
       <div class="container">
-        Generated Sun Aug 28 20:07:56 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/97c6d80ca7364d571ade073a7fb498b180b54dd3"><code>97c6d80</code></a>.
+        Generated Mon Aug 29 20:12:18 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/7fd771619f2a2e2fe6007aaa6aa9a02cbdd205bd"><code>7fd7716</code></a>.
       </div>
     </footer>
   </body>
