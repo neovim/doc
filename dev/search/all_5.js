@@ -161,7 +161,7 @@ var searchData=
   ['eval_5fto_5fstring_5fsafe',['eval_to_string_safe',['../eval_8c.html#a3135a5345df88e772530d5a297947251',1,'eval.c']]],
   ['eval_5fto_5fstring_5fskip',['eval_to_string_skip',['../eval_8c.html#a87b4a42e053eceb48fce2f4d927a8376',1,'eval.c']]],
   ['eval_5fvars',['eval_vars',['../ex__docmd_8c.html#a3ee05172915ce153268d68494f997a36',1,'ex_docmd.c']]],
-  ['event',['event',['../structqueue__item.html#ab9f38adaa5b69bf1e04945fd0ff74b36',1,'queue_item::event()'],['../structAutoPatCmd.html#a5b57f801dcf26ae979df8e63db32e31f',1,'AutoPatCmd::event()'],['../event_2defs_8h.html#a408e1e4bb05c7dfcf6900e8bffebd072',1,'Event():&#160;defs.h']]],
+  ['event',['event',['../structqueue__item.html#ab9f38adaa5b69bf1e04945fd0ff74b36',1,'queue_item::event()'],['../structAutoPatCmd.html#a5b57f801dcf26ae979df8e63db32e31f',1,'AutoPatCmd::event()'],['../structui__t.html#a668ae74959d1d939ed5e5e132282a4b0',1,'ui_t::event()'],['../event_2defs_8h.html#a408e1e4bb05c7dfcf6900e8bffebd072',1,'Event():&#160;defs.h']]],
   ['event_5fhandler_5fmax_5fargc',['EVENT_HANDLER_MAX_ARGC',['../event_2defs_8h.html#a6ec760f4a6f0e302f99c5ca915e9d547',1,'defs.h']]],
   ['event_5finit',['event_init',['../main_8c.html#a703aee6d18b09a8b0e7fa762e6024594',1,'main.c']]],
   ['event_5fscheduler',['event_scheduler',['../event_2defs_8h.html#a1d153d1d0e6d6774ff8e075e250f37bd',1,'defs.h']]],

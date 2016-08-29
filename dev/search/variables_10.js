@@ -289,6 +289,7 @@ var searchData=
   ['ps_5ffontname',['ps_fontname',['../structprt__ps__font__S.html#aa9af39a717f2debc30d4b95d9d26eb63',1,'prt_ps_font_S']]],
   ['ptr',['ptr',['../structinsert__state.html#a693dcfedbbf598ab510247998dc89678',1,'insert_state::ptr()'],['../structregsave__T.html#a7c7d0899db2da921e33aaca1a5f3a320',1,'regsave_T::ptr()'],['../structsave__se__T.html#a9f4951984f2783985dbb176d2f8aef77',1,'save_se_T::ptr()'],['../structnfa__pim__S.html#a1e831d5bb6b3b69fd5325eb1d403ff6d',1,'nfa_pim_S::ptr()'],['../structu__header.html#a76b7139f57496d4cddde200b63d47776',1,'u_header::ptr()']]],
   ['pty',['pty',['../structTerminalJobData.html#a169b73ef42d5ab772ac9341ad98ad15b',1,'TerminalJobData']]],
+  ['pum_5fexternal',['pum_external',['../structui__t.html#a98e03fe7d25a457b7b5c918ec883184e',1,'ui_t']]],
   ['pum_5fextra',['pum_extra',['../structpumitem__T.html#a6eff95dd03db4971ecef4d929b643838',1,'pumitem_T']]],
   ['pum_5finfo',['pum_info',['../structpumitem__T.html#a1c68a30eba2ae938e4a49e5d761ad49c',1,'pumitem_T']]],
   ['pum_5fkind',['pum_kind',['../structpumitem__T.html#ab7a77b05b2b38ea311cea1580c9f13a4',1,'pumitem_T']]],

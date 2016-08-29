@@ -10,5 +10,9 @@ var searchData=
   ['not_5fexiting',['not_exiting',['../ex__docmd_8c.html#a08c3f557376be97916064edf56d27dd0',1,'ex_docmd.c']]],
   ['not_5fwriting',['not_writing',['../ex__cmds_8c.html#ac4a1bf4814b50fdf26269252e07fa3c4',1,'ex_cmds.c']]],
   ['number_5fwidth',['number_width',['../screen_8c.html#a9c404f9aed34a4bdceb3df25c2d80d33',1,'screen.c']]],
-  ['nv_5fdiffgetput',['nv_diffgetput',['../diff_8c.html#a10a822a5fe93a598867f59ea4b682e5c',1,'diff.c']]]
+  ['nv_5fdiffgetput',['nv_diffgetput',['../diff_8c.html#a10a822a5fe93a598867f59ea4b682e5c',1,'diff.c']]],
+  ['nvim_5fui_5fattach',['nvim_ui_attach',['../api_2ui_8c.html#a1c511a0610c7d0bb2159b31c582ee10a',1,'ui.c']]],
+  ['nvim_5fui_5fdetach',['nvim_ui_detach',['../api_2ui_8c.html#a9a5f76ba0d985b8884c706347b443a20',1,'ui.c']]],
+  ['nvim_5fui_5fset_5foption',['nvim_ui_set_option',['../api_2ui_8c.html#a71ae5b7c5bd4d0e7894cc1ded9b3bd54',1,'ui.c']]],
+  ['nvim_5fui_5ftry_5fresize',['nvim_ui_try_resize',['../api_2ui_8c.html#a491719eb40f29b940646c49c6fff25ce',1,'ui.c']]]
 ];
