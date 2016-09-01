@@ -91,7 +91,7 @@ instance.
 
 There are three ways to obtain <A HREF="api.html#API">API</A> metadata:
 
-  1. Connect to a running Nvim instance and call `vim_get_api_info` via
+  1. Connect to a running Nvim instance and call `nvim_get_api_info` via
      <A HREF="#msgpack-rpc">msgpack-rpc</A>. This is best for clients written in dynamic languages which
      can define <A HREF="eval.html#functions">functions</A> at runtime.
 
@@ -150,7 +150,7 @@ Nvim instance:
 <B>    require 'msgpack/rpc/transport/unix'</B>
 
 <B>    nvim = MessagePack::RPC::Client.new(MessagePack::RPC::UNIXTransport.new, ENV['NVIM_LISTEN_ADDRESS'])</B>
-<B>    result = nvim.call(:vim_command, 'echo "hello world!"')</B>
+<B>    result = nvim.call(:nvim_command, 'echo "hello world!"')</B>
  
 A better way is to use the <A HREF="if_pyth.html#Python">Python</A> REPL with the `neovim` package, where <A HREF="api.html#API">API</A>
 <A HREF="eval.html#functions">functions</A> can be called interactively:
@@ -162,9 +162,9 @@ A better way is to use the <A HREF="if_pyth.html#Python">Python</A> REPL with th
 You can also embed an Nvim instance via |<A HREF="eval.html#jobstart()">jobstart()</A>|, and communicate using
 |<A HREF="eval.html#rpcrequest()">rpcrequest()</A>| and |<A HREF="eval.html#rpcnotify()">rpcnotify()</A>|:
 
-<B>    let vim = jobstart(['nvim', '--embed'], {'rpc': v:true})</B>
-<B>    echo rpcrequest(vim, 'vim_eval', '"Hello " . "world!"')</B>
-<B>    call jobstop(vim)</B>
+<B>    let nvim = jobstart(['nvim', '--embed'], {'rpc': v:true})</B>
+<B>    echo rpcrequest(nvim, 'nvim_eval', '"Hello " . "world!"')</B>
+<B>    call jobstop(nvim)</B>
  
 ==============================================================================
 
@@ -223,15 +223,20 @@ contains information that makes this task easier (see also |<A HREF="#rpc-types"
   - Container types may be decorated with type/size constraints, e.g.
     ArrayOf(Buffer) or ArrayOf(Integer, 2). This can be useful to generate
     even more strongly-typed APIs.
-  - Methods that operate on instances of Nvim special types (msgpack EXT) are
-    prefixed with the type name in lower <A HREF="change.html#case">case</A>, e.g. `buffer_get_line`
-    represents the `get_line` method of a Buffer instance.
-  - Global methods are prefixed with `vim`, e.g. `vim_get_buffers`.
+  - Functions that are considered to be methods that operate on instances of
+    Nvim special types (msgpack EXT) will have the `&quot;method&quot;` attribute set to
+    `true`. The reciever type is the type of the first argument. The method
+    names are prefixed with `nvim_` plus a shortened type name, e.g.
+    `nvim_buf_get_lines` represents the `get_lines` method of a Buffer instance.
+    - Global <A HREF="eval.html#functions">functions</A> have `&quot;method&quot;` set to `false` and are prefixed with just
+    `nvim_`, e.g. `nvim_get_buffers`.
 
 So for an object-oriented language, an <A HREF="api.html#API">API</A> client contains the classes
 representing Nvim special types, and the methods of each class could be
-defined by inspecting the method name prefix. There could also be a singleton
-Vim class with methods mapped to <A HREF="eval.html#functions">functions</A> prefixed with `vim_`.
+defined by stripping the prefix for the type <A HREF="motion.html#as">as</A> defined in the `types` metadata
+(this will always be the first two &quot;_&quot;-separated parts of the function name).
+There could also be a singleton Vim class with methods where the `nvim_`
+prefix is stripped off.
 
 ==============================================================================
 
@@ -266,18 +271,21 @@ an integer, but not a Window or Tabpage.
 
 The most reliable way of determining the type codes for the special Nvim types
 is to inspect the `types` key of metadata dictionary returned by the
-`vim_get_api_info` method at runtime. Here's a sample JSON representation of
+`nvim_get_api_info` method at runtime. Here's a sample JSON representation of
 the `types` object:
 
 <B>  "types": {</B>
 <B>    "Buffer": {</B>
-<B>      "id": 0</B>
+<B>      "id": 0,</B>
+<B>      "prefix": "nvim_buf_"</B>
 <B>    },</B>
 <B>    "Window": {</B>
-<B>      "id": 1</B>
+<B>      "id": 1,</B>
+<B>      "prefix": "nvim_win_"</B>
 <B>    },</B>
 <B>    "Tabpage": {</B>
-<B>      "id": 2</B>
+<B>      "id": 2,</B>
+<B>      "prefix": "nvim_tabpage_"</B>
 <B>    }</B>
 <B>  }</B>
  
@@ -458,7 +466,7 @@ of update.
 
     <footer>
       <div class="container">
-        Generated Wed Aug 31 20:16:39 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/0ade1bb7067d0cdb9b059fb66a8c4b868408be9c"><code>0ade1bb</code></a>.
+        Generated Thu Sep  1 20:14:03 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/c6ac4f84b16324b56c38bd2003f037d995262fa1"><code>c6ac4f8</code></a>.
       </div>
     </footer>
   </body>
