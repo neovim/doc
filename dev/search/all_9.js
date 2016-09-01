@@ -194,6 +194,7 @@ var searchData=
   ['internal_5fprocess_5fcb',['internal_process_cb',['../process_8h.html#a858fc4198288a1219d3298c7e2f141a3',1,'process.h']]],
   ['interval',['interval',['../structinterval.html',1,'']]],
   ['intro_5fmessage',['intro_message',['../version_8c.html#adc94ae3e8797bd98124ca5f6004611be',1,'version.c']]],
+  ['invalid_5fchannel',['INVALID_CHANNEL',['../api_2private_2defs_8h.html#ab4200d11f2d44f72d67ed5a2bb15e49b',1,'defs.h']]],
   ['invalid_5fend',['invalid_end',['../structterminal.html#a6e766a913547b2f9d8b8f83061673ff3',1,'terminal']]],
   ['invalid_5fstart',['invalid_start',['../structterminal.html#a31c0a284a139ff4e2c0450a919ef4193',1,'terminal']]],
   ['invalid_5fstate',['INVALID_STATE',['../syntax_8c.html#aee822b60cf29df9b013487aacc409897',1,'syntax.c']]],

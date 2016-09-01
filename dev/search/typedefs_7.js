@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['handle_5ft',['handle_T',['../api_2private_2defs_8h.html#a5fe5d437f595ae0cbe41e77669592921',1,'defs.h']]],
   ['hash_5ft',['hash_T',['../hashtab_8h.html#a7b00f34659dc168c35da7c824a12b4d0',1,'hashtab.h']]],
   ['hashitem_5ft',['hashitem_T',['../hashtab_8h.html#a0cd0b05f3eca10e7b37814dc38f06dad',1,'hashtab.h']]],
   ['hashtab_5ft',['hashtab_T',['../hashtab_8h.html#a211adabef8faee6c81eda3f6535b5779',1,'hashtab.h']]],

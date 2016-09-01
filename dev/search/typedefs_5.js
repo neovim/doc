@@ -13,5 +13,6 @@ var searchData=
   ['frag_5ft',['Frag_T',['../regexp__nfa_8c.html#a0ebd17b22a87f1894cc08c78b4b71a99',1,'regexp_nfa.c']]],
   ['frame_5ft',['frame_T',['../buffer__defs_8h.html#a0af2abac0014aec3e863b9a60a9b946c',1,'buffer_defs.h']]],
   ['fromto_5ft',['fromto_T',['../spell_8c.html#a8329179bae59ea876676028f2deeede0',1,'spell.c']]],
-  ['funccall_5ft',['funccall_T',['../eval_8c.html#a5330b8e8e9b8bf37f1f4d6024e242429',1,'eval.c']]]
+  ['funccall_5ft',['funccall_T',['../eval_8c.html#a5330b8e8e9b8bf37f1f4d6024e242429',1,'eval.c']]],
+  ['funptr',['FunPtr',['../eval_8c.html#aabac74d4128ca4aefd82ac4cbba19cc0',1,'eval.c']]]
 ];

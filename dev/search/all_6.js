@@ -273,7 +273,7 @@ var searchData=
   ['fmark_5ft',['fmark_T',['../mark__defs_8h.html#a536599060b9fae750638f5f1ad0527e7',1,'mark_defs.h']]],
   ['fmarks_5fcheck_5fnames',['fmarks_check_names',['../mark_8c.html#a58947b5fc241d5c7c11c996d2b34822d',1,'mark.c']]],
   ['fmt_5fpatterns',['FMT_PATTERNS',['../quickfix_8c.html#ae351d72e02019deac017d321cfb3910d',1,'quickfix.c']]],
-  ['fn',['fn',['../structMsgpackRpcRequestHandler.html#ae78499db45b5363d50b6f6b8c3f6c6df',1,'MsgpackRpcRequestHandler']]],
+  ['fn',['fn',['../structMsgpackRpcRequestHandler.html#aa17a4833ccae9b033e11050f947f8446',1,'MsgpackRpcRequestHandler']]],
   ['fname',['fname',['../structsource__cookie.html#a819dd7c5c287db125a8a30881b054c5a',1,'source_cookie::fname()'],['../structAutoPatCmd.html#a8aacb646de8d7c6c6802118d9cce8eaa',1,'AutoPatCmd::fname()'],['../structcsi.html#acbcb8a7d2e9b72cf797de14015a2f54a',1,'csi::fname()'],['../structxfilemark.html#a2362325e7dca0b07100b96d94d58b2f6',1,'xfilemark::fname()'],['../structShadaEntry.html#aaafb732ebc8edfb28da07bde17e992b8',1,'ShadaEntry::fname()'],['../structtag__pointers.html#aa7b4ec357dac14f124d152077ac14080',1,'tag_pointers::fname()'],['../memline_8c.html#adcdd88a39fafb78962cd48e47726a4c0',1,'fname():&#160;memline.c'],['../regexp_8c.html#afd7feb39acd312085566c208e35c2362',1,'FNAME():&#160;regexp.c']]],
   ['fname_5fend',['fname_end',['../structtag__pointers.html#ada1231ebf2df09f8b16d3ab1dc7435d0',1,'tag_pointers']]],
   ['fname_5fexp',['FNAME_EXP',['../window_8h.html#a25dad9998146d199f00542d8a7cb4125',1,'window.h']]],
@@ -406,6 +406,7 @@ var searchData=
   ['fs_2ec',['fs.c',['../fs_8c.html',1,'']]],
   ['fs_5fdefs_2eh',['fs_defs.h',['../fs__defs_8h.html',1,'']]],
   ['fs_5finit',['fs_init',['../fs_8c.html#ae9386973b39dad27b36dc6262ec4d6b9',1,'fs.c']]],
+  ['fst',['fst',['../structfst.html',1,'']]],
   ['ft_5ffrom',['ft_from',['../structfromto__S.html#a3a686bf3f1491b80b34ce60291937228',1,'fromto_S']]],
   ['ft_5fto',['ft_to',['../structfromto__S.html#a789fe0cb2b3297d4648a0d6587f88704',1,'fromto_S']]],
   ['ftoff_5ffile',['FTOFF_FILE',['../globals_8h.html#a115097f9836492df9622bc45a541b423',1,'globals.h']]],
@@ -414,7 +415,7 @@ var searchData=
   ['full_5fcb',['full_cb',['../structrbuffer.html#a55fa0b189980075157869de9323cddd3',1,'rbuffer']]],
   ['fullname',['fullname',['../structvimoption.html#aaef209d5d3ab318df64509d808a026fc',1,'vimoption']]],
   ['fullname_5fsave',['FullName_save',['../path_8c.html#a3d0637e8c5940467300dc37e467f0251',1,'path.c']]],
-  ['func',['func',['../structfunccall__S.html#ad8090854e5899a3632359502f8409b6e',1,'funccall_S::func()'],['../structcscmd__T.html#a1747554e4a1517848cb670cc7536a0c7',1,'cscmd_T::func()'],['../structStlClickDefinition.html#a2101959405f9ce6a82149d088bc1011b',1,'StlClickDefinition::func()'],['../structsubcommand.html#a959261fedf5d012df5eb67b36386f4a7',1,'subcommand::func()']]],
+  ['func',['func',['../structfunccall__S.html#ad8090854e5899a3632359502f8409b6e',1,'funccall_S::func()'],['../structfst.html#ad9613c2f0ef4f8c468dd0fc3145d22b1',1,'fst::func()'],['../structcscmd__T.html#a1747554e4a1517848cb670cc7536a0c7',1,'cscmd_T::func()'],['../structStlClickDefinition.html#a2101959405f9ce6a82149d088bc1011b',1,'StlClickDefinition::func()'],['../structsubcommand.html#a959261fedf5d012df5eb67b36386f4a7',1,'subcommand::func()']]],
   ['func_5fattr_2eh',['func_attr.h',['../func__attr_8h.html',1,'']]],
   ['func_5fattr_5falloc_5falign',['FUNC_ATTR_ALLOC_ALIGN',['../func__attr_8h.html#a4fc6982471b6373f76b543d55c9b90db',1,'func_attr.h']]],
   ['func_5fattr_5falloc_5fsize',['FUNC_ATTR_ALLOC_SIZE',['../func__attr_8h.html#a5ae2aa6af4dcdc56005619e1224281a0',1,'func_attr.h']]],
@@ -448,5 +449,6 @@ var searchData=
   ['funccalp',['funccalp',['../structcaller__scope.html#a00166300f81ce3da855326615b08283d',1,'caller_scope']]],
   ['funcdict_5ft',['funcdict_T',['../structfuncdict__T.html',1,'']]],
   ['funcline',['FUNCLINE',['../eval_8c.html#aa335e6720113ef4e875f4ad015438d6f',1,'eval.c']]],
+  ['funptr',['FunPtr',['../eval_8c.html#aabac74d4128ca4aefd82ac4cbba19cc0',1,'eval.c']]],
   ['fwd_5fword',['fwd_word',['../search_8c.html#ab08dd4937256741d1b10a5120722f120',1,'search.c']]]
 ];

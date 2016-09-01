@@ -102,6 +102,7 @@ var searchData=
   ['int_5fkey',['INT_KEY',['../shada_8c.html#ae812c399de910a955bbc9b6d6b6b0068',1,'shada.c']]],
   ['integer_5fkey',['INTEGER_KEY',['../shada_8c.html#a78a0ca18d30b9213090fc16e732b9569',1,'shada.c']]],
   ['integer_5fobj',['INTEGER_OBJ',['../api_2private_2helpers_8h.html#ab744c3793bd5c8ef48c1893ac48e1f8b',1,'helpers.h']]],
+  ['invalid_5fchannel',['INVALID_CHANNEL',['../api_2private_2defs_8h.html#ab4200d11f2d44f72d67ed5a2bb15e49b',1,'defs.h']]],
   ['invalid_5fstate',['INVALID_STATE',['../syntax_8c.html#aee822b60cf29df9b013487aacc409897',1,'syntax.c']]],
   ['inverted',['INVERTED',['../screen_8h.html#ab05995eec69c22f9170313d727c35788',1,'screen.h']]],
   ['inverted_5fall',['INVERTED_ALL',['../screen_8h.html#aa529a8f28d6bea4f6d0efb6d27ad7097',1,'screen.h']]],

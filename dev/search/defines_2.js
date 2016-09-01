@@ -14,6 +14,7 @@ var searchData=
   ['b0_5fmagic_5fshort',['B0_MAGIC_SHORT',['../memline_8c.html#a136a6ccfa892765672abfc5e0dff1a2d',1,'memline.c']]],
   ['b0_5fsame_5fdir',['B0_SAME_DIR',['../memline_8c.html#a47709ebb68758a4b1db1a5205761c146',1,'memline.c']]],
   ['b0_5funame_5fsize',['B0_UNAME_SIZE',['../memline_8c.html#a67d0b82009004217400bc8708acf4c06',1,'memline.c']]],
+  ['b_5ffnum',['b_fnum',['../buffer__defs_8h.html#a8852d6726e5ce81c25fa211ccf85d1dd',1,'buffer_defs.h']]],
   ['b_5fimode_5flast',['B_IMODE_LAST',['../buffer__defs_8h.html#a82658ac0ec0de060b0669d47019ceb88',1,'buffer_defs.h']]],
   ['b_5fimode_5flmap',['B_IMODE_LMAP',['../buffer__defs_8h.html#a26c45c5313ab7c476bccb8a96fe0485a',1,'buffer_defs.h']]],
   ['b_5fimode_5fnone',['B_IMODE_NONE',['../buffer__defs_8h.html#aa209065235d56c0f64e61b506c050f90',1,'buffer_defs.h']]],
