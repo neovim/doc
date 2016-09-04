@@ -391,7 +391,7 @@ var searchData=
   ['expand_5fspelling',['expand_spelling',['../spell_8c.html#abf7efbe146f3fab230fedb0ab882aa85',1,'spell.c']]],
   ['expand_5fsyntax',['EXPAND_SYNTAX',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a610002e6d209d87414a0ad3c62f0fd95',1,'vim.h']]],
   ['expand_5fsyntime',['EXPAND_SYNTIME',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0af66e571d1f1bc72ddf643187adafdfb8',1,'vim.h']]],
-  ['expand_5ft',['expand_T',['../ex__cmds__defs_8h.html#a95559045580eeca1c2921f776e7271cd',1,'ex_cmds_defs.h']]],
+  ['expand_5ft',['expand_T',['../types_8h.html#a0472b2c541b720c34a9e36b8d351a12e',1,'types.h']]],
   ['expand_5ftags',['expand_tags',['../tag_8c.html#a64eb08ad12ac695d149f6b79738639fe',1,'expand_tags(int tagnames, char_u *pat, int *num_file, char_u ***file):&#160;tag.c'],['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0ac70e92aa41d21ebb25ed4e87b8dfa83c',1,'EXPAND_TAGS():&#160;vim.h']]],
   ['expand_5ftags_5flistfiles',['EXPAND_TAGS_LISTFILES',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0aae4fff6fccc6880a8db4abbbdaf83f27',1,'vim.h']]],
   ['expand_5funsuccessful',['EXPAND_UNSUCCESSFUL',['../vim_8h.html#ae8a3b6a5d0d3244ed73924ab2421a0d0a5e06876de4189e6edc8a0f7b4773dead',1,'vim.h']]],
