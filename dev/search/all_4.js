@@ -244,7 +244,7 @@ var searchData=
   ['do_5fdebug',['do_debug',['../ex__cmds2_8c.html#a7ffe8f8931f5480d9862555705544fdd',1,'ex_cmds2.c']]],
   ['do_5fdialog',['do_dialog',['../message_8c.html#a11967fba12a8e754c36eacf1bea2eda6',1,'message.c']]],
   ['do_5fdigraph',['do_digraph',['../digraph_8c.html#adf7f8568742f8b02c4b1853c03cbb35f',1,'digraph.c']]],
-  ['do_5fdoautocmd',['do_doautocmd',['../fileio_8c.html#a76e4c3360484642bd2e80772effb9986',1,'fileio.c']]],
+  ['do_5fdoautocmd',['do_doautocmd',['../fileio_8c.html#ad82e15865b882ebcb38b3836ec5351ef',1,'fileio.c']]],
   ['do_5fecmd',['do_ecmd',['../ex__cmds_8c.html#a8045573d9f16a032b7ba6c005cfd3889',1,'ex_cmds.c']]],
   ['do_5fecmd_5fcmd',['do_ecmd_cmd',['../structexarg.html#a07e00543a7656620356c5d0bd6a98fdc',1,'exarg']]],
   ['do_5fecmd_5flnum',['do_ecmd_lnum',['../structexarg.html#a55066c3b58bac67bc45bfd644451e095',1,'exarg']]],
