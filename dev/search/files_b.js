@@ -26,8 +26,6 @@ var searchData=
   ['message_2eh',['message.h',['../message_8h.html',1,'']]],
   ['misc1_2ec',['misc1.c',['../misc1_8c.html',1,'']]],
   ['misc1_2eh',['misc1.h',['../misc1_8h.html',1,'']]],
-  ['misc2_2ec',['misc2.c',['../misc2_8c.html',1,'']]],
-  ['misc2_2eh',['misc2.h',['../misc2_8h.html',1,'']]],
   ['mouse_2ec',['mouse.c',['../mouse_8c.html',1,'']]],
   ['mouse_2eh',['mouse.h',['../mouse_8h.html',1,'']]],
   ['move_2ec',['move.c',['../move_8c.html',1,'']]],

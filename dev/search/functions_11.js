@@ -15,7 +15,7 @@ var searchData=
   ['rbuffer_5fwrite',['rbuffer_write',['../rbuffer_8c.html#a55c28607e21133bdb028bbacc42876f5',1,'rbuffer.c']]],
   ['rbuffer_5fwrite_5fptr',['rbuffer_write_ptr',['../rbuffer_8c.html#a3a7c2a2e21888adbb08e0753eac1a10c',1,'rbuffer.c']]],
   ['re_5fmultiline',['re_multiline',['../regexp_8c.html#ab9e61b1216aafbd3d353948cb8f5c6e4',1,'regexp.c']]],
-  ['read_5fstring',['read_string',['../misc2_8c.html#afd6b1e01f309a8c00257d4c8a20a75dd',1,'misc2.c']]],
+  ['read_5fstring',['read_string',['../fileio_8c.html#afd6b1e01f309a8c00257d4c8a20a75dd',1,'fileio.c']]],
   ['readbuf1_5fempty',['readbuf1_empty',['../getchar_8c.html#a739b4c39504b82a258d616a4740ed184',1,'getchar.c']]],
   ['readfile',['readfile',['../fileio_8c.html#a73e5befa6abbf600f3d3f1aaf1c2ee85',1,'fileio.c']]],
   ['recover_5fnames',['recover_names',['../memline_8c.html#aba940da76a214a22a875eab61ec804e9',1,'memline.c']]],
