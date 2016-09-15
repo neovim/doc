@@ -1,0 +1,1000 @@
+<!doctype html>
+<html>
+<head>
+<title>/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c</title>
+<style type="text/css">
+ body { color:#000000; background-color:#ffffff }
+ body { font-family:Helvetica, sans-serif; font-size:10pt }
+ h1 { font-size:14pt }
+ .code { border-collapse:collapse; width:100%; }
+ .code { font-family: "Monospace", monospace; font-size:10pt }
+ .code { line-height: 1.2em }
+ .comment { color: green; font-style: oblique }
+ .keyword { color: blue }
+ .string_literal { color: red }
+ .directive { color: darkmagenta }
+ .expansion { display: none; }
+ .macro:hover .expansion { display: block; border: 2px solid #FF0000; padding: 2px; background-color:#FFF0F0; font-weight: normal;   -webkit-border-radius:5px;  -webkit-box-shadow:1px 1px 7px #000; position: absolute; top: -1em; left:10em; z-index: 1 } 
+ .macro { color: darkmagenta; background-color:LemonChiffon; position: relative }
+ .num { width:2.5em; padding-right:2ex; background-color:#eeeeee }
+ .num { text-align:right; font-size:8pt }
+ .num { color:#444444 }
+ .line { padding-left: 1ex; border-left: 3px solid #ccc }
+ .line { white-space: pre }
+ .msg { -webkit-box-shadow:1px 1px 7px #000 }
+ .msg { -webkit-border-radius:5px }
+ .msg { font-family:Helvetica, sans-serif; font-size:8pt }
+ .msg { float:left }
+ .msg { padding:0.25em 1ex 0.25em 1ex }
+ .msg { margin-top:10px; margin-bottom:10px }
+ .msg { font-weight:bold }
+ .msg { max-width:60em; word-wrap: break-word; white-space: pre-wrap }
+ .msgT { padding:0x; spacing:0x }
+ .msgEvent { background-color:#fff8b4; color:#000000 }
+ .msgControl { background-color:#bbbbbb; color:#000000 }
+ .mrange { background-color:#dfddf3 }
+ .mrange { border-bottom:1px solid #6F9DBE }
+ .PathIndex { font-weight: bold; padding:0px 5px; margin-right:5px; }
+ .PathIndex { -webkit-border-radius:8px }
+ .PathIndexEvent { background-color:#bfba87 }
+ .PathIndexControl { background-color:#8c8c8c }
+ .PathNav a { text-decoration:none; font-size: larger }
+ .CodeInsertionHint { font-weight: bold; background-color: #10dd10 }
+ .CodeRemovalHint { background-color:#de1010 }
+ .CodeRemovalHint { border-bottom:1px solid #6F9DBE }
+ table.simpletable {
+   padding: 5px;
+   font-size:12pt;
+   margin:20px;
+   border-collapse: collapse; border-spacing: 0px;
+ }
+ td.rowname {
+   text-align:right; font-weight:bold; color:#444444;
+   padding-right:2ex; }
+</style>
+</head>
+<body>
+<!-- BUGDESC Value stored to 'obj' during its initialization is never read -->
+
+<!-- BUGTYPE Dead initialization -->
+
+<!-- BUGCATEGORY Dead store -->
+
+<!-- BUGFILE /home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c -->
+
+<!-- FILENAME helpers.c -->
+
+<!-- FUNCTIONNAME typval_encode_list_start -->
+
+<!-- BUGLINE 371 -->
+
+<!-- BUGCOLUMN 16 -->
+
+<!-- BUGPATHLENGTH 1 -->
+
+<!-- BUGMETAEND -->
+<!-- REPORTHEADER -->
+<h3>Bug Summary</h3>
+<table class="simpletable">
+<tr><td class="rowname">File:</td><td>helpers.c</td></tr>
+<tr><td class="rowname">Location:</td><td><a href="#EndPath">line 371, column 16</a></td></tr>
+<tr><td class="rowname">Description:</td><td>Value stored to 'obj' during its initialization is never read</td></tr>
+</table>
+<!-- REPORTSUMMARYEXTRA -->
+<h3>Annotated Source Code</h3>
+<table class="code">
+<tr><td class="num" id="LN1">1</td><td class="line"><span class='directive'>#include &lt;assert.h&gt;</span></td></tr>
+<tr><td class="num" id="LN2">2</td><td class="line"><span class='directive'>#include &lt;inttypes.h&gt;</span></td></tr>
+<tr><td class="num" id="LN3">3</td><td class="line"><span class='directive'>#include &lt;stdbool.h&gt;</span></td></tr>
+<tr><td class="num" id="LN4">4</td><td class="line"><span class='directive'>#include &lt;stdlib.h&gt;</span></td></tr>
+<tr><td class="num" id="LN5">5</td><td class="line"><span class='directive'>#include &lt;string.h&gt;</span></td></tr>
+<tr><td class="num" id="LN6">6</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN7">7</td><td class="line"><span class='directive'>#include "nvim/api/private/helpers.h"</span></td></tr>
+<tr><td class="num" id="LN8">8</td><td class="line"><span class='directive'>#include "nvim/api/private/defs.h"</span></td></tr>
+<tr><td class="num" id="LN9">9</td><td class="line"><span class='directive'>#include "nvim/api/private/handle.h"</span></td></tr>
+<tr><td class="num" id="LN10">10</td><td class="line"><span class='directive'>#include "nvim/ascii.h"</span></td></tr>
+<tr><td class="num" id="LN11">11</td><td class="line"><span class='directive'>#include "nvim/vim.h"</span></td></tr>
+<tr><td class="num" id="LN12">12</td><td class="line"><span class='directive'>#include "nvim/buffer.h"</span></td></tr>
+<tr><td class="num" id="LN13">13</td><td class="line"><span class='directive'>#include "nvim/window.h"</span></td></tr>
+<tr><td class="num" id="LN14">14</td><td class="line"><span class='directive'>#include "nvim/memory.h"</span></td></tr>
+<tr><td class="num" id="LN15">15</td><td class="line"><span class='directive'>#include "nvim/eval.h"</span></td></tr>
+<tr><td class="num" id="LN16">16</td><td class="line"><span class='directive'>#include "nvim/map_defs.h"</span></td></tr>
+<tr><td class="num" id="LN17">17</td><td class="line"><span class='directive'>#include "nvim/map.h"</span></td></tr>
+<tr><td class="num" id="LN18">18</td><td class="line"><span class='directive'>#include "nvim/option.h"</span></td></tr>
+<tr><td class="num" id="LN19">19</td><td class="line"><span class='directive'>#include "nvim/option_defs.h"</span></td></tr>
+<tr><td class="num" id="LN20">20</td><td class="line"><span class='directive'>#include "nvim/eval/typval_encode.h"</span></td></tr>
+<tr><td class="num" id="LN21">21</td><td class="line"><span class='directive'>#include "nvim/lib/kvec.h"</span></td></tr>
+<tr><td class="num" id="LN22">22</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN23">23</td><td class="line"><span class='comment'>/// Helper structure for vim_to_object</span></td></tr>
+<tr><td class="num" id="LN24">24</td><td class="line"><span class='keyword'>typedef</span> <span class='keyword'>struct</span> {</td></tr>
+<tr><td class="num" id="LN25">25</td><td class="line">  <span class='macro'>kvec_t(Object)<span class='expansion'>struct { size_t size; size_t capacity; Object *items; }</span></span> stack;  <span class='comment'>///&lt; Object stack.</span></td></tr>
+<tr><td class="num" id="LN26">26</td><td class="line">} EncodedData;</td></tr>
+<tr><td class="num" id="LN27">27</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN28">28</td><td class="line"><span class='directive'>#ifdef <span class='macro'>INCLUDE_GENERATED_DECLARATIONS<span class='expansion'>1</span></span></span></td></tr>
+<tr><td class="num" id="LN29">29</td><td class="line"><span class='directive'># include "api/private/helpers.c.generated.h"</span></td></tr>
+<tr><td class="num" id="LN30">30</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN31">31</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN32">32</td><td class="line"><span class='comment'>/// Start block that may cause vimscript exceptions</span></td></tr>
+<tr><td class="num" id="LN33">33</td><td class="line"><span class='keyword'>void</span> try_start(<span class='keyword'>void</span>)</td></tr>
+<tr><td class="num" id="LN34">34</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN35">35</td><td class="line">  ++trylevel;</td></tr>
+<tr><td class="num" id="LN36">36</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN37">37</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN38">38</td><td class="line"><span class='comment'>/// End try block, set the error message if any and return true if an error</span></td></tr>
+<tr><td class="num" id="LN39">39</td><td class="line"><span class='comment'>/// occurred.</span></td></tr>
+<tr><td class="num" id="LN40">40</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN41">41</td><td class="line"><span class='comment'>/// @param err Pointer to the stack-allocated error object</span></td></tr>
+<tr><td class="num" id="LN42">42</td><td class="line"><span class='comment'>/// @return true if an error occurred</span></td></tr>
+<tr><td class="num" id="LN43">43</td><td class="line"><span class='macro'>bool<span class='expansion'>_Bool</span></span> try_end(Error *err)</td></tr>
+<tr><td class="num" id="LN44">44</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN45">45</td><td class="line">  --trylevel;</td></tr>
+<tr><td class="num" id="LN46">46</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN47">47</td><td class="line">  <span class='comment'>// Without this it stops processing all subsequent VimL commands and</span></td></tr>
+<tr><td class="num" id="LN48">48</td><td class="line">  <span class='comment'>// generates strange error messages if I e.g. try calling Test() in a</span></td></tr>
+<tr><td class="num" id="LN49">49</td><td class="line">  <span class='comment'>// cycle</span></td></tr>
+<tr><td class="num" id="LN50">50</td><td class="line">  did_emsg = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN51">51</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN52">52</td><td class="line">  <span class='keyword'>if</span> (got_int) {</td></tr>
+<tr><td class="num" id="LN53">53</td><td class="line">    <span class='keyword'>if</span> (did_throw) {</td></tr>
+<tr><td class="num" id="LN54">54</td><td class="line">      <span class='comment'>// If we got an interrupt, discard the current exception</span></td></tr>
+<tr><td class="num" id="LN55">55</td><td class="line">      discard_current_exception();</td></tr>
+<tr><td class="num" id="LN56">56</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN57">57</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN58">58</td><td class="line">    <span class='macro'>api_set_error(err, Exception, _(<span class='string_literal'>"Keyboard interrupt"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Keyboard interrupt"))); (err)-&gt;set = 1; (err)-&gt;<br>type = kErrorTypeException; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN59">59</td><td class="line">    got_int = <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN60">60</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (msg_list != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span> &amp;&amp; *msg_list != <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN61">61</td><td class="line">    <span class='keyword'>int</span> should_free;</td></tr>
+<tr><td class="num" id="LN62">62</td><td class="line">    <span class='keyword'>char</span> *msg = (<span class='keyword'>char</span> *)get_exception_string(*msg_list,</td></tr>
+<tr><td class="num" id="LN63">63</td><td class="line">                                             <span class='macro'>ET_ERROR<span class='expansion'>1</span></span>,</td></tr>
+<tr><td class="num" id="LN64">64</td><td class="line">                                             <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>,</td></tr>
+<tr><td class="num" id="LN65">65</td><td class="line">                                             &amp;should_free);</td></tr>
+<tr><td class="num" id="LN66">66</td><td class="line">    xstrlcpy(err-&gt;msg, msg, <span class='keyword'>sizeof</span>(err-&gt;msg));</td></tr>
+<tr><td class="num" id="LN67">67</td><td class="line">    err-&gt;set = <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN68">68</td><td class="line">    free_global_msglist();</td></tr>
+<tr><td class="num" id="LN69">69</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN70">70</td><td class="line">    <span class='keyword'>if</span> (should_free) {</td></tr>
+<tr><td class="num" id="LN71">71</td><td class="line">      xfree(msg);</td></tr>
+<tr><td class="num" id="LN72">72</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN73">73</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (did_throw) {</td></tr>
+<tr><td class="num" id="LN74">74</td><td class="line">    <span class='macro'>api_set_error(err, Exception, <span class='string_literal'>"%s"</span>, current_exception-&gt;value)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), "%s", current_exception<br>-&gt;value); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException<br>; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN75">75</td><td class="line">    discard_current_exception();</td></tr>
+<tr><td class="num" id="LN76">76</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN77">77</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN78">78</td><td class="line">  <span class='keyword'>return</span> err-&gt;set;</td></tr>
+<tr><td class="num" id="LN79">79</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN80">80</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN81">81</td><td class="line"><span class='comment'>/// Recursively expands a vimscript value in a dict</span></td></tr>
+<tr><td class="num" id="LN82">82</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN83">83</td><td class="line"><span class='comment'>/// @param dict The vimscript dict</span></td></tr>
+<tr><td class="num" id="LN84">84</td><td class="line"><span class='comment'>/// @param key The key</span></td></tr>
+<tr><td class="num" id="LN85">85</td><td class="line"><span class='comment'>/// @param[out] err Details of an error that may have occurred</span></td></tr>
+<tr><td class="num" id="LN86">86</td><td class="line">Object dict_get_value(dict_T *dict, String key, Error *err)</td></tr>
+<tr><td class="num" id="LN87">87</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN88">88</td><td class="line">  hashitem_T *hi = hash_find(&amp;dict-&gt;dv_hashtab, (uint8_t *) key.data);</td></tr>
+<tr><td class="num" id="LN89">89</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN90">90</td><td class="line">  <span class='keyword'>if</span> (<span class='macro'>HASHITEM_EMPTY(hi)<span class='expansion'>((hi)-&gt;hi_key == ((void*)0) || (hi)-&gt;hi_key == &amp;hash_removed<br>)</span></span>) {</td></tr>
+<tr><td class="num" id="LN91">91</td><td class="line">    <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Key not found"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Key not found"))); (err)-&gt;set = 1; (err)-&gt;type<br> = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN92">92</td><td class="line">    <span class='keyword'>return</span> (Object) <span class='macro'>OBJECT_INIT<span class='expansion'>{ .type = kObjectTypeNil }</span></span>;</td></tr>
+<tr><td class="num" id="LN93">93</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN94">94</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN95">95</td><td class="line">  dictitem_T *di = dict_lookup(hi);</td></tr>
+<tr><td class="num" id="LN96">96</td><td class="line">  <span class='keyword'>return</span> vim_to_object(&amp;di-&gt;di_tv);</td></tr>
+<tr><td class="num" id="LN97">97</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN98">98</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN99">99</td><td class="line"><span class='comment'>/// Set a value in a dict. Objects are recursively expanded into their</span></td></tr>
+<tr><td class="num" id="LN100">100</td><td class="line"><span class='comment'>/// vimscript equivalents.</span></td></tr>
+<tr><td class="num" id="LN101">101</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN102">102</td><td class="line"><span class='comment'>/// @param dict The vimscript dict</span></td></tr>
+<tr><td class="num" id="LN103">103</td><td class="line"><span class='comment'>/// @param key The key</span></td></tr>
+<tr><td class="num" id="LN104">104</td><td class="line"><span class='comment'>/// @param value The new value</span></td></tr>
+<tr><td class="num" id="LN105">105</td><td class="line"><span class='comment'>/// @param del Delete key in place of setting it. Argument `value` is ignored in</span></td></tr>
+<tr><td class="num" id="LN106">106</td><td class="line"><span class='comment'>///            this case.</span></td></tr>
+<tr><td class="num" id="LN107">107</td><td class="line"><span class='comment'>/// @param retval If true the old value will be converted and returned.</span></td></tr>
+<tr><td class="num" id="LN108">108</td><td class="line"><span class='comment'>/// @param[out] err Details of an error that may have occurred</span></td></tr>
+<tr><td class="num" id="LN109">109</td><td class="line"><span class='comment'>/// @return The old value if `retval` is true and the key was present, else NIL</span></td></tr>
+<tr><td class="num" id="LN110">110</td><td class="line">Object dict_set_value(dict_T *dict, String key, Object value, <span class='macro'>bool<span class='expansion'>_Bool</span></span> del,</td></tr>
+<tr><td class="num" id="LN111">111</td><td class="line">                      <span class='macro'>bool<span class='expansion'>_Bool</span></span> retval, Error *err)</td></tr>
+<tr><td class="num" id="LN112">112</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN113">113</td><td class="line">  Object rv = <span class='macro'>OBJECT_INIT<span class='expansion'>{ .type = kObjectTypeNil }</span></span>;</td></tr>
+<tr><td class="num" id="LN114">114</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN115">115</td><td class="line">  <span class='keyword'>if</span> (dict-&gt;dv_lock) {</td></tr>
+<tr><td class="num" id="LN116">116</td><td class="line">    <span class='macro'>api_set_error(err, Exception, _(<span class='string_literal'>"Dictionary is locked"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Dictionary is locked"))); (err)-&gt;set = 1; (err)-&gt;<br>type = kErrorTypeException; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN117">117</td><td class="line">    <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN118">118</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN119">119</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN120">120</td><td class="line">  <span class='keyword'>if</span> (key.size == 0) {</td></tr>
+<tr><td class="num" id="LN121">121</td><td class="line">    <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Empty dictionary keys aren't allowed"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Empty dictionary keys aren't allowed"))); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN122">122</td><td class="line">    <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN123">123</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN124">124</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN125">125</td><td class="line">  <span class='keyword'>if</span> (key.size &gt; <span class='macro'>INT_MAX<span class='expansion'>2147483647</span></span>) {</td></tr>
+<tr><td class="num" id="LN126">126</td><td class="line">    <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Key length is too high"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Key length is too high"))); (err)-&gt;set = 1; (err)<br>-&gt;type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN127">127</td><td class="line">    <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN128">128</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN129">129</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN130">130</td><td class="line">  dictitem_T *di = dict_find(dict, (uint8_t *)key.data, (<span class='keyword'>int</span>)key.size);</td></tr>
+<tr><td class="num" id="LN131">131</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN132">132</td><td class="line">  <span class='keyword'>if</span> (del) {</td></tr>
+<tr><td class="num" id="LN133">133</td><td class="line">    <span class='comment'>// Delete the key</span></td></tr>
+<tr><td class="num" id="LN134">134</td><td class="line">    <span class='keyword'>if</span> (di == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN135">135</td><td class="line">      <span class='comment'>// Doesn't exist, fail</span></td></tr>
+<tr><td class="num" id="LN136">136</td><td class="line">      <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Key \"%s\" doesn't exist"</span>), key.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Key \"%s\" doesn't exist")), key.data); (err)-&gt;set<br> = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN137">137</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN138">138</td><td class="line">      <span class='comment'>// Return the old value</span></td></tr>
+<tr><td class="num" id="LN139">139</td><td class="line">      <span class='keyword'>if</span> (retval) {</td></tr>
+<tr><td class="num" id="LN140">140</td><td class="line">        rv = vim_to_object(&amp;di-&gt;di_tv);</td></tr>
+<tr><td class="num" id="LN141">141</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN142">142</td><td class="line">      <span class='comment'>// Delete the entry</span></td></tr>
+<tr><td class="num" id="LN143">143</td><td class="line">      hashitem_T *hi = hash_find(&amp;dict-&gt;dv_hashtab, di-&gt;di_key);</td></tr>
+<tr><td class="num" id="LN144">144</td><td class="line">      hash_remove(&amp;dict-&gt;dv_hashtab, hi);</td></tr>
+<tr><td class="num" id="LN145">145</td><td class="line">      dictitem_free(di);</td></tr>
+<tr><td class="num" id="LN146">146</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN147">147</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN148">148</td><td class="line">    <span class='comment'>// Update the key</span></td></tr>
+<tr><td class="num" id="LN149">149</td><td class="line">    typval_T tv;</td></tr>
+<tr><td class="num" id="LN150">150</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN151">151</td><td class="line">    <span class='comment'>// Convert the object to a vimscript type in the temporary variable</span></td></tr>
+<tr><td class="num" id="LN152">152</td><td class="line">    <span class='keyword'>if</span> (!object_to_vim(value, &amp;tv, err)) {</td></tr>
+<tr><td class="num" id="LN153">153</td><td class="line">      <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN154">154</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN155">155</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN156">156</td><td class="line">    <span class='keyword'>if</span> (di == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN157">157</td><td class="line">      <span class='comment'>// Need to create an entry</span></td></tr>
+<tr><td class="num" id="LN158">158</td><td class="line">      di = dictitem_alloc((uint8_t *) key.data);</td></tr>
+<tr><td class="num" id="LN159">159</td><td class="line">      dict_add(dict, di);</td></tr>
+<tr><td class="num" id="LN160">160</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN161">161</td><td class="line">      <span class='comment'>// Return the old value</span></td></tr>
+<tr><td class="num" id="LN162">162</td><td class="line">      <span class='keyword'>if</span> (retval) {</td></tr>
+<tr><td class="num" id="LN163">163</td><td class="line">        rv = vim_to_object(&amp;di-&gt;di_tv);</td></tr>
+<tr><td class="num" id="LN164">164</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN165">165</td><td class="line">      clear_tv(&amp;di-&gt;di_tv);</td></tr>
+<tr><td class="num" id="LN166">166</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN167">167</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN168">168</td><td class="line">    <span class='comment'>// Update the value</span></td></tr>
+<tr><td class="num" id="LN169">169</td><td class="line">    copy_tv(&amp;tv, &amp;di-&gt;di_tv);</td></tr>
+<tr><td class="num" id="LN170">170</td><td class="line">    <span class='comment'>// Clear the temporary variable</span></td></tr>
+<tr><td class="num" id="LN171">171</td><td class="line">    clear_tv(&amp;tv);</td></tr>
+<tr><td class="num" id="LN172">172</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN173">173</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN174">174</td><td class="line">  <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN175">175</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN176">176</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN177">177</td><td class="line"><span class='comment'>/// Gets the value of a global or local(buffer, window) option.</span></td></tr>
+<tr><td class="num" id="LN178">178</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN179">179</td><td class="line"><span class='comment'>/// @param from If `type` is `SREQ_WIN` or `SREQ_BUF`, this must be a pointer</span></td></tr>
+<tr><td class="num" id="LN180">180</td><td class="line"><span class='comment'>///        to the window or buffer.</span></td></tr>
+<tr><td class="num" id="LN181">181</td><td class="line"><span class='comment'>/// @param type One of `SREQ_GLOBAL`, `SREQ_WIN` or `SREQ_BUF`</span></td></tr>
+<tr><td class="num" id="LN182">182</td><td class="line"><span class='comment'>/// @param name The option name</span></td></tr>
+<tr><td class="num" id="LN183">183</td><td class="line"><span class='comment'>/// @param[out] err Details of an error that may have occurred</span></td></tr>
+<tr><td class="num" id="LN184">184</td><td class="line"><span class='comment'>/// @return the option value</span></td></tr>
+<tr><td class="num" id="LN185">185</td><td class="line">Object get_option_from(<span class='keyword'>void</span> *from, <span class='keyword'>int</span> type, String name, Error *err)</td></tr>
+<tr><td class="num" id="LN186">186</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN187">187</td><td class="line">  Object rv = <span class='macro'>OBJECT_INIT<span class='expansion'>{ .type = kObjectTypeNil }</span></span>;</td></tr>
+<tr><td class="num" id="LN188">188</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN189">189</td><td class="line">  <span class='keyword'>if</span> (name.size == 0) {</td></tr>
+<tr><td class="num" id="LN190">190</td><td class="line">    <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Empty option name"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Empty option name"))); (err)-&gt;set = 1; (err)-&gt;<br>type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN191">191</td><td class="line">    <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN192">192</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN193">193</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN194">194</td><td class="line">  <span class='comment'>// Return values</span></td></tr>
+<tr><td class="num" id="LN195">195</td><td class="line">  int64_t numval;</td></tr>
+<tr><td class="num" id="LN196">196</td><td class="line">  <span class='keyword'>char</span> *stringval = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN197">197</td><td class="line">  <span class='keyword'>int</span> flags = get_option_value_strict(name.data, &amp;numval, &amp;stringval,</td></tr>
+<tr><td class="num" id="LN198">198</td><td class="line">                                      type, from);</td></tr>
+<tr><td class="num" id="LN199">199</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN200">200</td><td class="line">  <span class='keyword'>if</span> (!flags) {</td></tr>
+<tr><td class="num" id="LN201">201</td><td class="line">    <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid option name \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN202">202</td><td class="line">                  <span class='macro'>Validation,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid option name \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN203">203</td><td class="line">                  <span class='macro'>_(<span class='string_literal'>"Invalid option name \"%s\""</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid option name \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN204">204</td><td class="line">                  <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid option name \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN205">205</td><td class="line">    <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN206">206</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN207">207</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN208">208</td><td class="line">  <span class='keyword'>if</span> (flags &amp; <span class='macro'>SOPT_BOOL<span class='expansion'>0x01</span></span>) {</td></tr>
+<tr><td class="num" id="LN209">209</td><td class="line">    rv.type = kObjectTypeBoolean;</td></tr>
+<tr><td class="num" id="LN210">210</td><td class="line">    rv.data.boolean = numval ? <span class='macro'>true<span class='expansion'>1</span></span> : <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN211">211</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (flags &amp; <span class='macro'>SOPT_NUM<span class='expansion'>0x02</span></span>) {</td></tr>
+<tr><td class="num" id="LN212">212</td><td class="line">    rv.type = kObjectTypeInteger;</td></tr>
+<tr><td class="num" id="LN213">213</td><td class="line">    rv.data.integer = numval;</td></tr>
+<tr><td class="num" id="LN214">214</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (flags &amp; <span class='macro'>SOPT_STRING<span class='expansion'>0x04</span></span>) {</td></tr>
+<tr><td class="num" id="LN215">215</td><td class="line">    <span class='keyword'>if</span> (stringval) {</td></tr>
+<tr><td class="num" id="LN216">216</td><td class="line">      rv.type = kObjectTypeString;</td></tr>
+<tr><td class="num" id="LN217">217</td><td class="line">      rv.data.string.data = stringval;</td></tr>
+<tr><td class="num" id="LN218">218</td><td class="line">      rv.data.string.size = strlen(stringval);</td></tr>
+<tr><td class="num" id="LN219">219</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN220">220</td><td class="line">      <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unable to get value for option \"%s\"")), name.data)<br>; (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException; } while<br> (0)</span></span></td></tr>
+<tr><td class="num" id="LN221">221</td><td class="line">                    <span class='macro'>Exception,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unable to get value for option \"%s\"")), name.data)<br>; (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException; } while<br> (0)</span></span></td></tr>
+<tr><td class="num" id="LN222">222</td><td class="line">                    <span class='macro'>_(<span class='string_literal'>"Unable to get value for option \"%s\""</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unable to get value for option \"%s\"")), name.data)<br>; (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException; } while<br> (0)</span></span></td></tr>
+<tr><td class="num" id="LN223">223</td><td class="line">                    <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unable to get value for option \"%s\"")), name.data)<br>; (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException; } while<br> (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN224">224</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN225">225</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN226">226</td><td class="line">    <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unknown type for option \"%s\"")), name.data); (err)<br>-&gt;set = 1; (err)-&gt;type = kErrorTypeException; } while (<br>0)</span></span></td></tr>
+<tr><td class="num" id="LN227">227</td><td class="line">                  <span class='macro'>Exception,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unknown type for option \"%s\"")), name.data); (err)<br>-&gt;set = 1; (err)-&gt;type = kErrorTypeException; } while (<br>0)</span></span></td></tr>
+<tr><td class="num" id="LN228">228</td><td class="line">                  <span class='macro'>_(<span class='string_literal'>"Unknown type for option \"%s\""</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unknown type for option \"%s\"")), name.data); (err)<br>-&gt;set = 1; (err)-&gt;type = kErrorTypeException; } while (<br>0)</span></span></td></tr>
+<tr><td class="num" id="LN229">229</td><td class="line">                  <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unknown type for option \"%s\"")), name.data); (err)<br>-&gt;set = 1; (err)-&gt;type = kErrorTypeException; } while (<br>0)</span></span>;</td></tr>
+<tr><td class="num" id="LN230">230</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN231">231</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN232">232</td><td class="line">  <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN233">233</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN234">234</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN235">235</td><td class="line"><span class='comment'>/// Sets the value of a global or local(buffer, window) option.</span></td></tr>
+<tr><td class="num" id="LN236">236</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN237">237</td><td class="line"><span class='comment'>/// @param to If `type` is `SREQ_WIN` or `SREQ_BUF`, this must be a pointer</span></td></tr>
+<tr><td class="num" id="LN238">238</td><td class="line"><span class='comment'>///        to the window or buffer.</span></td></tr>
+<tr><td class="num" id="LN239">239</td><td class="line"><span class='comment'>/// @param type One of `SREQ_GLOBAL`, `SREQ_WIN` or `SREQ_BUF`</span></td></tr>
+<tr><td class="num" id="LN240">240</td><td class="line"><span class='comment'>/// @param name The option name</span></td></tr>
+<tr><td class="num" id="LN241">241</td><td class="line"><span class='comment'>/// @param[out] err Details of an error that may have occurred</span></td></tr>
+<tr><td class="num" id="LN242">242</td><td class="line"><span class='keyword'>void</span> set_option_to(<span class='keyword'>void</span> *to, <span class='keyword'>int</span> type, String name, Object value, Error *err)</td></tr>
+<tr><td class="num" id="LN243">243</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN244">244</td><td class="line">  <span class='keyword'>if</span> (name.size == 0) {</td></tr>
+<tr><td class="num" id="LN245">245</td><td class="line">    <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Empty option name"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Empty option name"))); (err)-&gt;set = 1; (err)-&gt;<br>type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN246">246</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN247">247</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN248">248</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN249">249</td><td class="line">  <span class='keyword'>int</span> flags = get_option_value_strict(name.data, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, type, to);</td></tr>
+<tr><td class="num" id="LN250">250</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN251">251</td><td class="line">  <span class='keyword'>if</span> (flags == 0) {</td></tr>
+<tr><td class="num" id="LN252">252</td><td class="line">    <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid option name \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN253">253</td><td class="line">                  <span class='macro'>Validation,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid option name \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN254">254</td><td class="line">                  <span class='macro'>_(<span class='string_literal'>"Invalid option name \"%s\""</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid option name \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN255">255</td><td class="line">                  <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid option name \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN256">256</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN257">257</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN258">258</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN259">259</td><td class="line">  <span class='keyword'>if</span> (value.type == kObjectTypeNil) {</td></tr>
+<tr><td class="num" id="LN260">260</td><td class="line">    <span class='keyword'>if</span> (type == <span class='macro'>SREQ_GLOBAL<span class='expansion'>0</span></span>) {</td></tr>
+<tr><td class="num" id="LN261">261</td><td class="line">      <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unable to unset option \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeException; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN262">262</td><td class="line">                    <span class='macro'>Exception,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unable to unset option \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeException; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN263">263</td><td class="line">                    <span class='macro'>_(<span class='string_literal'>"Unable to unset option \"%s\""</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unable to unset option \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeException; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN264">264</td><td class="line">                    <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Unable to unset option \"%s\"")), name.data); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeException; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN265">265</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN266">266</td><td class="line">    } <span class='keyword'>else</span> <span class='keyword'>if</span> (!(flags &amp; <span class='macro'>SOPT_GLOBAL<span class='expansion'>0x08</span></span>)) {</td></tr>
+<tr><td class="num" id="LN267">267</td><td class="line">      <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Cannot unset option \"%s\" " "because it doesn't have a global value"<br>)), name.data); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException<br>; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN268">268</td><td class="line">                    <span class='macro'>Exception,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Cannot unset option \"%s\" " "because it doesn't have a global value"<br>)), name.data); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException<br>; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN269">269</td><td class="line">                    <span class='macro'>_(<span class='string_literal'>"Cannot unset option \"%s\" "<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Cannot unset option \"%s\" " "because it doesn't have a global value"<br>)), name.data); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException<br>; } while (0)</span></span></span></td></tr>
+<tr><td class="num" id="LN270">270</td><td class="line">                      <span class='string_literal'><span class='macro'>"because it doesn't have a global value"</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Cannot unset option \"%s\" " "because it doesn't have a global value"<br>)), name.data); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException<br>; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN271">271</td><td class="line">                    <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Cannot unset option \"%s\" " "because it doesn't have a global value"<br>)), name.data); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException<br>; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN272">272</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN273">273</td><td class="line">    } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN274">274</td><td class="line">      unset_global_local_option(name.data, to);</td></tr>
+<tr><td class="num" id="LN275">275</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN276">276</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN277">277</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN278">278</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN279">279</td><td class="line">  <span class='keyword'>int</span> opt_flags = (type ? OPT_LOCAL : OPT_GLOBAL);</td></tr>
+<tr><td class="num" id="LN280">280</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN281">281</td><td class="line">  <span class='keyword'>if</span> (flags &amp; <span class='macro'>SOPT_BOOL<span class='expansion'>0x01</span></span>) {</td></tr>
+<tr><td class="num" id="LN282">282</td><td class="line">    <span class='keyword'>if</span> (value.type != kObjectTypeBoolean) {</td></tr>
+<tr><td class="num" id="LN283">283</td><td class="line">      <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires a boolean value")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN284">284</td><td class="line">                    <span class='macro'>Validation,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires a boolean value")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN285">285</td><td class="line">                    <span class='macro'>_(<span class='string_literal'>"Option \"%s\" requires a boolean value"</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires a boolean value")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN286">286</td><td class="line">                    <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires a boolean value")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN287">287</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN288">288</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN289">289</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN290">290</td><td class="line">    <span class='macro'>bool<span class='expansion'>_Bool</span></span> val = value.data.boolean;</td></tr>
+<tr><td class="num" id="LN291">291</td><td class="line">    set_option_value_for(name.data, val, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, opt_flags, type, to, err);</td></tr>
+<tr><td class="num" id="LN292">292</td><td class="line">  } <span class='keyword'>else</span> <span class='keyword'>if</span> (flags &amp; <span class='macro'>SOPT_NUM<span class='expansion'>0x02</span></span>) {</td></tr>
+<tr><td class="num" id="LN293">293</td><td class="line">    <span class='keyword'>if</span> (value.type != kObjectTypeInteger) {</td></tr>
+<tr><td class="num" id="LN294">294</td><td class="line">      <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires an integer value")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN295">295</td><td class="line">                    <span class='macro'>Validation,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires an integer value")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN296">296</td><td class="line">                    <span class='macro'>_(<span class='string_literal'>"Option \"%s\" requires an integer value"</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires an integer value")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN297">297</td><td class="line">                    <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires an integer value")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN298">298</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN299">299</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN300">300</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN301">301</td><td class="line">    <span class='keyword'>if</span> (value.data.integer &gt; <span class='macro'>INT_MAX<span class='expansion'>2147483647</span></span> || value.data.integer &lt; <span class='macro'>INT_MIN<span class='expansion'>(-2147483647 -1)</span></span>) {</td></tr>
+<tr><td class="num" id="LN302">302</td><td class="line">      <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Value for option \"%s\" is outside range")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN303">303</td><td class="line">                    <span class='macro'>Validation,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Value for option \"%s\" is outside range")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN304">304</td><td class="line">                    <span class='macro'>_(<span class='string_literal'>"Value for option \"%s\" is outside range"</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Value for option \"%s\" is outside range")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN305">305</td><td class="line">                    <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Value for option \"%s\" is outside range")), name.data<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN306">306</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN307">307</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN308">308</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN309">309</td><td class="line">    <span class='keyword'>int</span> val = (<span class='keyword'>int</span>) value.data.integer;</td></tr>
+<tr><td class="num" id="LN310">310</td><td class="line">    set_option_value_for(name.data, val, <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>, opt_flags, type, to, err);</td></tr>
+<tr><td class="num" id="LN311">311</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN312">312</td><td class="line">    <span class='keyword'>if</span> (value.type != kObjectTypeString) {</td></tr>
+<tr><td class="num" id="LN313">313</td><td class="line">      <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires a string value")), name.data)<br>; (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN314">314</td><td class="line">                    <span class='macro'>Validation,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires a string value")), name.data)<br>; (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN315">315</td><td class="line">                    <span class='macro'>_(<span class='string_literal'>"Option \"%s\" requires a string value"</span>),<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires a string value")), name.data)<br>; (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span></td></tr>
+<tr><td class="num" id="LN316">316</td><td class="line">                    <span class='macro'>name.data)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Option \"%s\" requires a string value")), name.data)<br>; (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeValidation; }<br> while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN317">317</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN318">318</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN319">319</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN320">320</td><td class="line">    set_option_value_for(name.data, 0, value.data.string.data,</td></tr>
+<tr><td class="num" id="LN321">321</td><td class="line">            opt_flags, type, to, err);</td></tr>
+<tr><td class="num" id="LN322">322</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN323">323</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN324">324</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN325">325</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_ALLOW_SPECIALS <span class='macro'>false<span class='expansion'>0</span></span></span></td></tr>
+<tr><td class="num" id="LN326">326</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN327">327</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_NIL() \</span></td></tr>
+<tr><td class="num" id="LN328">328</td><td class="line">    <span class='directive'><span class='macro'>kv_push(edata-&gt;stack, NIL)<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) {.type<br> = kObjectTypeNil})))</span></span></span></td></tr>
+<tr><td class="num" id="LN329">329</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN330">330</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_BOOL(num) \</span></td></tr>
+<tr><td class="num" id="LN331">331</td><td class="line">    <span class='directive'><span class='macro'>kv_push(edata-&gt;stack, BOOLEAN_OBJ((Boolean)(num)))<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeBoolean, .data.boolean = (Boolean)(num) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN332">332</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN333">333</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_NUMBER(num) \</span></td></tr>
+<tr><td class="num" id="LN334">334</td><td class="line">    <span class='directive'><span class='macro'>kv_push(edata-&gt;stack, INTEGER_OBJ((Integer)(num)))<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeInteger, .data.integer = (Integer)(num) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN335">335</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN336">336</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_UNSIGNED_NUMBER TYPVAL_ENCODE_CONV_NUMBER</span></td></tr>
+<tr><td class="num" id="LN337">337</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN338">338</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_FLOAT(flt) \</span></td></tr>
+<tr><td class="num" id="LN339">339</td><td class="line">    <span class='directive'><span class='macro'>kv_push(edata-&gt;stack, FLOATING_OBJ((Float)(flt)))<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeFloat, .data.floating = (Float)(flt) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN340">340</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN341">341</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_STRING(str, len) \</span></td></tr>
+<tr><td class="num" id="LN342">342</td><td class="line">    <span class='directive'>do { \</span></td></tr>
+<tr><td class="num" id="LN343">343</td><td class="line">      <span class='directive'>const size_t len_ = (size_t)(len); \</span></td></tr>
+<tr><td class="num" id="LN344">344</td><td class="line">      <span class='directive'>const char *const str_ = (const char *)(str); \</span></td></tr>
+<tr><td class="num" id="LN345">345</td><td class="line">      <span class='directive'><span class='macro'>assert(len_ == 0 || str_ != NULL)<span class='expansion'>((len_ == 0 || str_ != ((void*)0)) ? (void) (0) : __assert_fail<br> ("len_ == 0 || str_ != ((void*)0)", "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 345, __PRETTY_FUNCTION__))</span></span>; \</span></td></tr>
+<tr><td class="num" id="LN346">346</td><td class="line">      <span class='directive'><span class='macro'>kv_push(edata-&gt;stack, STRING_OBJ(((String) { \<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeString, .data.string = ((String) { .data = xmemdupz<br>((len_?str_:""), len_), .size = len_ }) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN347">347</td><td class="line">        <span class='directive'><span class='macro'>.data = xmemdupz((len_?str_:""), len_), \<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeString, .data.string = ((String) { .data = xmemdupz<br>((len_?str_:""), len_), .size = len_ }) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN348">348</td><td class="line">        <span class='directive'><span class='macro'>.size = len_ \<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeString, .data.string = ((String) { .data = xmemdupz<br>((len_?str_:""), len_), .size = len_ }) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN349">349</td><td class="line">      <span class='directive'><span class='macro'>})))<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeString, .data.string = ((String) { .data = xmemdupz<br>((len_?str_:""), len_), .size = len_ }) })))</span></span>; \</span></td></tr>
+<tr><td class="num" id="LN350">350</td><td class="line">    <span class='directive'>} while (0)</span></td></tr>
+<tr><td class="num" id="LN351">351</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN352">352</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_STR_STRING TYPVAL_ENCODE_CONV_STRING</span></td></tr>
+<tr><td class="num" id="LN353">353</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN354">354</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_EXT_STRING(str, len, type) \</span></td></tr>
+<tr><td class="num" id="LN355">355</td><td class="line">    <span class='directive'>TYPVAL_ENCODE_CONV_NIL()</span></td></tr>
+<tr><td class="num" id="LN356">356</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN357">357</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_FUNC(fun) \</span></td></tr>
+<tr><td class="num" id="LN358">358</td><td class="line">    <span class='directive'>TYPVAL_ENCODE_CONV_NIL()</span></td></tr>
+<tr><td class="num" id="LN359">359</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN360">360</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_EMPTY_LIST() \</span></td></tr>
+<tr><td class="num" id="LN361">361</td><td class="line">    <span class='directive'><span class='macro'>kv_push(edata-&gt;stack, ARRAY_OBJ(((Array) { .capacity = 0, .size = 0 })))<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeArray, .data.array = ((Array) { .capacity = 0, .<br>size = 0 }) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN362">362</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN363">363</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_EMPTY_DICT() \</span></td></tr>
+<tr><td class="num" id="LN364">364</td><td class="line">    <span class='directive'><span class='macro'>kv_push(edata-&gt;stack, \<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeDictionary, .data.dictionary = ((Dictionary) { .<br>capacity = 0, .size = 0 }) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN365">365</td><td class="line">            <span class='directive'><span class='macro'>DICTIONARY_OBJ(((Dictionary) { .capacity = 0, .size = 0 })))<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeDictionary, .data.dictionary = ((Dictionary) { .<br>capacity = 0, .size = 0 }) })))</span></span></span></td></tr>
+<tr><td class="num" id="LN366">366</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN367">367</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>inline</span> <span class='keyword'>void</span> typval_encode_list_start(EncodedData *<span class='keyword'>const</span> edata,</td></tr>
+<tr><td class="num" id="LN368">368</td><td class="line">                                            <span class='keyword'>const</span> size_t len)</td></tr>
+<tr><td class="num" id="LN369">369</td><td class="line">  FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN370">370</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN371">371</td><td class="line">  <span class='keyword'>const</span> Object <span class="mrange">obj</span> = <span class="mrange"><span class='macro'>OBJECT_INIT<span class='expansion'>{ .type = kObjectTypeNil }</span></span></span>;</td></tr>
+<tr><td class="num"></td><td class="line"><div id="EndPath" class="msg msgEvent" style="margin-left:16ex">Value stored to 'obj' during its initialization is never read</div></td></tr>
+<tr><td class="num" id="LN372">372</td><td class="line">  <span class='macro'>kv_push(edata-&gt;stack, ARRAY_OBJ(((Array) {<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeArray, .data.array = ((Array) { .capacity = len<br>, .size = 0, .items = xmalloc(len * sizeof(*obj.data.array.items<br>)), }) })))</span></span></td></tr>
+<tr><td class="num" id="LN373">373</td><td class="line">    <span class='macro'>.capacity = len,<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeArray, .data.array = ((Array) { .capacity = len<br>, .size = 0, .items = xmalloc(len * sizeof(*obj.data.array.items<br>)), }) })))</span></span></td></tr>
+<tr><td class="num" id="LN374">374</td><td class="line">    <span class='macro'>.size = 0,<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeArray, .data.array = ((Array) { .capacity = len<br>, .size = 0, .items = xmalloc(len * sizeof(*obj.data.array.items<br>)), }) })))</span></span></td></tr>
+<tr><td class="num" id="LN375">375</td><td class="line">    <span class='macro'>.items = xmalloc(len * <span class='keyword'>sizeof</span>(*obj.data.array.items)),<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeArray, .data.array = ((Array) { .capacity = len<br>, .size = 0, .items = xmalloc(len * sizeof(*obj.data.array.items<br>)), }) })))</span></span></td></tr>
+<tr><td class="num" id="LN376">376</td><td class="line">  <span class='macro'>})))<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeArray, .data.array = ((Array) { .capacity = len<br>, .size = 0, .items = xmalloc(len * sizeof(*obj.data.array.items<br>)), }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN377">377</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN378">378</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN379">379</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_LIST_START(len) \</span></td></tr>
+<tr><td class="num" id="LN380">380</td><td class="line">    <span class='directive'>typval_encode_list_start(edata, (size_t)(len))</span></td></tr>
+<tr><td class="num" id="LN381">381</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN382">382</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>inline</span> <span class='keyword'>void</span> typval_encode_between_list_items(EncodedData *<span class='keyword'>const</span> edata)</td></tr>
+<tr><td class="num" id="LN383">383</td><td class="line">  FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN384">384</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN385">385</td><td class="line">  Object item = <span class='macro'>kv_pop(edata-&gt;stack)<span class='expansion'>((edata-&gt;stack).items[--(edata-&gt;stack).size])</span></span>;</td></tr>
+<tr><td class="num" id="LN386">386</td><td class="line">  Object *<span class='keyword'>const</span> list = &amp;<span class='macro'>kv_last(edata-&gt;stack)<span class='expansion'>((edata-&gt;stack).items[(((edata-&gt;stack).size) - 1)])</span></span>;</td></tr>
+<tr><td class="num" id="LN387">387</td><td class="line">  <span class='macro'>assert(list-&gt;type == kObjectTypeArray)<span class='expansion'>((list-&gt;type == kObjectTypeArray) ? (void) (0) : __assert_fail<br> ("list-&gt;type == kObjectTypeArray", "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 387, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN388">388</td><td class="line">  <span class='macro'>assert(list-&gt;data.array.size &lt; list-&gt;data.array.capacity)<span class='expansion'>((list-&gt;data.array.size &lt; list-&gt;data.array.capacity)<br> ? (void) (0) : __assert_fail ("list-&gt;data.array.size &lt; list-&gt;data.array.capacity"<br>, "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 388, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN389">389</td><td class="line">  list-&gt;data.array.items[list-&gt;data.array.size++] = item;</td></tr>
+<tr><td class="num" id="LN390">390</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN391">391</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN392">392</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_LIST_BETWEEN_ITEMS() \</span></td></tr>
+<tr><td class="num" id="LN393">393</td><td class="line">    <span class='directive'>typval_encode_between_list_items(edata)</span></td></tr>
+<tr><td class="num" id="LN394">394</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN395">395</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>inline</span> <span class='keyword'>void</span> typval_encode_list_end(EncodedData *<span class='keyword'>const</span> edata)</td></tr>
+<tr><td class="num" id="LN396">396</td><td class="line">  FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN397">397</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN398">398</td><td class="line">  typval_encode_between_list_items(edata);</td></tr>
+<tr><td class="num" id="LN399">399</td><td class="line"><span class='directive'>#ifndef NDEBUG</span></td></tr>
+<tr><td class="num" id="LN400">400</td><td class="line">  <span class='keyword'>const</span> Object *<span class='keyword'>const</span> list = &amp;<span class='macro'>kv_last(edata-&gt;stack)<span class='expansion'>((edata-&gt;stack).items[(((edata-&gt;stack).size) - 1)])</span></span>;</td></tr>
+<tr><td class="num" id="LN401">401</td><td class="line">  <span class='macro'>assert(list-&gt;data.array.size == list-&gt;data.array.capacity)<span class='expansion'>((list-&gt;data.array.size == list-&gt;data.array.capacity) ?<br> (void) (0) : __assert_fail ("list-&gt;data.array.size == list-&gt;data.array.capacity"<br>, "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 401, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN402">402</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN403">403</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN404">404</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN405">405</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_LIST_END() \</span></td></tr>
+<tr><td class="num" id="LN406">406</td><td class="line">    <span class='directive'>typval_encode_list_end(edata)</span></td></tr>
+<tr><td class="num" id="LN407">407</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN408">408</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>inline</span> <span class='keyword'>void</span> typval_encode_dict_start(EncodedData *<span class='keyword'>const</span> edata,</td></tr>
+<tr><td class="num" id="LN409">409</td><td class="line">                                            <span class='keyword'>const</span> size_t len)</td></tr>
+<tr><td class="num" id="LN410">410</td><td class="line">  FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN411">411</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN412">412</td><td class="line">  <span class='keyword'>const</span> Object obj = <span class='macro'>OBJECT_INIT<span class='expansion'>{ .type = kObjectTypeNil }</span></span>;</td></tr>
+<tr><td class="num" id="LN413">413</td><td class="line">  <span class='macro'>kv_push(edata-&gt;stack, DICTIONARY_OBJ(((Dictionary) {<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeDictionary, .data.dictionary = ((Dictionary) { .<br>capacity = len, .size = 0, .items = xmalloc(len * sizeof(*obj<br>.data.dictionary.items)), }) })))</span></span></td></tr>
+<tr><td class="num" id="LN414">414</td><td class="line">    <span class='macro'>.capacity = len,<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeDictionary, .data.dictionary = ((Dictionary) { .<br>capacity = len, .size = 0, .items = xmalloc(len * sizeof(*obj<br>.data.dictionary.items)), }) })))</span></span></td></tr>
+<tr><td class="num" id="LN415">415</td><td class="line">    <span class='macro'>.size = 0,<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeDictionary, .data.dictionary = ((Dictionary) { .<br>capacity = len, .size = 0, .items = xmalloc(len * sizeof(*obj<br>.data.dictionary.items)), }) })))</span></span></td></tr>
+<tr><td class="num" id="LN416">416</td><td class="line">    <span class='macro'>.items = xmalloc(len * <span class='keyword'>sizeof</span>(*obj.data.dictionary.items)),<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeDictionary, .data.dictionary = ((Dictionary) { .<br>capacity = len, .size = 0, .items = xmalloc(len * sizeof(*obj<br>.data.dictionary.items)), }) })))</span></span></td></tr>
+<tr><td class="num" id="LN417">417</td><td class="line">  <span class='macro'>})))<span class='expansion'>(*((((edata-&gt;stack).size == (edata-&gt;stack).capacity) ? (<br>((edata-&gt;stack).capacity = ((edata-&gt;stack).capacity ? (<br>edata-&gt;stack).capacity &lt;&lt; 1 : 8), (edata-&gt;stack).<br>items = xrealloc((edata-&gt;stack).items, sizeof((edata-&gt;stack<br>).items[0]) * (edata-&gt;stack).capacity)), 0) : 0), ((edata-&gt;<br>stack).items + ((edata-&gt;stack).size++))) = (((Object) { .type<br> = kObjectTypeDictionary, .data.dictionary = ((Dictionary) { .<br>capacity = len, .size = 0, .items = xmalloc(len * sizeof(*obj<br>.data.dictionary.items)), }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN418">418</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN419">419</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN420">420</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_DICT_START(len) \</span></td></tr>
+<tr><td class="num" id="LN421">421</td><td class="line">    <span class='directive'>typval_encode_dict_start(edata, (size_t)(len))</span></td></tr>
+<tr><td class="num" id="LN422">422</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN423">423</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_SPECIAL_DICT_KEY_CHECK(label, kv_pair)</span></td></tr>
+<tr><td class="num" id="LN424">424</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN425">425</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>inline</span> <span class='keyword'>void</span> typval_encode_after_key(EncodedData *<span class='keyword'>const</span> edata)</td></tr>
+<tr><td class="num" id="LN426">426</td><td class="line">  FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN427">427</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN428">428</td><td class="line">  Object key = <span class='macro'>kv_pop(edata-&gt;stack)<span class='expansion'>((edata-&gt;stack).items[--(edata-&gt;stack).size])</span></span>;</td></tr>
+<tr><td class="num" id="LN429">429</td><td class="line">  Object *<span class='keyword'>const</span> dict = &amp;<span class='macro'>kv_last(edata-&gt;stack)<span class='expansion'>((edata-&gt;stack).items[(((edata-&gt;stack).size) - 1)])</span></span>;</td></tr>
+<tr><td class="num" id="LN430">430</td><td class="line">  <span class='macro'>assert(dict-&gt;type == kObjectTypeDictionary)<span class='expansion'>((dict-&gt;type == kObjectTypeDictionary) ? (void) (0) : __assert_fail<br> ("dict-&gt;type == kObjectTypeDictionary", "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 430, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN431">431</td><td class="line">  <span class='macro'>assert(dict-&gt;data.dictionary.size &lt; dict-&gt;data.dictionary.capacity)<span class='expansion'>((dict-&gt;data.dictionary.size &lt; dict-&gt;data.dictionary<br>.capacity) ? (void) (0) : __assert_fail ("dict-&gt;data.dictionary.size &lt; dict-&gt;data.dictionary.capacity"<br>, "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 431, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN432">432</td><td class="line">  <span class='keyword'>if</span> (key.type == kObjectTypeString) {</td></tr>
+<tr><td class="num" id="LN433">433</td><td class="line">    dict-&gt;data.dictionary.items[dict-&gt;data.dictionary.size].key</td></tr>
+<tr><td class="num" id="LN434">434</td><td class="line">        = key.data.string;</td></tr>
+<tr><td class="num" id="LN435">435</td><td class="line">  } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN436">436</td><td class="line">    api_free_object(key);</td></tr>
+<tr><td class="num" id="LN437">437</td><td class="line">    dict-&gt;data.dictionary.items[dict-&gt;data.dictionary.size].key</td></tr>
+<tr><td class="num" id="LN438">438</td><td class="line">        = <span class='macro'>STATIC_CSTR_TO_STRING(<span class='string_literal'>"__INVALID_KEY__"</span>)<span class='expansion'>((String){ .data = xmemdupz("__INVALID_KEY__", sizeof("__INVALID_KEY__"<br>) - 1), .size = sizeof("__INVALID_KEY__") - 1 })</span></span>;</td></tr>
+<tr><td class="num" id="LN439">439</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN440">440</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN441">441</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN442">442</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_DICT_AFTER_KEY() \</span></td></tr>
+<tr><td class="num" id="LN443">443</td><td class="line">    <span class='directive'>typval_encode_after_key(edata)</span></td></tr>
+<tr><td class="num" id="LN444">444</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN445">445</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>inline</span> <span class='keyword'>void</span> typval_encode_between_dict_items(EncodedData *<span class='keyword'>const</span> edata)</td></tr>
+<tr><td class="num" id="LN446">446</td><td class="line">  FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN447">447</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN448">448</td><td class="line">  Object val = <span class='macro'>kv_pop(edata-&gt;stack)<span class='expansion'>((edata-&gt;stack).items[--(edata-&gt;stack).size])</span></span>;</td></tr>
+<tr><td class="num" id="LN449">449</td><td class="line">  Object *<span class='keyword'>const</span> dict = &amp;<span class='macro'>kv_last(edata-&gt;stack)<span class='expansion'>((edata-&gt;stack).items[(((edata-&gt;stack).size) - 1)])</span></span>;</td></tr>
+<tr><td class="num" id="LN450">450</td><td class="line">  <span class='macro'>assert(dict-&gt;type == kObjectTypeDictionary)<span class='expansion'>((dict-&gt;type == kObjectTypeDictionary) ? (void) (0) : __assert_fail<br> ("dict-&gt;type == kObjectTypeDictionary", "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 450, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN451">451</td><td class="line">  <span class='macro'>assert(dict-&gt;data.dictionary.size &lt; dict-&gt;data.dictionary.capacity)<span class='expansion'>((dict-&gt;data.dictionary.size &lt; dict-&gt;data.dictionary<br>.capacity) ? (void) (0) : __assert_fail ("dict-&gt;data.dictionary.size &lt; dict-&gt;data.dictionary.capacity"<br>, "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 451, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN452">452</td><td class="line">  dict-&gt;data.dictionary.items[dict-&gt;data.dictionary.size++].value = val;</td></tr>
+<tr><td class="num" id="LN453">453</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN454">454</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN455">455</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_DICT_BETWEEN_ITEMS() \</span></td></tr>
+<tr><td class="num" id="LN456">456</td><td class="line">    <span class='directive'>typval_encode_between_dict_items(edata)</span></td></tr>
+<tr><td class="num" id="LN457">457</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN458">458</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>inline</span> <span class='keyword'>void</span> typval_encode_dict_end(EncodedData *<span class='keyword'>const</span> edata)</td></tr>
+<tr><td class="num" id="LN459">459</td><td class="line">  FUNC_ATTR_ALWAYS_INLINE FUNC_ATTR_NONNULL_ALL</td></tr>
+<tr><td class="num" id="LN460">460</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN461">461</td><td class="line">  typval_encode_between_dict_items(edata);</td></tr>
+<tr><td class="num" id="LN462">462</td><td class="line"><span class='directive'>#ifndef NDEBUG</span></td></tr>
+<tr><td class="num" id="LN463">463</td><td class="line">  <span class='keyword'>const</span> Object *<span class='keyword'>const</span> dict = &amp;<span class='macro'>kv_last(edata-&gt;stack)<span class='expansion'>((edata-&gt;stack).items[(((edata-&gt;stack).size) - 1)])</span></span>;</td></tr>
+<tr><td class="num" id="LN464">464</td><td class="line">  <span class='macro'>assert(dict-&gt;data.dictionary.size == dict-&gt;data.dictionary.capacity)<span class='expansion'>((dict-&gt;data.dictionary.size == dict-&gt;data.dictionary.capacity<br>) ? (void) (0) : __assert_fail ("dict-&gt;data.dictionary.size == dict-&gt;data.dictionary.capacity"<br>, "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 464, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN465">465</td><td class="line"><span class='directive'>#endif</span></td></tr>
+<tr><td class="num" id="LN466">466</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN467">467</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN468">468</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_DICT_END() \</span></td></tr>
+<tr><td class="num" id="LN469">469</td><td class="line">    <span class='directive'>typval_encode_dict_end(edata)</span></td></tr>
+<tr><td class="num" id="LN470">470</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN471">471</td><td class="line"><span class='directive'>#define TYPVAL_ENCODE_CONV_RECURSE(val, conv_type) \</span></td></tr>
+<tr><td class="num" id="LN472">472</td><td class="line">    <span class='directive'>TYPVAL_ENCODE_CONV_NIL()</span></td></tr>
+<tr><td class="num" id="LN473">473</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN474">474</td><td class="line"><span class='macro'>TYPVAL_ENCODE_DEFINE_CONV_FUNCTIONS(<span class='keyword'>static</span>, object, EncodedData *<span class='keyword'>const</span>, edata)<span class='expansion'>static int object_convert_one_value(EncodedData *const edata,<br> MPConvStack *const mpstack, typval_T *const tv, const int copyID<br>, const char *const objname) { switch (tv-&gt;v_type) { case VAR_STRING<br>: { TYPVAL_ENCODE_CONV_STRING(tv-&gt;vval.v_string, tv_strlen<br>(tv)); break; } case VAR_NUMBER: { TYPVAL_ENCODE_CONV_NUMBER(<br>tv-&gt;vval.v_number); break; } case VAR_FLOAT: { TYPVAL_ENCODE_CONV_FLOAT<br>(tv-&gt;vval.v_float); break; } case VAR_FUNC: { TYPVAL_ENCODE_CONV_FUNC<br>(tv-&gt;vval.v_string); break; } case VAR_LIST: { if (tv-&gt;<br>vval.v_list == ((void*)0) || tv-&gt;vval.v_list-&gt;lv_len ==<br> 0) { TYPVAL_ENCODE_CONV_EMPTY_LIST(); break; } do { if ((tv-&gt;<br>vval.v_list)-&gt;lv_copyID == copyID) { TYPVAL_ENCODE_CONV_RECURSE<br>((tv-&gt;vval.v_list), kMPConvList); return 1; } (tv-&gt;vval<br>.v_list)-&gt;lv_copyID = copyID; } while (0); TYPVAL_ENCODE_CONV_LIST_START<br>(tv-&gt;vval.v_list-&gt;lv_len); (*((((*mpstack).size == (*mpstack<br>).capacity) ? (((*mpstack).capacity = (((*mpstack).capacity &lt;&lt;<br> 1) &gt; ((sizeof((*mpstack).init_array)/sizeof(((*mpstack).init_array<br>)[0])) / ((size_t)(!(sizeof((*mpstack).init_array) % sizeof((<br>(*mpstack).init_array)[0]))))) ? ((*mpstack).capacity &lt;&lt;<br> 1) : ((sizeof((*mpstack).init_array)/sizeof(((*mpstack).init_array<br>)[0])) / ((size_t)(!(sizeof((*mpstack).init_array) % sizeof((<br>(*mpstack).init_array)[0])))))), (*mpstack).items = ((*mpstack<br>).capacity == ((sizeof((*mpstack).init_array)/sizeof(((*mpstack<br>).init_array)[0])) / ((size_t)(!(sizeof((*mpstack).init_array<br>) % sizeof(((*mpstack).init_array)[0]))))) ? ((*mpstack).items<br> == (*mpstack).init_array ? (*mpstack).items : _memcpy_free((<br>*mpstack).init_array, (*mpstack).items, (*mpstack).size * sizeof<br>((*mpstack).items[0]))) : ((*mpstack).items == (*mpstack).init_array<br> ? memcpy(xmalloc((*mpstack).capacity * sizeof((*mpstack).items<br>[0])), (*mpstack).items, (*mpstack).size * sizeof((*mpstack).<br>items[0])) : xrealloc((*mpstack).items, (*mpstack).capacity *<br> sizeof((*mpstack).items[0]))))), 0) : 0), ((*mpstack).items +<br> ((*mpstack).size++))) = (((MPConvStackVal) { .type = kMPConvList<br>, .tv = tv, .data = { .l = { .list = tv-&gt;vval.v_list, .li =<br> tv-&gt;vval.v_list-&gt;lv_first, }, }, }))); break; } case VAR_SPECIAL<br>: { switch (tv-&gt;vval.v_special) { case kSpecialVarNull: { TYPVAL_ENCODE_CONV_NIL<br>(); break; } case kSpecialVarTrue: case kSpecialVarFalse: { TYPVAL_ENCODE_CONV_BOOL<br>(tv-&gt;vval.v_special == kSpecialVarTrue); break; } } break;<br> } case VAR_DICT: { if (tv-&gt;vval.v_dict == ((void*)0) || tv<br>-&gt;vval.v_dict-&gt;dv_hashtab.ht_used == 0) { TYPVAL_ENCODE_CONV_EMPTY_DICT<br>(); break; } const dictitem_T *type_di; const dictitem_T *val_di<br>; if (TYPVAL_ENCODE_ALLOW_SPECIALS &amp;&amp; tv-&gt;vval.v_dict<br>-&gt;dv_hashtab.ht_used == 2 &amp;&amp; (type_di = dict_find(<br>(dict_T *) tv-&gt;vval.v_dict, (char_u *) "_TYPE", -1)) != ((<br>void*)0) &amp;&amp; type_di-&gt;di_tv.v_type == VAR_LIST &amp;&amp;<br> (val_di = dict_find((dict_T *) tv-&gt;vval.v_dict, (char_u *<br>) "_VAL", -1)) != ((void*)0)) { size_t i; for (i = 0; i &lt; (<br>(sizeof(eval_msgpack_type_lists)/sizeof((eval_msgpack_type_lists<br>)[0])) / ((size_t)(!(sizeof(eval_msgpack_type_lists) % sizeof<br>((eval_msgpack_type_lists)[0]))))); i++) { if (type_di-&gt;di_tv<br>.vval.v_list == eval_msgpack_type_lists[i]) { break; } } if (<br>i == ((sizeof(eval_msgpack_type_lists)/sizeof((eval_msgpack_type_lists<br>)[0])) / ((size_t)(!(sizeof(eval_msgpack_type_lists) % sizeof<br>((eval_msgpack_type_lists)[0])))))) { goto object_convert_one_value_regular_dict<br>; } switch ((MessagePackType) i) { case kMPNil: { TYPVAL_ENCODE_CONV_NIL<br>(); break; } case kMPBoolean: { if (val_di-&gt;di_tv.v_type !=<br> VAR_NUMBER) { goto object_convert_one_value_regular_dict; } TYPVAL_ENCODE_CONV_BOOL<br>(val_di-&gt;di_tv.vval.v_number); break; } case kMPInteger: {<br> const list_T *val_list; varnumber_T sign; varnumber_T highest_bits<br>; varnumber_T high_bits; varnumber_T low_bits; if (val_di-&gt;<br>di_tv.v_type != VAR_LIST || (val_list = val_di-&gt;di_tv.vval<br>.v_list) == ((void*)0) || val_list-&gt;lv_len != 4 || val_list<br>-&gt;lv_first-&gt;li_tv.v_type != VAR_NUMBER || (sign = val_list<br>-&gt;lv_first-&gt;li_tv.vval.v_number) == 0 || val_list-&gt;lv_first<br>-&gt;li_next-&gt;li_tv.v_type != VAR_NUMBER || (highest_bits =<br> val_list-&gt;lv_first-&gt;li_next-&gt;li_tv.vval.v_number) &lt;<br> 0 || val_list-&gt;lv_last-&gt;li_prev-&gt;li_tv.v_type != VAR_NUMBER<br> || (high_bits = val_list-&gt;lv_last-&gt;li_prev-&gt;li_tv.vval<br>.v_number) &lt; 0 || val_list-&gt;lv_last-&gt;li_tv.v_type !=<br> VAR_NUMBER || (low_bits = val_list-&gt;lv_last-&gt;li_tv.vval<br>.v_number) &lt; 0) { goto object_convert_one_value_regular_dict<br>; } uint64_t number = ((uint64_t) (((uint64_t) highest_bits) &lt;&lt;<br> 62) | (uint64_t) (((uint64_t) high_bits) &lt;&lt; 31) | (uint64_t<br>) low_bits); if (sign &gt; 0) { TYPVAL_ENCODE_CONV_UNSIGNED_NUMBER<br>(number); } else { TYPVAL_ENCODE_CONV_NUMBER(-number); } break<br>; } case kMPFloat: { if (val_di-&gt;di_tv.v_type != VAR_FLOAT<br>) { goto object_convert_one_value_regular_dict; } TYPVAL_ENCODE_CONV_FLOAT<br>(val_di-&gt;di_tv.vval.v_float); break; } case kMPString: case<br> kMPBinary: { const _Bool is_string = ((MessagePackType) i ==<br> kMPString); if (val_di-&gt;di_tv.v_type != VAR_LIST) { goto object_convert_one_value_regular_dict<br>; } size_t len; char *buf; if (!encode_vim_list_to_buf(val_di<br>-&gt;di_tv.vval.v_list, &amp;len, &amp;buf)) { goto object_convert_one_value_regular_dict<br>; } if (is_string) { TYPVAL_ENCODE_CONV_STR_STRING(buf, len);<br> } else { TYPVAL_ENCODE_CONV_STRING(buf, len); } xfree(buf); break<br>; } case kMPArray: { if (val_di-&gt;di_tv.v_type != VAR_LIST)<br> { goto object_convert_one_value_regular_dict; } do { if ((val_di<br>-&gt;di_tv.vval.v_list)-&gt;lv_copyID == copyID) { TYPVAL_ENCODE_CONV_RECURSE<br>((val_di-&gt;di_tv.vval.v_list), kMPConvList); return 1; } (val_di<br>-&gt;di_tv.vval.v_list)-&gt;lv_copyID = copyID; } while (0); TYPVAL_ENCODE_CONV_LIST_START<br>(val_di-&gt;di_tv.vval.v_list-&gt;lv_len); (*((((*mpstack).size<br> == (*mpstack).capacity) ? (((*mpstack).capacity = (((*mpstack<br>).capacity &lt;&lt; 1) &gt; ((sizeof((*mpstack).init_array)/sizeof<br>(((*mpstack).init_array)[0])) / ((size_t)(!(sizeof((*mpstack)<br>.init_array) % sizeof(((*mpstack).init_array)[0]))))) ? ((*mpstack<br>).capacity &lt;&lt; 1) : ((sizeof((*mpstack).init_array)/sizeof<br>(((*mpstack).init_array)[0])) / ((size_t)(!(sizeof((*mpstack)<br>.init_array) % sizeof(((*mpstack).init_array)[0])))))), (*mpstack<br>).items = ((*mpstack).capacity == ((sizeof((*mpstack).init_array<br>)/sizeof(((*mpstack).init_array)[0])) / ((size_t)(!(sizeof((*<br>mpstack).init_array) % sizeof(((*mpstack).init_array)[0])))))<br> ? ((*mpstack).items == (*mpstack).init_array ? (*mpstack).items<br> : _memcpy_free((*mpstack).init_array, (*mpstack).items, (*mpstack<br>).size * sizeof((*mpstack).items[0]))) : ((*mpstack).items ==<br> (*mpstack).init_array ? memcpy(xmalloc((*mpstack).capacity *<br> sizeof((*mpstack).items[0])), (*mpstack).items, (*mpstack).size<br> * sizeof((*mpstack).items[0])) : xrealloc((*mpstack).items, (<br>*mpstack).capacity * sizeof((*mpstack).items[0]))))), 0) : 0)<br>, ((*mpstack).items + ((*mpstack).size++))) = (((MPConvStackVal<br>) { .tv = tv, .type = kMPConvList, .data = { .l = { .list = val_di<br>-&gt;di_tv.vval.v_list, .li = val_di-&gt;di_tv.vval.v_list-&gt;<br>lv_first, }, }, }))); break; } case kMPMap: { if (val_di-&gt;<br>di_tv.v_type != VAR_LIST) { goto object_convert_one_value_regular_dict<br>; } list_T *const val_list = val_di-&gt;di_tv.vval.v_list; if<br> (val_list == ((void*)0) || val_list-&gt;lv_len == 0) { TYPVAL_ENCODE_CONV_EMPTY_DICT<br>(); break; } for (const listitem_T *li = val_list-&gt;lv_first<br>; li != ((void*)0); li = li-&gt;li_next) { if (li-&gt;li_tv.v_type<br> != VAR_LIST || li-&gt;li_tv.vval.v_list-&gt;lv_len != 2) { goto<br> object_convert_one_value_regular_dict; } } do { if ((val_list<br>)-&gt;lv_copyID == copyID) { TYPVAL_ENCODE_CONV_RECURSE((val_list<br>), kMPConvPairs); return 1; } (val_list)-&gt;lv_copyID = copyID<br>; } while (0); TYPVAL_ENCODE_CONV_DICT_START(val_list-&gt;lv_len<br>); (*((((*mpstack).size == (*mpstack).capacity) ? (((*mpstack<br>).capacity = (((*mpstack).capacity &lt;&lt; 1) &gt; ((sizeof(<br>(*mpstack).init_array)/sizeof(((*mpstack).init_array)[0])) / (<br>(size_t)(!(sizeof((*mpstack).init_array) % sizeof(((*mpstack)<br>.init_array)[0]))))) ? ((*mpstack).capacity &lt;&lt; 1) : ((sizeof<br>((*mpstack).init_array)/sizeof(((*mpstack).init_array)[0])) /<br> ((size_t)(!(sizeof((*mpstack).init_array) % sizeof(((*mpstack<br>).init_array)[0])))))), (*mpstack).items = ((*mpstack).capacity<br> == ((sizeof((*mpstack).init_array)/sizeof(((*mpstack).init_array<br>)[0])) / ((size_t)(!(sizeof((*mpstack).init_array) % sizeof((<br>(*mpstack).init_array)[0]))))) ? ((*mpstack).items == (*mpstack<br>).init_array ? (*mpstack).items : _memcpy_free((*mpstack).init_array<br>, (*mpstack).items, (*mpstack).size * sizeof((*mpstack).items<br>[0]))) : ((*mpstack).items == (*mpstack).init_array ? memcpy(<br>xmalloc((*mpstack).capacity * sizeof((*mpstack).items[0])), (<br>*mpstack).items, (*mpstack).size * sizeof((*mpstack).items[0]<br>)) : xrealloc((*mpstack).items, (*mpstack).capacity * sizeof(<br>(*mpstack).items[0]))))), 0) : 0), ((*mpstack).items + ((*mpstack<br>).size++))) = (((MPConvStackVal) { .tv = tv, .type = kMPConvPairs<br>, .data = { .l = { .list = val_list, .li = val_list-&gt;lv_first<br>, }, }, }))); break; } case kMPExt: { const list_T *val_list;<br> varnumber_T type; if (val_di-&gt;di_tv.v_type != VAR_LIST ||<br> (val_list = val_di-&gt;di_tv.vval.v_list) == ((void*)0) || val_list<br>-&gt;lv_len != 2 || (val_list-&gt;lv_first-&gt;li_tv.v_type !=<br> VAR_NUMBER) || (type = val_list-&gt;lv_first-&gt;li_tv.vval.<br>v_number) &gt; (127) || type &lt; (-128) || (val_list-&gt;lv_last<br>-&gt;li_tv.v_type != VAR_LIST)) { goto object_convert_one_value_regular_dict<br>; } size_t len; char *buf; if (!encode_vim_list_to_buf(val_list<br>-&gt;lv_last-&gt;li_tv.vval.v_list, &amp;len, &amp;buf)) { goto<br> object_convert_one_value_regular_dict; } TYPVAL_ENCODE_CONV_EXT_STRING<br>(buf, len, type); xfree(buf); break; } } break; } object_convert_one_value_regular_dict<br>: do { if ((tv-&gt;vval.v_dict)-&gt;dv_copyID == copyID) { TYPVAL_ENCODE_CONV_RECURSE<br>((tv-&gt;vval.v_dict), kMPConvDict); return 1; } (tv-&gt;vval<br>.v_dict)-&gt;dv_copyID = copyID; } while (0); TYPVAL_ENCODE_CONV_DICT_START<br>(tv-&gt;vval.v_dict-&gt;dv_hashtab.ht_used); (*((((*mpstack).<br>size == (*mpstack).capacity) ? (((*mpstack).capacity = (((*mpstack<br>).capacity &lt;&lt; 1) &gt; ((sizeof((*mpstack).init_array)/sizeof<br>(((*mpstack).init_array)[0])) / ((size_t)(!(sizeof((*mpstack)<br>.init_array) % sizeof(((*mpstack).init_array)[0]))))) ? ((*mpstack<br>).capacity &lt;&lt; 1) : ((sizeof((*mpstack).init_array)/sizeof<br>(((*mpstack).init_array)[0])) / ((size_t)(!(sizeof((*mpstack)<br>.init_array) % sizeof(((*mpstack).init_array)[0])))))), (*mpstack<br>).items = ((*mpstack).capacity == ((sizeof((*mpstack).init_array<br>)/sizeof(((*mpstack).init_array)[0])) / ((size_t)(!(sizeof((*<br>mpstack).init_array) % sizeof(((*mpstack).init_array)[0])))))<br> ? ((*mpstack).items == (*mpstack).init_array ? (*mpstack).items<br> : _memcpy_free((*mpstack).init_array, (*mpstack).items, (*mpstack<br>).size * sizeof((*mpstack).items[0]))) : ((*mpstack).items ==<br> (*mpstack).init_array ? memcpy(xmalloc((*mpstack).capacity *<br> sizeof((*mpstack).items[0])), (*mpstack).items, (*mpstack).size<br> * sizeof((*mpstack).items[0])) : xrealloc((*mpstack).items, (<br>*mpstack).capacity * sizeof((*mpstack).items[0]))))), 0) : 0)<br>, ((*mpstack).items + ((*mpstack).size++))) = (((MPConvStackVal<br>) { .tv = tv, .type = kMPConvDict, .data = { .d = { .dict = tv<br>-&gt;vval.v_dict, .hi = tv-&gt;vval.v_dict-&gt;dv_hashtab.ht_array<br>, .todo = tv-&gt;vval.v_dict-&gt;dv_hashtab.ht_used, }, }, })<br>)); break; } case VAR_UNKNOWN: { emsgf((const char *) (gettext<br>((char *)(e_intern2))), ("object" "_convert_one_value()")); return<br> 0; } } return 1; } static int encode_vim_to_object(EncodedData<br> *const edata, typval_T *const tv, const char *const objname)<br> { const int copyID = get_copyID(); MPConvStack mpstack; ((mpstack<br>).capacity = ((sizeof((mpstack).init_array)/sizeof(((mpstack)<br>.init_array)[0])) / ((size_t)(!(sizeof((mpstack).init_array) %<br> sizeof(((mpstack).init_array)[0]))))), (mpstack).size = 0, (<br>mpstack).items = (mpstack).init_array); if ( object_convert_one_value<br>(edata, &amp;mpstack, tv, copyID, objname) == 0) { goto encode_vim_to_object_error_ret<br>; } while (((mpstack).size)) { MPConvStackVal *cur_mpsv = &amp;<br>((mpstack).items[(((mpstack).size) - 1)]); typval_T *cur_tv =<br> ((void*)0); switch (cur_mpsv-&gt;type) { case kMPConvDict: {<br> if (!cur_mpsv-&gt;data.d.todo) { (void) ((mpstack).items[--(<br>mpstack).size]); cur_mpsv-&gt;data.d.dict-&gt;dv_copyID = copyID<br> - 1; TYPVAL_ENCODE_CONV_DICT_END(); continue; } else if (cur_mpsv<br>-&gt;data.d.todo != cur_mpsv-&gt;data.d.dict-&gt;dv_hashtab.ht_used<br>) { TYPVAL_ENCODE_CONV_DICT_BETWEEN_ITEMS(); } while (((cur_mpsv<br>-&gt;data.d.hi)-&gt;hi_key == ((void*)0) || (cur_mpsv-&gt;data<br>.d.hi)-&gt;hi_key == &amp;hash_removed)) { cur_mpsv-&gt;data.<br>d.hi++; } dictitem_T *const di = ((dictitem_T *)((cur_mpsv-&gt;<br>data.d.hi)-&gt;hi_key - __builtin_offsetof(dictitem_T, di_key<br>))); cur_mpsv-&gt;data.d.todo--; cur_mpsv-&gt;data.d.hi++; TYPVAL_ENCODE_CONV_STR_STRING<br>(&amp;di-&gt;di_key[0], strlen((char *) &amp;di-&gt;di_key[0]<br>)); TYPVAL_ENCODE_CONV_DICT_AFTER_KEY(); cur_tv = &amp;di-&gt;<br>di_tv; break; } case kMPConvList: { if (cur_mpsv-&gt;data.l.li<br> == ((void*)0)) { (void) ((mpstack).items[--(mpstack).size]);<br> cur_mpsv-&gt;data.l.list-&gt;lv_copyID = copyID - 1; TYPVAL_ENCODE_CONV_LIST_END<br>(); continue; } else if (cur_mpsv-&gt;data.l.li != cur_mpsv-&gt;<br>data.l.list-&gt;lv_first) { TYPVAL_ENCODE_CONV_LIST_BETWEEN_ITEMS<br>(); } cur_tv = &amp;cur_mpsv-&gt;data.l.li-&gt;li_tv; cur_mpsv<br>-&gt;data.l.li = cur_mpsv-&gt;data.l.li-&gt;li_next; break; }<br> case kMPConvPairs: { if (cur_mpsv-&gt;data.l.li == ((void*)0<br>)) { (void) ((mpstack).items[--(mpstack).size]); cur_mpsv-&gt;<br>data.l.list-&gt;lv_copyID = copyID - 1; TYPVAL_ENCODE_CONV_DICT_END<br>(); continue; } else if (cur_mpsv-&gt;data.l.li != cur_mpsv-&gt;<br>data.l.list-&gt;lv_first) { TYPVAL_ENCODE_CONV_DICT_BETWEEN_ITEMS<br>(); } const list_T *const kv_pair = cur_mpsv-&gt;data.l.li-&gt;<br>li_tv.vval.v_list; TYPVAL_ENCODE_CONV_SPECIAL_DICT_KEY_CHECK(<br> encode_vim_to_object_error_ret, kv_pair-&gt;lv_first-&gt;li_tv<br>); if ( object_convert_one_value(edata, &amp;mpstack, &amp;kv_pair<br>-&gt;lv_first-&gt;li_tv, copyID, objname) == 0) { goto encode_vim_to_object_error_ret<br>; } TYPVAL_ENCODE_CONV_DICT_AFTER_KEY(); cur_tv = &amp;kv_pair<br>-&gt;lv_last-&gt;li_tv; cur_mpsv-&gt;data.l.li = cur_mpsv-&gt;<br>data.l.li-&gt;li_next; break; } } ((cur_tv != ((void*)0)) ? (<br>void) (0) : __assert_fail ("cur_tv != ((void*)0)", "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 474, __PRETTY_FUNCTION__)); if ( object_convert_one_value(edata<br>, &amp;mpstack, cur_tv, copyID, objname) == 0) { goto encode_vim_to_object_error_ret<br>; } } do { if ((mpstack).items != (mpstack).init_array) { xfree<br>((mpstack).items); } } while (0); return 1; encode_vim_to_object_error_ret<br>: do { if ((mpstack).items != (mpstack).init_array) { xfree((<br>mpstack).items); } } while (0); return 0; }</span></span></td></tr>
+<tr><td class="num" id="LN475">475</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN476">476</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_STRING</span></td></tr>
+<tr><td class="num" id="LN477">477</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_STR_STRING</span></td></tr>
+<tr><td class="num" id="LN478">478</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_EXT_STRING</span></td></tr>
+<tr><td class="num" id="LN479">479</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_NUMBER</span></td></tr>
+<tr><td class="num" id="LN480">480</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_FLOAT</span></td></tr>
+<tr><td class="num" id="LN481">481</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_FUNC</span></td></tr>
+<tr><td class="num" id="LN482">482</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_EMPTY_LIST</span></td></tr>
+<tr><td class="num" id="LN483">483</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_LIST_START</span></td></tr>
+<tr><td class="num" id="LN484">484</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_EMPTY_DICT</span></td></tr>
+<tr><td class="num" id="LN485">485</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_NIL</span></td></tr>
+<tr><td class="num" id="LN486">486</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_BOOL</span></td></tr>
+<tr><td class="num" id="LN487">487</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_UNSIGNED_NUMBER</span></td></tr>
+<tr><td class="num" id="LN488">488</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_DICT_START</span></td></tr>
+<tr><td class="num" id="LN489">489</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_DICT_END</span></td></tr>
+<tr><td class="num" id="LN490">490</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_DICT_AFTER_KEY</span></td></tr>
+<tr><td class="num" id="LN491">491</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_DICT_BETWEEN_ITEMS</span></td></tr>
+<tr><td class="num" id="LN492">492</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_SPECIAL_DICT_KEY_CHECK</span></td></tr>
+<tr><td class="num" id="LN493">493</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_LIST_END</span></td></tr>
+<tr><td class="num" id="LN494">494</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_LIST_BETWEEN_ITEMS</span></td></tr>
+<tr><td class="num" id="LN495">495</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_CONV_RECURSE</span></td></tr>
+<tr><td class="num" id="LN496">496</td><td class="line"><span class='directive'>#undef TYPVAL_ENCODE_ALLOW_SPECIALS</span></td></tr>
+<tr><td class="num" id="LN497">497</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN498">498</td><td class="line"><span class='comment'>/// Convert a vim object to an `Object` instance, recursively expanding</span></td></tr>
+<tr><td class="num" id="LN499">499</td><td class="line"><span class='comment'>/// Arrays/Dictionaries.</span></td></tr>
+<tr><td class="num" id="LN500">500</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN501">501</td><td class="line"><span class='comment'>/// @param obj The source object</span></td></tr>
+<tr><td class="num" id="LN502">502</td><td class="line"><span class='comment'>/// @return The converted value</span></td></tr>
+<tr><td class="num" id="LN503">503</td><td class="line">Object vim_to_object(typval_T *obj)</td></tr>
+<tr><td class="num" id="LN504">504</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN505">505</td><td class="line">  EncodedData edata = { .stack = <span class='macro'>KV_INITIAL_VALUE<span class='expansion'>{ .size = 0, .capacity = 0, .items = ((void*)0) }</span></span> };</td></tr>
+<tr><td class="num" id="LN506">506</td><td class="line">  encode_vim_to_object(&amp;edata, obj, <span class='string_literal'>"vim_to_object argument"</span>);</td></tr>
+<tr><td class="num" id="LN507">507</td><td class="line">  Object ret = <span class='macro'>kv_A(edata.stack, 0)<span class='expansion'>((edata.stack).items[(0)])</span></span>;</td></tr>
+<tr><td class="num" id="LN508">508</td><td class="line">  <span class='macro'>assert(kv_size(edata.stack) == 1)<span class='expansion'>((((edata.stack).size) == 1) ? (void) (0) : __assert_fail ("((edata.stack).size) == 1"<br>, "/home/travis/build/neovim/bot-ci/build/neovim/src/nvim/api/private/helpers.c"<br>, 508, __PRETTY_FUNCTION__))</span></span>;</td></tr>
+<tr><td class="num" id="LN509">509</td><td class="line">  <span class='macro'>kv_destroy(edata.stack)<span class='expansion'>xfree((edata.stack).items)</span></span>;</td></tr>
+<tr><td class="num" id="LN510">510</td><td class="line">  <span class='keyword'>return</span> ret;</td></tr>
+<tr><td class="num" id="LN511">511</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN512">512</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN513">513</td><td class="line">buf_T *find_buffer_by_handle(Buffer buffer, Error *err)</td></tr>
+<tr><td class="num" id="LN514">514</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN515">515</td><td class="line">  <span class='keyword'>if</span> (buffer == 0) {</td></tr>
+<tr><td class="num" id="LN516">516</td><td class="line">    <span class='keyword'>return</span> curbuf;</td></tr>
+<tr><td class="num" id="LN517">517</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN518">518</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN519">519</td><td class="line">  buf_T *rv = handle_get_buffer(buffer);</td></tr>
+<tr><td class="num" id="LN520">520</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN521">521</td><td class="line">  <span class='keyword'>if</span> (!rv) {</td></tr>
+<tr><td class="num" id="LN522">522</td><td class="line">    <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Invalid buffer id"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid buffer id"))); (err)-&gt;set = 1; (err)-&gt;<br>type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN523">523</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN524">524</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN525">525</td><td class="line">  <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN526">526</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN527">527</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN528">528</td><td class="line">win_T * find_window_by_handle(Window window, Error *err)</td></tr>
+<tr><td class="num" id="LN529">529</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN530">530</td><td class="line">  <span class='keyword'>if</span> (window == 0) {</td></tr>
+<tr><td class="num" id="LN531">531</td><td class="line">    <span class='keyword'>return</span> curwin;</td></tr>
+<tr><td class="num" id="LN532">532</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN533">533</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN534">534</td><td class="line">  win_T *rv = handle_get_window(window);</td></tr>
+<tr><td class="num" id="LN535">535</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN536">536</td><td class="line">  <span class='keyword'>if</span> (!rv) {</td></tr>
+<tr><td class="num" id="LN537">537</td><td class="line">    <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Invalid window id"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid window id"))); (err)-&gt;set = 1; (err)-&gt;<br>type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN538">538</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN539">539</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN540">540</td><td class="line">  <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN541">541</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN542">542</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN543">543</td><td class="line">tabpage_T * find_tab_by_handle(Tabpage tabpage, Error *err)</td></tr>
+<tr><td class="num" id="LN544">544</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN545">545</td><td class="line">  <span class='keyword'>if</span> (tabpage == 0) {</td></tr>
+<tr><td class="num" id="LN546">546</td><td class="line">    <span class='keyword'>return</span> curtab;</td></tr>
+<tr><td class="num" id="LN547">547</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN548">548</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN549">549</td><td class="line">  tabpage_T *rv = handle_get_tabpage(tabpage);</td></tr>
+<tr><td class="num" id="LN550">550</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN551">551</td><td class="line">  <span class='keyword'>if</span> (!rv) {</td></tr>
+<tr><td class="num" id="LN552">552</td><td class="line">    <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Invalid tabpage id"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Invalid tabpage id"))); (err)-&gt;set = 1; (err)-&gt;<br>type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN553">553</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN554">554</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN555">555</td><td class="line">  <span class='keyword'>return</span> rv;</td></tr>
+<tr><td class="num" id="LN556">556</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN557">557</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN558">558</td><td class="line"><span class='comment'>/// Copies a C string into a String (binary safe string, characters + length).</span></td></tr>
+<tr><td class="num" id="LN559">559</td><td class="line"><span class='comment'>/// The resulting string is also NUL-terminated, to facilitate interoperating</span></td></tr>
+<tr><td class="num" id="LN560">560</td><td class="line"><span class='comment'>/// with code using C strings.</span></td></tr>
+<tr><td class="num" id="LN561">561</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN562">562</td><td class="line"><span class='comment'>/// @param str the C string to copy</span></td></tr>
+<tr><td class="num" id="LN563">563</td><td class="line"><span class='comment'>/// @return the resulting String, if the input string was NULL, an</span></td></tr>
+<tr><td class="num" id="LN564">564</td><td class="line"><span class='comment'>///         empty String is returned</span></td></tr>
+<tr><td class="num" id="LN565">565</td><td class="line">String cstr_to_string(<span class='keyword'>const</span> <span class='keyword'>char</span> *str)</td></tr>
+<tr><td class="num" id="LN566">566</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN567">567</td><td class="line">    <span class='keyword'>if</span> (str == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN568">568</td><td class="line">        <span class='keyword'>return</span> (String) <span class='macro'>STRING_INIT<span class='expansion'>{.data = ((void*)0), .size = 0}</span></span>;</td></tr>
+<tr><td class="num" id="LN569">569</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN570">570</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN571">571</td><td class="line">    size_t len = strlen(str);</td></tr>
+<tr><td class="num" id="LN572">572</td><td class="line">    <span class='keyword'>return</span> (String) {</td></tr>
+<tr><td class="num" id="LN573">573</td><td class="line">        .data = xmemdupz(str, len),</td></tr>
+<tr><td class="num" id="LN574">574</td><td class="line">        .size = len</td></tr>
+<tr><td class="num" id="LN575">575</td><td class="line">    };</td></tr>
+<tr><td class="num" id="LN576">576</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN577">577</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN578">578</td><td class="line"><span class='comment'>/// Creates a String using the given C string. Unlike</span></td></tr>
+<tr><td class="num" id="LN579">579</td><td class="line"><span class='comment'>/// cstr_to_string this function DOES NOT copy the C string.</span></td></tr>
+<tr><td class="num" id="LN580">580</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN581">581</td><td class="line"><span class='comment'>/// @param str the C string to use</span></td></tr>
+<tr><td class="num" id="LN582">582</td><td class="line"><span class='comment'>/// @return The resulting String, or an empty String if</span></td></tr>
+<tr><td class="num" id="LN583">583</td><td class="line"><span class='comment'>///           str was NULL</span></td></tr>
+<tr><td class="num" id="LN584">584</td><td class="line">String cstr_as_string(<span class='keyword'>char</span> *str) FUNC_ATTR_PURE</td></tr>
+<tr><td class="num" id="LN585">585</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN586">586</td><td class="line">  <span class='keyword'>if</span> (str == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN587">587</td><td class="line">    <span class='keyword'>return</span> (String) <span class='macro'>STRING_INIT<span class='expansion'>{.data = ((void*)0), .size = 0}</span></span>;</td></tr>
+<tr><td class="num" id="LN588">588</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN589">589</td><td class="line">  <span class='keyword'>return</span> (String) {.data = str, .size = strlen(str)};</td></tr>
+<tr><td class="num" id="LN590">590</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN591">591</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN592">592</td><td class="line"><span class='comment'>/// Converts from type Object to a VimL value.</span></td></tr>
+<tr><td class="num" id="LN593">593</td><td class="line"><span class='comment'>///</span></td></tr>
+<tr><td class="num" id="LN594">594</td><td class="line"><span class='comment'>/// @param obj  Object to convert from.</span></td></tr>
+<tr><td class="num" id="LN595">595</td><td class="line"><span class='comment'>/// @param tv   Conversion result is placed here. On failure member v_type is</span></td></tr>
+<tr><td class="num" id="LN596">596</td><td class="line"><span class='comment'>///             set to VAR_UNKNOWN (no allocation was made for this variable).</span></td></tr>
+<tr><td class="num" id="LN597">597</td><td class="line"><span class='comment'>/// returns     true if conversion is successful, otherwise false.</span></td></tr>
+<tr><td class="num" id="LN598">598</td><td class="line"><span class='macro'>bool<span class='expansion'>_Bool</span></span> object_to_vim(Object obj, typval_T *tv, Error *err)</td></tr>
+<tr><td class="num" id="LN599">599</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN600">600</td><td class="line">  tv-&gt;v_type = VAR_UNKNOWN;</td></tr>
+<tr><td class="num" id="LN601">601</td><td class="line">  tv-&gt;v_lock = VAR_UNLOCKED;</td></tr>
+<tr><td class="num" id="LN602">602</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN603">603</td><td class="line">  <span class='keyword'>switch</span> (obj.type) {</td></tr>
+<tr><td class="num" id="LN604">604</td><td class="line">    <span class='keyword'>case</span> kObjectTypeNil:</td></tr>
+<tr><td class="num" id="LN605">605</td><td class="line">      tv-&gt;v_type = VAR_SPECIAL;</td></tr>
+<tr><td class="num" id="LN606">606</td><td class="line">      tv-&gt;vval.v_special = kSpecialVarNull;</td></tr>
+<tr><td class="num" id="LN607">607</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN608">608</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN609">609</td><td class="line">    <span class='keyword'>case</span> kObjectTypeBoolean:</td></tr>
+<tr><td class="num" id="LN610">610</td><td class="line">      tv-&gt;v_type = VAR_SPECIAL;</td></tr>
+<tr><td class="num" id="LN611">611</td><td class="line">      tv-&gt;vval.v_special = obj.data.boolean? kSpecialVarTrue: kSpecialVarFalse;</td></tr>
+<tr><td class="num" id="LN612">612</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN613">613</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN614">614</td><td class="line">    <span class='keyword'>case</span> kObjectTypeBuffer:</td></tr>
+<tr><td class="num" id="LN615">615</td><td class="line">    <span class='keyword'>case</span> kObjectTypeWindow:</td></tr>
+<tr><td class="num" id="LN616">616</td><td class="line">    <span class='keyword'>case</span> kObjectTypeTabpage:</td></tr>
+<tr><td class="num" id="LN617">617</td><td class="line">    <span class='keyword'>case</span> kObjectTypeInteger:</td></tr>
+<tr><td class="num" id="LN618">618</td><td class="line">      <span class='keyword'>if</span> (obj.data.integer &gt; <span class='macro'>INT_MAX<span class='expansion'>2147483647</span></span> || obj.data.integer &lt; <span class='macro'>INT_MIN<span class='expansion'>(-2147483647 -1)</span></span>) {</td></tr>
+<tr><td class="num" id="LN619">619</td><td class="line">        <span class='macro'>api_set_error(err, Validation, _(<span class='string_literal'>"Integer value outside range"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Integer value outside range"))); (err)-&gt;set = 1; (<br>err)-&gt;type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN620">620</td><td class="line">        <span class='keyword'>return</span> <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN621">621</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN622">622</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN623">623</td><td class="line">      tv-&gt;v_type = VAR_NUMBER;</td></tr>
+<tr><td class="num" id="LN624">624</td><td class="line">      tv-&gt;vval.v_number = (<span class='keyword'>int</span>)obj.data.integer;</td></tr>
+<tr><td class="num" id="LN625">625</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN626">626</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN627">627</td><td class="line">    <span class='keyword'>case</span> kObjectTypeFloat:</td></tr>
+<tr><td class="num" id="LN628">628</td><td class="line">      tv-&gt;v_type = VAR_FLOAT;</td></tr>
+<tr><td class="num" id="LN629">629</td><td class="line">      tv-&gt;vval.v_float = obj.data.floating;</td></tr>
+<tr><td class="num" id="LN630">630</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN631">631</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN632">632</td><td class="line">    <span class='keyword'>case</span> kObjectTypeString:</td></tr>
+<tr><td class="num" id="LN633">633</td><td class="line">      tv-&gt;v_type = VAR_STRING;</td></tr>
+<tr><td class="num" id="LN634">634</td><td class="line">      <span class='keyword'>if</span> (obj.data.string.data == <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>) {</td></tr>
+<tr><td class="num" id="LN635">635</td><td class="line">        tv-&gt;vval.v_string = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN636">636</td><td class="line">      } <span class='keyword'>else</span> {</td></tr>
+<tr><td class="num" id="LN637">637</td><td class="line">        tv-&gt;vval.v_string = xmemdupz(obj.data.string.data,</td></tr>
+<tr><td class="num" id="LN638">638</td><td class="line">                                     obj.data.string.size);</td></tr>
+<tr><td class="num" id="LN639">639</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN640">640</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN641">641</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN642">642</td><td class="line">    <span class='keyword'>case</span> kObjectTypeArray: {</td></tr>
+<tr><td class="num" id="LN643">643</td><td class="line">      list_T *list = list_alloc();</td></tr>
+<tr><td class="num" id="LN644">644</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN645">645</td><td class="line">      <span class='keyword'>for</span> (uint32_t i = 0; i &lt; obj.data.array.size; i++) {</td></tr>
+<tr><td class="num" id="LN646">646</td><td class="line">        Object item = obj.data.array.items[i];</td></tr>
+<tr><td class="num" id="LN647">647</td><td class="line">        listitem_T *li = listitem_alloc();</td></tr>
+<tr><td class="num" id="LN648">648</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN649">649</td><td class="line">        <span class='keyword'>if</span> (!object_to_vim(item, &amp;li-&gt;li_tv, err)) {</td></tr>
+<tr><td class="num" id="LN650">650</td><td class="line">          <span class='comment'>// cleanup</span></td></tr>
+<tr><td class="num" id="LN651">651</td><td class="line">          listitem_free(li);</td></tr>
+<tr><td class="num" id="LN652">652</td><td class="line">          list_free(list, <span class='macro'>true<span class='expansion'>1</span></span>);</td></tr>
+<tr><td class="num" id="LN653">653</td><td class="line">          <span class='keyword'>return</span> <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN654">654</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN655">655</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN656">656</td><td class="line">        list_append(list, li);</td></tr>
+<tr><td class="num" id="LN657">657</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN658">658</td><td class="line">      list-&gt;lv_refcount++;</td></tr>
+<tr><td class="num" id="LN659">659</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN660">660</td><td class="line">      tv-&gt;v_type = VAR_LIST;</td></tr>
+<tr><td class="num" id="LN661">661</td><td class="line">      tv-&gt;vval.v_list = list;</td></tr>
+<tr><td class="num" id="LN662">662</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN663">663</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN664">664</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN665">665</td><td class="line">    <span class='keyword'>case</span> kObjectTypeDictionary: {</td></tr>
+<tr><td class="num" id="LN666">666</td><td class="line">      dict_T *dict = dict_alloc();</td></tr>
+<tr><td class="num" id="LN667">667</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN668">668</td><td class="line">      <span class='keyword'>for</span> (uint32_t i = 0; i &lt; obj.data.dictionary.size; i++) {</td></tr>
+<tr><td class="num" id="LN669">669</td><td class="line">        KeyValuePair item = obj.data.dictionary.items[i];</td></tr>
+<tr><td class="num" id="LN670">670</td><td class="line">        String key = item.key;</td></tr>
+<tr><td class="num" id="LN671">671</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN672">672</td><td class="line">        <span class='keyword'>if</span> (key.size == 0) {</td></tr>
+<tr><td class="num" id="LN673">673</td><td class="line">          <span class='macro'>api_set_error(err, Validation,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Empty dictionary keys aren't allowed"))); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN674">674</td><td class="line">                        <span class='macro'>_(<span class='string_literal'>"Empty dictionary keys aren't allowed"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Empty dictionary keys aren't allowed"))); (err)-&gt;<br>set = 1; (err)-&gt;type = kErrorTypeValidation; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN675">675</td><td class="line">          <span class='comment'>// cleanup</span></td></tr>
+<tr><td class="num" id="LN676">676</td><td class="line">          dict_free(dict, <span class='macro'>true<span class='expansion'>1</span></span>);</td></tr>
+<tr><td class="num" id="LN677">677</td><td class="line">          <span class='keyword'>return</span> <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN678">678</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN679">679</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN680">680</td><td class="line">        dictitem_T *di = dictitem_alloc((uint8_t *)key.data);</td></tr>
+<tr><td class="num" id="LN681">681</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN682">682</td><td class="line">        <span class='keyword'>if</span> (!object_to_vim(item.value, &amp;di-&gt;di_tv, err)) {</td></tr>
+<tr><td class="num" id="LN683">683</td><td class="line">          <span class='comment'>// cleanup</span></td></tr>
+<tr><td class="num" id="LN684">684</td><td class="line">          dictitem_free(di);</td></tr>
+<tr><td class="num" id="LN685">685</td><td class="line">          dict_free(dict, <span class='macro'>true<span class='expansion'>1</span></span>);</td></tr>
+<tr><td class="num" id="LN686">686</td><td class="line">          <span class='keyword'>return</span> <span class='macro'>false<span class='expansion'>0</span></span>;</td></tr>
+<tr><td class="num" id="LN687">687</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN688">688</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN689">689</td><td class="line">        dict_add(dict, di);</td></tr>
+<tr><td class="num" id="LN690">690</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN691">691</td><td class="line">      dict-&gt;dv_refcount++;</td></tr>
+<tr><td class="num" id="LN692">692</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN693">693</td><td class="line">      tv-&gt;v_type = VAR_DICT;</td></tr>
+<tr><td class="num" id="LN694">694</td><td class="line">      tv-&gt;vval.v_dict = dict;</td></tr>
+<tr><td class="num" id="LN695">695</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN696">696</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN697">697</td><td class="line">    <span class='keyword'>default</span>:</td></tr>
+<tr><td class="num" id="LN698">698</td><td class="line">      abort();</td></tr>
+<tr><td class="num" id="LN699">699</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN700">700</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN701">701</td><td class="line">  <span class='keyword'>return</span> <span class='macro'>true<span class='expansion'>1</span></span>;</td></tr>
+<tr><td class="num" id="LN702">702</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN703">703</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN704">704</td><td class="line"><span class='keyword'>void</span> api_free_string(String value)</td></tr>
+<tr><td class="num" id="LN705">705</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN706">706</td><td class="line">  <span class='keyword'>if</span> (!value.data) {</td></tr>
+<tr><td class="num" id="LN707">707</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN708">708</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN709">709</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN710">710</td><td class="line">  xfree(value.data);</td></tr>
+<tr><td class="num" id="LN711">711</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN712">712</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN713">713</td><td class="line"><span class='keyword'>void</span> api_free_object(Object value)</td></tr>
+<tr><td class="num" id="LN714">714</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN715">715</td><td class="line">  <span class='keyword'>switch</span> (value.type) {</td></tr>
+<tr><td class="num" id="LN716">716</td><td class="line">    <span class='keyword'>case</span> kObjectTypeNil:</td></tr>
+<tr><td class="num" id="LN717">717</td><td class="line">    <span class='keyword'>case</span> kObjectTypeBoolean:</td></tr>
+<tr><td class="num" id="LN718">718</td><td class="line">    <span class='keyword'>case</span> kObjectTypeInteger:</td></tr>
+<tr><td class="num" id="LN719">719</td><td class="line">    <span class='keyword'>case</span> kObjectTypeFloat:</td></tr>
+<tr><td class="num" id="LN720">720</td><td class="line">    <span class='keyword'>case</span> kObjectTypeBuffer:</td></tr>
+<tr><td class="num" id="LN721">721</td><td class="line">    <span class='keyword'>case</span> kObjectTypeWindow:</td></tr>
+<tr><td class="num" id="LN722">722</td><td class="line">    <span class='keyword'>case</span> kObjectTypeTabpage:</td></tr>
+<tr><td class="num" id="LN723">723</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN724">724</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN725">725</td><td class="line">    <span class='keyword'>case</span> kObjectTypeString:</td></tr>
+<tr><td class="num" id="LN726">726</td><td class="line">      api_free_string(value.data.string);</td></tr>
+<tr><td class="num" id="LN727">727</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN728">728</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN729">729</td><td class="line">    <span class='keyword'>case</span> kObjectTypeArray:</td></tr>
+<tr><td class="num" id="LN730">730</td><td class="line">      api_free_array(value.data.array);</td></tr>
+<tr><td class="num" id="LN731">731</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN732">732</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN733">733</td><td class="line">    <span class='keyword'>case</span> kObjectTypeDictionary:</td></tr>
+<tr><td class="num" id="LN734">734</td><td class="line">      api_free_dictionary(value.data.dictionary);</td></tr>
+<tr><td class="num" id="LN735">735</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN736">736</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN737">737</td><td class="line">    <span class='keyword'>default</span>:</td></tr>
+<tr><td class="num" id="LN738">738</td><td class="line">      abort();</td></tr>
+<tr><td class="num" id="LN739">739</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN740">740</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN741">741</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN742">742</td><td class="line"><span class='keyword'>void</span> api_free_array(Array value)</td></tr>
+<tr><td class="num" id="LN743">743</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN744">744</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; value.size; i++) {</td></tr>
+<tr><td class="num" id="LN745">745</td><td class="line">    api_free_object(value.items[i]);</td></tr>
+<tr><td class="num" id="LN746">746</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN747">747</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN748">748</td><td class="line">  xfree(value.items);</td></tr>
+<tr><td class="num" id="LN749">749</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN750">750</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN751">751</td><td class="line"><span class='keyword'>void</span> api_free_dictionary(Dictionary value)</td></tr>
+<tr><td class="num" id="LN752">752</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN753">753</td><td class="line">  <span class='keyword'>for</span> (size_t i = 0; i &lt; value.size; i++) {</td></tr>
+<tr><td class="num" id="LN754">754</td><td class="line">    api_free_string(value.items[i].key);</td></tr>
+<tr><td class="num" id="LN755">755</td><td class="line">    api_free_object(value.items[i].value);</td></tr>
+<tr><td class="num" id="LN756">756</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN757">757</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN758">758</td><td class="line">  xfree(value.items);</td></tr>
+<tr><td class="num" id="LN759">759</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN760">760</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN761">761</td><td class="line">Dictionary api_metadata(<span class='keyword'>void</span>)</td></tr>
+<tr><td class="num" id="LN762">762</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN763">763</td><td class="line">  <span class='keyword'>static</span> Dictionary metadata = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN764">764</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN765">765</td><td class="line">  <span class='keyword'>if</span> (!metadata.size) {</td></tr>
+<tr><td class="num" id="LN766">766</td><td class="line">    msgpack_rpc_init_function_metadata(&amp;metadata);</td></tr>
+<tr><td class="num" id="LN767">767</td><td class="line">    init_error_type_metadata(&amp;metadata);</td></tr>
+<tr><td class="num" id="LN768">768</td><td class="line">    init_type_metadata(&amp;metadata);</td></tr>
+<tr><td class="num" id="LN769">769</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN770">770</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN771">771</td><td class="line">  <span class='keyword'>return</span> copy_object(<span class='macro'>DICTIONARY_OBJ(metadata)<span class='expansion'>((Object) { .type = kObjectTypeDictionary, .data.dictionary =<br> metadata })</span></span>).data.dictionary;</td></tr>
+<tr><td class="num" id="LN772">772</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN773">773</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN774">774</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> init_error_type_metadata(Dictionary *metadata)</td></tr>
+<tr><td class="num" id="LN775">775</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN776">776</td><td class="line">  Dictionary types = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN777">777</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN778">778</td><td class="line">  Dictionary exception_metadata = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN779">779</td><td class="line">  <span class='macro'>PUT(exception_metadata, <span class='string_literal'>"id"</span>, INTEGER_OBJ(kErrorTypeException))<span class='expansion'>(*((((exception_metadata).size == (exception_metadata).capacity<br>) ? (((exception_metadata).capacity = ((exception_metadata).capacity<br> ? (exception_metadata).capacity &lt;&lt; 1 : 8), (exception_metadata<br>).items = xrealloc((exception_metadata).items, sizeof((exception_metadata<br>).items[0]) * (exception_metadata).capacity)), 0) : 0), ((exception_metadata<br>).items + ((exception_metadata).size++))) = (((KeyValuePair) {<br> .key = cstr_to_string("id"), .value = ((Object) { .type = kObjectTypeInteger<br>, .data.integer = kErrorTypeException }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN780">780</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN781">781</td><td class="line">  Dictionary validation_metadata = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN782">782</td><td class="line">  <span class='macro'>PUT(validation_metadata, <span class='string_literal'>"id"</span>, INTEGER_OBJ(kErrorTypeValidation))<span class='expansion'>(*((((validation_metadata).size == (validation_metadata).capacity<br>) ? (((validation_metadata).capacity = ((validation_metadata)<br>.capacity ? (validation_metadata).capacity &lt;&lt; 1 : 8), (<br>validation_metadata).items = xrealloc((validation_metadata).items<br>, sizeof((validation_metadata).items[0]) * (validation_metadata<br>).capacity)), 0) : 0), ((validation_metadata).items + ((validation_metadata<br>).size++))) = (((KeyValuePair) { .key = cstr_to_string("id"),<br> .value = ((Object) { .type = kObjectTypeInteger, .data.integer<br> = kErrorTypeValidation }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN783">783</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN784">784</td><td class="line">  <span class='macro'>PUT(types, <span class='string_literal'>"Exception"</span>, DICTIONARY_OBJ(exception_metadata))<span class='expansion'>(*((((types).size == (types).capacity) ? (((types).capacity =<br> ((types).capacity ? (types).capacity &lt;&lt; 1 : 8), (types<br>).items = xrealloc((types).items, sizeof((types).items[0]) * (<br>types).capacity)), 0) : 0), ((types).items + ((types).size++)<br>)) = (((KeyValuePair) { .key = cstr_to_string("Exception"), .<br>value = ((Object) { .type = kObjectTypeDictionary, .data.dictionary<br> = exception_metadata }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN785">785</td><td class="line">  <span class='macro'>PUT(types, <span class='string_literal'>"Validation"</span>, DICTIONARY_OBJ(validation_metadata))<span class='expansion'>(*((((types).size == (types).capacity) ? (((types).capacity =<br> ((types).capacity ? (types).capacity &lt;&lt; 1 : 8), (types<br>).items = xrealloc((types).items, sizeof((types).items[0]) * (<br>types).capacity)), 0) : 0), ((types).items + ((types).size++)<br>)) = (((KeyValuePair) { .key = cstr_to_string("Validation"), .<br>value = ((Object) { .type = kObjectTypeDictionary, .data.dictionary<br> = validation_metadata }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN786">786</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN787">787</td><td class="line">  <span class='macro'>PUT(*metadata, <span class='string_literal'>"error_types"</span>, DICTIONARY_OBJ(types))<span class='expansion'>(*((((*metadata).size == (*metadata).capacity) ? (((*metadata<br>).capacity = ((*metadata).capacity ? (*metadata).capacity &lt;&lt;<br> 1 : 8), (*metadata).items = xrealloc((*metadata).items, sizeof<br>((*metadata).items[0]) * (*metadata).capacity)), 0) : 0), ((*<br>metadata).items + ((*metadata).size++))) = (((KeyValuePair) {<br> .key = cstr_to_string("error_types"), .value = ((Object) { .<br>type = kObjectTypeDictionary, .data.dictionary = types }) }))<br>)</span></span>;</td></tr>
+<tr><td class="num" id="LN788">788</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN789">789</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> init_type_metadata(Dictionary *metadata)</td></tr>
+<tr><td class="num" id="LN790">790</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN791">791</td><td class="line">  Dictionary types = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN792">792</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN793">793</td><td class="line">  Dictionary buffer_metadata = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN794">794</td><td class="line">  <span class='macro'>PUT(buffer_metadata, <span class='string_literal'>"id"</span>, INTEGER_OBJ(kObjectTypeBuffer))<span class='expansion'>(*((((buffer_metadata).size == (buffer_metadata).capacity) ? (<br>((buffer_metadata).capacity = ((buffer_metadata).capacity ? (<br>buffer_metadata).capacity &lt;&lt; 1 : 8), (buffer_metadata).<br>items = xrealloc((buffer_metadata).items, sizeof((buffer_metadata<br>).items[0]) * (buffer_metadata).capacity)), 0) : 0), ((buffer_metadata<br>).items + ((buffer_metadata).size++))) = (((KeyValuePair) { .<br>key = cstr_to_string("id"), .value = ((Object) { .type = kObjectTypeInteger<br>, .data.integer = kObjectTypeBuffer }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN795">795</td><td class="line">  <span class='macro'>PUT(buffer_metadata, <span class='string_literal'>"prefix"</span>, STRING_OBJ(cstr_to_string(<span class='string_literal'>"nvim_buf_"</span>)))<span class='expansion'>(*((((buffer_metadata).size == (buffer_metadata).capacity) ? (<br>((buffer_metadata).capacity = ((buffer_metadata).capacity ? (<br>buffer_metadata).capacity &lt;&lt; 1 : 8), (buffer_metadata).<br>items = xrealloc((buffer_metadata).items, sizeof((buffer_metadata<br>).items[0]) * (buffer_metadata).capacity)), 0) : 0), ((buffer_metadata<br>).items + ((buffer_metadata).size++))) = (((KeyValuePair) { .<br>key = cstr_to_string("prefix"), .value = ((Object) { .type = kObjectTypeString<br>, .data.string = cstr_to_string("nvim_buf_") }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN796">796</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN797">797</td><td class="line">  Dictionary window_metadata = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN798">798</td><td class="line">  <span class='macro'>PUT(window_metadata, <span class='string_literal'>"id"</span>, INTEGER_OBJ(kObjectTypeWindow))<span class='expansion'>(*((((window_metadata).size == (window_metadata).capacity) ? (<br>((window_metadata).capacity = ((window_metadata).capacity ? (<br>window_metadata).capacity &lt;&lt; 1 : 8), (window_metadata).<br>items = xrealloc((window_metadata).items, sizeof((window_metadata<br>).items[0]) * (window_metadata).capacity)), 0) : 0), ((window_metadata<br>).items + ((window_metadata).size++))) = (((KeyValuePair) { .<br>key = cstr_to_string("id"), .value = ((Object) { .type = kObjectTypeInteger<br>, .data.integer = kObjectTypeWindow }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN799">799</td><td class="line">  <span class='macro'>PUT(window_metadata, <span class='string_literal'>"prefix"</span>, STRING_OBJ(cstr_to_string(<span class='string_literal'>"nvim_win_"</span>)))<span class='expansion'>(*((((window_metadata).size == (window_metadata).capacity) ? (<br>((window_metadata).capacity = ((window_metadata).capacity ? (<br>window_metadata).capacity &lt;&lt; 1 : 8), (window_metadata).<br>items = xrealloc((window_metadata).items, sizeof((window_metadata<br>).items[0]) * (window_metadata).capacity)), 0) : 0), ((window_metadata<br>).items + ((window_metadata).size++))) = (((KeyValuePair) { .<br>key = cstr_to_string("prefix"), .value = ((Object) { .type = kObjectTypeString<br>, .data.string = cstr_to_string("nvim_win_") }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN800">800</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN801">801</td><td class="line">  Dictionary tabpage_metadata = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN802">802</td><td class="line">  <span class='macro'>PUT(tabpage_metadata, <span class='string_literal'>"id"</span>, INTEGER_OBJ(kObjectTypeTabpage))<span class='expansion'>(*((((tabpage_metadata).size == (tabpage_metadata).capacity) ?<br> (((tabpage_metadata).capacity = ((tabpage_metadata).capacity<br> ? (tabpage_metadata).capacity &lt;&lt; 1 : 8), (tabpage_metadata<br>).items = xrealloc((tabpage_metadata).items, sizeof((tabpage_metadata<br>).items[0]) * (tabpage_metadata).capacity)), 0) : 0), ((tabpage_metadata<br>).items + ((tabpage_metadata).size++))) = (((KeyValuePair) { .<br>key = cstr_to_string("id"), .value = ((Object) { .type = kObjectTypeInteger<br>, .data.integer = kObjectTypeTabpage }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN803">803</td><td class="line">  <span class='macro'>PUT(tabpage_metadata, <span class='string_literal'>"prefix"</span>, STRING_OBJ(cstr_to_string(<span class='string_literal'>"nvim_tabpage_"</span>)))<span class='expansion'>(*((((tabpage_metadata).size == (tabpage_metadata).capacity) ?<br> (((tabpage_metadata).capacity = ((tabpage_metadata).capacity<br> ? (tabpage_metadata).capacity &lt;&lt; 1 : 8), (tabpage_metadata<br>).items = xrealloc((tabpage_metadata).items, sizeof((tabpage_metadata<br>).items[0]) * (tabpage_metadata).capacity)), 0) : 0), ((tabpage_metadata<br>).items + ((tabpage_metadata).size++))) = (((KeyValuePair) { .<br>key = cstr_to_string("prefix"), .value = ((Object) { .type = kObjectTypeString<br>, .data.string = cstr_to_string("nvim_tabpage_") }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN804">804</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN805">805</td><td class="line">  <span class='macro'>PUT(types, <span class='string_literal'>"Buffer"</span>, DICTIONARY_OBJ(buffer_metadata))<span class='expansion'>(*((((types).size == (types).capacity) ? (((types).capacity =<br> ((types).capacity ? (types).capacity &lt;&lt; 1 : 8), (types<br>).items = xrealloc((types).items, sizeof((types).items[0]) * (<br>types).capacity)), 0) : 0), ((types).items + ((types).size++)<br>)) = (((KeyValuePair) { .key = cstr_to_string("Buffer"), .value<br> = ((Object) { .type = kObjectTypeDictionary, .data.dictionary<br> = buffer_metadata }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN806">806</td><td class="line">  <span class='macro'>PUT(types, <span class='string_literal'>"Window"</span>, DICTIONARY_OBJ(window_metadata))<span class='expansion'>(*((((types).size == (types).capacity) ? (((types).capacity =<br> ((types).capacity ? (types).capacity &lt;&lt; 1 : 8), (types<br>).items = xrealloc((types).items, sizeof((types).items[0]) * (<br>types).capacity)), 0) : 0), ((types).items + ((types).size++)<br>)) = (((KeyValuePair) { .key = cstr_to_string("Window"), .value<br> = ((Object) { .type = kObjectTypeDictionary, .data.dictionary<br> = window_metadata }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN807">807</td><td class="line">  <span class='macro'>PUT(types, <span class='string_literal'>"Tabpage"</span>, DICTIONARY_OBJ(tabpage_metadata))<span class='expansion'>(*((((types).size == (types).capacity) ? (((types).capacity =<br> ((types).capacity ? (types).capacity &lt;&lt; 1 : 8), (types<br>).items = xrealloc((types).items, sizeof((types).items[0]) * (<br>types).capacity)), 0) : 0), ((types).items + ((types).size++)<br>)) = (((KeyValuePair) { .key = cstr_to_string("Tabpage"), .value<br> = ((Object) { .type = kObjectTypeDictionary, .data.dictionary<br> = tabpage_metadata }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN808">808</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN809">809</td><td class="line">  <span class='macro'>PUT(*metadata, <span class='string_literal'>"types"</span>, DICTIONARY_OBJ(types))<span class='expansion'>(*((((*metadata).size == (*metadata).capacity) ? (((*metadata<br>).capacity = ((*metadata).capacity ? (*metadata).capacity &lt;&lt;<br> 1 : 8), (*metadata).items = xrealloc((*metadata).items, sizeof<br>((*metadata).items[0]) * (*metadata).capacity)), 0) : 0), ((*<br>metadata).items + ((*metadata).size++))) = (((KeyValuePair) {<br> .key = cstr_to_string("types"), .value = ((Object) { .type =<br> kObjectTypeDictionary, .data.dictionary = types }) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN810">810</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN811">811</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN812">812</td><td class="line"><span class='comment'>/// Creates a deep clone of an object</span></td></tr>
+<tr><td class="num" id="LN813">813</td><td class="line">Object copy_object(Object obj)</td></tr>
+<tr><td class="num" id="LN814">814</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN815">815</td><td class="line">  <span class='keyword'>switch</span> (obj.type) {</td></tr>
+<tr><td class="num" id="LN816">816</td><td class="line">    <span class='keyword'>case</span> kObjectTypeNil:</td></tr>
+<tr><td class="num" id="LN817">817</td><td class="line">    <span class='keyword'>case</span> kObjectTypeBoolean:</td></tr>
+<tr><td class="num" id="LN818">818</td><td class="line">    <span class='keyword'>case</span> kObjectTypeInteger:</td></tr>
+<tr><td class="num" id="LN819">819</td><td class="line">    <span class='keyword'>case</span> kObjectTypeFloat:</td></tr>
+<tr><td class="num" id="LN820">820</td><td class="line">      <span class='keyword'>return</span> obj;</td></tr>
+<tr><td class="num" id="LN821">821</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN822">822</td><td class="line">    <span class='keyword'>case</span> kObjectTypeString:</td></tr>
+<tr><td class="num" id="LN823">823</td><td class="line">      <span class='keyword'>return</span> <span class='macro'>STRING_OBJ(cstr_to_string(obj.data.string.data))<span class='expansion'>((Object) { .type = kObjectTypeString, .data.string = cstr_to_string<br>(obj.data.string.data) })</span></span>;</td></tr>
+<tr><td class="num" id="LN824">824</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN825">825</td><td class="line">    <span class='keyword'>case</span> kObjectTypeArray: {</td></tr>
+<tr><td class="num" id="LN826">826</td><td class="line">      Array rv = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN827">827</td><td class="line">      <span class='keyword'>for</span> (size_t i = 0; i &lt; obj.data.array.size; i++) {</td></tr>
+<tr><td class="num" id="LN828">828</td><td class="line">        <span class='macro'>ADD(rv, copy_object(obj.data.array.items[i]))<span class='expansion'>(*((((rv).size == (rv).capacity) ? (((rv).capacity = ((rv).capacity<br> ? (rv).capacity &lt;&lt; 1 : 8), (rv).items = xrealloc((rv).<br>items, sizeof((rv).items[0]) * (rv).capacity)), 0) : 0), ((rv<br>).items + ((rv).size++))) = (copy_object(obj.data.array.items<br>[i])))</span></span>;</td></tr>
+<tr><td class="num" id="LN829">829</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN830">830</td><td class="line">      <span class='keyword'>return</span> <span class='macro'>ARRAY_OBJ(rv)<span class='expansion'>((Object) { .type = kObjectTypeArray, .data.array = rv })</span></span>;</td></tr>
+<tr><td class="num" id="LN831">831</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN832">832</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN833">833</td><td class="line">    <span class='keyword'>case</span> kObjectTypeDictionary: {</td></tr>
+<tr><td class="num" id="LN834">834</td><td class="line">      Dictionary rv = <span class='macro'>ARRAY_DICT_INIT<span class='expansion'>{.size = 0, .capacity = 0, .items = ((void*)0)}</span></span>;</td></tr>
+<tr><td class="num" id="LN835">835</td><td class="line">      <span class='keyword'>for</span> (size_t i = 0; i &lt; obj.data.dictionary.size; i++) {</td></tr>
+<tr><td class="num" id="LN836">836</td><td class="line">        KeyValuePair item = obj.data.dictionary.items[i];</td></tr>
+<tr><td class="num" id="LN837">837</td><td class="line">        <span class='macro'>PUT(rv, item.key.data, copy_object(item.value))<span class='expansion'>(*((((rv).size == (rv).capacity) ? (((rv).capacity = ((rv).capacity<br> ? (rv).capacity &lt;&lt; 1 : 8), (rv).items = xrealloc((rv).<br>items, sizeof((rv).items[0]) * (rv).capacity)), 0) : 0), ((rv<br>).items + ((rv).size++))) = (((KeyValuePair) { .key = cstr_to_string<br>(item.key.data), .value = copy_object(item.value) })))</span></span>;</td></tr>
+<tr><td class="num" id="LN838">838</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN839">839</td><td class="line">      <span class='keyword'>return</span> <span class='macro'>DICTIONARY_OBJ(rv)<span class='expansion'>((Object) { .type = kObjectTypeDictionary, .data.dictionary =<br> rv })</span></span>;</td></tr>
+<tr><td class="num" id="LN840">840</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN841">841</td><td class="line">    <span class='keyword'>default</span>:</td></tr>
+<tr><td class="num" id="LN842">842</td><td class="line">      abort();</td></tr>
+<tr><td class="num" id="LN843">843</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN844">844</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN845">845</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN846">846</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> set_option_value_for(<span class='keyword'>char</span> *key,</td></tr>
+<tr><td class="num" id="LN847">847</td><td class="line">                                 <span class='keyword'>int</span> numval,</td></tr>
+<tr><td class="num" id="LN848">848</td><td class="line">                                 <span class='keyword'>char</span> *stringval,</td></tr>
+<tr><td class="num" id="LN849">849</td><td class="line">                                 <span class='keyword'>int</span> opt_flags,</td></tr>
+<tr><td class="num" id="LN850">850</td><td class="line">                                 <span class='keyword'>int</span> opt_type,</td></tr>
+<tr><td class="num" id="LN851">851</td><td class="line">                                 <span class='keyword'>void</span> *from,</td></tr>
+<tr><td class="num" id="LN852">852</td><td class="line">                                 Error *err)</td></tr>
+<tr><td class="num" id="LN853">853</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN854">854</td><td class="line">  win_T *save_curwin = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN855">855</td><td class="line">  tabpage_T *save_curtab = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN856">856</td><td class="line">  buf_T *save_curbuf = <span class='macro'>NULL<span class='expansion'>((void*)0)</span></span>;</td></tr>
+<tr><td class="num" id="LN857">857</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN858">858</td><td class="line">  try_start();</td></tr>
+<tr><td class="num" id="LN859">859</td><td class="line">  <span class='keyword'>switch</span> (opt_type)</td></tr>
+<tr><td class="num" id="LN860">860</td><td class="line">  {</td></tr>
+<tr><td class="num" id="LN861">861</td><td class="line">    <span class='keyword'>case</span> <span class='macro'>SREQ_WIN<span class='expansion'>1</span></span>:</td></tr>
+<tr><td class="num" id="LN862">862</td><td class="line">      <span class='keyword'>if</span> (switch_win(&amp;save_curwin, &amp;save_curtab, (win_T *)from,</td></tr>
+<tr><td class="num" id="LN863">863</td><td class="line">            win_find_tabpage((win_T *)from), <span class='macro'>false<span class='expansion'>0</span></span>) == <span class='macro'>FAIL<span class='expansion'>0</span></span>)</td></tr>
+<tr><td class="num" id="LN864">864</td><td class="line">      {</td></tr>
+<tr><td class="num" id="LN865">865</td><td class="line">        <span class='keyword'>if</span> (try_end(err)) {</td></tr>
+<tr><td class="num" id="LN866">866</td><td class="line">          <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN867">867</td><td class="line">        }</td></tr>
+<tr><td class="num" id="LN868">868</td><td class="line">        <span class='macro'>api_set_error(err,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Problem while switching windows"))); (err)-&gt;set =<br> 1; (err)-&gt;type = kErrorTypeException; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN869">869</td><td class="line">                      <span class='macro'>Exception,<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Problem while switching windows"))); (err)-&gt;set =<br> 1; (err)-&gt;type = kErrorTypeException; } while (0)</span></span></td></tr>
+<tr><td class="num" id="LN870">870</td><td class="line">                      <span class='macro'>_(<span class='string_literal'>"Problem while switching windows"</span>))<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), gettext((<br>char *)("Problem while switching windows"))); (err)-&gt;set =<br> 1; (err)-&gt;type = kErrorTypeException; } while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN871">871</td><td class="line">        <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN872">872</td><td class="line">      }</td></tr>
+<tr><td class="num" id="LN873">873</td><td class="line">      set_option_value_err(key, numval, stringval, opt_flags, err);</td></tr>
+<tr><td class="num" id="LN874">874</td><td class="line">      restore_win(save_curwin, save_curtab, <span class='macro'>true<span class='expansion'>1</span></span>);</td></tr>
+<tr><td class="num" id="LN875">875</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN876">876</td><td class="line">    <span class='keyword'>case</span> <span class='macro'>SREQ_BUF<span class='expansion'>2</span></span>:</td></tr>
+<tr><td class="num" id="LN877">877</td><td class="line">      switch_buffer(&amp;save_curbuf, (buf_T *)from);</td></tr>
+<tr><td class="num" id="LN878">878</td><td class="line">      set_option_value_err(key, numval, stringval, opt_flags, err);</td></tr>
+<tr><td class="num" id="LN879">879</td><td class="line">      restore_buffer(save_curbuf);</td></tr>
+<tr><td class="num" id="LN880">880</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN881">881</td><td class="line">    <span class='keyword'>case</span> <span class='macro'>SREQ_GLOBAL<span class='expansion'>0</span></span>:</td></tr>
+<tr><td class="num" id="LN882">882</td><td class="line">      set_option_value_err(key, numval, stringval, opt_flags, err);</td></tr>
+<tr><td class="num" id="LN883">883</td><td class="line">      <span class='keyword'>break</span>;</td></tr>
+<tr><td class="num" id="LN884">884</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN885">885</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN886">886</td><td class="line">  <span class='keyword'>if</span> (err-&gt;set) {</td></tr>
+<tr><td class="num" id="LN887">887</td><td class="line">    <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN888">888</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN889">889</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN890">890</td><td class="line">  try_end(err);</td></tr>
+<tr><td class="num" id="LN891">891</td><td class="line">}</td></tr>
+<tr><td class="num" id="LN892">892</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN893">893</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN894">894</td><td class="line"><span class='keyword'>static</span> <span class='keyword'>void</span> set_option_value_err(<span class='keyword'>char</span> *key,</td></tr>
+<tr><td class="num" id="LN895">895</td><td class="line">                                 <span class='keyword'>int</span> numval,</td></tr>
+<tr><td class="num" id="LN896">896</td><td class="line">                                 <span class='keyword'>char</span> *stringval,</td></tr>
+<tr><td class="num" id="LN897">897</td><td class="line">                                 <span class='keyword'>int</span> opt_flags,</td></tr>
+<tr><td class="num" id="LN898">898</td><td class="line">                                 Error *err)</td></tr>
+<tr><td class="num" id="LN899">899</td><td class="line">{</td></tr>
+<tr><td class="num" id="LN900">900</td><td class="line">  <span class='keyword'>char</span> *errmsg;</td></tr>
+<tr><td class="num" id="LN901">901</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN902">902</td><td class="line">  <span class='keyword'>if</span> ((errmsg = (<span class='keyword'>char</span> *)set_option_value((uint8_t *)key,</td></tr>
+<tr><td class="num" id="LN903">903</td><td class="line">                                         numval,</td></tr>
+<tr><td class="num" id="LN904">904</td><td class="line">                                         (uint8_t *)stringval,</td></tr>
+<tr><td class="num" id="LN905">905</td><td class="line">                                         opt_flags)))</td></tr>
+<tr><td class="num" id="LN906">906</td><td class="line">  {</td></tr>
+<tr><td class="num" id="LN907">907</td><td class="line">    <span class='keyword'>if</span> (try_end(err)) {</td></tr>
+<tr><td class="num" id="LN908">908</td><td class="line">      <span class='keyword'>return</span>;</td></tr>
+<tr><td class="num" id="LN909">909</td><td class="line">    }</td></tr>
+<tr><td class="num" id="LN910">910</td><td class="line"> </td></tr>
+<tr><td class="num" id="LN911">911</td><td class="line">    <span class='macro'>api_set_error(err, Exception, <span class='string_literal'>"%s"</span>, errmsg)<span class='expansion'>do { snprintf((err)-&gt;msg, sizeof((err)-&gt;msg), "%s", errmsg<br>); (err)-&gt;set = 1; (err)-&gt;type = kErrorTypeException; }<br> while (0)</span></span>;</td></tr>
+<tr><td class="num" id="LN912">912</td><td class="line">  }</td></tr>
+<tr><td class="num" id="LN913">913</td><td class="line">}</td></tr>
+</table></body></html>
