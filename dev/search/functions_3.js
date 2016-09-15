@@ -41,7 +41,7 @@ var searchData=
   ['dict_5fget_5fvalue',['dict_get_value',['../api_2private_2helpers_8c.html#a133284ee658a684c4742fe9aecfa9d76',1,'helpers.c']]],
   ['dict_5flookup',['dict_lookup',['../eval_8c.html#ab16c115d8c1763cd9c468f8b96f11af4',1,'eval.c']]],
   ['dict_5fset_5fkeys_5freadonly',['dict_set_keys_readonly',['../eval_8c.html#a265b4f7a7ea74bb83238d360aa86169d',1,'eval.c']]],
-  ['dict_5fset_5fvalue',['dict_set_value',['../api_2private_2helpers_8c.html#aecd945dcfe6179aa3456befe46524bf1',1,'helpers.c']]],
+  ['dict_5fset_5fvalue',['dict_set_value',['../api_2private_2helpers_8c.html#a24ca0598efe855a0275944076e400721',1,'helpers.c']]],
   ['dict_5funref',['dict_unref',['../eval_8c.html#aabf2cdc48294b2576212f72230235c81',1,'eval.c']]],
   ['dictitem_5falloc',['dictitem_alloc',['../eval_8c.html#abd73750de233ecc477bff7ab04d3c547',1,'eval.c']]],
   ['dictitem_5ffree',['dictitem_free',['../eval_8c.html#af38b98eac44cb928bddedc9406fc22fc',1,'eval.c']]],

@@ -130,7 +130,7 @@ var searchData=
   ['dict_5flookup',['dict_lookup',['../eval_8c.html#ab16c115d8c1763cd9c468f8b96f11af4',1,'eval.c']]],
   ['dict_5fmaxnest',['DICT_MAXNEST',['../eval_8c.html#a6f2af55844aa386ba2670a3904c914f4',1,'eval.c']]],
   ['dict_5fset_5fkeys_5freadonly',['dict_set_keys_readonly',['../eval_8c.html#a265b4f7a7ea74bb83238d360aa86169d',1,'eval.c']]],
-  ['dict_5fset_5fvalue',['dict_set_value',['../api_2private_2helpers_8c.html#aecd945dcfe6179aa3456befe46524bf1',1,'helpers.c']]],
+  ['dict_5fset_5fvalue',['dict_set_value',['../api_2private_2helpers_8c.html#a24ca0598efe855a0275944076e400721',1,'helpers.c']]],
   ['dict_5ft',['dict_T',['../eval__defs_8h.html#a9fbe6cdf6b0db166d2ef268621c16c4d',1,'eval_defs.h']]],
   ['dict_5funref',['dict_unref',['../eval_8c.html#aabf2cdc48294b2576212f72230235c81',1,'eval.c']]],
   ['dict_5fwatcher',['dict_watcher',['../structdict__watcher.html',1,'']]],

@@ -50,7 +50,7 @@ var searchData=
   ['op_5ffolddelrec',['OP_FOLDDELREC',['../ops_8h.html#ad14a314ff0ce04864624fa9559d47b51',1,'ops.h']]],
   ['op_5ffoldopen',['OP_FOLDOPEN',['../ops_8h.html#a1616b41ec2dabcb4a5caf0d1c1f42c8b',1,'ops.h']]],
   ['op_5ffoldopenrec',['OP_FOLDOPENREC',['../ops_8h.html#a1765abe3edf065a4f02558cfd7f245fd',1,'ops.h']]],
-  ['op_5fformat',['op_format',['../ops_8c.html#a1181ca289c5f7abd1589a080b2e1937d',1,'op_format(oparg_T *oap, int keep_cursor):&#160;ops.c'],['../ops_8h.html#a24cd0ab7c48683860091f753d5fd1a44',1,'OP_FORMAT():&#160;ops.h']]],
+  ['op_5fformat',['OP_FORMAT',['../ops_8h.html#a24cd0ab7c48683860091f753d5fd1a44',1,'OP_FORMAT():&#160;ops.h'],['../ops_8c.html#a1181ca289c5f7abd1589a080b2e1937d',1,'op_format(oparg_T *oap, int keep_cursor):&#160;ops.c']]],
   ['op_5fformat2',['OP_FORMAT2',['../ops_8h.html#a7c4f694de2251e0cd7ee208480139e39',1,'ops.h']]],
   ['op_5fformatexpr',['op_formatexpr',['../ops_8c.html#a50357880bd18267d82dfb5d2858c3efc',1,'ops.c']]],
   ['op_5ffunction',['OP_FUNCTION',['../ops_8h.html#a7128082abfd9a473175349e33e0c0d6b',1,'ops.h']]],
