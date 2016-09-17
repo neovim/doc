@@ -176,12 +176,25 @@ include the kitchen sink... but you can use <A HREF="motion.html#it">it</A> for 
 2. Design decisions					*<A NAME="design-decisions"></A><B>design-decisions</B>*
 
 
-Jargon	 							*<A NAME="dev-jargon"></A><B>dev-jargon</B>*
+JARGON	 							*<A NAME="dev-jargon"></A><B>dev-jargon</B>*
+
+<B><FONT color="#54A23D">API client </FONT></B>
+All external UIs and remote plugins (as opposed to regular Vim plugins) are
+&quot;clients&quot; in general; but we call something an &quot;<A HREF="api.html#API">API</A> client&quot; if its purpose is
+to abstract or wrap the <A HREF="msgpack_rpc.html#RPC">RPC</A> <A HREF="api.html#API">API</A> for the convenience of other applications
+(just like a REST client or SDK such <A HREF="motion.html#as">as</A> boto3 for AWS: you can speak AWS REST
+using an HTTP client like curl, but boto3 wraps that in a convenient <A HREF="if_pyth.html#python">python</A>
+interface). For example, the Nvim lua-client is an <A HREF="api.html#API">API</A> client:
+    https://github.com/neovim/lua-client
 
 <B><FONT color="#54A23D">Host </FONT></B>
 A <A HREF="usr_05.html#plugin">plugin</A> &quot;host&quot; is both a client (of the Nvim <A HREF="api.html#API">API</A>) and a server (of an
 external platform, e.g. <A HREF="if_pyth.html#python">python</A>). It is a remote <A HREF="usr_05.html#plugin">plugin</A> that hosts other
 plugins.
+
+<B><FONT color="#54A23D">Remote plugin </FONT></B>
+Arbitrary code registered via |<A HREF="remote_plugin.html#:UpdateRemotePlugins">:UpdateRemotePlugins</A>|, that runs in a separate
+process and communicates with Nvim via the |<A HREF="api.html#api">api</A>|.
 
 <B><FONT color="#54A23D">Window </FONT></B>
 The <A HREF="motion.html#word">word</A> &quot;<A HREF="windows.html#window">window</A>&quot; is commonly used for several things: A <A HREF="windows.html#window">window</A> on the screen,
@@ -198,7 +211,7 @@ shell		The Vim application.  This can cover the whole screen (e.g.,
 		fit in the shell.
 
 
-Providers 							*<A NAME="dev-provider"></A><B>dev-provider</B>*
+PROVIDERS 							*<A NAME="dev-provider"></A><B>dev-provider</B>*
 
 A goal of Nvim is to allow extension of the editor without special knowledge
 in the core. But some Vim components are too tightly coupled; in those cases
@@ -242,9 +255,37 @@ defined if a valid external <A HREF="if_pyth.html#Python">Python</A> host is fou
 a Vim compiled without the |<A HREF="various.html#+python">+python</A>| feature.
 
 
-<A HREF="msgpack_rpc.html#RPC">RPC</A> <A HREF="api.html#API">API</A>
-<A HREF="api.html#API">API</A> client
-remote <A HREF="usr_05.html#plugin">plugin</A>
+
+<A HREF="api.html#API">API</A>								*<A NAME="dev-api"></A><B>dev-api</B>*
+
+Use this <A HREF="pattern.html#pattern">pattern</A> to name new <A HREF="api.html#API">API</A> <A HREF="eval.html#functions">functions</A>:
+    nvim_{thing}_{action}_{arbitrary-qualifiers}
+
+If the function acts on an object then {thing} is the name of that object
+(e.g. &quot;buf&quot; or &quot;win&quot;). If the function operates in a &quot;global&quot; context then
+{thing} is usually omitted (but consider &quot;namespacing&quot; your global operations
+with a {thing} that groups <A HREF="eval.html#functions">functions</A> under a common concept).
+
+Use existing common {action} names if possible:
+    add   append to, or insert into, a collection
+    get   get a thing (or subset of things by some query)
+    set   set a thing
+    del   delete a thing (or group of things)
+    <A HREF="eval.html#list">list</A>  get all things
+
+Use consistent names for {thing} in all <A HREF="api.html#API">API</A> function. E.g. a buffer is called
+&quot;buf&quot; everywhere, not &quot;buffer&quot; in some places and &quot;buf&quot; in others.
+
+Example: `nvim_get_current_line` acts on the global editor state; the common
+{action} &quot;get&quot; is used but {thing} is omitted.
+
+Example: `nvim_buf_add_highlight` acts on a `Buffer` object (the first
+parameter) and uses the common {action} &quot;add&quot;.
+
+Example: `nvim_list_bufs` operates in a global context (first parameter is
+_not_ a Buffer). The common {action} &quot;<A HREF="eval.html#list">list</A>&quot; indicates that <A HREF="motion.html#it">it</A> lists all
+bufs (plural) in the global context.
+
 
 <A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
 </PRE>
@@ -252,7 +293,7 @@ remote <A HREF="usr_05.html#plugin">plugin</A>
 
     <footer>
       <div class="container">
-        Generated Fri Sep 16 20:09:09 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/6e9f329d051cf6bf6d83dbe5335f86a1752ec45a"><code>6e9f329</code></a>.
+        Generated Sat Sep 17 20:07:59 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/dc6cc4787c16d2b339699c12136c400c1b3b5cef"><code>dc6cc47</code></a>.
       </div>
     </footer>
   </body>
