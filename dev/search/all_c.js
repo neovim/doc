@@ -177,7 +177,7 @@ var searchData=
   ['loop',['loop',['../structloop.html',1,'loop'],['../structprocess.html#a9acec035b31eb669a45d0736e7932bcf',1,'process::loop()'],['../structterm__input.html#ad20e5c54202f7a953fff1353fd839094',1,'term_input::loop()'],['../structTUIData.html#a5b9be972ece68ce6d5929fc4c18a7ba5',1,'TUIData::loop()'],['../loop_8h.html#ae8ce2461c5be616fe2f4ada9b67b9fc1',1,'Loop():&#160;loop.h']]],
   ['loop_2ec',['loop.c',['../loop_8c.html',1,'']]],
   ['loop_2eh',['loop.h',['../loop_8h.html',1,'']]],
-  ['loop_5fclose',['loop_close',['../loop_8c.html#a0024fc1f41cadd7fddf61bbb84eef1ee',1,'loop.c']]],
+  ['loop_5fclose',['loop_close',['../loop_8c.html#a6599a46e711fb57d03bf8b4ffbd6d479',1,'loop.c']]],
   ['loop_5fcookie',['loop_cookie',['../structloop__cookie.html',1,'']]],
   ['loop_5finit',['loop_init',['../loop_8c.html#a429398acfbb953286b0ec3d9425a632f',1,'loop.c']]],
   ['loop_5fon_5fput',['loop_on_put',['../loop_8c.html#aa18452eb3013a9ab431ac3f5fb13004f',1,'loop.c']]],

@@ -55,7 +55,7 @@ var searchData=
   ['log_5finit',['log_init',['../log_8c.html#a2508fad025e49f9746b6c178dce6917e',1,'log.c']]],
   ['log_5flock',['log_lock',['../log_8c.html#a28ff6083cbd84060be682dad776c4c3c',1,'log.c']]],
   ['log_5funlock',['log_unlock',['../log_8c.html#a661a1be4a5a85a896f36007319b39807',1,'log.c']]],
-  ['loop_5fclose',['loop_close',['../loop_8c.html#a0024fc1f41cadd7fddf61bbb84eef1ee',1,'loop.c']]],
+  ['loop_5fclose',['loop_close',['../loop_8c.html#a6599a46e711fb57d03bf8b4ffbd6d479',1,'loop.c']]],
   ['loop_5finit',['loop_init',['../loop_8c.html#a429398acfbb953286b0ec3d9425a632f',1,'loop.c']]],
   ['loop_5fon_5fput',['loop_on_put',['../loop_8c.html#aa18452eb3013a9ab431ac3f5fb13004f',1,'loop.c']]],
   ['loop_5fpoll_5fevents',['loop_poll_events',['../loop_8c.html#ac96262308d24e406dafd4e79aeead075',1,'loop.c']]],
