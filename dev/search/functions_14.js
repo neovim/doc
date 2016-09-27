@@ -86,6 +86,7 @@ var searchData=
   ['update_5ftopline_5fwin',['update_topline_win',['../move_8c.html#a2ac11883117fd0354fafe1377142c289',1,'move.c']]],
   ['updatescript',['updatescript',['../getchar_8c.html#acf84f93c4c5245fb12e3721cdd69606f',1,'getchar.c']]],
   ['using_5fscript',['using_script',['../getchar_8c.html#ab29ff5db05498fa455d5b86e5688fd33',1,'getchar.c']]],
+  ['utf_5fambiguous_5fwidth',['utf_ambiguous_width',['../mbyte_8c.html#a280a0a43e5f4744afae8587e0b75377d',1,'mbyte.c']]],
   ['utf_5fbyte2len',['utf_byte2len',['../mbyte_8c.html#a017670c8d005b2f38de65c666ca11c5f',1,'mbyte.c']]],
   ['utf_5fchar2bytes',['utf_char2bytes',['../mbyte_8c.html#a7d36274c4fe31f3e8c447d33cfdbdb7a',1,'mbyte.c']]],
   ['utf_5fchar2cells',['utf_char2cells',['../mbyte_8c.html#ac38b8ec71563a4bd534a6e45504dac29',1,'mbyte.c']]],
