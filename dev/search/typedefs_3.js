@@ -2,6 +2,7 @@ var searchData=
 [
   ['data_5fbl',['DATA_BL',['../memline_8c.html#aa644b4da792aa82847aa9bfab40cafab',1,'memline.c']]],
   ['dict_5ft',['dict_T',['../eval__defs_8h.html#a9fbe6cdf6b0db166d2ef268621c16c4d',1,'eval_defs.h']]],
+  ['dictitem16_5ft',['dictitem16_T',['../eval__defs_8h.html#a2a4758c888989eafaa9239b40693fca1',1,'eval_defs.h']]],
   ['dictitem_5ft',['dictitem_T',['../eval__defs_8h.html#a0fc26a29e71c9ae7f518765f7027cab0',1,'eval_defs.h']]],
   ['dictwatcher',['DictWatcher',['../eval_8c.html#a0dba0129809b4b571a737542e326f860',1,'eval.c']]],
   ['diff_5ft',['diff_T',['../buffer__defs_8h.html#aaf62b3fd8eeaa17fe5f6c0eed153c6a6',1,'buffer_defs.h']]],
