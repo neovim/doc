@@ -9,5 +9,7 @@ var searchData=
   ['mf_5fblocknr_5ftrans_5fitem_5ft',['mf_blocknr_trans_item_T',['../memfile__defs_8h.html#a7c512af4bbdbdc3e3950c0ea0f609baf',1,'memfile_defs.h']]],
   ['mf_5fhashitem_5ft',['mf_hashitem_T',['../memfile__defs_8h.html#ad6053292ae4cd215b5e49361548b6a8e',1,'memfile_defs.h']]],
   ['mf_5fhashtab_5ft',['mf_hashtab_T',['../memfile__defs_8h.html#a4b5661ebbbdbaa073d3a33ec8caa1a00',1,'memfile_defs.h']]],
-  ['msgchunk_5ft',['msgchunk_T',['../message_8c.html#ac6f4e6194294f05cfbe3336a372b2cd5',1,'message.c']]]
+  ['msgchunk_5ft',['msgchunk_T',['../message_8c.html#ac6f4e6194294f05cfbe3336a372b2cd5',1,'message.c']]],
+  ['multiqueue',['MultiQueue',['../multiqueue_8h.html#a93c74838c8ff321a9f6c00a6cbced791',1,'multiqueue.h']]],
+  ['multiqueueitem',['MultiQueueItem',['../multiqueue_8c.html#a358ddf1476c5ddd4361cd560ea836aef',1,'multiqueue.c']]]
 ];

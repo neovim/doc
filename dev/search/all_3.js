@@ -434,7 +434,7 @@ var searchData=
   ['cpt_5finfo',['CPT_INFO',['../edit_8h.html#a0933ac2ab90aa4673881cc92b102d0f9',1,'edit.h']]],
   ['cpt_5fkind',['CPT_KIND',['../edit_8h.html#a70468756419a4a611361e089c9dadfc6',1,'edit.h']]],
   ['cpt_5fmenu',['CPT_MENU',['../edit_8h.html#a900b6a70f54639c29e256e4ab2fc7181',1,'edit.h']]],
-  ['create_5fevent',['CREATE_EVENT',['../loop_8h.html#aea4e4a24a841cb105aafcd2b40d5dc13',1,'loop.h']]],
+  ['create_5fevent',['CREATE_EVENT',['../loop_8h.html#a49112d747eb768c5bcc046285f86dbca',1,'loop.h']]],
   ['cs_5fb5',['CS_B5',['../hardcopy_8c.html#a9f122c03346a72703acbee3a22b47e1c',1,'hardcopy.c']]],
   ['cs_5fcns_5fplane_5f1',['CS_CNS_PLANE_1',['../hardcopy_8c.html#a9ca4673d7bdb4aaa8747e5f4aaa5ca01',1,'hardcopy.c']]],
   ['cs_5fcns_5fplane_5f1_5f2',['CS_CNS_PLANE_1_2',['../hardcopy_8c.html#a2414ddb95c669991f7bd388cff76264e',1,'hardcopy.c']]],

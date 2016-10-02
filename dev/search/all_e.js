@@ -241,7 +241,7 @@ var searchData=
   ['no_5fswap_5ffile',['no_swap_file',['../structmparm__T.html#aa90e5e188aed10bff09b23bcdbd5284c',1,'mparm_T']]],
   ['nobehind',['NOBEHIND',['../regexp_8c.html#a7251f1e6318e227c9abd3376a5979a6f',1,'regexp.c']]],
   ['noctal',['NOCTAL',['../regexp_8c.html#a6ec641625bc1364d802067ad64c29647',1,'regexp.c']]],
-  ['node',['node',['../structdict__watcher.html#a90e51ccd68fea64b1fafdf949de96d30',1,'dict_watcher::node()'],['../structqueue__item.html#a66eaf24c8cc8a0028ad0e11b8c6d0ffb',1,'queue_item::node()']]],
+  ['node',['node',['../structdict__watcher.html#a90e51ccd68fea64b1fafdf949de96d30',1,'dict_watcher::node()'],['../structmultiqueue__item.html#a4924140cdb2483bbbbb3b15bb1181b31',1,'multiqueue_item::node()']]],
   ['node_5fnormal',['NODE_NORMAL',['../fs__defs_8h.html#a4835cb7f20ae811fad76da87661cd41c',1,'fs_defs.h']]],
   ['node_5fother',['NODE_OTHER',['../fs__defs_8h.html#a5fa7206c4ea5643ce564e145789d7491',1,'fs_defs.h']]],
   ['node_5fwritable',['NODE_WRITABLE',['../fs__defs_8h.html#a7aea9d8898beac0ebf166c8cdc0fcfb8',1,'fs_defs.h']]],

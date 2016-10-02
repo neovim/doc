@@ -238,7 +238,7 @@ var searchData=
   ['p_5fws',['p_ws',['../option__defs_8h.html#a3a722804e74013dc7bea5cd2084bf306',1,'option_defs.h']]],
   ['p_5fww',['p_ww',['../option__defs_8h.html#a66f0c0118fd1033137d45e35e6747c6d',1,'option_defs.h']]],
   ['params',['params',['../structTUIData.html#a6fc4623e8d5939bdf464c3d560161b92',1,'TUIData']]],
-  ['parent',['parent',['../structqueue__item.html#aca3b799a844504ee6b5a97fa92e18cfd',1,'queue_item::parent()'],['../structqueue.html#af9fa670f56c1838a066ea63a30735598',1,'queue::parent()'],['../structVimMenu.html#ac88f56d5adfbb1debede0d20ec2b1640',1,'VimMenu::parent()']]],
+  ['parent',['parent',['../structmultiqueue__item.html#a44449b680881cdb4de590597a68b3852',1,'multiqueue_item::parent()'],['../structmultiqueue.html#ac3a101261fcf787c65cf3e2983acf06c',1,'multiqueue::parent()'],['../structVimMenu.html#ac88f56d5adfbb1debede0d20ec2b1640',1,'VimMenu::parent()']]],
   ['parse_5fstate_5ft',['parse_state_T',['../regexp_8c.html#ae1dbd15248dcb1646cf1eb6e10e32294',1,'regexp.c']]],
   ['paste_5fenabled',['paste_enabled',['../structterm__input.html#aa61db7cd63f68d10a94f6b0ab4aa6b78',1,'term_input']]],
   ['pat',['pat',['../structAutoPat.html#a8c98c4f05140757493f39f6604dc1a81',1,'AutoPat::pat()'],['../structspat.html#ad6c74e83b279cbca2aa0e673ee6f1718',1,'spat::pat()'],['../structShadaEntry.html#af2fda30f6f33052bad430a5bc3687c45',1,'ShadaEntry::pat()'],['../structpat__T.html#aebbe15f2e0be4b053603ea54c8e82339',1,'pat_T::pat()']]],
@@ -296,5 +296,5 @@ var searchData=
   ['pum_5fkind',['pum_kind',['../structpumitem__T.html#ab7a77b05b2b38ea311cea1580c9f13a4',1,'pumitem_T']]],
   ['pum_5ftext',['pum_text',['../structpumitem__T.html#a5b638b003a9c7e7bf49cb293ad3125a6',1,'pumitem_T']]],
   ['put',['put',['../structui__t.html#a0d9debb625f6275c0faa76c79fc30b9c',1,'ui_t']]],
-  ['put_5fcb',['put_cb',['../structqueue.html#aaf89901587d83b08952b67db03a760ac',1,'queue']]]
+  ['put_5fcb',['put_cb',['../structmultiqueue.html#ae91cbb6a3fdf2f20c56b9556a86ab59b',1,'multiqueue']]]
 ];

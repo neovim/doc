@@ -18,5 +18,7 @@ var searchData=
   ['msg_5fhist',['msg_hist',['../structmsg__hist.html',1,'']]],
   ['msgchunk_5fs',['msgchunk_S',['../structmsgchunk__S.html',1,'']]],
   ['msglist',['msglist',['../structmsglist.html',1,'']]],
-  ['msgpackrpcrequesthandler',['MsgpackRpcRequestHandler',['../structMsgpackRpcRequestHandler.html',1,'']]]
+  ['msgpackrpcrequesthandler',['MsgpackRpcRequestHandler',['../structMsgpackRpcRequestHandler.html',1,'']]],
+  ['multiqueue',['multiqueue',['../structmultiqueue.html',1,'']]],
+  ['multiqueue_5fitem',['multiqueue_item',['../structmultiqueue__item.html',1,'']]]
 ];

@@ -42,7 +42,7 @@ var searchData=
   ['is_5fsubstitute_5fpattern',['is_substitute_pattern',['../structShadaEntry.html#a3a343d27dad8d3e0490528086125513d',1,'ShadaEntry']]],
   ['is_5fvisual',['is_VIsual',['../structoparg__S.html#a0bfdee9aacb2a3f44395f910ed560a4e',1,'oparg_S']]],
   ['italic',['italic',['../structprt__text__attr__T.html#aacdac715511f322d0e4c5d4c6560ce0d',1,'prt_text_attr_T::italic()'],['../structHlAttrs.html#a022bc22cfeeb5a410482507b89ffa900',1,'HlAttrs::italic()']]],
-  ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T::item()'],['../structqueue__item.html#a1b7380f51e4115a419081354ad888dbb',1,'queue_item::item()']]],
+  ['item',['item',['../structsortItem__T.html#a817f833e852fe11b67097f456a4d1b57',1,'sortItem_T::item()'],['../structmultiqueue__item.html#a2a81a97acb34c3df74881039812e54a9',1,'multiqueue_item::item()']]],
   ['item_5fcompare_5ffloat',['item_compare_float',['../structsortinfo__T.html#aa6cf696339f8b9eca0d2d665a361521d',1,'sortinfo_T']]],
   ['item_5fcompare_5ffunc',['item_compare_func',['../structsortinfo__T.html#afd9a64b82b2305a868251fd777b626dc',1,'sortinfo_T']]],
   ['item_5fcompare_5ffunc_5ferr',['item_compare_func_err',['../structsortinfo__T.html#abdb056e37a1815e9ac8b3a3e7dd087a8',1,'sortinfo_T']]],
