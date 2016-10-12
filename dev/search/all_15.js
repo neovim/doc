@@ -234,7 +234,7 @@ var searchData=
   ['usr_5flog_5ffile',['USR_LOG_FILE',['../log_8c.html#a90af61c26b8d36298079ffac691d1c27',1,'log.c']]],
   ['usr_5flog_5ffile_5f2',['USR_LOG_FILE_2',['../log_8c.html#af2dc49b306dbc3ead50e05b378933ff5',1,'log.c']]],
   ['ut',['ut',['../structTUIData.html#aa07b131befaf96d760f2afa651124701',1,'TUIData']]],
-  ['utf_5fambiguous_5fwidth',['utf_ambiguous_width',['../mbyte_8c.html#a280a0a43e5f4744afae8587e0b75377d',1,'mbyte.c']]],
+  ['utf_5fambiguous_5fwidth',['utf_ambiguous_width',['../mbyte_8c.html#a7789d18fe1c86695429c16dd9da2eb78',1,'mbyte.c']]],
   ['utf_5fbyte2len',['utf_byte2len',['../mbyte_8c.html#a017670c8d005b2f38de65c666ca11c5f',1,'mbyte.c']]],
   ['utf_5fchar2bytes',['utf_char2bytes',['../mbyte_8c.html#a7d36274c4fe31f3e8c447d33cfdbdb7a',1,'mbyte.c']]],
   ['utf_5fchar2cells',['utf_char2cells',['../mbyte_8c.html#ac38b8ec71563a4bd534a6e45504dac29',1,'mbyte.c']]],
