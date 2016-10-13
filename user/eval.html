@@ -1995,6 +1995,7 @@ buflisted({expr})		<A HREF="#Number">Number</A>	TRUE if buffer {expr} is listed
 bufloaded({expr})		<A HREF="#Number">Number</A>	TRUE if buffer {expr} is loaded
 bufname({expr})		<A HREF="#String">String</A>	Name of the buffer {expr}
 bufnr({expr} [, {create}])	<A HREF="#Number">Number</A>	<A HREF="#Number">Number</A> of the buffer {expr}
+bufwinid({expr})		<A HREF="#Number">Number</A>	<A HREF="windows.html#window">window</A> ID of buffer {expr}
 bufwinnr({expr})		<A HREF="#Number">Number</A>	<A HREF="windows.html#window">window</A> number of buffer {expr}
 byte2line({byte})		<A HREF="#Number">Number</A>	line number at byte <A HREF="intro.html#count">count</A> {byte}
 byteidx({expr}, {nr})		<A HREF="#Number">Number</A>	byte index of {nr}'th char in {expr}
@@ -2079,7 +2080,8 @@ getchar([expr])		<A HREF="#Number">Number</A>	get one character from the user
 <A HREF="#getcmdpos()">getcmdpos()</A>			<A HREF="#Number">Number</A>	return cursor position in command-line
 <A HREF="#getcmdtype()">getcmdtype()</A>			<A HREF="#String">String</A>	return current command-line type
 <A HREF="#getcmdwintype()">getcmdwintype()</A>			<A HREF="#String">String</A>	return current command-line <A HREF="windows.html#window">window</A> type
-getcompletion({pat}, {type})	<A HREF="#List">List</A>	<A HREF="#list">list</A> of cmdline completion matches
+getcompletion({pat}, {type} [, {filtered}])
+				<A HREF="#List">List</A>	<A HREF="#list">list</A> of cmdline completion matches
 <A HREF="#getcurpos()">getcurpos()</A>			<A HREF="#List">List</A>	position of the cursor
 getcwd([{winnr} [, {tabnr}]])	<A HREF="#String">String</A>	the current working directory
 getfontname([{name}])		<A HREF="#String">String</A>	name of font being used
@@ -2434,6 +2436,7 @@ arglistid([{winnr} [, {tabnr}]])
 		With {winnr} only use this <A HREF="windows.html#window">window</A> in the current <A HREF="intro.html#tab">tab</A> page.
 		With {winnr} and {tabnr} use the <A HREF="windows.html#window">window</A> in the specified <A HREF="intro.html#tab">tab</A>
 		page.
+		{winnr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
 
 
 							*<A NAME="argv()"></A><B>argv()</B>*
@@ -2676,6 +2679,17 @@ bufnr({expr} [, {create}])
 		of existing <A HREF="windows.html#buffers">buffers</A>.  Note that not all <A HREF="windows.html#buffers">buffers</A> with a smaller
 		number necessarily exist, because &quot;<A HREF="windows.html#:bwipeout">:bwipeout</A>&quot; may have removed
 		them.  Use <A HREF="#bufexists()">bufexists()</A> to test for the existence of a buffer.
+
+
+bufwinid({expr})					*<A NAME="bufwinid()"></A><B>bufwinid()</B>*
+		The result is a <A HREF="#Number">Number</A>, which is the <A HREF="windows.html#window">window</A> ID of the first
+		<A HREF="windows.html#window">window</A> associated with buffer {expr}.  For the use of {expr},
+		see |<A HREF="#bufname()">bufname()</A>| above.  If buffer {expr} doesn't exist or
+		there is no such <A HREF="windows.html#window">window</A>, -1 is returned.  Example:
+
+<B>	echo "A window containing buffer 1 is " . (bufwinid(1))</B>
+ 
+		Only deals with the current <A HREF="intro.html#tab">tab</A> page.
 
 
 bufwinnr({expr})					*<A NAME="bufwinnr()"></A><B>bufwinnr()</B>*
@@ -3932,7 +3946,7 @@ getchar([expr])						*<A NAME="getchar()"></A><B>getchar()</B>*
 		when not in the command-line <A HREF="windows.html#window">window</A>.
 
 
-getcompletion({pat}, {type})				*<A NAME="getcompletion()"></A><B>getcompletion()</B>*
+getcompletion({pat}, {type} [, {filtered}])		*<A NAME="getcompletion()"></A><B>getcompletion()</B>*
 		Return a <A HREF="#list">list</A> of command-line completion matches. {type}
 		specifies what for.  The following completion types are
 		supported:
@@ -3972,6 +3986,10 @@ getcompletion({pat}, {type})				*<A NAME="getcompletion()"></A><B>getcompletion(
 		Otherwise only items matching <A HREF="autocmd.html#{pat}">{pat}</A> are returned. See
 		|<A HREF="editing.html#wildcards">wildcards</A>| for the use of special characters in <A HREF="autocmd.html#{pat}">{pat}</A>.
 
+		If the optional {filtered} flag is set to 1, then <A HREF="options.html#'wildignore'">'wildignore'</A>
+		is applied to <A HREF="change.html#filter">filter</A> the results.  Otherwise all the matches
+		are returned. The <A HREF="options.html#'wildignorecase'">'wildignorecase'</A> option always applies.
+
 		If there are no matches, an empty <A HREF="#list">list</A> is returned.  An
 		invalid value for {type} produces an error.
 
@@ -3999,6 +4017,7 @@ getcwd([{winnr}[, {tabnr}]])				*<A NAME="getcwd()"></A><B>getcwd()</B>*
 <B>			getcwd(0)</B>
 <B>			getcwd(0, 0)</B>
  		If {winnr} is -1 <A HREF="motion.html#it">it</A> is ignored, only the <A HREF="intro.html#tab">tab</A> is resolved.
+		{winnr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
 
 
 
@@ -4100,7 +4119,9 @@ getline({lnum} [, {end}])
 
 getloclist({nr})					*<A NAME="getloclist()"></A><B>getloclist()</B>*
 		Returns a <A HREF="#list">list</A> with all the entries in the location <A HREF="#list">list</A> for
-		<A HREF="windows.html#window">window</A> {nr}. When {nr} is zero the current <A HREF="windows.html#window">window</A> is used.
+		<A HREF="windows.html#window">window</A> {nr}. {nr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
+		When {nr} is zero the current <A HREF="windows.html#window">window</A> is used.
+
 		For a location <A HREF="#list">list</A> <A HREF="windows.html#window">window</A>, the displayed location <A HREF="#list">list</A> is
 		returned.  For an invalid <A HREF="windows.html#window">window</A> number {nr}, an empty <A HREF="#list">list</A> is
 		returned. Otherwise, same <A HREF="motion.html#as">as</A> |<A HREF="#getqflist()">getqflist()</A>|.
@@ -4236,6 +4257,7 @@ gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*<A NAME="gettabwinvar()"><
 		Note that {varname} must be the name without &quot;<A HREF="#w:">w:</A>&quot;.
 		Tabs are numbered starting with one.  For the current <A HREF="tabpage.html#tabpage">tabpage</A>
 		use |<A HREF="#getwinvar()">getwinvar()</A>|.
+		{winnr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
 		When {winnr} is zero the current <A HREF="windows.html#window">window</A> is used.
 		This also works for a global option, buffer-local option and
 		window-local option, but <A HREF="motion.html#it">it</A> doesn't work for a global variable
@@ -4372,7 +4394,8 @@ haslocaldir([{winnr}[, {tabnr}]])			*<A NAME="haslocaldir()"></A><B>haslocaldir(
 <B>			haslocaldir()</B>
 <B>			haslocaldir(0)</B>
 <B>			haslocaldir(0, 0)</B>
- 		If {winnr} is -1 <A HREF="motion.html#it">it</A> is ignored, only the <A HREF="intro.html#tab">tab</A> is resolved.
+ 		{winnr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
+		If {winnr} is -1 <A HREF="motion.html#it">it</A> is ignored, only the <A HREF="intro.html#tab">tab</A> is resolved.
 
 
 hasmapto({what} [, {mode} [, {abbr}]])			*<A NAME="hasmapto()"></A><B>hasmapto()</B>*
@@ -6493,11 +6516,13 @@ setline({lnum}, {text})					*<A NAME="setline()"></A><B>setline()</B>*
 
 setloclist({nr}, {list} [, {action}[, {title}]])	*<A NAME="setloclist()"></A><B>setloclist()</B>*
 		Create or replace or add to the location <A HREF="#list">list</A> for <A HREF="windows.html#window">window</A> {nr}.
-		When {nr} is zero the current <A HREF="windows.html#window">window</A> is used. For a location
-		<A HREF="#list">list</A> <A HREF="windows.html#window">window</A>, the displayed location <A HREF="#list">list</A> is modified.  For an
-		invalid <A HREF="windows.html#window">window</A> number {nr}, -1 is returned. If {title} is
-		given, it will be used to set |<A HREF="quickfix.html#w:quickfix_title">w:quickfix_title</A>| after opening
-		the location <A HREF="windows.html#window">window</A>.
+		{nr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
+		When {nr} is zero the current <A HREF="windows.html#window">window</A> is used.
+
+		For a location <A HREF="#list">list</A> <A HREF="windows.html#window">window</A>, the displayed location <A HREF="#list">list</A> is
+		modified.  For an invalid <A HREF="windows.html#window">window</A> number {nr}, -1 is returned. If
+		{title} is given, it will be used to set |<A HREF="quickfix.html#w:quickfix_title">w:quickfix_title</A>|
+		after opening the location <A HREF="windows.html#window">window</A>.
 		Otherwise, same <A HREF="motion.html#as">as</A> |<A HREF="#setqflist()">setqflist()</A>|.
 		Also see |<A HREF="quickfix.html#location-list">location-list</A>|.
 
@@ -6668,6 +6693,7 @@ settabwinvar({tabnr}, {winnr}, {varname}, {val})	*<A NAME="settabwinvar()"></A><
 		{val}.
 		Tabs are numbered starting with one.  For the current <A HREF="tabpage.html#tabpage">tabpage</A>
 		use |<A HREF="#setwinvar()">setwinvar()</A>|.
+		{winnr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
 		When {winnr} is zero the current <A HREF="windows.html#window">window</A> is used.
 		This also works for a global or local buffer option, but <A HREF="motion.html#it">it</A>
 		doesn't work for a global or local buffer variable.
@@ -7762,9 +7788,11 @@ win_id2win({expr})					*<A NAME="win_id2win()"></A><B>win_id2win()</B>*
 
 							*<A NAME="winbufnr()"></A><B>winbufnr()</B>*
 winbufnr({nr})	The result is a <A HREF="#Number">Number</A>, which is the number of the buffer
-		associated with <A HREF="windows.html#window">window</A> {nr}.  When {nr} is zero, the number of
-		the buffer in the current <A HREF="windows.html#window">window</A> is returned.  When <A HREF="windows.html#window">window</A>
-		{nr} doesn't exist, -1 is returned.
+		associated with <A HREF="windows.html#window">window</A> {nr}.  {nr} can be the <A HREF="windows.html#window">window</A> number or
+		the <A HREF="windows.html#window">window</A> ID.
+		When {nr} is zero, the number of the buffer in the current
+		<A HREF="windows.html#window">window</A> is returned.
+		When <A HREF="windows.html#window">window</A> {nr} doesn't exist, -1 is returned.
 		Example:
 <B>  :echo "The file in the current window is " . bufname(winbufnr(0))</B>
  
@@ -7777,6 +7805,7 @@ winbufnr({nr})	The result is a <A HREF="#Number">Number</A>, which is the number
 
 winheight({nr})						*<A NAME="winheight()"></A><B>winheight()</B>*
 		The result is a <A HREF="#Number">Number</A>, which is the height of <A HREF="windows.html#window">window</A> {nr}.
+		{nr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
 		When {nr} is zero, the height of the current <A HREF="windows.html#window">window</A> is
 		returned.  When <A HREF="windows.html#window">window</A> {nr} doesn't exist, -1 is returned.
 		An existing <A HREF="windows.html#window">window</A> always has a height of zero or more.
@@ -7862,6 +7891,7 @@ winrestview({dict})
 
 winwidth({nr})						*<A NAME="winwidth()"></A><B>winwidth()</B>*
 		The result is a <A HREF="#Number">Number</A>, which is the width of <A HREF="windows.html#window">window</A> {nr}.
+		{nr} can be the <A HREF="windows.html#window">window</A> number or the <A HREF="windows.html#window">window</A> ID.
 		When {nr} is zero, the width of the current <A HREF="windows.html#window">window</A> is
 		returned.  When <A HREF="windows.html#window">window</A> {nr} doesn't exist, -1 is returned.
 		An existing <A HREF="windows.html#window">window</A> always has a width of zero or more.
@@ -10314,7 +10344,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Wed Oct 12 20:11:22 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/6bc3bcefc6ca907d18bd5c8d3667901a62e1285c"><code>6bc3bce</code></a>.
+        Generated Thu Oct 13 20:22:49 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/819b79dbc5a6724b38fde606e065aabd761a870d"><code>819b79d</code></a>.
       </div>
     </footer>
   </body>
