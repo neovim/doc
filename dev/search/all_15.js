@@ -130,7 +130,7 @@ var searchData=
   ['ui_5fbuiltin_5fstop',['ui_builtin_stop',['../ui_8c.html#a5dc18a143efb0500b3cba94a03389a05',1,'ui.c']]],
   ['ui_5fbusy_5fstart',['ui_busy_start',['../ui_8c.html#a25cfd68deb2dbfed27e946e560a92727',1,'ui.c']]],
   ['ui_5fbusy_5fstop',['ui_busy_stop',['../ui_8c.html#a7697bd32546b9386a85cfc0315954936',1,'ui.c']]],
-  ['ui_5fcall',['UI_CALL',['../ui__bridge_8c.html#a335573279de190b9dc9c5a0918f23d75',1,'UI_CALL():&#160;ui_bridge.c'],['../ui_8c.html#ac08cc8816bc977390ba485f59861733e',1,'UI_CALL():&#160;ui.c']]],
+  ['ui_5fcall',['UI_CALL',['../ui_8c.html#ac08cc8816bc977390ba485f59861733e',1,'UI_CALL():&#160;ui.c'],['../ui__bridge_8c.html#a335573279de190b9dc9c5a0918f23d75',1,'UI_CALL():&#160;ui_bridge.c']]],
   ['ui_5fcall_5fhelper',['UI_CALL_HELPER',['../ui_8c.html#a71a64ffa8412d76fc5bebc726b289b24',1,'ui.c']]],
   ['ui_5fcall_5fhelper2',['UI_CALL_HELPER2',['../ui_8c.html#a9b9c1fb338518ef4ca57e2d87f1d1b9f',1,'ui.c']]],
   ['ui_5fcall_5fmore',['UI_CALL_MORE',['../ui_8c.html#ad593e7cd1d05732c5346e4ece485fca1',1,'ui.c']]],
