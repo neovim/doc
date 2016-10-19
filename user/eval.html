@@ -7320,23 +7320,31 @@ system({cmd} [, {input}])				*<A NAME="system()"></A><B>system()</B>* *<A NAME="
 		Get the output of the shell command {cmd} <A HREF="motion.html#as">as</A> a |<A HREF="#string">string</A>|.  {cmd}
 		will be run the same <A HREF="motion.html#as">as</A> in |<A HREF="#jobstart()">jobstart()</A>|.  See |<A HREF="#systemlist()">systemlist()</A>|
 		to get the output <A HREF="motion.html#as">as</A> a |<A HREF="#List">List</A>|.
+		Not to be used for interactive commands.
 
-		When {input} is given and is a <A HREF="#string">string</A> this <A HREF="#string">string</A> is written 
-		to a file and passed <A HREF="motion.html#as">as</A> stdin to the command.  The <A HREF="#string">string</A> is 
-		written as-is, you need to take care of using the correct line 
-		separators yourself.
-		If {input} is given and is a |<A HREF="#List">List</A>| <A HREF="motion.html#it">it</A> is written to the file
-		in a way |<A HREF="#writefile()">writefile()</A>| does with {binary} set to &quot;<A HREF="motion.html#b">b</A>&quot; (i.e.
-		with a newline between each <A HREF="#list">list</A> item with newlines inside
-		<A HREF="#list">list</A> items converted to NULs).  
-		Pipes are not used.
+		If {input} is a <A HREF="#string">string</A> <A HREF="motion.html#it">it</A> is written to a pipe and passed <A HREF="motion.html#as">as</A>
+		stdin to the command.  The <A HREF="#string">string</A> is written as-is, line
+		separators are not changed.
+		If {input} is a |<A HREF="#List">List</A>| <A HREF="motion.html#it">it</A> is written to the pipe <A HREF="motion.html#as">as</A>
+		|<A HREF="#writefile()">writefile()</A>| does with {binary} set to &quot;<A HREF="motion.html#b">b</A>&quot; (i.e. with
+		a newline between each <A HREF="#list">list</A> item, and newlines inside <A HREF="#list">list</A>
+		items converted to NULs).
+
+								*<A NAME="E5677"></A><B>E5677</B>*
+		Note: <A HREF="#system()">system()</A> cannot write to or read from backgrounded (&quot;&amp;&quot;)
+		shell commands, e.g.:
+<B>		    :echo system("cat - &amp;", "foo"))</B>
+ 		which is equivalent to:
+<B>		    $ echo foo | bash -c 'cat - &amp;'</B>
+ 		The pipes are disconnected (unless overridden by shell
+		redirection <A HREF="syntax.html#syntax">syntax</A>) before input can reach <A HREF="motion.html#it">it</A>. Use
+		|<A HREF="#jobstart()">jobstart()</A>| instead.
 
 		Note: Use |<A HREF="#shellescape()">shellescape()</A>| or |<A HREF="cmdline.html#::S">::S</A>| with |<A HREF="#expand()">expand()</A>| or 
 		|<A HREF="#fnamemodify()">fnamemodify()</A>| to <A HREF="intro.html#escape">escape</A> special characters in a command 
 		argument.  Newlines in {cmd} may cause the command to fail.  
 		The characters in <A HREF="options.html#'shellquote'">'shellquote'</A> and <A HREF="options.html#'shellxquote'">'shellxquote'</A> may also 
 		cause trouble.
-		This is not to be used for interactive commands.
 
 		The result is a <A HREF="#String">String</A>.  Example:
 <B>		    :let files = system("ls " .  shellescape(expand('%:h')))</B>
@@ -7350,9 +7358,6 @@ system({cmd} [, {input}])				*<A NAME="system()"></A><B>system()</B>* *<A NAME="
 
 		The command executed is constructed using several <A HREF="options.html#options">options</A> when
 		{cmd} is a <A HREF="#string">string</A>: <A HREF="options.html#'shell'">'shell'</A> <A HREF="options.html#'shellcmdflag'">'shellcmdflag'</A> {cmd}
-
-		The command will be executed in &quot;cooked&quot; mode, so that a
-		<A HREF="pattern.html#CTRL-C">CTRL-C</A> will interrupt the command (on Unix at least).
 
 		The resulting error code can be found in |<A HREF="#v:shell_error">v:shell_error</A>|.
 		This function will fail in |<A HREF="starting.html#restricted-mode">restricted-mode</A>|.
@@ -10344,7 +10349,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Tue Oct 18 20:13:07 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/869a9078e189ed14284fee7c341d669d8a4611d5"><code>869a907</code></a>.
+        Generated Wed Oct 19 20:10:27 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/2d961403baf3ed702982ca946ba41a6602ec8608"><code>2d96140</code></a>.
       </div>
     </footer>
   </body>
