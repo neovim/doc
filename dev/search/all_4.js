@@ -210,6 +210,7 @@ var searchData=
   ['dirname',['dirname',['../structdir__stack__T.html#ab697407585dcf56aa533f28958f6c0b4',1,'dir_stack_T']]],
   ['discard_5fcurrent_5fexception',['discard_current_exception',['../ex__eval_8c.html#a06d7be1cb44cc1e9b451028b6148fa0e',1,'ex_eval.c']]],
   ['discard_5fpending_5freturn',['discard_pending_return',['../eval_8c.html#a93183836efa78e55c54c2d730089bbc2',1,'eval.c']]],
+  ['dispatch_2ec',['dispatch.c',['../dispatch_8c.html',1,'']]],
   ['dispatch_2eh',['dispatch.h',['../dispatch_8h.html',1,'']]],
   ['display_5fconfirm_5fmsg',['display_confirm_msg',['../message_8c.html#a4c4d5b17a4702f7b201dd19b8745cecf',1,'message.c']]],
   ['display_5fdollar',['display_dollar',['../edit_8c.html#a7e377c5d04aac75d3d7f67eec42242bc',1,'edit.c']]],

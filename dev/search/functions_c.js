@@ -174,6 +174,7 @@ var searchData=
   ['msgpack_5frpc_5ffrom_5finteger',['msgpack_rpc_from_integer',['../msgpack__rpc_2helpers_8c.html#a6c40a91f24dd94c89e679fdd50c5c3de',1,'helpers.c']]],
   ['msgpack_5frpc_5ffrom_5fobject',['msgpack_rpc_from_object',['../msgpack__rpc_2helpers_8c.html#ab13526c97f3a6d57c0b89f8647d88d17',1,'msgpack_rpc_from_object(const Object result, msgpack_packer *const res) FUNC_ATTR_NONNULL_ARG(2):&#160;helpers.c'],['../msgpack__rpc_2helpers_8c.html#a47ed3563d81505cdbbedd33d16cb8085',1,'msgpack_rpc_from_object(arg, pac):&#160;helpers.c']]],
   ['msgpack_5frpc_5ffrom_5fstring',['msgpack_rpc_from_string',['../msgpack__rpc_2helpers_8c.html#a521760f31eb2ec03484fe9d361ed6ae6',1,'helpers.c']]],
+  ['msgpack_5frpc_5fget_5fhandler_5ffor',['msgpack_rpc_get_handler_for',['../dispatch_8c.html#a91cf821380b09bb971ec9fd7d33c2695',1,'dispatch.c']]],
   ['msgpack_5frpc_5fhandle_5finvalid_5farguments',['msgpack_rpc_handle_invalid_arguments',['../msgpack__rpc_2helpers_8c.html#a0a73fb73b46b56f268b980a11be5d47c',1,'helpers.c']]],
   ['msgpack_5frpc_5fhandle_5fmissing_5fmethod',['msgpack_rpc_handle_missing_method',['../msgpack__rpc_2helpers_8c.html#acf3cc48da8fb1a345a1ee9915294f3e6',1,'helpers.c']]],
   ['msgpack_5frpc_5fhelpers_5finit',['msgpack_rpc_helpers_init',['../msgpack__rpc_2helpers_8c.html#a860e6adcf50b9796273d7332230864af',1,'helpers.c']]],
