@@ -360,7 +360,7 @@ var searchData=
   ['api_5finteger_5fmin',['API_INTEGER_MIN',['../api_2private_2defs_8h.html#a630cf1c604e63694434624664caf781d',1,'defs.h']]],
   ['api_5fmetadata',['api_metadata',['../api_2private_2helpers_8c.html#a3e97553b8e92c0d4e940c8293a86d3d8',1,'helpers.c']]],
   ['api_5fset_5ferror',['api_set_error',['../api_2private_2helpers_8h.html#aaf14608fa9fd6079c93366e4158f5c04',1,'helpers.h']]],
-  ['apidispatchwrapper',['ApiDispatchWrapper',['../dispatch_8h.html#a3c3d89ca97c5663a4b95d502ff4724b5',1,'dispatch.h']]],
+  ['apidispatchwrapper',['ApiDispatchWrapper',['../dispatch_8h.html#a5fd60c0e160c99721368f67cfeaae629',1,'dispatch.h']]],
   ['apitompobjectstackitem',['APIToMPObjectStackItem',['../structAPIToMPObjectStackItem.html',1,'']]],
   ['append',['append',['../structexarg.html#a4a11bed5908196f1dcedb2cf75deaa80',1,'exarg']]],
   ['append_5fpath',['append_path',['../path_8c.html#ac9df1913aed5af8be5e7a94bdaeac98f',1,'path.c']]],

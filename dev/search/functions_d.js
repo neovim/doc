@@ -24,6 +24,7 @@ var searchData=
   ['nvim_5fbuf_5fset_5fname',['nvim_buf_set_name',['../api_2buffer_8c.html#a0ff2a0b32d030fbae42a35b2379066db',1,'buffer.c']]],
   ['nvim_5fbuf_5fset_5foption',['nvim_buf_set_option',['../api_2buffer_8c.html#afee71682fb402687c853c4dae55ad5ea',1,'buffer.c']]],
   ['nvim_5fbuf_5fset_5fvar',['nvim_buf_set_var',['../api_2buffer_8c.html#a286b947e3f8ebf08954a771a15753198',1,'buffer.c']]],
+  ['nvim_5fcall_5fatomic',['nvim_call_atomic',['../vim_8c.html#af02284b16834b68d4410c9e917e833f0',1,'vim.c']]],
   ['nvim_5fcall_5ffunction',['nvim_call_function',['../vim_8c.html#a51c584f69b02969107d76c647904f70d',1,'vim.c']]],
   ['nvim_5fcommand',['nvim_command',['../vim_8c.html#ad7e420069a56193b222050de26e39514',1,'vim.c']]],
   ['nvim_5fcommand_5foutput',['nvim_command_output',['../vim_8c.html#abd42f54a33049dc247ef94b4c8be4849',1,'vim.c']]],

@@ -206,6 +206,8 @@ Functions</h2></td></tr>
 <tr class="separator:a984db23e55b0b0a2180bdd27d2451882"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2e87596225d8b5ebed27c697a75886a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structArray.html">Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vim_8c.html#ab2e87596225d8b5ebed27c697a75886a">nvim_get_api_info</a> (uint64_t channel_id) FUNC_API_ASYNC FUNC_API_NOEVAL</td></tr>
 <tr class="separator:ab2e87596225d8b5ebed27c697a75886a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af02284b16834b68d4410c9e917e833f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structArray.html">Array</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="vim_8c.html#af02284b16834b68d4410c9e917e833f0">nvim_call_atomic</a> (uint64_t channel_id, <a class="el" href="structArray.html">Array</a> calls, <a class="el" href="structError.html">Error</a> *err) FUNC_API_NOEVAL</td></tr>
+<tr class="separator:af02284b16834b68d4410c9e917e833f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a class="anchor" id="afa0499dcb85922b683da3918f512adb6"></a>
@@ -341,6 +343,48 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Gets the current list of tabpage handles</p>
 <dl class="section return"><dt>Returns</dt><dd>The number of tab pages </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af02284b16834b68d4410c9e917e833f0"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structArray.html">Array</a> nvim_call_atomic </td>
+          <td>(</td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>channel_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structArray.html">Array</a>&#160;</td>
+          <td class="paramname"><em>calls</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structError.html">Error</a> *&#160;</td>
+          <td class="paramname"><em>err</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Call many api methods atomically</p>
+<p>This has two main usages: Firstly, to perform several requests from an async context atomically, i.e. without processing requests from other rpc clients or redrawing or allowing user interaction in between. Note that api methods that could fire autocommands or do event processing still might do so. For instance invoking the :sleep command might call timer callbacks. Secondly, it can be used to reduce rpc overhead (roundtrips) when doing many requests in sequence.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">calls</td><td>an array of calls, where each call is described by an array with two elements: the request name, and an array of arguments. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">err</td><td>Details of a validation error of the nvim_multi_request call itself, i e malformatted <code>calls</code> parameter. Errors from called methods will be indicated in the return value, see below.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>an array with two elements. The first is an array of return values. The second is NIL if all calls succeeded. If a call resulted in an error, it is a three-element array with the zero-based index of the call which resulted in an error, the error type and the error message. If an error ocurred, the values from all preceding calls will still be returned. </dd></dl>
 
 </div>
 </div>
@@ -1387,7 +1431,7 @@ cpoptions </dd></dl>
 <!-- start footer part -->
 <footer>
   <div class="container">
-    Generated on Fri Oct 21 2016 20:04:04 for Neovim by
+    Generated on Sat Oct 22 2016 20:03:06 for Neovim by
     <a href="http://www.doxygen.org/index.html">Doxygen</a>
     1.8.7
   </div>
