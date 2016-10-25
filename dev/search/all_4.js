@@ -356,6 +356,7 @@ var searchData=
   ['dv_5fused_5fprev',['dv_used_prev',['../structdictvar__S.html#a0fc974b3b82a4afc244a1c59518c3a38',1,'dictvar_S']]],
   ['dy_5fflags',['dy_flags',['../option__defs_8h.html#a21e7ca7e1d2cbf40a1b2ef20ddbd696e',1,'option_defs.h']]],
   ['dy_5flastline',['DY_LASTLINE',['../option__defs_8h.html#ad62df1d4620616e36e6fb6d70851e04f',1,'option_defs.h']]],
+  ['dy_5ftruncate',['DY_TRUNCATE',['../option__defs_8h.html#a3e9edb054a0751b1146cb085923f1830',1,'option_defs.h']]],
   ['dy_5fuhex',['DY_UHEX',['../option__defs_8h.html#a1007c4a21dc5336fafb7f5226addaa71',1,'option_defs.h']]],
   ['dynamic_5fbuffer_5finit',['DYNAMIC_BUFFER_INIT',['../shell_8c.html#a663551b736506cd5dc0ba2c808a99a17',1,'shell.c']]],
   ['dynamicbuffer',['DynamicBuffer',['../structDynamicBuffer.html',1,'']]]

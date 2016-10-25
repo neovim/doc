@@ -114,6 +114,7 @@ var searchData=
   ['dumpflag_5fkeepcase',['DUMPFLAG_KEEPCASE',['../spell_8c.html#adbc0d25e141102a43e20cef3137ea678',1,'spell.c']]],
   ['dumpflag_5fonecap',['DUMPFLAG_ONECAP',['../spell_8c.html#a1af140a0f290c71dc7f1f2b414796191',1,'spell.c']]],
   ['dy_5flastline',['DY_LASTLINE',['../option__defs_8h.html#ad62df1d4620616e36e6fb6d70851e04f',1,'option_defs.h']]],
+  ['dy_5ftruncate',['DY_TRUNCATE',['../option__defs_8h.html#a3e9edb054a0751b1146cb085923f1830',1,'option_defs.h']]],
   ['dy_5fuhex',['DY_UHEX',['../option__defs_8h.html#a1007c4a21dc5336fafb7f5226addaa71',1,'option_defs.h']]],
   ['dynamic_5fbuffer_5finit',['DYNAMIC_BUFFER_INIT',['../shell_8c.html#a663551b736506cd5dc0ba2c808a99a17',1,'shell.c']]]
 ];

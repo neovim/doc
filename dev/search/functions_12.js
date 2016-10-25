@@ -262,6 +262,6 @@ var searchData=
   ['syntax_5fcheck_5fchanged',['syntax_check_changed',['../syntax_8c.html#afb0725165263ea9531fefcfaa867a8c9',1,'syntax.c']]],
   ['syntax_5fclear',['syntax_clear',['../syntax_8c.html#ab5a23f684040171a492bc1803634f9ea',1,'syntax.c']]],
   ['syntax_5fend_5fparsing',['syntax_end_parsing',['../syntax_8c.html#ade8516c3b02978609b00278838eb1913',1,'syntax.c']]],
-  ['syntax_5fpresent',['syntax_present',['../syntax_8c.html#a2d58114d0eee1bdd1fcf096622d5f52e',1,'syntax.c']]],
+  ['syntax_5fpresent',['syntax_present',['../syntax_8c.html#aaf4c3b8178a73aa09c8ea37b7ae9a5db',1,'syntax.c']]],
   ['syntax_5fstart',['syntax_start',['../syntax_8c.html#a560238fd259b657707c82c1722e8cdc5',1,'syntax.c']]]
 ];
