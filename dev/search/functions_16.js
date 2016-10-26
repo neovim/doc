@@ -53,6 +53,7 @@ var searchData=
   ['win_5fsplit',['win_split',['../window_8c.html#a150cb04cf7d8e9a194bb077c05bd11c1',1,'window.c']]],
   ['win_5fsplit_5fins',['win_split_ins',['../window_8c.html#a51607554402719a3abe0dc993ee92624',1,'window.c']]],
   ['win_5fvalid',['win_valid',['../window_8c.html#a66b1d63770a5e8163ddbcd7dbd7e6174',1,'window.c']]],
+  ['win_5fvalid_5fany_5ftab',['win_valid_any_tab',['../window_8c.html#a24fa3aeb14f18ef9d5a3890af5bb92e2',1,'window.c']]],
   ['window_5fdel_5fvar',['window_del_var',['../api_2window_8c.html#aa4a837c431c66af364a881f4af1479da',1,'window.c']]],
   ['window_5fset_5fvar',['window_set_var',['../api_2window_8c.html#a730416df10c5d1196aba5ebd8e819c0c',1,'window.c']]],
   ['winframe_5fremove',['winframe_remove',['../window_8c.html#a9979315cc7619997e15c6d0311710fa1',1,'window.c']]],

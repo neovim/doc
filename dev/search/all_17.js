@@ -278,6 +278,7 @@ var searchData=
   ['win_5ft',['win_T',['../buffer__defs_8h.html#a2d63c71f6ff363aaf63acb8c01f18066',1,'buffer_defs.h']]],
   ['win_5ftabs',['WIN_TABS',['../main_8c.html#a2f2d3be7f72620012950485346776cab',1,'main.c']]],
   ['win_5fvalid',['win_valid',['../window_8c.html#a66b1d63770a5e8163ddbcd7dbd7e6174',1,'window.c']]],
+  ['win_5fvalid_5fany_5ftab',['win_valid_any_tab',['../window_8c.html#a24fa3aeb14f18ef9d5a3890af5bb92e2',1,'window.c']]],
   ['win_5fver',['WIN_VER',['../main_8c.html#aca4698db7f9a7137e427d8a897e62897',1,'main.c']]],
   ['winch_5fhandle',['winch_handle',['../structTUIData.html#affb978b12f42184db88572def6621b4f',1,'TUIData']]],
   ['window',['window',['../structobject.html#aa1cc09bb0fafde46a6e917fe0cbd088d',1,'object']]],
