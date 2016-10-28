@@ -24,6 +24,7 @@ var searchData=
   ['verbose_5fopen',['verbose_open',['../message_8c.html#adbff98e39b1d87fd42e3313a974fc252',1,'message.c']]],
   ['verbose_5fstop',['verbose_stop',['../message_8c.html#a2c146ca8984fa84bdd104ed297de7756',1,'message.c']]],
   ['verbose_5ftry_5fmalloc',['verbose_try_malloc',['../memory_8c.html#a8af346742b0ef5494ac3cd7dc5e40668',1,'memory.c']]],
+  ['version_5fdict',['version_dict',['../version_8c.html#a53dfda9902aed613254b655e9f5533b9',1,'version.c']]],
   ['vgetc',['vgetc',['../getchar_8c.html#a15db3f8639823b11e0a9e1ea99873be5',1,'getchar.c']]],
   ['vim_5fbeep',['vim_beep',['../misc1_8c.html#afa93ecfab56a9c785ce453c6df7c4227',1,'misc1.c']]],
   ['vim_5fchdir',['vim_chdir',['../file__search_8c.html#a05bda11d595c6dd11d5d91b2fa795fe6',1,'file_search.c']]],

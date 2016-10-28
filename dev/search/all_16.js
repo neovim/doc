@@ -90,6 +90,7 @@ var searchData=
   ['version_2eh',['version.h',['../version_8h.html',1,'']]],
   ['version_5fbuildtype',['version_buildtype',['../version_8c.html#a8ea1ed12e6c8d4c054866d3a1067925f',1,'version.c']]],
   ['version_5fcflags',['version_cflags',['../version_8c.html#a882d769979cbc4744d5a7560b42ed39e',1,'version.c']]],
+  ['version_5fdict',['version_dict',['../version_8c.html#a53dfda9902aed613254b655e9f5533b9',1,'version.c']]],
   ['vgetc',['vgetc',['../getchar_8c.html#a15db3f8639823b11e0a9e1ea99873be5',1,'getchar.c']]],
   ['vgr_5fglobal',['VGR_GLOBAL',['../quickfix_8h.html#aeb1b08f5b45060c8fec54a6c995367ec',1,'quickfix.h']]],
   ['vgr_5fnojump',['VGR_NOJUMP',['../quickfix_8h.html#a52970322cac19d202eb96dc07bb6f995',1,'quickfix.h']]],
