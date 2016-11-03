@@ -281,7 +281,6 @@ var searchData=
   ['win_5fvalid_5fany_5ftab',['win_valid_any_tab',['../window_8c.html#a24fa3aeb14f18ef9d5a3890af5bb92e2',1,'window.c']]],
   ['win_5fver',['WIN_VER',['../main_8c.html#aca4698db7f9a7137e427d8a897e62897',1,'main.c']]],
   ['winch_5fhandle',['winch_handle',['../structTUIData.html#affb978b12f42184db88572def6621b4f',1,'TUIData']]],
-  ['window',['window',['../structobject.html#aa1cc09bb0fafde46a6e917fe0cbd088d',1,'object']]],
   ['window_2ec',['window.c',['../api_2window_8c.html',1,'']]],
   ['window_2ec',['window.c',['../window_8c.html',1,'']]],
   ['window_2eh',['window.h',['../api_2window_8h.html',1,'']]],

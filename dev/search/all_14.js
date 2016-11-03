@@ -6,7 +6,6 @@ var searchData=
   ['tab_5fpage_5fclick_5fdefs_5fsize',['tab_page_click_defs_size',['../screen_8c.html#a8cfd112bcf39bb1839a262670ae0a8ca',1,'tab_page_click_defs_size():&#160;screen.c'],['../screen_8h.html#a8cfd112bcf39bb1839a262670ae0a8ca',1,'tab_page_click_defs_size():&#160;screen.c']]],
   ['tabline_5fheight',['tabline_height',['../window_8c.html#aeb34215e11d8d1ff9c8b896c64330ddc',1,'window.c']]],
   ['tabnr',['tabnr',['../structStlClickDefinition.html#a5d142a977b878f7cdaaba1355d773baa',1,'StlClickDefinition']]],
-  ['tabpage',['tabpage',['../structobject.html#a2527706201ccc29c42716a854159ab7e',1,'object']]],
   ['tabpage_2ec',['tabpage.c',['../tabpage_8c.html',1,'']]],
   ['tabpage_2eh',['tabpage.h',['../tabpage_8h.html',1,'']]],
   ['tabpage_5fclose',['tabpage_close',['../ex__docmd_8c.html#a827c1c198e8dcf140b0294615e03cf29',1,'ex_docmd.c']]],

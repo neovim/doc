@@ -112,7 +112,6 @@ var searchData=
   ['wim_5fflags',['wim_flags',['../globals_8h.html#ac7c650bec1a58b93a10e67d8acacf6a4',1,'globals.h']]],
   ['wim_5findex',['wim_index',['../structcommand__line__state.html#a98a55d463643f582bf5318c2a13016c1',1,'command_line_state']]],
   ['winch_5fhandle',['winch_handle',['../structTUIData.html#affb978b12f42184db88572def6621b4f',1,'TUIData']]],
-  ['window',['window',['../structobject.html#aa1cc09bb0fafde46a6e917fe0cbd088d',1,'object']]],
   ['window_5fcount',['window_count',['../structmparm__T.html#aeac0c77dc6feba005a3c2a4cc046de2b',1,'mparm_T']]],
   ['window_5flayout',['window_layout',['../structmparm__T.html#aefacf15db06f52cb2da09092973d70bf',1,'mparm_T']]],
   ['winsize',['winsize',['../structpty__process.html#a7d1e67c6f609592514e7305edaceabf7',1,'pty_process']]],

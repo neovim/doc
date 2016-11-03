@@ -5,7 +5,6 @@ var searchData=
   ['tab_5fpage_5fclick_5fdefs',['tab_page_click_defs',['../screen_8c.html#a19378f4bb54fb506888a125caf9c69ce',1,'tab_page_click_defs():&#160;screen.c'],['../screen_8h.html#a19378f4bb54fb506888a125caf9c69ce',1,'tab_page_click_defs():&#160;screen.c']]],
   ['tab_5fpage_5fclick_5fdefs_5fsize',['tab_page_click_defs_size',['../screen_8c.html#a8cfd112bcf39bb1839a262670ae0a8ca',1,'tab_page_click_defs_size():&#160;screen.c'],['../screen_8h.html#a8cfd112bcf39bb1839a262670ae0a8ca',1,'tab_page_click_defs_size():&#160;screen.c']]],
   ['tabnr',['tabnr',['../structStlClickDefinition.html#a5d142a977b878f7cdaaba1355d773baa',1,'StlClickDefinition']]],
-  ['tabpage',['tabpage',['../structobject.html#a2527706201ccc29c42716a854159ab7e',1,'object']]],
   ['tag_5ffname',['tag_fname',['../structtag__pointers.html#ae42b5697defd0a70d8168786653315ff',1,'tag_pointers']]],
   ['tagkind',['tagkind',['../structtag__pointers.html#a9badf9bf2cf66661ba3a37fe0e05b8e9',1,'tag_pointers']]],
   ['tagkind_5fend',['tagkind_end',['../structtag__pointers.html#a4b5eedf1b5f10b1068bff053b4bb46a7',1,'tag_pointers']]],
