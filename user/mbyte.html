@@ -114,29 +114,24 @@ See |<A HREF="#mbyte-locale">mbyte-locale</A>| for details.
 
 ENCODING
 
-If your <A HREF="#locale">locale</A> works properly, Vim will try to set the <A HREF="options.html#'encoding'">'encoding'</A> option
-accordingly.  If this doesn't work you can overrule its value:
+Nvim always uses <A HREF="#UTF-8">UTF-8</A> internally. Thus <A HREF="options.html#'encoding'">'encoding'</A> option is always set
+to &quot;<A HREF="#utf-8">utf-8</A>&quot; and cannot be changed.
 
-<B>	:set encoding=utf-8</B>
+All the text that is used inside Vim will be in <A HREF="#UTF-8">UTF-8</A>. Not only the text in
+the <A HREF="windows.html#buffers">buffers</A>, but also in <A HREF="change.html#registers">registers</A>, <A HREF="eval.html#variables">variables</A>, etc.
 
-See |<A HREF="#encoding-values">encoding-values</A>| for a <A HREF="eval.html#list">list</A> of acceptable values.
-
-The result is that all the text that is used inside Vim will be in this
-encoding.  Not only the text in the <A HREF="windows.html#buffers">buffers</A>, but also in <A HREF="change.html#registers">registers</A>, <A HREF="eval.html#variables">variables</A>,
-etc. <A HREF="options.html#'encoding'">'encoding'</A> is read-only after <A HREF="starting.html#startup">startup</A> because <A HREF="change.html#changing">changing</A> <A HREF="motion.html#it">it</A> would make the
-existing text invalid.
-
-You can edit files in another encoding than what <A HREF="options.html#'encoding'">'encoding'</A> is set to.  Vim
+You can edit files in different encodings than <A HREF="#UTF-8">UTF-8</A>.  Nvim
 will convert the file when you read <A HREF="motion.html#it">it</A> and convert <A HREF="motion.html#it">it</A> back when you write <A HREF="motion.html#it">it</A>.
 See <A HREF="options.html#'fileencoding'">'fileencoding'</A>, <A HREF="options.html#'fileencodings'">'fileencodings'</A> and |<A HREF="editing.html#++enc">++enc</A>|.
 
 
 DISPLAY AND FONTS
 
-If you are working in a terminal (emulator) you must make sure <A HREF="motion.html#it">it</A> accepts the
-same encoding <A HREF="motion.html#as">as</A> which Vim is working with.
+If you are working in a terminal (emulator) you must make sure <A HREF="motion.html#it">it</A> accepts
+<A HREF="#UTF-8">UTF-8</A>, the encoding which Vim is working with. Otherwise only ASCII can
+be displayed and edited correctly.
 
-For the <A HREF="gui.html#GUI">GUI</A> you must select fonts that work with the current <A HREF="options.html#'encoding'">'encoding'</A>.  This
+For the <A HREF="gui.html#GUI">GUI</A> you must select fonts that work with <A HREF="#UTF-8">UTF-8</A>.  This
 is the difficult part.  It depends on the system you are using, the <A HREF="#locale">locale</A> and
 a few other things.  See the chapters on fonts: |<A HREF="#mbyte-fonts-X11">mbyte-fonts-X11</A>| for
 X-Windows and |<A HREF="#mbyte-fonts-MSwin">mbyte-fonts-MSwin</A>| for <A HREF="os_win32.html#MS-Windows">MS-Windows</A>.
@@ -264,10 +259,9 @@ You could make a small shell <A HREF="usr_41.html#script">script</A> for this.
 
 3.  Encoding				*<A NAME="mbyte-encoding"></A><B>mbyte-encoding</B>*
 
-Vim uses the <A HREF="options.html#'encoding'">'encoding'</A> option to specify how characters are identified and
-encoded when they are used inside Vim.  This applies to all the places where
-text is used, including <A HREF="windows.html#buffers">buffers</A> (files loaded into memory), <A HREF="change.html#registers">registers</A> and
-<A HREF="eval.html#variables">variables</A>.
+In Nvim <A HREF="#UTF-8">UTF-8</A> is always used internally to encode characters.
+ This applies to all the places where text is used, including <A HREF="windows.html#buffers">buffers</A> (files
+ loaded into memory), <A HREF="change.html#registers">registers</A> and <A HREF="eval.html#variables">variables</A>.
 
 
 							*<A NAME="charset"></A><B>charset</B>* *<A NAME="codeset"></A><B>codeset</B>*
@@ -290,7 +284,7 @@ encoding was set wrong.
 
 
 							*<A NAME="encoding-names"></A><B>encoding-names</B>*
-Vim can use many different character encodings.  There are three major groups:
+Vim can edit files in different character encodings.  There are three major groups:
 
 1   8bit	Single-byte encodings, 256 different characters.  Mostly used
 		in USA and Europe.  Example: ISO-8859-1 (Latin1).  All
@@ -305,12 +299,11 @@ Vim can use many different character encodings.  There are three major groups:
 		Millions of different characters.  Example: <A HREF="#UTF-8">UTF-8</A>.  The
 		relation between bytes and screen cells is complex.
 
-Other encodings cannot be used by Vim internally.  But files in other
+Only <A HREF="#UTF-8">UTF-8</A> is used by Vim internally.  But files in other
 encodings can be edited by using conversion, see <A HREF="options.html#'fileencoding'">'fileencoding'</A>.
-Note that all encodings must use ASCII for the characters up to 128.
 
 
-Supported <A HREF="options.html#'encoding'">'encoding'</A> values are:			*<A NAME="encoding-values"></A><B>encoding-values</B>*
+Recognized <A HREF="options.html#'fileencoding'">'fileencoding'</A> values include:		*<A NAME="encoding-values"></A><B>encoding-values</B>*
 1   latin1	8-bit characters (ISO 8859-1, also used for cp1252)
 1   iso-8859-n	ISO_8859 variant (n = 2 to 15)
 1   koi8-r	<A HREF="russian.html#Russian">Russian</A>
@@ -362,11 +355,11 @@ Supported <A HREF="options.html#'encoding'">'encoding'</A> values are:			*<A NAM
 <A HREF="undo.html#u">u</A>   ucs-4le	like ucs-4, little endian
 
 The {name} can be any encoding name that your system supports.  It is passed
-to <A HREF="eval.html#iconv()">iconv()</A> to convert between the encoding of the file and the current <A HREF="#locale">locale</A>.
+to <A HREF="eval.html#iconv()">iconv()</A> to convert between <A HREF="#UTF-8">UTF-8</A> and the encoding of the file.
 For <A HREF="os_win32.html#MS-Windows">MS-Windows</A> &quot;cp{number}&quot; means using codepage {number}.
 Examples:
-<B>		:set encoding=8bit-cp1252</B>
-<B>		:set encoding=2byte-cp932</B>
+<B>		:set fileencoding=8bit-cp1252</B>
+<B>		:set fileencoding=2byte-cp932</B>
 
 The <A HREF="os_win32.html#MS-Windows">MS-Windows</A> codepage 1252 is very similar to latin1.  For practical reasons
 the same encoding is used and it's called latin1.  <A HREF="options.html#'isprint'">'isprint'</A> can be used to
@@ -388,8 +381,7 @@ An incomplete <A HREF="eval.html#list">list</A>:
 <A HREF="undo.html#u">u</A>   ucs-4be	same <A HREF="motion.html#as">as</A> ucs-4 (big endian)
 <A HREF="undo.html#u">u</A>   utf-32	same <A HREF="motion.html#as">as</A> ucs-4
 <A HREF="undo.html#u">u</A>   utf-32le	same <A HREF="motion.html#as">as</A> ucs-4le
-    default     stands for the default value of <A HREF="options.html#'encoding'">'encoding'</A>, depends on the
-		environment
+    default     the encoding of the current <A HREF="#locale">locale</A>.
 
 For the UCS codes the byte order matters.  This is tricky, use <A HREF="#UTF-8">UTF-8</A> whenever
 you can.  The default is to use big-endian (most significant byte comes
@@ -415,13 +407,12 @@ or when conversion is not possible:
 CONVERSION						*<A NAME="charset-conversion"></A><B>charset-conversion</B>*
 
 Vim will automatically convert from one to another encoding in several places:
-- When reading a file and <A HREF="options.html#'fileencoding'">'fileencoding'</A> is different from <A HREF="options.html#'encoding'">'encoding'</A>
-- When <A HREF="editing.html#writing">writing</A> a file and <A HREF="options.html#'fileencoding'">'fileencoding'</A> is different from <A HREF="options.html#'encoding'">'encoding'</A>
+- When reading a file and <A HREF="options.html#'fileencoding'">'fileencoding'</A> is different from &quot;<A HREF="#utf-8">utf-8</A>&quot;
+- When <A HREF="editing.html#writing">writing</A> a file and <A HREF="options.html#'fileencoding'">'fileencoding'</A> is different from &quot;<A HREF="#utf-8">utf-8</A>&quot;
 - When displaying <A HREF="message.html#messages">messages</A> and the encoding used for LC_MESSAGES differs from
-  <A HREF="options.html#'encoding'">'encoding'</A> (requires a gettext version that supports this).
+  &quot;<A HREF="#utf-8">utf-8</A>&quot; (requires a gettext version that supports this).
 - When reading a Vim script where |<A HREF="repeat.html#:scriptencoding">:scriptencoding</A>| is different from
-  <A HREF="options.html#'encoding'">'encoding'</A>.
-- When reading or <A HREF="editing.html#writing">writing</A> a |<A HREF="starting.html#shada">shada</A>| file.
+  &quot;<A HREF="#utf-8">utf-8</A>&quot;.
 Most of these require the |<A HREF="various.html#+iconv">+iconv</A>| feature.  Conversion for reading and
 <A HREF="editing.html#writing">writing</A> files may also be specified with the <A HREF="options.html#'charconvert'">'charconvert'</A> option.
 
@@ -461,11 +452,11 @@ Useful utilities for converting the <A HREF="#charset">charset</A>:
 
 
 							*<A NAME="mbyte-conversion"></A><B>mbyte-conversion</B>*
-When reading and <A HREF="editing.html#writing">writing</A> files in an encoding different from <A HREF="options.html#'encoding'">'encoding'</A>,
+When reading and <A HREF="editing.html#writing">writing</A> files in an encoding different from &quot;<A HREF="#utf-8">utf-8</A>&quot;,
 conversion needs to be done.  These conversions are supported:
 - All conversions between Latin-1 (ISO-8859-1), <A HREF="#UTF-8">UTF-8</A>, UCS-2 and UCS-4 are
   handled internally.
-- For <A HREF="os_win32.html#MS-Windows">MS-Windows</A>, when <A HREF="options.html#'encoding'">'encoding'</A> is a <A HREF="#Unicode">Unicode</A> encoding, conversion from and
+- For <A HREF="os_win32.html#MS-Windows">MS-Windows</A>, conversion from and
   to any codepage should work.
 - Conversion specified with <A HREF="options.html#'charconvert'">'charconvert'</A>
 - Conversion with the iconv library, if <A HREF="motion.html#it">it</A> is available.
@@ -523,8 +514,6 @@ and you will have a working <A HREF="#UTF-8">UTF-8</A> terminal emulator.  Try b
 
 with the demo text that comes with ucs-fonts.tar.gz in order to see
 whether there are any problems with <A HREF="#UTF-8">UTF-8</A> in your xterm.
-
-For Vim you may need to set <A HREF="options.html#'encoding'">'encoding'</A> to &quot;<A HREF="#utf-8">utf-8</A>&quot;.
 
 ==============================================================================
 
@@ -938,11 +927,11 @@ between two keyboard settings.
 The value of the <A HREF="options.html#'keymap'">'keymap'</A> option specifies a keymap file to use.  The name of
 this file is one of these two:
 
-	keymap/{keymap}_{encoding}.vim
+	keymap/{keymap}_utf-8.vim
 	keymap/{keymap}.vim
 
-Here {keymap} is the value of the <A HREF="options.html#'keymap'">'keymap'</A> option and {encoding} of the
-<A HREF="options.html#'encoding'">'encoding'</A> option.  The file name with the {encoding} included is tried first.
+Here {keymap} is the value of the <A HREF="options.html#'keymap'">'keymap'</A> option.
+The file name with &quot;<A HREF="#utf-8">utf-8</A>&quot; included is tried first.
 
 <A HREF="options.html#'runtimepath'">'runtimepath'</A> is used to find these files.  To see an overview of all
 available keymap files, use this:
@@ -1027,7 +1016,7 @@ this is unusual.  But you can use various ways to specify the character:
 <B>	A	&lt;char-0141&gt;	octal value</B>
 <B>	x	&lt;Space&gt;		special key name</B>
 
-The characters are assumed to be encoded for the current value of <A HREF="options.html#'encoding'">'encoding'</A>.
+The characters are assumed to be encoded in <A HREF="#UTF-8">UTF-8</A>.
 It's possible to use &quot;<A HREF="repeat.html#:scriptencoding">:scriptencoding</A>&quot; when all characters are given
 literally.  That doesn't work when using the &lt;char-&gt; construct, because the
 conversion is done on the keymap file, not on the resulting character.
@@ -1252,21 +1241,13 @@ Useful commands:
   message is truncated, use &quot;:messages&quot;).
 - &quot;<A HREF="various.html#g8">g8</A>&quot; shows the bytes used in a <A HREF="#UTF-8">UTF-8</A> character, also the composing
   characters, <A HREF="motion.html#as">as</A> hex numbers.
-- &quot;<A HREF="options.html#:set">:set</A> <A HREF="options.html#'encoding'">encoding</A>=utf-8 fileencodings=&quot; forces using <A HREF="#UTF-8">UTF-8</A> for all files.  The
-  default is to use the current <A HREF="#locale">locale</A> for <A HREF="options.html#'encoding'">'encoding'</A> and set <A HREF="options.html#'fileencodings'">'fileencodings'</A>
-  to automatically detect the encoding of a file.
+- &quot;<A HREF="options.html#:set">:set</A> <A HREF="options.html#'fileencodings'">fileencodings</A>=&quot; forces using <A HREF="#UTF-8">UTF-8</A> for all files.  The
+  default is to automatically detect the encoding of a file.
 
 
 STARTING VIM
 
-If your current <A HREF="#locale">locale</A> is in an <A HREF="#utf-8">utf-8</A> encoding, Vim will automatically start
-in <A HREF="#utf-8">utf-8</A> mode.
-
-If you are using another <A HREF="#locale">locale</A>:
-
-<B>	set encoding=utf-8</B>
-
-You might also want to select the font used for the <A HREF="gui.html#menus">menus</A>.  Unfortunately this
+You might want to select the font used for the <A HREF="gui.html#menus">menus</A>.  Unfortunately this
 doesn't always work.  See the system specific remarks below, and <A HREF="options.html#'langmenu'">'langmenu'</A>.
 
 
@@ -1331,10 +1312,9 @@ not everybody is able to type a composing character.
 These <A HREF="options.html#options">options</A> are relevant for editing <A HREF="#multi-byte">multi-byte</A> files.  Check the help in
 <A HREF="options.html#options.txt">options.txt</A> for detailed information.
 
-<A HREF="options.html#'encoding'">'encoding'</A>	Encoding used for the keyboard and display.  It is also the
-		default encoding for files.
+<A HREF="options.html#'encoding'">'encoding'</A>	Internal text encoding, always &quot;<A HREF="#utf-8">utf-8</A>&quot;.
 
-<A HREF="options.html#'fileencoding'">'fileencoding'</A>	Encoding of a file.  When it's different from <A HREF="options.html#'encoding'">'encoding'</A>
+<A HREF="options.html#'fileencoding'">'fileencoding'</A>	Encoding of a file.  When it's different from &quot;<A HREF="#utf-8">utf-8</A>&quot;
 		conversion is done when reading or <A HREF="editing.html#writing">writing</A> the file.
 
 <A HREF="options.html#'fileencodings'">'fileencodings'</A>	<A HREF="eval.html#List">List</A> of possible encodings of a file.  When opening a file
@@ -1368,7 +1348,7 @@ Contributions specifically for the <A HREF="#multi-byte">multi-byte</A> features
 
     <footer>
       <div class="container">
-        Generated Fri Nov  4 20:10:12 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/32d9c19e294f38a6adae6e055fc606fc3fd33f2f"><code>32d9c19</code></a>.
+        Generated Sat Nov  5 20:09:41 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/9147331e212e8d0fff0f30344007faffd42609ee"><code>9147331</code></a>.
       </div>
     </footer>
   </body>

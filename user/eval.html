@@ -1132,8 +1132,8 @@ A <A HREF="#string">string</A> constant accepts these special characters:
 \x.	byte specified with one hex number (must be followed by non-hex char)
 \X..	same <A HREF="motion.html#as">as</A> \x..
 \X.	same <A HREF="motion.html#as">as</A> \x.
-\u....	character specified with up to 4 hex numbers, stored according to the
-	current value of <A HREF="options.html#'encoding'">'encoding'</A> (e.g., &quot;\u02a4&quot;)
+\u....	character specified with up to 4 hex numbers, stored <A HREF="motion.html#as">as</A> <A HREF="mbyte.html#UTF-8">UTF-8</A>
+	(e.g., &quot;\u02a4&quot;)
 \U....	same <A HREF="motion.html#as">as</A> \u but allows up to 8 hex numbers.
 \b	backspace <A HREF="motion.html#&lt;BS&gt;">&lt;BS&gt;</A>
 \e	<A HREF="intro.html#escape">escape</A> <A HREF="intro.html#&lt;Esc&gt;">&lt;Esc&gt;</A>
@@ -1148,8 +1148,7 @@ A <A HREF="#string">string</A> constant accepts these special characters:
 	<A HREF="mbyte.html#utf-8">utf-8</A> character, use \uxxxx <A HREF="motion.html#as">as</A> mentioned above.
 
 Note that &quot;\xff&quot; is stored <A HREF="motion.html#as">as</A> the byte 255, which may be invalid in some
-encodings.  Use &quot;\u00ff&quot; to store character 255 according to the current value
-of <A HREF="options.html#'encoding'">'encoding'</A>.
+encodings.  Use &quot;\u00ff&quot; to store character 255 correctly <A HREF="motion.html#as">as</A> <A HREF="mbyte.html#UTF-8">UTF-8</A>.
 
 Note that &quot;\000&quot; and &quot;\x00&quot; force the end of the <A HREF="#string">string</A>.
 
@@ -2747,8 +2746,6 @@ byteidxcomp({expr}, {nr})					*<A NAME="byteidxcomp()"></A><B>byteidxcomp()</B>*
  		The first and third echo result in 3 ('e' plus composing
 		character is 3 bytes), the second echo results in 1 ('e' is
 		one byte).
-		Only works different from <A HREF="#byteidx()">byteidx()</A> when <A HREF="options.html#'encoding'">'encoding'</A> is set to
-		a <A HREF="mbyte.html#Unicode">Unicode</A> encoding.
 
 
 call({func}, <A HREF="editing.html#{arglist}">{arglist}</A> [, {dict}])			*<A NAME="call()"></A><B>call()</B>* *<A NAME="E699"></A><B>E699</B>*
@@ -2787,11 +2784,11 @@ char2nr({expr}[, {utf8}])					*<A NAME="char2nr()"></A><B>char2nr()</B>*
 		Return number value of the first char in {expr}.  Examples:
 <B>			char2nr(" ")		returns 32</B>
 <B>			char2nr("ABC")		returns 65</B>
- 		When {utf8} is omitted or zero, the current <A HREF="options.html#'encoding'">'encoding'</A> is used.
-		Example for &quot;<A HREF="mbyte.html#utf-8">utf-8</A>&quot;:
 <B>			char2nr("á")		returns 225</B>
 <B>			char2nr("á"[0])		returns 195</B>
- 		With {utf8} set to 1, always treat <A HREF="motion.html#as">as</A> <A HREF="mbyte.html#utf-8">utf-8</A> characters.
+ 		Non-ASCII characters are always treated <A HREF="motion.html#as">as</A> <A HREF="mbyte.html#UTF-8">UTF-8</A> characters.
+		{utf8} has no effect, and exists only for
+		backwards-compatibility.
 		A combining character is a separate character.
 		|<A HREF="#nr2char()">nr2char()</A>| does the opposite.
 
@@ -4544,11 +4541,7 @@ iconv({expr}, {from}, {to})				*<A NAME="iconv()"></A><B>iconv()</B>*
 		Most conversions require Vim to be compiled with the |<A HREF="various.html#+iconv">+iconv</A>|
 		feature.  Otherwise only <A HREF="mbyte.html#UTF-8">UTF-8</A> to latin1 conversion and back
 		can be done.
-		This can be used to display <A HREF="message.html#messages">messages</A> with special characters,
-		no matter what <A HREF="options.html#'encoding'">'encoding'</A> is set to.  Write the message in
-		<A HREF="mbyte.html#UTF-8">UTF-8</A> and use:
-<B>			echo iconv(utf8_str, "utf-8", &amp;enc)</B>
- 		Note that Vim uses <A HREF="mbyte.html#UTF-8">UTF-8</A> for all <A HREF="mbyte.html#Unicode">Unicode</A> encodings, conversion
+		Note that Vim uses <A HREF="mbyte.html#UTF-8">UTF-8</A> for all <A HREF="mbyte.html#Unicode">Unicode</A> encodings, conversion
 		from/to UCS-2 is automatically changed to use <A HREF="mbyte.html#UTF-8">UTF-8</A>.  You
 		cannot use UCS-2 in a <A HREF="#string">string</A> anyway, because of the NUL bytes.
 		{only available when compiled with the |<A HREF="various.html#+multi_byte">+multi_byte</A>| feature}
@@ -4854,9 +4847,7 @@ join({list} [, {sep}])					*<A NAME="join()"></A><B>join()</B>*
 json_decode({expr})					*<A NAME="json_decode()"></A><B>json_decode()</B>*
 		Convert {expr} from JSON object.  Accepts |readfile()|-style 
 		<A HREF="#list">list</A> <A HREF="motion.html#as">as</A> the input, <A HREF="motion.html#as">as</A> well <A HREF="motion.html#as">as</A> regular <A HREF="#string">string</A>.  May output any 
-		Vim value.  When <A HREF="options.html#'encoding'">'encoding'</A> is not <A HREF="mbyte.html#UTF-8">UTF-8</A> <A HREF="#string">string</A> is converted 
-		from <A HREF="mbyte.html#UTF-8">UTF-8</A> to <A HREF="options.html#'encoding'">'encoding'</A>, failing conversion fails 
-		<A HREF="#json_decode()">json_decode()</A>.  In the following cases <A HREF="motion.html#it">it</A> will output 
+		Vim value. In the following cases <A HREF="motion.html#it">it</A> will output
 		YXXYmsgpack-special-dict|:
 		1. <A HREF="#Dictionary">Dictionary</A> contains duplicate key.
 		2. <A HREF="#Dictionary">Dictionary</A> contains empty key.
@@ -4864,33 +4855,22 @@ json_decode({expr})					*<A NAME="json_decode()"></A><B>json_decode()</B>*
 		   dictionary and for <A HREF="#string">string</A> will be emitted in <A HREF="change.html#case">case</A> <A HREF="#string">string</A> 
 		   with NUL byte was a dictionary key.
 
-		Note: function treats its input <A HREF="motion.html#as">as</A> <A HREF="mbyte.html#UTF-8">UTF-8</A> always regardless of 
-		<A HREF="options.html#'encoding'">'encoding'</A> value.  This is needed because JSON source is 
-		supposed to be external (e.g. |<A HREF="#readfile()">readfile()</A>|) and JSON standard 
-		allows only a few encodings, of which <A HREF="mbyte.html#UTF-8">UTF-8</A> is recommended and 
-		the only one required to be supported.  Non-UTF-8 characters 
-		are an error.
+		Note: function treats its input <A HREF="motion.html#as">as</A> <A HREF="mbyte.html#UTF-8">UTF-8</A> always.  The JSON
+		standard allows only a few encodings, of which <A HREF="mbyte.html#UTF-8">UTF-8</A> is
+		recommended and the only one required to be supported.
+		Non-UTF-8 characters are an error.
 
 
 json_encode({expr})					*<A NAME="json_encode()"></A><B>json_encode()</B>*
 		Convert {expr} into a JSON <A HREF="#string">string</A>.  Accepts 
-		|<A HREF="#msgpack-special-dict">msgpack-special-dict</A>| <A HREF="motion.html#as">as</A> the input.  Converts from <A HREF="options.html#'encoding'">'encoding'</A> 
-		to <A HREF="mbyte.html#UTF-8">UTF-8</A> when encoding strings.  Will not convert |<A HREF="#Funcref">Funcref</A>|<A HREF="change.html#s">s</A>, 
+		|<A HREF="#msgpack-special-dict">msgpack-special-dict</A>| <A HREF="motion.html#as">as</A> the input.  Will not convert |<A HREF="#Funcref">Funcref</A>|s, 
 		mappings with non-string keys (can be created <A HREF="motion.html#as">as</A> 
 		|<A HREF="#msgpack-special-dict">msgpack-special-dict</A>|), values with self-referencing 
 		containers, strings which contain non-UTF-8 characters, 
 		pseudo-UTF-8 strings which contain codepoints reserved for 
 		surrogate pairs (such strings are not valid <A HREF="mbyte.html#UTF-8">UTF-8</A> strings).  
-		When converting <A HREF="options.html#'encoding'">'encoding'</A> is taken into account, if <A HREF="motion.html#it">it</A> is not 
-		&quot;<A HREF="mbyte.html#utf-8">utf-8</A>&quot;, then conversion is performed before encoding strings.  
 		Non-printable characters are converted into &quot;\u1234&quot; escapes 
 		or special escapes like &quot;\t&quot;, other are dumped as-is.
-
-		Note: all characters above U+0079 are considered non-printable 
-		when <A HREF="options.html#'encoding'">'encoding'</A> is not <A HREF="mbyte.html#UTF-8">UTF-8</A>.  This function always outputs 
-		<A HREF="mbyte.html#UTF-8">UTF-8</A> strings <A HREF="motion.html#as">as</A> required by the standard thus when <A HREF="options.html#'encoding'">'encoding'</A> 
-		is not <A HREF="mbyte.html#unicode">unicode</A> resulting <A HREF="#string">string</A> will look incorrect if 
-		&quot;\u1234&quot; <A HREF="intro.html#notation">notation</A> is not used.
 
 
 keys({dict})						*<A NAME="keys()"></A><B>keys()</B>*
@@ -5000,9 +4980,9 @@ line2byte({lnum})					*<A NAME="line2byte()"></A><B>line2byte()</B>*
 		Return the byte <A HREF="intro.html#count">count</A> from the start of the buffer for line
 		{lnum}.  This includes the end-of-line character, depending on
 		the <A HREF="options.html#'fileformat'">'fileformat'</A> option for the current buffer.  The first
-		line returns 1. <A HREF="options.html#'encoding'">'encoding'</A> matters, <A HREF="options.html#'fileencoding'">'fileencoding'</A> is ignored.
-		This can also be used to get the byte <A HREF="intro.html#count">count</A> for the line just
-		below the last line:
+		line returns 1. <A HREF="mbyte.html#UTF-8">UTF-8</A> encoding is used, <A HREF="options.html#'fileencoding'">'fileencoding'</A> is
+		ignored.  This can also be used to get the byte <A HREF="intro.html#count">count</A> for the
+		line just below the last line:
 <B>			line2byte(line("$") + 1)</B>
  		This is the buffer size plus one.  If <A HREF="options.html#'fileencoding'">'fileencoding'</A> is empty
 		<A HREF="motion.html#it">it</A> is the file size plus one.
@@ -5550,10 +5530,10 @@ nr2char({expr}[, {utf8}])				*<A NAME="nr2char()"></A><B>nr2char()</B>*
 		value {expr}.  Examples:
 <B>			nr2char(64)		returns "@"</B>
 <B>			nr2char(32)		returns " "</B>
- 		When {utf8} is omitted or zero, the current <A HREF="options.html#'encoding'">'encoding'</A> is used.
-		Example for &quot;<A HREF="mbyte.html#utf-8">utf-8</A>&quot;:
+ 		Example for &quot;<A HREF="mbyte.html#utf-8">utf-8</A>&quot;:
 <B>			nr2char(300)		returns I with bow character</B>
- 		With {utf8} set to 1, always return <A HREF="mbyte.html#utf-8">utf-8</A> characters.
+ 		<A HREF="mbyte.html#UTF-8">UTF-8</A> encoding is always used, {utf8} option has no effect,
+		and exists only for backwards-compatibility.
 		Note that a NUL character in the file is specified with
 		nr2char(10), because NULs are represented with newline
 		characters.  nr2char(0) is a real NUL and terminates the
@@ -5813,7 +5793,7 @@ py3eval({expr})						*<A NAME="py3eval()"></A><B>py3eval()</B>*
 		converted to Vim data structures.
 		Numbers and strings are returned <A HREF="motion.html#as">as</A> they are (strings are 
 		copied though, <A HREF="mbyte.html#Unicode">Unicode</A> strings are additionally converted to 
-		<A HREF="options.html#'encoding'">'encoding'</A>).
+		<A HREF="mbyte.html#UTF-8">UTF-8</A>).
 		<A HREF="#Lists">Lists</A> are represented <A HREF="motion.html#as">as</A> Vim |<A HREF="#List">List</A>| type.
 		<A HREF="#Dictionaries">Dictionaries</A> are represented <A HREF="motion.html#as">as</A> Vim |<A HREF="#Dictionary">Dictionary</A>| type with 
 		keys converted to strings.
@@ -5868,8 +5848,7 @@ readfile({fname} [, {binary} [, {max}]])
 		Otherwise:
 		- CR characters that appear before a NL are removed.
 		- Whether the last line ends in a NL or not does not matter.
-		- When <A HREF="options.html#'encoding'">'encoding'</A> is <A HREF="mbyte.html#Unicode">Unicode</A> any <A HREF="mbyte.html#UTF-8">UTF-8</A> byte order <A HREF="motion.html#mark">mark</A> is
-		  removed from the text.
+		- Any <A HREF="mbyte.html#UTF-8">UTF-8</A> byte order <A HREF="motion.html#mark">mark</A> is removed from the text.
 		When {max} is given this specifies the maximum number of lines
 		to be read.  Useful if you only want to check the first ten
 		lines of a file:
@@ -7091,8 +7070,7 @@ string({expr})	Return {expr} converted to a <A HREF="#String">String</A>.  If {e
 		for infinite and NaN floating-point values representations 
 		which use |<A HREF="#str2float()">str2float()</A>|.  Strings are also dumped literally, 
 		only single <A HREF="change.html#quote">quote</A> is escaped, which does not allow using YAML 
-		for parsing back binary strings (including text when 
-		<A HREF="options.html#'encoding'">'encoding'</A> is not <A HREF="mbyte.html#UTF-8">UTF-8</A>).  |<A HREF="#eval()">eval()</A>| should always work for 
+		for parsing back binary strings.  |<A HREF="#eval()">eval()</A>| should always work for 
 		strings and floats though and this is the only official 
 		method, use |<A HREF="#msgpackdump()">msgpackdump()</A>| or |<A HREF="#json_encode()">json_encode()</A>| if you need to 
 		share data with other application.
@@ -10359,7 +10337,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Fri Nov  4 20:10:12 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/32d9c19e294f38a6adae6e055fc606fc3fd33f2f"><code>32d9c19</code></a>.
+        Generated Sat Nov  5 20:09:41 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/9147331e212e8d0fff0f30344007faffd42609ee"><code>9147331</code></a>.
       </div>
     </footer>
   </body>
