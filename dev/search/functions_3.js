@@ -1,10 +1,6 @@
 var searchData=
 [
   ['dbcs_5fclass',['dbcs_class',['../mbyte_8c.html#ad1e2811f8dcc6d9f9ba50160ad9d8f3f',1,'mbyte.c']]],
-  ['dbcs_5fhead_5foff',['dbcs_head_off',['../mbyte_8c.html#ac557af202f4246b64ccab8aa64e70cc9',1,'mbyte.c']]],
-  ['dbcs_5foff2cells',['dbcs_off2cells',['../mbyte_8c.html#a933fe75ede57d6f2ecaee8050d8f33c5',1,'mbyte.c']]],
-  ['dbcs_5fptr2cells',['dbcs_ptr2cells',['../mbyte_8c.html#af10d724fbe4160bcd1507cce1690eb6d',1,'mbyte.c']]],
-  ['dbcs_5fscreen_5fhead_5foff',['dbcs_screen_head_off',['../mbyte_8c.html#a62e0ee5ed5094cae79180dbebcaf993a',1,'mbyte.c']]],
   ['dbg_5fbreakpoint',['dbg_breakpoint',['../ex__cmds2_8c.html#a2af7e5985585ed1f33992c538151ec21',1,'ex_cmds2.c']]],
   ['dbg_5fcheck_5fbreakpoint',['dbg_check_breakpoint',['../ex__cmds2_8c.html#ab06ec813ce571029ebe9f03bcbfe4759',1,'ex_cmds2.c']]],
   ['dbg_5fcheck_5fskipped',['dbg_check_skipped',['../ex__cmds2_8c.html#ab17c60d43d61172a935e8c45c988639b',1,'ex_cmds2.c']]],

@@ -102,6 +102,7 @@ var searchData=
   ['utf_5foff2cells',['utf_off2cells',['../mbyte_8c.html#abdc2bac7a8c50c4cd209f8060cffcd7d',1,'mbyte.c']]],
   ['utf_5fprintable',['utf_printable',['../mbyte_8c.html#aed3385030d1d224e998f93b882a64cd3',1,'mbyte.c']]],
   ['utf_5fptr2cells',['utf_ptr2cells',['../mbyte_8c.html#aadf37325c55221b6f86fd6019a09d8c1',1,'mbyte.c']]],
+  ['utf_5fptr2cells_5flen',['utf_ptr2cells_len',['../mbyte_8c.html#ab247f239756d46ae12535ac6e2411082',1,'mbyte.c']]],
   ['utf_5fptr2char',['utf_ptr2char',['../mbyte_8c.html#ad8c3ac61600ccf197005978772d0db6b',1,'mbyte.c']]],
   ['utf_5fptr2len',['utf_ptr2len',['../mbyte_8c.html#a09be4759e834a6653708a64da792b4e6',1,'mbyte.c']]],
   ['utf_5fptr2len_5flen',['utf_ptr2len_len',['../mbyte_8c.html#afa96aa9d60c5426dcd837f2b61b74786',1,'mbyte.c']]],

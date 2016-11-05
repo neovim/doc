@@ -30,6 +30,7 @@ var searchData=
   ['has_5fhotkey_5flen',['HAS_HOTKEY_LEN',['../message_8c.html#a0ad819454387af187e41ca6545e05946',1,'message.c']]],
   ['has_5fline_5foffset',['has_line_offset',['../structShadaEntry.html#a7fcc1fbf84519894fec4032b8498a3ff',1,'ShadaEntry']]],
   ['has_5floop_5fcmd',['has_loop_cmd',['../ex__eval_8c.html#a62db8d272386297c0ec64a7613fd9d1d',1,'ex_eval.c']]],
+  ['has_5fmbyte',['has_mbyte',['../globals_8h.html#acf4eceb14df419437835978617929c98',1,'globals.h']]],
   ['has_5fnon_5fascii',['has_non_ascii',['../shada_8c.html#a3fbb6263fb7573082ae9d3995a00309d',1,'has_non_ascii():&#160;shada.c'],['../strings_8c.html#a494b6bd6ac8b293b6ab9969feee99979',1,'has_non_ascii(const char_u *s) FUNC_ATTR_PURE:&#160;strings.c']]],
   ['has_5fnon_5fascii_5flen',['has_non_ascii_len',['../strings_8c.html#a550b8ff6a5becb6fc10b13dc341adaba',1,'strings.c']]],
   ['has_5fnvim_5fversion',['has_nvim_version',['../version_8c.html#afdf53d2d107cc44340813f297565286f',1,'version.c']]],
