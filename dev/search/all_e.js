@@ -233,6 +233,7 @@ var searchData=
   ['nlocalmarks',['NLOCALMARKS',['../mark__defs_8h.html#a73412c7115c2393e713a2064b3539ed9',1,'mark_defs.h']]],
   ['nlower',['NLOWER',['../regexp_8c.html#af31c375f11fe6faec21b75e638fad7bc',1,'regexp.c']]],
   ['nmarks',['NMARKS',['../mark__defs_8h.html#a1c02ca83443513a6ab1c93dcb316ac7e',1,'mark_defs.h']]],
+  ['nmatch',['nmatch',['../structMatchedLine.html#ad1396ad1d7a3842b2167a67d2026df42',1,'MatchedLine']]],
   ['no_5fbuffers',['NO_BUFFERS',['../globals_8h.html#a559716265a4e4f0cc2a485fc3de818e5',1,'globals.h']]],
   ['no_5flocal_5fundolevel',['NO_LOCAL_UNDOLEVEL',['../option__defs_8h.html#a57c940314b87564de95c015c3d36ad78',1,'option_defs.h']]],
   ['no_5fresponse',['NO_RESPONSE',['../api_2private_2defs_8h.html#a5f137187c6a892935c5acd036f609b22',1,'defs.h']]],

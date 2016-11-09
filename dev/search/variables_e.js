@@ -25,6 +25,7 @@ var searchData=
   ['nextline',['nextline',['../structsource__cookie.html#a0d89487209adee15be463489827292d9',1,'source_cookie']]],
   ['nindexhigh',['nIndexHigh',['../structcsi.html#a8b7655be63842c26ade7e7aa48836f32',1,'csi']]],
   ['nindexlow',['nIndexLow',['../structcsi.html#af2565ce8d8d25cfed4a8d957b7879de0',1,'csi']]],
+  ['nmatch',['nmatch',['../structMatchedLine.html#ad1396ad1d7a3842b2167a67d2026df42',1,'MatchedLine']]],
   ['no_5fscs',['no_scs',['../structspat.html#abc725b1f46d13d28364eaf5bdbd69a13',1,'spat']]],
   ['no_5fswap_5ffile',['no_swap_file',['../structmparm__T.html#aa90e5e188aed10bff09b23bcdbd5284c',1,'mparm_T']]],
   ['node',['node',['../structdict__watcher.html#a90e51ccd68fea64b1fafdf949de96d30',1,'dict_watcher::node()'],['../structmultiqueue__item.html#a4924140cdb2483bbbbb3b15bb1181b31',1,'multiqueue_item::node()']]],

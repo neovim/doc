@@ -158,6 +158,7 @@ var searchData=
   ['ex_5fspellinfo',['ex_spellinfo',['../spell_8c.html#ad8ac4419c8b83662ccc2dd91c31a99ec',1,'spell.c']]],
   ['ex_5fspellrepall',['ex_spellrepall',['../spell_8c.html#ab02496008c49b7fa4a0f595639e433d6',1,'spell.c']]],
   ['ex_5fsplitview',['ex_splitview',['../ex__docmd_8c.html#a5e790d3faec4925d87f948e4d1432773',1,'ex_docmd.c']]],
+  ['ex_5fsubstitute',['ex_substitute',['../ex__cmds_8c.html#af7ad3e8e5b721aa06d5d47dac38d1e7c',1,'ex_cmds.c']]],
   ['ex_5fsyntax',['ex_syntax',['../syntax_8c.html#aeb92e02f635891d972d1f1527f0b0f4e',1,'syntax.c']]],
   ['ex_5fsyntime',['ex_syntime',['../syntax_8c.html#af901b419d9f60c81458e0310e49bc692',1,'syntax.c']]],
   ['ex_5fthrow',['ex_throw',['../ex__eval_8c.html#a43d941ccf690158966b63f742f21c2ec',1,'ex_eval.c']]],

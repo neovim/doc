@@ -2,6 +2,7 @@ var searchData=
 [
   ['mapblock',['mapblock',['../structmapblock.html',1,'']]],
   ['match_5ft',['match_T',['../structmatch__T.html',1,'']]],
+  ['matchedline',['MatchedLine',['../structMatchedLine.html',1,'']]],
   ['matchinf_5fs',['matchinf_S',['../structmatchinf__S.html',1,'']]],
   ['matchitem',['matchitem',['../structmatchitem.html',1,'']]],
   ['memfile',['memfile',['../structmemfile.html',1,'']]],

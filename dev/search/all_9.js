@@ -211,6 +211,7 @@ var searchData=
   ['ip_5flow',['ip_low',['../structinfo__pointer.html#a4a99e7d504486b928d73e306227af4a4',1,'info_pointer']]],
   ['is_5fcomposing',['IS_COMPOSING',['../mbyte_8c.html#afb1b667777be6f49623eb5a012a426a1',1,'mbyte.c']]],
   ['is_5flast_5fused',['is_last_used',['../structShadaEntry.html#ad8eaeaa32ea8167d1d4a01f790c3d299',1,'ShadaEntry']]],
+  ['is_5flive',['is_live',['../structexarg.html#a9aad8767a5c69de7a15f343a9812d0b7',1,'exarg']]],
   ['is_5fll_5fwindow',['IS_LL_WINDOW',['../quickfix_8c.html#ad390e41e6fd0bf36fb69758ba8dee712',1,'quickfix.c']]],
   ['is_5fmagic',['is_Magic',['../regexp_8c.html#ada5158c5ec499a6e2ad6c5b4b0a5fce1',1,'regexp.c']]],
   ['is_5fmax',['is_MAX',['../structblock__def.html#a74e3129c23a35b120d745b7668d67a99',1,'block_def']]],

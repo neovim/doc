@@ -79,6 +79,7 @@ var searchData=
   ['match_5ftext',['match_text',['../structnfa__regprog__T.html#a533b14763f3ebfa4c7fbb59fdd11a8a2',1,'nfa_regprog_T']]],
   ['match_5fuser',['match_user',['../misc1_8c.html#a6e6b5a0fe8ea8964deba94c4556355fa',1,'misc1.c']]],
   ['matched',['matched',['../structSearchedFile.html#a7d67d11c8b49f7493e1f48f5cc3ff5b1',1,'SearchedFile']]],
+  ['matchedline',['MatchedLine',['../structMatchedLine.html',1,'']]],
   ['matches',['matches',['../structreg__extmatch__T.html#a37bc6d5e3d3cbf48d30d178d54afb5f7',1,'reg_extmatch_T']]],
   ['matchinf_5fs',['matchinf_S',['../structmatchinf__S.html',1,'']]],
   ['matchinf_5ft',['matchinf_T',['../spell_8c.html#a9ac28785888127e34455b530842e1af8',1,'spell.c']]],
