@@ -7,7 +7,6 @@ var searchData=
   ['ecmd_5flastl',['ECMD_LASTL',['../ex__cmds_8h.html#af9caaff220c47133e4814a9d325c2d6f',1,'ex_cmds.h']]],
   ['ecmd_5foldbuf',['ECMD_OLDBUF',['../ex__cmds_8h.html#af29807182e9789bdb2b7fa214e0d52da',1,'ex_cmds.h']]],
   ['ecmd_5fone',['ECMD_ONE',['../ex__cmds_8h.html#a87ab13ef03b12233dae036ba34b32cae',1,'ex_cmds.h']]],
-  ['ecmd_5freserved_5fbufnr',['ECMD_RESERVED_BUFNR',['../ex__cmds_8h.html#a3ba42e434a042d0ceefe7f48140d3dc0',1,'ex_cmds.h']]],
   ['ecmd_5fset_5fhelp',['ECMD_SET_HELP',['../ex__cmds_8h.html#aecfe5a579bfc88c1f245ae92f8bf79c3',1,'ex_cmds.h']]],
   ['edit_5ffile',['EDIT_FILE',['../main_8c.html#a3ed0eec308af6f19d53a0a22ce545df9',1,'main.c']]],
   ['edit_5fnone',['EDIT_NONE',['../main_8c.html#a753f3ca599382fb345ae699c80357b3c',1,'main.c']]],

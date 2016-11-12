@@ -1,7 +1,7 @@
 var searchData=
 [
   ['b',['b',['../structdecomp__T.html#aacd3aac354ee475cbc7bd664327950b3',1,'decomp_T']]],
-  ['b0_5fdirty',['b0_dirty',['../memline_8c.html#a31f731b7125114308c0b2e85b10e0bb0',1,'b0_dirty():&#160;memline.c'],['../memline_8c.html#aef48b3fc0252f461c7bce9fb717fc542',1,'B0_DIRTY():&#160;memline.c']]],
+  ['b0_5fdirty',['B0_DIRTY',['../memline_8c.html#aef48b3fc0252f461c7bce9fb717fc542',1,'B0_DIRTY():&#160;memline.c'],['../memline_8c.html#a31f731b7125114308c0b2e85b10e0bb0',1,'b0_dirty():&#160;memline.c']]],
   ['b0_5fff_5fmask',['B0_FF_MASK',['../memline_8c.html#ab299d2ddb4d4be7565b25e8a197e63bb',1,'memline.c']]],
   ['b0_5fflags',['b0_flags',['../memline_8c.html#a035de78041927f925e59c97913c822bf',1,'memline.c']]],
   ['b0_5ffname',['b0_fname',['../structblock0.html#a619635d3effa9f2496dd6662e20b9037',1,'block0']]],
@@ -439,7 +439,7 @@ var searchData=
   ['buf_5fjump_5fopen_5ftab',['buf_jump_open_tab',['../window_8c.html#a40b80bf596ddf7a543b5ccc22863917d',1,'window.c']]],
   ['buf_5fjump_5fopen_5fwin',['buf_jump_open_win',['../window_8c.html#a0f972066bca0dc1d7b181e54ff6dc038',1,'window.c']]],
   ['buf_5fname_5fchanged',['buf_name_changed',['../buffer_8c.html#a0f90b3cdf65d6258ea90c1a399a6cab3',1,'buffer.c']]],
-  ['buf_5fopen_5fspecial',['buf_open_special',['../buffer_8c.html#a59980550be007d02f8334ab3458c893d',1,'buffer.c']]],
+  ['buf_5fopen_5fscratch',['buf_open_scratch',['../buffer_8c.html#ae4d3b1f9a2ec0adf04091021f46451a9',1,'buffer.c']]],
   ['buf_5freload',['buf_reload',['../fileio_8c.html#ab02773584c4be23890f17b12483b22e9',1,'fileio.c']]],
   ['buf_5fset_5ffile_5fid',['buf_set_file_id',['../buffer_8c.html#a6059fea2a7db08f6e3432a12ae377342',1,'buffer.c']]],
   ['buf_5fset_5fname',['buf_set_name',['../buffer_8c.html#a33a7d1510268556598a03fc1653af58b',1,'buffer.c']]],
