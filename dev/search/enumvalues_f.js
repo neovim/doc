@@ -83,6 +83,7 @@ var searchData=
   ['vv_5ftrue',['VV_TRUE',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a9b2bdeee8637a25b639b9ff12ac3db9e',1,'eval.h']]],
   ['vv_5fval',['VV_VAL',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a4b2bc98578fa1c7edfeb21444ff8e24d',1,'eval.h']]],
   ['vv_5fversion',['VV_VERSION',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800ae14dfe61981fc82ee5926e3c416732b8',1,'eval.h']]],
+  ['vv_5fvim_5fdid_5fenter',['VV_VIM_DID_ENTER',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a2b1e9744452ed465355e3160b4a96517',1,'eval.h']]],
   ['vv_5fwarningmsg',['VV_WARNINGMSG',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a3987b6deb3d81a8c1d4b49c03bb3b367',1,'eval.h']]],
   ['vv_5fwindowid',['VV_WINDOWID',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800aecc5ae395766d257244952b84942149b',1,'eval.h']]]
 ];

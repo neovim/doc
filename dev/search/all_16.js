@@ -225,7 +225,7 @@ var searchData=
   ['vimvarindex',['VimVarIndex',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800',1,'eval.h']]],
   ['virtual_5factive',['virtual_active',['../state_8c.html#ad53fe5f53eda7f02128d6cd0b10a3b10',1,'state.c']]],
   ['visible',['visible',['../structterminal.html#acdb627d9dcb1bce3cf2796675728b4b5',1,'terminal']]],
-  ['visual',['VIsual',['../globals_8h.html#acf84ebbba1c7b96312e1e8af22a3bf9a',1,'VIsual():&#160;globals.h'],['../vim_8h.html#a5719963d148e344fe549ddff3b70f9b2',1,'VISUAL():&#160;vim.h']]],
+  ['visual',['VISUAL',['../vim_8h.html#a5719963d148e344fe549ddff3b70f9b2',1,'VISUAL():&#160;vim.h'],['../globals_8h.html#acf84ebbba1c7b96312e1e8af22a3bf9a',1,'VIsual():&#160;globals.h']]],
   ['visual_5fbell',['visual_bell',['../structui__t.html#a154aa74b68bb3a9049838771f270f4f9',1,'ui_t']]],
   ['visual_5freselect',['VIsual_reselect',['../globals_8h.html#a94f6632f8b7b88cf8fe53e560eeaf6d8',1,'globals.h']]],
   ['visualinfo_5ft',['visualinfo_T',['../structvisualinfo__T.html',1,'']]],
@@ -318,6 +318,7 @@ var searchData=
   ['vv_5ftype',['vv_type',['../eval_8c.html#aa77ebc97b612830f3fd8036652158f42',1,'eval.c']]],
   ['vv_5fval',['VV_VAL',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a4b2bc98578fa1c7edfeb21444ff8e24d',1,'eval.h']]],
   ['vv_5fversion',['VV_VERSION',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800ae14dfe61981fc82ee5926e3c416732b8',1,'eval.h']]],
+  ['vv_5fvim_5fdid_5fenter',['VV_VIM_DID_ENTER',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a2b1e9744452ed465355e3160b4a96517',1,'eval.h']]],
   ['vv_5fwarningmsg',['VV_WARNINGMSG',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a3987b6deb3d81a8c1d4b49c03bb3b367',1,'eval.h']]],
   ['vv_5fwindowid',['VV_WINDOWID',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800aecc5ae395766d257244952b84942149b',1,'eval.h']]],
   ['vval',['vval',['../structtypval__T.html#a76759f8db9f78eaf13bf6844fafb9ac1',1,'typval_T']]]

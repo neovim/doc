@@ -82,7 +82,6 @@ var searchData=
   ['docmd_5fexcreset',['DOCMD_EXCRESET',['../ex__docmd_8h.html#a8358a46ed07c87872526939958064f37',1,'ex_docmd.h']]],
   ['docmd_5fkeepline',['DOCMD_KEEPLINE',['../ex__docmd_8h.html#a648ff4240ab6432d0d8e1f7c9a055077',1,'ex_docmd.h']]],
   ['docmd_5fkeytyped',['DOCMD_KEYTYPED',['../ex__docmd_8h.html#a622c51f47531b60e3b1e321b6c279fc8',1,'ex_docmd.h']]],
-  ['docmd_5flive',['DOCMD_LIVE',['../ex__docmd_8h.html#ad0c748f023201a352abcede3d2c4aaa4',1,'ex_docmd.h']]],
   ['docmd_5fnowait',['DOCMD_NOWAIT',['../ex__docmd_8h.html#a62a2b35b47ed58af1d1f011bea727b3f',1,'ex_docmd.h']]],
   ['docmd_5frepeat',['DOCMD_REPEAT',['../ex__docmd_8h.html#a41dde5703483d7abde72ab935a7baabe',1,'ex_docmd.h']]],
   ['docmd_5fverbose',['DOCMD_VERBOSE',['../ex__docmd_8h.html#a66b41d00ba9a616b12f9f245babc08d3',1,'ex_docmd.h']]],

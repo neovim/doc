@@ -72,6 +72,7 @@ var searchData=
   ['cmd_5fup',['CMD_UP',['../ex__cmds2_8c.html#ad5c2fd894f208b25f6f8ed2b43660e7c',1,'ex_cmds2.c']]],
   ['cmdbuffsize',['CMDBUFFSIZE',['../os__defs_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;os_defs.h'],['../vim_8h.html#a44dc8ca2df5b45aa6a3cd1955112993a',1,'CMDBUFFSIZE():&#160;vim.h']]],
   ['cmdline',['CMDLINE',['../vim_8h.html#a17cfc132230dcbede6802a80d600b2b2',1,'vim.h']]],
+  ['cmdpreview',['CMDPREVIEW',['../vim_8h.html#a84b461a843f88eb56004f7eb12885020',1,'vim.h']]],
   ['cmdwin',['CMDWIN',['../ex__cmds__defs_8h.html#a393d467a1515e4213d0ee44109c3091d',1,'ex_cmds_defs.h']]],
   ['cmp_5finternal',['CMP_INTERNAL',['../option__defs_8h.html#a347b7fd28c2b606320785b6889831849',1,'option_defs.h']]],
   ['cmp_5fkeepascii',['CMP_KEEPASCII',['../option__defs_8h.html#a31855c08f3f4999c6687b9d1bd1ac137',1,'option_defs.h']]],
