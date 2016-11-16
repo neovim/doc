@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2016 May 20
+*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2016 Jun 04
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -1425,6 +1425,11 @@ Predefined Vim <A HREF="#variables">variables</A>:			*<A NAME="vim-variable"></A
 		<A HREF="windows.html#window">window</A> gets a number).
 
 
+					*<A NAME="v:beval_winid"></A><B>v:beval_winid</B>* *<A NAME="beval_winid-variable"></A><B>beval_winid-variable</B>*
+<A HREF="#v:beval_winid">v:beval_winid</A>	The <A HREF="windows.html#window">window</A> ID of the <A HREF="windows.html#window">window</A>, over which the mouse pointer is.
+		Otherwise like <A HREF="#v:beval_winnr">v:beval_winnr</A>.
+
+
 					*<A NAME="v:char"></A><B>v:char</B>* *<A NAME="char-variable"></A><B>char-variable</B>*
 <A HREF="#v:char">v:char</A>		Argument for evaluating <A HREF="options.html#'formatexpr'">'formatexpr'</A> and used for the typed
 		character when using &lt;expr&gt; in an abbreviation |<A HREF="map.html#:map-&lt;expr&gt;">:map-&lt;expr&gt;</A>|.
@@ -1706,6 +1711,11 @@ Predefined Vim <A HREF="#variables">variables</A>:			*<A NAME="vim-variable"></A
 		zero when there was no mouse button click.
 
 
+					*<A NAME="v:mouse_winid"></A><B>v:mouse_winid</B>* *<A NAME="mouse_winid-variable"></A><B>mouse_winid-variable</B>*
+<A HREF="#v:mouse_winid">v:mouse_winid</A>	Window ID for a mouse click obtained with |<A HREF="#getchar()">getchar()</A>|.
+		The value is zero when there was no mouse button click.
+
+
 					*<A NAME="v:mouse_lnum"></A><B>v:mouse_lnum</B>* *<A NAME="mouse_lnum-variable"></A><B>mouse_lnum-variable</B>*
 <A HREF="#v:mouse_lnum">v:mouse_lnum</A>	Line number for a mouse click obtained with |<A HREF="#getchar()">getchar()</A>|.
 		This is the text line number, not the screen line number.  The
@@ -1958,7 +1968,7 @@ Predefined Vim <A HREF="#variables">variables</A>:			*<A NAME="vim-variable"></A
 					*<A NAME="v:windowid"></A><B>v:windowid</B>* *<A NAME="windowid-variable"></A><B>windowid-variable</B>* {Nvim}
 <A HREF="#v:windowid">v:windowid</A>	Application-specific <A HREF="windows.html#window">window</A> ID (&quot;window handle&quot; in <A HREF="os_win32.html#MS-Windows">MS-Windows</A>)
 		which may be set by any attached UI. Defaults to zero.
-		Note: for <A HREF="windows.html#windows">windows</A> inside Vim use |<A HREF="#winnr()">winnr()</A>|.
+		Note: for <A HREF="windows.html#windows">windows</A> inside Vim use |<A HREF="#winnr()">winnr()</A>| or |<A HREF="#win_getid()">win_getid()</A>|.
 
 ==============================================================================
 
@@ -3831,8 +3841,8 @@ getchar([expr])						*<A NAME="getchar()"></A><B>getchar()</B>*
 
 		When the user clicks a mouse button, the mouse event will be
 		returned.  The position can then be found in |<A HREF="#v:mouse_col">v:mouse_col</A>|,
-		|<A HREF="#v:mouse_lnum">v:mouse_lnum</A>| and |<A HREF="#v:mouse_win">v:mouse_win</A>|.  This example positions the
-		mouse <A HREF="motion.html#as">as</A> <A HREF="motion.html#it">it</A> would normally happen:
+		|<A HREF="#v:mouse_lnum">v:mouse_lnum</A>|, |<A HREF="#v:mouse_winid">v:mouse_winid</A>| and |<A HREF="#v:mouse_win">v:mouse_win</A>|.  This
+		example positions the mouse <A HREF="motion.html#as">as</A> <A HREF="motion.html#it">it</A> would normally happen:
 <B>			let c = getchar()</B>
 <B>			if c == "\&lt;LeftMouse&gt;" &amp;&amp; v:mouse_win &gt; 0</B>
 <B>			  exe v:mouse_win . "wincmd w"</B>
@@ -5435,7 +5445,7 @@ msgpackdump({list})				   {Nvim} *<A NAME="msgpackdump()"></A><B>msgpackdump()</
 		messagepack).
 
 
-		Limitations:				*<A NAME="E951"></A><B>E951</B>* *<A NAME="E952"></A><B>E952</B>* *<A NAME="E953"></A><B>E953</B>*
+		Limitations:				*<A NAME="E5004"></A><B>E5004</B>* *<A NAME="E5005"></A><B>E5005</B>*
 		1. |<A HREF="#Funcref">Funcref</A>|<A HREF="change.html#s">s</A> cannot be dumped.
 		2. Containers that reference themselves cannot be dumped.
 		3. <A HREF="#Dictionary">Dictionary</A> keys are always dumped <A HREF="motion.html#as">as</A> STR strings.
@@ -6604,10 +6614,15 @@ setqflist({list} [, {action}[, {title}]])		*<A NAME="setqflist()"></A><B>setqfli
 							*<A NAME="E927"></A><B>E927</B>*
 		If {action} is set to '<A HREF="insert.html#a">a</A>', then the items from {list} are
 		added to the existing <A HREF="quickfix.html#quickfix">quickfix</A> <A HREF="#list">list</A>. If there is no existing
-		<A HREF="#list">list</A>, then a new <A HREF="#list">list</A> is created. If {action} is set to '<A HREF="change.html#r">r</A>',
-		then the items from the current <A HREF="quickfix.html#quickfix">quickfix</A> <A HREF="#list">list</A> are replaced
-		with the items from {list}. If {action} is not present or is
-		set to '' '', then a new <A HREF="#list">list</A> is created.
+		<A HREF="#list">list</A>, then a new <A HREF="#list">list</A> is created.
+		
+		If {action} is set to '<A HREF="change.html#r">r</A>', then the items from the current
+		<A HREF="quickfix.html#quickfix">quickfix</A> <A HREF="#list">list</A> are replaced with the items from {list}.  This
+		can also be used to clear the <A HREF="#list">list</A>:
+<B>			:call setqflist([], 'r')</B>
+ 	
+		If {action} is not present or is set to '' '', then a new <A HREF="#list">list</A>
+		is created.
 
 		If {title} is given, it will be used to set |<A HREF="quickfix.html#w:quickfix_title">w:quickfix_title</A>|
 		after opening the <A HREF="quickfix.html#quickfix">quickfix</A> <A HREF="windows.html#window">window</A>.
@@ -10342,7 +10357,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Tue Nov 15 20:19:22 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/c91e9c1c7af48ad55a19a77b34fcabe6029fd956"><code>c91e9c1</code></a>.
+        Generated Wed Nov 16 20:20:29 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/f1fed42ca7c8c4d9d5cbfcd039305afeca147747"><code>f1fed42</code></a>.
       </div>
     </footer>
   </body>
