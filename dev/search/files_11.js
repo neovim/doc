@@ -17,7 +17,6 @@ var searchData=
   ['signal_2ec',['signal.c',['../event_2signal_8c.html',1,'']]],
   ['signal_2eh',['signal.h',['../os_2signal_8h.html',1,'']]],
   ['signal_2eh',['signal.h',['../event_2signal_8h.html',1,'']]],
-  ['sjiscorr_2ec',['sjiscorr.c',['../sjiscorr_8c.html',1,'']]],
   ['socket_2ec',['socket.c',['../socket_8c.html',1,'']]],
   ['socket_2eh',['socket.h',['../socket_8h.html',1,'']]],
   ['spell_2ec',['spell.c',['../spell_8c.html',1,'']]],

@@ -544,7 +544,6 @@ var searchData=
   ['site_5fsize',['SITE_SIZE',['../option_8c.html#a55f6179425ce79a2d6fab25b0b1de962',1,'option.c']]],
   ['size',['size',['../structString.html#a467ea29ffa5dd45a89f7c01e199fd104',1,'String::size()'],['../structArray.html#a13f67ab957f4fdd3443d7f62b2fd09ce',1,'Array::size()'],['../structDictionary.html#a30bbe791c57ae21169a4b7d2c44798e8',1,'Dictionary::size()'],['../structwbuffer.html#a457bd8fc37d290d1b75f60337fc7fefc',1,'wbuffer::size()'],['../structrbuffer.html#a1771fa00ea6ec402f71feb04f7b026e9',1,'rbuffer::size()'],['../structShadaEntry.html#a97363d862a93b5b88e0b4861b9e1cd7d',1,'ShadaEntry::size()'],['../structHMLList.html#ad1e65c0be21359f5b01bf3a78b30d9cd',1,'HMLList::size()']]],
   ['sizeof_5fcstr',['SIZEOF_CSTR',['../hardcopy_8c.html#a15cd40e9b62f00f2818ee3c397d2c722',1,'hardcopy.c']]],
-  ['sjiscorr_2ec',['sjiscorr.c',['../sjiscorr_8c.html',1,'']]],
   ['skip',['skip',['../structexarg.html#a773bcdda1e8cbf9c8f408b770e6a3117',1,'exarg::skip()'],['../structsd__read__def.html#a0e038d889c7ac9b0fcda48d8a45ba0d8',1,'sd_read_def::skip()']]],
   ['skip_5fexpr',['skip_expr',['../eval_8c.html#a96c524b2b64dbd400c98797ff51a8919',1,'eval.c']]],
   ['skip_5frange',['skip_range',['../ex__docmd_8c.html#a94e7950eb631e29f8f051696b48c36f6',1,'ex_docmd.c']]],

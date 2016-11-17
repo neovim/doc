@@ -19,7 +19,7 @@ var searchData=
   ['magic_5fnone',['MAGIC_NONE',['../regexp_8c.html#affd74523395f3a98d1234b0bd8a97940',1,'regexp.c']]],
   ['magic_5foff',['MAGIC_OFF',['../regexp_8c.html#af7e8c489405bf8f0c2684981ac9324da',1,'regexp.c']]],
   ['magic_5fon',['MAGIC_ON',['../regexp_8c.html#ae4026f0b0121d99d923d7b284d4d1fcc',1,'regexp.c']]],
-  ['main',['main',['../main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;main.c'],['../sjiscorr_8c.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main(int argc, char **argv):&#160;sjiscorr.c']]],
+  ['main',['main',['../main_8c.html#a3c04138a5bfe5d72780bb7e82a18e627',1,'main.c']]],
   ['main_2ec',['main.c',['../main_8c.html',1,'']]],
   ['main_2eh',['main.h',['../main_8h.html',1,'']]],
   ['main_5floop',['main_loop',['../main_8c.html#a162cc5c0c831830f9f6c6ac18fd90f92',1,'main_loop():&#160;main.c'],['../main_8h.html#a162cc5c0c831830f9f6c6ac18fd90f92',1,'main_loop():&#160;main.c']]],
