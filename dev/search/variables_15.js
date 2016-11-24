@@ -76,7 +76,6 @@ var searchData=
   ['userhl',['userhl',['../structstl__hlrec.html#a2bcb76e29abe56af9972d0ec198a0e36',1,'stl_hlrec']]],
   ['useridx',['useridx',['../structexarg.html#a90d39e6e4a6c6406accce7fc5e4a519f',1,'exarg']]],
   ['ut',['ut',['../structTUIData.html#aa07b131befaf96d760f2afa651124701',1,'TUIData']]],
-  ['utf8len_5ftab',['utf8len_tab',['../globals_8h.html#a3d9fd2dd4de68f6a20190f9eb0a9a3c7',1,'utf8len_tab():&#160;globals.h'],['../mbyte_8c.html#ac3bda942304e1b4209df78f7aca222d8',1,'utf8len_tab():&#160;mbyte.c']]],
   ['uv',['uv',['../structTerminalJobData.html#ac032c22b53836a22bb0f6de5e6b414f5',1,'TerminalJobData::uv()'],['../structlibuv__process.html#a4aa9b44a4e092f2534a130066350521f',1,'libuv_process::uv()'],['../structloop.html#aae8230c0dfc4beb0cc36568856823323',1,'loop::uv()'],['../structsignal__watcher.html#a54139a2df78aef2e3e0d2a5acd758aa0',1,'signal_watcher::uv()'],['../structsocket__watcher.html#a3fbee64dc1824e7bff3422b3aaa2f78c',1,'socket_watcher::uv()'],['../structstream.html#a65c271056576f8ab41e63fc3b5f7e8d9',1,'stream::uv()'],['../structtime__watcher.html#ab59315c450cd24137fb1acd02966bb55',1,'time_watcher::uv()']]],
   ['uv_5freq',['uv_req',['../structWRequest.html#a05e52cebd77b1bcc989e6806a8ac47cf',1,'WRequest']]],
   ['uvbuf',['uvbuf',['../structstream.html#a92c3ab23723f0ca7c735fd144991e6ac',1,'stream']]],

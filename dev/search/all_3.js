@@ -188,6 +188,7 @@ var searchData=
   ['clear_5ftv',['clear_tv',['../eval_8c.html#a0305cc6241b38e6e49c48da0de1b560c',1,'eval.c']]],
   ['clear_5fwinopt',['clear_winopt',['../option_8c.html#aaf552b83a8b0efc26cdbb0e9cb74093e',1,'option.c']]],
   ['clearfolding',['clearFolding',['../fold_8c.html#acf12395a164cac77795ae1df759b2b29',1,'fold.c']]],
+  ['clearmode',['clearmode',['../screen_8c.html#a8432da3f05c19b983eef260550d216dc',1,'screen.c']]],
   ['clearpos',['clearpos',['../macros_8h.html#a82327b353dbd100d9cf721f3505fe0d3',1,'macros.h']]],
   ['clonefoldgrowarray',['cloneFoldGrowArray',['../fold_8c.html#a0373c159000474fe0babcdf66fcfeb2a',1,'fold.c']]],
   ['close',['close',['../structsd__read__def.html#a5696209a16b220a2b73e6eac8ab49caa',1,'sd_read_def::close()'],['../structsd__write__def.html#a14e30f4af61bb44c28c3d9002393b63c',1,'sd_write_def::close()'],['../structterminal__state.html#a41d2abb8015b03dc528ca59e564d7a21',1,'terminal_state::close()']]],

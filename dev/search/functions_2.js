@@ -89,6 +89,7 @@ var searchData=
   ['clear_5ftv',['clear_tv',['../eval_8c.html#a0305cc6241b38e6e49c48da0de1b560c',1,'eval.c']]],
   ['clear_5fwinopt',['clear_winopt',['../option_8c.html#aaf552b83a8b0efc26cdbb0e9cb74093e',1,'option.c']]],
   ['clearfolding',['clearFolding',['../fold_8c.html#acf12395a164cac77795ae1df759b2b29',1,'fold.c']]],
+  ['clearmode',['clearmode',['../screen_8c.html#a8432da3f05c19b983eef260550d216dc',1,'screen.c']]],
   ['clonefoldgrowarray',['cloneFoldGrowArray',['../fold_8c.html#a0373c159000474fe0babcdf66fcfeb2a',1,'fold.c']]],
   ['close_5fbuffer',['close_buffer',['../buffer_8c.html#a8cca20eba93671e6be1e1fe1b9072fcc',1,'buffer.c']]],
   ['close_5fothers',['close_others',['../window_8c.html#ac23bacbbc0f8b42f517190eb73058c64',1,'window.c']]],
