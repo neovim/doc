@@ -490,6 +490,7 @@ var searchData=
   ['msg_5fputs_5ftitle',['MSG_PUTS_TITLE',['../message_8h.html#ad74d9106e2d053ef13c910e8dc6363e7',1,'MSG_PUTS_TITLE():&#160;message.h'],['../message_8c.html#ac9f5fa9fc5c661009cb88e3fa9294648',1,'msg_puts_title(char_u *s):&#160;message.c']]],
   ['msg_5frow',['msg_row',['../globals_8h.html#a376f82c59d5c5bf72c5bc753f7554128',1,'globals.h']]],
   ['msg_5fsb_5feol',['msg_sb_eol',['../message_8c.html#a57f5586cf3f8e17b6f5d21ced08f8ee1',1,'message.c']]],
+  ['msg_5fschedule_5femsgf',['msg_schedule_emsgf',['../message_8c.html#a04d240ed4526850b8fed5a4ce349c994',1,'message.c']]],
   ['msg_5fscrolled',['msg_scrolled',['../globals_8h.html#a0b03bc5fdd1ab38b00bf9264b8c7275b',1,'globals.h']]],
   ['msg_5fsource',['msg_source',['../message_8c.html#a8fba68755b6f0632589492cc06daa673',1,'message.c']]],
   ['msg_5fstart',['msg_start',['../message_8c.html#a701ffeff793261a605a4090e7c085a2d',1,'message.c']]],
