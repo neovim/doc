@@ -245,6 +245,7 @@ var searchData=
   ['addr_5fcount',['addr_count',['../structexarg.html#a6df745abf04de31377b3beb6282c29c6',1,'exarg']]],
   ['addr_5flines',['ADDR_LINES',['../ex__cmds__defs_8h.html#a5744a34777a643d670f206482095e119',1,'ex_cmds_defs.h']]],
   ['addr_5floaded_5fbuffers',['ADDR_LOADED_BUFFERS',['../ex__cmds__defs_8h.html#a3307ddd01e102ec4186b7789620b90d7',1,'ex_cmds_defs.h']]],
+  ['addr_5fother',['ADDR_OTHER',['../ex__cmds__defs_8h.html#acabd8d08bb8a3d42e18333bd8ffd8c3e',1,'ex_cmds_defs.h']]],
   ['addr_5fquickfix',['ADDR_QUICKFIX',['../ex__cmds__defs_8h.html#ae46fdc07bfd8ba3ba52cbc047809dfff',1,'ex_cmds_defs.h']]],
   ['addr_5ftabs',['ADDR_TABS',['../ex__cmds__defs_8h.html#ac30d16e51501da1c404126827bf0e2ff',1,'ex_cmds_defs.h']]],
   ['addr_5ftype',['addr_type',['../structexarg.html#a26c04fe1b1fdb8bc1ab21376fed10a56',1,'exarg']]],
