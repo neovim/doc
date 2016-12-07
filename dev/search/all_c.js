@@ -37,8 +37,6 @@ var searchData=
   ['lastc',['lastc',['../structinsert__state.html#a1a35052388b2b6794ffc5a800b6ae7a1',1,'insert_state']]],
   ['lastlist',['lastlist',['../structnfa__state.html#a1262b7cff8457a645a74cfba0653e5b2',1,'nfa_state']]],
   ['lastwin',['lastwin',['../globals_8h.html#a7e68cf90ba26a00b4979dfc56316fbc5',1,'globals.h']]],
-  ['latin1lower',['LATIN1LOWER',['../charset_8c.html#a7b2353f50be9089dcbc7dfe627d16e56',1,'charset.c']]],
-  ['latin1upper',['LATIN1UPPER',['../charset_8c.html#a19a61b23d5eb7e0a88ceed1517234eb0',1,'charset.c']]],
   ['lbr_5fchartabsize',['lbr_chartabsize',['../charset_8c.html#aac1e34d3873b354b9501dec5e14b7f31',1,'charset.c']]],
   ['lbr_5fchartabsize_5fadv',['lbr_chartabsize_adv',['../charset_8c.html#a387bab5eccbdacc7bd6424d7b17b3d8e',1,'charset.c']]],
   ['lbuflen',['LBUFLEN',['../diff_8c.html#ac570af6781e9b5c073b2e2702fc4a92a',1,'diff.c']]],

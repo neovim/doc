@@ -1,6 +1,7 @@
 var searchData=
 [
   ['c',['c',['../structinsert__state.html#a8140b17b215591eaa01ab5fe53973d73',1,'insert_state::c()'],['../structcommand__line__state.html#a362d84f8584a44955301d5272023f973',1,'command_line_state::c()'],['../structnormal__state.html#a1756cb19c1ac8fce03f9cb3961cce426',1,'normal_state::c()'],['../structdecomp__T.html#a1b0e71f8a5ba3d1eac9a79ff6d265751',1,'decomp_T::c()'],['../structnfa__state.html#ab1312b9f7fc41eececb1d1554c7056f6',1,'nfa_state::c()']]],
+  ['c_5fcedilla',['C_cedilla',['../regexp__nfa_8c.html#a045f16a9e888c7397145a82fde697add',1,'C_cedilla():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a10143f9e2895f731408f84452dd79725',1,'c_cedilla():&#160;regexp_nfa.c']]],
   ['ca',['ca',['../structinsert__state.html#a2e98ca6879d5601fb744539af3737593',1,'insert_state::ca()'],['../structnormal__state.html#ad1cbd0388c506142bbcec33acacce631',1,'normal_state::ca()']]],
   ['ca_5fcommand_5fbusy',['CA_COMMAND_BUSY',['../normal_8h.html#a5b7ad7c53dd3fa29fea560b9702de21d',1,'normal.h']]],
   ['ca_5fno_5fadj_5fop_5fend',['CA_NO_ADJ_OP_END',['../normal_8h.html#a6076843766d3c1a6208c4d5cd619e6a2',1,'normal.h']]],
