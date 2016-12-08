@@ -2,7 +2,7 @@ var searchData=
 [
   ['i',['i',['../structinsert__state.html#aafd5bb75bdc38ae8954c361e6459de9d',1,'insert_state::i()'],['../structcommand__line__state.html#a6b604183154f29e63e042107c9dc9328',1,'command_line_state::i()']]],
   ['i_5facute',['I_acute',['../regexp__nfa_8c.html#a13ada54bc05143df1b6c67792ec86006',1,'I_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#aaf5ce7ac364fe90d9f605f3813d6ead7',1,'i_acute():&#160;regexp_nfa.c']]],
-  ['i_5fcircumflex',['i_circumflex',['../regexp__nfa_8c.html#a6224bad4f2469a5fac83821f4db7da24',1,'i_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#afa2832c7ca3cc56b729e82b64d5997f7',1,'I_circumflex():&#160;regexp_nfa.c']]],
+  ['i_5fcircumflex',['I_circumflex',['../regexp__nfa_8c.html#afa2832c7ca3cc56b729e82b64d5997f7',1,'I_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a6224bad4f2469a5fac83821f4db7da24',1,'i_circumflex():&#160;regexp_nfa.c']]],
   ['i_5fdiaeresis',['I_diaeresis',['../regexp__nfa_8c.html#a6e8c6835ded2fe88955ca846e95425f2',1,'I_diaeresis():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a1cb79d8385e140a509b8421f251626d0',1,'i_diaeresis():&#160;regexp_nfa.c']]],
   ['i_5fgrave',['I_grave',['../regexp__nfa_8c.html#aecce5d4f656b71cdce26088166c3db20',1,'I_grave():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#ad5a8c2588e4bf39ab416ba7837e28e90',1,'i_grave():&#160;regexp_nfa.c']]],
   ['iconv_2eh',['iconv.h',['../iconv_8h.html',1,'']]],
@@ -213,6 +213,7 @@ var searchData=
   ['ip_5fhigh',['ip_high',['../structinfo__pointer.html#ac473382eb6323825263f4e65ddbb68de',1,'info_pointer']]],
   ['ip_5findex',['ip_index',['../structinfo__pointer.html#acdf584cb720506bd2f40240dc71bab50',1,'info_pointer']]],
   ['ip_5flow',['ip_low',['../structinfo__pointer.html#a4a99e7d504486b928d73e306227af4a4',1,'info_pointer']]],
+  ['is_5faddpos',['is_addpos',['../structmatch__T.html#a104df5854b2c769401378e73c4e6d72b',1,'match_T']]],
   ['is_5fcomposing',['IS_COMPOSING',['../mbyte_8c.html#afb1b667777be6f49623eb5a012a426a1',1,'mbyte.c']]],
   ['is_5flast_5fused',['is_last_used',['../structShadaEntry.html#ad8eaeaa32ea8167d1d4a01f790c3d299',1,'ShadaEntry']]],
   ['is_5fll_5fwindow',['IS_LL_WINDOW',['../quickfix_8c.html#ad390e41e6fd0bf36fb69758ba8dee712',1,'quickfix.c']]],

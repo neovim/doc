@@ -34,6 +34,7 @@ var searchData=
   ['ip_5fhigh',['ip_high',['../structinfo__pointer.html#ac473382eb6323825263f4e65ddbb68de',1,'info_pointer']]],
   ['ip_5findex',['ip_index',['../structinfo__pointer.html#acdf584cb720506bd2f40240dc71bab50',1,'info_pointer']]],
   ['ip_5flow',['ip_low',['../structinfo__pointer.html#a4a99e7d504486b928d73e306227af4a4',1,'info_pointer']]],
+  ['is_5faddpos',['is_addpos',['../structmatch__T.html#a104df5854b2c769401378e73c4e6d72b',1,'match_T']]],
   ['is_5flast_5fused',['is_last_used',['../structShadaEntry.html#ad8eaeaa32ea8167d1d4a01f790c3d299',1,'ShadaEntry']]],
   ['is_5fmax',['is_MAX',['../structblock__def.html#a74e3129c23a35b120d745b7668d67a99',1,'block_def']]],
   ['is_5fonechar',['is_oneChar',['../structblock__def.html#a38004b8aeec4dc9aff73dbe994dfe9a8',1,'block_def']]],
