@@ -52,6 +52,7 @@ var searchData=
   ['nothing',['NOTHING',['../regexp_8c.html#aad4a7ebff687dc5228cc3fd4d25067f2',1,'regexp.c']]],
   ['notrlcom',['NOTRLCOM',['../ex__cmds__defs_8h.html#a06501eb4c34e77c0c5ebb0e93bf12968',1,'ex_cmds_defs.h']]],
   ['nowin',['NOWIN',['../window_8c.html#a66ca554ea9a68484abf01df88ac7cd56',1,'window.c']]],
+  ['ns_5f1_5fsecond',['NS_1_SECOND',['../shell_8c.html#a29fa65deffcd521ccf16fb14b7a8ebe3',1,'shell.c']]],
   ['nscript',['NSCRIPT',['../globals_8h.html#a377ec1febef345989928c8db9e43e022',1,'globals.h']]],
   ['nsubexp',['NSUBEXP',['../regexp__defs_8h.html#aac46a27dfcb1ea4aa6254cf4ec48c4c2',1,'regexp_defs.h']]],
   ['nt_5fold_5fbnum',['nt_old_bnum',['../memfile__defs_8h.html#ab92990050e32ae3547789c209c810c52',1,'memfile_defs.h']]],

@@ -49,7 +49,9 @@ var searchData=
   ['loop_5finit',['loop_init',['../loop_8c.html#a429398acfbb953286b0ec3d9425a632f',1,'loop.c']]],
   ['loop_5fon_5fput',['loop_on_put',['../loop_8c.html#a9bcd697c2ff50fb5beff1f039c2b4f56',1,'loop.c']]],
   ['loop_5fpoll_5fevents',['loop_poll_events',['../loop_8c.html#ac96262308d24e406dafd4e79aeead075',1,'loop.c']]],
+  ['loop_5fpurge',['loop_purge',['../loop_8c.html#a67e727ebda7d285e1a47d6736b73a3a5',1,'loop.c']]],
   ['loop_5fschedule',['loop_schedule',['../loop_8c.html#aebd2728fb38a2801df711e0e88de9404',1,'loop.c']]],
+  ['loop_5fsize',['loop_size',['../loop_8c.html#a97ebbc89f96dced20a7e6eb1c4c0a448',1,'loop.c']]],
   ['lrf_5fsub',['lrF_sub',['../farsi_8c.html#ae9d2d9e8fbb8214abd0f0886a1d31a99',1,'farsi.c']]],
   ['lrfswap',['lrFswap',['../farsi_8c.html#abbb47d7d7b20c72ccfb2a4ac1769a0c9',1,'farsi.c']]],
   ['lrswap',['lrswap',['../farsi_8c.html#a90738e4cd526619406d3888b238af075',1,'farsi.c']]]
