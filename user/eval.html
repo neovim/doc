@@ -96,6 +96,9 @@ There are six types of <A HREF="#variables">variables</A>:
 
 Funcref		A reference to a function |<A HREF="#Funcref">Funcref</A>|.
 		Example: function(&quot;strlen&quot;)
+		It can be bound to a dictionary and arguments, <A HREF="motion.html#it">it</A> then works
+		like a <A HREF="#Partial">Partial</A>.
+		Example: function(&quot;Callback&quot;, [arg], myDict)
 
 List		An ordered sequence of items |<A HREF="#List">List</A>|.
 		Example: [1, 2, ['a', 'b']]
@@ -193,6 +196,41 @@ The name of the referenced function can be obtained with |<A HREF="#string()">st
 You can use |<A HREF="#call()">call()</A>| to invoke a <A HREF="#Funcref">Funcref</A> and use a <A HREF="#list">list</A> variable for the
 arguments:
 <B>	:let r = call(Fn, mylist)</B>
+ 
+
+								*<A NAME="Partial"></A><B>Partial</B>*
+A <A HREF="#Funcref">Funcref</A> optionally binds a <A HREF="#Dictionary">Dictionary</A> and/or arguments.  This is also called
+a <A HREF="#Partial">Partial</A>.  This is created by passing the <A HREF="#Dictionary">Dictionary</A> and/or arguments to
+<A HREF="#function()">function()</A>.  When calling the function the <A HREF="#Dictionary">Dictionary</A> and/or arguments will be
+passed to the function.  Example:
+
+<B>	let Cb = function('Callback', ['foo'], myDict)</B>
+<B>	call Cb()</B>
+
+This will invoke the function <A HREF="motion.html#as">as</A> if using:
+<B>	call myDict.Callback('foo')</B>
+
+Note that binding a function to a <A HREF="#Dictionary">Dictionary</A> also happens when the function is
+a member of the <A HREF="#Dictionary">Dictionary</A>:
+
+<B>	let myDict.myFunction = MyFunction</B>
+<B>	call myDict.myFunction()</B>
+
+Here MyFunction() will get myDict passed <A HREF="motion.html#as">as</A> &quot;<A HREF="#self">self</A>&quot;.  This happens when the
+&quot;myFunction&quot; member is accessed.  When assigning &quot;myFunction&quot; to otherDict
+and calling <A HREF="motion.html#it">it</A>, <A HREF="motion.html#it">it</A> will be bound to otherDict:
+
+<B>	let otherDict.myFunction = myDict.myFunction</B>
+<B>	call otherDict.myFunction()</B>
+
+Now &quot;<A HREF="#self">self</A>&quot; will be &quot;otherDict&quot;.  But when the dictionary was bound explicitly
+this won't happen:
+
+<B>	let myDict.myFunction = function(MyFunction, myDict)</B>
+<B>	let otherDict.myFunction = myDict.myFunction</B>
+<B>	call otherDict.myFunction()</B>
+
+Here &quot;<A HREF="#self">self</A>&quot; will be &quot;myDict&quot;, because <A HREF="motion.html#it">it</A> was bound explitly.
 
 
 <B><FONT color="#54A23D">1.3 Lists </FONT></B>
@@ -2107,10 +2145,12 @@ foldlevel({lnum})		<A HREF="#Number">Number</A>	fold level at {lnum}
 <A HREF="#foldtext()">foldtext()</A>			<A HREF="#String">String</A>	line displayed for closed fold
 foldtextresult({lnum})		<A HREF="#String">String</A>	text for closed fold at {lnum}
 <A HREF="#foreground()">foreground()</A>			<A HREF="#Number">Number</A>	bring the Vim <A HREF="windows.html#window">window</A> to the foreground
-function({name})		<A HREF="#Funcref">Funcref</A> reference to function {name}
+function({name} [, {arglist}] [, {dict}])
+				<A HREF="#Funcref">Funcref</A> reference to function {name}
 garbagecollect([{atexit}])	none	free memory, breaking cyclic references
 get({list}, {idx} [, {def}])	any	get item {idx} from {list} or {def}
 get({dict}, {key} [, {def}])	any	get item {key} from {dict} or {def}
+get({func}, {what})		any	get property of funcref/partial {func}
 getbufline({expr}, {lnum} [, {end}])
 				<A HREF="#List">List</A>	lines {lnum} to {end} of buffer {expr}
 getbufvar({expr}, {varname} [, {def}])
@@ -3765,9 +3805,45 @@ foldtextresult({lnum})					*<A NAME="foldtextresult()"></A><B>foldtextresult()</
 
 
 
-function({name})					*<A NAME="function()"></A><B>function()</B>* *<A NAME="E700"></A><B>E700</B>*
+				       *<A NAME="function()"></A><B>function()</B>* *<A NAME="E700"></A><B>E700</B>* *<A NAME="E922"></A><B>E922</B>* *<A NAME="E929"></A><B>E929</B>*
+function({name} [, {arglist}] [, {dict}])
 		Return a |<A HREF="#Funcref">Funcref</A>| variable that refers to function {name}.
 		{name} can be a user defined function or an internal function.
+
+		When <A HREF="editing.html#{arglist}">{arglist}</A> or {dict} is present this creates a partial.
+		That mans the argument <A HREF="#list">list</A> and/or the dictionary is stored in
+		the <A HREF="#Funcref">Funcref</A> and will be used when the <A HREF="#Funcref">Funcref</A> is called.
+		
+		The arguments are passed to the function in front of other
+		arguments.  Example:
+<B>			func Callback(arg1, arg2, name)</B>
+<B>			...</B>
+<B>			let Func = function('Callback', ['one', 'two'])</B>
+<B>			...</B>
+<B>			call Func('name')</B>
+ 		Invokes the function <A HREF="motion.html#as">as</A> with:
+<B>			call Callback('one', 'two', 'name')</B>
+
+ 		The <A HREF="#Dictionary">Dictionary</A> is only useful when calling a &quot;<A HREF="#dict">dict</A>&quot; function.
+		In that <A HREF="change.html#case">case</A> the {dict} is passed in <A HREF="motion.html#as">as</A> &quot;<A HREF="#self">self</A>&quot;. Example:
+<B>			function Callback() dict</B>
+<B>			   echo "called for " . self.name</B>
+<B>			endfunction</B>
+<B>			...</B>
+<B>			let context = {"name": "example"}</B>
+<B>			let Func = function('Callback', context)</B>
+<B>			...</B>
+<B>			call Func()	" will echo: called for example</B>
+
+ 		The argument <A HREF="#list">list</A> and the <A HREF="#Dictionary">Dictionary</A> can be combined:
+<B>			function Callback(arg1, count) dict</B>
+<B>			...</B>
+<B>			let context = {"name": "example"}</B>
+<B>			let Func = function('Callback', ['one'], context)</B>
+<B>			...</B>
+<B>			call Func(500)</B>
+ 		Invokes the function <A HREF="motion.html#as">as</A> with:
+<B>			call context.Callback('one', 500)</B>
 
 
 
@@ -3794,6 +3870,13 @@ get({dict}, {key} [, {default}])
 		Get item with key {key} from |<A HREF="#Dictionary">Dictionary</A>| {dict}.  When this
 		item is not available return {default}.  Return zero when
 		{default} is omitted.
+get({func}, {what})
+		Get item {what} from <A HREF="#Funcref">Funcref</A> {func}.  Possible values for
+		{what} are:
+			'name'	The function name
+			'func'	The function
+			<A HREF="options.html#'dict'">'dict'</A>	The dictionary
+			'args'	The <A HREF="#list">list</A> with arguments
 
 
 							*<A NAME="getbufline()"></A><B>getbufline()</B>*
@@ -10405,7 +10488,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sun Dec 11 20:07:34 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/29e651515fec1a4bc2cd41ed1c04eb5d03250525"><code>29e6515</code></a>.
+        Generated Mon Dec 12 20:34:46 UTC 2016 from <a href="https://github.com/neovim/neovim/commit/988ab5804a16beafff26b487b0612cb7cf97ea09"><code>988ab58</code></a>.
       </div>
     </footer>
   </body>
