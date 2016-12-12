@@ -33,7 +33,7 @@ var searchData=
   ['dict_5fclear',['dict_clear',['../eval_8c.html#a041ab2dc69b30d65fd604200feaa7148',1,'eval.c']]],
   ['dict_5fextend',['dict_extend',['../eval_8c.html#ae392952ea3f9b7f106e97d02fec5a39e',1,'eval.c']]],
   ['dict_5ffind',['dict_find',['../eval_8c.html#aa9ab744cd9a8ef358ec9b941e4d27604',1,'eval.c']]],
-  ['dict_5ffree',['dict_free',['../eval_8c.html#a084a374ecf8c6bd53c392409b8e38229',1,'eval.c']]],
+  ['dict_5ffree',['dict_free',['../eval_8c.html#a08564e9c8d4e388b5854ab697ea1a986',1,'eval.c']]],
   ['dict_5fget_5fvalue',['dict_get_value',['../api_2private_2helpers_8c.html#a133284ee658a684c4742fe9aecfa9d76',1,'helpers.c']]],
   ['dict_5flookup',['dict_lookup',['../eval_8c.html#ab16c115d8c1763cd9c468f8b96f11af4',1,'eval.c']]],
   ['dict_5fset_5fkeys_5freadonly',['dict_set_keys_readonly',['../eval_8c.html#a265b4f7a7ea74bb83238d360aa86169d',1,'eval.c']]],

@@ -58,7 +58,7 @@ var searchData=
   ['file_5fid_5fvalid',['file_id_valid',['../structfile__buffer.html#a3ae8a4f422f2dbc65422eb607773a85d',1,'file_buffer::file_id_valid()'],['../structscriptitem__S.html#a2c060dc95091ba12c7f6428923b492dc',1,'scriptitem_S::file_id_valid()'],['../structff__visited.html#a99e53435a3485a21b7c316eee6a78074',1,'ff_visited::file_id_valid()']]],
   ['file_5fline',['file_line',['../structprt__pos__T.html#a67bf7b685d6b6a1d8a7f7bb09e270faf',1,'prt_pos_T']]],
   ['file_5fname',['file_name',['../undo_8c.html#a6b6649b1d78225d0f7a7b5abace92227',1,'undo.c']]],
-  ['filemark',['filemark',['../structShadaEntry.html#aed7d2c96b945daaa9acb96a19b1adb25',1,'ShadaEntry']]],
+  ['filemark',['filemark',['../structShadaEntry.html#a2bee01340954aa66cdf4206dc3ecafad',1,'ShadaEntry']]],
   ['filename',['filename',['../structprt__ps__resource__S.html#a6e4fb858ac12dd77ee2eede64e7b72b2',1,'prt_ps_resource_S']]],
   ['fill',['fill',['../structlineoff__T.html#aa5d8491a318ec7a0b316625ce1cceb19',1,'lineoff_T']]],
   ['finished',['finished',['../structsource__cookie.html#a186a0a4228b2455336faf9ee31c492d3',1,'source_cookie']]],
@@ -111,5 +111,6 @@ var searchData=
   ['func_5fattr_5fnonnull_5fret',['FUNC_ATTR_NONNULL_RET',['../memory_8c.html#aa77008ac38bc6da28fd13edc0a1d3f72',1,'memory.c']]],
   ['func_5fattr_5fwarn_5funused_5fresult',['FUNC_ATTR_WARN_UNUSED_RESULT',['../encode_8c.html#a7e7f51bf3a580c90a772b7e0f16afe4f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;encode.c'],['../mark_8c.html#a7569e4590e0916dc8a36210e858fbb2f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;mark.c'],['../ops_8c.html#a7569e4590e0916dc8a36210e858fbb2f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;ops.c'],['../env_8c.html#a7569e4590e0916dc8a36210e858fbb2f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;env.c']]],
   ['func_5fhashtab',['func_hashtab',['../eval_8c.html#afa6cfc623c2de4135c8b833fcf1296a4',1,'func_hashtab():&#160;eval.c'],['../eval_8h.html#afa6cfc623c2de4135c8b833fcf1296a4',1,'func_hashtab():&#160;eval.c']]],
-  ['funccalp',['funccalp',['../structcaller__scope.html#a00166300f81ce3da855326615b08283d',1,'caller_scope']]]
+  ['funccalp',['funccalp',['../structcaller__scope.html#a00166300f81ce3da855326615b08283d',1,'caller_scope']]],
+  ['funcref',['funcref',['../structCallback.html#a1ee4c4fda697c2685bf7fcc9de9a56c9',1,'Callback']]]
 ];

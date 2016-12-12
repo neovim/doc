@@ -5,6 +5,7 @@ var searchData=
   ['v_5flist',['v_list',['../structtypval__T.html#a886659f986c150dab284f1d5ef64ee00',1,'typval_T']]],
   ['v_5flock',['v_lock',['../structtypval__T.html#a1da8dd2efdd15f2b78d71cf2b085bf44',1,'typval_T']]],
   ['v_5fnumber',['v_number',['../structtypval__T.html#aa8615bd53291928fc5adceff07d5e5bc',1,'typval_T::v_number()'],['../eval_8c.html#a24deba0837a73245cc0b413af22d7208',1,'v_number():&#160;eval.c']]],
+  ['v_5fpartial',['v_partial',['../structtypval__T.html#a357def79f46d08d1e0631fe1df3ede02',1,'typval_T']]],
   ['v_5fspecial',['v_special',['../structtypval__T.html#ac868de4dd1df2e46d4a5fdfee8d5bd62',1,'typval_T']]],
   ['v_5fstring',['v_string',['../structtypval__T.html#ad5403b6cf230c7f663901d46079b9ac3',1,'typval_T']]],
   ['v_5ftype',['v_type',['../structtypval__T.html#ae8bf8f1bbe623ebccf498d92042f2f74',1,'typval_T']]],
@@ -35,5 +36,5 @@ var searchData=
   ['vts',['vts',['../structterminal.html#ab33698998f9e6e636d83d902aabe88cd',1,'terminal']]],
   ['vv_5fexception',['vv_exception',['../structdbg__stuff.html#ae214d0d3eb51e908d88eff000eee7240',1,'dbg_stuff']]],
   ['vv_5fthrowpoint',['vv_throwpoint',['../structdbg__stuff.html#af51ae41ed949f3b44be4a1fce396ae38',1,'dbg_stuff']]],
-  ['vval',['vval',['../structtypval__T.html#a76759f8db9f78eaf13bf6844fafb9ac1',1,'typval_T']]]
+  ['vval',['vval',['../structtypval__T.html#afa9f950a390a05b809ef8b6a64f9b424',1,'typval_T']]]
 ];

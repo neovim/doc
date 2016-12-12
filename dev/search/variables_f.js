@@ -15,9 +15,9 @@ var searchData=
   ['old_5fpos',['old_pos',['../structnormal__state.html#a62098e156242a08e70812658580db8c5',1,'normal_state']]],
   ['old_5ftopfill',['old_topfill',['../structinsert__state.html#ad1b9d118731c3012ee3af926832cc2a5',1,'insert_state::old_topfill()'],['../structcommand__line__state.html#a37bd42e400e134f6869c2f0a0d25f8b1',1,'command_line_state::old_topfill()']]],
   ['old_5ftopline',['old_topline',['../structinsert__state.html#a73d8526b630f8436d5bbdf27a9d5871c',1,'insert_state::old_topline()'],['../structcommand__line__state.html#ab27d1a671d9aeb1dcba654c2432af1ea',1,'command_line_state::old_topline()']]],
-  ['on_5fexit',['on_exit',['../structTerminalJobData.html#abd2570fdf5527cd0160eeb2f6c45b99c',1,'TerminalJobData']]],
-  ['on_5fstderr',['on_stderr',['../structTerminalJobData.html#a2dae7b03f78b526768f475b7e1e1b4ec',1,'TerminalJobData']]],
-  ['on_5fstdout',['on_stdout',['../structTerminalJobData.html#a0bbe045a66a8202fe8bd4103f86a65e3',1,'TerminalJobData']]],
+  ['on_5fexit',['on_exit',['../structTerminalJobData.html#af1ea089b052f1a1ee6b4f3abc787e428',1,'TerminalJobData']]],
+  ['on_5fstderr',['on_stderr',['../structTerminalJobData.html#a8c2b5c8841cc5c7be3aa0f14a893d4ed',1,'TerminalJobData']]],
+  ['on_5fstdout',['on_stdout',['../structTerminalJobData.html#adab0b494b1c81b17720f4aee49e3ccfa',1,'TerminalJobData']]],
   ['op_5ftype',['op_type',['../structoparg__S.html#acb9e3c2b4847f0e369552cad973c137e',1,'oparg_S']]],
   ['opcount',['opcount',['../structcmdarg__S.html#a58f88a02d8bfe611ed941f8950fdf89d',1,'cmdarg_S']]],
   ['opts',['opts',['../structterminal.html#a603d2575fb7a867cf9d91de2d5dd05fe',1,'terminal']]],
@@ -25,7 +25,7 @@ var searchData=
   ['out1',['out1',['../structnfa__state.html#a6b5efbc7503e9540cdce968e55f6c62a',1,'nfa_state']]],
   ['out_5fisatty',['out_isatty',['../structTUIData.html#a8923a10fe4a73826666c557cce3a0e8d',1,'TUIData']]],
   ['outfile',['outfile',['../structprt__settings__T.html#ab26e4b46eb152abd13d282cea9c44d3b',1,'prt_settings_T']]],
-  ['output_5fhandle',['output_handle',['../structTUIData.html#a4db2d64175365fb62e27fcf30705b2b0',1,'TUIData']]],
+  ['output_5fhandle',['output_handle',['../structTUIData.html#a21996799103bad268dd760728eb34c2d',1,'TUIData']]],
   ['output_5fisatty',['output_isatty',['../structmparm__T.html#adb0610f895a905db77d2d6fd3bfcc7d3',1,'mparm_T']]],
   ['overstrike',['overstrike',['../structcmdline__info.html#abf1e5be4d11b1905f47bd8ff82039740',1,'cmdline_info']]]
 ];

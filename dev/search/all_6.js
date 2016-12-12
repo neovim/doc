@@ -170,7 +170,7 @@ var searchData=
   ['fileio_2ec',['fileio.c',['../os_2fileio_8c.html',1,'']]],
   ['fileio_2eh',['fileio.h',['../fileio_8h.html',1,'']]],
   ['fileio_2eh',['fileio.h',['../os_2fileio_8h.html',1,'']]],
-  ['filemark',['filemark',['../structfilemark.html',1,'filemark'],['../structShadaEntry.html#aed7d2c96b945daaa9acb96a19b1adb25',1,'ShadaEntry::filemark()']]],
+  ['filemark',['filemark',['../structfilemark.html',1,'filemark'],['../structShadaEntry.html#a2bee01340954aa66cdf4206dc3ecafad',1,'ShadaEntry::filemark()']]],
   ['filemarks',['FileMarks',['../structFileMarks.html',1,'']]],
   ['filemess',['filemess',['../fileio_8c.html#a5ec15b7931c942ab2ed6992c98368de0',1,'fileio.c']]],
   ['filename',['filename',['../structprt__ps__resource__S.html#a6e4fb858ac12dd77ee2eede64e7b72b2',1,'prt_ps_resource_S']]],
@@ -431,7 +431,7 @@ var searchData=
   ['func_5fattr_5funused',['FUNC_ATTR_UNUSED',['../func__attr_8h.html#a88fe8278d0eb3b0607f7243d19eda36c',1,'func_attr.h']]],
   ['func_5fattr_5fwarn_5funused_5fresult',['FUNC_ATTR_WARN_UNUSED_RESULT',['../func__attr_8h.html#a7569e4590e0916dc8a36210e858fbb2f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;func_attr.h'],['../encode_8c.html#a7e7f51bf3a580c90a772b7e0f16afe4f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;encode.c'],['../mark_8c.html#a7569e4590e0916dc8a36210e858fbb2f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;mark.c'],['../ops_8c.html#a7569e4590e0916dc8a36210e858fbb2f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;ops.c'],['../env_8c.html#a7569e4590e0916dc8a36210e858fbb2f',1,'FUNC_ATTR_WARN_UNUSED_RESULT():&#160;env.c']]],
   ['func_5fbreakpoint',['func_breakpoint',['../eval_8c.html#aa75d4bb36139b8a72ad2d1bc0e8b3f41',1,'eval.c']]],
-  ['func_5fcall',['func_call',['../eval_8c.html#a3722fbc7d9cc8147b215a06ba9e44e2e',1,'eval.c']]],
+  ['func_5fcall',['func_call',['../eval_8c.html#aaeac1d66a66a140877d5550cc1b3aed5',1,'eval.c']]],
   ['func_5fdbg_5ftick',['func_dbg_tick',['../eval_8c.html#a36a59e841c7e26ecfa10a657a1cbf7d7',1,'eval.c']]],
   ['func_5fdump_5fprofile',['func_dump_profile',['../eval_8c.html#a882052f1d2c15180069efe761e43549b',1,'eval.c']]],
   ['func_5fhas_5fabort',['func_has_abort',['../eval_8c.html#a7e9af1f17d3645f7cc123df493d579bf',1,'eval.c']]],
@@ -450,6 +450,7 @@ var searchData=
   ['funccalp',['funccalp',['../structcaller__scope.html#a00166300f81ce3da855326615b08283d',1,'caller_scope']]],
   ['funcdict_5ft',['funcdict_T',['../structfuncdict__T.html',1,'']]],
   ['funcline',['FUNCLINE',['../eval_8c.html#aa335e6720113ef4e875f4ad015438d6f',1,'eval.c']]],
+  ['funcref',['funcref',['../structCallback.html#a1ee4c4fda697c2685bf7fcc9de9a56c9',1,'Callback']]],
   ['funptr',['FunPtr',['../eval_8c.html#aabac74d4128ca4aefd82ac4cbba19cc0',1,'eval.c']]],
   ['fwd_5fword',['fwd_word',['../search_8c.html#ab08dd4937256741d1b10a5120722f120',1,'search.c']]]
 ];

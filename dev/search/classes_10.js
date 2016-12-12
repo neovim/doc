@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['partial_5fs',['partial_S',['../structpartial__S.html',1,'']]],
   ['pat_5ft',['pat_T',['../structpat__T.html',1,'']]],
   ['pointer_5fblock',['pointer_block',['../structpointer__block.html',1,'']]],
   ['pointer_5fentry',['pointer_entry',['../structpointer__entry.html',1,'']]],

@@ -6,6 +6,7 @@ var searchData=
   ['v_5flist',['v_list',['../structtypval__T.html#a886659f986c150dab284f1d5ef64ee00',1,'typval_T']]],
   ['v_5flock',['v_lock',['../structtypval__T.html#a1da8dd2efdd15f2b78d71cf2b085bf44',1,'typval_T']]],
   ['v_5fnumber',['v_number',['../structtypval__T.html#aa8615bd53291928fc5adceff07d5e5bc',1,'typval_T::v_number()'],['../eval_8c.html#a24deba0837a73245cc0b413af22d7208',1,'v_number():&#160;eval.c']]],
+  ['v_5fpartial',['v_partial',['../structtypval__T.html#a357def79f46d08d1e0631fe1df3ede02',1,'typval_T']]],
   ['v_5fspecial',['v_special',['../structtypval__T.html#ac868de4dd1df2e46d4a5fdfee8d5bd62',1,'typval_T']]],
   ['v_5fstring',['v_string',['../structtypval__T.html#ad5403b6cf230c7f663901d46079b9ac3',1,'typval_T']]],
   ['v_5fthrowpoint',['v_throwpoint',['../eval_8c.html#ad83516bfbac6fa4e2bd884c85075fca7',1,'eval.c']]],
@@ -49,6 +50,7 @@ var searchData=
   ['var_5flist',['VAR_LIST',['../eval__defs_8h.html#a20dc844625408b8f19865275d22d4fa0a0d3c7284227bb22719180d8096217d6a',1,'eval_defs.h']]],
   ['var_5flocked',['VAR_LOCKED',['../eval__defs_8h.html#aa743b54dfa683455ad455eb20117e22da44ea00a6396b24bcd0e1ed1bc226a6d9',1,'eval_defs.h']]],
   ['var_5fnumber',['VAR_NUMBER',['../eval__defs_8h.html#a20dc844625408b8f19865275d22d4fa0ab52f7ef71ffc1d4c197a7422cedbaff2',1,'eval_defs.h']]],
+  ['var_5fpartial',['VAR_PARTIAL',['../eval__defs_8h.html#a20dc844625408b8f19865275d22d4fa0a2972867427c39b77c8e8a244be37c499',1,'eval_defs.h']]],
   ['var_5fredir_5fstart',['var_redir_start',['../eval_8c.html#a54c72d493c7650b417b737757e3b0fb2',1,'eval.c']]],
   ['var_5fredir_5fstop',['var_redir_stop',['../eval_8c.html#ae29c7273c15fae97266377f0daf217e6',1,'eval.c']]],
   ['var_5fredir_5fstr',['var_redir_str',['../eval_8c.html#a10da0be143c137ec3dc6ed0292b39ba6',1,'eval.c']]],
@@ -338,5 +340,5 @@ var searchData=
   ['vv_5fvim_5fdid_5fenter',['VV_VIM_DID_ENTER',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a2b1e9744452ed465355e3160b4a96517',1,'eval.h']]],
   ['vv_5fwarningmsg',['VV_WARNINGMSG',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a3987b6deb3d81a8c1d4b49c03bb3b367',1,'eval.h']]],
   ['vv_5fwindowid',['VV_WINDOWID',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800aecc5ae395766d257244952b84942149b',1,'eval.h']]],
-  ['vval',['vval',['../structtypval__T.html#a76759f8db9f78eaf13bf6844fafb9ac1',1,'typval_T']]]
+  ['vval',['vval',['../structtypval__T.html#afa9f950a390a05b809ef8b6a64f9b424',1,'typval_T']]]
 ];
