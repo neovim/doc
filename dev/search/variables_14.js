@@ -42,7 +42,6 @@ var searchData=
   ['title',['title',['../structprt__ps__resource__S.html#abf1a7cb15460ae4fd584bdb1b1df3ab6',1,'prt_ps_resource_S::title()'],['../eval_8c.html#a051e403214cb6872ad3fe4e50302a6ee',1,'title():&#160;eval.c']]],
   ['title_5farg',['title_arg',['../eval_8c.html#a53b70df5be865d8e4c6f098901799b39',1,'eval.c']]],
   ['tk',['tk',['../structterm__input.html#a8c4b1c3241003d2f3f506e6861c5069a',1,'term_input']]],
-  ['tk_5fti_5fhook_5ffn',['tk_ti_hook_fn',['../structterm__input.html#a8fbb5adc210f46ea6653a1df80bf41db',1,'term_input']]],
   ['tm',['tm',['../structmatch__T.html#acbe19a09886335d3db942f694225961e',1,'match_T']]],
   ['tn_5fdid_5ffilefind_5finit',['tn_did_filefind_init',['../structtagname__T.html#a2b4551a8e7e060aa926146e47488cab1',1,'tagname_T']]],
   ['tn_5fhf_5fidx',['tn_hf_idx',['../structtagname__T.html#a28ee7898e960286c754cb9149cd4f6be',1,'tagname_T']]],
