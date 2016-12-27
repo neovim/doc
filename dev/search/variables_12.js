@@ -48,6 +48,7 @@ var searchData=
   ['ret_5fbuf',['ret_buf',['../encode_8c.html#a4d3fd4e56430cfcecae97aa4ec01088c',1,'encode.c']]],
   ['ret_5flen',['ret_len',['../encode_8c.html#aaafe8c2db6afbf98d6f76bb4ccecf049',1,'encode.c']]],
   ['rettv',['rettv',['../structfunccall__S.html#a9fb20a0b0dbcddd5f93d7be7e19d67b8',1,'funccall_S']]],
+  ['return',['return',['../eval_8c.html#a9717e7bbecb906637e86cef6da3d83c2',1,'eval.c']]],
   ['returned',['returned',['../structfunccall__S.html#acd1553758ad1dc65721cccdb29c1ad24',1,'funccall_S::returned()'],['../structChannelCallFrame.html#a7327f557b0e29ef298f1e4e40b8c422e',1,'ChannelCallFrame::returned()']]],
   ['retval',['retval',['../structcmdarg__S.html#a17a9d4e34d1059f4839dc9ddf80cae47',1,'cmdarg_S']]],
   ['reverse',['reverse',['../structHlAttrs.html#a98d467d2ef24cdccd6e060560eed64f2',1,'HlAttrs']]],

@@ -42,6 +42,7 @@ var searchData=
   ['b_5fflags',['b_flags',['../structfile__buffer.html#a82e1f497c5a51eff88502f03dd1cd5c3',1,'file_buffer']]],
   ['b_5ffname',['b_fname',['../structfile__buffer.html#a34a7c5a6d702c7ce0181584242976f3e',1,'file_buffer']]],
   ['b_5ffnum',['b_fnum',['../buffer__defs_8h.html#a8852d6726e5ce81c25fa211ccf85d1dd',1,'buffer_defs.h']]],
+  ['b_5fhas_5fqf_5fentry',['b_has_qf_entry',['../structfile__buffer.html#a66c6626449af9d0a99764daf1996a6a5',1,'file_buffer']]],
   ['b_5fhelp',['b_help',['../structfile__buffer.html#a7aea3240817be4e49c8389ae28d6b2ff',1,'file_buffer']]],
   ['b_5fim_5fptr',['b_im_ptr',['../structcommand__line__state.html#ab7a59bda8c5f851324369df56c7c8199',1,'command_line_state']]],
   ['b_5fimode_5flast',['B_IMODE_LAST',['../buffer__defs_8h.html#a82658ac0ec0de060b0669d47019ceb88',1,'buffer_defs.h']]],

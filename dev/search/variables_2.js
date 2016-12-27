@@ -31,6 +31,7 @@ var searchData=
   ['b_5ffirst_5fabbr',['b_first_abbr',['../structfile__buffer.html#a2000440ea2200acb618cb27d2133982d',1,'file_buffer']]],
   ['b_5fflags',['b_flags',['../structfile__buffer.html#a82e1f497c5a51eff88502f03dd1cd5c3',1,'file_buffer']]],
   ['b_5ffname',['b_fname',['../structfile__buffer.html#a34a7c5a6d702c7ce0181584242976f3e',1,'file_buffer']]],
+  ['b_5fhas_5fqf_5fentry',['b_has_qf_entry',['../structfile__buffer.html#a66c6626449af9d0a99764daf1996a6a5',1,'file_buffer']]],
   ['b_5fhelp',['b_help',['../structfile__buffer.html#a7aea3240817be4e49c8389ae28d6b2ff',1,'file_buffer']]],
   ['b_5fim_5fptr',['b_im_ptr',['../structcommand__line__state.html#ab7a59bda8c5f851324369df56c7c8199',1,'command_line_state']]],
   ['b_5find_5fcase',['b_ind_case',['../structfile__buffer.html#a0ac0f9f123ac1b6da3cec8bb053a7e4f',1,'file_buffer']]],

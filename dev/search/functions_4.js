@@ -62,6 +62,7 @@ var searchData=
   ['ex_5fbuffer_5fall',['ex_buffer_all',['../buffer_8c.html#a9b859eabd6705915369b806608a87c81',1,'buffer.c']]],
   ['ex_5fcall',['ex_call',['../eval_8c.html#a79cf09e247b2b2ab53002efe5a248e87',1,'eval.c']]],
   ['ex_5fcatch',['ex_catch',['../ex__eval_8c.html#af52e705a355bf408af131797f9d07641',1,'ex_eval.c']]],
+  ['ex_5fcbottom',['ex_cbottom',['../quickfix_8c.html#a36fea21077591df9ea970d8dd294431a',1,'quickfix.c']]],
   ['ex_5fcbuffer',['ex_cbuffer',['../quickfix_8c.html#ada258c3a3c58e2a127ab5ebbf1a68a6b',1,'quickfix.c']]],
   ['ex_5fcc',['ex_cc',['../quickfix_8c.html#a0af292c2355a53f8da1eb1aaa562811b',1,'quickfix.c']]],
   ['ex_5fcclose',['ex_cclose',['../quickfix_8c.html#a3d3b84a01251fab0dfeb72cee9430b61',1,'quickfix.c']]],

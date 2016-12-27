@@ -50,7 +50,7 @@ var searchData=
   ['server_5fstop',['server_stop',['../server_8c.html#ac6df478c3d9de74432a5be29d5e575ce',1,'server.c']]],
   ['server_5fteardown',['server_teardown',['../server_8c.html#a44b32b6967c04c49bdd07c799f7837af',1,'server.c']]],
   ['set_5fbuflisted',['set_buflisted',['../buffer_8c.html#a1b244697b0ecc8cc2891ea43477c3092',1,'buffer.c']]],
-  ['set_5fcmd_5fcontext',['set_cmd_context',['../ex__getln_8c.html#a8f1f6d6608e36a5bae08df126ce6eb37',1,'ex_getln.c']]],
+  ['set_5fcmd_5fcontext',['set_cmd_context',['../ex__getln_8c.html#a5811510048620e2270e3a550eb2661c2',1,'ex_getln.c']]],
   ['set_5fcmdarg',['set_cmdarg',['../eval_8c.html#a805f02bc4da6811aae6a1ea928a75282',1,'eval.c']]],
   ['set_5fcmdline_5fpos',['set_cmdline_pos',['../ex__getln_8c.html#acefd057fc451f889d7f70301fcd25507',1,'ex_getln.c']]],
   ['set_5fcompletion',['set_completion',['../edit_8c.html#a1fc4de4883f10dfbc86059a85929bebe',1,'edit.c']]],
