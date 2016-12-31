@@ -184,7 +184,7 @@ var searchData=
   ['find_5fbuffer_5fby_5fhandle',['find_buffer_by_handle',['../api_2private_2helpers_8c.html#a8f1395b8612de1edc9a0ac55dcdfe2dd',1,'helpers.c']]],
   ['find_5fcmdline_5fvar',['find_cmdline_var',['../ex__docmd_8c.html#a05d6375852a284822997920b3778bee7',1,'ex_docmd.c']]],
   ['find_5fcompound',['FIND_COMPOUND',['../spell_8c.html#aca07ceb3d8aa59091ace399006e6c018',1,'spell.c']]],
-  ['find_5fdecl',['find_decl',['../normal_8c.html#a122c8bf6771ae8c835428b26134fd79e',1,'normal.c']]],
+  ['find_5fdecl',['find_decl',['../normal_8c.html#afcb4af87e8e9c0007fb3c4675df9c489',1,'normal.c']]],
   ['find_5fdefine',['FIND_DEFINE',['../search_8h.html#a846415f5dc8f188b2c8783c4a263d0d9',1,'search.h']]],
   ['find_5fdirectory_5fin_5fpath',['find_directory_in_path',['../file__search_8c.html#aab3ba54b620adfcbad9add365ad1d180',1,'file_search.c']]],
   ['find_5feval',['FIND_EVAL',['../normal_8h.html#a5c464d801fdf3b1835f3aac6b01ed1dc',1,'normal.h']]],
