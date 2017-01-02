@@ -166,6 +166,7 @@ var searchData=
   ['wo_5frnu',['wo_rnu',['../structwinopt__T.html#a12fd0d145f116bcfd82025b30f2de889',1,'winopt_T']]],
   ['wo_5fscb',['wo_scb',['../structwinopt__T.html#a9db0b48fedd38e287a10c5367cb3a6f9',1,'winopt_T']]],
   ['wo_5fscb_5fsave',['wo_scb_save',['../structwinopt__T.html#afb5d6a1da45e912f913182a8b046c1f3',1,'winopt_T']]],
+  ['wo_5fscl',['wo_scl',['../structwinopt__T.html#a20c951831e4930eed318728577cd7965',1,'winopt_T']]],
   ['wo_5fscr',['wo_scr',['../structwinopt__T.html#a2481faea3648f04b4161c5b252a4cadd',1,'winopt_T']]],
   ['wo_5fscriptid',['wo_scriptID',['../structwinopt__T.html#aa6aa0fe00f6a7ceb1c3b5f8fe0ce0c0d',1,'winopt_T']]],
   ['wo_5fspell',['wo_spell',['../structwinopt__T.html#a9bea151d88b0514d44dac9d6cb322365',1,'winopt_T']]],

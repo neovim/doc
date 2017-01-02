@@ -30,6 +30,7 @@ var searchData=
   ['wv_5frlc',['WV_RLC',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a42b67d26f15f07d3592361cd0a5f7310',1,'option_defs.h']]],
   ['wv_5frnu',['WV_RNU',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a968c157ec5b0eecf03827319f9345825',1,'option_defs.h']]],
   ['wv_5fscbind',['WV_SCBIND',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a1a48088716029e463bdd47e6e6956bea',1,'option_defs.h']]],
+  ['wv_5fscl',['WV_SCL',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a5ec584c4013853784dcf2f6c0faa10b7',1,'option_defs.h']]],
   ['wv_5fscroll',['WV_SCROLL',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a54b50398d4dcf53ba1c7743e217b5f68',1,'option_defs.h']]],
   ['wv_5fspell',['WV_SPELL',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a10fc53cb549ba4eae7e96946bfef70d6',1,'option_defs.h']]],
   ['wv_5fstl',['WV_STL',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a53edd9e982ed1e73defdbff14173f475',1,'option_defs.h']]],

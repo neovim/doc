@@ -157,6 +157,7 @@ var searchData=
   ['signal_5fwatcher_5finit',['signal_watcher_init',['../event_2signal_8c.html#a3d2d3f569b873b0d7a7e29f04b48bcf3',1,'signal.c']]],
   ['signal_5fwatcher_5fstart',['signal_watcher_start',['../event_2signal_8c.html#acf32c0a2e1fa28c24ccb9688fde7c139',1,'signal.c']]],
   ['signal_5fwatcher_5fstop',['signal_watcher_stop',['../event_2signal_8c.html#a21a3d263c8333d6e3a20dddab25d22a0',1,'signal.c']]],
+  ['signcolumn_5fon',['signcolumn_on',['../option_8c.html#a32ac5faf6b806f9cba474840b7416a4a',1,'option.c']]],
   ['simplify_5ffilename',['simplify_filename',['../path_8c.html#a7eee11b4544aafc357269c6a6d7213f0',1,'path.c']]],
   ['simplify_5fkey',['simplify_key',['../keymap_8c.html#aac99dfc9965e8bdc644c5c523e63d7ff',1,'keymap.c']]],
   ['skip_5fexpr',['skip_expr',['../eval_8c.html#a96c524b2b64dbd400c98797ff51a8919',1,'eval.c']]],

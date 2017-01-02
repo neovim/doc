@@ -27,6 +27,7 @@ var searchData=
   ['dialog_5fchanged',['dialog_changed',['../ex__cmds2_8c.html#ad13cbc5e86662492a4025a5a2924c663',1,'ex_cmds2.c']]],
   ['dialog_5fmsg',['dialog_msg',['../ex__docmd_8c.html#acd3ff432bddbf323926f4f2b6c1f168d',1,'ex_docmd.c']]],
   ['dict_5fadd',['dict_add',['../eval_8c.html#a4430ca5dc9f54759e3f09347415958c7',1,'eval.c']]],
+  ['dict_5fadd_5fdict',['dict_add_dict',['../eval_8c.html#a6fb74c5549b12fa2c36f8273a4bb3f75',1,'eval.c']]],
   ['dict_5fadd_5flist',['dict_add_list',['../eval_8c.html#a62154990f0c2b7f2fb9262bd0da35bca',1,'eval.c']]],
   ['dict_5fadd_5fnr_5fstr',['dict_add_nr_str',['../eval_8c.html#af3914623ffacc384299f35d766841b6b',1,'eval.c']]],
   ['dict_5falloc',['dict_alloc',['../eval_8c.html#a9566ecec0bde76a2d68ff23d90d08771',1,'eval.c']]],

@@ -38,6 +38,7 @@ var searchData=
   ['w_5fp_5frnu',['w_p_rnu',['../buffer__defs_8h.html#adee157ddf25bd76d7133c745ffd5df46',1,'buffer_defs.h']]],
   ['w_5fp_5fscb',['w_p_scb',['../buffer__defs_8h.html#a136d65d982f435284aeb57309a511963',1,'buffer_defs.h']]],
   ['w_5fp_5fscb_5fsave',['w_p_scb_save',['../buffer__defs_8h.html#a2764658ab53fa47d229a26e93320e30d',1,'buffer_defs.h']]],
+  ['w_5fp_5fscl',['w_p_scl',['../buffer__defs_8h.html#a2558d2c8750b44139d820af16c8a30dc',1,'buffer_defs.h']]],
   ['w_5fp_5fscr',['w_p_scr',['../buffer__defs_8h.html#a1f17cec46131c7289063079a0aea8f85',1,'buffer_defs.h']]],
   ['w_5fp_5fscriptid',['w_p_scriptID',['../buffer__defs_8h.html#a9907123547c2a88be2a50155e690a825',1,'buffer_defs.h']]],
   ['w_5fp_5fspell',['w_p_spell',['../buffer__defs_8h.html#aba41dd40ec78764c4cde96f1ed8e5374',1,'buffer_defs.h']]],

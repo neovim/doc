@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['b0_5fdirty',['B0_DIRTY',['../memline_8c.html#aef48b3fc0252f461c7bce9fb717fc542',1,'B0_DIRTY():&#160;memline.c'],['../memline_8c.html#a31f731b7125114308c0b2e85b10e0bb0',1,'b0_dirty():&#160;memline.c']]],
+  ['b0_5fdirty',['b0_dirty',['../memline_8c.html#a31f731b7125114308c0b2e85b10e0bb0',1,'b0_dirty():&#160;memline.c'],['../memline_8c.html#aef48b3fc0252f461c7bce9fb717fc542',1,'B0_DIRTY():&#160;memline.c']]],
   ['b0_5fff_5fmask',['B0_FF_MASK',['../memline_8c.html#ab299d2ddb4d4be7565b25e8a197e63bb',1,'memline.c']]],
   ['b0_5fflags',['b0_flags',['../memline_8c.html#a035de78041927f925e59c97913c822bf',1,'memline.c']]],
   ['b0_5ffname_5fsize_5fcrypt',['B0_FNAME_SIZE_CRYPT',['../memline_8c.html#a4ecf812828065a7ac0dccbe3e4661de9',1,'memline.c']]],

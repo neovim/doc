@@ -29,6 +29,7 @@ var searchData=
   ['win_5fgotoid',['win_gotoid',['../window_8c.html#a2c1870b171e0e3a889091e8824e8f8de',1,'window.c']]],
   ['win_5fid2tabwin',['win_id2tabwin',['../window_8c.html#a66ea2f99c55d15195e5b0726e7db09e3',1,'window.c']]],
   ['win_5fid2win',['win_id2win',['../window_8c.html#a1e0cc8ab9d793408a14db618251f3c7c',1,'window.c']]],
+  ['win_5fid2wp',['win_id2wp',['../window_8c.html#a6697572f399f729f15e03ac012c78bbc',1,'window.c']]],
   ['win_5finit_5fempty',['win_init_empty',['../window_8c.html#a0df9ea2f78943705bf8bcccbfcec8688',1,'window.c']]],
   ['win_5finit_5fsize',['win_init_size',['../window_8c.html#ab2da33e07717293d0f3dc79e17d7c815',1,'window.c']]],
   ['win_5fins_5flines',['win_ins_lines',['../screen_8c.html#acdb7ee0a4db4f545fe4ab46a99c8ed16',1,'screen.c']]],
