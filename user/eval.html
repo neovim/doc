@@ -39,7 +39,7 @@
 <HR>
 <PRE>
 
-*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2016 Jun 04
+*<A NAME="eval.txt"></A><B>eval.txt</B>*	For Vim version 7.4.  Last change: 2016 Aug 27
 
 
 		  VIM REFERENCE MANUAL	  by <A HREF="intro.html#Bram">Bram</A> <A HREF="intro.html#Moolenaar">Moolenaar</A>
@@ -2151,6 +2151,7 @@ garbagecollect([{atexit}])	none	free memory, breaking cyclic references
 get({list}, {idx} [, {def}])	any	get item {idx} from {list} or {def}
 get({dict}, {key} [, {def}])	any	get item {key} from {dict} or {def}
 get({func}, {what})		any	get property of funcref/partial {func}
+getbufinfo( [{expr}])		<A HREF="#List">List</A>  	information about <A HREF="windows.html#buffers">buffers</A>
 getbufline({expr}, {lnum} [, {end}])
 				<A HREF="#List">List</A>	lines {lnum} to {end} of buffer {expr}
 getbufvar({expr}, {varname} [, {def}])
@@ -2181,10 +2182,12 @@ getpos({expr})			<A HREF="#List">List</A>	position of cursor, <A HREF="motion.ht
 getreg([{regname} [, 1 [, {list}]]])
 				<A HREF="#String">String</A> or <A HREF="#List">List</A>   contents of <A HREF="sponsor.html#register">register</A>
 getregtype([{regname}])	<A HREF="#String">String</A>	type of <A HREF="sponsor.html#register">register</A>
+gettabinfo( [{expr}])		<A HREF="#List">List</A>  	<A HREF="#list">list</A> of <A HREF="intro.html#tab">tab</A> pages
 gettabvar({nr}, {varname} [, {def}])
 				any	variable {varname} in <A HREF="intro.html#tab">tab</A> {nr} or {def}
 gettabwinvar({tabnr}, {winnr}, {name} [, {def}])
 				any	{name} in {winnr} in <A HREF="intro.html#tab">tab</A> page {tabnr}
+getwininfo( [{winid}])		<A HREF="#List">List</A>  	<A HREF="#list">list</A> of <A HREF="windows.html#windows">windows</A>
 <A HREF="#getwinposx()">getwinposx()</A>			<A HREF="#Number">Number</A>	X coord in pixels of <A HREF="gui.html#GUI">GUI</A> Vim <A HREF="windows.html#window">window</A>
 <A HREF="#getwinposy()">getwinposy()</A>			<A HREF="#Number">Number</A>	<A HREF="change.html#Y">Y</A> coord in pixels of <A HREF="gui.html#GUI">GUI</A> Vim <A HREF="windows.html#window">window</A>
 getwinvar({nr}, {varname} [, {def}])
@@ -3879,6 +3882,61 @@ get({func}, {what})
 			'args'	The <A HREF="#list">list</A> with arguments
 
 
+							*<A NAME="getbufinfo()"></A><B>getbufinfo()</B>*
+getbufinfo([{expr}])
+getbufinfo([{dict}])
+		Get information about <A HREF="windows.html#buffers">buffers</A> <A HREF="motion.html#as">as</A> a <A HREF="#List">List</A> of <A HREF="#Dictionaries">Dictionaries</A>.
+
+		Without an argument information about all the <A HREF="windows.html#buffers">buffers</A> is
+		returned.
+
+		When the argument is a <A HREF="#Dictionary">Dictionary</A> only the <A HREF="windows.html#buffers">buffers</A> matching
+		the specified criteria are returned.  The following keys can
+		be specified in {dict}:
+			buflisted	include only listed <A HREF="windows.html#buffers">buffers</A>.
+			bufloaded	include only loaded <A HREF="windows.html#buffers">buffers</A>.
+
+		Otherwise, {expr} specifies a particular buffer to return
+		information for.  For the use of {expr}, see |<A HREF="#bufname()">bufname()</A>|
+		above.  If the buffer is found the returned <A HREF="#List">List</A> has one item.
+		Otherwise the result is an empty <A HREF="#list">list</A>.
+
+		Each returned <A HREF="#List">List</A> item is a dictionary with the following
+		entries:
+			bufnr		buffer number.
+			changed		TRUE if the buffer is modified.
+			changedtick	number of changes made to the buffer.
+			hidden		TRUE if the buffer is hidden.
+			listed		TRUE if the buffer is listed.
+			lnum		current line number in buffer.
+			loaded		TRUE if the buffer is loaded.
+			name		full path to the file in the buffer.
+			<A HREF="sign.html#signs">signs</A>		<A HREF="#list">list</A> of <A HREF="sign.html#signs">signs</A> placed in the buffer.
+					Each <A HREF="#list">list</A> item is a dictionary with
+					the following fields:
+					    id	  sign identifier
+					    lnum  line number
+					    name  sign name
+			<A HREF="#variables">variables</A>	a reference to the dictionary with
+					buffer-local <A HREF="#variables">variables</A>.
+			<A HREF="windows.html#windows">windows</A>		<A HREF="#list">list</A> of |<A HREF="intro.html#window-ID">window-ID</A>|<A HREF="change.html#s">s</A> that display this
+					buffer
+
+		Examples:
+<B>			for buf in getbufinfo()</B>
+<B>			    echo buf.name</B>
+<B>			endfor</B>
+<B>			for buf in getbufinfo({'buflisted':1})</B>
+<B>			    if buf.changed</B>
+<B>				....</B>
+<B>			    endif</B>
+<B>			endfor</B>
+ 
+		To get buffer-local <A HREF="options.html#options">options</A> use:
+<B>			getbufvar({bufnr}, '&amp;')</B>
+
+ 
+
 							*<A NAME="getbufline()"></A><B>getbufline()</B>*
 getbufline({expr}, {lnum} [, {end}])
 		Return a |<A HREF="#List">List</A>| with the lines starting from {lnum} to {end}
@@ -3911,6 +3969,10 @@ getbufvar({expr}, {varname} [, {def}])				*<A NAME="getbufvar()"></A><B>getbufva
 		must be used.
 		When {varname} is empty returns a dictionary with all the
 		buffer-local <A HREF="#variables">variables</A>.
+		When {varname} is equal to &quot;<A HREF="change.html#&amp;">&amp;</A>&quot; returns a dictionary with all
+		the buffer-local <A HREF="options.html#options">options</A>.
+		Otherwise, when {varname} starts with &quot;<A HREF="change.html#&amp;">&amp;</A>&quot; returns the value of
+		a buffer-local option.
 		This also works for a global or buffer-local option, but <A HREF="motion.html#it">it</A>
 		doesn't work for a global variable, window-local variable or
 		window-local option.
@@ -4361,6 +4423,20 @@ getregtype([{regname}])					*<A NAME="getregtype()"></A><B>getregtype()</B>*
 		If {regname} is not specified, |<A HREF="#v:register">v:register</A>| is used.
 
 
+gettabinfo([{arg}])					*<A NAME="gettabinfo()"></A><B>gettabinfo()</B>*
+		If {arg} is not specified, then information about all the <A HREF="intro.html#tab">tab</A>
+		pages is returned <A HREF="motion.html#as">as</A> a <A HREF="#List">List</A>. Each <A HREF="#List">List</A> item is a <A HREF="#Dictionary">Dictionary</A>.
+		Otherwise, {arg} specifies the <A HREF="intro.html#tab">tab</A> page number and information
+		about that one is returned.  If the <A HREF="intro.html#tab">tab</A> page does not exist an
+		empty <A HREF="#List">List</A> is returned.
+
+		Each <A HREF="#List">List</A> item is a <A HREF="#Dictionary">Dictionary</A> with the following entries:
+			nr		<A HREF="intro.html#tab">tab</A> page number.
+			<A HREF="#variables">variables</A>	a reference to the dictionary with
+					tabpage-local <A HREF="#variables">variables</A>
+			<A HREF="windows.html#windows">windows</A>		<A HREF="#List">List</A> of <A HREF="windows.html#window">window</A> IDs in the <A HREF="tagsrch.html#tag">tag</A> page.
+
+
 gettabvar({tabnr}, {varname} [, {def}])				*<A NAME="gettabvar()"></A><B>gettabvar()</B>*
 		Get the value of a tab-local variable {varname} in <A HREF="intro.html#tab">tab</A> page
 		{tabnr}. |<A HREF="#t:var">t:var</A>|
@@ -4375,10 +4451,12 @@ gettabvar({tabnr}, {varname} [, {def}])				*<A NAME="gettabvar()"></A><B>gettabv
 gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*<A NAME="gettabwinvar()"></A><B>gettabwinvar()</B>*
 		Get the value of window-local variable {varname} in <A HREF="windows.html#window">window</A>
 		{winnr} in <A HREF="intro.html#tab">tab</A> page {tabnr}.
-		When {varname} starts with &quot;<A HREF="change.html#&amp;">&amp;</A>&quot; get the value of a window-local
-		option.
 		When {varname} is empty a dictionary with all window-local
 		<A HREF="#variables">variables</A> is returned.
+		When {varname} is equal to &quot;<A HREF="change.html#&amp;">&amp;</A>&quot; get the values of all
+		window-local <A HREF="options.html#options">options</A> in a <A HREF="#Dictionary">Dictionary</A>.
+		Otherwise, when {varname} starts with &quot;<A HREF="change.html#&amp;">&amp;</A>&quot; get the value of a
+		window-local option.
 		Note that {varname} must be the name without &quot;<A HREF="#w:">w:</A>&quot;.
 		Tabs are numbered starting with one.  For the current <A HREF="tabpage.html#tabpage">tabpage</A>
 		use |<A HREF="#getwinvar()">getwinvar()</A>|.
@@ -4404,6 +4482,32 @@ gettabwinvar({tabnr}, {winnr}, {varname} [, {def}])		*<A NAME="gettabwinvar()"><
 <A HREF="#getwinposy()">getwinposy()</A>	The result is a <A HREF="#Number">Number</A>, which is the <A HREF="change.html#Y">Y</A> coordinate in pixels of
 		the top of the <A HREF="gui.html#GUI">GUI</A> Vim <A HREF="windows.html#window">window</A>.	The result will be -1 if the
 		information is not available.
+
+
+getwininfo([{winid}])					*<A NAME="getwininfo()"></A><B>getwininfo()</B>*
+		Returns information about <A HREF="windows.html#windows">windows</A> <A HREF="motion.html#as">as</A> a <A HREF="#List">List</A> with <A HREF="#Dictionaries">Dictionaries</A>.
+
+		If {winid} is given Information about the <A HREF="windows.html#window">window</A> with that ID
+		is returned.  If the <A HREF="windows.html#window">window</A> does not exist the result is an
+		empty <A HREF="#list">list</A>.
+
+		Without an information about all the <A HREF="windows.html#windows">windows</A> in all the <A HREF="intro.html#tab">tab</A>
+		pages is returned.
+
+		Each <A HREF="#List">List</A> item is a <A HREF="#Dictionary">Dictionary</A> with the following entries:
+			bufnum		number of buffer in the <A HREF="windows.html#window">window</A>
+			height		<A HREF="windows.html#window">window</A> height
+			loclist		1 if showing a location <A HREF="#list">list</A>
+			nr		<A HREF="windows.html#window">window</A> number
+			<A HREF="quickfix.html#quickfix">quickfix</A>	1 if <A HREF="quickfix.html#quickfix">quickfix</A> or location <A HREF="#list">list</A> <A HREF="windows.html#window">window</A>
+			tpnr		<A HREF="intro.html#tab">tab</A> page number
+			<A HREF="#variables">variables</A>	a reference to the dictionary with
+					window-local <A HREF="#variables">variables</A>
+			width		<A HREF="windows.html#window">window</A> width
+			winid		<A HREF="windows.html#window">window</A> ID
+
+		To obtain all window-local <A HREF="#variables">variables</A> use:
+<B>			gettabwinvar({tabnr}, {winnr}, '&amp;')</B>
 
 
 getwinvar({winnr}, {varname} [, {def}])				*<A NAME="getwinvar()"></A><B>getwinvar()</B>*
@@ -5856,6 +5960,16 @@ printf({fmt}, {expr1} <A HREF="#...">...</A>)				*<A NAME="printf()"></A><B>prin
 			numeric field; if the result of a conversion is wider
 			than the field width, the field is expanded to contain
 			the conversion result.
+			The '<A HREF="motion.html#h">h</A>' modifier indicates the argument is 16 bits.
+			The '<A HREF="motion.html#l">l</A>' modifier indicates the argument is 32 bits.
+			The '<A HREF="motion.html#L">L</A>' modifier indicates the argument is 64 bits.
+			Generally, these modifiers are not useful. They are
+			ignored when type is known from the argument.
+
+		<A HREF="insert.html#i">i</A>	alias for <A HREF="change.html#d">d</A>
+		<A HREF="change.html#D">D</A>	alias for ld
+		<A HREF="undo.html#U">U</A>	alias for lu
+		<A HREF="insert.html#O">O</A>	alias for lo
 
 
 							*<A NAME="printf-c"></A><B>printf-c</B>*
@@ -5876,7 +5990,7 @@ printf({fmt}, {expr1} <A HREF="#...">...</A>)				*<A NAME="printf()"></A><B>prin
 
 
 							*<A NAME="printf-f"></A><B>printf-f</B>* *<A NAME="E807"></A><B>E807</B>*
-		<A HREF="motion.html#f">f</A>	The <A HREF="#Float">Float</A> argument is converted into a <A HREF="#string">string</A> of the 
+		<A HREF="motion.html#f">f</A> <A HREF="motion.html#F">F</A>	The <A HREF="#Float">Float</A> argument is converted into a <A HREF="#string">string</A> of the 
 			form 123.456.  The precision specifies the number of
 			digits after the decimal point.  When the precision is
 			zero the decimal point is omitted.  When the precision
@@ -10488,7 +10602,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Sun Jan  1 20:07:46 UTC 2017 from <a href="https://github.com/neovim/neovim/commit/57ce8b56488a781088cb503f0da723f59e2f9554"><code>57ce8b5</code></a>.
+        Generated Mon Jan  2 20:08:01 UTC 2017 from <a href="https://github.com/neovim/neovim/commit/efe1476d4293170496f0e933a4d3c955f0559b03"><code>efe1476</code></a>.
       </div>
     </footer>
   </body>
