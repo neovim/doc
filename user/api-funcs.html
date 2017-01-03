@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>Vim documentation: api-funcs</title>
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.0/normalize.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="/css/main.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container">
+        <nav class="navbar">
+          <div class="container-fluid">
+            <div class="navbar-header">
+
+              <a href="/" class="navbar-brand">
+                <img src="/images/logo@2x.png" id="navbar-logo" alt="Neovim">
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container">
+      <h1>Vim documentation: api-funcs</h1>
+<A NAME="top"></A>
+<A HREF="index.html">main help file</A>
+
+<HR>
+<PRE>
+
+*<A NAME="api-funcs.txt"></A><B>api-funcs.txt</B>*         Neovim <A HREF="api.html#API">API</A> Function Reference                   {Nvim}
+
+Note: This documentation is generated from Neovim's <A HREF="api.html#API">API</A> source code.
+
+<A HREF="quickref.html#Contents">Contents</A>:
+
+1. Global Functions   |<A HREF="#api-global">api-global</A>|
+2. Buffer Functions   |<A HREF="#api-buffer">api-buffer</A>|
+3. Window Functions   |<A HREF="#api-window">api-window</A>|
+4. Tabpage Functions  |<A HREF="#api-tabpage">api-tabpage</A>|
+5. UI Functions       |<A HREF="#api-ui">api-ui</A>|
+
+==============================================================================
+
+1. Global Functions                                               *<A NAME="api-global"></A><B>api-global</B>*
+
+
+nvim_command({command})                                       *<A NAME="nvim_command()"></A><B>nvim_command()</B>*
+                Executes an ex-command. On VimL error: Returns the VimL error;
+                <A HREF="eval.html#v:errmsg">v:errmsg</A> is not updated.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {command}  Ex-command <A HREF="eval.html#string">string</A>
+
+
+nvim_feedkeys({keys}, {mode}, {escape_csi})                  *<A NAME="nvim_feedkeys()"></A><B>nvim_feedkeys()</B>*
+                Passes input keys to Nvim. On VimL error: Does not fail, but
+                updates <A HREF="eval.html#v:errmsg">v:errmsg</A>.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {keys}        to be typed
+                    {mode}        <A HREF="map.html#mapping">mapping</A> <A HREF="options.html#options">options</A>
+                    {escape_csi}  If true, <A HREF="intro.html#escape">escape</A> K_SPECIAL/CSI bytes in
+                                  `keys`
+
+
+nvim_input({keys})                                              *<A NAME="nvim_input()"></A><B>nvim_input()</B>*
+                Passes keys to Nvim <A HREF="motion.html#as">as</A> raw user-input. On VimL error: Does not
+                fail, but updates <A HREF="eval.html#v:errmsg">v:errmsg</A>.
+
+                Unlike `nvim_feedkeys`, this uses a lower-level input buffer
+                and the call is not deferred. This is the most reliable way to
+                emulate real user input.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {keys}  to be typed
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    <A HREF="eval.html#Number">Number</A> of bytes actually written (can be fewer than
+                    requested if the buffer becomes full).
+
+
+                                                    *<A NAME="nvim_replace_termcodes()"></A><B>nvim_replace_termcodes()</B>*
+nvim_replace_termcodes({str}, {from_part}, {do_lt}, {special})
+                Replaces any terminal codes with the internal representation
+
+
+nvim_command_output({str})                             *<A NAME="nvim_command_output()"></A><B>nvim_command_output()</B>*
+                TODO: Documentation
+
+
+nvim_eval({expr})                                                *<A NAME="nvim_eval()"></A><B>nvim_eval()</B>*
+                Evaluates a VimL <A HREF="eval.html#expression">expression</A> (:help <A HREF="eval.html#expression">expression</A>). <A HREF="eval.html#Dictionaries">Dictionaries</A>
+                and <A HREF="eval.html#Lists">Lists</A> are recursively expanded. On VimL error: Returns a
+                generic error; <A HREF="eval.html#v:errmsg">v:errmsg</A> is not updated.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {expr}  VimL <A HREF="eval.html#expression">expression</A> <A HREF="eval.html#string">string</A>
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Evaluation result or expanded object
+
+
+nvim_call_function({fname}, {args})                     *<A NAME="nvim_call_function()"></A><B>nvim_call_function()</B>*
+                Calls a VimL function with the given arguments. On VimL error:
+                Returns a generic error; <A HREF="eval.html#v:errmsg">v:errmsg</A> is not updated.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {fname}  Function to call
+                    {args}   Function arguments packed in an Array
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Result of the function call
+
+
+nvim_strwidth({str})                                         *<A NAME="nvim_strwidth()"></A><B>nvim_strwidth()</B>*
+                Calculates the number of display cells occupied by `text`.
+                <A HREF="motion.html#&lt;Tab&gt;">&lt;Tab&gt;</A> counts <A HREF="motion.html#as">as</A> one cell.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {text}  Some text
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    <A HREF="eval.html#Number">Number</A> of cells
+
+
+<A HREF="#nvim_list_runtime_paths()">nvim_list_runtime_paths()</A>                          *<A NAME="nvim_list_runtime_paths()"></A><B>nvim_list_runtime_paths()</B>*
+                Gets the paths contained in <A HREF="options.html#'runtimepath'">'runtimepath'</A>.
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    <A HREF="eval.html#List">List</A> of paths
+
+
+nvim_set_current_dir({dir})                           *<A NAME="nvim_set_current_dir()"></A><B>nvim_set_current_dir()</B>*
+                Changes the global working directory.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {dir}  Directory path
+
+
+<A HREF="#nvim_get_current_line()">nvim_get_current_line()</A>                              *<A NAME="nvim_get_current_line()"></A><B>nvim_get_current_line()</B>*
+                Gets the current line
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Current line <A HREF="eval.html#string">string</A>
+
+
+nvim_set_current_line({line})                        *<A NAME="nvim_set_current_line()"></A><B>nvim_set_current_line()</B>*
+                Sets the current line
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {line}  Line contents
+
+
+<A HREF="#nvim_del_current_line()">nvim_del_current_line()</A>                              *<A NAME="nvim_del_current_line()"></A><B>nvim_del_current_line()</B>*
+                Deletes the current line
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+
+
+nvim_get_var({name})                                          *<A NAME="nvim_get_var()"></A><B>nvim_get_var()</B>*
+                Gets a global (g:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {name}  Variable name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Variable value
+
+
+nvim_set_var({name}, {value})                                 *<A NAME="nvim_set_var()"></A><B>nvim_set_var()</B>*
+                Sets a global (g:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {name}   Variable name
+                    {value}  Variable value
+
+
+nvim_del_var({name})                                          *<A NAME="nvim_del_var()"></A><B>nvim_del_var()</B>*
+                Removes a global (g:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {name}  Variable name
+
+
+nvim_get_vvar({name})                                        *<A NAME="nvim_get_vvar()"></A><B>nvim_get_vvar()</B>*
+                Gets a <A HREF="eval.html#v:">v:</A> variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {name}  Variable name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Variable value
+
+
+nvim_get_option({name})                                    *<A NAME="nvim_get_option()"></A><B>nvim_get_option()</B>*
+                Gets an option value <A HREF="eval.html#string">string</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {name}  Option name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Option value
+
+
+nvim_set_option({name}, {value})                           *<A NAME="nvim_set_option()"></A><B>nvim_set_option()</B>*
+                Sets an option value
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {name}   Option name
+                    {value}  New option value
+
+
+nvim_out_write({str})                                       *<A NAME="nvim_out_write()"></A><B>nvim_out_write()</B>*
+                Writes a message to vim output buffer
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {str}  Message
+
+
+nvim_err_write({str})                                       *<A NAME="nvim_err_write()"></A><B>nvim_err_write()</B>*
+                Writes a message to vim error buffer
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {str}  Message
+
+
+nvim_err_writeln({str})                                   *<A NAME="nvim_err_writeln()"></A><B>nvim_err_writeln()</B>*
+                Writes a message to vim error buffer. Appends a <A HREF="intro.html#linefeed">linefeed</A> to
+                ensure all contents are written.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {str}  Message
+
+
+<A HREF="#nvim_list_bufs()">nvim_list_bufs()</A>                                            *<A NAME="nvim_list_bufs()"></A><B>nvim_list_bufs()</B>*
+                Gets the current <A HREF="eval.html#list">list</A> of buffer handles
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    <A HREF="eval.html#List">List</A> of buffer handles
+
+
+<A HREF="#nvim_get_current_buf()">nvim_get_current_buf()</A>                                *<A NAME="nvim_get_current_buf()"></A><B>nvim_get_current_buf()</B>*
+                Gets the current buffer
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Buffer handle
+
+
+nvim_set_current_buf({buffer})                        *<A NAME="nvim_set_current_buf()"></A><B>nvim_set_current_buf()</B>*
+                Sets the current buffer
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {id}  Buffer handle
+
+
+<A HREF="#nvim_list_wins()">nvim_list_wins()</A>                                            *<A NAME="nvim_list_wins()"></A><B>nvim_list_wins()</B>*
+                Gets the current <A HREF="eval.html#list">list</A> of <A HREF="windows.html#window">window</A> handles
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    <A HREF="eval.html#List">List</A> of <A HREF="windows.html#window">window</A> handles
+
+
+<A HREF="#nvim_get_current_win()">nvim_get_current_win()</A>                                *<A NAME="nvim_get_current_win()"></A><B>nvim_get_current_win()</B>*
+                Gets the current <A HREF="windows.html#window">window</A>
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Window handle
+
+
+nvim_set_current_win({window})                        *<A NAME="nvim_set_current_win()"></A><B>nvim_set_current_win()</B>*
+                Sets the current <A HREF="windows.html#window">window</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {handle}  Window handle
+
+
+<A HREF="#nvim_list_tabpages()">nvim_list_tabpages()</A>                                    *<A NAME="nvim_list_tabpages()"></A><B>nvim_list_tabpages()</B>*
+                Gets the current <A HREF="eval.html#list">list</A> of <A HREF="tabpage.html#tabpage">tabpage</A> handles
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    <A HREF="eval.html#List">List</A> of <A HREF="tabpage.html#tabpage">tabpage</A> handles
+
+
+<A HREF="#nvim_get_current_tabpage()">nvim_get_current_tabpage()</A>                        *<A NAME="nvim_get_current_tabpage()"></A><B>nvim_get_current_tabpage()</B>*
+                Gets the current <A HREF="tabpage.html#tabpage">tabpage</A>
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Tabpage handle
+
+
+nvim_set_current_tabpage({tabpage})               *<A NAME="nvim_set_current_tabpage()"></A><B>nvim_set_current_tabpage()</B>*
+                Sets the current <A HREF="tabpage.html#tabpage">tabpage</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {handle}  Tabpage handle
+
+
+nvim_subscribe({event})                                     *<A NAME="nvim_subscribe()"></A><B>nvim_subscribe()</B>*
+                Subscribes to event broadcasts
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    <A HREF="autocmd.html#{event}">{event}</A>  Event type <A HREF="eval.html#string">string</A>
+
+
+nvim_unsubscribe({event})                                 *<A NAME="nvim_unsubscribe()"></A><B>nvim_unsubscribe()</B>*
+                Unsubscribes to event broadcasts
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    <A HREF="autocmd.html#{event}">{event}</A>  Event type <A HREF="eval.html#string">string</A>
+
+
+nvim_get_color_by_name({name})                      *<A NAME="nvim_get_color_by_name()"></A><B>nvim_get_color_by_name()</B>*
+                TODO: Documentation
+
+
+<A HREF="#nvim_get_color_map()">nvim_get_color_map()</A>                                    *<A NAME="nvim_get_color_map()"></A><B>nvim_get_color_map()</B>*
+                TODO: Documentation
+
+
+<A HREF="#nvim_get_api_info()">nvim_get_api_info()</A>                                      *<A NAME="nvim_get_api_info()"></A><B>nvim_get_api_info()</B>*
+                TODO: Documentation
+
+
+nvim_call_atomic({calls})                                 *<A NAME="nvim_call_atomic()"></A><B>nvim_call_atomic()</B>*
+                Call many <A HREF="api.html#api">api</A> methods atomically
+
+                This has two main usages: Firstly, to perform several requests
+                from an async context atomically, i.e. without processing
+                requests from other <A HREF="msgpack_rpc.html#rpc">rpc</A> clients or redrawing or allowing user
+                interaction in between. Note that <A HREF="api.html#api">api</A> methods that could fire
+                autocommands or <A HREF="diff.html#do">do</A> event processing still might <A HREF="diff.html#do">do</A> so. For
+                instance invoking the <A HREF="various.html#:sleep">:sleep</A> command might call timer
+                callbacks. Secondly, <A HREF="motion.html#it">it</A> can be used to reduce <A HREF="msgpack_rpc.html#rpc">rpc</A> overhead
+                (roundtrips) when doing many requests in sequence.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {calls}  an array of calls, where each call is described
+                             by an array with two elements: the request name,
+                             and an array of arguments.
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    an array with two elements. The first is an array of
+                    return values. The second is NIL if all calls succeeded.
+                    If a call resulted in an error, <A HREF="motion.html#it">it</A> is a three-element
+                    array with the zero-based index of the call which resulted
+                    in an error, the error type and the error message. If an
+                    error ocurred, the values from all preceding calls will
+                    still be returned.
+
+
+==============================================================================
+
+2. Buffer Functions                                               *<A NAME="api-buffer"></A><B>api-buffer</B>*
+
+
+nvim_buf_line_count({buffer})                          *<A NAME="nvim_buf_line_count()"></A><B>nvim_buf_line_count()</B>*
+                Gets the buffer line <A HREF="intro.html#count">count</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Line <A HREF="intro.html#count">count</A>
+
+
+                                                        *<A NAME="nvim_buf_get_lines()"></A><B>nvim_buf_get_lines()</B>*
+nvim_buf_get_lines({buffer}, {start}, {end}, {strict_indexing})
+                Retrieves a line range from the buffer
+
+                Indexing is zero-based, end-exclusive. Negative indices are
+                interpreted <A HREF="motion.html#as">as</A> length+1+index, <A HREF="insert.html#i">i</A> <A HREF="motion.html#e">e</A> -1 refers to the index past
+                the end. So to get the last element set start=-2 and end=-1.
+
+                Out-of-bounds indices are clamped to the nearest valid value,
+                unless `strict_indexing` is set.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}           Buffer handle
+                    {start}            First line index
+                    {end}              Last line index (exclusive)
+                    {strict_indexing}  Whether out-of-bounds should be an
+                                       error.
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Array of lines
+
+
+                                                        *<A NAME="nvim_buf_set_lines()"></A><B>nvim_buf_set_lines()</B>*
+nvim_buf_set_lines({buffer}, {start}, {end}, {strict_indexing},
+                   {replacement})
+                Replaces line range on the buffer
+
+                Indexing is zero-based, end-exclusive. Negative indices are
+                interpreted <A HREF="motion.html#as">as</A> length+1+index, <A HREF="insert.html#i">i</A> <A HREF="motion.html#e">e</A> -1 refers to the index past
+                the end. So to change or delete the last element set start=-2
+                and end=-1.
+
+                To insert lines at a given index, set both start and end to
+                the same index. To delete a range of lines, set replacement to
+                an empty array.
+
+                Out-of-bounds indices are clamped to the nearest valid value,
+                unless `strict_indexing` is set.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}           Buffer handle
+                    {start}            First line index
+                    {end}              Last line index (exclusive)
+                    {strict_indexing}  Whether out-of-bounds should be an
+                                       error.
+                    {replacement}      Array of lines to use <A HREF="motion.html#as">as</A> replacement
+
+
+nvim_buf_get_var({buffer}, {name})                        *<A NAME="nvim_buf_get_var()"></A><B>nvim_buf_get_var()</B>*
+                Gets a buffer-scoped (b:) variable.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+                    {name}    Variable name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Variable value
+
+
+nvim_buf_set_var({buffer}, {name}, {value})               *<A NAME="nvim_buf_set_var()"></A><B>nvim_buf_set_var()</B>*
+                Sets a buffer-scoped (b:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+                    {name}    Variable name
+                    {value}   Variable value
+
+
+nvim_buf_del_var({buffer}, {name})                        *<A NAME="nvim_buf_del_var()"></A><B>nvim_buf_del_var()</B>*
+                Removes a buffer-scoped (b:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+                    {name}    Variable name
+
+
+nvim_buf_get_option({buffer}, {name})                  *<A NAME="nvim_buf_get_option()"></A><B>nvim_buf_get_option()</B>*
+                Gets a buffer option value
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+                    {name}    Option name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Option value
+
+
+nvim_buf_set_option({buffer}, {name}, {value})         *<A NAME="nvim_buf_set_option()"></A><B>nvim_buf_set_option()</B>*
+                Sets a buffer option value. Passing 'nil' <A HREF="motion.html#as">as</A> value deletes the
+                option (only works if there's a global fallback)
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+                    {name}    Option name
+                    {value}   Option value
+
+
+nvim_buf_get_number({buffer})                          *<A NAME="nvim_buf_get_number()"></A><B>nvim_buf_get_number()</B>*
+                Gets the buffer number
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Buffer number
+
+
+nvim_buf_get_name({buffer})                              *<A NAME="nvim_buf_get_name()"></A><B>nvim_buf_get_name()</B>*
+                Gets the full file name for the buffer
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Buffer name
+
+
+nvim_buf_set_name({buffer}, {name})                      *<A NAME="nvim_buf_set_name()"></A><B>nvim_buf_set_name()</B>*
+                Sets the full file name for a buffer
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+                    {name}    Buffer name
+
+
+nvim_buf_is_valid({buffer})                              *<A NAME="nvim_buf_is_valid()"></A><B>nvim_buf_is_valid()</B>*
+                Checks if a buffer is valid
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    true if the buffer is valid, false otherwise
+
+
+nvim_buf_get_mark({buffer}, {name})                      *<A NAME="nvim_buf_get_mark()"></A><B>nvim_buf_get_mark()</B>*
+                Return a tuple (row,col) representing the position of the
+                named <A HREF="motion.html#mark">mark</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}  Buffer handle
+                    {name}    <A HREF="motion.html#Mark">Mark</A> name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    (row, col) tuple
+
+
+                                                    *<A NAME="nvim_buf_add_highlight()"></A><B>nvim_buf_add_highlight()</B>*
+nvim_buf_add_highlight({buffer}, {src_id}, {hl_group}, {line},
+                       {col_start}, {col_end})
+                Adds a highlight to buffer.
+
+                This can be used for plugins which dynamically generate
+                highlights to a buffer (like a semantic highlighter or
+                linter). The function adds a single highlight to a buffer.
+                Unlike <A HREF="eval.html#matchaddpos()">matchaddpos()</A> highlights follow changes to line
+                numbering (as lines are inserted/removed above the highlighted
+                line), like <A HREF="sign.html#signs">signs</A> and marks <A HREF="diff.html#do">do</A>.
+
+                &quot;src_id&quot; is useful for batch deletion/updating of a set of
+                highlights. When called with src_id = 0, an unique source id
+                is generated and returned. Succesive calls can pass in <A HREF="motion.html#it">it</A> <A HREF="motion.html#as">as</A>
+                &quot;src_id&quot; to add new highlights to the same source group. All
+                highlights in the same group can then be cleared with
+                nvim_buf_clear_highlight. If the highlight never will be
+                manually deleted pass in -1 for &quot;src_id&quot;.
+
+                If &quot;hl_group&quot; is the empty <A HREF="eval.html#string">string</A> no highlight is added, but a
+                new src_id is still returned. This is useful for an external
+                <A HREF="usr_05.html#plugin">plugin</A> to synchrounously request an unique src_id at
+                <A HREF="starting.html#initialization">initialization</A>, and later asynchronously add and clear
+                highlights in response to buffer changes.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}     Buffer handle
+                    {src_id}     Source group to use or 0 to use a new group,
+                                 or -1 for ungrouped highlight
+                    {hl_group}   Name of the highlight group to use
+                    {line}       Line to highlight
+                    {col_start}  Start of range of columns to highlight
+                    {col_end}    End of range of columns to highlight, or -1
+                                 to highlight to end of line
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    The src_id that was used
+
+
+                                                  *<A NAME="nvim_buf_clear_highlight()"></A><B>nvim_buf_clear_highlight()</B>*
+nvim_buf_clear_highlight({buffer}, {src_id}, {line_start}, {line_end})
+                Clears highlights from a given source group and a range of
+                lines
+
+                To clear a source group in the entire buffer, pass in 1 and -1
+                to line_start and line_end respectively.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {buffer}      Buffer handle
+                    {src_id}      Highlight source group to clear, or -1 to
+                                  clear all.
+                    {line_start}  Start of range of lines to clear
+                    {line_end}    End of range of lines to clear (exclusive)
+                                  or -1 to clear to end of file.
+
+
+==============================================================================
+
+3. Window Functions                                               *<A NAME="api-window"></A><B>api-window</B>*
+
+
+nvim_win_get_buf({window})                                *<A NAME="nvim_win_get_buf()"></A><B>nvim_win_get_buf()</B>*
+                Gets the current buffer in a <A HREF="windows.html#window">window</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Buffer handle
+
+
+nvim_win_get_cursor({window})                          *<A NAME="nvim_win_get_cursor()"></A><B>nvim_win_get_cursor()</B>*
+                Gets the cursor position in the <A HREF="windows.html#window">window</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    (row, col) tuple
+
+
+nvim_win_set_cursor({window}, {pos})                   *<A NAME="nvim_win_set_cursor()"></A><B>nvim_win_set_cursor()</B>*
+                Sets the cursor position in the <A HREF="windows.html#window">window</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+                    {pos}     (row, col) tuple representing the new position
+
+
+nvim_win_get_height({window})                          *<A NAME="nvim_win_get_height()"></A><B>nvim_win_get_height()</B>*
+                Gets the <A HREF="windows.html#window">window</A> height
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Height <A HREF="motion.html#as">as</A> a <A HREF="intro.html#count">count</A> of rows
+
+
+nvim_win_set_height({window}, {height})                *<A NAME="nvim_win_set_height()"></A><B>nvim_win_set_height()</B>*
+                Sets the <A HREF="windows.html#window">window</A> height. This will only succeed if the screen
+                is split horizontally.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+                    {height}  Height <A HREF="motion.html#as">as</A> a <A HREF="intro.html#count">count</A> of rows
+
+
+nvim_win_get_width({window})                            *<A NAME="nvim_win_get_width()"></A><B>nvim_win_get_width()</B>*
+                Gets the <A HREF="windows.html#window">window</A> width
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Width <A HREF="motion.html#as">as</A> a <A HREF="intro.html#count">count</A> of columns
+
+
+nvim_win_set_width({window}, {width})                   *<A NAME="nvim_win_set_width()"></A><B>nvim_win_set_width()</B>*
+                Sets the <A HREF="windows.html#window">window</A> width. This will only succeed if the screen is
+                split vertically.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+                    {width}   Width <A HREF="motion.html#as">as</A> a <A HREF="intro.html#count">count</A> of columns
+
+
+nvim_win_get_var({window}, {name})                        *<A NAME="nvim_win_get_var()"></A><B>nvim_win_get_var()</B>*
+                Gets a window-scoped (w:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+                    {name}    Variable name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Variable value
+
+
+nvim_win_set_var({window}, {name}, {value})               *<A NAME="nvim_win_set_var()"></A><B>nvim_win_set_var()</B>*
+                Sets a window-scoped (w:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+                    {name}    Variable name
+                    {value}   Variable value
+
+
+nvim_win_del_var({window}, {name})                        *<A NAME="nvim_win_del_var()"></A><B>nvim_win_del_var()</B>*
+                Removes a window-scoped (w:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+                    {name}    Variable name
+
+
+nvim_win_get_option({window}, {name})                  *<A NAME="nvim_win_get_option()"></A><B>nvim_win_get_option()</B>*
+                Gets a <A HREF="windows.html#window">window</A> option value
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+                    {name}    Option name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Option value
+
+
+nvim_win_set_option({window}, {name}, {value})         *<A NAME="nvim_win_set_option()"></A><B>nvim_win_set_option()</B>*
+                Sets a <A HREF="windows.html#window">window</A> option value. Passing 'nil' <A HREF="motion.html#as">as</A> value deletes the
+                option(only works if there's a global fallback)
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+                    {name}    Option name
+                    {value}   Option value
+
+
+nvim_win_get_position({window})                      *<A NAME="nvim_win_get_position()"></A><B>nvim_win_get_position()</B>*
+                Gets the <A HREF="windows.html#window">window</A> position in display cells. First position is
+                zero.
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    (row, col) tuple with the <A HREF="windows.html#window">window</A> position
+
+
+nvim_win_get_tabpage({window})                        *<A NAME="nvim_win_get_tabpage()"></A><B>nvim_win_get_tabpage()</B>*
+                Gets the <A HREF="windows.html#window">window</A> <A HREF="tabpage.html#tabpage">tabpage</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Tabpage that contains the <A HREF="windows.html#window">window</A>
+
+
+nvim_win_get_number({window})                          *<A NAME="nvim_win_get_number()"></A><B>nvim_win_get_number()</B>*
+                Gets the <A HREF="windows.html#window">window</A> number
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Window number
+
+
+nvim_win_is_valid({window})                              *<A NAME="nvim_win_is_valid()"></A><B>nvim_win_is_valid()</B>*
+                Checks if a <A HREF="windows.html#window">window</A> is valid
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {window}  Window handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    true if the <A HREF="windows.html#window">window</A> is valid, false otherwise
+
+
+==============================================================================
+
+4. Tabpage Functions                                             *<A NAME="api-tabpage"></A><B>api-tabpage</B>*
+
+
+nvim_tabpage_list_wins({tabpage})                   *<A NAME="nvim_tabpage_list_wins()"></A><B>nvim_tabpage_list_wins()</B>*
+                Gets the <A HREF="windows.html#windows">windows</A> in a <A HREF="tabpage.html#tabpage">tabpage</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {tabpage}  Tabpage
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    <A HREF="eval.html#List">List</A> of <A HREF="windows.html#windows">windows</A> in <A HREF="tabpage.html#tabpage">tabpage</A>
+
+
+nvim_tabpage_get_var({tabpage}, {name})               *<A NAME="nvim_tabpage_get_var()"></A><B>nvim_tabpage_get_var()</B>*
+                Gets a tab-scoped (t:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {tabpage}  Tabpage handle
+                    {name}     Variable name
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Variable value
+
+
+nvim_tabpage_set_var({tabpage}, {name}, {value})      *<A NAME="nvim_tabpage_set_var()"></A><B>nvim_tabpage_set_var()</B>*
+                Sets a tab-scoped (t:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {tabpage}  Tabpage handle
+                    {name}     Variable name
+                    {value}    Variable value
+
+
+nvim_tabpage_del_var({tabpage}, {name})               *<A NAME="nvim_tabpage_del_var()"></A><B>nvim_tabpage_del_var()</B>*
+                Removes a tab-scoped (t:) variable
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {tabpage}  Tabpage handle
+                    {name}     Variable name
+
+
+nvim_tabpage_get_win({tabpage})                       *<A NAME="nvim_tabpage_get_win()"></A><B>nvim_tabpage_get_win()</B>*
+                Gets the current <A HREF="windows.html#window">window</A> in a <A HREF="tabpage.html#tabpage">tabpage</A>
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {tabpage}  Tabpage handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Window handle
+
+
+nvim_tabpage_get_number({tabpage})                 *<A NAME="nvim_tabpage_get_number()"></A><B>nvim_tabpage_get_number()</B>*
+                Gets the <A HREF="tabpage.html#tabpage">tabpage</A> number
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {tabpage}  Tabpage handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    Tabpage number
+
+
+nvim_tabpage_is_valid({tabpage})                     *<A NAME="nvim_tabpage_is_valid()"></A><B>nvim_tabpage_is_valid()</B>*
+                Checks if a <A HREF="tabpage.html#tabpage">tabpage</A> is valid
+
+<B><FONT color="#54A23D">                Parameters:</FONT></B>
+                    {tabpage}  Tabpage handle
+
+<B><FONT color="#54A23D">                Return:</FONT></B>
+                    true if the <A HREF="tabpage.html#tabpage">tabpage</A> is valid, false otherwise
+
+
+==============================================================================
+
+5. UI Functions                                                       *<A NAME="api-ui"></A><B>api-ui</B>*
+
+
+<A HREF="#remote_ui_disconnect()">remote_ui_disconnect()</A>                                *<A NAME="remote_ui_disconnect()"></A><B>remote_ui_disconnect()</B>*
+                TODO: Documentation
+
+
+nvim_ui_attach({width}, {height}, {options})                *<A NAME="nvim_ui_attach()"></A><B>nvim_ui_attach()</B>*
+                TODO: Documentation
+
+
+<A HREF="#nvim_ui_detach()">nvim_ui_detach()</A>                                            *<A NAME="nvim_ui_detach()"></A><B>nvim_ui_detach()</B>*
+                TODO: Documentation
+
+
+nvim_ui_try_resize({width}, {height})                   *<A NAME="nvim_ui_try_resize()"></A><B>nvim_ui_try_resize()</B>*
+                TODO: Documentation
+
+
+nvim_ui_set_option({name}, {value})                     *<A NAME="nvim_ui_set_option()"></A><B>nvim_ui_set_option()</B>*
+                TODO: Documentation
+
+<A HREF="#top">top</A> - <A HREF="index.html">main help file</A>
+</PRE>
+    </div>
+
+    <footer>
+      <div class="container">
+        Generated Tue Jan  3 20:15:29 UTC 2017 from <a href="https://github.com/neovim/neovim/commit/3b793d045388d9ff7f8ab3efdccf60ddab336b88"><code>3b793d0</code></a>.
+      </div>
+    </footer>
+  </body>
+</html>
