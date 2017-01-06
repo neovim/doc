@@ -71,7 +71,7 @@ var searchData=
   ['do_5fargfile',['do_argfile',['../ex__cmds2_8c.html#a79e124d37832db5655cd83269eabb37c',1,'ex_cmds2.c']]],
   ['do_5faugroup',['do_augroup',['../fileio_8c.html#a67d3aaa3a30b0c3a8d717ec78e017179',1,'fileio.c']]],
   ['do_5fautochdir',['do_autochdir',['../buffer_8c.html#a41c081e44e6e813f0f5e95a420c0939b',1,'buffer.c']]],
-  ['do_5fautocmd',['do_autocmd',['../fileio_8c.html#a4965e84b86ffa978da0643286c541964',1,'fileio.c']]],
+  ['do_5fautocmd',['do_autocmd',['../fileio_8c.html#a71ed49f13c4ecfa92674e421bd17098c',1,'fileio.c']]],
   ['do_5fbang',['do_bang',['../ex__cmds_8c.html#aff5a8d706922d1ccfaa1fd4ad18653c1',1,'ex_cmds.c']]],
   ['do_5fbufdel',['do_bufdel',['../buffer_8c.html#a2297fcc4162e9d8de00bd656d8110ef8',1,'buffer.c']]],
   ['do_5fbuffer',['do_buffer',['../buffer_8c.html#a9f6058cb9361cc9f7498d5e3435ecf19',1,'buffer.c']]],

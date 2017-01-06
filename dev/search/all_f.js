@@ -191,7 +191,7 @@ var searchData=
   ['os_5fisrealdir',['os_isrealdir',['../fs_8c.html#a55959b554f76afce0c05349facb6287d',1,'fs.c']]],
   ['os_5flibcall',['os_libcall',['../dl_8c.html#a0a9bca0f32738e8f7c04a0f0837f0dcf',1,'dl.c']]],
   ['os_5flocaltime_5fr',['os_localtime_r',['../os_2time_8c.html#ab8cff4f6a19fd0fa5f62d6655f7f538f',1,'time.c']]],
-  ['os_5fmicrodelay',['os_microdelay',['../os_2time_8c.html#aaa177a6c2a2c7be9738c24392a31095d',1,'time.c']]],
+  ['os_5fmicrodelay',['os_microdelay',['../os_2time_8c.html#a9541569a879c47b2761533d74383f82b',1,'time.c']]],
   ['os_5fmkdir',['os_mkdir',['../fs_8c.html#acf057cc3c02baf87c5221269239dc051',1,'fs.c']]],
   ['os_5fmkdir_5frecurse',['os_mkdir_recurse',['../fs_8c.html#a420cef78d08fd85db6e741f8570dd556',1,'fs.c']]],
   ['os_5fmkdtemp',['os_mkdtemp',['../fs_8c.html#ab210820f2d5f3315c9a91a9c2b07cac9',1,'fs.c']]],
