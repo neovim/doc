@@ -52,7 +52,7 @@ var searchData=
   ['hash_5flock',['hash_lock',['../hashtab_8c.html#a49b651de8edaf9d8b6375c63c4106b5d',1,'hashtab.c']]],
   ['hash_5flookup',['hash_lookup',['../hashtab_8c.html#ab2e29d6b1fd5efabb342d54bfef8fa3e',1,'hashtab.c']]],
   ['hash_5fremove',['hash_remove',['../hashtab_8c.html#a6acdcb55113dfca42811b53109f8b3ba',1,'hashtab.c']]],
-  ['hash_5fremoved',['hash_removed',['../globals_8h.html#af626108b84ee181391c04a4cdfec4c58',1,'globals.h']]],
+  ['hash_5fremoved',['hash_removed',['../hashtab_8c.html#afe062c6bec386a8eb7d57dbb90497f1c',1,'hash_removed():&#160;hashtab.c'],['../hashtab_8h.html#afe062c6bec386a8eb7d57dbb90497f1c',1,'hash_removed():&#160;hashtab.c']]],
   ['hash_5ft',['hash_T',['../hashtab_8h.html#a7b00f34659dc168c35da7c824a12b4d0',1,'hashtab.h']]],
   ['hash_5funlock',['hash_unlock',['../hashtab_8c.html#adb2779e2b1f3393ac14de128717fb3d4',1,'hashtab.c']]],
   ['hashitem_5fempty',['HASHITEM_EMPTY',['../hashtab_8h.html#a6daf8b4e03c36362fcadf86a894e0528',1,'hashtab.h']]],

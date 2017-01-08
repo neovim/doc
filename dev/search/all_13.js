@@ -194,6 +194,7 @@ var searchData=
   ['searchit',['searchit',['../search_8c.html#a5faf5ecb453b03e5c3697a220fc4cf02',1,'search.c']]],
   ['searchoffset',['SearchOffset',['../search_8h.html#aaa78800d6bf6378ca437fd2b6968434f',1,'search.h']]],
   ['searchpattern',['SearchPattern',['../search_8h.html#acf1036570eb963c3a1d7a8a872013335',1,'search.h']]],
+  ['searchpatterngetter',['SearchPatternGetter',['../shada_8c.html#a01f9e06f2dfd817514e354fe38a48b69',1,'shada.c']]],
   ['select_5fnth',['SELECT_NTH',['../ui_8c.html#a9fbb99984776342d2b89262373bd6ae7',1,'ui.c']]],
   ['selectmode',['SELECTMODE',['../vim_8h.html#a1a494303c1f194480adadd34a07588a3',1,'vim.h']]],
   ['sep',['sep',['../structShadaEntry.html#a4f24d70a9e27ea72103ca3d8f2f67cc8',1,'ShadaEntry']]],

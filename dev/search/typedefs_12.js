@@ -10,6 +10,7 @@ var searchData=
   ['searchedfile',['SearchedFile',['../search_8c.html#a2fcd96a0beb2d947171bcf8ebffb87a4',1,'search.c']]],
   ['searchoffset',['SearchOffset',['../search_8h.html#aaa78800d6bf6378ca437fd2b6968434f',1,'search.h']]],
   ['searchpattern',['SearchPattern',['../search_8h.html#acf1036570eb963c3a1d7a8a872013335',1,'search.h']]],
+  ['searchpatterngetter',['SearchPatternGetter',['../shada_8c.html#a01f9e06f2dfd817514e354fe38a48b69',1,'shada.c']]],
   ['shadafilereader',['ShaDaFileReader',['../shada_8c.html#abe90f94764e5c3f76227ac7592eadd20',1,'shada.c']]],
   ['shadafileskipper',['ShaDaFileSkipper',['../shada_8c.html#ad7e7541cffb67bedffb4d9a1ed2a0075',1,'shada.c']]],
   ['shadafilewriter',['ShaDaFileWriter',['../shada_8c.html#ab079d534e4dae7e8c1e6e4b2f49a54c2',1,'shada.c']]],

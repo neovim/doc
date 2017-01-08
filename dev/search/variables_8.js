@@ -10,7 +10,7 @@ var searchData=
   ['has_5fline_5foffset',['has_line_offset',['../structShadaEntry.html#a7fcc1fbf84519894fec4032b8498a3ff',1,'ShadaEntry']]],
   ['has_5fpim',['has_pim',['../structnfa__list__T.html#a2b5d4f96b540b161c256c4cc671f171d',1,'nfa_list_T']]],
   ['has_5fzend',['has_zend',['../structnfa__regprog__T.html#a497ec9f87b98a76519e6b0c9487a8e11',1,'nfa_regprog_T']]],
-  ['hash_5fremoved',['hash_removed',['../globals_8h.html#af626108b84ee181391c04a4cdfec4c58',1,'globals.h']]],
+  ['hash_5fremoved',['hash_removed',['../hashtab_8c.html#afe062c6bec386a8eb7d57dbb90497f1c',1,'hash_removed():&#160;hashtab.c'],['../hashtab_8h.html#afe062c6bec386a8eb7d57dbb90497f1c',1,'hash_removed():&#160;hashtab.c']]],
   ['hashkey',['hashkey',['../structwordnode__S.html#a5464c1edc34ab992343d4e7e4846739c',1,'wordnode_S']]],
   ['hasnum',['hasnum',['../structoption__table__T.html#ae16614d6a309c10c96d7bf93dc0def52',1,'option_table_T']]],
   ['head',['head',['../structpat__T.html#aaa85f3c45632362f883ba2247e62404b',1,'pat_T']]],

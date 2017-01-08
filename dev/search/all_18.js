@@ -32,9 +32,9 @@ var searchData=
   ['xstpcpy',['xstpcpy',['../memory_8c.html#a899058a8f9a3080962ae07192873a75f',1,'memory.c']]],
   ['xstpncpy',['xstpncpy',['../memory_8c.html#af94a19db7a2295e3160e847225c053d4',1,'memory.c']]],
   ['xstrchrnul',['xstrchrnul',['../memory_8c.html#a231b15058955dc0e308d923cc4c97df7',1,'memory.c']]],
-  ['xstrdup',['xstrdup',['../memory_8c.html#af948034a6fa9841282c17be0fdbce605',1,'memory.c']]],
+  ['xstrdup',['xstrdup',['../memory_8c.html#a1ba7b6a210ced40ef12d99599184e134',1,'memory.c']]],
   ['xstrlcpy',['xstrlcpy',['../memory_8c.html#aae10fc1bb9aac1f327f95a605c7e7c08',1,'memory.c']]],
-  ['xstrndup',['xstrndup',['../memory_8c.html#a6a2f013f490b1da3661b74c77eba5f9a',1,'memory.c']]],
+  ['xstrndup',['xstrndup',['../memory_8c.html#a0888e1d07b4e154eb4356e6a5f8c0e65',1,'memory.c']]],
   ['xterm_5fsetab',['XTERM_SETAB',['../tui_8c.html#a02d3b1b37d395971912f1190d67cbafb',1,'tui.c']]],
   ['xterm_5fsetaf',['XTERM_SETAF',['../tui_8c.html#a5f70baff2d42d0c7f1a5443c8a95e88b',1,'tui.c']]]
 ];

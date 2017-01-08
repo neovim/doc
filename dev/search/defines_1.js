@@ -224,7 +224,6 @@ var searchData=
   ['action_5fsplit',['ACTION_SPLIT',['../search_8h.html#a64d309887c25865c091689d7c40c74a3',1,'search.h']]],
   ['add',['ADD',['../api_2private_2helpers_8h.html#a6aa321a80c2b73f92ed79627a0db9914',1,'helpers.h']]],
   ['add_5fnl',['ADD_NL',['../regexp_8c.html#a1333495fccc1fba2f7f3a195d6398a2d',1,'regexp.c']]],
-  ['add_5fsearch_5fpat',['ADD_SEARCH_PAT',['../shada_8c.html#a646fea9a355a83c60e2b11e8992faca3',1,'shada.c']]],
   ['add_5fstate_5fif_5fmatch',['ADD_STATE_IF_MATCH',['../regexp__nfa_8c.html#a50e51373d25bb01c76e08de71ef53db9',1,'regexp_nfa.c']]],
   ['additional_5fkey',['ADDITIONAL_KEY',['../shada_8c.html#a8474cb96740e4804d16b0c5306fe83b4',1,'shada.c']]],
   ['addr_5farguments',['ADDR_ARGUMENTS',['../ex__cmds__defs_8h.html#a33a75c6c86655065fb1564854f310a38',1,'ex_cmds_defs.h']]],
