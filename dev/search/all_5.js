@@ -214,6 +214,7 @@ var searchData=
   ['ex_5fchange',['ex_change',['../ex__cmds_8c.html#aa336ca19b6e9e573dc87a794857641d5',1,'ex_cmds.c']]],
   ['ex_5fchanges',['ex_changes',['../mark_8c.html#aa860d454e4d7a2777bdc89d0a77b3f17',1,'mark.c']]],
   ['ex_5fchecktime',['ex_checktime',['../ex__cmds2_8c.html#ae0cfa58b1183f52d34c443767585abb2',1,'ex_cmds2.c']]],
+  ['ex_5fclearjumps',['ex_clearjumps',['../mark_8c.html#acb92551f51d75e6d9e9c668a4ac368d9',1,'mark.c']]],
   ['ex_5fcmds_2ec',['ex_cmds.c',['../ex__cmds_8c.html',1,'']]],
   ['ex_5fcmds_2eh',['ex_cmds.h',['../ex__cmds_8h.html',1,'']]],
   ['ex_5fcmds2_2ec',['ex_cmds2.c',['../ex__cmds2_8c.html',1,'']]],

@@ -72,6 +72,7 @@ var searchData=
   ['ex_5fchange',['ex_change',['../ex__cmds_8c.html#aa336ca19b6e9e573dc87a794857641d5',1,'ex_cmds.c']]],
   ['ex_5fchanges',['ex_changes',['../mark_8c.html#aa860d454e4d7a2777bdc89d0a77b3f17',1,'mark.c']]],
   ['ex_5fchecktime',['ex_checktime',['../ex__cmds2_8c.html#ae0cfa58b1183f52d34c443767585abb2',1,'ex_cmds2.c']]],
+  ['ex_5fclearjumps',['ex_clearjumps',['../mark_8c.html#acb92551f51d75e6d9e9c668a4ac368d9',1,'mark.c']]],
   ['ex_5fcnext',['ex_cnext',['../quickfix_8c.html#a063d7a6e7e6cf160595f5e27aa93e47e',1,'quickfix.c']]],
   ['ex_5fcomclear',['ex_comclear',['../ex__docmd_8c.html#aa966c1031789bb75d73b63129bbce36c',1,'ex_docmd.c']]],
   ['ex_5fcompiler',['ex_compiler',['../ex__cmds2_8c.html#ade8886a36f91addb2993fdb3a8f508ca',1,'ex_cmds2.c']]],

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['u8char_5ft',['u8char_T',['../types_8h.html#a18d5cbae7068149cbcd19eb1954ad6a5',1,'types.h']]],
-  ['u_5facute',['u_acute',['../regexp__nfa_8c.html#a2c48f3ac0ccf3e2a4e6e002142e5be79',1,'u_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a6a548330e1782c57563a955c4518383b',1,'U_acute():&#160;regexp_nfa.c']]],
+  ['u_5facute',['U_acute',['../regexp__nfa_8c.html#a6a548330e1782c57563a955c4518383b',1,'U_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a2c48f3ac0ccf3e2a4e6e002142e5be79',1,'u_acute():&#160;regexp_nfa.c']]],
   ['u_5fblockfree',['u_blockfree',['../undo_8c.html#a1f1396583a1e1db5af06fccc36abfde6',1,'undo.c']]],
   ['u_5fcircumflex',['U_circumflex',['../regexp__nfa_8c.html#a1dfa57cdca2d36c8aa7e04d2ac2f27ff',1,'U_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a95b10978f27d8e8b044c04c4d88f4ba7',1,'u_circumflex():&#160;regexp_nfa.c']]],
   ['u_5fclearall',['u_clearall',['../undo_8c.html#a9d4e2fc9c19c0860880c8dbc43a8f259',1,'undo.c']]],
