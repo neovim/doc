@@ -1,7 +1,7 @@
 var searchData=
 [
   ['o_5facute',['o_acute',['../regexp__nfa_8c.html#a75fd7b08045e91bee3077bf37e38afe9',1,'o_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#abfdf9c1ee261ee98613709e211035529',1,'O_acute():&#160;regexp_nfa.c']]],
-  ['o_5fcircumflex',['O_circumflex',['../regexp__nfa_8c.html#a8487d10b980a3e961e5d60e1c237bf36',1,'O_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#abd5302afc1717c0e4a3a11cef45d1c3f',1,'o_circumflex():&#160;regexp_nfa.c']]],
+  ['o_5fcircumflex',['o_circumflex',['../regexp__nfa_8c.html#abd5302afc1717c0e4a3a11cef45d1c3f',1,'o_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a8487d10b980a3e961e5d60e1c237bf36',1,'O_circumflex():&#160;regexp_nfa.c']]],
   ['o_5fdiaeresis',['O_diaeresis',['../regexp__nfa_8c.html#a8f70094a512acc687744158e8c673008',1,'O_diaeresis():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#abe0e20ee3c71a9b7ba9b7aad920f418e',1,'o_diaeresis():&#160;regexp_nfa.c']]],
   ['o_5fgrave',['O_grave',['../regexp__nfa_8c.html#aad4312ae657afaeedb28327e755851a5',1,'O_grave():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#affda3b79ef3bdb27b1e8ed0b0cdb316b',1,'o_grave():&#160;regexp_nfa.c']]],
   ['o_5fnofollow',['O_NOFOLLOW',['../win__defs_8h.html#a82d4d551b214905742c9e045185d352a',1,'win_defs.h']]],
@@ -157,6 +157,7 @@ var searchData=
   ['os_5fdelay',['os_delay',['../os_2time_8c.html#a38ba6f7625c0f588da79ea8f334d4138',1,'time.c']]],
   ['os_5fdirname',['os_dirname',['../fs_8c.html#a6209a54a8e312dd52d93c2ae977c286d',1,'fs.c']]],
   ['os_5fenv_5fexists',['os_env_exists',['../env_8c.html#a0c4df7825a41f8b19167ba1ef56b1abe',1,'env.c']]],
+  ['os_5fexepath',['os_exepath',['../fs_8c.html#acb1cd9a18e0c1be40662350ec192df34',1,'fs.c']]],
   ['os_5ffchown',['os_fchown',['../fs_8c.html#a7cb2aa1a7e4653d6e875b90decf8450f',1,'fs.c']]],
   ['os_5ffile_5fis_5freadable',['os_file_is_readable',['../fs_8c.html#a9549610c0709a5c1aff7e0d3ecbd8932',1,'fs.c']]],
   ['os_5ffile_5fis_5fwritable',['os_file_is_writable',['../fs_8c.html#a362c00174a68645c46019e71702ccd82',1,'fs.c']]],
