@@ -26,6 +26,7 @@ var searchData=
   ['p_5frclr',['P_RCLR',['../option_8c.html#a448b2ea4196069329b276be26b0e5a38',1,'option.c']]],
   ['p_5frstat',['P_RSTAT',['../option_8c.html#a5af1007868f40419f758f5b9c4ea8667',1,'option.c']]],
   ['p_5frwin',['P_RWIN',['../option_8c.html#a1d559beac70ed4cd1f6586290c2a89aa',1,'option.c']]],
+  ['p_5frwinonly',['P_RWINONLY',['../option_8c.html#ad17908a4e6c14a6271ffe003066d0542',1,'option.c']]],
   ['p_5fsecure',['P_SECURE',['../option_8c.html#ac892fc4fabcac0160e59c4f33e5b7c8a',1,'option.c']]],
   ['p_5fstring',['P_STRING',['../option_8c.html#aad997a10fe4897f058cdd4838d5c138a',1,'option.c']]],
   ['p_5fvi_5fdef',['P_VI_DEF',['../option_8c.html#a743498c3e9ec8fabac605047a84bc770',1,'option.c']]],
