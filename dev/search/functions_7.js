@@ -68,7 +68,7 @@ var searchData=
   ['get_5findent_5flnum',['get_indent_lnum',['../indent_8c.html#a429c582bb4d42654534f312fa08e71b3',1,'indent.c']]],
   ['get_5findent_5fstr',['get_indent_str',['../indent_8c.html#aacdf51e3b6fc6d2ccc37fa1d82080098',1,'indent.c']]],
   ['get_5finserted',['get_inserted',['../getchar_8c.html#a3189dcfe6d82ee43f9be483ac499a1e8',1,'getchar.c']]],
-  ['get_5fkeymap_5fstr',['get_keymap_str',['../screen_8c.html#aaada59aaf0a3d9d20ff290806d844916',1,'screen.c']]],
+  ['get_5fkeymap_5fstr',['get_keymap_str',['../screen_8c.html#a5a7b60b5d1ea5c0e6f686814093b1801',1,'screen.c']]],
   ['get_5fkeystroke',['get_keystroke',['../misc1_8c.html#aa3996cbb7707fe589876786ce126842c',1,'misc1.c']]],
   ['get_5flast_5finsert',['get_last_insert',['../edit_8c.html#a6586e84818a01b720449c9042f003e46',1,'edit.c']]],
   ['get_5flast_5finsert_5fsave',['get_last_insert_save',['../edit_8c.html#ac09027f7593fc787c321fd83f196fd58',1,'edit.c']]],

@@ -27,7 +27,7 @@ var searchData=
   ['version_5fdict',['version_dict',['../version_8c.html#a53dfda9902aed613254b655e9f5533b9',1,'version.c']]],
   ['vgetc',['vgetc',['../getchar_8c.html#a15db3f8639823b11e0a9e1ea99873be5',1,'getchar.c']]],
   ['vim_5fbeep',['vim_beep',['../misc1_8c.html#afa93ecfab56a9c785ce453c6df7c4227',1,'misc1.c']]],
-  ['vim_5fchdir',['vim_chdir',['../file__search_8c.html#a05bda11d595c6dd11d5d91b2fa795fe6',1,'file_search.c']]],
+  ['vim_5fchdir',['vim_chdir',['../file__search_8c.html#a107c9ccd863b3d5f5a3ba93349a4c93e',1,'file_search.c']]],
   ['vim_5fchdirfile',['vim_chdirfile',['../file__search_8c.html#a5ed23ebe9710b0c7c928cd18de872161',1,'file_search.c']]],
   ['vim_5fcolon_5fenv_5fiter',['vim_colon_env_iter',['../env_8c.html#a1c24627985a3d07834d19e69c319ec15',1,'env.c']]],
   ['vim_5fcolon_5fenv_5fiter_5frev',['vim_colon_env_iter_rev',['../env_8c.html#aeed051078ec6b7516667be2c24fbb27e',1,'env.c']]],
