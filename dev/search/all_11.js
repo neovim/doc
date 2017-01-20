@@ -16,6 +16,7 @@ var searchData=
   ['qf_5fget_5fcur_5fidx',['qf_get_cur_idx',['../quickfix_8c.html#ab6c0fecf13f17961c96f780bd2ce31f9',1,'quickfix.c']]],
   ['qf_5fget_5fcur_5fvalid_5fidx',['qf_get_cur_valid_idx',['../quickfix_8c.html#ae4c392ec533c8cf97ddbb7baad5cdc43',1,'quickfix.c']]],
   ['qf_5fget_5fsize',['qf_get_size',['../quickfix_8c.html#a7b858717153258f95ecaf4c0e55ee471',1,'quickfix.c']]],
+  ['qf_5fhistory',['qf_history',['../quickfix_8c.html#a491774077afdcc71cd3472ca268daa02',1,'quickfix.c']]],
   ['qf_5findex',['qf_index',['../structqf__list__S.html#a1cbb969438bec9a5628eadf5db5214ff',1,'qf_list_S']]],
   ['qf_5finfo_5fs',['qf_info_S',['../structqf__info__S.html',1,'']]],
   ['qf_5finfo_5ft',['qf_info_T',['../buffer__defs_8h.html#a439c6417d03bd5aa852c407ac5234297',1,'buffer_defs.h']]],

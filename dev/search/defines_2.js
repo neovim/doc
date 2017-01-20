@@ -106,6 +106,8 @@ var searchData=
   ['bs_5feol',['BS_EOL',['../option__defs_8h.html#a5cd2a5292cb376547d03be490154ae7b',1,'option_defs.h']]],
   ['bs_5findent',['BS_INDENT',['../option__defs_8h.html#afe3a68009f0994bfd0fade0e5c2818e1',1,'option_defs.h']]],
   ['bs_5fstart',['BS_START',['../option__defs_8h.html#a328850d621bdabf0f2548113f8680e2e',1,'option_defs.h']]],
+  ['buf_5fhas_5fll_5fentry',['BUF_HAS_LL_ENTRY',['../buffer__defs_8h.html#ab36e7d2ffef30b840f1ea2d4cb5d9251',1,'buffer_defs.h']]],
+  ['buf_5fhas_5fqf_5fentry',['BUF_HAS_QF_ENTRY',['../buffer__defs_8h.html#aa49b9369e613d90f4a3ae9401fec2eba',1,'buffer_defs.h']]],
   ['bufempty',['bufempty',['../macros_8h.html#a262dc06774ba50c32f44a35fe0571c11',1,'macros.h']]],
   ['buffer_5fobj',['BUFFER_OBJ',['../api_2private_2helpers_8h.html#adeba4b57ec37a426fa0bd27626312df9',1,'helpers.h']]],
   ['buflist_5fnew',['buflist_new',['../shada_8c.html#aba3ea101f3e2a0fa60296f87574cd389',1,'shada.c']]],
