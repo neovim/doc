@@ -58,7 +58,7 @@ var searchData=
   ['mb_5fbyte2len_5fcheck',['MB_BYTE2LEN_CHECK',['../mbyte_8h.html#af2f0ffd626aefcdfb36558da6a2223c6',1,'mbyte.h']]],
   ['mb_5fchar2bytes',['mb_char2bytes',['../mbyte_8h.html#a427c003137b84837b6062f4fe7c8dd2a',1,'mbyte.h']]],
   ['mb_5fchar2cells',['mb_char2cells',['../mbyte_8h.html#a9cda086c8d9a98b327f235fa07166f98',1,'mbyte.h']]],
-  ['mb_5fchar2len',['mb_char2len',['../mbyte_8h.html#a44a3ea4949cfc68baee28a51fffc201e',1,'mb_char2len():&#160;mbyte.h'],['../macros_8h.html#a428a655e53a82822038026218f198665',1,'MB_CHAR2LEN():&#160;macros.h']]],
+  ['mb_5fchar2len',['MB_CHAR2LEN',['../macros_8h.html#a428a655e53a82822038026218f198665',1,'MB_CHAR2LEN():&#160;macros.h'],['../mbyte_8h.html#a44a3ea4949cfc68baee28a51fffc201e',1,'mb_char2len():&#160;mbyte.h']]],
   ['mb_5fcharlen',['MB_CHARLEN',['../macros_8h.html#a0d93171a94215a283d472e35cf21f612',1,'macros.h']]],
   ['mb_5fcopy_5fchar',['MB_COPY_CHAR',['../macros_8h.html#aa21fbc34cfa4ee06435a80d315bf8719',1,'macros.h']]],
   ['mb_5fcptr2len',['mb_cptr2len',['../macros_8h.html#ad43ebbd06292081bafff713af33dc2c4',1,'macros.h']]],

@@ -309,6 +309,7 @@ var searchData=
   ['string_5finit',['STRING_INIT',['../api_2private_2defs_8h.html#ae882befd90636f6c7227f93c45e15bbe',1,'defs.h']]],
   ['string_5fkey',['STRING_KEY',['../shada_8c.html#a0708fa603a5c7b93dcded6abce451413',1,'shada.c']]],
   ['string_5fobj',['STRING_OBJ',['../api_2private_2helpers_8h.html#a8aafec2a2811e04ea25b210d761717c9',1,'helpers.h']]],
+  ['strlcat',['STRLCAT',['../vim_8h.html#a6e755ddb3e5b9f03b9cc5a56d867e7f1',1,'vim.h']]],
   ['strlcpy',['STRLCPY',['../vim_8h.html#ad243e54058737435eb10ecbc5befb657',1,'vim.h']]],
   ['strlen',['STRLEN',['../vim_8h.html#a916ffefe1fc74532d08102cca55d8e34',1,'vim.h']]],
   ['strmove',['STRMOVE',['../vim_8h.html#a1d75ac7dfcfa7aabca75ae7b1333ac9e',1,'vim.h']]],

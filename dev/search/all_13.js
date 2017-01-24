@@ -1025,6 +1025,7 @@ var searchData=
   ['strings',['strings',['../structVimMenu.html#a4063f47f615c46852cf195247c77b36c',1,'VimMenu']]],
   ['strings_2ec',['strings.c',['../strings_8c.html',1,'']]],
   ['strings_2eh',['strings.h',['../strings_8h.html',1,'']]],
+  ['strlcat',['STRLCAT',['../vim_8h.html#a6e755ddb3e5b9f03b9cc5a56d867e7f1',1,'vim.h']]],
   ['strlcpy',['STRLCPY',['../vim_8h.html#ad243e54058737435eb10ecbc5befb657',1,'vim.h']]],
   ['strlen',['strlen',['../structoption__table__T.html#a31ac48cd0585311ef343060c80f6fab2',1,'option_table_T::strlen()'],['../vim_8h.html#a916ffefe1fc74532d08102cca55d8e34',1,'STRLEN():&#160;vim.h']]],
   ['strmove',['STRMOVE',['../vim_8h.html#a1d75ac7dfcfa7aabca75ae7b1333ac9e',1,'vim.h']]],
