@@ -58,7 +58,7 @@ var searchData=
   ['os_5ffileinfo_5flink',['os_fileinfo_link',['../fs_8c.html#a703486ac16578963025291948a890fd1',1,'fs.c']]],
   ['os_5ffileinfo_5fsize',['os_fileinfo_size',['../fs_8c.html#a0ba13b55a9db25ca83dc9b4c168ccdb4',1,'fs.c']]],
   ['os_5ffsync',['os_fsync',['../fs_8c.html#a17bb20dc0a90a193d0c9820706b5f1d1',1,'fs.c']]],
-  ['os_5fget_5fhostname',['os_get_hostname',['../env_8c.html#a9af263e58b6070de00f666f9de2e86d0',1,'env.c']]],
+  ['os_5fget_5fhostname',['os_get_hostname',['../env_8c.html#af6e9ebf5b58366cd8cc51f68c4868dbb',1,'env.c']]],
   ['os_5fget_5flocaltime',['os_get_localtime',['../os_2time_8c.html#a3e7ff4b7dff9bca24a59e1dc2c95c07e',1,'time.c']]],
   ['os_5fget_5fpid',['os_get_pid',['../env_8c.html#a7ef9554c3c6eddb8bd53b8bab508c478',1,'env.c']]],
   ['os_5fget_5ftotal_5fmem_5fkib',['os_get_total_mem_kib',['../mem_8c.html#ab3517178e5e8769bba1a08bd853846c7',1,'mem.c']]],
