@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['o_5facute',['o_acute',['../regexp__nfa_8c.html#a75fd7b08045e91bee3077bf37e38afe9',1,'o_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#abfdf9c1ee261ee98613709e211035529',1,'O_acute():&#160;regexp_nfa.c']]],
+  ['o_5facute',['O_acute',['../regexp__nfa_8c.html#abfdf9c1ee261ee98613709e211035529',1,'O_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a75fd7b08045e91bee3077bf37e38afe9',1,'o_acute():&#160;regexp_nfa.c']]],
   ['o_5fcircumflex',['O_circumflex',['../regexp__nfa_8c.html#a8487d10b980a3e961e5d60e1c237bf36',1,'O_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#abd5302afc1717c0e4a3a11cef45d1c3f',1,'o_circumflex():&#160;regexp_nfa.c']]],
   ['o_5fdiaeresis',['O_diaeresis',['../regexp__nfa_8c.html#a8f70094a512acc687744158e8c673008',1,'O_diaeresis():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#abe0e20ee3c71a9b7ba9b7aad920f418e',1,'o_diaeresis():&#160;regexp_nfa.c']]],
   ['o_5fgrave',['o_grave',['../regexp__nfa_8c.html#affda3b79ef3bdb27b1e8ed0b0cdb316b',1,'o_grave():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#aad4312ae657afaeedb28327e755851a5',1,'O_grave():&#160;regexp_nfa.c']]],
@@ -45,7 +45,7 @@ var searchData=
   ['op',['OP',['../regexp_8c.html#a140367a510ad117b6e871c9042df9350',1,'regexp.c']]],
   ['op_5faddsub',['op_addsub',['../ops_8c.html#a36bd271a2b8c18b831e7e4f7cb3c6149',1,'ops.c']]],
   ['op_5fappend',['OP_APPEND',['../ops_8h.html#aa257e5f97877dd14dc37355a3f399dc9',1,'ops.h']]],
-  ['op_5fchange',['op_change',['../ops_8c.html#a419b73b5fa28ab0acf629fe27306de70',1,'op_change(oparg_T *oap):&#160;ops.c'],['../ops_8h.html#a377c11894a7badab6bfe21ef7bebda09',1,'OP_CHANGE():&#160;ops.h']]],
+  ['op_5fchange',['OP_CHANGE',['../ops_8h.html#a377c11894a7badab6bfe21ef7bebda09',1,'OP_CHANGE():&#160;ops.h'],['../ops_8c.html#a419b73b5fa28ab0acf629fe27306de70',1,'op_change(oparg_T *oap):&#160;ops.c']]],
   ['op_5fcolon',['OP_COLON',['../ops_8h.html#aa237977ec8ec22304c7430cc8b28ee47',1,'ops.h']]],
   ['op_5fdelete',['op_delete',['../ops_8c.html#afe8903bc49a7fe3a2503ca6eda1e4727',1,'op_delete(oparg_T *oap):&#160;ops.c'],['../ops_8h.html#a753e792a4508dbc3edc42e4aa2bf9d9a',1,'OP_DELETE():&#160;ops.h']]],
   ['op_5ffilter',['OP_FILTER',['../ops_8h.html#ad5079f9b0ece753ba8d7ace3b4145188',1,'ops.h']]],
@@ -83,7 +83,7 @@ var searchData=
   ['op_5ftilde',['op_tilde',['../ops_8c.html#a382dfbf71cb71f42a9d79ac4a6117834',1,'op_tilde(oparg_T *oap):&#160;ops.c'],['../ops_8h.html#a4c8b61d291592a712922b2d564e54774',1,'OP_TILDE():&#160;ops.h']]],
   ['op_5ftype',['op_type',['../structoparg__S.html#acb9e3c2b4847f0e369552cad973c137e',1,'oparg_S']]],
   ['op_5fupper',['OP_UPPER',['../ops_8h.html#aec2ae0d775d88ac03af2650a8c147ea5',1,'ops.h']]],
-  ['op_5fyank',['OP_YANK',['../ops_8h.html#aa890552a8824de25e0d105b7d8bb3775',1,'OP_YANK():&#160;ops.h'],['../ops_8c.html#a1031933f3119c0a111b893b035e2bbe2',1,'op_yank(oparg_T *oap, bool message) FUNC_ATTR_NONNULL_ALL:&#160;ops.c']]],
+  ['op_5fyank',['op_yank',['../ops_8c.html#a1031933f3119c0a111b893b035e2bbe2',1,'op_yank(oparg_T *oap, bool message) FUNC_ATTR_NONNULL_ALL:&#160;ops.c'],['../ops_8h.html#aa890552a8824de25e0d105b7d8bb3775',1,'OP_YANK():&#160;ops.h']]],
   ['oparg_5fs',['oparg_S',['../structoparg__S.html',1,'']]],
   ['oparg_5ft',['oparg_T',['../normal_8h.html#a0355ffe21ea601a40a864d0346ba75bb',1,'normal.h']]],
   ['opcount',['opcount',['../structcmdarg__S.html#a58f88a02d8bfe611ed941f8950fdf89d',1,'cmdarg_S']]],
@@ -206,6 +206,7 @@ var searchData=
   ['os_5fscandir',['os_scandir',['../fs_8c.html#a95f9ff75faf7e8bdf7359999fc4dc496',1,'fs.c']]],
   ['os_5fscandir_5fnext',['os_scandir_next',['../fs_8c.html#a386fe8ddd974d4e4713571fa74668665',1,'fs.c']]],
   ['os_5fsetenv',['os_setenv',['../env_8c.html#a7c5a977050f7a06e1499d0107fc70913',1,'env.c']]],
+  ['os_5fsetenv_5fappend_5fpath',['os_setenv_append_path',['../env_8c.html#a3d56ad54d13d2c4639ff6c38cb2b53f4',1,'env.c']]],
   ['os_5fsetperm',['os_setperm',['../fs_8c.html#a49953c1ffb81c31d749173f685753818',1,'os_setperm(const char_u *name, int perm) FUNC_ATTR_NONNULL_ALL:&#160;fs.c'],['../undo_8c.html#a1d41a79e8dca78ee72b9094e413dca4e',1,'os_setperm((char_u *) file_name, perm):&#160;undo.c']]],
   ['os_5fstrerror',['os_strerror',['../fs__defs_8h.html#a337322a2a03d31e8ac5a9077f490da09',1,'os_strerror():&#160;fs_defs.h'],['../os__defs_8h.html#a337322a2a03d31e8ac5a9077f490da09',1,'os_strerror():&#160;os_defs.h']]],
   ['os_5fstrtok',['os_strtok',['../os__defs_8h.html#a543cd6503d78221b99fa169fc1102386',1,'os_defs.h']]],

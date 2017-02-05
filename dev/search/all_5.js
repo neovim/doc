@@ -109,6 +109,7 @@ var searchData=
   ['entries',['entries',['../structbufhl__lineinfo__T.html#a51e1d05442f96bd7447627dd5900f18b',1,'bufhl_lineinfo_T::entries()'],['../structHMLList.html#aa23ec4b0da6006084a2f181c92de50d6',1,'HMLList::entries()']]],
   ['env_2ec',['env.c',['../env_8c.html',1,'']]],
   ['env_5fsepchar',['ENV_SEPCHAR',['../unix__defs_8h.html#a4561b5fadd4bbfa2c45c0c775709989f',1,'ENV_SEPCHAR():&#160;unix_defs.h'],['../win__defs_8h.html#a4561b5fadd4bbfa2c45c0c775709989f',1,'ENV_SEPCHAR():&#160;win_defs.h']]],
+  ['env_5fsepstr',['ENV_SEPSTR',['../unix__defs_8h.html#a3d1217c4eae3e3fd21fdf49d3765db0e',1,'ENV_SEPSTR():&#160;unix_defs.h'],['../win__defs_8h.html#a3d1217c4eae3e3fd21fdf49d3765db0e',1,'ENV_SEPSTR():&#160;win_defs.h']]],
   ['envnamelen',['ENVNAMELEN',['../env_8c.html#a6edceae4a221309e39b2cbdb4d413b79',1,'env.c']]],
   ['eof',['eof',['../structFileDescriptor.html#a7674d6960e03da36f4b70c32a6404945',1,'FileDescriptor::eof()'],['../structsd__read__def.html#a887c6cfaf58763f93a4d9444c9f68885',1,'sd_read_def::eof()']]],
   ['eol',['EOL',['../regexp_8c.html#a4e67e9429d48a2ba8f833ee3b1dceb5d',1,'regexp.c']]],
