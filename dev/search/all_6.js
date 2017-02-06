@@ -337,6 +337,7 @@ var searchData=
   ['foldupdateall',['foldUpdateAll',['../fold_8c.html#a2e8c67487e90a1d4957853f4e328bbf9',1,'fold.c']]],
   ['for',['for',['../memline_8c.html#a8b9eb702eb3f9bcba3923532d1e801db',1,'memline.c']]],
   ['for_5fall_5fbuffers',['FOR_ALL_BUFFERS',['../globals_8h.html#ab2dfc04411a40f8bcaf0f45b0d16f482',1,'globals.h']]],
+  ['for_5fall_5fbuffers_5fbackwards',['FOR_ALL_BUFFERS_BACKWARDS',['../globals_8h.html#a97b226f37ba86a2064dcb3932df8f5bb',1,'globals.h']]],
   ['for_5fall_5ftab_5fwindows',['FOR_ALL_TAB_WINDOWS',['../globals_8h.html#a7ec3ef1eaaad38a0f6b3b1965c6d1624',1,'globals.h']]],
   ['for_5fall_5ftabs',['FOR_ALL_TABS',['../globals_8h.html#a87576879e89a11905d64d1a9c687ab0f',1,'globals.h']]],
   ['for_5fall_5fwindows',['FOR_ALL_WINDOWS',['../globals_8h.html#ace47feb394b092f7e9f5e736b86ae91b',1,'globals.h']]],

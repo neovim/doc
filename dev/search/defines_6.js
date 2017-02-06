@@ -146,6 +146,7 @@ var searchData=
   ['focusgained_5fkey',['FOCUSGAINED_KEY',['../tui_2input_8c.html#a14b0edca1082033659cd9fcfe85850fb',1,'input.c']]],
   ['focuslost_5fkey',['FOCUSLOST_KEY',['../tui_2input_8c.html#ae3308360fca0b63a00e97c4cd23018a4',1,'input.c']]],
   ['for_5fall_5fbuffers',['FOR_ALL_BUFFERS',['../globals_8h.html#ab2dfc04411a40f8bcaf0f45b0d16f482',1,'globals.h']]],
+  ['for_5fall_5fbuffers_5fbackwards',['FOR_ALL_BUFFERS_BACKWARDS',['../globals_8h.html#a97b226f37ba86a2064dcb3932df8f5bb',1,'globals.h']]],
   ['for_5fall_5ftab_5fwindows',['FOR_ALL_TAB_WINDOWS',['../globals_8h.html#a7ec3ef1eaaad38a0f6b3b1965c6d1624',1,'globals.h']]],
   ['for_5fall_5ftabs',['FOR_ALL_TABS',['../globals_8h.html#a87576879e89a11905d64d1a9c687ab0f',1,'globals.h']]],
   ['for_5fall_5fwindows',['FOR_ALL_WINDOWS',['../globals_8h.html#ace47feb394b092f7e9f5e736b86ae91b',1,'globals.h']]],

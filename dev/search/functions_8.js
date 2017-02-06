@@ -2,7 +2,7 @@ var searchData=
 [
   ['halfpage',['halfpage',['../move_8c.html#a17d90c31db94fe43dbac04d81521282e',1,'move.c']]],
   ['handle_5finit',['handle_init',['../handle_8c.html#ad38136ab85af9968427fdf3fa1a9d62d',1,'handle_init(void):&#160;handle.c'],['../handle_8h.html#ad38136ab85af9968427fdf3fa1a9d62d',1,'handle_init(void):&#160;handle.c']]],
-  ['handle_5fswap_5fexists',['handle_swap_exists',['../buffer_8c.html#acfcc98ff362688515e452810ddf0144d',1,'buffer.c']]],
+  ['handle_5fswap_5fexists',['handle_swap_exists',['../buffer_8c.html#a9b0b06c67dbd1d75ed7bc4e3d2d8f089',1,'buffer.c']]],
   ['handle_5fx_5fkeys',['handle_x_keys',['../keymap_8c.html#aed5088c50e2b25750dad15230e90a008',1,'keymap.c']]],
   ['has_5fautocmd',['has_autocmd',['../fileio_8c.html#a7fccb633bb0ccece7ec26a2ffb5a2300',1,'fileio.c']]],
   ['has_5fcursorhold',['has_cursorhold',['../fileio_8c.html#ab589953f99ac97e7ebeb4c38069fde94',1,'fileio.c']]],

@@ -6,6 +6,7 @@ var searchData=
   ['bln_5fcurbuf',['BLN_CURBUF',['../buffer_8h.html#a0757e048a6e01ef9cdfbde931168616aa876cf585c4d240c09c2f137c64ba50c0',1,'buffer.h']]],
   ['bln_5fdummy',['BLN_DUMMY',['../buffer_8h.html#a0757e048a6e01ef9cdfbde931168616aa9728f5cd9a76ecc203bfc79757a5ac79',1,'buffer.h']]],
   ['bln_5flisted',['BLN_LISTED',['../buffer_8h.html#a0757e048a6e01ef9cdfbde931168616aa773664d22b8157fbc501e2eb130c2b3a',1,'buffer.h']]],
+  ['bln_5fnoopt',['BLN_NOOPT',['../buffer_8h.html#a0757e048a6e01ef9cdfbde931168616aa9b7baf9e1ccabb59b7bb07fba3ded0cc',1,'buffer.h']]],
   ['bv_5fai',['BV_AI',['../option__defs_8h.html#a5d76b81b0ad4c19007a781d4edb8181fab08f9f31edc8939ae04a8452f8bba64f',1,'option_defs.h']]],
   ['bv_5far',['BV_AR',['../option__defs_8h.html#a5d76b81b0ad4c19007a781d4edb8181fa1f46916d85178cd28d938a47c41afec1',1,'option_defs.h']]],
   ['bv_5fbexpr',['BV_BEXPR',['../option__defs_8h.html#a5d76b81b0ad4c19007a781d4edb8181faf7a6c2976032bb1ad085a1c6ad71890e',1,'option_defs.h']]],

@@ -57,7 +57,7 @@ var searchData=
   ['reset_5fvisual_5fand_5fresel',['reset_VIsual_and_resel',['../normal_8c.html#a2d96a9deb324aef61b400859bf219f97',1,'normal.c']]],
   ['resetredobuff',['ResetRedobuff',['../getchar_8c.html#ae2bf5846772fc579ea03d5d5cc06ec81',1,'getchar.c']]],
   ['resettitle',['resettitle',['../buffer_8c.html#a221cf536cec04557d6689df215eff35c',1,'buffer.c']]],
-  ['restore_5fbuffer',['restore_buffer',['../window_8c.html#a2d57fd6b78d38ab0cc73ac591375518a',1,'window.c']]],
+  ['restore_5fbuffer',['restore_buffer',['../window_8c.html#a45396f05acf52e5c91fb06a0d372b03e',1,'window.c']]],
   ['restore_5fcmdline_5falloc',['restore_cmdline_alloc',['../ex__getln_8c.html#ab8b016c2705babac0ebb6a6d073e590a',1,'ex_getln.c']]],
   ['restore_5fcterm_5fcolors',['restore_cterm_colors',['../syntax_8c.html#ab4ba5f244232f0e7f7a9d914fcda58a3',1,'syntax.c']]],
   ['restore_5ffunccal',['restore_funccal',['../eval_8c.html#af211a35cda61b35e65799285c024cbb9',1,'eval.c']]],

@@ -11,5 +11,6 @@ var searchData=
   ['bufhl_5fhl_5fitem',['bufhl_hl_item',['../structbufhl__hl__item.html',1,'']]],
   ['bufhl_5flineinfo_5ft',['bufhl_lineinfo_T',['../structbufhl__lineinfo__T.html',1,'']]],
   ['bufinfo_5ft',['bufinfo_T',['../structbufinfo__T.html',1,'']]],
+  ['bufref_5ft',['bufref_T',['../structbufref__T.html',1,'']]],
   ['bw_5finfo',['bw_info',['../structbw__info.html',1,'']]]
 ];

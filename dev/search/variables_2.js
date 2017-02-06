@@ -278,6 +278,8 @@ var searchData=
   ['botlnum',['botlnum',['../structposmatch.html#a2c728dd6c31832a3a7d6c62cd78d64ce',1,'posmatch']]],
   ['bp_5fpos',['bp_pos',['../structbackpos__S.html#ac93932333575d36c6f14ed38c721938d',1,'backpos_S']]],
   ['bp_5fscan',['bp_scan',['../structbackpos__S.html#afd828b38abb99641acbe2b6463c24b9a',1,'backpos_S']]],
+  ['br_5fbuf',['br_buf',['../structbufref__T.html#a97c41661287efeb270f8c20338d70e23',1,'bufref_T']]],
+  ['br_5fbuf_5ffree_5fcount',['br_buf_free_count',['../structbufref__T.html#a73ac73239da97766255002334a184c90',1,'bufref_T']]],
   ['break_5fctrl_5fc',['break_ctrl_c',['../structcommand__line__state.html#a8e37c3a526180b14075ebf6013dc6f8e',1,'command_line_state']]],
   ['breakat_5fflags',['breakat_flags',['../globals_8h.html#afa12e740685e29874093784d97217929',1,'globals.h']]],
   ['breakpoint',['breakpoint',['../structfunccall__S.html#abf15aaaa05e78406c01c73c5a17a3240',1,'funccall_S::breakpoint()'],['../structsource__cookie.html#a5a9f0f78254de8f5eaef34a99e776ac0',1,'source_cookie::breakpoint()']]],

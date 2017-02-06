@@ -9,7 +9,7 @@ var searchData=
   ['handle_5fdecls',['HANDLE_DECLS',['../handle_8h.html#a9c8a0aa288d6fd97b86fec2e9d7f9d87',1,'handle.h']]],
   ['handle_5fimpl',['HANDLE_IMPL',['../handle_8c.html#ac43e637e8bf18a5c9cd4203b7eb315e7',1,'handle.c']]],
   ['handle_5finit',['handle_init',['../handle_8c.html#ad38136ab85af9968427fdf3fa1a9d62d',1,'handle_init(void):&#160;handle.c'],['../handle_8h.html#ad38136ab85af9968427fdf3fa1a9d62d',1,'handle_init(void):&#160;handle.c'],['../handle_8c.html#a73291d97fb9d4f5393d02e11576bf5b6',1,'HANDLE_INIT():&#160;handle.c']]],
-  ['handle_5fswap_5fexists',['handle_swap_exists',['../buffer_8c.html#acfcc98ff362688515e452810ddf0144d',1,'buffer.c']]],
+  ['handle_5fswap_5fexists',['handle_swap_exists',['../buffer_8c.html#a9b0b06c67dbd1d75ed7bc4e3d2d8f089',1,'buffer.c']]],
   ['handle_5ft',['handle_T',['../api_2private_2defs_8h.html#a5fe5d437f595ae0cbe41e77669592921',1,'defs.h']]],
   ['handle_5ft_5feq',['handle_T_eq',['../map_8c.html#acb5494b39975e818b4ab8ac426417a53',1,'map.c']]],
   ['handle_5ft_5fhash',['handle_T_hash',['../map_8c.html#ae1f48e105fad2fc46644182183320d1d',1,'map.c']]],
