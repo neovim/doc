@@ -31,6 +31,7 @@ var searchData=
   ['no_5flocal_5fundolevel',['NO_LOCAL_UNDOLEVEL',['../option__defs_8h.html#a57c940314b87564de95c015c3d36ad78',1,'option_defs.h']]],
   ['no_5fresponse',['NO_RESPONSE',['../api_2private_2defs_8h.html#a5f137187c6a892935c5acd036f609b22',1,'defs.h']]],
   ['no_5fscreen',['NO_SCREEN',['../globals_8h.html#afcec43537029f9dcbf8705496cdbe294',1,'globals.h']]],
+  ['no_5fvim_5fmain',['NO_VIM_MAIN',['../memfile__test_8c.html#abeb370d31608e867c96e90815177cbde',1,'memfile_test.c']]],
   ['nobehind',['NOBEHIND',['../regexp_8c.html#a7251f1e6318e227c9abd3376a5979a6f',1,'regexp.c']]],
   ['noctal',['NOCTAL',['../regexp_8c.html#a6ec641625bc1364d802067ad64c29647',1,'regexp.c']]],
   ['node_5fnormal',['NODE_NORMAL',['../fs__defs_8h.html#a4835cb7f20ae811fad76da87661cd41c',1,'fs_defs.h']]],

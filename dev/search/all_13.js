@@ -136,6 +136,7 @@ var searchData=
   ['scroll_5fcursor_5fhalfway',['scroll_cursor_halfway',['../move_8c.html#afc4e75d420c97a1b979f737aa0b63978',1,'move.c']]],
   ['scroll_5fcursor_5ftop',['scroll_cursor_top',['../move_8c.html#aac5c7fe37dab94d672d8620449126d32',1,'move.c']]],
   ['scroll_5fredraw',['scroll_redraw',['../normal_8c.html#a122dca1f5dacf7330d4a43157067a6b3',1,'normal.c']]],
+  ['scroll_5fto_5ffraction',['scroll_to_fraction',['../window_8c.html#a344de88e388a042f010b688c21fab38a',1,'window.c']]],
   ['scrollback_5fbuffer_5fdefault_5fsize',['SCROLLBACK_BUFFER_DEFAULT_SIZE',['../terminal_8c.html#ad7528f004ad5d9235baff108de10e7a4',1,'terminal.c']]],
   ['scrollbackline',['ScrollbackLine',['../structScrollbackLine.html',1,'']]],
   ['scrolldown',['scrolldown',['../move_8c.html#a261340d894264f4fd5eadaa2c0df5d69',1,'move.c']]],

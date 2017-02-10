@@ -241,6 +241,7 @@ var searchData=
   ['no_5fscreen',['NO_SCREEN',['../globals_8h.html#afcec43537029f9dcbf8705496cdbe294',1,'globals.h']]],
   ['no_5fscs',['no_scs',['../structspat.html#abc725b1f46d13d28364eaf5bdbd69a13',1,'spat']]],
   ['no_5fswap_5ffile',['no_swap_file',['../structmparm__T.html#aa90e5e188aed10bff09b23bcdbd5284c',1,'mparm_T']]],
+  ['no_5fvim_5fmain',['NO_VIM_MAIN',['../memfile__test_8c.html#abeb370d31608e867c96e90815177cbde',1,'memfile_test.c']]],
   ['nobehind',['NOBEHIND',['../regexp_8c.html#a7251f1e6318e227c9abd3376a5979a6f',1,'regexp.c']]],
   ['noctal',['NOCTAL',['../regexp_8c.html#a6ec641625bc1364d802067ad64c29647',1,'regexp.c']]],
   ['node',['node',['../structdict__watcher.html#a90e51ccd68fea64b1fafdf949de96d30',1,'dict_watcher::node()'],['../structmultiqueue__item.html#a4924140cdb2483bbbbb3b15bb1181b31',1,'multiqueue_item::node()']]],
