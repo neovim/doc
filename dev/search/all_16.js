@@ -1,14 +1,14 @@
 var searchData=
 [
-  ['v_5fdict',['v_dict',['../structtypval__T.html#a3e158fa0e1ba87a1a739a476845dc6fc',1,'typval_T']]],
+  ['v_5fdict',['v_dict',['../uniontypval__T_1_1typval__vval__union.html#abeecc47fbd3f2ccae7ff096bf28f49fa',1,'typval_T::typval_vval_union']]],
   ['v_5fexception',['v_exception',['../eval_8c.html#a8f50c1590f81ffe343796e1505fe13e3',1,'eval.c']]],
-  ['v_5ffloat',['v_float',['../structtypval__T.html#a9cece71110442dfcc80455bc77a1a98e',1,'typval_T']]],
-  ['v_5flist',['v_list',['../structtypval__T.html#a886659f986c150dab284f1d5ef64ee00',1,'typval_T']]],
+  ['v_5ffloat',['v_float',['../uniontypval__T_1_1typval__vval__union.html#ae974a6b2d4e2d3679cd8ba1b4a65369b',1,'typval_T::typval_vval_union']]],
+  ['v_5flist',['v_list',['../uniontypval__T_1_1typval__vval__union.html#ad8e4e66e08bc0901a9eba845a41a2235',1,'typval_T::typval_vval_union']]],
   ['v_5flock',['v_lock',['../structtypval__T.html#a1da8dd2efdd15f2b78d71cf2b085bf44',1,'typval_T']]],
-  ['v_5fnumber',['v_number',['../structtypval__T.html#aa8615bd53291928fc5adceff07d5e5bc',1,'typval_T::v_number()'],['../eval_8c.html#a24deba0837a73245cc0b413af22d7208',1,'v_number():&#160;eval.c']]],
-  ['v_5fpartial',['v_partial',['../structtypval__T.html#a357def79f46d08d1e0631fe1df3ede02',1,'typval_T']]],
-  ['v_5fspecial',['v_special',['../structtypval__T.html#ac868de4dd1df2e46d4a5fdfee8d5bd62',1,'typval_T']]],
-  ['v_5fstring',['v_string',['../structtypval__T.html#ad5403b6cf230c7f663901d46079b9ac3',1,'typval_T']]],
+  ['v_5fnumber',['v_number',['../uniontypval__T_1_1typval__vval__union.html#a55ecdab6995848fcbe7d42203d6f4076',1,'typval_T::typval_vval_union::v_number()'],['../eval_8c.html#a24deba0837a73245cc0b413af22d7208',1,'v_number():&#160;eval.c']]],
+  ['v_5fpartial',['v_partial',['../uniontypval__T_1_1typval__vval__union.html#acc4ee119406f96967157bfba8031cdd5',1,'typval_T::typval_vval_union']]],
+  ['v_5fspecial',['v_special',['../uniontypval__T_1_1typval__vval__union.html#ab5515f8cbf42bd862879b810baacb3bb',1,'typval_T::typval_vval_union']]],
+  ['v_5fstring',['v_string',['../uniontypval__T_1_1typval__vval__union.html#a648516068e837f9757fc1b9bbb8dd422',1,'typval_T::typval_vval_union']]],
   ['v_5fthrowpoint',['v_throwpoint',['../eval_8c.html#ad83516bfbac6fa4e2bd884c85075fca7',1,'eval.c']]],
   ['v_5ftype',['v_type',['../structtypval__T.html#ae8bf8f1bbe623ebccf498d92042f2f74',1,'typval_T']]],
   ['va_5fevent_5finit',['VA_EVENT_INIT',['../event_2defs_8h.html#a90881d444f5dd9e1872bae79df88ee50',1,'defs.h']]],
@@ -233,7 +233,7 @@ var searchData=
   ['vimvarindex',['VimVarIndex',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800',1,'eval.h']]],
   ['virtual_5factive',['virtual_active',['../state_8c.html#ad53fe5f53eda7f02128d6cd0b10a3b10',1,'state.c']]],
   ['visible',['visible',['../structterminal.html#acdb627d9dcb1bce3cf2796675728b4b5',1,'terminal']]],
-  ['visual',['VISUAL',['../vim_8h.html#a5719963d148e344fe549ddff3b70f9b2',1,'VISUAL():&#160;vim.h'],['../globals_8h.html#acf84ebbba1c7b96312e1e8af22a3bf9a',1,'VIsual():&#160;globals.h']]],
+  ['visual',['VIsual',['../globals_8h.html#acf84ebbba1c7b96312e1e8af22a3bf9a',1,'VIsual():&#160;globals.h'],['../vim_8h.html#a5719963d148e344fe549ddff3b70f9b2',1,'VISUAL():&#160;vim.h']]],
   ['visual_5fbell',['visual_bell',['../structui__t.html#a154aa74b68bb3a9049838771f270f4f9',1,'ui_t']]],
   ['visual_5freselect',['VIsual_reselect',['../globals_8h.html#a94f6632f8b7b88cf8fe53e560eeaf6d8',1,'globals.h']]],
   ['visualinfo_5ft',['visualinfo_T',['../structvisualinfo__T.html',1,'']]],
@@ -339,5 +339,5 @@ var searchData=
   ['vv_5fvim_5fdid_5fenter',['VV_VIM_DID_ENTER',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a2b1e9744452ed465355e3160b4a96517',1,'eval.h']]],
   ['vv_5fwarningmsg',['VV_WARNINGMSG',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a3987b6deb3d81a8c1d4b49c03bb3b367',1,'eval.h']]],
   ['vv_5fwindowid',['VV_WINDOWID',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800aecc5ae395766d257244952b84942149b',1,'eval.h']]],
-  ['vval',['vval',['../structtypval__T.html#a9270dae1c46183e5f71629695d8ecb33',1,'typval_T']]]
+  ['vval',['vval',['../structtypval__T.html#a40afc2b385237c694d7f70d3a44ea066',1,'typval_T']]]
 ];

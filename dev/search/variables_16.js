@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['v_5fdict',['v_dict',['../structtypval__T.html#a3e158fa0e1ba87a1a739a476845dc6fc',1,'typval_T']]],
-  ['v_5ffloat',['v_float',['../structtypval__T.html#a9cece71110442dfcc80455bc77a1a98e',1,'typval_T']]],
-  ['v_5flist',['v_list',['../structtypval__T.html#a886659f986c150dab284f1d5ef64ee00',1,'typval_T']]],
+  ['v_5fdict',['v_dict',['../uniontypval__T_1_1typval__vval__union.html#abeecc47fbd3f2ccae7ff096bf28f49fa',1,'typval_T::typval_vval_union']]],
+  ['v_5ffloat',['v_float',['../uniontypval__T_1_1typval__vval__union.html#ae974a6b2d4e2d3679cd8ba1b4a65369b',1,'typval_T::typval_vval_union']]],
+  ['v_5flist',['v_list',['../uniontypval__T_1_1typval__vval__union.html#ad8e4e66e08bc0901a9eba845a41a2235',1,'typval_T::typval_vval_union']]],
   ['v_5flock',['v_lock',['../structtypval__T.html#a1da8dd2efdd15f2b78d71cf2b085bf44',1,'typval_T']]],
-  ['v_5fnumber',['v_number',['../structtypval__T.html#aa8615bd53291928fc5adceff07d5e5bc',1,'typval_T::v_number()'],['../eval_8c.html#a24deba0837a73245cc0b413af22d7208',1,'v_number():&#160;eval.c']]],
-  ['v_5fpartial',['v_partial',['../structtypval__T.html#a357def79f46d08d1e0631fe1df3ede02',1,'typval_T']]],
-  ['v_5fspecial',['v_special',['../structtypval__T.html#ac868de4dd1df2e46d4a5fdfee8d5bd62',1,'typval_T']]],
-  ['v_5fstring',['v_string',['../structtypval__T.html#ad5403b6cf230c7f663901d46079b9ac3',1,'typval_T']]],
+  ['v_5fnumber',['v_number',['../uniontypval__T_1_1typval__vval__union.html#a55ecdab6995848fcbe7d42203d6f4076',1,'typval_T::typval_vval_union::v_number()'],['../eval_8c.html#a24deba0837a73245cc0b413af22d7208',1,'v_number():&#160;eval.c']]],
+  ['v_5fpartial',['v_partial',['../uniontypval__T_1_1typval__vval__union.html#acc4ee119406f96967157bfba8031cdd5',1,'typval_T::typval_vval_union']]],
+  ['v_5fspecial',['v_special',['../uniontypval__T_1_1typval__vval__union.html#ab5515f8cbf42bd862879b810baacb3bb',1,'typval_T::typval_vval_union']]],
+  ['v_5fstring',['v_string',['../uniontypval__T_1_1typval__vval__union.html#a648516068e837f9757fc1b9bbb8dd422',1,'typval_T::typval_vval_union']]],
   ['v_5ftype',['v_type',['../structtypval__T.html#ae8bf8f1bbe623ebccf498d92042f2f74',1,'typval_T']]],
   ['val',['val',['../structValuesStackItem.html#ac51a7ad20d8b7efa9bd29818d700c895',1,'ValuesStackItem::val()'],['../structnfa__state.html#a49a1ded2b94a5386f574977862b121c5',1,'nfa_state::val()']]],
   ['valid_5fto',['valid_to',['../structbufhl__lineinfo__T.html#a91f2945c0eab87b7a856bb6958b326c6',1,'bufhl_lineinfo_T']]],
@@ -36,5 +36,5 @@ var searchData=
   ['vts',['vts',['../structterminal.html#ab33698998f9e6e636d83d902aabe88cd',1,'terminal']]],
   ['vv_5fexception',['vv_exception',['../structdbg__stuff.html#ae214d0d3eb51e908d88eff000eee7240',1,'dbg_stuff']]],
   ['vv_5fthrowpoint',['vv_throwpoint',['../structdbg__stuff.html#af51ae41ed949f3b44be4a1fce396ae38',1,'dbg_stuff']]],
-  ['vval',['vval',['../structtypval__T.html#a9270dae1c46183e5f71629695d8ecb33',1,'typval_T']]]
+  ['vval',['vval',['../structtypval__T.html#a40afc2b385237c694d7f70d3a44ea066',1,'typval_T']]]
 ];

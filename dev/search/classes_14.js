@@ -16,5 +16,6 @@ var searchData=
   ['trystate_5fs',['trystate_S',['../structtrystate__S.html',1,'']]],
   ['tuidata',['TUIData',['../structTUIData.html',1,'']]],
   ['typebuf_5ft',['typebuf_T',['../structtypebuf__T.html',1,'']]],
-  ['typval_5ft',['typval_T',['../structtypval__T.html',1,'']]]
+  ['typval_5ft',['typval_T',['../structtypval__T.html',1,'']]],
+  ['typval_5fvval_5funion',['typval_vval_union',['../uniontypval__T_1_1typval__vval__union.html',1,'typval_T']]]
 ];
