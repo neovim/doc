@@ -1,13 +1,13 @@
 var searchData=
 [
   ['u8char_5ft',['u8char_T',['../types_8h.html#a18d5cbae7068149cbcd19eb1954ad6a5',1,'types.h']]],
-  ['u_5facute',['U_acute',['../regexp__nfa_8c.html#a6a548330e1782c57563a955c4518383b',1,'U_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a2c48f3ac0ccf3e2a4e6e002142e5be79',1,'u_acute():&#160;regexp_nfa.c']]],
+  ['u_5facute',['u_acute',['../regexp__nfa_8c.html#a2c48f3ac0ccf3e2a4e6e002142e5be79',1,'u_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a6a548330e1782c57563a955c4518383b',1,'U_acute():&#160;regexp_nfa.c']]],
   ['u_5fblockfree',['u_blockfree',['../undo_8c.html#a1f1396583a1e1db5af06fccc36abfde6',1,'undo.c']]],
-  ['u_5fcircumflex',['u_circumflex',['../regexp__nfa_8c.html#a95b10978f27d8e8b044c04c4d88f4ba7',1,'u_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a1dfa57cdca2d36c8aa7e04d2ac2f27ff',1,'U_circumflex():&#160;regexp_nfa.c']]],
+  ['u_5fcircumflex',['U_circumflex',['../regexp__nfa_8c.html#a1dfa57cdca2d36c8aa7e04d2ac2f27ff',1,'U_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a95b10978f27d8e8b044c04c4d88f4ba7',1,'u_circumflex():&#160;regexp_nfa.c']]],
   ['u_5fclearall',['u_clearall',['../undo_8c.html#a9d4e2fc9c19c0860880c8dbc43a8f259',1,'undo.c']]],
   ['u_5fclearline',['u_clearline',['../undo_8c.html#a7061c9be20066803ba61f91519c7d90c',1,'undo.c']]],
   ['u_5fcompute_5fhash',['u_compute_hash',['../undo_8c.html#a17ca50dd4247561e7c74ba60920cf04d',1,'undo.c']]],
-  ['u_5fdiaeresis',['U_diaeresis',['../regexp__nfa_8c.html#ad5dafd1cfe6bc54ff4e385f7080be8f9',1,'U_diaeresis():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a377fa5205b2b588aa5fba3f5152e507d',1,'u_diaeresis():&#160;regexp_nfa.c']]],
+  ['u_5fdiaeresis',['u_diaeresis',['../regexp__nfa_8c.html#a377fa5205b2b588aa5fba3f5152e507d',1,'u_diaeresis():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#ad5dafd1cfe6bc54ff4e385f7080be8f9',1,'U_diaeresis():&#160;regexp_nfa.c']]],
   ['u_5fentry',['u_entry',['../structu__entry.html',1,'']]],
   ['u_5fentry_5ft',['u_entry_T',['../undo__defs_8h.html#a4aefde13020dbe2ef9369bd2067ade34',1,'undo_defs.h']]],
   ['u_5feval_5ftree',['u_eval_tree',['../undo_8c.html#a02c9b3d6c18c8d29d45424953986fb98',1,'undo.c']]],
