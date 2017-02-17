@@ -286,6 +286,7 @@ var searchData=
   ['fname_5funesc',['FNAME_UNESC',['../window_8h.html#aa20a9a609a7a18ee61b20f697a696b5d',1,'window.h']]],
   ['fnamecmp',['fnamecmp',['../vim_8h.html#a74e72b20fdc634f1981f0e0b503368e9',1,'vim.h']]],
   ['fnamencmp',['fnamencmp',['../vim_8h.html#a9be62a551d4fba0ca6f627386c3ccbe8',1,'vim.h']]],
+  ['fnametranserror',['FnameTransError',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8a',1,'eval.c']]],
   ['fne_5fcheck_5fstart',['FNE_CHECK_START',['../eval_8c.html#a85d47bb3b1c8299f77d3c8c16dc65a2d',1,'eval.c']]],
   ['fne_5fincl_5fbr',['FNE_INCL_BR',['../eval_8c.html#ad37a7ee377943f0865b4c63138a2aa2b',1,'eval.c']]],
   ['fnum',['fnum',['../structfilemark.html#a40783351402af521156d7e27d7acf5c7',1,'filemark']]],

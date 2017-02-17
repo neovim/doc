@@ -7,5 +7,6 @@ var searchData=
   ['ex_5ffunc_5ft',['ex_func_T',['../ex__cmds__defs_8h.html#aa3074980da14a1abbb0c524cc43ee61b',1,'ex_cmds_defs.h']]],
   ['exarg_5ft',['exarg_T',['../ex__cmds__defs_8h.html#a4ece4b404e62892e7473c6663b1a0f24',1,'ex_cmds_defs.h']]],
   ['except_5ft',['except_T',['../ex__eval_8h.html#a689b5c954492eb0e90c825fbf265d22f',1,'ex_eval.h']]],
-  ['expand_5ft',['expand_T',['../types_8h.html#a0472b2c541b720c34a9e36b8d351a12e',1,'types.h']]]
+  ['expand_5ft',['expand_T',['../types_8h.html#a0472b2c541b720c34a9e36b8d351a12e',1,'types.h']]],
+  ['expandfunc',['ExpandFunc',['../ex__getln_8c.html#ae2f5b2754dae1528f19b474a76ebd0a0',1,'ex_getln.c']]]
 ];

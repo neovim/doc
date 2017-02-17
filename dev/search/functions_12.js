@@ -66,7 +66,7 @@ var searchData=
   ['restore_5ftypeahead',['restore_typeahead',['../getchar_8c.html#a6821bba15da7464f459619c0bf87cb33',1,'getchar.c']]],
   ['restore_5fwin',['restore_win',['../window_8c.html#a69ad3d4a3e21e92f775a82b3c90a9e68',1,'window.c']]],
   ['restoreredobuff',['restoreRedobuff',['../getchar_8c.html#a489472bdedbe15eb2d82221410561b4c',1,'getchar.c']]],
-  ['return',['return',['../mark_8c.html#a3029c055e11e14015ef86f14d6e07c29',1,'mark.c']]],
+  ['return',['return',['../eval_8c.html#a766dcf01baed5e8c8b94772d3f4b2457',1,'return(char_u *):&#160;eval.c'],['../mark_8c.html#a3029c055e11e14015ef86f14d6e07c29',1,'return(const void *):&#160;mark.c']]],
   ['reverse_5ftext',['reverse_text',['../search_8c.html#a3297192e0587a54283079de0de0995dc',1,'search.c']]],
   ['rewind_5fconditionals',['rewind_conditionals',['../ex__eval_8c.html#a070b68fbf13a6cd1366a184507048019',1,'ex_eval.c']]],
   ['rl_5fmirror',['rl_mirror',['../screen_8c.html#aa9bd143450271431de376bc3aa28bcb8',1,'screen.c']]],

@@ -175,7 +175,7 @@ var searchData=
   ['skiptohex',['skiptohex',['../charset_8c.html#ac909356febb491ff5f450e3ee79edbb7',1,'charset.c']]],
   ['skiptowhite',['skiptowhite',['../charset_8c.html#af985ed977d4d9940d6e927f8845ee5db',1,'charset.c']]],
   ['skiptowhite_5fesc',['skiptowhite_esc',['../charset_8c.html#ae818a8afd922617427e805e3f3c2da14',1,'charset.c']]],
-  ['skipwhite',['skipwhite',['../charset_8c.html#a9b0bcaf36a3b4d0acb84601593dea494',1,'charset.c']]],
+  ['skipwhite',['skipwhite',['../charset_8c.html#a33b012469804f448e0d93d07ce87ed38',1,'charset.c']]],
   ['sm_5fgettail',['sm_gettail',['../ex__getln_8c.html#aa6e12867f9e7e7802704fe9795d047e8',1,'ex_getln.c']]],
   ['smsg',['smsg',['../message_8c.html#a4fa5a912e1ca4b4521476678bf18c440',1,'message.c']]],
   ['smsg_5fattr',['smsg_attr',['../message_8c.html#a0fcbca77eaab0472b3503ee60c8c8d9d',1,'message.c']]],
