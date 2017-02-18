@@ -55,7 +55,6 @@ var searchData=
   ['p_5fef',['p_ef',['../option__defs_8h.html#aa145448eb9be0534c02743f719f498e0',1,'option_defs.h']]],
   ['p_5fefm',['p_efm',['../option__defs_8h.html#adc074996a887f60da9a4f354c363780f',1,'option_defs.h']]],
   ['p_5fei',['p_ei',['../option__defs_8h.html#ad94929d032bace48ddb16331da5004e8',1,'option_defs.h']]],
-  ['p_5fek',['p_ek',['../option__defs_8h.html#a6c3f765c4be244d5c2c4882aae294a31',1,'option_defs.h']]],
   ['p_5femoji',['p_emoji',['../option__defs_8h.html#ad2a47e8e58e8bcf682039e6697632db5',1,'option_defs.h']]],
   ['p_5fenc',['p_enc',['../option__defs_8h.html#af186899443ac27aca383add9bbe5fff3',1,'option_defs.h']]],
   ['p_5fep',['p_ep',['../option__defs_8h.html#ad7176a1dfeb540b3b2427db916f695d0',1,'option_defs.h']]],

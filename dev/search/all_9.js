@@ -1,8 +1,8 @@
 var searchData=
 [
   ['i',['i',['../structinsert__state.html#aafd5bb75bdc38ae8954c361e6459de9d',1,'insert_state::i()'],['../structcommand__line__state.html#a6b604183154f29e63e042107c9dc9328',1,'command_line_state::i()']]],
-  ['i_5facute',['I_acute',['../regexp__nfa_8c.html#a13ada54bc05143df1b6c67792ec86006',1,'I_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#aaf5ce7ac364fe90d9f605f3813d6ead7',1,'i_acute():&#160;regexp_nfa.c']]],
-  ['i_5fcircumflex',['I_circumflex',['../regexp__nfa_8c.html#afa2832c7ca3cc56b729e82b64d5997f7',1,'I_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a6224bad4f2469a5fac83821f4db7da24',1,'i_circumflex():&#160;regexp_nfa.c']]],
+  ['i_5facute',['i_acute',['../regexp__nfa_8c.html#aaf5ce7ac364fe90d9f605f3813d6ead7',1,'i_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a13ada54bc05143df1b6c67792ec86006',1,'I_acute():&#160;regexp_nfa.c']]],
+  ['i_5fcircumflex',['i_circumflex',['../regexp__nfa_8c.html#a6224bad4f2469a5fac83821f4db7da24',1,'i_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#afa2832c7ca3cc56b729e82b64d5997f7',1,'I_circumflex():&#160;regexp_nfa.c']]],
   ['i_5fdiaeresis',['i_diaeresis',['../regexp__nfa_8c.html#a1cb79d8385e140a509b8421f251626d0',1,'i_diaeresis():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a6e8c6835ded2fe88955ca846e95425f2',1,'I_diaeresis():&#160;regexp_nfa.c']]],
   ['i_5fgrave',['I_grave',['../regexp__nfa_8c.html#aecce5d4f656b71cdce26088166c3db20',1,'I_grave():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#ad5a8c2588e4bf39ab416ba7837e28e90',1,'i_grave():&#160;regexp_nfa.c']]],
   ['iconv_2eh',['iconv.h',['../iconv_8h.html',1,'']]],
@@ -101,7 +101,7 @@ var searchData=
   ['in_5fuse',['in_use',['../structregsub__T.html#a27725d0c17dd3a4c391817b2cec117e3',1,'regsub_T']]],
   ['in_5fwin_5fborder',['in_win_border',['../charset_8c.html#a9bbd5fd72261db716f49712f6b3b9ca9',1,'charset.c']]],
   ['inbufpollresult',['InbufPollResult',['../os_2input_8c.html#aba659b7ea89ff3ccbfb12e87073859cf',1,'input.c']]],
-  ['inc',['inc',['../memline_8c.html#a0f1f4c4c9324421c76c2e29e8f418f86',1,'inc(pos_T *lp):&#160;memline.c'],['../option_8c.html#af735670d9b1cd3dfa2d927db387f7123',1,'INC():&#160;option.c']]],
+  ['inc',['INC',['../option_8c.html#af735670d9b1cd3dfa2d927db387f7123',1,'INC():&#160;option.c'],['../memline_8c.html#a0f1f4c4c9324421c76c2e29e8f418f86',1,'inc(pos_T *lp):&#160;memline.c']]],
   ['inc_5fcursor',['inc_cursor',['../cursor_8c.html#abf466a63a4b512bf655ae0c818664c43',1,'cursor.c']]],
   ['inc_5ftag',['inc_tag',['../structsp__syn.html#aafe1a57ad126381ea16c4079c87b92ae',1,'sp_syn']]],
   ['inchar',['inchar',['../getchar_8c.html#aa124065252fb794e1e0904b2e15535b8',1,'getchar.c']]],
