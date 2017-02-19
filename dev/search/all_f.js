@@ -147,7 +147,7 @@ var searchData=
   ['original_5ftext',['ORIGINAL_TEXT',['../edit_8c.html#a51326e458e4050b2115863e0edda4d9b',1,'edit.c']]],
   ['os_2eh',['os.h',['../os_8h.html',1,'']]],
   ['os_5fbreakcheck',['os_breakcheck',['../os_2input_8c.html#a32e12278d8bc8b11669377905baa662e',1,'input.c']]],
-  ['os_5fbuf',['os_buf',['../globals_8h.html#a927796547f7d63d5a77df9160156e810',1,'globals.h']]],
+  ['os_5fbuf',['os_buf',['../globals_8h.html#a2343a4d0e359ffead1be2d28bd344f75',1,'globals.h']]],
   ['os_5fcall_5fshell',['os_call_shell',['../shell_8c.html#a360e8d1add3ef5c50d995ec06513b5f6',1,'shell.c']]],
   ['os_5fcan_5fexe',['os_can_exe',['../fs_8c.html#a77d4eb2e2bdfa4acc220b8ceea8364ef',1,'fs.c']]],
   ['os_5fchar_5favail',['os_char_avail',['../os_2input_8c.html#a1bd21dc37589da99f55f8558099ef745',1,'input.c']]],

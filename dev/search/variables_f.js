@@ -21,7 +21,7 @@ var searchData=
   ['op_5ftype',['op_type',['../structoparg__S.html#acb9e3c2b4847f0e369552cad973c137e',1,'oparg_S']]],
   ['opcount',['opcount',['../structcmdarg__S.html#a58f88a02d8bfe611ed941f8950fdf89d',1,'cmdarg_S']]],
   ['opts',['opts',['../structterminal.html#a603d2575fb7a867cf9d91de2d5dd05fe',1,'terminal']]],
-  ['os_5fbuf',['os_buf',['../globals_8h.html#a927796547f7d63d5a77df9160156e810',1,'globals.h']]],
+  ['os_5fbuf',['os_buf',['../globals_8h.html#a2343a4d0e359ffead1be2d28bd344f75',1,'globals.h']]],
   ['out',['out',['../structTerminalJobData.html#aeffa7abe9f735360dd0936b7019f4586',1,'TerminalJobData::out()'],['../structprocess.html#a7e5763e08b2655df2cfc0c7018c36533',1,'process::out()'],['../structnfa__state.html#a5f6af7a656c2d7f366164db6c349780f',1,'nfa_state::out()'],['../structFrag.html#a857b78b327224ffc647fe2c828b2f347',1,'Frag::out()']]],
   ['out1',['out1',['../structnfa__state.html#a6b5efbc7503e9540cdce968e55f6c62a',1,'nfa_state']]],
   ['out_5fisatty',['out_isatty',['../structTUIData.html#a8923a10fe4a73826666c557cce3a0e8d',1,'TUIData']]],
