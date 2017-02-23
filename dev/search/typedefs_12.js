@@ -5,7 +5,7 @@ var searchData=
   ['sattr_5ft',['sattr_T',['../globals_8h.html#ae5481da181fa7c2285fb3b23a2670dfb',1,'globals.h']]],
   ['sblock_5ft',['sblock_T',['../spell_8c.html#a0dc250f643f98eb1dfc7f71f541fdfe5',1,'spell.c']]],
   ['schar_5ft',['schar_T',['../globals_8h.html#ab3ddbe205d47d9b30e84276bd40e8aa1',1,'globals.h']]],
-  ['scid_5ft',['scid_T',['../buffer__defs_8h.html#a02a5ed8479635618fa379378a5f8d6d5',1,'buffer_defs.h']]],
+  ['scid_5ft',['scid_T',['../eval__defs_8h.html#a02a5ed8479635618fa379378a5f8d6d5',1,'eval_defs.h']]],
   ['scriptitem_5ft',['scriptitem_T',['../ex__cmds2_8c.html#acb1d485a414b0b4d84ec8b20c526acad',1,'ex_cmds2.c']]],
   ['searchedfile',['SearchedFile',['../search_8c.html#a2fcd96a0beb2d947171bcf8ebffb87a4',1,'search.c']]],
   ['searchoffset',['SearchOffset',['../search_8h.html#aaa78800d6bf6378ca437fd2b6968434f',1,'search.h']]],

@@ -7,6 +7,7 @@ var searchData=
   ['parse_5fprintmbfont',['parse_printmbfont',['../hardcopy_8c.html#a40df60d78472ddeac2ddc634baa38ac2',1,'hardcopy.c']]],
   ['parse_5fprintoptions',['parse_printoptions',['../hardcopy_8c.html#a023617454df2eb22023c6c8f38cc7312',1,'hardcopy.c']]],
   ['parse_5fshape_5fopt',['parse_shape_opt',['../cursor__shape_8c.html#ad8187a8343255052bff99e7b607537e4',1,'cursor_shape.c']]],
+  ['partial_5fname',['partial_name',['../eval_8c.html#a7157304180ff3b14de007739a3709763',1,'eval.c']]],
   ['partial_5funref',['partial_unref',['../eval_8c.html#ae1ee36a725913597ed42ad9093bceae6',1,'eval.c']]],
   ['pat_5fhas_5fuppercase',['pat_has_uppercase',['../search_8c.html#aa4d06a0e09bee3e1c458c8eb5959066b',1,'search.c']]],
   ['path_5ffix_5fcase',['path_fix_case',['../path_8c.html#a9ee35e02f63d112d3ddf3e724249468a',1,'path.c']]],

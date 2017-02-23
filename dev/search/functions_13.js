@@ -98,6 +98,8 @@ var searchData=
   ['set_5foption_5fto',['set_option_to',['../api_2private_2helpers_8c.html#ad53b69abe68f104f3e4a88d83e9116fb',1,'helpers.c']]],
   ['set_5foption_5fvalue',['set_option_value',['../option_8c.html#a926f5a8d6d984bcc5e2e983853a40ba3',1,'option.c']]],
   ['set_5foptions_5fbin',['set_options_bin',['../option_8c.html#a51bd5244e8de578edd61ab92045a943e',1,'option.c']]],
+  ['set_5fref_5fin_5ffunc',['set_ref_in_func',['../eval_8c.html#a356ae9d183557d713052d76fdc3673d3',1,'eval.c']]],
+  ['set_5fref_5fin_5ffunctions',['set_ref_in_functions',['../eval_8c.html#a28bba24b39a90393b9775b24f13edfac',1,'eval.c']]],
   ['set_5fref_5fin_5fht',['set_ref_in_ht',['../eval_8c.html#a38ae47579a6949b3204d5128458a60bd',1,'eval.c']]],
   ['set_5fref_5fin_5fitem',['set_ref_in_item',['../eval_8c.html#aef23142d1c9d97d017f695ea5c064a0c',1,'eval.c']]],
   ['set_5fref_5fin_5flist',['set_ref_in_list',['../eval_8c.html#af82e5cc653fc1006465a654902ac60e7',1,'eval.c']]],

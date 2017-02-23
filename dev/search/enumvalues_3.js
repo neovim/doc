@@ -1,6 +1,7 @@
 var searchData=
 [
   ['error_5fboth',['ERROR_BOTH',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8aa0a004ea8d7a996b81c5a4e1a4c5b5f75',1,'eval.c']]],
+  ['error_5fdeleted',['ERROR_DELETED',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8aa166114ce7a9ba41c6059ea6d49ce79f3',1,'eval.c']]],
   ['error_5fdict',['ERROR_DICT',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8aa36823fb4aab61393e98320a5f8f28078',1,'eval.c']]],
   ['error_5fnone',['ERROR_NONE',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8aa4edc8aade11e1de7bbbdc04704baae5f',1,'eval.c']]],
   ['error_5fother',['ERROR_OTHER',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8aa8271b369203f770c5d1ac041c27655c7',1,'eval.c']]],

@@ -16,6 +16,7 @@ var searchData=
   ['init_5fhomedir',['init_homedir',['../env_8c.html#a5bd328bc06c8c3f71f3d9df207ea39bd',1,'env.c']]],
   ['init_5fnormal_5fcmds',['init_normal_cmds',['../normal_8c.html#a28946c68804466aa22b6517e02da7395',1,'normal.c']]],
   ['init_5fspell_5fchartab',['init_spell_chartab',['../spell_8c.html#a4ae27fa250e3e75b306f77b17acb7a65',1,'spell.c']]],
+  ['init_5fstatic_5flist',['init_static_list',['../eval_8c.html#a814f594703aac00d08b487addccb55a3',1,'eval.c']]],
   ['init_5fvar_5fdict',['init_var_dict',['../eval_8c.html#ab3b2e9de18d3cf1c9632dcdcb491bae7',1,'eval.c']]],
   ['init_5fyank',['init_yank',['../ops_8c.html#a77abd835ed7da5f3c126359c147e2a19',1,'ops.c']]],
   ['input_5favailable',['input_available',['../os_2input_8c.html#ac4072cddd08b3acbaf7419c744731aed',1,'input.c']]],

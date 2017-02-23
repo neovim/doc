@@ -125,6 +125,7 @@ var searchData=
   ['errmsg',['errmsg',['../structexarg.html#ac0914c147d7728c439edc77c88b1099c',1,'exarg']]],
   ['error',['Error',['../structError.html',1,'Error'],['../structsd__read__def.html#a4f33abcf5ffcdaf76c8cad7c836b3b53',1,'sd_read_def::error()'],['../structsd__write__def.html#a690ab36dcaff964e831bf0b608bc59b8',1,'sd_write_def::error()']]],
   ['error_5fboth',['ERROR_BOTH',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8aa0a004ea8d7a996b81c5a4e1a4c5b5f75',1,'eval.c']]],
+  ['error_5fdeleted',['ERROR_DELETED',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8aa166114ce7a9ba41c6059ea6d49ce79f3',1,'eval.c']]],
   ['error_5fdict',['ERROR_DICT',['../eval_8c.html#ab6f1727f7aba1ecbdeaab8b6fff69d8aa36823fb4aab61393e98320a5f8f28078',1,'eval.c']]],
   ['error_5finit',['ERROR_INIT',['../api_2private_2defs_8h.html#a44f30b25078f303e66d1ebc56bc37bd7',1,'defs.h']]],
   ['error_5flog_5flevel',['ERROR_LOG_LEVEL',['../log_8h.html#a023f94f341f2300adee0891b15b364b2',1,'log.h']]],

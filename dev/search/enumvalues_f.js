@@ -82,6 +82,7 @@ var searchData=
   ['vv_5fswapcommand',['VV_SWAPCOMMAND',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a6918d7b29533ccb3ff1e776adb6175ef',1,'eval.h']]],
   ['vv_5fswapname',['VV_SWAPNAME',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800afb2874272a63c2b10f7b4466d27760ac',1,'eval.h']]],
   ['vv_5ftermresponse',['VV_TERMRESPONSE',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800ad64ec34b253f7684de48bc23a03a0003',1,'eval.h']]],
+  ['vv_5ftesting',['VV_TESTING',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800aa61770ad0b6539a566a4a419a825ac9c',1,'eval.h']]],
   ['vv_5fthis_5fsession',['VV_THIS_SESSION',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a4ab76460b9cadb29563bb968cd29cc3c',1,'eval.h']]],
   ['vv_5fthrowpoint',['VV_THROWPOINT',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a53461fe82cae767353ac04ccfdfdac06',1,'eval.h']]],
   ['vv_5ftrue',['VV_TRUE',['../eval_8h.html#a73f01f4d7538f31de6363bbf6aeca800a9b2bdeee8637a25b639b9ff12ac3db9e',1,'eval.h']]],

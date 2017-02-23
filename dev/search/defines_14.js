@@ -31,6 +31,7 @@ var searchData=
   ['textdomain',['textdomain',['../vim_8h.html#a4aff4edc09ea9fa224a467bd1e43bb78',1,'vim.h']]],
   ['tfn_5fint',['TFN_INT',['../eval_8c.html#a48f6c3488dc842467706cccee2492ee8',1,'eval.c']]],
   ['tfn_5fno_5fautoload',['TFN_NO_AUTOLOAD',['../eval_8c.html#a0b8ba311861c931fb7e3ddb22a3123be',1,'eval.c']]],
+  ['tfn_5fno_5fderef',['TFN_NO_DEREF',['../eval_8c.html#afd22ce921e1fed532699e4dd603bdce6',1,'eval.c']]],
   ['tfn_5fquiet',['TFN_QUIET',['../eval_8c.html#a5db6b1ffec320dcc3c1d22d4af5b544d',1,'eval.c']]],
   ['throw_5fon_5ferror',['THROW_ON_ERROR',['../ex__eval_8c.html#ac91b45d16d5fe10abdad30d5284987cf',1,'ex_eval.c']]],
   ['throw_5fon_5ferror_5ftrue',['THROW_ON_ERROR_TRUE',['../ex__eval_8c.html#acbe39514171dd4e8dc50438289e32e58',1,'ex_eval.c']]],

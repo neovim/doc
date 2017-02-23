@@ -7,6 +7,7 @@ var searchData=
   ['alist_5ft',['alist_T',['../buffer__defs_8h.html#a2bfec23dcc5050849c69ac30b331bb57',1,'buffer_defs.h']]],
   ['apidispatchwrapper',['ApiDispatchWrapper',['../dispatch_8h.html#a5fd60c0e160c99721368f67cfeaae629',1,'dispatch.h']]],
   ['argv_5fcallback',['argv_callback',['../event_2defs_8h.html#a8f050aa1321f0742fdc423be50d0d6f4',1,'defs.h']]],
+  ['argvfunc',['ArgvFunc',['../eval_8h.html#a30cde13557e4987ca3406af60417a886',1,'eval.h']]],
   ['attrentry_5ft',['attrentry_T',['../syntax__defs_8h.html#a67f0b6437883727320dbef6080916800',1,'syntax_defs.h']]],
   ['autocmd',['AutoCmd',['../fileio_8c.html#aeae4fe66e25953a58616cfb59df22e78',1,'fileio.c']]],
   ['autopat',['AutoPat',['../fileio_8c.html#aceb1a884fb0de403333d18544ac2983a',1,'fileio.c']]],
