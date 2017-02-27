@@ -46,30 +46,20 @@
 
 
 
-Embedded terminal emulator				   *<A NAME="terminal-emulator"></A><B>terminal-emulator</B>*
+Terminal emulator					   *<A NAME="terminal-emulator"></A><B>terminal-emulator</B>*
 
-1. Introduction			|<A HREF="#terminal-emulator-intro">terminal-emulator-intro</A>|
-2. Spawning			|<A HREF="#terminal-emulator-spawning">terminal-emulator-spawning</A>|
-3. Input			|<A HREF="#terminal-emulator-input">terminal-emulator-input</A>|
-4. Configuration		|<A HREF="#terminal-emulator-configuration">terminal-emulator-configuration</A>|
-5. Status Variables		|<A HREF="#terminal-emulator-status">terminal-emulator-status</A>|
+Nvim embeds a VT220/xterm terminal emulator based on libvterm. The terminal is
+presented <A HREF="motion.html#as">as</A> a special buffer type, asynchronously updated from the virtual
+terminal <A HREF="motion.html#as">as</A> data is received from the program connected to <A HREF="motion.html#it">it</A>.
 
-==============================================================================
-
-1. Introduction					     *<A NAME="terminal-emulator-intro"></A><B>terminal-emulator-intro</B>*
-
-Nvim offers a mostly complete VT220/xterm terminal emulator. The terminal is
-presented <A HREF="motion.html#as">as</A> a special buffer type, asynchronously updated to mirror the
-virtual terminal display <A HREF="motion.html#as">as</A> data is received from the program connected to <A HREF="motion.html#it">it</A>.
-For most purposes, terminal <A HREF="windows.html#buffers">buffers</A> behave a lot like normal <A HREF="windows.html#buffers">buffers</A> with
-<A HREF="options.html#'nomodifiable'">'nomodifiable'</A> set.
-
-The implementation is powered by libvterm, a powerful abstract terminal
- emulation library.	<A HREF="http://www.leonerd.org.uk/code/libvterm/">http://www.leonerd.org.uk/code/libvterm/</A>
+Terminal <A HREF="windows.html#buffers">buffers</A> behave mostly like normal <A HREF="options.html#'nomodifiable'">'nomodifiable'</A> <A HREF="windows.html#buffers">buffers</A>, except:
+- Plugins can set <A HREF="options.html#'modifiable'">'modifiable'</A> to modify text, but lines cannot be deleted.
+- <A HREF="options.html#'scrollback'">'scrollback'</A> controls how many off-screen lines are kept.
+- Terminal output is followed if the cursor is on the last line.
 
 ==============================================================================
 
-2. Spawning					  *<A NAME="terminal-emulator-spawning"></A><B>terminal-emulator-spawning</B>*
+Spawning					  *<A NAME="terminal-emulator-spawning"></A><B>terminal-emulator-spawning</B>*
 
 There are 3 ways to create a terminal buffer:
 
@@ -84,35 +74,28 @@ There are 3 ways to create a terminal buffer:
     Note: The &quot;term://&quot; <A HREF="pattern.html#pattern">pattern</A> is handled by a <A HREF="autocmd.html#BufReadCmd">BufReadCmd</A> handler, so the
     |<A HREF="autocmd.html#autocmd-nested">autocmd-nested</A>| modifier is required to use <A HREF="motion.html#it">it</A> in an autocmd.
 <B>        autocmd VimEnter * nested split term://sh</B>
-     This is only mentioned for reference; you should use the |<A HREF="various.html#:terminal">:terminal</A>|
-    command instead.
+     This is only mentioned for reference; use |<A HREF="various.html#:terminal">:terminal</A>| instead.
 
 When the terminal spawns the program, the buffer will start to mirror the
-terminal display and change its name to `term://$CWD//$PID:$COMMAND`.
-Note that |<A HREF="starting.html#:mksession">:mksession</A>| will &quot;save&quot; the terminal <A HREF="windows.html#buffers">buffers</A> by restarting all
-programs when the session is restored.
+terminal display and change its name to `term://{cwd}//{pid}:{cmd}`.
+The &quot;term://...&quot; scheme enables |<A HREF="starting.html#:mksession">:mksession</A>| to &quot;restore&quot; a terminal buffer by
+restarting the {cmd} when the session is loaded.
 
 ==============================================================================
 
-3. Input					     *<A NAME="terminal-emulator-input"></A><B>terminal-emulator-input</B>*
+Input						     *<A NAME="terminal-emulator-input"></A><B>terminal-emulator-input</B>*
 
-Sending input is possible by entering terminal mode, which is achieved by
-pressing any key that would enter insert mode in a normal buffer (|<A HREF="insert.html#i">i</A>| or |<A HREF="insert.html#a">a</A>|
-for example). The |<A HREF="various.html#:terminal">:terminal</A>| ex command will automatically enter terminal
-mode once it's spawned. While in terminal mode, Nvim will forward all keys to
-the underlying program. The only exception is the &lt;C-\&gt;&lt;C-n&gt; key combo,
-which will exit back to normal mode.
+To send input, enter terminal mode using any command that would enter &quot;insert
+mode&quot; in a normal buffer, such <A HREF="motion.html#as">as</A> |<A HREF="insert.html#i">i</A>| or |<A HREF="insert.html#:startinsert">:startinsert</A>|. In this mode all keys
+except &lt;C-\&gt;&lt;C-N&gt; are sent to the underlying program. Use &lt;C-\&gt;&lt;C-N&gt; to return
+to normal mode. |<A HREF="intro.html#CTRL-\_CTRL-N">CTRL-\_CTRL-N</A>|
 
-Terminal mode has its own namespace for mappings, which is accessed with the
-&quot;<A HREF="motion.html#t">t</A>&quot; prefix. It's possible to use terminal mappings to customize interaction
-with the terminal. For example, here's how to map <A HREF="intro.html#&lt;Esc&gt;">&lt;Esc&gt;</A> to exit terminal mode:
-
+Terminal mode has its own |<A HREF="map.html#:tnoremap">:tnoremap</A>| namespace for mappings, this can be used
+to automate any terminal interaction. To map <A HREF="intro.html#&lt;Esc&gt;">&lt;Esc&gt;</A> to exit terminal mode:
 <B>    :tnoremap &lt;Esc&gt; &lt;C-\&gt;&lt;C-n&gt;</B>
  
-Navigating to other <A HREF="windows.html#windows">windows</A> is only possible by <A HREF="starting.html#exiting">exiting</A> to normal mode, which
-can be cumbersome with &lt;C-\&gt;&lt;C-n&gt; keys. To improve the <A HREF="motion.html#navigation">navigation</A> experience,
-you could use the following mappings:
-
+Navigating to other <A HREF="windows.html#windows">windows</A> is only possible in normal mode. For convenience,
+you could use these mappings:
 <B>    :tnoremap &lt;A-h&gt; &lt;C-\&gt;&lt;C-n&gt;&lt;C-w&gt;h</B>
 <B>    :tnoremap &lt;A-j&gt; &lt;C-\&gt;&lt;C-n&gt;&lt;C-w&gt;j</B>
 <B>    :tnoremap &lt;A-k&gt; &lt;C-\&gt;&lt;C-n&gt;&lt;C-w&gt;k</B>
@@ -122,11 +105,9 @@ you could use the following mappings:
 <B>    :nnoremap &lt;A-k&gt; &lt;C-w&gt;k</B>
 <B>    :nnoremap &lt;A-l&gt; &lt;C-w&gt;l</B>
  
-This configuration allows using `Alt+{h,j,k,l}` to navigate between <A HREF="windows.html#windows">windows</A> no
-matter if they are displaying a normal buffer or a terminal buffer in terminal
-mode.
+Then you can use `Alt+{h,j,k,l}` to navigate between <A HREF="windows.html#windows">windows</A> from any mode.
 
-Mouse input is also fully supported, and has the following behavior:
+Mouse input is supported, and has the following behavior:
 
 - If the program has enabled mouse events, the corresponding events will be
   forwarded to the program.
@@ -139,29 +120,24 @@ Mouse input is also fully supported, and has the following behavior:
 
 ==============================================================================
 
-4. Configuration			     *<A NAME="terminal-emulator-configuration"></A><B>terminal-emulator-configuration</B>*
+Configuration				     *<A NAME="terminal-emulator-configuration"></A><B>terminal-emulator-configuration</B>*
 
-Terminal <A HREF="windows.html#buffers">buffers</A> can be customized through the following global/buffer-local
-<A HREF="eval.html#variables">variables</A> (set via the |<A HREF="autocmd.html#TermOpen">TermOpen</A>| autocmd):
+Options:		<A HREF="options.html#'scrollback'">'scrollback'</A>
+Events:			|<A HREF="autocmd.html#TermOpen">TermOpen</A>|, |<A HREF="autocmd.html#TermClose">TermClose</A>|
+Highlight groups:	|<A HREF="syntax.html#hl-TermCursor">hl-TermCursor</A>|, |<A HREF="syntax.html#hl-TermCursorNC">hl-TermCursorNC</A>|
 
-- `{g,b}:terminal_scrollback_buffer_size`: Scrollback buffer size, between 1
-  and 100000 <A HREF="motion.html#inclusive">inclusive</A>. The default is 1000.
+Terminal colors can be customized with these <A HREF="eval.html#variables">variables</A>:
+
 - `{g,b}:terminal_color_$NUM`: The terminal color palette, where `$NUM` is the
   color index, between 0 and 255 <A HREF="motion.html#inclusive">inclusive</A>. This setting only affects UIs with
   RGB capabilities; for normal terminals the color index is simply forwarded.
 
-The configuration <A HREF="eval.html#variables">variables</A> are only processed when the terminal starts, which
-is why <A HREF="motion.html#it">it</A> needs to be done with the |<A HREF="autocmd.html#TermOpen">TermOpen</A>| autocmd or setting global
-<A HREF="eval.html#variables">variables</A> before the terminal is started.
-
-There is also a corresponding |<A HREF="autocmd.html#TermClose">TermClose</A>| event.
-
-The terminal cursor can be highlighted via |<A HREF="syntax.html#hl-TermCursor">hl-TermCursor</A>| and
-|<A HREF="syntax.html#hl-TermCursorNC">hl-TermCursorNC</A>|.
+The `{g,b}:terminal_color_$NUM` <A HREF="eval.html#variables">variables</A> are processed only when the terminal
+starts (after |<A HREF="autocmd.html#TermOpen">TermOpen</A>|).
 
 ==============================================================================
 
-5. Status Variables				    *<A NAME="terminal-emulator-status"></A><B>terminal-emulator-status</B>*
+Status Variables				    *<A NAME="terminal-emulator-status"></A><B>terminal-emulator-status</B>*
 
 Terminal <A HREF="windows.html#buffers">buffers</A> maintain some information about the terminal in buffer-local
 <A HREF="eval.html#variables">variables</A>:
@@ -177,11 +153,8 @@ Terminal <A HREF="windows.html#buffers">buffers</A> maintain some information ab
 - *<A NAME="b:terminal_job_pid"></A><B>b:terminal_job_pid</B>* The PID of the top-level process running in the
   terminal.
 
-These <A HREF="eval.html#variables">variables</A> will have a value by the time the <A HREF="autocmd.html#TermOpen">TermOpen</A> autocmd runs, and
-will continue to have a value for the lifetime of the terminal buffer, making
-them suitable for use in <A HREF="options.html#'statusline'">'statusline'</A>. For example, to show the terminal title
-<A HREF="motion.html#as">as</A> the status line:
-
+These <A HREF="eval.html#variables">variables</A> are initialized before <A HREF="autocmd.html#TermOpen">TermOpen</A>, so you can use them in
+a local <A HREF="options.html#'statusline'">'statusline'</A>. Example:
 <B>    :autocmd TermOpen * setlocal statusline=%{b:term_title}</B>
  
 ==============================================================================
@@ -191,7 +164,7 @@ them suitable for use in <A HREF="options.html#'statusline'">'statusline'</A>. F
 
     <footer>
       <div class="container">
-        Generated Sun Feb 26 20:08:31 UTC 2017 from <a href="https://github.com/neovim/neovim/commit/7ea81fe443369382b3ec8c9cfb5a80bcbcbe40bd"><code>7ea81fe</code></a>.
+        Generated Mon Feb 27 20:26:45 UTC 2017 from <a href="https://github.com/neovim/neovim/commit/d290c1342117867d4fb1e8ffbe685037553971a5"><code>d290c13</code></a>.
       </div>
     </footer>
   </body>
