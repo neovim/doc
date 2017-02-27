@@ -5,7 +5,6 @@ var searchData=
   ['f_5fisdigit',['F_isdigit',['../farsi_8c.html#a7afd798426d5fe20d4b7db9238ae6575',1,'farsi.c']]],
   ['farsi_5ffkey',['farsi_fkey',['../farsi_8c.html#ae3291f3fdd408faac1e85fb8d6186565',1,'farsi.c']]],
   ['fast_5fbreakcheck',['fast_breakcheck',['../misc1_8c.html#ab76e97b0e4c8694e5ecae285d0231b22',1,'misc1.c']]],
-  ['fetch_5frow',['fetch_row',['../terminal_8c.html#acf69568f422d1a6d186840d2047e94ef',1,'terminal.c']]],
   ['fex_5fformat',['fex_format',['../ops_8c.html#ac3aff3ec937c36b9b9571ed47cfcda2a',1,'ops.c']]],
   ['file_5fclose',['file_close',['../os_2fileio_8c.html#a49a5a49214bb032effee1a8d513c5016',1,'fileio.c']]],
   ['file_5fff_5fdiffers',['file_ff_differs',['../option_8c.html#a9a2e3a1fe1139cb9ae9a33e41f284554',1,'option.c']]],

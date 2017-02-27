@@ -66,6 +66,7 @@ var searchData=
   ['mch_5fprint_5ftext_5fout',['mch_print_text_out',['../hardcopy_8c.html#a91c03c75458004ba4389d88211125a03',1,'hardcopy.c']]],
   ['memchrsub',['memchrsub',['../memory_8c.html#a91dd511f07a58386489566b92a81bd14',1,'memory.c']]],
   ['memcnt',['memcnt',['../memory_8c.html#a6bb9ffa67e1b74bf6cd743a76c52c279',1,'memory.c']]],
+  ['memset',['memset',['../eval_8c.html#a085d6896a57a7c0a3bd8901882e75274',1,'eval.c']]],
   ['menu_5fis_5fmenubar',['menu_is_menubar',['../menu_8c.html#acb5ff3e927a80c942fe99c777370b006',1,'menu.c']]],
   ['menu_5fis_5fpopup',['menu_is_popup',['../menu_8c.html#a9680092d119a0103721d4557fd8a1ffd',1,'menu.c']]],
   ['menu_5fis_5fseparator',['menu_is_separator',['../menu_8c.html#a3a95450fb1f7cb8b566b4cd5a7a6e919',1,'menu.c']]],

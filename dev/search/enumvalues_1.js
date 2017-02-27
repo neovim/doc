@@ -64,6 +64,7 @@ var searchData=
   ['bv_5fpi',['BV_PI',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8aa90bf6ba27bbb01a5476c3d6ec20f3cb',1,'option_defs.h']]],
   ['bv_5fqe',['BV_QE',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a6b6226b7832991d97776fd3cd6c98dfe',1,'option_defs.h']]],
   ['bv_5fro',['BV_RO',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a463ba6b141c69a32f25dcaf86f3aecae',1,'option_defs.h']]],
+  ['bv_5fscbk',['BV_SCBK',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a0893b36f8d158fb869556911ec398074',1,'option_defs.h']]],
   ['bv_5fsi',['BV_SI',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8aa4574ee40e450c8c36b4c34204ceb975',1,'option_defs.h']]],
   ['bv_5fsmc',['BV_SMC',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a44663c899a03bdb41b0049bdd41c3f97',1,'option_defs.h']]],
   ['bv_5fspc',['BV_SPC',['../option__defs_8h.html#aabfcbcb5ac86a1edac4035264bc7d2b8a56f76e2d98e747440449e809b3c55384',1,'option_defs.h']]],

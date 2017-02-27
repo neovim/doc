@@ -23,6 +23,7 @@ var searchData=
   ['nextb_5fic',['nextb_ic',['../structregstar__S.html#af711e66909a9216768733b7609c6902d',1,'regstar_S']]],
   ['nextcmd',['nextcmd',['../structexarg.html#af98a7c612e1bb0f4c355d5fa13caf9ec',1,'exarg::nextcmd()'],['../structAutoPatCmd.html#aa27c47830e348f8d2a6983d2032ea9d1',1,'AutoPatCmd::nextcmd()']]],
   ['nextline',['nextline',['../structsource__cookie.html#a0d89487209adee15be463489827292d9',1,'source_cookie']]],
+  ['ni',['ni',['../eval_8c.html#aca837ce495cffd3cfff9d5730df316ec',1,'eval.c']]],
   ['nindexhigh',['nIndexHigh',['../structcsi.html#a8b7655be63842c26ade7e7aa48836f32',1,'csi']]],
   ['nindexlow',['nIndexLow',['../structcsi.html#af2565ce8d8d25cfed4a8d957b7879de0',1,'csi']]],
   ['nmatch',['nmatch',['../structMatchedLine.html#ad1396ad1d7a3842b2167a67d2026df42',1,'MatchedLine']]],

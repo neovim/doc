@@ -22,8 +22,6 @@ var searchData=
   ['ghayn_5f',['GHAYN_',['../farsi_8h.html#a8b41b0d604f3e06d2e8c6200bc86740f',1,'farsi.h']]],
   ['global_5fwo',['GLOBAL_WO',['../buffer__defs_8h.html#a3a494d9abbb64e276b40da3a0e9f22bf',1,'buffer_defs.h']]],
   ['globvarht',['globvarht',['../eval_8c.html#ad68c9f8c69caf43e2b0f573759e79c53',1,'eval.c']]],
-  ['glv_5fno_5fautoload',['GLV_NO_AUTOLOAD',['../eval_8c.html#ae1f54ef47c368db7b1ff128dfe02ed6c',1,'eval.c']]],
-  ['glv_5fquiet',['GLV_QUIET',['../eval_8c.html#a1a020a773703fe11131ba6a873a763f9',1,'eval.c']]],
   ['go_5fall',['GO_ALL',['../option__defs_8h.html#a5bca44277f2e2202c0cb9ae6f8b83569',1,'option_defs.h']]],
   ['go_5fasel',['GO_ASEL',['../option__defs_8h.html#a861e8053762a7908f4d7643b6ba75033',1,'option_defs.h']]],
   ['go_5faselml',['GO_ASELML',['../option__defs_8h.html#a50cf799073dc26245dff37fc718419e7',1,'option_defs.h']]],

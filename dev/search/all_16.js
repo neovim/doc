@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['v',['v',['../eval_8c.html#ac4055e3a20b6b3af3d10590ea446ef6c',1,'eval.c']]],
   ['v_5fdict',['v_dict',['../uniontypval__T_1_1typval__vval__union.html#abeecc47fbd3f2ccae7ff096bf28f49fa',1,'typval_T::typval_vval_union']]],
   ['v_5fexception',['v_exception',['../eval_8c.html#a8f50c1590f81ffe343796e1505fe13e3',1,'eval.c']]],
   ['v_5ffloat',['v_float',['../uniontypval__T_1_1typval__vval__union.html#ae974a6b2d4e2d3679cd8ba1b4a65369b',1,'typval_T::typval_vval_union']]],
@@ -37,6 +38,8 @@ var searchData=
   ['value_5fflt',['value_flt',['../structsorti__T.html#ade1d7e89f0ab110b0fc471cafb1d687b',1,'sorti_T']]],
   ['valuesstackitem',['ValuesStackItem',['../structValuesStackItem.html',1,'']]],
   ['var',['var',['../structfunccall__S.html#a2da17673198c34c20c1fb84f4ae603c3',1,'funccall_S::var()'],['../structvimoption.html#a7a4602548515b399450854cc3c7bb2b0',1,'vimoption::var()']]],
+  ['var1',['var1',['../eval_8c.html#a06b3b6b4bf544c11d1236fc4fbbc0456',1,'eval.c']]],
+  ['var2',['var2',['../eval_8c.html#ab7bd1b8ef0021c6a31813255d9b0c4a4',1,'eval.c']]],
   ['var_5fdef_5fscope',['VAR_DEF_SCOPE',['../eval__defs_8h.html#a56766bb38bc2f9cacdfb6c9fac5daca1',1,'eval_defs.h']]],
   ['var_5fdict',['VAR_DICT',['../eval__defs_8h.html#a20dc844625408b8f19865275d22d4fa0aa3a72813b2075b71a9a9789fa4252853',1,'eval_defs.h']]],
   ['var_5ffixed',['VAR_FIXED',['../eval__defs_8h.html#aa743b54dfa683455ad455eb20117e22daa3a2fc833ca8d79a24c9d161c752a907',1,'eval_defs.h']]],

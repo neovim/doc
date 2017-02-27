@@ -14,6 +14,7 @@ var searchData=
   ['nvim_5fbuf_5fadd_5fhighlight',['nvim_buf_add_highlight',['../api_2buffer_8c.html#af9cb451107933abcccdce32c1a5175bb',1,'buffer.c']]],
   ['nvim_5fbuf_5fclear_5fhighlight',['nvim_buf_clear_highlight',['../api_2buffer_8c.html#aae5e0157a4a0844119733af7eebc56a2',1,'buffer.c']]],
   ['nvim_5fbuf_5fdel_5fvar',['nvim_buf_del_var',['../api_2buffer_8c.html#af4481cc6c30bddff929f2437dc27a067',1,'buffer.c']]],
+  ['nvim_5fbuf_5fget_5fchangedtick',['nvim_buf_get_changedtick',['../api_2buffer_8c.html#a379e461bfb4bf6aebb03a530ea577e9b',1,'buffer.c']]],
   ['nvim_5fbuf_5fget_5fname',['nvim_buf_get_name',['../api_2buffer_8c.html#a41f4f1150f2fd8a9202ffdef781f61b6',1,'buffer.c']]],
   ['nvim_5fbuf_5fget_5fnumber',['nvim_buf_get_number',['../api_2buffer_8c.html#ac9c8a0f0a322fe5f98ef52816773ba59',1,'buffer.c']]],
   ['nvim_5fbuf_5fget_5foption',['nvim_buf_get_option',['../api_2buffer_8c.html#acf474f3ead02df98a464f74c57b1471d',1,'buffer.c']]],

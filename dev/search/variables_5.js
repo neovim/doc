@@ -4,13 +4,14 @@ var searchData=
   ['edit_5ftype',['edit_type',['../structmparm__T.html#a2f55dd99ef0b0767ce33701a81b781fa',1,'mparm_T']]],
   ['else',['else',['../eval_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;eval.c'],['../mark_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;mark.c'],['../msgpack__rpc_2helpers_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;helpers.c'],['../env_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;env.c'],['../undo_8c.html#a0544c3fe466e421738dae463968b70ba',1,'else():&#160;undo.c']]],
   ['empty',['empty',['../structoparg__S.html#a9b9972a6ece055a3710e438f53efe4b9',1,'oparg_S']]],
+  ['empty1',['empty1',['../eval_8c.html#ab27ba60a7b7233ff1c3155c56169dc27',1,'eval.c']]],
   ['en_5fdname',['en_dname',['../structVimMenu.html#add54620a2f0f00c05bc1d63960643a3a',1,'VimMenu']]],
   ['en_5fname',['en_name',['../structVimMenu.html#a7f0fddaa5405a6d04bcb84bf05f74f54',1,'VimMenu']]],
   ['enabled',['enabled',['../structVimMenu.html#ad1dd9af0ff59c7d13b595866a7ea6ad1',1,'VimMenu']]],
   ['encode_5fspecial_5fvar_5fnames',['encode_special_var_names',['../encode_8c.html#a7af2b9f28c4d0651ea66dfad0d9ef903',1,'encode_special_var_names():&#160;encode.c'],['../encode_8h.html#a7af2b9f28c4d0651ea66dfad0d9ef903',1,'encode_special_var_names():&#160;encode.c']]],
   ['encoding',['encoding',['../structprt__ps__encoding__S.html#a6b78c290493624319af161e5fefd20d2',1,'prt_ps_encoding_S']]],
   ['encodings',['encodings',['../structprt__ps__mbfont__S.html#a335d67a06da231982b7a44fb94280c4a',1,'prt_ps_mbfont_S']]],
-  ['end',['end',['../structfline__T.html#ac8405ea4091f64a91b2a0f6c43191ae4',1,'fline_T::end()'],['../structoparg__S.html#a01c704a19ea4f4fee28ec159cfad7bca',1,'oparg_S::end()'],['../structregsub__T.html#a70ed09404ebf776b252821b201f83a06',1,'regsub_T::end()'],['../structnfa__pim__S.html#a9d42c059e5603c906aeb6d0e7174dd70',1,'nfa_pim_S::end()'],['../structsoffset.html#a584c6ab04d52eca684463bcf1a38edb8',1,'soffset::end()']]],
+  ['end',['end',['../structfline__T.html#ac8405ea4091f64a91b2a0f6c43191ae4',1,'fline_T::end()'],['../structoparg__S.html#a01c704a19ea4f4fee28ec159cfad7bca',1,'oparg_S::end()'],['../structregsub__T.html#a70ed09404ebf776b252821b201f83a06',1,'regsub_T::end()'],['../structnfa__pim__S.html#a48cae3c7d42523f2ce0759d578b24940',1,'nfa_pim_S::end()'],['../structsoffset.html#a584c6ab04d52eca684463bcf1a38edb8',1,'soffset::end()']]],
   ['end_5fadjusted',['end_adjusted',['../structoparg__S.html#a2e27e323624cac065dca446ea65ccd93',1,'oparg_S']]],
   ['end_5fchar_5fvcols',['end_char_vcols',['../structblock__def.html#a8dfaba71582b4154434c5ae3471c5e32',1,'block_def']]],
   ['end_5fcol',['end_col',['../structregsub__T.html#a299f6508e87c81a31c51630dc39cf974',1,'regsub_T']]],
@@ -39,5 +40,7 @@ var searchData=
   ['exited',['exited',['../structTerminalJobData.html#a102b55872e2cb2411dba20f15e6a1b1d',1,'TerminalJobData']]],
   ['expand',['expand',['../ex__docmd_8c.html#a4fd89930cfa1006f152d636b9a0c7ab9',1,'ex_docmd.c']]],
   ['expr',['expr',['../structregengine.html#a705cea9ce7786614e33c89823a5d4bca',1,'regengine']]],
+  ['expr_5fend',['expr_end',['../eval_8c.html#a3d0110d7408386602c17870f2b1b09e2',1,'eval.c']]],
+  ['expr_5fstart',['expr_start',['../eval_8c.html#abb298b53d923babf53866e771d665df5',1,'eval.c']]],
   ['extra_5fchar',['extra_char',['../structcmdarg__S.html#a2a40234a723a0bc67a687982eb51d9bf',1,'cmdarg_S']]]
 ];

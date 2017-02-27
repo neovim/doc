@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['v',['v',['../eval_8c.html#ac4055e3a20b6b3af3d10590ea446ef6c',1,'eval.c']]],
   ['v_5fdict',['v_dict',['../uniontypval__T_1_1typval__vval__union.html#abeecc47fbd3f2ccae7ff096bf28f49fa',1,'typval_T::typval_vval_union']]],
   ['v_5ffloat',['v_float',['../uniontypval__T_1_1typval__vval__union.html#ae974a6b2d4e2d3679cd8ba1b4a65369b',1,'typval_T::typval_vval_union']]],
   ['v_5flist',['v_list',['../uniontypval__T_1_1typval__vval__union.html#ad8e4e66e08bc0901a9eba845a41a2235',1,'typval_T::typval_vval_union']]],
@@ -14,6 +15,8 @@ var searchData=
   ['value',['value',['../structkey__value__pair.html#a695ec5055b3fa3b7fb4f219f84a0a1c0',1,'key_value_pair::value()'],['../structsorti__T.html#a457f3c4f13009a96db5b0c741c2535c2',1,'sorti_T::value()'],['../structvim__exception.html#af2a3350a66ea67c23125adf0b93c7c7f',1,'vim_exception::value()'],['../structShadaEntry.html#a7b35967a23f2254f0ea8386a02cdc229',1,'ShadaEntry::value()']]],
   ['value_5fflt',['value_flt',['../structsorti__T.html#ade1d7e89f0ab110b0fc471cafb1d687b',1,'sorti_T']]],
   ['var',['var',['../structfunccall__S.html#a2da17673198c34c20c1fb84f4ae603c3',1,'funccall_S::var()'],['../structvimoption.html#a7a4602548515b399450854cc3c7bb2b0',1,'vimoption::var()']]],
+  ['var1',['var1',['../eval_8c.html#a06b3b6b4bf544c11d1236fc4fbbc0456',1,'eval.c']]],
+  ['var2',['var2',['../eval_8c.html#ab7bd1b8ef0021c6a31813255d9b0c4a4',1,'eval.c']]],
   ['varlen',['varlen',['../env_8c.html#a8f5696e525c49b3d80faa2f2783e5591',1,'env.c']]],
   ['vc_5ffactor',['vc_factor',['../structvimconv__T.html#ae77b309e282980b03d3bbf9fb8093c43',1,'vimconv_T']]],
   ['vc_5ffail',['vc_fail',['../structvimconv__T.html#a1534592100db22b2ccdfd32c32d7e32f',1,'vimconv_T']]],
