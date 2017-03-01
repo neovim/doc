@@ -107,6 +107,6 @@ var searchData=
   ['msg_5fscrolled',['msg_scrolled',['../globals_8h.html#a0b03bc5fdd1ab38b00bf9264b8c7275b',1,'globals.h']]],
   ['msgbuf',['msgbuf',['../undo_8c.html#a41cc1d682b67486c9a0032da681ba2f2',1,'undo.c']]],
   ['mshape',['mshape',['../structcursor__entry.html#af618354b5410e23249775766ce5f94d3',1,'cursor_entry']]],
-  ['multi',['multi',['../structregsub__T.html#ad49c8d24a69b48222f4bdba7629d90fb',1,'regsub_T']]],
+  ['multi',['multi',['../structregsub__T.html#a95ae5f4748e197de688c88a5f506eed6',1,'regsub_T']]],
   ['mutex',['mutex',['../structloop.html#a7baab27d53c837067bccf898ba446d3c',1,'loop::mutex()'],['../structui__bridge__data.html#aa0cfd6a936eeef414402a48074ec09f8',1,'ui_bridge_data::mutex()']]]
 ];

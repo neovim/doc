@@ -211,7 +211,7 @@ var searchData=
   ['global_5falist',['global_alist',['../globals_8h.html#a5ad902bd6d0455a0473c1d8490369979',1,'globals.h']]],
   ['global_5fexe',['global_exe',['../ex__cmds_8c.html#af5c1bd486735bb3a20cd9b04acbdc15c',1,'ex_cmds.c']]],
   ['global_5fmarks',['global_marks',['../structWriteMergerState.html#a8ce232537109c1daf76b6c2572d4b829',1,'WriteMergerState']]],
-  ['global_5fvar',['global_var',['../structShadaEntry.html#ae66c57757783c3f9ed8e59f0cb7f0130',1,'ShadaEntry']]],
+  ['global_5fvar',['global_var',['../structShadaEntry.html#af885907185ad3b11ad074d3c59c12764',1,'ShadaEntry']]],
   ['global_5fwo',['GLOBAL_WO',['../buffer__defs_8h.html#a3a494d9abbb64e276b40da3a0e9f22bf',1,'buffer_defs.h']]],
   ['globaldir',['globaldir',['../structaco__save__T.html#aac59471518e29fcbdade5f4e2e5c7028',1,'aco_save_T']]],
   ['globals_2eh',['globals.h',['../globals_8h.html',1,'']]],
@@ -259,5 +259,7 @@ var searchData=
   ['grep_5finternal',['grep_internal',['../quickfix_8c.html#adda89757cc4011d315d8965272fd959c',1,'quickfix.c']]],
   ['grid',['grid',['../structTUIData.html#a42529a3c27c7dede2fccf81a1d9d6f33',1,'TUIData']]],
   ['group',['group',['../structAutoPat.html#a4b89d6bc14de915e0c086588173051d3',1,'AutoPat::group()'],['../structAutoPatCmd.html#a81c67de2173f15310a11f199f523ab8c',1,'AutoPatCmd::group()']]],
-  ['growarray',['growarray',['../structgrowarray.html',1,'']]]
+  ['growarray',['growarray',['../structgrowarray.html',1,'']]],
+  ['growbuf',['growbuf',['../structqfstate__T.html#a9b8bb11b386b6a39d26a125f2783b219',1,'qfstate_T']]],
+  ['growbufsiz',['growbufsiz',['../structqfstate__T.html#a5edb6eb4b872c3977fcd7fb5610534df',1,'qfstate_T']]]
 ];

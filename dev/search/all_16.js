@@ -14,7 +14,7 @@ var searchData=
   ['v_5ftype',['v_type',['../structtypval__T.html#ae8bf8f1bbe623ebccf498d92042f2f74',1,'typval_T']]],
   ['va_5fevent_5finit',['VA_EVENT_INIT',['../event_2defs_8h.html#a90881d444f5dd9e1872bae79df88ee50',1,'defs.h']]],
   ['val',['val',['../structValuesStackItem.html#ac51a7ad20d8b7efa9bd29818d700c895',1,'ValuesStackItem::val()'],['../structnfa__state.html#a49a1ded2b94a5386f574977862b121c5',1,'nfa_state::val()']]],
-  ['valid',['VALID',['../screen_8h.html#ad47ac60ff0cfac53148a07bc32fc7585',1,'screen.h']]],
+  ['valid',['valid',['../structqffields__T.html#a9573880c3bfd409fe86a6b9b2c1fdc08',1,'qffields_T::valid()'],['../screen_8h.html#ad47ac60ff0cfac53148a07bc32fc7585',1,'VALID():&#160;screen.h']]],
   ['valid_5fbotline',['VALID_BOTLINE',['../buffer__defs_8h.html#ae7257df27ce88d3f8a4996793f3975a1',1,'buffer_defs.h']]],
   ['valid_5fbotline_5fap',['VALID_BOTLINE_AP',['../buffer__defs_8h.html#a15b38488b8d4fc1987693ba3ef4f5572',1,'buffer_defs.h']]],
   ['valid_5fcheight',['VALID_CHEIGHT',['../buffer__defs_8h.html#a4a118d9a3f654d1edf43ebdd1fe7e22c',1,'buffer_defs.h']]],

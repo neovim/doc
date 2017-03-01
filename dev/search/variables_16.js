@@ -11,6 +11,7 @@ var searchData=
   ['v_5fstring',['v_string',['../uniontypval__T_1_1typval__vval__union.html#a648516068e837f9757fc1b9bbb8dd422',1,'typval_T::typval_vval_union']]],
   ['v_5ftype',['v_type',['../structtypval__T.html#ae8bf8f1bbe623ebccf498d92042f2f74',1,'typval_T']]],
   ['val',['val',['../structValuesStackItem.html#ac51a7ad20d8b7efa9bd29818d700c895',1,'ValuesStackItem::val()'],['../structnfa__state.html#a49a1ded2b94a5386f574977862b121c5',1,'nfa_state::val()']]],
+  ['valid',['valid',['../structqffields__T.html#a9573880c3bfd409fe86a6b9b2c1fdc08',1,'qffields_T']]],
   ['valid_5fto',['valid_to',['../structbufhl__lineinfo__T.html#a91f2945c0eab87b7a856bb6958b326c6',1,'bufhl_lineinfo_T']]],
   ['value',['value',['../structkey__value__pair.html#a695ec5055b3fa3b7fb4f219f84a0a1c0',1,'key_value_pair::value()'],['../structsorti__T.html#a457f3c4f13009a96db5b0c741c2535c2',1,'sorti_T::value()'],['../structvim__exception.html#af2a3350a66ea67c23125adf0b93c7c7f',1,'vim_exception::value()'],['../structShadaEntry.html#a7b35967a23f2254f0ea8386a02cdc229',1,'ShadaEntry::value()']]],
   ['value_5fflt',['value_flt',['../structsorti__T.html#ade1d7e89f0ab110b0fc471cafb1d687b',1,'sorti_T']]],
