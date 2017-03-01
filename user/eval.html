@@ -137,15 +137,33 @@ To force conversion from <A HREF="#String">String</A> to <A HREF="#Number">Numbe
 To avoid a leading zero to cause <A HREF="#octal">octal</A> conversion, or for using a different
 base, use |<A HREF="#str2nr()">str2nr()</A>|.
 
-For <A HREF="options.html#boolean">boolean</A> operators Numbers are used.  Zero is FALSE, non-zero is TRUE.
 
-Note that in the command
+							*<A NAME="TRUE"></A><B>TRUE</B>* *<A NAME="FALSE"></A><B>FALSE</B>*
+For <A HREF="options.html#boolean">boolean</A> operators Numbers are used.  Zero is <A HREF="#FALSE">FALSE</A>, non-zero is <A HREF="#TRUE">TRUE</A>.
+You can also use |<A HREF="#v:false">v:false</A>| and |<A HREF="#v:true">v:true</A>|.  When <A HREF="#TRUE">TRUE</A> is returned from a
+function <A HREF="motion.html#it">it</A> is the <A HREF="#Number">Number</A> one, <A HREF="#FALSE">FALSE</A> is the number zero.
+
+Note that in the command:
 <B>	:if "foo"</B>
-&quot;foo&quot; is converted to 0, which means FALSE.  To test for a non-empty <A HREF="#string">string</A>,
-use <A HREF="#empty()">empty()</A>:
+<B>	:" NOT executed</B>
+&quot;foo&quot; is converted to 0, which means <A HREF="#FALSE">FALSE</A>.  If the <A HREF="#string">string</A> starts with a
+non-zero number <A HREF="motion.html#it">it</A> means <A HREF="#TRUE">TRUE</A>:
+<B>	:if "8foo"</B>
+<B>	:" executed</B>
+To test for a non-empty <A HREF="#string">string</A>, use <A HREF="#empty()">empty()</A>:
 <B>	:if !empty("foo")</B>
+ 
 
- 				*<A NAME="E745"></A><B>E745</B>* *<A NAME="E728"></A><B>E728</B>* *<A NAME="E703"></A><B>E703</B>* *<A NAME="E729"></A><B>E729</B>* *<A NAME="E730"></A><B>E730</B>* *<A NAME="E731"></A><B>E731</B>*
+							*<A NAME="non-zero-arg"></A><B>non-zero-arg</B>*
+Function arguments often behave slightly different from |TRUE|: If the
+argument is present and <A HREF="motion.html#it">it</A> evaluates to a non-zero <A HREF="#Number">Number</A>, |<A HREF="#v:true">v:true</A>| or a
+non-empty <A HREF="#String">String</A>, then the value is considere to be <A HREF="#TRUE">TRUE</A>.
+Note that &quot; &quot; and &quot;<A HREF="motion.html#0">0</A>&quot; are also non-empty strings, thus cause the mode to be
+cleared.  A <A HREF="#List">List</A>, <A HREF="#Dictionary">Dictionary</A> or <A HREF="#Float">Float</A> is not a <A HREF="#Number">Number</A> or <A HREF="#String">String</A>, thus
+evaluates to <A HREF="#FALSE">FALSE</A>.
+
+
+				*<A NAME="E745"></A><B>E745</B>* *<A NAME="E728"></A><B>E728</B>* *<A NAME="E703"></A><B>E703</B>* *<A NAME="E729"></A><B>E729</B>* *<A NAME="E730"></A><B>E730</B>* *<A NAME="E731"></A><B>E731</B>*
 <A HREF="#List">List</A>, <A HREF="#Dictionary">Dictionary</A> and <A HREF="#Funcref">Funcref</A> types are not automatically converted.
 
 
@@ -755,7 +773,7 @@ All expressions within one level are parsed from left to right.
 <A HREF="#expr2">expr2</A> ? <A HREF="#expr1">expr1</A> : <A HREF="#expr1">expr1</A>
 
 The <A HREF="#expression">expression</A> before the '<A HREF="pattern.html#?">?</A>' is evaluated to a number.  If <A HREF="motion.html#it">it</A> evaluates to
-non-zero, the result is the value of the <A HREF="#expression">expression</A> between the '<A HREF="pattern.html#?">?</A>' and '<A HREF="cmdline.html#:">:</A>',
+|<A HREF="#TRUE">TRUE</A>|, the result is the value of the <A HREF="#expression">expression</A> between the '<A HREF="pattern.html#?">?</A>' and '<A HREF="cmdline.html#:">:</A>',
 otherwise the result is the value of the <A HREF="#expression">expression</A> after the '<A HREF="cmdline.html#:">:</A>'.
 Example:
 <B>	:echo lnum == 1 ? "top" : lnum</B>
@@ -784,12 +802,12 @@ use in a variable such <A HREF="motion.html#as">as</A> &quot;<A HREF="#a:1">a:1<
 The &quot;&#124;&#124;&quot; and &quot;&amp;&amp;&quot; operators take one argument on each side.  The arguments
 are (converted to) Numbers.  The result is:
 
-<B><FONT color="#54A23D">	 input				 output </FONT></B>
-<B><FONT color="#54A23D">n1		n2		n1 || n2	n1 &amp;&amp; n2 </FONT></B>
-zero		zero		zero		zero
-zero		non-zero	non-zero	zero
-non-zero	zero		non-zero	zero
-non-zero	non-zero	non-zero	non-zero
+<B><FONT color="#54A23D">    input			 output </FONT></B>
+<B><FONT color="#54A23D">n1	n2		n1 || n2	n1 &amp;&amp; n2 </FONT></B>
+|<A HREF="#FALSE">FALSE</A>|	|<A HREF="#FALSE">FALSE</A>|		|<A HREF="#FALSE">FALSE</A>|		|<A HREF="#FALSE">FALSE</A>|
+|<A HREF="#FALSE">FALSE</A>|	|<A HREF="#TRUE">TRUE</A>|		|<A HREF="#TRUE">TRUE</A>|		|<A HREF="#FALSE">FALSE</A>|
+|<A HREF="#TRUE">TRUE</A>|	|<A HREF="#FALSE">FALSE</A>|		|<A HREF="#TRUE">TRUE</A>|		|<A HREF="#FALSE">FALSE</A>|
+|<A HREF="#TRUE">TRUE</A>|	|<A HREF="#TRUE">TRUE</A>|		|<A HREF="#TRUE">TRUE</A>|		|<A HREF="#TRUE">TRUE</A>|
 
 The operators can be concatenated, for example:
 
@@ -805,8 +823,8 @@ arguments are not evaluated.  This is like what happens in C.  For example:
 <B>	let a = 1</B>
 <B>	echo a || b</B>
 
-This is valid even if there is no variable called &quot;<A HREF="motion.html#b">b</A>&quot; because &quot;<A HREF="insert.html#a">a</A>&quot; is non-zero,
-so the result must be non-zero.  Similarly below:
+This is valid even if there is no variable called &quot;<A HREF="motion.html#b">b</A>&quot; because &quot;<A HREF="insert.html#a">a</A>&quot; is |<A HREF="#TRUE">TRUE</A>|,
+so the result must be |<A HREF="#TRUE">TRUE</A>|.  Similarly below:
 
 <B>	echo exists("b") &amp;&amp; b == "yes"</B>
 
@@ -989,7 +1007,7 @@ None of these work for |<A HREF="#Funcref">Funcref</A>|<A HREF="change.html#s">s
 
 + <A HREF="#expr7">expr7</A>			unary plus		*<A NAME="expr-unary-+"></A><B>expr-unary-+</B>*
 
-For '<A HREF="change.html#!">!</A>' non-zero becomes zero, zero becomes one.
+For '<A HREF="change.html#!">!</A>' |<A HREF="#TRUE">TRUE</A>| becomes |<A HREF="#FALSE">FALSE</A>|, |<A HREF="#FALSE">FALSE</A>| becomes |<A HREF="#TRUE">TRUE</A>| (one).
 For '<A HREF="motion.html#-">-</A>' the sign of the number is changed.
 For '<A HREF="motion.html#+">+</A>' the number is unchanged.
 
@@ -1287,7 +1305,7 @@ See below |<A HREF="#functions">functions</A>|.
 {args -&gt; expr1}		<A HREF="#lambda">lambda</A> <A HREF="#expression">expression</A>
 
 A <A HREF="#lambda">lambda</A> <A HREF="#expression">expression</A> creates a new unnamed function which returns the result of
-evaluating |<A HREF="#expr1">expr1</A>|.  Lambda expressions are differ from |<A HREF="#user-functions">user-functions</A>| in
+evaluating |<A HREF="#expr1">expr1</A>|.  Lambda expressions differ from |<A HREF="#user-functions">user-functions</A>| in
 the following ways:
 
 1. The body of the <A HREF="#lambda">lambda</A> <A HREF="#expression">expression</A> is an |<A HREF="#expr1">expr1</A>| and not a sequence of |<A HREF="intro.html#Ex">Ex</A>|
@@ -2127,6 +2145,8 @@ assert_equal({exp}, {act} [, {msg}]) none  assert {exp} is equal to {act}
 assert_exception( {error} [, {msg}]) none  assert {error} is in <A HREF="#v:exception">v:exception</A>
 assert_fails( {cmd} [, {error}])     none  assert {cmd} fails
 assert_false({actual} [, {msg}])     none  assert {actual} is false
+assert_inrange({lower}, {upper}, {actual} [, {msg}])
+				none  	assert {actual} is inside the range
 assert_match( <A HREF="autocmd.html#{pat}">{pat}</A>, {text} [, {msg}]) none  assert <A HREF="autocmd.html#{pat}">{pat}</A> matches {text}
 assert_notequal( {exp}, {act} [, {msg}]) none  assert {exp} is not equal {act}
 assert_notmatch( <A HREF="autocmd.html#{pat}">{pat}</A>, {text} [, {msg}]) none  assert <A HREF="autocmd.html#{pat}">{pat}</A> not matches {text}
@@ -2137,9 +2157,9 @@ atan2({expr}, {expr})		<A HREF="#Float">Float</A>   arc tangent of {expr1} / {ex
 browse({save}, {title}, {initdir}, {default})
 				<A HREF="#String">String</A>	put up a file requester
 browsedir({title}, {initdir})	<A HREF="#String">String</A>	put up a directory requester
-bufexists({expr})		<A HREF="#Number">Number</A>	TRUE if buffer {expr} exists
-buflisted({expr})		<A HREF="#Number">Number</A>	TRUE if buffer {expr} is listed
-bufloaded({expr})		<A HREF="#Number">Number</A>	TRUE if buffer {expr} is loaded
+bufexists({expr})		<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if buffer {expr} exists
+buflisted({expr})		<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if buffer {expr} is listed
+bufloaded({expr})		<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if buffer {expr} is loaded
 bufname({expr})		<A HREF="#String">String</A>	Name of the buffer {expr}
 bufnr({expr} [, {create}])	<A HREF="#Number">Number</A>	<A HREF="#Number">Number</A> of the buffer {expr}
 bufwinid({expr})		<A HREF="#Number">Number</A>	<A HREF="windows.html#window">window</A> ID of buffer {expr}
@@ -2176,25 +2196,25 @@ dictwatcheradd({dict}, {pattern}, {callback})
 				Start watching a dictionary
 dictwatcherdel({dict}, {pattern}, {callback})
 				Stop watching a dictionary
-<A HREF="#did_filetype()">did_filetype()</A>			<A HREF="#Number">Number</A>	TRUE if <A HREF="autocmd.html#FileType">FileType</A> <A HREF="autocmd.html#autocommand">autocommand</A> event used
+<A HREF="#did_filetype()">did_filetype()</A>			<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if <A HREF="autocmd.html#FileType">FileType</A> <A HREF="autocmd.html#autocommand">autocommand</A> event used
 diff_filler({lnum})		<A HREF="#Number">Number</A>	<A HREF="diff.html#diff">diff</A> filler lines about {lnum}
 diff_hlID({lnum}, {col})	<A HREF="#Number">Number</A>	<A HREF="diff.html#diff">diff</A> highlighting at {lnum}/{col}
-empty({expr})			<A HREF="#Number">Number</A>	TRUE if {expr} is empty
+empty({expr})			<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if {expr} is empty
 escape({string}, {chars})	<A HREF="#String">String</A>	<A HREF="intro.html#escape">escape</A> {chars} in {string} with '\'
 eval({string})			any	evaluate {string} into its value
-<A HREF="#eventhandler()">eventhandler()</A>			<A HREF="#Number">Number</A>	TRUE if inside an event handler
+<A HREF="#eventhandler()">eventhandler()</A>			<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if inside an event handler
 executable({expr})		<A HREF="#Number">Number</A>	1 if executable {expr} exists
 execute({command})		<A HREF="#String">String</A>	execute and capture output of {command}
 exepath({expr})		<A HREF="#String">String</A>  full path of the command {expr}
-exists({expr})			<A HREF="#Number">Number</A>	TRUE if {expr} exists
+exists({expr})			<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if {expr} exists
 extend({expr1}, {expr2} [, {expr3}])
 				List/Dict insert items of {expr2} into {expr1}
 exp({expr})			<A HREF="#Float">Float</A>	exponential of {expr}
 expand({expr} [, {nosuf} [, {list}]])
 				any	expand special keywords in {expr}
 feedkeys({string} [, {mode}])	<A HREF="#Number">Number</A>	add key sequence to typeahead buffer
-filereadable({file})		<A HREF="#Number">Number</A>	TRUE if <A HREF="editing.html#{file}">{file}</A> is a readable file
-filewritable({file})		<A HREF="#Number">Number</A>	TRUE if <A HREF="editing.html#{file}">{file}</A> is a writable file
+filereadable({file})		<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if <A HREF="editing.html#{file}">{file}</A> is a readable file
+filewritable({file})		<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if <A HREF="editing.html#{file}">{file}</A> is a writable file
 filter({expr}, {string})	List/Dict  remove items from {expr} where
 				{string} is 0
 finddir({name}[, {path}[, {count}]])
@@ -2266,17 +2286,17 @@ glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])
 glob2regpat({expr})		<A HREF="#String">String</A>  convert a glob pat into a search pat
 globpath({path}, {expr} [, {nosuf} [, {list} [, {alllinks}]]])
 				<A HREF="#String">String</A>	<A HREF="diff.html#do">do</A> glob({expr}) for all dirs in {path}
-has({feature})			<A HREF="#Number">Number</A>	TRUE if feature {feature} supported
-has_key({dict}, {key})		<A HREF="#Number">Number</A>	TRUE if {dict} has entry {key}
+has({feature})			<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if feature {feature} supported
+has_key({dict}, {key})		<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if {dict} has entry {key}
 haslocaldir([{winnr} [, {tabnr}]])
-				<A HREF="#Number">Number</A>	TRUE if current <A HREF="windows.html#window">window</A> executed |<A HREF="editing.html#:lcd">:lcd</A>|
+				<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if current <A HREF="windows.html#window">window</A> executed |<A HREF="editing.html#:lcd">:lcd</A>|
 hasmapto({what} [, {mode} [, {abbr}]])
-				<A HREF="#Number">Number</A>	TRUE if <A HREF="map.html#mapping">mapping</A> to {what} exists
+				<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if <A HREF="map.html#mapping">mapping</A> to {what} exists
 histadd({history}, {item})	<A HREF="#String">String</A>	add an item to a <A HREF="cmdline.html#history">history</A>
 histdel({history} [, {item}])	<A HREF="#String">String</A>	remove an item from a <A HREF="cmdline.html#history">history</A>
 histget({history} [, {index}])	<A HREF="#String">String</A>	get the item {index} from a <A HREF="cmdline.html#history">history</A>
 histnr({history})		<A HREF="#Number">Number</A>	highest index of a <A HREF="cmdline.html#history">history</A>
-hlexists({name})		<A HREF="#Number">Number</A>	TRUE if highlight group {name} exists
+hlexists({name})		<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if highlight group {name} exists
 hlID({name})			<A HREF="#Number">Number</A>	<A HREF="syntax.html#syntax">syntax</A> ID of highlight group {name}
 <A HREF="#hostname()">hostname()</A>			<A HREF="#String">String</A>	name of the machine Vim is running on
 iconv({expr}, {from}, {to})	<A HREF="#String">String</A>	convert encoding of {expr}
@@ -2294,8 +2314,8 @@ inputsecret({prompt} [, {text}])
 insert({list}, {item} [, {idx}])
 				<A HREF="#List">List</A>	insert {item} in {list} [before {idx}]
 invert({expr})			<A HREF="#Number">Number</A>  bitwise invert
-isdirectory({directory})	<A HREF="#Number">Number</A>	TRUE if {directory} is a directory
-islocked({expr})		<A HREF="#Number">Number</A>	TRUE if {expr} is locked
+isdirectory({directory})	<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if {directory} is a directory
+islocked({expr})		<A HREF="#Number">Number</A>	|<A HREF="#TRUE">TRUE</A>| if {expr} is locked
 id({expr})			<A HREF="#String">String</A>	identifier of the container
 items({dict})			<A HREF="#List">List</A>	key-value pairs in {dict}
 jobclose({job}[, {stream}])	<A HREF="#Number">Number</A>	Closes a job stream(s)
@@ -2655,8 +2675,17 @@ assert_false({actual} [, {msg}])				*<A NAME="assert_false()"></A><B>assert_fals
 		|<A HREF="#v:errors">v:errors</A>|, like with |<A HREF="#assert_equal()">assert_equal()</A>|.
 		A value is false when <A HREF="motion.html#it">it</A> is zero or |<A HREF="#v:false">v:false</A>|. When &quot;{actual}&quot; 
 		is not a number or |<A HREF="#v:false">v:false</A>| the assert fails.
-		When {msg} is omitted an error in the form &quot;Expected False but
-		got {actual}&quot; is produced.
+		When {msg} is omitted an error in the form
+		&quot;Expected False but got {actual}&quot; is produced.
+
+
+assert_inrange({lower}, {upper}, {actual} [, {msg}])	 *<A NAME="assert_inrange()"></A><B>assert_inrange()</B>*
+		This asserts number values.  When {actual}  is lower than
+		{lower} or higher than {upper} an error message is added to
+		|<A HREF="#v:errors">v:errors</A>|.
+		When {msg} is omitted an error in the form
+		&quot;Expected range {lower} - {upper}, but got {actual}&quot; is
+		produced.
 
 
 								*<A NAME="assert_match()"></A><B>assert_match()</B>*
@@ -2672,8 +2701,8 @@ assert_match({pattern}, {actual} [, {msg}])
 		Use &quot;<A HREF="motion.html#^">^</A>&quot; and &quot;<A HREF="motion.html#$">$</A>&quot; to match with the start and end of the text.
 		Use both to match the whole text.
 
-		When {msg} is omitted an error in the form &quot;<A HREF="pattern.html#Pattern">Pattern</A> {pattern}
-		does not match {actual}&quot; is produced.
+		When {msg} is omitted an error in the form
+		&quot;<A HREF="pattern.html#Pattern">Pattern</A> {pattern} does not match {actual}&quot; is produced.
 		Example:
 <B>	assert_match('^f.*o$', 'foobar')</B>
  		Will result in a <A HREF="#string">string</A> to be added to YXXYv:errors|:
@@ -2695,7 +2724,7 @@ assert_notmatch({pattern}, {actual} [, {msg}])
 assert_true({actual} [, {msg}])					*<A NAME="assert_true()"></A><B>assert_true()</B>*
 		When {actual} is not true an error message is added to
 		|<A HREF="#v:errors">v:errors</A>|, like with |<A HREF="#assert_equal()">assert_equal()</A>|.
-		A value is true when <A HREF="motion.html#it">it</A> is a non-zero number or |<A HREF="#v:true">v:true</A>|.  
+		A value is |<A HREF="#TRUE">TRUE</A>| when <A HREF="motion.html#it">it</A> is a non-zero number or |<A HREF="#v:true">v:true</A>|.
 		When {actual} is not a number or |<A HREF="#v:true">v:true</A>| the assert fails.
 		When {msg} is omitted an error in the form &quot;Expected True but
 		got {actual}&quot; is produced.
@@ -2741,9 +2770,9 @@ atan2({expr1}, {expr2})					*<A NAME="atan2()"></A><B>atan2()</B>*
 							*<A NAME="browse()"></A><B>browse()</B>*
 browse({save}, {title}, {initdir}, {default})
 		Put up a file requester.  This only works when &quot;has(&quot;browse&quot;)&quot;
-		returns non-zero (only in some <A HREF="gui.html#GUI">GUI</A> versions).
+		returns |<A HREF="#TRUE">TRUE</A>| (only in some <A HREF="gui.html#GUI">GUI</A> versions).
 		The input fields are:
-		    {save}	when non-zero, select file to write
+		    {save}	when |<A HREF="#TRUE">TRUE</A>|, select file to write
 		    {title}	title for the requester
 		    {initdir}	directory to start browsing in
 		    {default}	default file name
@@ -2754,7 +2783,7 @@ browse({save}, {title}, {initdir}, {default})
 							*<A NAME="browsedir()"></A><B>browsedir()</B>*
 browsedir({title}, {initdir})
 		Put up a directory requester.  This only works when
-		&quot;has(&quot;browse&quot;)&quot; returns non-zero (only in some <A HREF="gui.html#GUI">GUI</A> versions).
+		&quot;has(&quot;browse&quot;)&quot; returns |<A HREF="#TRUE">TRUE</A>| (only in some <A HREF="gui.html#GUI">GUI</A> versions).
 		On systems where a directory browser is not supported a file
 		browser is used.  In that <A HREF="change.html#case">case</A>: select a file in the directory
 		to be used.
@@ -2766,7 +2795,7 @@ browsedir({title}, {initdir})
 
 
 bufexists({expr})					*<A NAME="bufexists()"></A><B>bufexists()</B>*
-		The result is a <A HREF="#Number">Number</A>, which is non-zero if a buffer called
+		The result is a <A HREF="#Number">Number</A>, which is |<A HREF="#TRUE">TRUE</A>| if a buffer called
 		{expr} exists.
 		If the {expr} argument is a number, buffer numbers are used.
 		If the {expr} argument is a <A HREF="#string">string</A> <A HREF="motion.html#it">it</A> must match a buffer name
@@ -2787,13 +2816,13 @@ bufexists({expr})					*<A NAME="bufexists()"></A><B>bufexists()</B>*
 
 
 buflisted({expr})					*<A NAME="buflisted()"></A><B>buflisted()</B>*
-		The result is a <A HREF="#Number">Number</A>, which is non-zero if a buffer called
+		The result is a <A HREF="#Number">Number</A>, which is |<A HREF="#TRUE">TRUE</A>| if a buffer called
 		{expr} exists and is listed (has the <A HREF="options.html#'buflisted'">'buflisted'</A> option set).
 		The {expr} argument is used like with |<A HREF="#bufexists()">bufexists()</A>|.
 
 
 bufloaded({expr})					*<A NAME="bufloaded()"></A><B>bufloaded()</B>*
-		The result is a <A HREF="#Number">Number</A>, which is non-zero if a buffer called
+		The result is a <A HREF="#Number">Number</A>, which is |<A HREF="#TRUE">TRUE</A>| if a buffer called
 		{expr} exists and is loaded (shown in a <A HREF="windows.html#window">window</A> or hidden).
 		The {expr} argument is used like with |<A HREF="#bufexists()">bufexists()</A>|.
 
@@ -3050,7 +3079,7 @@ complete_add({expr})				*<A NAME="complete_add()"></A><B>complete_add()</B>*
 <A HREF="#complete_check()">complete_check()</A>				*<A NAME="complete_check()"></A><B>complete_check()</B>*
 		Check for a key typed while looking for completion matches.
 		This is to be used when looking for matches takes some time.
-		Returns non-zero when searching for matches is to be aborted,
+		Returns |<A HREF="#TRUE">TRUE</A>| when searching for matches is to be aborted,
 		zero otherwise.
 		Only to be used by the function specified with the
 		<A HREF="options.html#'completefunc'">'completefunc'</A> option.
@@ -3149,7 +3178,7 @@ count({comp}, {expr} [, {ic} [, {start}]])			*<A NAME="count()"></A><B>count()</
 		in |<A HREF="#List">List</A>| or |<A HREF="#Dictionary">Dictionary</A>| {comp}.
 		If {start} is given then start with the item with this index.
 		{start} can only be used with a |<A HREF="#List">List</A>|.
-		When {ic} is given and it's non-zero then <A HREF="change.html#case">case</A> is ignored.
+		When {ic} is given and it's |<A HREF="#TRUE">TRUE</A>| then <A HREF="change.html#case">case</A> is ignored.
 
 
 
@@ -3310,7 +3339,7 @@ dictwatcherdel({dict}, {pattern}, {callback})		      *<A NAME="dictwatcherdel()"
 
 
 							*<A NAME="did_filetype()"></A><B>did_filetype()</B>*
-<A HREF="#did_filetype()">did_filetype()</A>	Returns non-zero when autocommands are being executed and the
+<A HREF="#did_filetype()">did_filetype()</A>	Returns |<A HREF="#TRUE">TRUE</A>| when autocommands are being executed and the
 		<A HREF="autocmd.html#FileType">FileType</A> event has been triggered at least once.  Can be used
 		to avoid triggering the <A HREF="autocmd.html#FileType">FileType</A> event again in the scripts
 		that detect the file type. |<A HREF="autocmd.html#FileType">FileType</A>|
@@ -3434,7 +3463,7 @@ exepath({expr})						*<A NAME="exepath()"></A><B>exepath()</B>*
 
 
 							*<A NAME="exists()"></A><B>exists()</B>*
-exists({expr})	The result is a <A HREF="#Number">Number</A>, which is non-zero if {expr} is
+exists({expr})	The result is a <A HREF="#Number">Number</A>, which is |<A HREF="#TRUE">TRUE</A>| if {expr} is
 		defined, zero otherwise.  The {expr} argument is a <A HREF="#string">string</A>,
 		which contains one of these:
 			&amp;option-name	Vim option (only checks if <A HREF="motion.html#it">it</A> exists,
@@ -3532,7 +3561,7 @@ expand({expr} [, {nosuf} [, {list}]])				*<A NAME="expand()"></A><B>expand()</B>
 		Expand <A HREF="editing.html#wildcards">wildcards</A> and the following special keywords in {expr}.
 		<A HREF="options.html#'wildignorecase'">'wildignorecase'</A> applies.
 
-		If {list} is given and <A HREF="motion.html#it">it</A> is non-zero, a <A HREF="#List">List</A> will be returned.
+		If {list} is given and <A HREF="motion.html#it">it</A> is |<A HREF="#TRUE">TRUE</A>|, a <A HREF="#List">List</A> will be returned.
 		Otherwise the result is a <A HREF="#String">String</A> and when there are several
 		matches, they are separated by <A HREF="motion.html#&lt;NL&gt;">&lt;NL&gt;</A> characters.  [Note: in
 		version 5.0 a space was used, which caused problems when a
@@ -3591,7 +3620,7 @@ expand({expr} [, {nosuf} [, {list}]])				*<A NAME="expand()"></A><B>expand()</B>
 		When {expr} does not start with '<A HREF="motion.html#&#37;">&#37;</A>', '<A HREF="pattern.html##">#</A>' or '<A HREF="change.html#&lt;">&lt;</A>', <A HREF="motion.html#it">it</A> is
 		expanded like a file name is expanded on the command line.
 		<A HREF="options.html#'suffixes'">'suffixes'</A> and <A HREF="options.html#'wildignore'">'wildignore'</A> are used, unless the optional
-		{nosuf} argument is given and <A HREF="motion.html#it">it</A> is non-zero.
+		{nosuf} argument is given and <A HREF="motion.html#it">it</A> is |<A HREF="#TRUE">TRUE</A>|.
 		Names for non-existing files are included.  The &quot;**&quot; item can
 		be used to search in a directory tree.  For example, to find
 		all &quot;README&quot; files in the current directory and below:
@@ -3687,9 +3716,9 @@ feedkeys({string} [, {mode}])				*<A NAME="feedkeys()"></A><B>feedkeys()</B>*
 
 
 filereadable({file})					*<A NAME="filereadable()"></A><B>filereadable()</B>*
-		The result is a <A HREF="#Number">Number</A>, which is TRUE when a file with the
+		The result is a <A HREF="#Number">Number</A>, which is |<A HREF="#TRUE">TRUE</A>| when a file with the
 		name <A HREF="editing.html#{file}">{file}</A> exists, and can be read.  If <A HREF="editing.html#{file}">{file}</A> doesn't exist,
-		or is a directory, the result is FALSE.  <A HREF="editing.html#{file}">{file}</A> is any
+		or is a directory, the result is |<A HREF="#FALSE">FALSE</A>|.  <A HREF="editing.html#{file}">{file}</A> is any
 		<A HREF="#expression">expression</A>, which is used <A HREF="motion.html#as">as</A> a <A HREF="#String">String</A>.
 		If you don't care about the file being readable you can use
 		|<A HREF="#glob()">glob()</A>|.
@@ -3729,7 +3758,7 @@ filter({expr1}, {expr2})					*<A NAME="filter()"></A><B>filter()</B>*
 		If {expr2} is a |<A HREF="#Funcref">Funcref</A>| <A HREF="motion.html#it">it</A> must take two arguments:
 			1. the key or the index of the current item.
 			2. the value of the current item.
-		The function must return TRUE if the item should be kept.
+		The function must return |<A HREF="#TRUE">TRUE</A>| if the item should be kept.
 		Example that keeps the odd items of a <A HREF="#list">list</A>:
 <B>			func Odd(idx, val)</B>
 <B>			  return a:idx % 2 == 1</B>
@@ -4034,12 +4063,12 @@ getbufinfo([{dict}])
 		Each returned <A HREF="#List">List</A> item is a dictionary with the following
 		entries:
 			bufnr		buffer number.
-			changed		TRUE if the buffer is modified.
+			changed		<A HREF="#TRUE">TRUE</A> if the buffer is modified.
 			changedtick	number of changes made to the buffer.
-			hidden		TRUE if the buffer is hidden.
-			listed		TRUE if the buffer is listed.
+			hidden		<A HREF="#TRUE">TRUE</A> if the buffer is hidden.
+			listed		<A HREF="#TRUE">TRUE</A> if the buffer is listed.
 			lnum		current line number in buffer.
-			loaded		TRUE if the buffer is loaded.
+			loaded		<A HREF="#TRUE">TRUE</A> if the buffer is loaded.
 			name		full path to the file in the buffer.
 			<A HREF="sign.html#signs">signs</A>		<A HREF="#list">list</A> of <A HREF="sign.html#signs">signs</A> placed in the buffer.
 					Each <A HREF="#list">list</A> item is a dictionary with
@@ -4507,13 +4536,13 @@ getqflist([{what}])					*<A NAME="getqflist()"></A><B>getqflist()</B>*
 				<A HREF="#bufname()">bufname()</A> to get the name
 			lnum	line number in the buffer (first line is 1)
 			col	column number (first column is 1)
-			vcol	non-zero: &quot;col&quot; is visual column
-				zero: &quot;col&quot; is byte index
+			vcol	|TRUE|: &quot;col&quot; is visual column
+				|FALSE|: &quot;col&quot; is byte index
 			nr	error number
 			<A HREF="pattern.html#pattern">pattern</A>	search <A HREF="pattern.html#pattern">pattern</A> used to locate the error
 			text	description of the error
 			type	type of the error, '<A HREF="motion.html#E">E</A>', '1', etc.
-			valid	non-zero: recognized error message
+			valid	|TRUE|: recognized error message
 
 		When there is no error <A HREF="#list">list</A> or it's empty an empty <A HREF="#list">list</A> is
 		returned. <A HREF="quickfix.html#Quickfix">Quickfix</A> <A HREF="#list">list</A> entries with non-existing buffer
@@ -4561,7 +4590,7 @@ getreg([{regname} [, 1 [, {list}]]])			*<A NAME="getreg()"></A><B>getreg()</B>*
 		be restored with |<A HREF="#setreg()">setreg()</A>|.  For other <A HREF="change.html#registers">registers</A> the extra
 		argument is ignored, thus you can always give <A HREF="motion.html#it">it</A>.
 
-		If {list} is present and non-zero, the result type is changed
+		If {list} is present and |<A HREF="#TRUE">TRUE</A>|, the result type is changed
 		to |<A HREF="#List">List</A>|. Each <A HREF="#list">list</A> item is one text line. Use <A HREF="motion.html#it">it</A> if you care
 		about zero bytes possibly present inside <A HREF="sponsor.html#register">register</A>: without
 		third argument both NLs and zero bytes are represented <A HREF="motion.html#as">as</A> NLs
@@ -4681,13 +4710,13 @@ glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])		*<A NAME="glob()"></A><B>glo
 		Expand the file wildcards in {expr}.  See |<A HREF="editing.html#wildcards">wildcards</A>| for the
 		use of special characters.
 
-		Unless the optional {nosuf} argument is given and is non-zero,
+		Unless the optional {nosuf} argument is given and is |<A HREF="#TRUE">TRUE</A>|,
 		the <A HREF="options.html#'suffixes'">'suffixes'</A> and <A HREF="options.html#'wildignore'">'wildignore'</A> <A HREF="options.html#options">options</A> apply: Names matching
 		one of the patterns in <A HREF="options.html#'wildignore'">'wildignore'</A> will be skipped and
 		<A HREF="options.html#'suffixes'">'suffixes'</A> affect the ordering of matches.
 		<A HREF="options.html#'wildignorecase'">'wildignorecase'</A> always applies.
 
-		When {list} is present and <A HREF="motion.html#it">it</A> is non-zero the result is a <A HREF="#List">List</A>
+		When {list} is present and <A HREF="motion.html#it">it</A> is |<A HREF="#TRUE">TRUE</A>| the result is a <A HREF="#List">List</A>
 		with all matching files. The advantage of using a <A HREF="#List">List</A> is,
 		you also get filenames containing newlines correctly.
 		Otherwise the result is a <A HREF="#String">String</A> and when there are several
@@ -4698,7 +4727,7 @@ glob({expr} [, {nosuf} [, {list} [, {alllinks}]]])		*<A NAME="glob()"></A><B>glo
 		A name for a non-existing file is not included.  A symbolic
 		link is only included if <A HREF="motion.html#it">it</A> points to an existing file.
 		However, when the {alllinks} argument is present and <A HREF="motion.html#it">it</A> is
-		non-zero then all symbolic links are included.
+		|<A HREF="#TRUE">TRUE</A>| then all symbolic links are included.
 
 		For most systems backticks can be used to get files names from
 		any external command.  Example:
@@ -4739,12 +4768,12 @@ globpath({path}, {expr} [, {nosuf} [, {list} [, {allinks}]]])
 		If the expansion fails for one of the directories, there is no
 		error message.
 
-		Unless the optional {nosuf} argument is given and is non-zero,
+		Unless the optional {nosuf} argument is given and is |<A HREF="#TRUE">TRUE</A>|,
 		the <A HREF="options.html#'suffixes'">'suffixes'</A> and <A HREF="options.html#'wildignore'">'wildignore'</A> <A HREF="options.html#options">options</A> apply: Names matching
 		one of the patterns in <A HREF="options.html#'wildignore'">'wildignore'</A> will be skipped and
 		<A HREF="options.html#'suffixes'">'suffixes'</A> affect the ordering of matches.
 
-		When {list} is present and <A HREF="motion.html#it">it</A> is non-zero the result is a <A HREF="#List">List</A>
+		When {list} is present and <A HREF="motion.html#it">it</A> is |<A HREF="#TRUE">TRUE</A>| the result is a <A HREF="#List">List</A>
 		with all matching files. The advantage of using a <A HREF="#List">List</A> is, you
 		also get filenames containing newlines correctly. Otherwise
 		the result is a <A HREF="#String">String</A> and when there are several matches,
@@ -4794,7 +4823,7 @@ hasmapto({what} [, {mode} [, {abbr}]])			*<A NAME="hasmapto()"></A><B>hasmapto()
 		contains {what} in somewhere in the rhs (what <A HREF="motion.html#it">it</A> is mapped to)
 		and this <A HREF="map.html#mapping">mapping</A> exists in one of the modes indicated by
 		{mode}.
-		When {abbr} is there and <A HREF="motion.html#it">it</A> is non-zero use <A HREF="map.html#abbreviations">abbreviations</A>
+		When {abbr} is there and <A HREF="motion.html#it">it</A> is |<A HREF="#TRUE">TRUE</A>| use <A HREF="map.html#abbreviations">abbreviations</A>
 		instead of mappings.  Don't forget to specify <A HREF="insert.html#Insert">Insert</A> and/or
 		<A HREF="cmdline.html#Command-line">Command-line</A> mode.
 		Both the global mappings and the mappings local to the current
@@ -4956,7 +4985,7 @@ index({list}, {expr} [, {start} [, {ic}]])			*<A NAME="index()"></A><B>index()</
 		is not used here, <A HREF="change.html#case">case</A> always matters.
 		If {start} is given then start looking at the item with index
 		{start} (may be negative for an item relative to the end).
-		When {ic} is given and <A HREF="motion.html#it">it</A> is non-zero, ignore <A HREF="change.html#case">case</A>.  Otherwise
+		When {ic} is given and <A HREF="motion.html#it">it</A> is |<A HREF="#TRUE">TRUE</A>|, ignore <A HREF="change.html#case">case</A>.  Otherwise
 		<A HREF="change.html#case">case</A> must match.
 		-1 is returned when {expr} is not found in {list}.
 		Example:
@@ -5093,14 +5122,14 @@ invert({expr})						*<A NAME="invert()"></A><B>invert()</B>*
 
 
 isdirectory({directory})				*<A NAME="isdirectory()"></A><B>isdirectory()</B>*
-		The result is a <A HREF="#Number">Number</A>, which is non-zero when a directory
+		The result is a <A HREF="#Number">Number</A>, which is |<A HREF="#TRUE">TRUE</A>| when a directory
 		with the name {directory} exists.  If {directory} doesn't
-		exist, or isn't a directory, the result is FALSE.  {directory}
+		exist, or isn't a directory, the result is |<A HREF="#FALSE">FALSE</A>|.  {directory}
 		is any <A HREF="#expression">expression</A>, which is used <A HREF="motion.html#as">as</A> a <A HREF="#String">String</A>.
 
 
 islocked({expr})					*<A NAME="islocked()"></A><B>islocked()</B>* *<A NAME="E786"></A><B>E786</B>*
-		The result is a <A HREF="#Number">Number</A>, which is non-zero when {expr} is the
+		The result is a <A HREF="#Number">Number</A>, which is |<A HREF="#TRUE">TRUE</A>| when {expr} is the
 		name of a locked variable.
 		{expr} must be the name of a variable, |<A HREF="#List">List</A>| item or
 		|<A HREF="#Dictionary">Dictionary</A>| entry, not the variable itself!  Example:
@@ -5507,10 +5536,10 @@ maparg({name}[, {mode} [, {abbr} [, {dict}]]])			*<A NAME="maparg()"></A><B>mapa
 			&quot;&quot;	<A HREF="intro.html#Normal">Normal</A>, <A HREF="visual.html#Visual">Visual</A> and <A HREF="intro.html#Operator-pending">Operator-pending</A>
 		When {mode} is omitted, the modes for &quot;&quot; are used.
 
-		When {abbr} is there and <A HREF="motion.html#it">it</A> is non-zero use <A HREF="map.html#abbreviations">abbreviations</A>
+		When {abbr} is there and <A HREF="motion.html#it">it</A> is |<A HREF="#TRUE">TRUE</A>| use <A HREF="map.html#abbreviations">abbreviations</A>
 		instead of mappings.
 
-		When {dict} is there and <A HREF="motion.html#it">it</A> is non-zero return a dictionary
+		When {dict} is there and <A HREF="motion.html#it">it</A> is |<A HREF="#TRUE">TRUE</A>| return a dictionary
 		containing all the information of the <A HREF="map.html#mapping">mapping</A> with the
 		following items:
 		  &quot;lhs&quot;	     The <A HREF="map.html#{lhs}">{lhs}</A> of the <A HREF="map.html#mapping">mapping</A>.
@@ -5841,8 +5870,7 @@ mkdir({name} [, {path} [, {prot}]])
 mode([expr])	Return a <A HREF="#string">string</A> that indicates the current mode.
 		If [expr] is supplied and <A HREF="motion.html#it">it</A> evaluates to a non-zero <A HREF="#Number">Number</A> or
 		a non-empty <A HREF="#String">String</A> (|<A HREF="#non-zero-arg">non-zero-arg</A>|), then the full mode is
-		returned, otherwise only the first <A HREF="print.html#letter">letter</A> is returned.  Note
-		that &quot; &quot; and &quot;<A HREF="motion.html#0">0</A>&quot; are also non-empty strings.
+		returned, otherwise only the first <A HREF="print.html#letter">letter</A> is returned.
 
 			<A HREF="pattern.html#n">n</A>	<A HREF="intro.html#Normal">Normal</A>
 			no	<A HREF="intro.html#Operator-pending">Operator-pending</A>
@@ -7184,8 +7212,8 @@ shellescape({string} [, {special}])			*<A NAME="shellescape()"></A><B>shellescap
 		On Windows when <A HREF="options.html#'shellslash'">'shellslash'</A> is not set, <A HREF="motion.html#it">it</A>
 		will enclose {string} in double quotes and double all double
 		quotes within {string}.
-		For other systems, <A HREF="motion.html#it">it</A> will enclose {string} in single quotes
-		and replace all &quot;&#39;&#34;' with &quot;'\'&#39;&#34;'.
+		Otherwise, <A HREF="motion.html#it">it</A> will enclose {string} in single quotes and
+		replace all &quot;&#39;&#34;' with &quot;'\'&#39;&#34;'.
 		When the {special} argument is present and it's a non-zero
 		<A HREF="#Number">Number</A> or a non-empty <A HREF="#String">String</A> (|<A HREF="#non-zero-arg">non-zero-arg</A>|), then special
 		items such <A HREF="motion.html#as">as</A> &quot;<A HREF="change.html#!">!</A>&quot;, &quot;<A HREF="motion.html#&#37;">&#37;</A>&quot;, &quot;<A HREF="pattern.html##">#</A>&quot; and &quot;&lt;cword&gt;&quot; will be preceded by
@@ -7713,9 +7741,9 @@ synID({lnum}, {col}, {trans})				*<A NAME="synID()"></A><B>synID()</B>*
 		that's where the cursor can be in <A HREF="insert.html#Insert">Insert</A> mode, <A HREF="#synID()">synID()</A> returns
 		zero.
 
-		When {trans} is |<A HREF="intro.html#TRUE">TRUE</A>|, transparent items are reduced to the
+		When {trans} is |<A HREF="#TRUE">TRUE</A>|, transparent items are reduced to the
 		item that they reveal.	This is useful when wanting to know
-		the effective color.  When {trans} is |<A HREF="intro.html#FALSE">FALSE</A>|, the transparent
+		the effective color.  When {trans} is |<A HREF="#FALSE">FALSE</A>|, the transparent
 		item is returned.  This is useful when wanting to know which
 		<A HREF="syntax.html#syntax">syntax</A> item is effective (e.g. inside parens).
 		Warning: This function can be very slow.  Best speed is
@@ -8233,18 +8261,13 @@ visualmode([expr])						*<A NAME="visualmode()"></A><B>visualmode()</B>*
 		<A HREF="visual.html#Visual">Visual</A> mode that was used.
 		If <A HREF="visual.html#Visual">Visual</A> mode is active, use |<A HREF="#mode()">mode()</A>| to get the <A HREF="visual.html#Visual">Visual</A> mode
 		(e.g., in a |<A HREF="map.html#:vmap">:vmap</A>|).
-
-							*<A NAME="non-zero-arg"></A><B>non-zero-arg</B>*
 		If [expr] is supplied and <A HREF="motion.html#it">it</A> evaluates to a non-zero <A HREF="#Number">Number</A> or
 		a non-empty <A HREF="#String">String</A>, then the <A HREF="visual.html#Visual">Visual</A> mode will be cleared and
-		the old value is returned.  Note that &quot; &quot; and &quot;<A HREF="motion.html#0">0</A>&quot; are also
-		non-empty strings, thus cause the mode to be cleared.  A <A HREF="#List">List</A>,
-		<A HREF="#Dictionary">Dictionary</A> or <A HREF="#Float">Float</A> is not a <A HREF="#Number">Number</A> or <A HREF="#String">String</A>, thus does not
-		cause the mode to be cleared.
+		the old value is returned.  See |<A HREF="#non-zero-arg">non-zero-arg</A>|.
 
 
 <A HREF="#wildmenumode()">wildmenumode()</A>					*<A NAME="wildmenumode()"></A><B>wildmenumode()</B>*
-		Returns non-zero when the wildmenu is active and zero
+		Returns |<A HREF="#TRUE">TRUE</A>| when the wildmenu is active and |<A HREF="#FALSE">FALSE</A>|
 		otherwise.  See <A HREF="options.html#'wildmenu'">'wildmenu'</A> and <A HREF="options.html#'wildmode'">'wildmode'</A>.
 		This can be used in mappings to handle the <A HREF="options.html#'wildcharm'">'wildcharm'</A> option
 		gracefully. (Makes only sense with |<A HREF="map.html#mapmode-c">mapmode-c</A>| mappings).
@@ -10873,7 +10896,7 @@ This is not allowed when the <A HREF="#textlock">textlock</A> is active:
 
     <footer>
       <div class="container">
-        Generated Mon Feb 27 20:26:44 UTC 2017 from <a href="https://github.com/neovim/neovim/commit/d290c1342117867d4fb1e8ffbe685037553971a5"><code>d290c13</code></a>.
+        Generated Wed Mar  1 20:24:32 UTC 2017 from <a href="https://github.com/neovim/neovim/commit/2c408c0c94915b6c38c1eccdb68b2645829130c2"><code>2c408c0</code></a>.
       </div>
     </footer>
   </body>
