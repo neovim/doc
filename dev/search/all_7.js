@@ -243,7 +243,7 @@ var searchData=
   ['go_5fvleft',['GO_VLEFT',['../option__defs_8h.html#a4eb10d7d1982300acceb99a14c68a4ec',1,'option_defs.h']]],
   ['go_5fvright',['GO_VRIGHT',['../option__defs_8h.html#ab1129419de0523f91b1480b14aa9142f',1,'option_defs.h']]],
   ['goodi',['goodi',['../structlimitscore__T.html#a281d8b8c22a25376b3438852365ab458',1,'limitscore_T']]],
-  ['got_5fbs',['got_bs',['../structterminal__state.html#a6fa259fadeab1e2bb3d1814b21c65a5f',1,'terminal_state']]],
+  ['got_5fbsl',['got_bsl',['../structterminal__state.html#a9db320810d01559692075f60f3144e70',1,'terminal_state']]],
   ['got_5fint',['got_int',['../structdbg__stuff.html#a73705bd16b95fbf0d2b2e7c998ceb9de',1,'dbg_stuff']]],
   ['gotesc',['gotesc',['../structcommand__line__state.html#a6e9145c8054a046fbfb153b5a7f3461f',1,'command_line_state']]],
   ['goto_5fbuffer',['goto_buffer',['../buffer_8c.html#ab054e54d7861f08302047229e474389a',1,'buffer.c']]],

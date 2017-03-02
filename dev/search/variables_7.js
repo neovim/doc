@@ -12,7 +12,7 @@ var searchData=
   ['globaldir',['globaldir',['../structaco__save__T.html#aac59471518e29fcbdade5f4e2e5c7028',1,'aco_save_T']]],
   ['globvardict',['globvardict',['../globals_8h.html#aa1e3b6594df899f03e14287849995349',1,'globals.h']]],
   ['goodi',['goodi',['../structlimitscore__T.html#a281d8b8c22a25376b3438852365ab458',1,'limitscore_T']]],
-  ['got_5fbs',['got_bs',['../structterminal__state.html#a6fa259fadeab1e2bb3d1814b21c65a5f',1,'terminal_state']]],
+  ['got_5fbsl',['got_bsl',['../structterminal__state.html#a9db320810d01559692075f60f3144e70',1,'terminal_state']]],
   ['got_5fint',['got_int',['../structdbg__stuff.html#a73705bd16b95fbf0d2b2e7c998ceb9de',1,'dbg_stuff']]],
   ['gotesc',['gotesc',['../structcommand__line__state.html#a6e9145c8054a046fbfb153b5a7f3461f',1,'command_line_state']]],
   ['greatest_5ftimestamp',['greatest_timestamp',['../structFileMarks.html#a69610bebe15674a218a19884be10ade0',1,'FileMarks']]],

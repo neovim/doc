@@ -165,7 +165,6 @@ var searchData=
   ['to_5fspecial',['TO_SPECIAL',['../keymap_8h.html#a5300e534627f106485629e271405e42d',1,'keymap.h']]],
   ['tochar',['TOCHAR',['../shada_8c.html#a2de9e0ceb2c7970433a11282b4c4f8f5',1,'shada.c']]],
   ['todo',['todo',['../structMPConvStackVal.html#a40cce0fff7fc5fa282eb0e81cc84bab5',1,'MPConvStackVal']]],
-  ['tof_5ftya',['toF_TyA',['../farsi_8c.html#a64992a4feb2bb49defdad21deaa44dc2',1,'farsi.c']]],
   ['tofree',['tofree',['../structjoin__S.html#adfea5d39138deae82ad392acae63f9ff',1,'join_S']]],
   ['toint',['TOINT',['../shada_8c.html#aef3fbe613dd5f3d70df0a182385af65a',1,'shada.c']]],
   ['tolong',['TOLONG',['../shada_8c.html#aacb37ec9796d7b5ce4ccdfe9f7b17095',1,'shada.c']]],

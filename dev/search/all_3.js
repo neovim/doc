@@ -357,8 +357,6 @@ var searchData=
   ['conv_5frestlen',['CONV_RESTLEN',['../fileio_8c.html#a2c2787e4098a3a89f61772d33aba569f',1,'fileio.c']]],
   ['conv_5fto_5flatin1',['CONV_TO_LATIN1',['../buffer__defs_8h.html#aeeb32b847876c3de1c5c772b534921c9',1,'buffer_defs.h']]],
   ['conv_5fto_5flatin9',['CONV_TO_LATIN9',['../buffer__defs_8h.html#a98c2d4ed09fc4ea7bb144a47ba81eb47',1,'buffer_defs.h']]],
-  ['conv_5fto_5fpstd',['conv_to_pstd',['../farsi_8c.html#aa9b0937b0d3d74aaa43b917aeb2ba434',1,'farsi.c']]],
-  ['conv_5fto_5fpvim',['conv_to_pvim',['../farsi_8c.html#aec36ca84aef99b073591d096741331d0',1,'farsi.c']]],
   ['conv_5fto_5futf8',['CONV_TO_UTF8',['../buffer__defs_8h.html#a97984b99398512c61868bbe06025c235',1,'buffer_defs.h']]],
   ['convert_5fsetup',['convert_setup',['../encode_8c.html#a274261da4036c1ace00653462b83aebf',1,'convert_setup():&#160;encode.c'],['../shada_8c.html#a274261da4036c1ace00653462b83aebf',1,'convert_setup():&#160;shada.c'],['../mbyte_8c.html#a71f312b0794a51fed97ae37b14ebc9fa',1,'convert_setup(vimconv_T *vcp, char_u *from, char_u *to):&#160;mbyte.c']]],
   ['convert_5fsetup_5fext',['convert_setup_ext',['../mbyte_8c.html#a7ef243298ba53b8397955a04042b2a44',1,'mbyte.c']]],
