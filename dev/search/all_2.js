@@ -514,7 +514,7 @@ var searchData=
   ['bufsize',['bufsize',['../structTUIData.html#a1acd89d4c781e936d1c784d04951adb9',1,'TUIData::bufsize()'],['../fileio_8c.html#aeca034f67218340ecb2261a22c2f3dcd',1,'BUFSIZE():&#160;fileio.c']]],
   ['bufstate_5ft',['bufstate_T',['../syntax__defs_8h.html#a976ff9b8e4ba6894bf6d04900bb6ab1d',1,'syntax_defs.h']]],
   ['bufunl',['BUFUNL',['../ex__cmds__defs_8h.html#a2ed642857db607c0e99eaa15d94eeff7',1,'ex_cmds_defs.h']]],
-  ['build_5fstl_5fstr_5fhl',['build_stl_str_hl',['../buffer_8c.html#aeacf1a167b69fccfded99ac61ecd6b92',1,'buffer.c']]],
+  ['build_5fstl_5fstr_5fhl',['build_stl_str_hl',['../buffer_8c.html#a1a8d0cf10a96cf77acc90dfc4719a838',1,'buffer.c']]],
   ['busy',['busy',['../structdict__watcher.html#a1c9f53f960274f72dd2d179463360552',1,'dict_watcher']]],
   ['busy_5fstart',['busy_start',['../structui__t.html#adf18abc5f40167c0522d4a21c470bec6',1,'ui_t']]],
   ['busy_5fstop',['busy_stop',['../structui__t.html#ad393f2f3a1eb3abaee200e2ad502191b',1,'ui_t']]],

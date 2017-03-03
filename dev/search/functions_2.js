@@ -72,6 +72,6 @@ var searchData=
   ['buflist_5fnr2name',['buflist_nr2name',['../buffer_8c.html#af84cba1d70cc1214852b4eb2f5854ba5',1,'buffer.c']]],
   ['buflist_5fsetfpos',['buflist_setfpos',['../buffer_8c.html#af19eff7279140bd85511a36c5e509a07',1,'buffer.c']]],
   ['bufref_5fvalid',['bufref_valid',['../buffer_8c.html#a2f819c936fac5699ab0aedda5cfbfaec',1,'buffer.c']]],
-  ['build_5fstl_5fstr_5fhl',['build_stl_str_hl',['../buffer_8c.html#aeacf1a167b69fccfded99ac61ecd6b92',1,'buffer.c']]],
+  ['build_5fstl_5fstr_5fhl',['build_stl_str_hl',['../buffer_8c.html#a1a8d0cf10a96cf77acc90dfc4719a838',1,'buffer.c']]],
   ['byte2cells',['byte2cells',['../charset_8c.html#a8dd1205204179cb986f6127534c2e357',1,'charset.c']]]
 ];
