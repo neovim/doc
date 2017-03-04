@@ -122,6 +122,5 @@ clone_neovim
   build_nightly
   NVIM_VERSION=$(get_nvim_version)
   create_nightly_tarball
-  upload_nightly
-  # [ "${CI_OS}" = osx ] && upload_nightly || upload_nightly delete
+  [ "${CI_OS}" = osx ] && upload_nightly || upload_nightly delete
 }
