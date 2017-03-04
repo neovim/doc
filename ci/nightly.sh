@@ -35,7 +35,7 @@ create_nightly_tarball() {(
 get_release_body() {
   echo 'Nvim development (pre-release) build. See **[Installing-Neovim](https://github.com/neovim/neovim/wiki/Installing-Neovim)**.'
   echo
-  echo 'Developers: see the [`bot-ci` README](https://github.com/neovim/bot-ci/blob/master/README.md#nightly-builds) to use this build automatically on Travis CI.'
+  echo 'Developers: see the [`bot-ci` README](https://github.com/neovim/bot-ci#generated-builds) to use this build automatically on Travis CI.'
   echo
   echo '```'
   "${NVIM_BIN}" --version
@@ -43,7 +43,7 @@ get_release_body() {
 }
 
 get_nvim_version() {
-  echo $( set +e ; 2>&1 "${NVIM_BIN}" --headless +":echo (api_info().version.major).'.'.(api_info().version.minor).'.'.(api_info().version.patch)" +q )
+  echo $( set +e ; 2>&1 "${NVIM_BIN}" --headless -u NONE +":echo (api_info().version.major).'.'.(api_info().version.minor).'.'.(api_info().version.patch)" +q )
 }
 
 upload_nightly() {
