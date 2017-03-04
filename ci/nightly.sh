@@ -63,7 +63,7 @@ upload_nightly() {
     echo "Creating release for tag ${NIGHTLY_TAG}."
     read release_id < <( \
       send_gh_api_data_request repos/${NEOVIM_REPO}/releases POST \
-      "{ \"name\": \"NVIM ${NVIM_VERSION}-dev pre-release\", \"tag_name\": \"${NIGHTLY_TAG}\", \
+      "{ \"name\": \"NVIM v${NVIM_VERSION}-dev pre-release\", \"tag_name\": \"${NIGHTLY_TAG}\", \
       \"prerelease\": true }" \
       | jq -r -c '.id') \
       || exit

@@ -56,7 +56,7 @@ upload_release_asset() {
   local file_name="${2}"
   local repository="${3}"
   local release_id="${4}"
-  local mime_type="$(mimetype --output-format '%m' "${file}")"
+  local mime_type="$(file --mime-type -b "${file}")"
 
   local response="$(curl -H "Accept: application/vnd.github.v3+json" \
     -H "User-Agent: neovim/bot-ci" \
