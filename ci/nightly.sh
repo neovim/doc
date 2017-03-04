@@ -10,6 +10,8 @@ source ${BUILD_DIR}/ci/common/neovim.sh
 NIGHTLY_DIR=${NIGHTLY_DIR:-${BUILD_DIR}/build/nightly}
 NIGHTLY_FILE=${NIGHTLY_FILE:-${BUILD_DIR}/build/nightly.tar.gz}
 NIGHTLY_TAG=${NIGHTLY_RELEASE:-nightly}
+NVIM_BIN=${NIGHTLY_DIR}/nvim-${CI_OS}64/bin/nvim
+NVIM_VERSION=unknown
 
 build_nightly() {(
   require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
@@ -31,13 +33,17 @@ create_nightly_tarball() {(
 )}
 
 get_release_body() {
-  echo 'Nvim development (pre-release) build. See **[Installing-Neovim](https://github.com/neovim/neovim/wiki/Installing-Neovim)**."'
+  echo 'Nvim development (pre-release) build. See **[Installing-Neovim](https://github.com/neovim/neovim/wiki/Installing-Neovim)**.'
   echo
   echo 'Developers: see the [`bot-ci` README](https://github.com/neovim/bot-ci/blob/master/README.md#nightly-builds) to use this build automatically on Travis CI.'
   echo
   echo '```'
-  ${NIGHTLY_DIR}/nvim-${CI_OS}64/bin/nvim --version
+  "${NVIM_BIN}" --version
   echo '```'
+}
+
+get_nvim_version() {
+  echo $( set +e ; 2>&1 "${NVIM_BIN}" --headless +":echo (api_info().version.major).'.'.(api_info().version.minor).'.'.(api_info().version.patch)" +q )
 }
 
 upload_nightly() {
@@ -57,7 +63,7 @@ upload_nightly() {
     echo "Creating release for tag ${NIGHTLY_TAG}."
     read release_id < <( \
       send_gh_api_data_request repos/${NEOVIM_REPO}/releases POST \
-      "{ \"name\": \"Nightly build\", \"tag_name\": \"${NIGHTLY_TAG}\", \
+      "{ \"name\": \"NVIM ${NVIM_VERSION}-dev pre-release\", \"tag_name\": \"${NIGHTLY_TAG}\", \
       \"prerelease\": true }" \
       | jq -r -c '.id') \
       || exit
@@ -114,6 +120,7 @@ clone_neovim
 # has_current_nightly ||
 {
   build_nightly
+  NVIM_VERSION=$(get_nvim_version)
   create_nightly_tarball
   upload_nightly
   # [ "${CI_OS}" = osx ] && upload_nightly || upload_nightly delete
