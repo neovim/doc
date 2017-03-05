@@ -25,11 +25,15 @@ build_nightly() {(
 
 create_nightly_tarball() {(
   if [ "${CI_OS}" = osx ] ; then
-    source ${BUILD_DIR}/ci/package-macos.sh "${NIGHTLY_DIR}/nvim-${CI_OS}64" ${NIGHTLY_FILE}
-  else
-    cd ${NIGHTLY_DIR}
-    tar cfz ${NIGHTLY_FILE} nvim-${CI_OS}64
+    # Relocate the `nvim` dylib references.
+    source ${BUILD_DIR}/ci/package-macos.sh "${NIGHTLY_DIR}/nvim-${CI_OS}64"
+    # Overwrite the installed `nvim` with the new binary and its dylibs.
+    cp -R bundle/nvim/bin   "${NIGHTLY_DIR}/nvim-${CI_OS}64/"
+    cp -R bundle/nvim/libs  "${NIGHTLY_DIR}/nvim-${CI_OS}64/"
   fi
+
+  cd ${NIGHTLY_DIR}
+  tar cfz ${NIGHTLY_FILE} nvim-${CI_OS}64
 )}
 
 get_release_body() {
