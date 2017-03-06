@@ -19,7 +19,7 @@ build_nightly() {(
   mkdir -p ${NIGHTLY_DIR}
 
   cd ${NEOVIM_DIR}
-  make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH="
+  make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH="
   make DESTDIR="${NIGHTLY_DIR}/nvim-${CI_OS}64" install
 )}
 
@@ -97,7 +97,7 @@ upload_nightly() {
 
   echo 'Uploading package.'
   local name="nvim-${CI_OS}64.tar.gz"
-  [ "${CI_OS}" = osx ] && name="nvim-macos.tar.bz2"
+  [ "${CI_OS}" = osx ] && name="nvim-macos.tar.gz"
   upload_release_asset ${NIGHTLY_FILE} "$name" \
     ${NEOVIM_REPO} ${release_id} \
     > /dev/null
