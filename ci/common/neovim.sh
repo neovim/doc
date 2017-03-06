@@ -9,7 +9,7 @@ NEOVIM_BRANCH=${NEOVIM_BRANCH:-master}
 clone_neovim() {
   if is_ci_build || ! [ -d ${NEOVIM_DIR} ] ; then
     rm -rf ${NEOVIM_DIR}
-    git clone --branch ${NEOVIM_BRANCH} --depth 1 git://github.com/${NEOVIM_REPO} ${NEOVIM_DIR}
+    git clone --branch ${NEOVIM_BRANCH} git://github.com/${NEOVIM_REPO} ${NEOVIM_DIR}
   else
     git --git-dir=${NEOVIM_DIR}/.git rev-parse HEAD >/dev/null \
       || exit 1
