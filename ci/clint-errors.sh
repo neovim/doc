@@ -16,15 +16,35 @@ DOC_SUBTREE="/reports/clint/"
 ERRORS_FILE="$DOC_DIR/$DOC_SUBTREE/errors.json"
 
 generate_clint_report() {
+  require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
+
   cd ${NEOVIM_DIR}
 
-  local index_file="$DOC_DIR/$DOC_SUBTREE/index.html"
+  rm "${DOC_DIR}/${DOC_SUBTREE}"/*.json
 
-  ./src/clint.py --record-errors="$ERRORS_FILE" \
-    src/nvim/**/*.c src/nvim/**/*.h 2> "$index_file" || true
+  local errors_file="$DOC_DIR/$DOC_SUBTREE/errors.json"
+  local index_file="$DOC_DIR/$DOC_SUBTREE/index.html"
+  local sect_header="<div data-file=\"%s\" data-commit=\"${NEOVIM_COMMIT}\" class=\"clint-report-one\"><pre>"
+  local sect_footer="</pre></div>"
+
+  : > "${errors_file}"
+  : > "${index_file}"
+
+  for f in src/nvim/**/*.[ch] ; do
+      local suffix="${f#src/nvim/}"
+      suffix="${suffix//[\/.]/-}"
+      local separate_errors_file="${DOC_DIR}/${DOC_SUBTREE}/${suffix}.json"
+      printf "${sect_header}\n" "${f}" >> "${index_file}"
+      ./src/clint.py \
+          --record-errors="${separate_errors_file}" \
+          "${f}" \
+          2>&1 | sed 's/&/&amp;/g;s/</\&lt;/g' >> "${index_file}" || true
+      echo "${sect_footer}" >> "${index_file}"
+      cat "${separate_errors_file}" >> "${errors_file}"
+  done
 
   local title="Clint.py errors list"
-  local body="<pre>$(cat "$index_file")</pre>"
+  local body="$(cat "$index_file")"
   generate_report "$title" "$body" "$index_file"
 }
 
