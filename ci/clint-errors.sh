@@ -30,6 +30,8 @@ generate_clint_report() {
   : > "${errors_file}"
   : > "${index_file}"
 
+  local errors_files=""
+
   for f in src/nvim/**/*.[ch] ; do
       local suffix="${f#src/nvim/}"
       suffix="${suffix//[\/.]/-}"
@@ -41,7 +43,10 @@ generate_clint_report() {
           2>&1 | sed 's/&/&amp;/g;s/</\&lt;/g' >> "${index_file}" || true
       echo "${sect_footer}" >> "${index_file}"
       cat "${separate_errors_file}" >> "${errors_file}"
+      errors_files="${errors_files} ${separate_errors_file}"
   done
+
+  tar c ${errors_files} | gzip -9 > "${DOC_DIR}/${DOC_SUBTREE}/errors.tar.gz"
 
   local title="Clint.py errors list"
   local body="$(cat "$index_file")"
