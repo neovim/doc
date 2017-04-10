@@ -1,4 +1,4 @@
-# See https://github.com/neovim/bot-ci#nightly-builds for more information.
+# See https://github.com/neovim/bot-ci#generated-builds for more information.
 nightly_x64() {
   mkdir "${TRAVIS_BUILD_DIR}/_neovim"
   wget -q -O - https://github.com/neovim/neovim/releases/download/nightly/nvim-${TRAVIS_OS_NAME}64.tar.gz \
