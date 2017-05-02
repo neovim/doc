@@ -35,9 +35,8 @@ generate_pvs_report() {
   (
     cd "$NEOVIM_DIR"
 
-    sh ./scripts/pvscheck.sh --pvs detect
-
-    cd ../neovim-pvs
+    sh ./scripts/pvscheck.sh --pvs detect --pvs-install .
+    sh ./scripts/pvscheck.sh --deps --recheck .
 
     # Note: will also copy a binary log with *all* errors, including filtered
     # out. This is intentional.
