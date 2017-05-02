@@ -6,7 +6,7 @@
 # ${3}: Line number.
 require_environment_variable() {
   local variable_name="${1}"
-  local variable_content="${!variable_name}"
+  eval "local variable_content=\"\${${variable_name}:-}\""
   if [[ -z "${variable_content}" ]]; then
     >&2 echo "${variable_name} not set at ${2}:${3}, cannot continue!"
     >&2 echo "Maybe you need to source a script from ci/common."
@@ -35,13 +35,17 @@ GIT_EMAIL=${GIT_EMAIL:-marvim@users.noreply.github.com}
 
 # Check if currently performing CI or local build.
 # ${1}: Task that is NOT executed if building locally.
-#       Default: "installing dependencies"
+#       Default: "installing dependencies". Not reported if equal to --silent.
 # Return 0 if CI build, 1 otherwise.
 is_ci_build() {
-  if [[ ${CI} != true ]]; then
-    echo "Local build, skip ${1:-installing dependencies}."
+  local msg="${1:-installing dependencies}"
+  if test "${CI:-}" != "true" ; then
+    if test "$msg" != "--silent" ; then
+      echo "Local build, skip $msg."
+    fi
     return 1
   fi
+  return 0
 }
 
 # Clone a Git repository and check out a subtree.
@@ -73,7 +77,7 @@ clone_subtree() {(
 # Prompt the user to press a key to continue for local builds.
 # ${1}: Shown message.
 prompt_key_local() {
-  if [[ ${CI} != true ]]; then
+  if ! is_ci_build --silent ; then
     echo "${1}"
     echo "Press a key to continue, CTRL-C to abort..."
     read -n 1 -s
@@ -104,7 +108,7 @@ commit_subtree() {(
 
   git add --all .
 
-  [[ ${CI} == true ]] && {
+  is_ci_build --silent && {
     # Commit on Travis CI.
     if [[ -z "${GH_TOKEN}" ]]; then
       echo "GH_TOKEN not set, not committing."
