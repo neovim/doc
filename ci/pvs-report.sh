@@ -2,6 +2,7 @@
 set -e
 set -o pipefail
 set -u
+set -x
 
 shopt -s failglob
 shopt -s dotglob
@@ -34,7 +35,7 @@ generate_pvs_report() {
   (
     cd "$NEOVIM_DIR"
 
-    sh ./scripts/pvscheck.sh
+    sh ./scripts/pvscheck.sh --pvs detect
 
     cd ../neovim-pvs
 
