@@ -84,6 +84,17 @@ prompt_key_local() {
   fi
 }
 
+# Check whether absense of private (i.e. encrypted) data should fail the build
+# Targets for use like `exit $(can_fail_without_private)` or `return
+# $(can_fail_without_private)`.
+can_fail_without_private() {
+  if test "$TRAVIS_EVENT_TYPE" = pull_request ; then
+    echo 0
+  else
+    echo 1
+  fi
+}
+
 # Commit and push to a Git repo checked out using clone_subtree.
 # ${1}: Variable prefix.
 commit_subtree() {(
@@ -108,18 +119,19 @@ commit_subtree() {(
 
   git add --all .
 
-  is_ci_build --silent && {
+  if is_ci_build --silent ; then
     # Commit on Travis CI.
-    if [[ -z "${GH_TOKEN}" ]]; then
-      echo "GH_TOKEN not set, not committing."
-      echo "To test pull requests, see instructions in README.md."
-      return 1
-    fi
-
     git config --local user.name ${GIT_NAME}
     git config --local user.email ${GIT_EMAIL}
 
     git commit -m "${CI_TARGET//-/ }: Automatic update." || true
+
+    if test -z "${GH_TOKEN}" ; then
+      echo "GH_TOKEN not set, not committing."
+      echo "To test pull requests, see instructions in README.md."
+      return $(can_fail_without_private)
+    fi
+
     until (git pull --rebase git://github.com/${!repo} ${!branch} &&
            git push https://${GH_TOKEN}@github.com/${!repo} ${!branch} >/dev/null 2>&1 &&
            echo "Pushed to ${!repo} ${!branch}."); do
@@ -127,9 +139,11 @@ commit_subtree() {(
       sleep 1
     done
     return
-  } || prompt_key_local "Build finished, do you want to commit and push the results to ${!repo}:${!branch} (change by setting ${repo}/${branch})?" && {
+  else
+    if prompt_key_local "Build finished, do you want to commit and push the results to ${!repo}:${!branch} (change by setting ${repo}/${branch})?" ; then
     # Commit in local builds.
-    git commit || true
-    git push ssh://git@github.com/${!repo} ${!branch}
-  }
+      git commit || true
+      git push ssh://git@github.com/${!repo} ${!branch}
+    fi
+  fi
 )}
