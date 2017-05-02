@@ -40,7 +40,7 @@ generate_clint_report() {
       local separate_errors_file="$REPORTS_DIR/$suffix.json"
       printf "$sect_header\n" "$f" >> "$index_file"
       ./src/clint.py --record-errors="$separate_errors_file" "$f" \
-        2>&1 | sed 's/&/&amp;/g;s/</\&lt;/g' >> "$index_file" \
+        2>&1 | html_escape >> "$index_file" \
       || true
       echo "$sect_footer" >> "$index_file"
       cat "$separate_errors_file" >> "$errors_file"

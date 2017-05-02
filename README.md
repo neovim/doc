@@ -13,6 +13,7 @@ However, you won't find the "Genuine People Personalities" technology here.
    - [User documentation][doc-user]
  - Build reports:
    - [Clang report][clang-report]
+   - [PVS-studio report][pvs-report]
    - [Translation report][translation-report]
    - [Vimpatch report][vimpatch-report]
  - [Coverity][coverity]
@@ -22,6 +23,7 @@ However, you won't find the "Genuine People Personalities" technology here.
 [doc-dev]: https://neovim.io/doc/dev
 [doc-user]: https://neovim.io/doc/user
 [clang-report]: https://neovim.io/doc/reports/clang
+[pvs-report]: https://neovim.io/doc/reports/pvs
 [translation-report]: https://neovim.io/doc/reports/translations
 [vimpatch-report]: https://neovim.io/doc/reports/vimpatch
 [coverity]: https://scan.coverity.com/projects/2227
