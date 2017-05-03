@@ -126,7 +126,7 @@ commit_subtree() {(
 
     git commit -m "${CI_TARGET//-/ }: Automatic update." || true
 
-    if test -z "${GH_TOKEN}" ; then
+    if test -z "${GH_TOKEN:-}" ; then
       echo "GH_TOKEN not set, not committing."
       echo "To test pull requests, see instructions in README.md."
       return $(can_fail_without_private)
