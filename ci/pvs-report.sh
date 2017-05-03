@@ -47,6 +47,8 @@ generate_pvs_report() {
 
     local body="<pre>$(cat PVS-studio.err | html_escape)</pre>"
 
+    local title="PVS-studio analysis results"
+
     generate_report "$title" "$body" "$index_file"
   )
 }
