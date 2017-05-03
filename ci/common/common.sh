@@ -126,20 +126,25 @@ commit_subtree() {(
 
     git commit -m "${CI_TARGET//-/ }: Automatic update." || true
 
-    if ! has_gh_token ; then
-      echo "GH_TOKEN not set, not committing."
-      echo "To test pull requests, see instructions in README.md."
-      return $(can_fail_without_private)
-    fi
+    local attempts=10
 
-    until (git pull --rebase git://github.com/${!repo} ${!branch} \
-           && with_token git push \
-                https://%token@github.com/${!repo} ${!branch} >/dev/null 2>&1 \
-           && echo "Pushed to ${!repo} ${!branch}."); do
+    while test $(( attempts-=1 )) -gt 0 ; do
+      if git pull --rebase git://github.com/${!repo} ${!branch} ; then
+        if ! has_gh_token ; then
+          echo "GH_TOKEN not set, not committing."
+          echo "To test pull requests, see instructions in README.md."
+          return $(can_fail_without_private)
+        fi
+        if with_token git push https://%token@github.com/${!repo} ${!branch}
+        then
+          echo "Pushed to ${!repo} ${!branch}."
+          return 0
+        fi
+      fi
       echo "Retry pushing to ${!repo} ${!branch}."
       sleep 1
     done
-    return
+    return 1
   else
     if prompt_key_local "Build finished, do you want to commit and push the results to ${!repo}:${!branch} (change by setting ${repo}/${branch})?" ; then
     # Commit in local builds.
@@ -161,8 +166,8 @@ with_token() {(
   for arg ; do
     arg="${arg//%token/$GH_TOKEN}"
     arg="${arg//%%/%}"
-    printf '\0%s' $arg
-  done | xargs -0 -x sh -c 'shift;"$@"' -
+    printf '%s\0' $arg
+  done | xargs -0 -x sh -c '"$@"' -
 )}
 
 has_gh_token() {
