@@ -18,12 +18,14 @@ send_gh_api_request() {
   local endpoint="${1}"
   local verb="${2:-GET}"
 
-  local response="$(curl -H "Accept: application/vnd.github.v3+json" \
-    -H "User-Agent: neovim/bot-ci" \
-    -u "${GH_TOKEN}:x-oauth-basic" \
-    -X ${verb} \
-    https://api.github.com/${endpoint} \
-    2>/dev/null)"
+  local response="$(
+    with_token \
+    curl -H "Accept: application/vnd.github.v3+json" \
+      -H "User-Agent: neovim/bot-ci" \
+      -u "%token:x-oauth-basic" \
+      -X ${verb} \
+      https://api.github.com/${endpoint} \
+      2>/dev/null)"
   _check_gh_error "${response}" "calling ${endpoint} (${verb})"
 }
 
@@ -36,13 +38,15 @@ send_gh_api_data_request() {
   local verb="${2}"
   local data="${3}"
 
-  local response="$(curl -H "Accept: application/vnd.github.v3+json" \
-    -H "User-Agent: neovim/bot-ci" \
-    -u "${GH_TOKEN}:x-oauth-basic" \
-    -X ${verb} \
-    -d "${data}" \
-    https://api.github.com/${endpoint} \
-    2>/dev/null)"
+  local response="$(
+    with_token \
+    curl -H "Accept: application/vnd.github.v3+json" \
+      -H "User-Agent: neovim/bot-ci" \
+      -u "%token:x-oauth-basic" \
+      -X ${verb} \
+      -d "${data}" \
+      https://api.github.com/${endpoint} \
+      2>/dev/null)"
   _check_gh_error "${response}" "calling ${endpoint} (${verb})"
 }
 
@@ -58,12 +62,14 @@ upload_release_asset() {
   local release_id="${4}"
   local mime_type="$(file --mime-type -b "${file}")"
 
-  local response="$(curl -H "Accept: application/vnd.github.v3+json" \
-    -H "User-Agent: neovim/bot-ci" \
-    -H "Content-Type: ${mime_type}" \
-    -u "${GH_TOKEN}:x-oauth-basic" \
-    -T "${file}"\
-    https://uploads.github.com/repos/${repository}/releases/${release_id}/assets?name=${file_name} \
-    2>/dev/null)"
+  local response="$(
+    with_token \
+      curl -H "Accept: application/vnd.github.v3+json" \
+        -H "User-Agent: neovim/bot-ci" \
+        -H "Content-Type: ${mime_type}" \
+        -u "%token:x-oauth-basic" \
+        -T "${file}"\
+        https://uploads.github.com/repos/${repository}/releases/${release_id}/assets?name=${file_name} \
+        2>/dev/null)"
   _check_gh_error "${response}" 'uploading release assets'
 }

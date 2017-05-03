@@ -126,15 +126,16 @@ commit_subtree() {(
 
     git commit -m "${CI_TARGET//-/ }: Automatic update." || true
 
-    if test -z "${GH_TOKEN:-}" ; then
+    if ! has_gh_token ; then
       echo "GH_TOKEN not set, not committing."
       echo "To test pull requests, see instructions in README.md."
       return $(can_fail_without_private)
     fi
 
-    until (git pull --rebase git://github.com/${!repo} ${!branch} &&
-           git push https://${GH_TOKEN}@github.com/${!repo} ${!branch} >/dev/null 2>&1 &&
-           echo "Pushed to ${!repo} ${!branch}."); do
+    until (git pull --rebase git://github.com/${!repo} ${!branch} \
+           && with_token git push \
+                https://%token@github.com/${!repo} ${!branch} >/dev/null 2>&1 \
+           && echo "Pushed to ${!repo} ${!branch}."); do
       echo "Retry pushing to ${!repo} ${!branch}."
       sleep 1
     done
@@ -147,3 +148,23 @@ commit_subtree() {(
     fi
   fi
 )}
+
+with_token() {(
+  set +x
+  if [[ $1 = --empty-unset ]] ; then
+    : ${GH_TOKEN:=}
+    shift
+  else
+    set -u
+    : ${GH_TOKEN}
+  fi
+  for arg ; do
+    arg="${arg//%token/$GH_TOKEN}"
+    arg="${arg//%%/%}"
+    printf '\0%s' $arg
+  done | xargs -0 -x sh -c 'shift;"$@"' -
+)}
+
+has_gh_token() {
+  with_token --empty-unset test -n %token
+}
