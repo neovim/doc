@@ -2,11 +2,14 @@
 set -e
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source ${BUILD_DIR}/ci/common/common.sh
-source ${BUILD_DIR}/ci/common/deps-repo.sh
-source ${BUILD_DIR}/ci/common/doc.sh
-source ${BUILD_DIR}/ci/common/neovim.sh
-source ${BUILD_DIR}/ci/common/html.sh
+source "$BUILD_DIR/ci/common/common.sh"
+source "$BUILD_DIR/ci/common/deps-repo.sh"
+source "$BUILD_DIR/ci/common/doc.sh"
+source "$BUILD_DIR/ci/common/neovim.sh"
+source "$BUILD_DIR/ci/common/html.sh"
+
+DOC_SUBTREE="/reports/translations"
+REPORTS_DIR="$DOC_DIR/$DOC_SUBTREE"
 
 generate_translation_report() {
   cd ${NEOVIM_DIR}
@@ -20,10 +23,10 @@ generate_translation_report() {
   ${MAKE_CMD} translations
 
   # Rebuild the translation report
-  rm -rf ${DOC_DIR}/reports/translations
-  mkdir -p ${DOC_DIR}/reports/translations
+  rm -rf "$REPORTS_DIR"
+  mkdir -p "$REPORTS_DIR"
   generate_report "Neovim Translation Report" "$(get_translation_report_body)" \
-    ${DOC_DIR}/reports/translations/index.html
+    "$REPORTS_DIR/index.html"
 }
 
 # Helper function for translation report
@@ -73,7 +76,6 @@ get_translation_report_body() {
   done
 }
 
-DOC_SUBTREE="/reports/translations/"
 clone_doc
 clone_neovim
 generate_translation_report

@@ -6,7 +6,7 @@
 # ${3}: Line number.
 require_environment_variable() {
   local variable_name="${1}"
-  local variable_content="${!variable_name}"
+  eval "local variable_content=\"\${${variable_name}:-}\""
   if [[ -z "${variable_content}" ]]; then
     >&2 echo "${variable_name} not set at ${2}:${3}, cannot continue!"
     >&2 echo "Maybe you need to source a script from ci/common."
@@ -35,13 +35,17 @@ GIT_EMAIL=${GIT_EMAIL:-marvim@users.noreply.github.com}
 
 # Check if currently performing CI or local build.
 # ${1}: Task that is NOT executed if building locally.
-#       Default: "installing dependencies"
+#       Default: "installing dependencies". Not reported if equal to --silent.
 # Return 0 if CI build, 1 otherwise.
 is_ci_build() {
-  if [[ ${CI} != true ]]; then
-    echo "Local build, skip ${1:-installing dependencies}."
+  local msg="${1:-installing dependencies}"
+  if test "${CI:-}" != "true" ; then
+    if test "$msg" != "--silent" ; then
+      echo "Local build, skip $msg."
+    fi
     return 1
   fi
+  return 0
 }
 
 # Clone a Git repository and check out a subtree.
@@ -73,10 +77,21 @@ clone_subtree() {(
 # Prompt the user to press a key to continue for local builds.
 # ${1}: Shown message.
 prompt_key_local() {
-  if [[ ${CI} != true ]]; then
+  if ! is_ci_build --silent ; then
     echo "${1}"
     echo "Press a key to continue, CTRL-C to abort..."
     read -n 1 -s
+  fi
+}
+
+# Check whether absense of private (i.e. encrypted) data should fail the build
+# Targets for use like `exit $(can_fail_without_private)` or `return
+# $(can_fail_without_private)`.
+can_fail_without_private() {
+  if test "$TRAVIS_EVENT_TYPE" = pull_request ; then
+    echo 0
+  else
+    echo 1
   fi
 }
 
@@ -104,18 +119,19 @@ commit_subtree() {(
 
   git add --all .
 
-  [[ ${CI} == true ]] && {
+  if is_ci_build --silent ; then
     # Commit on Travis CI.
-    if [[ -z "${GH_TOKEN}" ]]; then
-      echo "GH_TOKEN not set, not committing."
-      echo "To test pull requests, see instructions in README.md."
-      return 1
-    fi
-
     git config --local user.name ${GIT_NAME}
     git config --local user.email ${GIT_EMAIL}
 
     git commit -m "${CI_TARGET//-/ }: Automatic update." || true
+
+    if test -z "${GH_TOKEN:-}" ; then
+      echo "GH_TOKEN not set, not committing."
+      echo "To test pull requests, see instructions in README.md."
+      return $(can_fail_without_private)
+    fi
+
     until (git pull --rebase git://github.com/${!repo} ${!branch} &&
            git push https://${GH_TOKEN}@github.com/${!repo} ${!branch} >/dev/null 2>&1 &&
            echo "Pushed to ${!repo} ${!branch}."); do
@@ -123,9 +139,11 @@ commit_subtree() {(
       sleep 1
     done
     return
-  } || prompt_key_local "Build finished, do you want to commit and push the results to ${!repo}:${!branch} (change by setting ${repo}/${branch})?" && {
+  else
+    if prompt_key_local "Build finished, do you want to commit and push the results to ${!repo}:${!branch} (change by setting ${repo}/${branch})?" ; then
     # Commit in local builds.
-    git commit || true
-    git push ssh://git@github.com/${!repo} ${!branch}
-  }
+      git commit || true
+      git push ssh://git@github.com/${!repo} ${!branch}
+    fi
+  fi
 )}

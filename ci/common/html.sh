@@ -62,3 +62,10 @@ extract_inline_script() {
     | head -n -1 \
     | tail -n +2
 }
+
+# Escape HTML special characters (currently only & and <)
+# Input:  Text to escape
+# Output: Escaped text.
+html_escape() {
+  sed 's/&/&amp;/g;s/</\&lt;/g'
+}

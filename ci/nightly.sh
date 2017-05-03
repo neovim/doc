@@ -51,6 +51,10 @@ get_nvim_version() {
 }
 
 upload_nightly() {
+  if test -z "$GH_TOKEN" ; then
+    return $(can_fail_without_private)
+  fi
+
   require_environment_variable NEOVIM_REPO "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_BRANCH "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}

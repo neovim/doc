@@ -32,6 +32,11 @@ clean_ssh_id() {
 setup_ssh_id() {
   export SSH_KEY_FILE="${BUILD_DIR}/ssh/id_rsa"
   if [[ ! -e "${SSH_KEY_FILE}" ]]; then
+    # Private key not found, exit without failing the pull build
+    if test -z "$encrypted_0b2795149c16_key" ; then
+      echo 'Repo not synced: encrypted data not available'
+      exit $(can_fail_without_private)
+    fi
     # Private key encrypted by travis encrypt-file
     openssl aes-256-cbc -K ${encrypted_0b2795149c16_key} -iv ${encrypted_0b2795149c16_iv} \
       -in "${BUILD_DIR}/ssh/id_rsa.enc" -out "${SSH_KEY_FILE}" -d
