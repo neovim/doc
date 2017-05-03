@@ -167,7 +167,7 @@ with_token() {(
     arg="${arg//%token/$GH_TOKEN}"
     arg="${arg//%%/%}"
     printf '%s\0' $arg
-  done | xargs -0 -x sh -c '"$@"' -
+  done | xargs -0 -x sh -c '"$@"' - | sed "s/$GH_TOKEN/GH_TOKEN/g"
 )}
 
 has_gh_token() {
