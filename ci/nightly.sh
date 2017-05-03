@@ -51,7 +51,7 @@ get_nvim_version() {
 }
 
 upload_nightly() {
-  if test -z "$GH_TOKEN" ; then
+  if ! has_gh_token ; then
     return $(can_fail_without_private)
   fi
 
