@@ -112,12 +112,9 @@ commit_subtree() {(
   require_environment_variable ${repo} "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable ${branch} "${BASH_SOURCE[0]}" ${LINENO}
 
-  # Remove possible file name from full subtree path and change directory.
-  local subtree_path="${!dir}${!subtree}"
-  subtree_path=${subtree_path%/*}
-  cd ${subtree_path}
+  cd "${!dir}"
 
-  git add --all .
+  git add --all "./${!subtree}"
 
   if is_ci_build --silent ; then
     # Commit on Travis CI.
@@ -135,7 +132,7 @@ commit_subtree() {(
           echo "To test pull requests, see instructions in README.md."
           return $(can_fail_without_private)
         fi
-        if with_token git push https://%token@github.com/${!repo} ${!branch}
+        if with_token git push https://%token%@github.com/${!repo} ${!branch}
         then
           echo "Pushed to ${!repo} ${!branch}."
           return 0
@@ -156,6 +153,7 @@ commit_subtree() {(
 
 with_token() {(
   set +x
+  set +o pipefail
   if [[ $1 = --empty-unset ]] ; then
     : ${GH_TOKEN:=}
     shift
@@ -164,12 +162,12 @@ with_token() {(
     : ${GH_TOKEN}
   fi
   for arg ; do
-    arg="${arg//%token/$GH_TOKEN}"
-    arg="${arg//%%/%}"
-    printf '%s\0' $arg
-  done | xargs -0 -x sh -c '"$@"' - | sed "s/$GH_TOKEN/GH_TOKEN/g"
+    arg="${arg//%token%/$GH_TOKEN}"
+    printf '%s\0' "$arg"
+  done | xargs -0 -x sh -c '"$@"' - >&2 | sed "s/$GH_TOKEN/GH_TOKEN/g"
+  return ${PIPESTATUS[1]}
 )}
 
 has_gh_token() {
-  with_token --empty-unset test -n %token
+  with_token --empty-unset test -n %token%
 }

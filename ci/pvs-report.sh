@@ -23,7 +23,7 @@ download_pvs_badge() {
   download_badge \
     "$(cat "$REPORTS_DIR/PVS-studio.err" | grep '^./' | wc -l)" \
     "PVS_analysis" \
-    "$DOC_SUBTREE"
+    "$REPORTS_DIR"
 }
 
 generate_pvs_report() {

@@ -22,7 +22,7 @@ send_gh_api_request() {
     with_token \
     curl -H "Accept: application/vnd.github.v3+json" \
       -H "User-Agent: neovim/bot-ci" \
-      -u "%token:x-oauth-basic" \
+      -u "%token%:x-oauth-basic" \
       -X ${verb} \
       https://api.github.com/${endpoint} \
       2>/dev/null)"
@@ -42,7 +42,7 @@ send_gh_api_data_request() {
     with_token \
     curl -H "Accept: application/vnd.github.v3+json" \
       -H "User-Agent: neovim/bot-ci" \
-      -u "%token:x-oauth-basic" \
+      -u "%token%:x-oauth-basic" \
       -X ${verb} \
       -d "${data}" \
       https://api.github.com/${endpoint} \
@@ -67,7 +67,7 @@ upload_release_asset() {
       curl -H "Accept: application/vnd.github.v3+json" \
         -H "User-Agent: neovim/bot-ci" \
         -H "Content-Type: ${mime_type}" \
-        -u "%token:x-oauth-basic" \
+        -u "%token%:x-oauth-basic" \
         -T "${file}"\
         https://uploads.github.com/repos/${repository}/releases/${release_id}/assets?name=${file_name} \
         2>/dev/null)"
