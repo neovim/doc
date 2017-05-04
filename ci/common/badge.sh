@@ -43,11 +43,13 @@ download_badge() {
   local code_quality_color="$(
     get_code_quality_color $bugs $max_bugs $yellow_threshold)"
   local badge="${badge_text}-${bugs}-${code_quality_color}"
-  local response=$(
+  local response="$(
     curl --tlsv1 https://img.shields.io/badge/${badge}.svg \
-      > "$reports_dir/badge.svg" 2>&1 \
-    || true
-  )
-  test -f "$reports_dir/badge.svg" \
-    || echo "failed to download badge to $reports_dir: $response"
+      -o"$reports_dir/badge.svg" 2>&1
+  )" || rm -f "$reports_dir/badge.svg"
+  if ! cat "$reports_dir/badge.svg" \
+     | grep -F 'xmlns="http://www.w3.org/2000/svg"' ; then
+    echo "Failed to download badge to $reports_dir: $response"
+    rm "$reports_dir/badge.svg"
+  fi
 }
