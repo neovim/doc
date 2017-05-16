@@ -174,7 +174,7 @@ with_token() {
     for arg ; do
       arg="${arg//%token%/$GH_TOKEN}"
       printf '%s\0' "$arg"
-    done | xargs -0 -x sh -c '"$@"' - >&2 | sed "s/$GH_TOKEN/GH_TOKEN/g"
+    done | xargs -0 -n 5000 -x sh -c '"$@"' - >&2 | sed "s/$GH_TOKEN/GH_TOKEN/g"
     return "${PIPESTATUS[1]}"
   )
 }

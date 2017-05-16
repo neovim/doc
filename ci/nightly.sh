@@ -50,9 +50,10 @@ get_release_body() {
   echo '```'
 }
 
-get_nvim_version() {
-  echo $( set +e ; 2>&1 "${NVIM_BIN}" --headless -u NONE +":echo (api_info().version.major).'.'.(api_info().version.minor).'.'.(api_info().version.patch)" +q )
-}
+get_nvim_version() {(
+  set +e
+  2>&1 "${NVIM_BIN}" --headless -u NONE +":echo (api_info().version.major).'.'.(api_info().version.minor).'.'.(api_info().version.patch)" +q
+)}
 
 upload_nightly() {
   if ! has_gh_token ; then
