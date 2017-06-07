@@ -21,7 +21,7 @@ get_vimpatch_report_body() {
   #   - merged patches:   listed in version.c
   #   - unmerged patches: commented-out in version.c
   #   - N/A patches:      commented-out with "//123 NA"
-  local patches=$(sed -n '/static int included_patches/,/}/p' ${NEOVIM_DIR}/src/nvim/version.c |
+  local patches=$(sed -n '/static const int included_patches/,/}/p' ${NEOVIM_DIR}/src/nvim/version.c |
     grep -e '[0-9]' | sed 's/[ ,]//g' | grep -ve '^00*$')
 
   merged=$(echo "${patches}" | grep -v \/\/ | linkify_numbers) \
