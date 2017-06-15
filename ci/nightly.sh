@@ -52,7 +52,7 @@ get_nvim_version() {
 
 upload_nightly() {
   if ! has_gh_token ; then
-    return $(can_fail_without_private)
+    return "$(can_fail_without_private)"
   fi
 
   require_environment_variable NEOVIM_REPO "${BASH_SOURCE[0]}" ${LINENO}
