@@ -39,14 +39,6 @@ Example: To build the user manual HTML using an existing local repo:
 MAKE_CMD=ninja NEOVIM_DIR=~/neovim2 ./ci/user-docu.sh
 ```
 
-Example: To rebuild 64-bit dependencies and push to a `neovim/deps` fork:
-
-```bash
-NEOVIM_REPO=<username>/neovim NEOVIM_BRANCH=my-neovim-branch \
-DEPS_REPO=<username>/neovim-deps DEPS_BRANCH=my-deps-branch \
-./ci/deps64.sh
-```
-
 # Testing PRs
 
 Building of PRs is disabled for this repository; builds would always fail
