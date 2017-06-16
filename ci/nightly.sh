@@ -13,28 +13,32 @@ NIGHTLY_TAG=${NIGHTLY_RELEASE:-nightly}
 NVIM_BIN=${NIGHTLY_DIR}/nvim-${CI_OS}64/bin/nvim
 NVIM_VERSION=unknown
 
-build_nightly() {(
-  require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
+build_nightly() {
+  (
+    require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
-  mkdir -p ${NIGHTLY_DIR}
+    mkdir -p ${NIGHTLY_DIR}
 
-  cd ${NEOVIM_DIR}
-  make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH="
-  make DESTDIR="${NIGHTLY_DIR}/nvim-${CI_OS}64" install
-)}
+    cd ${NEOVIM_DIR}
+    make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH="
+    make DESTDIR="${NIGHTLY_DIR}/nvim-${CI_OS}64" install
+  )
+}
 
-create_nightly_tarball() {(
-  if [ "${CI_OS}" = osx ] ; then
-    # Relocate the `nvim` dylib references.
-    source ${BUILD_DIR}/ci/package-macos.sh "${NIGHTLY_DIR}/nvim-${CI_OS}64"
-    # Overwrite the installed `nvim` with the new binary and its dylibs.
-    cp -R bundle/nvim/bin   "${NIGHTLY_DIR}/nvim-${CI_OS}64/"
-    cp -R bundle/nvim/libs  "${NIGHTLY_DIR}/nvim-${CI_OS}64/"
-  fi
+create_nightly_tarball() {
+  (
+    if [ "${CI_OS}" = osx ] ; then
+        # Relocate the `nvim` dylib references.
+        source ${BUILD_DIR}/ci/package-macos.sh "${NIGHTLY_DIR}/nvim-${CI_OS}64"
+        # Overwrite the installed `nvim` with the new binary and its dylibs.
+        cp -R bundle/nvim/bin   "${NIGHTLY_DIR}/nvim-${CI_OS}64/"
+        cp -R bundle/nvim/libs  "${NIGHTLY_DIR}/nvim-${CI_OS}64/"
+    fi
 
-  cd ${NIGHTLY_DIR}
-  tar cfz ${NIGHTLY_FILE} nvim-${CI_OS}64
-)}
+    cd ${NIGHTLY_DIR}
+    tar cfz ${NIGHTLY_FILE} nvim-${CI_OS}64
+  )
+}
 
 get_release_body() {
   echo 'Nvim development (pre-release) build. See **[Installing-Neovim](https://github.com/neovim/neovim/wiki/Installing-Neovim)**.'
