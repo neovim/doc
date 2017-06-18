@@ -180,5 +180,8 @@ with_token() {
 }
 
 has_gh_token() {
-  with_token --empty-unset test -n %token%
+  (
+    set +o xtrace
+    2>&1 >/dev/null test -n "$GH_TOKEN"
+  )
 }
