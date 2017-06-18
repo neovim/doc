@@ -140,7 +140,7 @@ commit_subtree() {
             echo 'To test pull requests, see instructions in README.md.'
             return "$(can_fail_without_private)"
           fi
-          if with_token git push "https://%token%@github.com/${!repo}" "${!branch}"
+          if git push "https://github.com/${!repo}" "${!branch}"
           then
             echo "Pushed to ${!repo} ${!branch}."
             return 0
@@ -157,26 +157,6 @@ commit_subtree() {
         git push "ssh://git@github.com/${!repo}" "${!branch}"
       fi
     fi
-  )
-}
-
-with_token() {
-  (
-    set +x
-    set +o pipefail
-    if [[ $1 = --empty-unset ]] ; then
-      : "${GH_TOKEN:=}"
-      shift
-    else
-      set -u
-      : ${GH_TOKEN}
-    fi
-    token='%token%'
-    for arg ; do
-      arg="${arg//$token/$GH_TOKEN}"
-      printf '%s\0' "$arg"
-    done | xargs -0 -n 5000 -x sh -c '"$@"' - 2>&1 | sed "s/$GH_TOKEN/GH_TOKEN/g"
-    return "${PIPESTATUS[1]}"
   )
 }
 

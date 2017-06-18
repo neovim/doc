@@ -19,10 +19,8 @@ send_gh_api_request() {
   local verb="${2:-GET}"
 
   local response="$(
-    with_token \
-    curl -s -H "Accept: application/vnd.github.v3+json" \
+    curl --netrc -s -H "Accept: application/vnd.github.v3+json" \
       -H "User-Agent: neovim/bot-ci" \
-      -u "%token%:x-oauth-basic" \
       -X ${verb} \
       https://api.github.com/${endpoint} \
       2>/dev/null)"
@@ -39,10 +37,8 @@ send_gh_api_data_request() {
   local data="${3}"
 
   local response="$(
-    with_token \
-    curl -s -H "Accept: application/vnd.github.v3+json" \
+    curl --netrc -s -H "Accept: application/vnd.github.v3+json" \
       -H "User-Agent: neovim/bot-ci" \
-      -u "%token%:x-oauth-basic" \
       -X ${verb} \
       -d "${data}" \
       https://api.github.com/${endpoint} \
@@ -63,11 +59,9 @@ upload_release_asset() {
   local mime_type="$(file --mime-type -b "${file}")"
 
   local response="$(
-    with_token \
-      curl -s -H "Accept: application/vnd.github.v3+json" \
+      curl --netrc -s -H "Accept: application/vnd.github.v3+json" \
         -H "User-Agent: neovim/bot-ci" \
         -H "Content-Type: ${mime_type}" \
-        -u "%token%:x-oauth-basic" \
         -T "${file}"\
         https://uploads.github.com/repos/${repository}/releases/${release_id}/assets?name=${file_name} \
         2>/dev/null)"
