@@ -37,6 +37,10 @@ build_appimage() {
   (
     require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
+    sudo modprobe fuse;
+    user="$(whoami)";
+    sudo usermod -a -G fuse $user;
+
     cd ${NEOVIM_DIR}
     rm -rf build
     make appimage
