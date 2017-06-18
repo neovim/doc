@@ -21,11 +21,26 @@ build_nightly() {
 
     cd ${NEOVIM_DIR}
     if [ "${CI_OS}" = osx ] ; then
+      # This CMAKE_EXTRA_FLAGS is required for relocating the macOS libs.
       make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH="
     else
       make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH="
     fi
     make DESTDIR="${NIGHTLY_DIR}/nvim-${CI_OS}64" install
+  )
+}
+
+# Produces a "universal" Linux executable that looks like:
+#     nvim-v0.2.1-26-gaea523a7ed5e.glibc2.17-x86_64.AppImage
+build_appimage() {
+  (
+    require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
+
+    cd ${NEOVIM_DIR}
+    rm -rf build
+    make appimage
+    cp build/bin/nvim-*.AppImage build/bin/nvim.appimage
+    ls -lh build/bin/
   )
 }
 
@@ -108,9 +123,9 @@ upload_nightly() {
     "{ \"force\": true, \"sha\": \"${NEOVIM_COMMIT}\" }" \
     > /dev/null
 
-  echo 'Uploading package.'
   local name="nvim-${CI_OS}64.tar.gz"
   [ "${CI_OS}" = osx ] && name="nvim-macos.tar.gz"
+  echo "Uploading package: $name"
   upload_release_asset ${NIGHTLY_FILE} "$name" \
     ${NEOVIM_REPO} ${release_id} \
     > /dev/null
@@ -139,5 +154,11 @@ clone_neovim
   build_nightly
   NVIM_VERSION=$(get_nvim_version)
   create_nightly_tarball
-  [ "${CI_OS}" = osx ] && upload_nightly || upload_nightly delete
+  if [ "${CI_OS}" = osx ] ; then
+    upload_nightly
+  else
+    upload_nightly delete
+    build_appimage
+    upload_nightly
+  fi
 }
