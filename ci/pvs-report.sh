@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -e
 set -o pipefail
 set -u
@@ -7,7 +8,7 @@ set -x
 shopt -s failglob
 shopt -s dotglob
 
-BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$BUILD_DIR/ci/common/common.sh"
 source "$BUILD_DIR/ci/common/dependencies.sh"
 source "$BUILD_DIR/ci/common/deps-repo.sh"
@@ -16,21 +17,21 @@ source "$BUILD_DIR/ci/common/neovim.sh"
 source "$BUILD_DIR/ci/common/html.sh"
 source "$BUILD_DIR/ci/common/badge.sh"
 
-DOC_SUBTREE="/reports/pvs"
-REPORTS_DIR="$DOC_DIR/$DOC_SUBTREE"
+readonly DOC_SUBTREE='/reports/pvs'
+readonly REPORTS_DIR="$DOC_DIR/$DOC_SUBTREE"
 
 download_pvs_badge() {
-  download_badge \
-    "$(cat "$REPORTS_DIR/PVS-studio.err" | grep '^./' | wc -l)" \
-    "PVS_analysis" \
+  download_badge                                     \
+    "$(grep -c '^./' "$REPORTS_DIR/PVS-studio.err")" \
+    'PVS_analysis'                                   \
     "$REPORTS_DIR"
 }
 
 generate_pvs_report() {
+  local -r index_file="$REPORTS_DIR/index.html"
+
   rm -rf "$REPORTS_DIR"
   mkdir -p "$REPORTS_DIR"
-
-  local index_file="$REPORTS_DIR/index.html"
 
   (
     cd "$NEOVIM_DIR"
@@ -42,19 +43,23 @@ generate_pvs_report() {
     # out. This is intentional.
     cp PVS-studio* "$REPORTS_DIR"
   )
+
   (
     cd "$REPORTS_DIR"
 
-    local body="<pre>$(cat PVS-studio.err | html_escape)</pre>"
-
-    local title="PVS-studio analysis results"
+    local -r body="<pre>$(html_escape < PVS-studio.err)</pre>"
+    local -r title='PVS-studio analysis results'
 
     generate_report "$title" "$body" "$index_file"
   )
 }
 
-clone_doc
-clone_neovim
-generate_pvs_report
-download_pvs_badge
-commit_doc
+main() {
+  clone_doc
+  clone_neovim
+  download_pvs_badge
+  generate_pvs_report
+  commit_doc
+}
+
+main
