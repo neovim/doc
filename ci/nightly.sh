@@ -20,7 +20,11 @@ build_nightly() {
     mkdir -p ${NIGHTLY_DIR}
 
     cd ${NEOVIM_DIR}
-    make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH="
+    if [ "${CI_OS}" = osx ] ; then
+      make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH="
+    else
+      make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH="
+    fi
     make DESTDIR="${NIGHTLY_DIR}/nvim-${CI_OS}64" install
   )
 }
