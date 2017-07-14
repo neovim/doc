@@ -33,9 +33,9 @@ get_vimpatch_report_body() {
 
 # Decorates a list of numbers as links to Vim's online repo.
 linkify_numbers() {
-  # zero-pad numbers less than 3 digits
-  awk -F: '{ printf("%03d\n", $1) }' |
-  sed 's![0-9]*!<li><a href="https://github.com/vim/vim/tree/v7.4.\0">vim-patch:7.4.\0</a></li>!'
+  # zero-pad numbers less than 4 digits
+  awk -F: '{ printf("%04d\n", $1) }' |
+  sed 's![0-9]*!<li><a href="https://github.com/vim/vim/tree/v8.0.\0">vim-patch:8.0.\0</a></li>!'
 }
 
 # Generate HTML report of the current 'vim-patch' pull requests on GitHub
