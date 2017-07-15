@@ -32,6 +32,7 @@ build_nightly() {
 
 # Produces a "universal" Linux executable that looks like:
 #     nvim-v0.2.1-26-gaea523a7ed5e.glibc2.17-x86_64.AppImage
+# The executable is placed into ${NEOVIM_DIR}/build/bin/.
 build_appimage() {
   (
     require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
@@ -39,7 +40,6 @@ build_appimage() {
     cd ${NEOVIM_DIR}
     rm -rf build
     make appimage
-    cp build/bin/nvim-*.AppImage build/bin/nvim.appimage
     ls -lh build/bin/
   )
 }
@@ -75,15 +75,22 @@ get_nvim_version() {(
 )}
 
 upload_nightly() {
-  if ! has_gh_token ; then
-    return "$(can_fail_without_private)"
-  fi
-
   require_environment_variable NEOVIM_REPO "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_BRANCH "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
 
-  local delete_old=$1
+  # If arg1=delete, filepath name may be provided in arg2; else use arg1.
+  # If arg1=delete, uploadname name may be provided in arg3; else use arg2.
+  local delete_old="$( [ "${1:-}" = delete ] && echo delete )"
+  local filepath="$( [ -n "$delete_old" ] && echo "${2:-}" || echo "${1:-}" )"
+  local uploadname="$( [ -n "$delete_old" ] && echo "${3:-}" || echo "${2:-}" )"
+
+  echo "upload_nightly: delete_old=$delete_old filepath=$filepath uploadname=$uploadname"
+
+  is_ci_build 'updating release page'
+  if ! has_gh_token ; then
+    return "$(can_fail_without_private)"
+  fi
 
   local release_id
   read release_id < <( \
@@ -123,11 +130,8 @@ upload_nightly() {
     "{ \"force\": true, \"sha\": \"${NEOVIM_COMMIT}\" }" \
     > /dev/null
 
-  local name="nvim-${CI_OS}64.tar.gz"
-  [ "${CI_OS}" = osx ] && name="nvim-macos.tar.gz"
-  echo "Uploading package: $name"
-  upload_release_asset ${NIGHTLY_FILE} "$name" \
-    ${NEOVIM_REPO} ${release_id} \
+  echo "Uploading asset: $uploadname"
+  upload_release_asset "$filepath" "$uploadname" ${NEOVIM_REPO} ${release_id} \
     > /dev/null
 }
 
@@ -153,12 +157,14 @@ clone_neovim
 {
   build_nightly
   NVIM_VERSION=$(get_nvim_version)
-  create_nightly_tarball
   if [ "${CI_OS}" = osx ] ; then
-    upload_nightly
+    create_nightly_tarball
+    upload_nightly "$NIGHTLY_FILE" "nvim-macos.tar.gz"
   else
-    upload_nightly delete
+    create_nightly_tarball
+    upload_nightly delete "$NIGHTLY_FILE" "nvim-${CI_OS}64.tar.gz"
+
     build_appimage
-    upload_nightly
+    upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim-*.AppImage | head -1)"
   fi
 }
