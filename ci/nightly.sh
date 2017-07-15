@@ -111,7 +111,7 @@ upload_nightly() {
       | jq -r -c '.id') \
       || exit
   elif [ "$delete_old" = delete ] ; then
-    echo 'Deleting old nightly tarballs.'
+    echo "Deleting old release assets"
     local asset_id
     while read asset_id; do
       [[ -n "${asset_id}" ]] && \
@@ -125,8 +125,12 @@ upload_nightly() {
   fi
 
   echo 'Updating release description.'
+  # Set "draft" to un-publish. Then re-publish (to update the publish-date).
   send_gh_api_data_request repos/${NEOVIM_REPO}/releases/${release_id} PATCH \
-    "{ \"body\": $(get_release_body | jq -s -c -R '.') }" \
+    "{ \"draft\": true, \"body\": $(get_release_body | jq -s -c -R '.') }" \
+    > /dev/null
+  send_gh_api_data_request repos/${NEOVIM_REPO}/releases/${release_id} PATCH \
+    "{ \"draft\": false, \"prerelease\": true }" \
     > /dev/null
 
   echo "Updating ${NIGHTLY_TAG} tag to point to ${NEOVIM_COMMIT}."
