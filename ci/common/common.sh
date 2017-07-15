@@ -10,7 +10,7 @@ require_environment_variable() {
   eval "local variable_content=\"\${${variable_name}:-}\""
   # shellcheck disable=2154
   if [[ -z "${variable_content}" ]]; then
-    >&2 echo "${variable_name} not set at ${2}:${3}, cannot continue!"
+    >&2 echo "${2}:${3}: missing env var: ${variable_name}"
     >&2 echo "Maybe you need to source a script from ci/common."
     exit 1
   fi

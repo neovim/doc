@@ -88,7 +88,8 @@ upload_nightly() {
   local delete_old="$( [ "${1:-}" = delete ] && echo delete )"
   local filepath="$( [ -n "$delete_old" ] && echo "${2:-}" || echo "${1:-}" )"
   local uploadname="$( [ -n "$delete_old" ] && echo "${3:-}" || echo "${2:-}" )"
-
+  require_environment_variable filepath "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable uploadname "${BASH_SOURCE[0]}" ${LINENO}
   echo "upload_nightly: delete_old=$delete_old filepath=$filepath uploadname=$uploadname"
 
   is_ci_build 'updating release page'
@@ -173,6 +174,7 @@ clone_neovim
     upload_nightly delete "$NIGHTLY_FILE" "nvim-${CI_OS}64.tar.gz"
 
     build_appimage
-    upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim-*.AppImage | head -1)"
+    upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim-*.AppImage | head -1)" \
+      nvim.appimage
   fi
 }
