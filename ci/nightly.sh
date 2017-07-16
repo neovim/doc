@@ -176,5 +176,13 @@ clone_neovim
     build_appimage
     upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim-*.AppImage | head -1)" \
       nvim.appimage
+
+    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&job=Configuration%3A%20MINGW_32' \
+      -o 'nvim-win32.zip'
+    upload_nightly 'nvim-win32.zip' 'nvim-win32.zip'
+
+    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&job=Configuration%3A%20MINGW_64' \
+      -o 'nvim-win64.zip'
+    upload_nightly 'nvim-win64.zip' 'nvim-win64.zip'
   fi
 }
