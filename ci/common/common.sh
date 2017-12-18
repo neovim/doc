@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Common helper functions & environment variable defaults for all types of builds.
+
+# Common functions and environment variable defaults for all types of builds.
 
 # Fail if an environment variable does not exist.
 # ${1}: Environment variable.
@@ -14,6 +15,11 @@ require_environment_variable() {
     >&2 echo "Maybe you need to source a script from ci/common."
     exit 1
   fi
+}
+
+# Checks if a program is in $PATH and is executable.
+check_executable() {
+  test -x "$(command -v "${1}")"
 }
 
 # Output the current OS.
@@ -157,6 +163,58 @@ commit_subtree() {
         git push "ssh://git@github.com/${!repo}" "${!branch}"
       fi
     fi
+  )
+}
+
+_hub_cmd() {
+  hub pull-request -m "$1"
+}
+
+_git_hub_cmd() {
+  git hub pull new -m "$1"
+}
+
+create_pullrequest() {
+  local src_dir="${1:-}"
+  local repo="${2:-}"
+  local branch="${3:-}"
+  require_environment_variable src_dir "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable repo "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable branch "${BASH_SOURCE[0]}" ${LINENO}
+
+  local push_first=1
+  local pr_cmd
+  if check_executable hub; then
+    pr_cmd="_hub_cmd"
+  elif check_executable git-hub; then
+    push_first=0
+    pr_cmd="_git_hub_cmd"
+  else
+    >&2 echo 'create_pullrequest: "hub" and "git-hub" not in $PATH or not executable.'
+    exit 1
+  fi
+
+  (
+    cd "${src_dir}"
+    local checked_out_branch="$(git rev-parse --abbrev-ref HEAD)"
+    local git_remote
+    local pr_body
+    local pr_message
+
+    git_remote="$(find_git_remote)"
+    pr_body="$(git log --grep=vim-patch --reverse --format='#### %s%n%n%b%n' "${git_remote}"/master..HEAD)"
+    pr_message="$(printf '%s\n\n%s\n' "${pr_title#,}" "${pr_body}")"
+
+    if ! [ "$push_first" = 0 ]; then
+      echo "create_pullrequest: pushing to '$repo:$branch'."
+      output="$(git push ${git_remote} HEAD:refs/heads/$branch 2>&1)"
+      echo
+    fi
+
+    echo "create_pullrequest: creating pull request"
+    output="$(${submit_fn} "${pr_message}" 2>&1)" &&
+      echo "✔ ${output}" ||
+      (echo "✘ ${output}"; false)
   )
 }
 
