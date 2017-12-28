@@ -9,6 +9,7 @@ set -e
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source ${BUILD_DIR}/ci/common/common.sh
+source ${BUILD_DIR}/ci/common/dependencies.sh
 source ${BUILD_DIR}/ci/common/neovim.sh
 
 require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
@@ -67,11 +68,10 @@ tail_missing_vimpatches() {
   )
 }
 
-is_ci_build && {
-  install_doxygen
-}
+if ! check_executable nvim ; then
+  install_nvim_appimage
+fi
 
-install_nvim
 clone_neovim
 if update_version_c ; then
   create_pullrequest

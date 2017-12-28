@@ -22,6 +22,14 @@ check_executable() {
   test -x "$(command -v "${1}")"
 }
 
+log_info() {
+  printf "bot-ci: %s\n" "$@"
+}
+
+log_error() {
+  >&2 printf "bot-ci: error: %s\n" "$@"
+}
+
 # Output the current OS.
 # Possible values are "osx" and "linux".
 get_os() {
