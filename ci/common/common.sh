@@ -58,7 +58,7 @@ is_ci_build() {
   local msg="${1:-installing dependencies}"
   if test "${CI:-}" != "true" ; then
     if test "$msg" != "--silent" ; then
-      echo "Local build, skip $msg."
+      log_info "Local build, skip $msg"
     fi
     return 1
   fi
@@ -97,8 +97,8 @@ clone_subtree() {
 # ${1}: Shown message.
 prompt_key_local() {
   if ! is_ci_build --silent ; then
-    echo "${1}"
-    echo "Press a key to continue, CTRL-C to abort..."
+    log_info "${1}"
+    log_info "Press a key to continue, CTRL-C to abort..."
     read -r -n 1 -s
   fi
 }
@@ -150,17 +150,17 @@ commit_subtree() {
       while test $(( attempts-=1 )) -gt 0 ; do
         if git pull --rebase "git://github.com/${!repo}" "${!branch}" ; then
           if ! has_gh_token ; then
-            echo 'GH_TOKEN not set, not committing.'
-            echo 'To test pull requests, see instructions in README.md.'
+            log_info 'GH_TOKEN not set; push skipped.'
+            log_info 'To test pull requests, see instructions in README.md.'
             return "$(can_fail_without_private)"
           fi
           if git push "https://github.com/${!repo}" "${!branch}"
           then
-            echo "Pushed to ${!repo} ${!branch}."
+            log_info "Pushed to ${!repo} ${!branch}."
             return 0
           fi
         fi
-        echo "Retry pushing to ${!repo} ${!branch}."
+        log_info "Retry pushing to ${!repo} ${!branch}."
         sleep 1
       done
       return 1
@@ -174,55 +174,39 @@ commit_subtree() {
   )
 }
 
-_hub_cmd() {
-  hub pull-request -m "$1"
-}
-
-_git_hub_cmd() {
-  git hub pull new -m "$1"
-}
-
+# Creates a pull request from current HEAD.
+# Current directory must be a git repo.
+#
+# ${1}: base, in github_user:branch format
+# ${2}: head, in github_user:branch format
 create_pullrequest() {
-  local src_dir="${1:-}"
-  local repo="${2:-}"
-  local branch="${3:-}"
-  require_environment_variable src_dir "${BASH_SOURCE[0]}" ${LINENO}
-  require_environment_variable repo "${BASH_SOURCE[0]}" ${LINENO}
-  require_environment_variable branch "${BASH_SOURCE[0]}" ${LINENO}
+  local base="${1:-}"
+  local head="${2:-}"
+  require_environment_variable base "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable head "${BASH_SOURCE[0]}" ${LINENO}
 
-  local push_first=1
-  local pr_cmd
-  if check_executable hub; then
-    pr_cmd="_hub_cmd"
-  elif check_executable git-hub; then
-    push_first=0
-    pr_cmd="_git_hub_cmd"
-  else
-    >&2 echo 'create_pullrequest: "hub" and "git-hub" not in $PATH or not executable.'
+  if ! check_executable hub; then
+    log_error 'create_pullrequest: "hub" not in $PATH or not executable.'
     exit 1
   fi
 
   (
-    cd "${src_dir}"
-    local checked_out_branch="$(git rev-parse --abbrev-ref HEAD)"
-    local git_remote
-    local pr_body
-    local pr_message
+    set +o xtrace
+    local rv pr_message
 
-    git_remote="$(find_git_remote)"
-    pr_body="$(git log --grep=vim-patch --reverse --format='#### %s%n%n%b%n' "${git_remote}"/master..HEAD)"
-    pr_message="$(printf '%s\n\n%s\n' "${pr_title#,}" "${pr_body}")"
+    pr_message="$(printf '%s\n\nThis pull request is [automated](https://github.com/neovim/bot-ci).' "$(git log -1 --format='%s')")"
 
-    if ! [ "$push_first" = 0 ]; then
-      echo "create_pullrequest: pushing to '$repo:$branch'."
-      output="$(git push ${git_remote} HEAD:refs/heads/$branch 2>&1)"
-      echo
+    if ! has_gh_token ; then
+      log_info 'missing $GH_TOKEN, skipping pull-request'
+      return "$(can_fail_without_private)"
     fi
 
-    echo "create_pullrequest: creating pull request"
-    output="$(${submit_fn} "${pr_message}" 2>&1)" &&
-      echo "✔ ${output}" ||
-      (echo "✘ ${output}"; false)
+    log_info "create_pullrequest: creating pull-request ..."
+    GITHUB_TOKEN="$GH_TOKEN" hub pull-request \
+      -m "$pr_message" \
+      -b "$base" \
+      -h "$head" \
+      || true  # Ignore failure.
   )
 }
 
