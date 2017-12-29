@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Common helper functions & environment variable defaults for all types of builds.
+
+# Common functions and environment variable defaults for all types of builds.
 
 # Fail if an environment variable does not exist.
 # ${1}: Environment variable.
@@ -14,6 +15,19 @@ require_environment_variable() {
     >&2 echo "Maybe you need to source a script from ci/common."
     exit 1
   fi
+}
+
+# Checks if a program is in $PATH and is executable.
+check_executable() {
+  test -x "$(command -v "${1}")"
+}
+
+log_info() {
+  printf "bot-ci: %s\n" "$@"
+}
+
+log_error() {
+  >&2 printf "bot-ci: error: %s\n" "$@"
 }
 
 # Output the current OS.
@@ -44,7 +58,7 @@ is_ci_build() {
   local msg="${1:-installing dependencies}"
   if test "${CI:-}" != "true" ; then
     if test "$msg" != "--silent" ; then
-      echo "Local build, skip $msg."
+      log_info "Local build, skip $msg"
     fi
     return 1
   fi
@@ -83,8 +97,8 @@ clone_subtree() {
 # ${1}: Shown message.
 prompt_key_local() {
   if ! is_ci_build --silent ; then
-    echo "${1}"
-    echo "Press a key to continue, CTRL-C to abort..."
+    log_info "${1}"
+    log_info "Press a key to continue, CTRL-C to abort..."
     read -r -n 1 -s
   fi
 }
@@ -136,17 +150,17 @@ commit_subtree() {
       while test $(( attempts-=1 )) -gt 0 ; do
         if git pull --rebase "git://github.com/${!repo}" "${!branch}" ; then
           if ! has_gh_token ; then
-            echo 'GH_TOKEN not set, not committing.'
-            echo 'To test pull requests, see instructions in README.md.'
+            log_info 'GH_TOKEN not set; push skipped.'
+            log_info 'To test pull requests, see instructions in README.md.'
             return "$(can_fail_without_private)"
           fi
           if git push "https://github.com/${!repo}" "${!branch}"
           then
-            echo "Pushed to ${!repo} ${!branch}."
+            log_info "Pushed to ${!repo} ${!branch}."
             return 0
           fi
         fi
-        echo "Retry pushing to ${!repo} ${!branch}."
+        log_info "Retry pushing to ${!repo} ${!branch}."
         sleep 1
       done
       return 1
@@ -157,6 +171,42 @@ commit_subtree() {
         git push "ssh://git@github.com/${!repo}" "${!branch}"
       fi
     fi
+  )
+}
+
+# Creates a pull request from current HEAD.
+# Current directory must be a git repo.
+#
+# ${1}: base, in github_user:branch format
+# ${2}: head, in github_user:branch format
+create_pullrequest() {
+  local base="${1:-}"
+  local head="${2:-}"
+  require_environment_variable base "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable head "${BASH_SOURCE[0]}" ${LINENO}
+
+  if ! check_executable hub; then
+    log_error 'create_pullrequest: "hub" not in $PATH or not executable.'
+    exit 1
+  fi
+
+  (
+    set +o xtrace
+    local rv pr_message
+
+    pr_message="$(printf '%s\n\nThis pull request is [automated](https://github.com/neovim/bot-ci).' "$(git log -1 --format='%s')")"
+
+    if ! has_gh_token ; then
+      log_info 'missing $GH_TOKEN, skipping pull-request'
+      return "$(can_fail_without_private)"
+    fi
+
+    log_info "create_pullrequest: creating pull-request ..."
+    GITHUB_TOKEN="$GH_TOKEN" hub pull-request \
+      -m "$pr_message" \
+      -b "$base" \
+      -h "$head" \
+      || true  # Ignore failure.
   )
 }
 

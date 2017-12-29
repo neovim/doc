@@ -33,11 +33,17 @@ However, you won't find the "Genuine People Personalities" technology here.
 To build locally, execute `./ci/<build script>`, where `build script` is any
 executable shell script. Override environment variables as necessary.
 
-Example: To build the user manual HTML using an existing local repo:
+### Example: Generate the user manual HTML:
 
-```bash
-MAKE_CMD=ninja NEOVIM_DIR=~/neovim2 ./ci/user-docu.sh
-```
+    MAKE_CMD=ninja NEOVIM_DIR=~/neovim-src/ ./ci/user-docu.sh
+
+### Example: Generate the vim-patch report:
+
+    VIM_SOURCE_DIR=~/vim-src/ NEOVIM_DIR=~/neovim-src/ ./ci/vimpatch-report.sh
+
+### Example: Run the automated pull-requests task:
+
+    VIM_SOURCE_DIR=~/neovim/.vim-src/ NEOVIM_DIR=~/neovim-src/ ./ci/auto-pullrequest.sh
 
 # Testing PRs
 

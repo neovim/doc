@@ -40,7 +40,8 @@ linkify_numbers() {
 
 # Generate HTML report of the current 'vim-patch' pull requests on GitHub
 get_open_pullrequests() {
-  curl "https://api.github.com/repos/neovim/neovim/pulls?state=open&per_page=100" 2>/dev/null |
+  curl --netrc -s -H "User-Agent: neovim/bot-ci" \
+    "https://api.github.com/repos/neovim/neovim/pulls?state=open&per_page=100" 2>/dev/null |
   jq '[.[] | {html_url, title} |  select(contains({title: "vim-patch"}))] | sort_by(.title) | map("<li><a href=\"\(.html_url)\">\(.title)</a></li>")' |
   # use sed until travis gets jq 1.3+ (has 'reduce' and '@html')
   sed 's/^  "//' |

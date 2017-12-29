@@ -1,4 +1,4 @@
-# Helper functions & environment variable defaults for builds using the neovim repository.
+# Functions and defaults for builds using the Neovim repo.
 
 require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
@@ -13,6 +13,7 @@ clone_neovim() {
   else
     git --git-dir=${NEOVIM_DIR}/.git rev-parse HEAD >/dev/null \
       || exit 1
+    # Note: `git pull` is intentionally omitted: not wanted for local dev.
   fi
 
   NEOVIM_COMMIT=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse HEAD)
