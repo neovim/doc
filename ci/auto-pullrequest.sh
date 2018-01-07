@@ -46,7 +46,7 @@ update_version_c() {
 
     if test -z "$(git diff)" ; then
       log_info 'update_version_c: no changes to version.c'
-      return 0
+      return 1
     fi
 
     # Commit and push the changes.
