@@ -64,12 +64,12 @@ create_nightly_tarball() {
 }
 
 get_release_body() {
-  echo 'Nvim development (pre-release) build. See **[Installing-Neovim](https://github.com/neovim/neovim/wiki/Installing-Neovim)**.'
+  echo 'Nvim development (pre-release) build. See **[Install](https://github.com/neovim/neovim/wiki/Installing-Neovim)**.'
   echo
-  echo 'Developers: see the [`bot-ci` README](https://github.com/neovim/bot-ci#generated-builds) to use this build automatically on Travis CI.'
+  echo 'Developers: see the [bot-ci README](https://github.com/neovim/bot-ci#generated-builds) to use this build automatically on Travis CI.'
   echo
   echo '```'
-  "${NVIM_BIN}" --version
+  "${NVIM_BIN}" --version | head -n 3
   echo '```'
 }
 
