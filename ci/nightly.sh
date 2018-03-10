@@ -32,7 +32,8 @@ build_nightly() {
 
 # Produces a "universal" Linux executable that looks like:
 #     nvim-v0.2.1-26-gaea523a7ed5e.glibc2.17-x86_64.AppImage
-# The executable is placed into ${NEOVIM_DIR}/build/bin/.
+# The executable, and the corresponding .zsync file, are placed into
+# ${NEOVIM_DIR}/build/bin/.
 build_appimage() {
   (
     require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
@@ -43,7 +44,7 @@ build_appimage() {
 
     cd ${NEOVIM_DIR}
     rm -rf build
-    make appimage
+    make appimage-nightly
     ls -lh build/bin/
   )
 }
@@ -174,8 +175,10 @@ clone_neovim
     upload_nightly delete "$NIGHTLY_FILE" "nvim-${CI_OS}64.tar.gz"
 
     build_appimage
-    upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim-*.AppImage | head -1)" \
+    upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage | head -1)" \
       nvim.appimage
+    upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage.zsync | head -1)" \
+      nvim.appimage.zsync
 
     curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&job=Configuration%3A%20MINGW_32' \
       -o 'nvim-win32.zip'
