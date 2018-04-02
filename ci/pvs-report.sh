@@ -41,7 +41,7 @@ generate_pvs_report() {
 
     # Note: will also copy a binary log with *all* errors, including filtered
     # out. This is intentional.
-    cp PVS-studio* "$REPORTS_DIR"
+    cp -r PVS-studio* "$REPORTS_DIR"
   )
 
   (
