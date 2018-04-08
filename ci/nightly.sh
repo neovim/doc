@@ -65,13 +65,29 @@ create_nightly_tarball() {
 }
 
 get_release_body() {
-  echo 'Nvim development (pre-release) build. See **[Install](https://github.com/neovim/neovim/wiki/Installing-Neovim)**.'
-  echo
-  echo 'Developers: see the [bot-ci README](https://github.com/neovim/bot-ci#generated-builds) to use this build automatically on Travis CI.'
-  echo
+  echo 'Nvim development (pre-release) build.'
   echo '```'
   "${NVIM_BIN}" --version | head -n 3
   echo '```'
+  echo '
+### Install
+
+- **Windows:** extract [nvim-win32.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win32.zip) (or [nvim-win64.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip)) and run:
+  ```
+  nvim-qt.exe
+  ```
+- **macOS:** extract [nvim-macos.tar.gz](https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz) and run:
+  ```
+  ./nvim-osx64/bin/nvim
+  ```
+- **Linux:** download [nvim.appimage](https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage) and run:
+  ```
+  chmod u+x nvim.appimage && ./nvim.appimage
+  ```
+- Or install by [package manager](https://github.com/neovim/neovim/wiki/Installing-Neovim)
+
+Developers can also [use this build in Travis CI](https://github.com/neovim/bot-ci#generated-builds).
+'
 }
 
 get_nvim_version() {(
