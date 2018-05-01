@@ -57,8 +57,8 @@ generate_pvs_report() {
 main() {
   clone_doc
   clone_neovim
-  download_pvs_badge
   generate_pvs_report
+  download_pvs_badge
   commit_doc
 }
 
