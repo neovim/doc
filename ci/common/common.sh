@@ -30,6 +30,11 @@ log_error() {
   >&2 printf "bot-ci: error: %s\n" "$@"
 }
 
+get_file_size() {
+  [ -z "${1:-}" ] && { log_error 'missing arg1'; exit 1; }
+  cat "${1:-}" | wc -c
+}
+
 # Output the current OS.
 # Possible values are "osx" and "linux".
 get_os() {
