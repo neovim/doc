@@ -206,11 +206,11 @@ clone_neovim
     upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage.zsync | head -1)" \
       nvim.appimage.zsync
 
-    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&job=Configuration%3A%20MINGW_32' \
+    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&pr=false&job=Configuration%3A%20MINGW_32' \
       -o 'nvim-win32.zip'
     upload_win_nightly 'nvim-win32.zip'
 
-    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&job=Configuration%3A%20MINGW_64' \
+    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&&pr=falsejob=Configuration%3A%20MINGW_64' \
       -o 'nvim-win64.zip'
     upload_win_nightly 'nvim-win64.zip'
   fi
