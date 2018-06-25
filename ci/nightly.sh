@@ -186,6 +186,14 @@ has_current_nightly() {
   echo "${NIGHTLY_TAG} tag already points to ${NEOVIM_COMMIT}, exiting."
 }
 
+get_appveyor_build() {(
+  local type=$1
+  local filepath=$2
+
+  set +e
+  curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&pr=false&job=Configuration%3A%20'"$type" -o "$filepath"
+)}
+
 clone_neovim
 
 # Don't check this. We need to upload different builds to the same tag.
@@ -206,12 +214,10 @@ clone_neovim
     upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage.zsync | head -1)" \
       nvim.appimage.zsync
 
-    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&pr=false&job=Configuration%3A%20MINGW_32' \
-      -o 'nvim-win32.zip'
+    get_appveyor_build MINGW_32 nvim-win32.zip
     upload_win_nightly 'nvim-win32.zip'
 
-    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&&pr=falsejob=Configuration%3A%20MINGW_64' \
-      -o 'nvim-win64.zip'
+    get_appveyor_build MINGW_64 nvim-win64.zip
     upload_win_nightly 'nvim-win64.zip'
   fi
 }
