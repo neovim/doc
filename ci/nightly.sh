@@ -161,16 +161,6 @@ upload_nightly() {
     > /dev/null
 }
 
-upload_win_nightly() {
-  local f="$1"
-  if test "$(get_file_size "$f")" -gt 18000000 ; then
-    upload_nightly "$f" "$f"
-  else
-    log_error "invalid artifact (too small): ${f}"
-    stat "$f" | sed 's/.*/    \0/'
-  fi
-}
-
 has_current_nightly() {
   local nightly_commit
   read nightly_commit < <( \
@@ -185,6 +175,14 @@ has_current_nightly() {
 
   echo "${NIGHTLY_TAG} tag already points to ${NEOVIM_COMMIT}, exiting."
 }
+
+get_appveyor_build() {(
+  local type=$1
+  local filepath=$2
+
+  set +e
+  curl -f -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&pr=false&job=Configuration%3A%20'"$type" -o "$filepath"
+)}
 
 clone_neovim
 
@@ -206,12 +204,10 @@ clone_neovim
     upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage.zsync | head -1)" \
       nvim.appimage.zsync
 
-    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&job=Configuration%3A%20MINGW_32' \
-      -o 'nvim-win32.zip'
-    upload_win_nightly 'nvim-win32.zip'
+    get_appveyor_build MINGW_32 nvim-win32.zip
+    [ ! -f nvim-win32.zip ] || upload_nightly nvim-win32.zip nvim-win32.zip
 
-    curl -L 'https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?branch=master&job=Configuration%3A%20MINGW_64' \
-      -o 'nvim-win64.zip'
-    upload_win_nightly 'nvim-win64.zip'
+    get_appveyor_build MINGW_64 nvim-win64.zip
+    [ ! -f nvim-win64.zip ] || upload_nightly nvim-win64.zip nvim-win64.zip
   fi
 }
