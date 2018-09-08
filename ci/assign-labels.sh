@@ -7,27 +7,35 @@ source ${BUILD_DIR}/ci/common/dependencies.sh
 source ${BUILD_DIR}/ci/common/github-api.sh
 source ${BUILD_DIR}/ci/common/neovim.sh
 
-TAGS=('[WIP]' '[RFC]' '[RDY]')
-LABELS=('WIP' 'RFC' 'RDY')
+TAGS=('[WIP]' '[RFC]' '[RDY]' 'vim-patch')
+LABELS=('WIP' 'RFC' 'RDY' 'vim-patch')
 DRY_RUN=${DRY_RUN:-false}
+
+is_label_exclusive() {
+  local label="${1}"
+  for ((i=0; i < ${#LABELS[@]}; i=i+1)); do
+    # Only the first 3 tags/labels (WIP/RFC/RDY) are mutually-exclusive.
+    [ "$i" -gt 2 ] && return 1
+    [ "${label}" = "${LABELS[i]}" ] && return 0
+  done
+  return 1
+}
 
 label_issue() {
   local issue_id="${1}"
   local issue_labels="${2}"
   local new_label="${3}"
 
-  # Modify existing labels, if any.
-  # Otherwise just use new label.
-  if [[ -n "${issue_labels}" ]]; then
+  # Remove existing mutually-exclusive labels, if any.
+  # Else just use new label.
+  if is_label_exclusive "$new_label" && [ -n "${issue_labels}" ]; then
     issue_labels="\"${issue_labels//,/\",\"}\","
 
-    # Remove inapplicable labels, if any.
     local i
     for ((i=0; i < ${#LABELS[@]}; i=i+1)); do
       local old_label="${LABELS[i]}"
-
       if [[ "${issue_labels}" == *"${old_label}"* && "${old_label}" != "${new_label}" ]]; then
-        echo "  Removing '${old_label}' label."
+        echo "  Removing '${old_label}' label (it is mutually-exclusive with '${new_label}')."
         issue_labels="${issue_labels/\"${old_label}\",/}"
       fi
     done
@@ -50,21 +58,24 @@ check_issue() {
   local issue_name="${2}"
   local issue_labels="${3}"
 
-  # Check if issue title is prefixed with any of the tags.
+
+  # Check if issue title contains any of the tag strings.
   local i
   for ((i=0; i < ${#TAGS[@]}; i=i+1)); do
     local tag="${TAGS[i]}"
     local new_label="${LABELS[i]}"
 
-    if [[ "${issue_name}" == "${tag}"* ]]; then
+    if echo "${issue_name}" | >/dev/null 2>&1 grep -F "${tag}" ; then
+      echo "PR title '${issue_name}' contains '${tag}'"
+
       # Check if issue is already labelled correctly.
-      if [[ "${issue_labels}" != *"${new_label}"* ]]; then
+      if ! echo "${issue_labels}" | >/dev/null 2>&1 grep -F "${new_label}" ; then
         echo "Updating ${tag} issue ${issue_id}."
         echo "  Adding '${new_label}' label."
-
         label_issue "${issue_id}" "${issue_labels}" "${new_label}"
+      else
+        echo "issue ${issue_id} already labeled '${new_label}'"
       fi
-      break
     fi
   done
 }
@@ -73,9 +84,11 @@ assign_labels() {
   local page
   for ((page=1; ; page=page+1)); do
     local issues
+    echo "page $page..."
+
     readarray -t issues < <( \
-      send_gh_api_request "repos/${NEOVIM_REPO}/issues?sort=created&per_page=100&page=${page}" \
-      | jq -r -c 'map(select(.pull_request?)) | .[] | .number, .title, (.labels | map(.name) | join(","))') \
+      send_gh_api_request "repos/${NEOVIM_REPO}/pulls?sort=updated&direction=desc&per_page=100&page=${page}" \
+      | jq -r -c 'map(select(.id?)) | .[] | .number, .title, (.labels | map(.name) | join(","))') \
       || exit
 
     # Abort if no more issues returned from API.
