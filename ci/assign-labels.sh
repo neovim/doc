@@ -26,19 +26,22 @@ label_issue() {
   local issue_labels="${2}"
   local new_label="${3}"
 
-  # Remove existing mutually-exclusive labels, if any.
-  # Else just use new label.
-  if is_label_exclusive "$new_label" && [ -n "${issue_labels}" ]; then
+  # Update existing labels or create the first one.
+  if [ -n "${issue_labels}" ]; then
     issue_labels="\"${issue_labels//,/\",\"}\","
 
-    local i
-    for ((i=0; i < ${#LABELS[@]}; i=i+1)); do
-      local old_label="${LABELS[i]}"
-      if [[ "${issue_labels}" == *"${old_label}"* && "${old_label}" != "${new_label}" ]]; then
-        echo "  Removing '${old_label}' label (it is mutually-exclusive with '${new_label}')."
-        issue_labels="${issue_labels/\"${old_label}\",/}"
-      fi
-    done
+    # Remove existing mutually-exclusive labels, if any.
+    if is_label_exclusive "$new_label"; then
+      local i
+      for ((i=0; i < ${#LABELS[@]}; i=i+1)); do
+        local old_label="${LABELS[i]}"
+        if is_label_exclusive "$old_label" \
+            && [[ "${issue_labels}" == *"${old_label}"* && "${old_label}" != "${new_label}" ]]; then
+          echo "  Removing '${old_label}' label (it is mutually-exclusive with '${new_label}')."
+          issue_labels="${issue_labels/\"${old_label}\",/}"
+        fi
+      done
+    fi
     # Append new label to existing ones.
     issue_labels="${issue_labels}\"${new_label}\""
   else
