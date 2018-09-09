@@ -72,21 +72,24 @@ get_release_body() {
   echo '
 ### Install
 
-- **Windows:** extract [nvim-win32.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win32.zip) (or [nvim-win64.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip)) and run:
-  ```
-  nvim-qt.exe
-  ```
-- **macOS:** extract [nvim-macos.tar.gz](https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz) and run:
-  ```
-  ./nvim-osx64/bin/nvim
-  ```
-- **Linux:** download [nvim.appimage](https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage) and run:
-  ```
-  chmod u+x nvim.appimage && ./nvim.appimage
-  ```
-- Or install by [package manager](https://github.com/neovim/neovim/wiki/Installing-Neovim)
+- **Windows:**
+    1. Extract [nvim-win64.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip) (or [nvim-win32.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win32.zip))
+    2. Run: `nvim-qt.exe`
+- **macOS:**
+    1. Extract [nvim-macos.tar.gz](https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz)
+    2. Run: `./nvim-osx64/bin/nvim`
+- **Linux:**
+    1. Download [nvim.appimage](https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage)
+    2. Run: `chmod u+x nvim.appimage && ./nvim.appimage`
+       - If your system does not have FUSE you can [extract the appimage](https://github.com/AppImage/AppImageKit/wiki/FUSE#type-2-appimage):
+         ```
+         ./nvim.appimage --appimage-extract
+         ./squashfs-root/usr/bin/nvim
+         ```
 
-Developers can also [use this build in Travis CI](https://github.com/neovim/bot-ci#generated-builds).
+Or install by [package manager](https://github.com/neovim/neovim/wiki/Installing-Neovim).
+
+Developers can [use this build in Travis CI](https://github.com/neovim/bot-ci#generated-builds).
 '
 }
 
@@ -124,7 +127,7 @@ upload_nightly() {
     echo "Creating release for tag ${NIGHTLY_TAG}."
     read release_id < <( \
       send_gh_api_data_request repos/${NEOVIM_REPO}/releases POST \
-      "{ \"name\": \"NVIM v${NVIM_VERSION}-dev\", \"tag_name\": \"${NIGHTLY_TAG}\", \
+      "{ \"name\": \"NVIM ${NVIM_VERSION}-dev\", \"tag_name\": \"${NIGHTLY_TAG}\", \
       \"prerelease\": true }" \
       | jq -r -c '.id') \
       || exit
