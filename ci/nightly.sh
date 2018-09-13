@@ -70,22 +70,27 @@ get_release_body() {
   "${NVIM_BIN}" --version | head -n 3
   echo '```'
   echo '
-### Install
+## Install
 
-- **Windows:**
-    1. Extract [nvim-win64.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip) (or [nvim-win32.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win32.zip))
-    2. Run: `nvim-qt.exe`
-- **macOS:**
-    1. Extract [nvim-macos.tar.gz](https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz)
-    2. Run: `./nvim-osx64/bin/nvim`
-- **Linux:**
-    1. Download [nvim.appimage](https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage)
-    2. Run: `chmod u+x nvim.appimage && ./nvim.appimage`
-       - If your system does not have FUSE you can [extract the appimage](https://github.com/AppImage/AppImageKit/wiki/FUSE#type-2-appimage):
-         ```
-         ./nvim.appimage --appimage-extract
-         ./squashfs-root/usr/bin/nvim
-         ```
+### Windows
+
+1. Extract [nvim-win64.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win64.zip) (or [nvim-win32.zip](https://github.com/neovim/neovim/releases/download/nightly/nvim-win32.zip))
+2. Run: `nvim-qt.exe`
+
+### macOS
+
+1. Extract [nvim-macos.tar.gz](https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz)
+2. Run: `./nvim-osx64/bin/nvim`
+
+### Linux (x64)
+
+1. Download [nvim.appimage](https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage)
+2. Run: `chmod u+x nvim.appimage && ./nvim.appimage`
+   - If your system does not have FUSE you can [extract the appimage](https://github.com/AppImage/AppImageKit/wiki/FUSE#type-2-appimage):
+     ```
+     ./nvim.appimage --appimage-extract
+     ./squashfs-root/usr/bin/nvim
+     ```
 
 Or install by [package manager](https://github.com/neovim/neovim/wiki/Installing-Neovim).
 
