@@ -24,7 +24,8 @@ extract_sources() {
 
   echo "Extracting sources."
   cd "${DEPS_SRC_BUILD_DIR}/build/src"
-  rm -rf ./*-{stamp,build}
+  rm -rf ./*-build
+  rm -f ./*-stamp/*-{configure,build,install,done}
   while read dir; do
     cd "${DEPS_SRC_BUILD_DIR}/build/src/${dir}"
     echo "Cleaning ${dir}."
