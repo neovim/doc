@@ -17,17 +17,13 @@ sync_bzr_mirror() {
 
   echo "Cloning upstream repo ${upstream_url} into ${repo_dir}."
   rm -rf "${repo_dir}"
-  git-bzr clone "${upstream_url}" "${repo_dir}"
+  git clone "bzr::${upstream_url}" "${repo_dir}"
 
   echo "Pushing to ${MIRROR_USER}/${repo}."
   MIRROR_SUBTREE="/" \
   MIRROR_DIR="${repo_dir}" \
   MIRROR_REPO="${MIRROR_USER}/${repo}" \
   commit_subtree MIRROR
-}
-
-is_ci_build && {
-  install_git_bzr
 }
 
 sync_bzr_mirror libvterm

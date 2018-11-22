@@ -20,16 +20,6 @@ install_doxygen() {
   ln -fs ${DEPS_INSTALL_DIR}/doxygen/bin/doxygen ${DEPS_BIN_DIR}/doxygen
 }
 
-install_git_bzr() {
-  mkdir -p ${DEPS_INSTALL_DIR} ${DEPS_BIN_DIR}
-
-  log_info "installing git-bzr-ng ..."
-  mkdir -p ${DEPS_INSTALL_DIR}/git-bzr-ng
-  wget -q -O - https://github.com/termie/git-bzr-ng/archive/${GIT_BZR_NG_VERSION}.tar.gz \
-    | tar xzf - --strip-components=1 -C ${DEPS_INSTALL_DIR}/git-bzr-ng
-  ln -fs ${DEPS_INSTALL_DIR}/git-bzr-ng/git-bzr ${DEPS_BIN_DIR}/git-bzr
-}
-
 # Used when Nvim is needed but we don't want to compile it.
 install_nvim_appimage() {
   mkdir -p ${DEPS_INSTALL_DIR} ${DEPS_BIN_DIR}
