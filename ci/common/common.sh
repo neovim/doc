@@ -138,7 +138,11 @@ can_fail_without_private() {
 }
 
 # Commit and push to a Git repo checked out using clone_subtree.
+#
 # ${1}: Variable prefix.
+# ${2}: (optional) Number of retries.
+# ${3}: (optional) Extra arguments to "git push". If this is
+#       "--force-with-lease" then "git pull" is not attempted.
 commit_subtree() {
   (
     local prefix="${1}"
@@ -169,7 +173,8 @@ commit_subtree() {
       git commit -m "${CI_TARGET//-/ }: Automatic update" || true
 
       while test $(( attempts-=1 )) -ge 0 ; do
-        if git pull --rebase "git://github.com/${!repo}" "${!branch}" ; then
+        if test "${push_args}" = '--force-with-lease' \
+            || git pull --rebase "git://github.com/${!repo}" "${!branch}" ; then
           if ! has_gh_token ; then
             log_info 'GH_TOKEN not set; push skipped'
             log_info 'To test pull requests, see instructions in README.md'
@@ -181,7 +186,9 @@ commit_subtree() {
             return 0
           fi
         fi
-        log_info "Retry push to: ${!repo} ${!branch}"
+        if test $attempts -gt 0 ; then
+          log_info "Retry push to: ${!repo} ${!branch}"
+        fi
         sleep 1
       done
       return 1
