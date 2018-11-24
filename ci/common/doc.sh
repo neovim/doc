@@ -21,11 +21,23 @@ commit_doc() {
 # Keep the https://github.com/neovim/doc/ repository history trimmed, otherwise
 # it gets huge and slow to clone.  We don't care about its commit history.
 try_truncate_history() {
-  cd "${DOC_DIR}" || { echo "try_truncate_history: cd failed"; exit 1; }
+  cd "${DOC_DIR}" || { log_error "try_truncate_history: cd failed"; exit 1; }
+  local attempts=4
   local branch=gh-pages
   if NEW_ROOT=$(2>/dev/null git rev-parse "$branch"~11) ; then
-    git_truncate "$branch" "$branch"~10
+    while test $(( attempts-=1 )) -gt 0 ; do
+      git_truncate "$branch" "$branch"~10
+      # "git pull --rebase" will fail if another worker pushed just now.
+      # Retry the fetch-truncate-rebase cycle.
+      if commit_subtree DOC 1 --force-with-lease ; then
+        return 0
+      fi
+      log_info "try_truncate_history: retry"
+      git fetch --all
+      git reset --hard "origin/$branch"
+    done
+    return 1
   else
-    echo "try_truncate_history: branch ${branch} has too few commits, skipping truncate"
+    log_info "try_truncate_history: branch ${branch} has too few commits, skipping truncate"
   fi
 }

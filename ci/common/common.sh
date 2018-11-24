@@ -142,6 +142,8 @@ can_fail_without_private() {
 commit_subtree() {
   (
     local prefix="${1}"
+    local attempts="${2:-10}"
+    local push_args="${3:-}"
     local subtree="${prefix}_SUBTREE"
     local dir="${prefix}_DIR"
     local repo="${prefix}_REPO"
@@ -164,24 +166,22 @@ commit_subtree() {
       git config --local user.name "${GIT_NAME}"
       git config --local user.email "${GIT_EMAIL}"
 
-      git commit -m "${CI_TARGET//-/ }: Automatic update." || true
-
-      local attempts=10
+      git commit -m "${CI_TARGET//-/ }: Automatic update" || true
 
       while test $(( attempts-=1 )) -gt 0 ; do
         if git pull --rebase "git://github.com/${!repo}" "${!branch}" ; then
           if ! has_gh_token ; then
-            log_info 'GH_TOKEN not set; push skipped.'
-            log_info 'To test pull requests, see instructions in README.md.'
+            log_info 'GH_TOKEN not set; push skipped'
+            log_info 'To test pull requests, see instructions in README.md'
             return "$(can_fail_without_private)"
           fi
-          if git push "https://github.com/${!repo}" "${!branch}"
+          if git push "${push_args}" "https://github.com/${!repo}" "${!branch}"
           then
-            log_info "Pushed to ${!repo} ${!branch}."
+            log_info "Pushed to: ${!repo} ${!branch}"
             return 0
           fi
         fi
-        log_info "Retry pushing to ${!repo} ${!branch}."
+        log_info "Retry push to: ${!repo} ${!branch}"
         sleep 1
       done
       return 1
