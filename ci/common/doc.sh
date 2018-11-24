@@ -33,8 +33,8 @@ try_truncate_history() {
         return 0
       fi
       log_info "try_truncate_history: retry"
-      git fetch --all
-      git reset --hard "origin/$branch"
+      git fetch https://github.com/neovim/doc "$branch"
+      git reset --hard FETCH_HEAD
     done
     return 1
   else
