@@ -25,18 +25,10 @@ try_truncate_history() {
   local attempts=4
   local branch=gh-pages
   if NEW_ROOT=$(2>/dev/null git rev-parse "$branch"~11) ; then
-    while test $(( attempts-=1 )) -gt 0 ; do
-      git_truncate "$branch" "$branch"~10
-      # "git pull --rebase" will fail if another worker pushed just now.
-      # Retry the fetch-truncate-rebase cycle.
-      if commit_subtree DOC 1 --force ; then
-        return 0
-      fi
-      log_info "try_truncate_history: retry"
-      git fetch https://github.com/neovim/doc "$branch"
-      git reset --hard FETCH_HEAD
-    done
-    return 1
+    git fetch https://github.com/neovim/doc "$branch"
+    git reset --hard FETCH_HEAD
+    git_truncate "$branch" "$branch"~10
+    commit_subtree DOC 1 --force
   else
     log_info "try_truncate_history: branch ${branch} has too few commits, skipping truncate"
   fi
