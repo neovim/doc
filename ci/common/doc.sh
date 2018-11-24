@@ -29,7 +29,7 @@ try_truncate_history() {
       git_truncate "$branch" "$branch"~10
       # "git pull --rebase" will fail if another worker pushed just now.
       # Retry the fetch-truncate-rebase cycle.
-      if commit_subtree DOC 1 --force-with-lease ; then
+      if commit_subtree DOC 1 --force ; then
         return 0
       fi
       log_info "try_truncate_history: retry"
