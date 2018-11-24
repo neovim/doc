@@ -1,4 +1,4 @@
-# Helper functions & environment variable defaults for builds using the doc repository.
+# Functions for automating the https://github.com/neovim/doc/ repository.
 
 require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
@@ -16,4 +16,16 @@ clone_doc() {
 
 commit_doc() {
   commit_subtree DOC
+}
+
+# Keep the https://github.com/neovim/doc/ repository history trimmed, otherwise
+# it gets huge and slow to clone.  We don't care about its commit history.
+try_truncate_history() {
+  cd "${DOC_DIR}" || { echo "try_truncate_history: cd failed"; exit 1; }
+  local branch=gh-pages
+  if NEW_ROOT=$(2>/dev/null git rev-parse "$branch"~11) ; then
+    git_truncate "$branch" "$branch"~10
+  else
+    echo "try_truncate_history: branch ${branch} has too few commits, skipping truncate"
+  fi
 }

@@ -44,3 +44,5 @@ clone_doc
 clone_neovim
 generate_user_docu
 commit_doc
+try_truncate_history
+commit_doc  # Commit (again) after truncation.

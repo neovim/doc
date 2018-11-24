@@ -65,6 +65,27 @@ is_ci_build() {
   return 0
 }
 
+git_truncate() {
+  local branch="${1}"
+  local new_root
+  local old_head
+  if ! old_head=$(git rev-parse "$branch") ; then
+    >&2 echo "error: git_truncate: invalid branch: $1"
+    exit 1
+  fi
+  if ! new_root=$(git rev-parse "$2") ; then
+    >&2 echo "error: git_truncate: invalid branch: $2"
+    exit 1
+  fi
+  git checkout --orphan temp "$new_root"
+  git commit -m "truncate history"
+  git rebase --onto temp "$new_root" "$branch"
+  git branch -D temp
+  >&2 echo "git_truncate: new_root: $new_root"
+  >&2 echo "git_truncate: old HEAD: $old_head"
+  >&2 echo "git_truncate: new HEAD: $(git rev-parse HEAD)"
+}
+
 # Clone a Git repository and check out a subtree.
 # ${1}: Variable prefix.
 clone_subtree() {
