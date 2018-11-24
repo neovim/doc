@@ -168,7 +168,7 @@ commit_subtree() {
 
       git commit -m "${CI_TARGET//-/ }: Automatic update" || true
 
-      while test $(( attempts-=1 )) -gt 0 ; do
+      while test $(( attempts-=1 )) -ge 0 ; do
         if git pull --rebase "git://github.com/${!repo}" "${!branch}" ; then
           if ! has_gh_token ; then
             log_info 'GH_TOKEN not set; push skipped'
