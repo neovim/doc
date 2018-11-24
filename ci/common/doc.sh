@@ -20,6 +20,9 @@ commit_doc() {
 
 # Keep the https://github.com/neovim/doc/ repository history trimmed, otherwise
 # it gets huge and slow to clone.  We don't care about its commit history.
+#
+# NOTE: Do this after ALL other reports were pushed, otherwise their
+#       respective commit_subtree ("git pull --rebase") steps will fail.
 try_truncate_history() {
   cd "${DOC_DIR}" || { log_error "try_truncate_history: cd failed"; exit 1; }
   local attempts=4

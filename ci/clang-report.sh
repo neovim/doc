@@ -96,3 +96,4 @@ clone_neovim
 generate_clang_report
 download_clang_badge
 commit_doc
+try_truncate_history
