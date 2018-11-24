@@ -175,7 +175,7 @@ commit_subtree() {
             log_info 'To test pull requests, see instructions in README.md'
             return "$(can_fail_without_private)"
           fi
-          if git push "${push_args}" "https://github.com/${!repo}" "${!branch}"
+          if git push ${push_args} "https://github.com/${!repo}" "${!branch}"
           then
             log_info "Pushed to: ${!repo} ${!branch}"
             return 0
