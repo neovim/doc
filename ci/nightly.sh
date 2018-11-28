@@ -213,10 +213,10 @@ clone_neovim
     upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage.zsync | head -1)" \
       nvim.appimage.zsync
 
-    get_appveyor_build MINGW_32 nvim-win32.zip
+    get_appveyor_build MSVC_32 nvim-win32.zip
     [ ! -f nvim-win32.zip ] || upload_nightly nvim-win32.zip nvim-win32.zip
 
-    get_appveyor_build MINGW_64 nvim-win64.zip
+    get_appveyor_build MSVC_64 nvim-win64.zip
     [ ! -f nvim-win64.zip ] || upload_nightly nvim-win64.zip nvim-win64.zip
   fi
 }
