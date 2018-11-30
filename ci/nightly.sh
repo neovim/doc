@@ -22,7 +22,8 @@ build_nightly() {
     cd ${NEOVIM_DIR}
     if [ "${CI_OS}" = osx ] ; then
       # This CMAKE_EXTRA_FLAGS is required for relocating the macOS libs.
-      make CMAKE_BUILD_TYPE=Release CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH="
+      make CMAKE_BUILD_TYPE=Release \
+           CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH= -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13"
     else
       make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH="
     fi
