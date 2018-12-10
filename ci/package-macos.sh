@@ -31,7 +31,7 @@ fi
 libs=($(otool -L "${BUILD_DIR}/bin/nvim" | sed 1d | sed -E -e 's|^[[:space:]]*||' -e 's| .*||'))
 echo "${SCRIPT_NAME}: libs:"
 for lib in "${libs[@]}" ; do
-  if echo "$lib" | 2>&1 >/dev/null grep libSystem ; then
+  if echo "$lib" | 2>&1 >/dev/null grep -E 'libSystem|CoreFoundation' ; then
     echo "  [skipped] $lib"
   else
     echo "  $lib"
