@@ -17,10 +17,6 @@ generate_doxygen() {
   mv build/doxygen/html ${DOC_DIR}/dev
 }
 
-is_ci_build && {
-  install_doxygen
-}
-
 DOC_SUBTREE="/dev/"
 clone_doc
 clone_neovim
