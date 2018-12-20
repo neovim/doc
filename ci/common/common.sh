@@ -11,10 +11,19 @@ require_environment_variable() {
   eval "local variable_content=\"\${${variable_name}:-}\""
   # shellcheck disable=2154
   if [[ -z "${variable_content}" ]]; then
-    >&2 echo "${2}:${3}: missing env var: ${variable_name}"
-    >&2 echo "Maybe you need to source a script from ci/common."
+    >&2 log_error "${2}:${3}: missing env var: ${variable_name}"
+    >&2 echo "Maybe you need to source a script from ci/common?"
     exit 1
   fi
+}
+
+# Fail if an environment variable does not exist.
+# ${1}: Actual arg count.
+# ${2}: Expected arg count.
+# ${3}: Script file.
+# ${4}: Line number.
+require_args() {
+  [ "${1}" -eq "${2}" ] || { log_error "${3}:${4}: expected ${2} args, got ${1}"; exit 1; }
 }
 
 # Checks if a program is in $PATH and is executable.
@@ -241,6 +250,6 @@ create_pullrequest() {
 has_gh_token() {
   (
     set +o xtrace
-    2>&1 >/dev/null test -n "$GH_TOKEN"
+    >/dev/null 2>&1 test -n "$GH_TOKEN"
   )
 }

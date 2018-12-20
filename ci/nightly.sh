@@ -9,7 +9,6 @@ source ${BUILD_DIR}/ci/common/neovim.sh
 
 NIGHTLY_DIR=${NIGHTLY_DIR:-${BUILD_DIR}/build/nightly}
 NIGHTLY_FILE=${NIGHTLY_FILE:-${BUILD_DIR}/build/nightly.tar.gz}
-NIGHTLY_TAG=${NIGHTLY_RELEASE:-nightly}
 NVIM_BIN=${NIGHTLY_DIR}/nvim-${CI_OS}64/bin/nvim
 NVIM_VERSION=unknown
 
@@ -106,18 +105,16 @@ get_nvim_version() {(
 )}
 
 upload_nightly() {
+  require_args "$#" 4 "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_REPO "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_BRANCH "${BASH_SOURCE[0]}" ${LINENO}
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
 
-  # If arg1=delete, filepath name may be provided in arg2; else use arg1.
-  # If arg1=delete, uploadname name may be provided in arg3; else use arg2.
-  local delete_old="$( [ "${1:-}" = delete ] && echo delete )"
-  local filepath="$( [ -n "$delete_old" ] && echo "${2:-}" || echo "${1:-}" )"
-  local uploadname="$( [ -n "$delete_old" ] && echo "${3:-}" || echo "${2:-}" )"
-  require_environment_variable filepath "${BASH_SOURCE[0]}" ${LINENO}
-  require_environment_variable uploadname "${BASH_SOURCE[0]}" ${LINENO}
-  echo "upload_nightly: delete_old=$delete_old filepath=$filepath uploadname=$uploadname"
+  local delete_old="${1:-}"
+  local tag="${2:-}"
+  local filepath="${3:-}"
+  local uploadname="${4:-}"
+  echo "upload_nightly: delete_old=$delete_old tag=$tag filepath=$filepath uploadname=$uploadname"
 
   is_ci_build 'updating release page'
   if ! has_gh_token ; then
@@ -127,14 +124,14 @@ upload_nightly() {
   local release_id
   read release_id < <( \
     send_gh_api_request repos/${NEOVIM_REPO}/releases \
-    | jq -r -c "(.[] | select(.tag_name == \"${NIGHTLY_TAG}\").id), \"\"") \
+    | jq -r -c "(.[] | select(.tag_name == \"${tag}\").id), \"\"") \
     || exit
 
   if [[ -z "${release_id}" ]]; then
-    echo "Creating release for tag ${NIGHTLY_TAG}."
+    echo "Creating release for tag ${tag}."
     read release_id < <( \
       send_gh_api_data_request repos/${NEOVIM_REPO}/releases POST \
-      "{ \"name\": \"NVIM ${NVIM_VERSION}-dev\", \"tag_name\": \"${NIGHTLY_TAG}\", \
+      "{ \"name\": \"NVIM ${NVIM_VERSION}-dev\", \"tag_name\": \"${tag}\", \
       \"prerelease\": true }" \
       | jq -r -c '.id') \
       || exit
@@ -161,8 +158,8 @@ upload_nightly() {
     "{ \"draft\": false, \"prerelease\": true }" \
     > /dev/null
 
-  echo "Updating ${NIGHTLY_TAG} tag to point to ${NEOVIM_COMMIT}."
-  send_gh_api_data_request repos/${NEOVIM_REPO}/git/refs/tags/${NIGHTLY_TAG} PATCH \
+  echo "Updating ${tag} tag to point to ${NEOVIM_COMMIT}."
+  send_gh_api_data_request repos/${NEOVIM_REPO}/git/refs/tags/${tag} PATCH \
     "{ \"force\": true, \"sha\": \"${NEOVIM_COMMIT}\" }" \
     > /dev/null
 
@@ -175,15 +172,15 @@ has_current_nightly() {
   local nightly_commit
   read nightly_commit < <( \
     send_gh_api_request repos/${NEOVIM_REPO}/tags \
-    | jq -r -c "(.[] | select(.name == \"${NIGHTLY_TAG}\").commit.sha), \"\"") \
+    | jq -r -c "(.[] | select(.name == \"${tag}\").commit.sha), \"\"") \
     || exit
 
   if [[ "${nightly_commit}" != "${NEOVIM_COMMIT}" ]]; then
-    echo "${NIGHTLY_TAG} tag does not point to ${NEOVIM_COMMIT}, continuing."
+    echo "tag '${tag}' does not point to ${NEOVIM_COMMIT}, continuing."
     return 1
   fi
 
-  echo "${NIGHTLY_TAG} tag already points to ${NEOVIM_COMMIT}, exiting."
+  echo "tag '${tag}' already points to ${NEOVIM_COMMIT}, exiting."
 }
 
 get_appveyor_build() {(
@@ -203,21 +200,23 @@ clone_neovim
   NVIM_VERSION=$(get_nvim_version)
   if [ "${CI_OS}" = osx ] ; then
     create_nightly_tarball
-    upload_nightly "$NIGHTLY_FILE" "nvim-macos.tar.gz"
+    upload_nightly keep nightly "$NIGHTLY_FILE" "nvim-macos.tar.gz"
   else
     create_nightly_tarball
-    upload_nightly delete "$NIGHTLY_FILE" "nvim-${CI_OS}64.tar.gz"
+    upload_nightly delete nightly "$NIGHTLY_FILE" "nvim-${CI_OS}64.tar.gz"
 
     build_appimage
-    upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage | head -1)" \
+    upload_nightly keep nightly \
+      "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage | head -1)" \
       nvim.appimage
-    upload_nightly "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage.zsync | head -1)" \
+    upload_nightly keep nightly \
+      "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage.zsync | head -1)" \
       nvim.appimage.zsync
 
     get_appveyor_build MSVC_32 nvim-win32.zip
-    [ ! -f nvim-win32.zip ] || upload_nightly nvim-win32.zip nvim-win32.zip
+    [ -f nvim-win32.zip ] && upload_nightly keep nightly nvim-win32.zip nvim-win32.zip
 
     get_appveyor_build MSVC_64 nvim-win64.zip
-    [ ! -f nvim-win64.zip ] || upload_nightly nvim-win64.zip nvim-win64.zip
+    [ -f nvim-win64.zip ] && upload_nightly keep nightly nvim-win64.zip nvim-win64.zip
   fi
 }
