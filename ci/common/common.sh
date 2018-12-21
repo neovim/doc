@@ -162,7 +162,7 @@ prompt_key_local() {
 # - `exit $(can_fail_without_private)`
 # - `return $(can_fail_without_private)`
 can_fail_without_private() {
-  if [ "$TRAVIS_EVENT_TYPE" = pull_request ]; then
+  if [ "${TRAVIS_EVENT_TYPE:-}" = pull_request ]; then
     echo 0
   else
     echo 1
