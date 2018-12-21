@@ -191,11 +191,11 @@ is_tag_pointing_to() {
     || exit
 
   if [[ "${nightly_commit}" != "${commit}" ]]; then
-    >&2 log_info "tag '${tag}' does not point to: ${commit}, continuing."
+    log_info "tag '${tag}' does not point to: ${commit}, continuing."
     return 1
   fi
 
-  >&2 log_info "tag '${tag}' already points to: ${commit}"
+  log_info "tag '${tag}' already points to: ${commit}"
 }
 
 get_appveyor_build() {(
@@ -203,7 +203,7 @@ get_appveyor_build() {(
   local filepath=$2
   local appveyor_params=$3
   local url='https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?'"$appveyor_params"'&pr=false&job=Configuration%3A%20'"$type"
-  >&2 log_info "get_appveyor_build: $url"
+  log_info "get_appveyor_build: $url"
 
   set +e
   curl -f -L "$url" -o "$filepath"

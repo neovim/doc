@@ -11,8 +11,8 @@ require_environment_variable() {
   eval "local variable_content=\"\${${variable_name}:-}\""
   # shellcheck disable=2154
   if [[ -z "${variable_content}" ]]; then
-    >&2 log_error "${2}:${3}: missing env var: ${variable_name}"
-    >&2 echo "Maybe you need to source a script from ci/common?"
+    log_error "${2}:${3}: missing env var: ${variable_name}
+    Maybe you need to source a script from ci/common?"
     exit 1
   fi
 }
@@ -32,7 +32,7 @@ check_executable() {
 }
 
 log_info() {
-  printf "bot-ci: %s\n" "$@"
+  >&2 printf "bot-ci: %s\n" "$@"
 }
 
 log_error() {
@@ -79,26 +79,26 @@ git_truncate() {
   local new_root
   local old_head
   if ! old_head=$(git rev-parse "$branch") ; then
-    >&2 log_error "git_truncate: invalid branch: $1"
+    log_error "git_truncate: invalid branch: $1"
     exit 1
   fi
   if ! new_root=$(git rev-parse "$2") ; then
-    >&2 log_error "git_truncate: invalid branch: $2"
+    log_error "git_truncate: invalid branch: $2"
     exit 1
   fi
   git checkout --orphan temp "$new_root"
   git commit -m "truncate history"
   git rebase --onto temp "$new_root" "$branch"
   git branch -D temp
-  >&2 echo "git_truncate: new_root: $new_root"
-  >&2 echo "git_truncate: old HEAD: $old_head"
-  >&2 echo "git_truncate: new HEAD: $(git rev-parse HEAD)"
+  log_info "git_truncate: new_root: $new_root"
+  log_info "git_truncate: old HEAD: $old_head"
+  log_info "git_truncate: new HEAD: $(git rev-parse HEAD)"
 }
 
 git_last_tag() {
   local last_tag
   if ! last_tag=$(git describe --abbrev=0 --exclude=nightly --exclude=stable) ; then
-    >&2 log_error "git_commits_since_last_tag: 'git describe' failed"
+    log_error "git_commits_since_last_tag: 'git describe' failed"
     exit 1
   fi
   echo "$last_tag"
@@ -110,11 +110,11 @@ git_commits_since_last_tag() {
   local commits_since
   last_tag=$(git_last_tag)
   if ! commits_since=$(git rev-list "${last_tag}..${ref}" --count) ; then
-    >&2 log_error "git_commits_since_last_tag: 'git rev-list' failed"
+    log_error "git_commits_since_last_tag: 'git rev-list' failed"
     exit 1
   fi
-  >&2 log_info "git_commits_since_last_tag: last_tag: $last_tag"
-  >&2 log_info "git_commits_since_last_tag: commits_since: $commits_since"
+  log_info "git_commits_since_last_tag: last_tag: $last_tag"
+  log_info "git_commits_since_last_tag: commits_since: $commits_since"
   echo "$commits_since"
 }
 
