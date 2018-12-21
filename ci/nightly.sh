@@ -74,7 +74,7 @@ create_nightly_tarball() {
 get_release_body() {
   local to_tag=$1
   if test "$to_tag" = nightly ; then
-    echo 'Nvim development (pre-release) build.'
+    echo 'Nvim development (prerelease) build.'
   else
     echo 'Nvim release build.'
   fi
@@ -108,8 +108,10 @@ get_release_body() {
 ### Other
 
 - Install by [package manager](https://github.com/neovim/neovim/wiki/Installing-Neovim)
-- Developers can [use this build in Travis CI](https://github.com/neovim/bot-ci#generated-builds)
 '
+  if test "$to_tag" = nightly ; then
+    echo '- Developers can [use this build in Travis CI](https://github.com/neovim/bot-ci#generated-builds)'
+  fi
 }
 
 get_nvim_version() {(
@@ -127,7 +129,8 @@ upload_nightly() {
   local commit="${3:-}"
   local filepath="${4:-}"
   local uploadname="${5:-}"
-  log_info "upload_nightly: delete_old=$delete_old to_tag=$tag commit=$commit filepath=$filepath uploadname=$uploadname"
+  local prerelease=$( test "$tag" = nightly && echo "true" || echo "false" )
+  log_info "upload_nightly: delete_old=$delete_old to_tag=$tag commit=$commit filepath=$filepath uploadname=$uploadname prerelease=$prerelease"
 
   is_ci_build 'upload_nightly: updating release'
   if ! has_gh_token ; then
@@ -144,8 +147,8 @@ upload_nightly() {
     log_info "upload_nightly: Creating release for: ${tag}"
     read release_id < <( \
       send_gh_api_data_request repos/${NEOVIM_REPO}/releases POST \
-      "{ \"name\": \"NVIM ${NVIM_VERSION}-dev\", \"tag_name\": \"${tag}\", \
-      \"prerelease\": true }" \
+      "{ \"name\": \"NVIM ${NVIM_VERSION}\", \"tag_name\": \"${tag}\", \
+      \"prerelease\": ${prerelease} }" \
       | jq -r -c '.id') \
       || exit
   elif [ "$delete_old" = delete ] ; then
@@ -168,7 +171,7 @@ upload_nightly() {
     "{ \"draft\": true, \"body\": $(get_release_body $tag | jq -s -c -R '.') }" \
     > /dev/null
   send_gh_api_data_request repos/${NEOVIM_REPO}/releases/${release_id} PATCH \
-    "{ \"draft\": false, \"prerelease\": true }" \
+    "{ \"draft\": false, \"prerelease\": ${prerelease} }" \
     > /dev/null
 
   log_info "upload_nightly: Updating '${tag}' tag to point to: ${commit}"
