@@ -241,11 +241,13 @@ clone_neovim
 require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
 cd "${NEOVIM_DIR}"
 _NVIM_LAST_TAG="$(git_last_tag)"
+_NVIM_LAST_TAG_COMMIT=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse "$_NVIM_LAST_TAG")
 
-if test "$(git_commits_since_last_tag master)" -lt 4 ; then
+if ! is_tag_pointing_to stable "$_NVIM_LAST_TAG_COMMIT" \
+    || test "$(git_commits_since_last_tag master)" -lt 4 ; then
   log_info "building: stable"
   build_nightly "${_NVIM_LAST_TAG}"
-  try_update_nightly stable $(git --git-dir=${NEOVIM_DIR}/.git rev-parse "$_NVIM_LAST_TAG") "tag=${_NVIM_LAST_TAG}"
+  try_update_nightly stable "$_NVIM_LAST_TAG_COMMIT" "tag=${_NVIM_LAST_TAG}"
 else
   log_info "building: nightly"
   # Don't check: need different builds for same commit.
