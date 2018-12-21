@@ -11,6 +11,12 @@ _check_gh_error() {
   fi
 }
 
+_netrc_arg() {
+  if has_gh_token || ! is_ci_build --silent ; then
+    echo '--netrc'
+  fi
+}
+
 # Send a request to the Github API.
 # ${1}: API endpoint.
 # ${2}: HTTP verb (default: GET).
@@ -19,7 +25,7 @@ send_gh_api_request() {
   local verb="${2:-GET}"
 
   local response="$(
-    curl --netrc -s -H "Accept: application/vnd.github.v3+json" \
+    curl $(_netrc_arg) -s -H "Accept: application/vnd.github.v3+json" \
       -H "User-Agent: neovim/bot-ci" \
       -X ${verb} \
       https://api.github.com/${endpoint} \
@@ -37,7 +43,7 @@ send_gh_api_data_request() {
   local data="${3}"
 
   local response="$(
-    curl --netrc -s -H "Accept: application/vnd.github.v3+json" \
+    curl $(_netrc_arg) -s -H "Accept: application/vnd.github.v3+json" \
       -H "User-Agent: neovim/bot-ci" \
       -X ${verb} \
       -d "${data}" \
