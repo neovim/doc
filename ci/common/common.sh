@@ -79,11 +79,11 @@ git_truncate() {
   local new_root
   local old_head
   if ! old_head=$(git rev-parse "$branch") ; then
-    >&2 echo "error: git_truncate: invalid branch: $1"
+    >&2 log_error "git_truncate: invalid branch: $1"
     exit 1
   fi
   if ! new_root=$(git rev-parse "$2") ; then
-    >&2 echo "error: git_truncate: invalid branch: $2"
+    >&2 log_error "git_truncate: invalid branch: $2"
     exit 1
   fi
   git checkout --orphan temp "$new_root"
@@ -93,6 +93,29 @@ git_truncate() {
   >&2 echo "git_truncate: new_root: $new_root"
   >&2 echo "git_truncate: old HEAD: $old_head"
   >&2 echo "git_truncate: new HEAD: $(git rev-parse HEAD)"
+}
+
+git_last_tag() {
+  local last_tag
+  if ! last_tag=$(git describe --abbrev=0 --exclude=nightly --exclude=stable) ; then
+    >&2 log_error "git_commits_since_last_tag: 'git describe' failed"
+    exit 1
+  fi
+  echo "$last_tag"
+}
+
+git_commits_since_last_tag() {
+  local ref="${1}"
+  local last_tag
+  local commits_since
+  last_tag=$(git_last_tag)
+  if ! commits_since=$(git rev-list "${last_tag}..${ref}" --count) ; then
+    >&2 log_error "git_commits_since_last_tag: 'git rev-list' failed"
+    exit 1
+  fi
+  >&2 log_info "git_commits_since_last_tag: last_tag: $last_tag"
+  >&2 log_info "git_commits_since_last_tag: commits_since: $commits_since"
+  echo "$commits_since"
 }
 
 # Clone a Git repository and check out a subtree.
@@ -250,6 +273,6 @@ create_pullrequest() {
 has_gh_token() {
   (
     set +o xtrace
-    >/dev/null 2>&1 test -n "$GH_TOKEN"
+    >/dev/null 2>&1 test -n "${GH_TOKEN:-}"
   )
 }
