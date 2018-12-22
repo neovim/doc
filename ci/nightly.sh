@@ -191,7 +191,7 @@ is_tag_pointing_to() {
   read nightly_commit < <( \
     send_gh_api_request repos/${NEOVIM_REPO}/tags \
     | jq -r -c "(.[] | select(.name == \"${tag}\").commit.sha), \"\"") \
-    || exit
+    || { log_error 'send_gh_api_request failed' ; exit 1; }
 
   if [[ "${nightly_commit}" != "${commit}" ]]; then
     log_info "tag '${tag}' does not point to: ${commit}, continuing."
@@ -240,21 +240,26 @@ try_update_nightly() {
   fi
 }
 
-clone_neovim
-require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
-cd "${NEOVIM_DIR}"
-_NVIM_LAST_TAG="$(git_last_tag)"
-_NVIM_LAST_TAG_COMMIT=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse "$_NVIM_LAST_TAG")
+main() {
+  clone_neovim
+  require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
+  cd "${NEOVIM_DIR}"
+  last_tag="$(git_last_tag)"
+  last_tag_commit=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse "$last_tag"^{commit})
+  commits_since_last_tag=$(git_commits_since_last_tag master)
 
-if ! is_tag_pointing_to stable "$_NVIM_LAST_TAG_COMMIT" \
-    || test "$(git_commits_since_last_tag master)" -lt 4 ; then
-  log_info "building: stable"
-  build_nightly "${_NVIM_LAST_TAG}"
-  try_update_nightly stable "$_NVIM_LAST_TAG_COMMIT" "tag=${_NVIM_LAST_TAG}"
-else
-  log_info "building: nightly"
-  # Don't check: need different builds for same commit.
-  # is_tag_pointing_to nightly "$NEOVIM_COMMIT" ||
-  build_nightly master
-  try_update_nightly nightly "$NEOVIM_COMMIT" 'branch=master'
-fi
+  if ! is_tag_pointing_to stable "$last_tag_commit" \
+      || test "$commits_since_last_tag" -lt 4 ; then
+    log_info "building: stable"
+    build_nightly "${last_tag}"
+    try_update_nightly stable "$last_tag_commit" "tag=${last_tag}"
+  else
+    log_info "building: nightly"
+    # Don't check: need different builds for same commit.
+    # is_tag_pointing_to nightly "$NEOVIM_COMMIT" ||
+    build_nightly master
+    try_update_nightly nightly "$NEOVIM_COMMIT" 'branch=master'
+  fi
+}
+
+main
