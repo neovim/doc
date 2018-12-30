@@ -16,6 +16,7 @@ source "$BUILD_DIR/ci/common/badge.sh"
 DOC_SUBTREE="/reports/clint"
 REPORTS_DIR="$DOC_DIR/$DOC_SUBTREE"
 ERRORS_FILE="$REPORTS_DIR/errors.json"
+EXCLUDE_PAT='src/nvim/(testdir|xdiff)'
 
 generate_clint_report() {
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" $LINENO
@@ -35,6 +36,9 @@ generate_clint_report() {
   local errors_files=""
 
   for f in src/nvim/**/*.[ch] ; do
+    if echo "$f" | >/dev/null 2>&1 grep -E "$EXCLUDE_PAT" ; then
+      log_info "generate_clint_report: skipped: $f"
+    else
       local suffix="${f#src/nvim/}"
       suffix="${suffix//[\/.]/-}"
       local separate_errors_file="$REPORTS_DIR/$suffix.json"
@@ -45,6 +49,7 @@ generate_clint_report() {
       echo "$sect_footer" >> "$index_file"
       cat "$separate_errors_file" >> "$errors_file"
       errors_files="$errors_files $separate_errors_file"
+    fi
   done
 
   tar c $errors_files | gzip -9 > "$REPORTS_DIR/errors.tar.gz"
