@@ -246,7 +246,7 @@ main() {
   cd "${NEOVIM_DIR}"
   last_tag="$(git_last_tag)"
   last_tag_commit=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse "$last_tag"^{commit})
-  commits_since_last_tag=$(git_commits_since_last_tag master)
+  commits_since_last_tag=$(git_commits_since_last_tag "$NEOVIM_BRANCH")
 
   if ! is_tag_pointing_to stable "$last_tag_commit" \
       || test "$commits_since_last_tag" -lt 4 ; then
@@ -257,8 +257,8 @@ main() {
     log_info "building: nightly"
     # Don't check: need different builds for same commit.
     # is_tag_pointing_to nightly "$NEOVIM_COMMIT" ||
-    build_nightly master
-    try_update_nightly nightly "$NEOVIM_COMMIT" 'branch=master'
+    build_nightly "$NEOVIM_BRANCH"
+    try_update_nightly nightly "$NEOVIM_COMMIT" "branch=${NEOVIM_BRANCH}"
   fi
 }
 
