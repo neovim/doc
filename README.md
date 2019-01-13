@@ -79,6 +79,29 @@ that `<username>/doc` will always be up-to-date.
 The above steps can be performed analogously for other repositories a `bot-ci`
 script pushes to, e.g. `neovim/deps` for `ci/deps64.sh`.
 
+# One-off Travis CI build
+
+For maintenance releases, we need to manually trigger a build to publish to
+`stable`.
+
+From Travis CI web UI:
+
+- "More options" .. "Trigger build"
+- Set the branch to `release-0.3`
+- specify the jobs to run:
+  ```
+  matrix:
+    include:
+      - env: CI_TARGET=nightly NEOVIM_BRANCH=release-0.3
+      - env: CI_TARGET=nightly NEOVIM_BRANCH=release-0.3
+        os: osx
+        osx_image: xcode10.1
+        compiler: clang
+  ```
+- When finished, **re-run the last `master` job,** otherwise the automated trigger
+  re-run the one-off job.
+
+
 # Generated builds
 
 The `ci/nightly.sh` script auto-generates and publishes builds to
