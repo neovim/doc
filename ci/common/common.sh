@@ -178,7 +178,7 @@ can_fail_without_private() {
 commit_subtree() {
   (
     local prefix="${1}"
-    local attempts="${2:-10}"
+    local attempts="${2:-4}"
     local push_args="${3:-}"
     local subtree="${prefix}_SUBTREE"
     local dir="${prefix}_DIR"
@@ -191,7 +191,9 @@ commit_subtree() {
     require_environment_variable "${subtree}" "${BASH_SOURCE[0]}" ${LINENO}
     require_environment_variable "${dir}" "${BASH_SOURCE[0]}" ${LINENO}
     require_environment_variable "${repo}" "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable "${branch}" "${BASH_SOURCE[0]}" ${LINENO}
+    if ! echo "${push_args}" | >/dev/null 2>&1 grep -- '--all\|--mirror' ; then
+      require_environment_variable "${branch}" "${BASH_SOURCE[0]}" ${LINENO}
+    fi
 
     cd "${!dir}" || return
 
@@ -205,14 +207,14 @@ commit_subtree() {
       git commit -m "${CI_TARGET//-/ }: Automatic update" || true
 
       while test $(( attempts-=1 )) -ge 0 ; do
-        if echo "${push_args}" | >/dev/null 2>&1 grep -- '--force' \
+        if echo "${push_args}" | >/dev/null 2>&1 grep -- '--force\|--all\|--mirror' \
             || git pull --rebase "git://github.com/${!repo}" "${!branch}" ; then
           if ! has_gh_token ; then
             log_info 'GH_TOKEN not set; push skipped'
             log_info 'To test pull requests, see instructions in README.md'
             return "$(can_fail_without_private)"
           fi
-          if git push ${push_args} "https://github.com/${!repo}" "${!branch}"
+          if git push ${push_args} "https://github.com/${!repo}" ${!branch}
           then
             log_info "Pushed to: ${!repo} ${!branch}"
             return 0
@@ -225,10 +227,10 @@ commit_subtree() {
       done
       return 1
     else
-      if prompt_key_local "Build finished, do you want to commit and push the results to ${!repo}:${!branch} (change by setting ${repo}/${branch})?" ; then
-      # Commit in local builds.
+      if prompt_key_local "Build finished; commit and push to ${!repo}:${!branch:-*} ? (change by setting ${repo}/${branch})" ; then
+        # Commit in local builds.
         git commit || true
-        git push "ssh://git@github.com/${!repo}" "${!branch}"
+        git push ${push_args} "https://github.com/${!repo}" ${!branch}
       fi
     fi
   )
