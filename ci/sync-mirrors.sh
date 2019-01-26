@@ -19,12 +19,21 @@ sync_git_mirror() {
   rm -rf "${repo_dir}"
   git clone "${upstream_url}" "${repo_dir}"
 
+  # Create local branches from all remote branches, to feed `git push --all`.
+  # (Cannot use --mirror, it prunes our extra branches.)
+  (
+    cd "${repo_dir}"
+    for remote in $(git branch -r | grep -v /HEAD); do
+      git checkout --track "$remote" || true
+    done
+  )
+
   echo "Pushing to: ${MIRROR_USER}/${repo}"
   MIRROR_SUBTREE="/" \
   MIRROR_DIR="${repo_dir}" \
   MIRROR_REPO="${MIRROR_USER}/${repo}" \
   MIRROR_BRANCH= \
-    commit_subtree MIRROR 4 --mirror
+    commit_subtree MIRROR 4 --all
 }
 
 sync_bzr_mirror() {
@@ -36,12 +45,21 @@ sync_bzr_mirror() {
   rm -rf "${repo_dir}"
   git clone "bzr::${upstream_url}" "${repo_dir}"
 
+  # Create local branches from all remote branches, to feed `git push --all`.
+  # (Cannot use --mirror, it prunes our extra branches.)
+  (
+    cd "${repo_dir}"
+    for remote in $(git branch -r | grep -v /HEAD); do
+      git checkout --track "$remote" || true
+    done
+  )
+
   echo "Pushing to: ${MIRROR_USER}/${repo}"
   MIRROR_SUBTREE="/" \
   MIRROR_DIR="${repo_dir}" \
   MIRROR_REPO="${MIRROR_USER}/${repo}" \
   MIRROR_BRANCH= \
-    commit_subtree MIRROR 4 --mirror
+    commit_subtree MIRROR 4 --all
 }
 
 sync_bzr_mirror libvterm
