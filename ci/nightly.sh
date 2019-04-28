@@ -297,19 +297,17 @@ main() {
   clone_neovim
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
   cd "${NEOVIM_DIR}"
-  last_tag="$(git_last_tag)"
-  last_tag_commit=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse "$last_tag"^{commit})
-  commits_since_last_tag=$(git_commits_since_last_tag "$NEOVIM_BRANCH")
+  stable_commit=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse stable^{commit})
+  commits_since_stable=$(git_commits_since_tag stable "$NEOVIM_BRANCH")
 
   #
   # Update the "stable" release if needed, else update "nightly".
   #
-  if ! is_tag_pointing_to stable "$last_tag_commit" \
-      || test "$commits_since_last_tag" -lt 4 \
+  if test "$commits_since_stable" -lt 4 \
       || ! is_release_current stable ; then
     log_info "building: stable"
-    build_nightly "${last_tag}"
-    try_update_nightly stable "$last_tag_commit" "tag=${last_tag}"
+    build_nightly stable
+    try_update_nightly stable "$stable_commit" "tag=stable"
   else
     log_info "building: nightly"
     # Don't check. Need different builds for same commit.

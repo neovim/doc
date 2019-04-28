@@ -96,25 +96,23 @@ git_truncate() {
 }
 
 git_last_tag() {
-  local last_tag
-  if ! last_tag=$(git describe --abbrev=0 --exclude=nightly) ; then
-    log_error "git_commits_since_last_tag: 'git describe' failed"
+  local tag
+  if ! tag=$(git describe --abbrev=0 --exclude=nightly) ; then
+    log_error "git_last_tag: 'git describe' failed"
     exit 1
   fi
-  echo "$last_tag"
+  echo "$tag"
 }
 
-git_commits_since_last_tag() {
-  local ref="${1}"
-  local last_tag
+git_commits_since_tag() {
+  local tag="${1}"
+  local ref="${2}"
   local commits_since
-  last_tag=$(git_last_tag)
-  if ! commits_since=$(git rev-list "${last_tag}..${ref}" --count) ; then
-    log_error "git_commits_since_last_tag: 'git rev-list' failed"
+  if ! commits_since=$(git rev-list "${tag}..${ref}" --count) ; then
+    log_error "git_commits_since_tag: 'git rev-list' failed"
     exit 1
   fi
-  log_info "git_commits_since_last_tag: last_tag: $last_tag"
-  log_info "git_commits_since_last_tag: commits_since: $commits_since"
+  log_info "git_commits_since_tag: tag=$tag commits_since=$commits_since"
   echo "$commits_since"
 }
 
