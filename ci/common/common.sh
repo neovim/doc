@@ -97,7 +97,7 @@ git_truncate() {
 
 git_last_tag() {
   local last_tag
-  if ! last_tag=$(git describe --abbrev=0 --exclude=nightly --exclude=stable) ; then
+  if ! last_tag=$(git describe --abbrev=0 --exclude=nightly) ; then
     log_error "git_commits_since_last_tag: 'git describe' failed"
     exit 1
   fi
