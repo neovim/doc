@@ -28,7 +28,7 @@ build_nightly() {
     if [ "${CI_OS}" = osx ] ; then
       # This CMAKE_EXTRA_FLAGS is required for relocating the macOS libs.
       make CMAKE_BUILD_TYPE=Release \
-           CMAKE_EXTRA_FLAGS="-DENABLE_JEMALLOC=OFF -DCMAKE_INSTALL_PREFIX:PATH= -DCMAKE_OSX_DEPLOYMENT_TARGET=10.11"
+           CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH= -DCMAKE_OSX_DEPLOYMENT_TARGET=10.11"
     else
       make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_EXTRA_FLAGS="-DCMAKE_INSTALL_PREFIX:PATH="
     fi
@@ -107,8 +107,7 @@ get_release_body() {
 
 ### Other
 
-- Install by [package manager](https://github.com/neovim/neovim/wiki/Installing-Neovim)
-'
+- Install by [package manager](https://github.com/neovim/neovim/wiki/Installing-Neovim)'
   if test "$to_tag" = nightly ; then
     echo '- Developers can [use this build in Travis CI](https://github.com/neovim/bot-ci#generated-builds)'
   fi
@@ -118,6 +117,60 @@ get_nvim_version() {(
   set +e
   2>&1 "${NVIM_BIN}" --headless -u NONE +":echo (api_info().version.major).'.'.(api_info().version.minor).'.'.(api_info().version.patch)" +q
 )}
+
+# Prints a list like:
+#   nvim-macos.tar.gz
+#   nvim-win64.zip
+#   nvim.appimage
+#   ...
+get_release_id() {
+  local tag="${1}"
+  local release_id
+  read release_id < <( \
+    send_gh_api_request repos/${NEOVIM_REPO}/releases \
+    | jq -r -c "(.[] | select(.tag_name == \"${tag}\").id), \"\"") \
+    || exit 1
+  if [ -z "$release_id" ] ; then
+    echo 'NOT-FOUND'
+  else
+    echo "$release_id"
+  fi
+}
+
+# Prints a list of asset names for the given release-id.
+# Example:
+#   nvim-macos.tar.gz
+#   nvim-win64.zip
+#   nvim.appimage
+#   ...
+get_release_assets() {
+  local release_id="${1}"
+  send_gh_api_request "repos/${NEOVIM_REPO}/releases/${release_id}/assets" \
+    | jq -r -c '.[].name' \
+    || exit 1
+}
+
+# Checks if there is a release for the given tag, and if it has all assets.
+is_release_current() {
+  local tag="${1}"
+  local release_id
+  local assets
+  release_id="$(get_release_id ${tag})"
+  log_info "tag=${tag} release_id=${release_id}"
+  if [ "$release_id" = 'NOT-FOUND' ] ; then
+    return 1
+  else
+    assets="$(get_release_assets "$release_id")"
+    if ! echo "$assets" | grep -q 'nvim-macos.tar.gz' ; then
+      log_info "tag=${tag} missing asset: nvim-macos.tar.gz"
+      return 1
+    elif ! echo "$assets" | grep -q 'nvim-win64.zip' ; then
+      log_info "tag=${tag} missing asset: nvim-win64.zip"
+      return 1
+    fi
+  fi
+  return 0
+}
 
 upload_nightly() {
   require_args "$#" 5 "${BASH_SOURCE[0]}" ${LINENO}
@@ -141,7 +194,7 @@ upload_nightly() {
   read release_id < <( \
     send_gh_api_request repos/${NEOVIM_REPO}/releases \
     | jq -r -c "(.[] | select(.tag_name == \"${tag}\").id), \"\"") \
-    || exit
+    || exit 1
 
   if [[ -z "${release_id}" ]]; then
     log_info "upload_nightly: Creating release for: ${tag}"
@@ -150,7 +203,7 @@ upload_nightly() {
       "{ \"name\": \"NVIM ${NVIM_VERSION}\", \"tag_name\": \"${tag}\", \
       \"prerelease\": ${prerelease} }" \
       | jq -r -c '.id') \
-      || exit
+      || exit 1
   elif [ "$delete_old" = delete ] ; then
     log_info "upload_nightly: Deleting old release assets"
     local asset_id
@@ -162,7 +215,7 @@ upload_nightly() {
     done < <( \
       send_gh_api_request repos/${NEOVIM_REPO}/releases/${release_id}/assets \
       | jq -r -c '.[].id') \
-      || exit
+      || exit 1
   fi
 
   log_info 'upload_nightly: Updating release description'
@@ -198,7 +251,7 @@ is_tag_pointing_to() {
     return 1
   fi
 
-  log_info "tag '${tag}' already points to: ${commit}"
+  log_info "tag '${tag}' points to: ${commit}"
 }
 
 get_appveyor_build() {(
@@ -248,14 +301,18 @@ main() {
   last_tag_commit=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse "$last_tag"^{commit})
   commits_since_last_tag=$(git_commits_since_last_tag "$NEOVIM_BRANCH")
 
+  #
+  # Update the "stable" release if needed, else update "nightly".
+  #
   if ! is_tag_pointing_to stable "$last_tag_commit" \
-      || test "$commits_since_last_tag" -lt 4 ; then
+      || test "$commits_since_last_tag" -lt 4 \
+      || ! is_release_current stable ; then
     log_info "building: stable"
     build_nightly "${last_tag}"
     try_update_nightly stable "$last_tag_commit" "tag=${last_tag}"
   else
     log_info "building: nightly"
-    # Don't check: need different builds for same commit.
+    # Don't check. Need different builds for same commit.
     # is_tag_pointing_to nightly "$NEOVIM_COMMIT" ||
     build_nightly "$NEOVIM_BRANCH"
     try_update_nightly nightly "$NEOVIM_COMMIT" "branch=${NEOVIM_BRANCH}"
