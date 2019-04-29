@@ -7,24 +7,18 @@ However, you won't find the "Genuine People Personalities" technology here.
 
 # Generated Content
 
- - [Documentation/report overview page][doc-index]
+ - [Documentation/report overview page](https://neovim.io/doc)
  - Documentation:
-   - [Doxygen documentation][doc-dev]
-   - [User documentation][doc-user]
+   - [Doxygen documentation](https://neovim.io/doc/dev)
+   - [User documentation](https://neovim.io/doc/user)
  - Build reports:
-   - [Clang report][clang-report]
-   - [PVS-studio report][pvs-report]
-   - [Vimpatch report][vimpatch-report]
- - [Coverity][coverity]
+   - [Clang report](https://neovim.io/doc/reports/clang)
+   - [PVS-studio report](https://neovim.io/doc/reports/pvs)
+   - [Vimpatch report](https://neovim.io/doc/reports/vimpatch)
+ - [Coverity](https://scan.coverity.com/projects/2227)
+ - [Nightly builds](https://github.com/neovim/neovim/releases)
  - [Generated builds](#generated-builds)
 
-[doc-index]: https://neovim.io/doc
-[doc-dev]: https://neovim.io/doc/dev
-[doc-user]: https://neovim.io/doc/user
-[clang-report]: https://neovim.io/doc/reports/clang
-[pvs-report]: https://neovim.io/doc/reports/pvs
-[vimpatch-report]: https://neovim.io/doc/reports/vimpatch
-[coverity]: https://scan.coverity.com/projects/2227
 
 # Building Locally
 

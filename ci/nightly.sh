@@ -118,11 +118,7 @@ get_nvim_version() {(
   2>&1 "${NVIM_BIN}" --headless -u NONE +":echo (api_info().version.major).'.'.(api_info().version.minor).'.'.(api_info().version.patch)" +q
 )}
 
-# Prints a list like:
-#   nvim-macos.tar.gz
-#   nvim-win64.zip
-#   nvim.appimage
-#   ...
+# Prints the release-id for a given tag, or "NOT-FOUND".
 get_release_id() {
   local tag="${1}"
   local release_id
