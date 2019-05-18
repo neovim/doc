@@ -41,17 +41,18 @@ build_nightly() {
 # The executable, and the corresponding .zsync file, are placed into
 # ${NEOVIM_DIR}/build/bin/.
 build_appimage() {
+  local tag="${1:-}"
   (
     require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
     sudo modprobe fuse
 
-    sudo groupadd fuse
+    sudo groupadd -f fuse
     sudo usermod -a -G fuse `whoami`
 
     cd ${NEOVIM_DIR}
     rm -rf build
-    make appimage-nightly
+    make appimage-${tag}
     ls -lh build/bin/
   )
 }
@@ -273,12 +274,12 @@ try_update_nightly() {
     create_nightly_tarball
     upload_nightly delete "$to_tag" "$commit" "$NIGHTLY_FILE" "nvim-${CI_OS}64.tar.gz"
 
-    build_appimage
+    build_appimage "$to_tag"
     upload_nightly keep "$to_tag" "$commit" \
-      "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage | head -1)" \
+      "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim.appimage | head -1)" \
       nvim.appimage
     upload_nightly keep "$to_tag" "$commit" \
-      "$(ls -1 ${NEOVIM_DIR}/build/bin/Neovim-*.AppImage.zsync | head -1)" \
+      "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim.appimage.zsync | head -1)" \
       nvim.appimage.zsync
 
     get_appveyor_build MSVC_32 nvim-win32.zip "$appveyor_params"
