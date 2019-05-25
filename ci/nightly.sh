@@ -268,24 +268,24 @@ try_update_nightly() {
   local appveyor_params=$3
   NVIM_VERSION=$(get_nvim_version)
   if [ "${CI_OS}" = osx ] ; then
-    create_nightly_tarball
+    [ -f "$NIGHTLY_FILE" ] || create_nightly_tarball
     upload_nightly keep "$to_tag" "$commit" "$NIGHTLY_FILE" "nvim-macos.tar.gz"
   else
-    create_nightly_tarball
+    [ -f "$NIGHTLY_FILE" ] || create_nightly_tarball
     upload_nightly delete "$to_tag" "$commit" "$NIGHTLY_FILE" "nvim-${CI_OS}64.tar.gz"
 
-    build_appimage "$to_tag"
+    [ -f "${NEOVIM_DIR}/build/bin/nvim.appimage" ] || build_appimage "$to_tag"
     upload_nightly keep "$to_tag" "$commit" \
-      "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim.appimage | head -1)" \
+      "${NEOVIM_DIR}/build/bin/nvim.appimage" \
       nvim.appimage
     upload_nightly keep "$to_tag" "$commit" \
-      "$(ls -1 ${NEOVIM_DIR}/build/bin/nvim.appimage.zsync | head -1)" \
+      "${NEOVIM_DIR}/build/bin/nvim.appimage.zsync" \
       nvim.appimage.zsync
 
-    get_appveyor_build MSVC_32 nvim-win32.zip "$appveyor_params"
+    [ -f nvim-win32.zip ] || get_appveyor_build MSVC_32 nvim-win32.zip "$appveyor_params"
     [ -f nvim-win32.zip ] && upload_nightly keep "$to_tag" "$commit" nvim-win32.zip nvim-win32.zip
 
-    get_appveyor_build MSVC_64 nvim-win64.zip "$appveyor_params"
+    [ -f nvim-win64.zip ] || get_appveyor_build MSVC_64 nvim-win64.zip "$appveyor_params"
     [ -f nvim-win64.zip ] && upload_nightly keep "$to_tag" "$commit" nvim-win64.zip nvim-win64.zip
   fi
 }
@@ -295,7 +295,11 @@ main() {
   require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" ${LINENO}
   cd "${NEOVIM_DIR}"
   stable_commit=$(git --git-dir=${NEOVIM_DIR}/.git rev-parse stable^{commit})
+  # The current vX.Y.Z tag identified by the `stable` tag.
+  stable_semantic_tag=$(git tag --points-at stable | grep 'v[0-9].*')
   commits_since_stable=$(git_commits_since_tag stable "$NEOVIM_BRANCH")
+
+  log_info "stable_semantic_tag=${stable_semantic_tag}"
 
   #
   # Update the "stable" release if needed, else update "nightly".
@@ -304,7 +308,10 @@ main() {
       || ! is_release_current stable ; then
     log_info "building: stable"
     build_nightly stable
+    # Push assets to the stable tag.
     try_update_nightly stable "$stable_commit" "tag=stable"
+    # Push the same assets to the current vX.Y.Z tag.  https://github.com/neovim/neovim/issues/10011
+    try_update_nightly "$stable_semantic_tag" "$stable_commit" "tag=stable"
   else
     log_info "building: nightly"
     # Don't check. Need different builds for same commit.
