@@ -161,13 +161,16 @@ is_release_current() {
     return 1
   else
     assets="$(get_release_assets "$release_id")"
-    if ! echo "$assets" | grep -q 'nvim-macos.tar.gz' ; then
-      log_info "tag=${tag} missing asset: nvim-macos.tar.gz"
-      return 1
-    elif ! echo "$assets" | grep -q 'nvim-win64.zip' ; then
-      log_info "tag=${tag} missing asset: nvim-win64.zip"
-      return 1
-    fi
+    for name in \
+        'nvim-macos.tar.gz' \
+        'nvim-win64.zip' \
+        'nvim.appimage' \
+        ; do
+      if ! echo "$assets" | grep -q "$name" ; then
+        log_info "tag=${tag} missing asset: ${name}"
+        return 1
+      fi
+    done
   fi
   return 0
 }
