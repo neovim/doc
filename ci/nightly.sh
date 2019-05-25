@@ -74,7 +74,10 @@ create_nightly_tarball() {
 
 get_release_body() {
   local to_tag=$1
-  if test "$to_tag" = nightly ; then
+  if test "$to_tag" = stable ; then
+    echo 'The `stable` tag is an alias to the [current release tag](https://github.com/neovim/neovim/releases/latest).'
+    return 0
+  elif test "$to_tag" = nightly ; then
     echo 'Nvim development (prerelease) build.'
   else
     echo 'Nvim release build.'
@@ -224,10 +227,11 @@ upload_nightly() {
     "{ \"draft\": false, \"prerelease\": ${prerelease} }" \
     > /dev/null
 
-  log_info "upload_nightly: Updating '${tag}' tag to point to: ${commit}"
-  send_gh_api_data_request repos/${NEOVIM_REPO}/git/refs/tags/${tag} PATCH \
-    "{ \"force\": true, \"sha\": \"${commit}\" }" \
-    > /dev/null
+  # XXX: should not need this, the tags are the "source of truth".
+  # log_info "upload_nightly: Updating '${tag}' tag to point to: ${commit}"
+  # send_gh_api_data_request repos/${NEOVIM_REPO}/git/refs/tags/${tag} PATCH \
+  #   "{ \"force\": true, \"sha\": \"${commit}\" }" \
+  #   > /dev/null
 
   log_info "upload_nightly: Uploading asset: $uploadname"
   upload_release_asset "$filepath" "$uploadname" ${NEOVIM_REPO} ${release_id} \
