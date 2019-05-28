@@ -64,6 +64,11 @@ upload_release_asset() {
   local release_id="${4}"
   local mime_type="$(file --mime-type -b "${file}")"
 
+  if ! [ -f "${file}" ] ; then
+    log_error "upload_release_asset: file not found: ${file}"
+    return 1
+  fi
+
   local response="$(
       curl --netrc -s -H "Accept: application/vnd.github.v3+json" \
         -H "User-Agent: neovim/bot-ci" \
