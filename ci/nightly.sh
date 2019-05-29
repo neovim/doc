@@ -230,11 +230,12 @@ upload_nightly() {
     "{ \"draft\": false, \"prerelease\": ${prerelease} }" \
     > /dev/null
 
-  # XXX: should not need this, the tags are the "source of truth".
-  # log_info "upload_nightly: Updating '${tag}' tag to point to: ${commit}"
-  # send_gh_api_data_request repos/${NEOVIM_REPO}/git/refs/tags/${tag} PATCH \
-  #   "{ \"force\": true, \"sha\": \"${commit}\" }" \
-  #   > /dev/null
+  if [ "${tag}" = nightly ] ; then
+    log_info "upload_nightly: updating '${tag}' tag to: ${commit}"
+    send_gh_api_data_request repos/${NEOVIM_REPO}/git/refs/tags/${tag} PATCH \
+      "{ \"force\": true, \"sha\": \"${commit}\" }" \
+      > /dev/null
+  fi
 
   log_info "upload_nightly: Uploading asset: $uploadname"
   upload_release_asset "$filepath" "$uploadname" ${NEOVIM_REPO} ${release_id} \
