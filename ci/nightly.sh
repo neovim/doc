@@ -313,6 +313,7 @@ main() {
   # Update the "stable" release if needed, else update "nightly".
   #
   if test "$commits_since_stable" -lt 4 \
+      || ! is_release_current "$stable_semantic_tag" \
       || ! is_release_current stable ; then
     log_info "building: stable"
     build_nightly stable
