@@ -64,5 +64,4 @@ sync_bzr_mirror() {
 
 sync_bzr_mirror libvterm
 sync_bzr_mirror libtermkey
-sync_git_mirror unibilium master https://github.com/mauke/unibilium/
 sync_git_mirror libuv master https://github.com/libuv/libuv/
