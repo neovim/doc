@@ -263,6 +263,7 @@ get_appveyor_build() {(
   local type=$1
   local filepath=$2
   local appveyor_params=$3
+  # Example: https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?tag=v0.4.1&pr=false&job=Configuration%3A%20MSVC_32
   local url='https://ci.appveyor.com/api/projects/neovim/neovim/artifacts/build/Neovim.zip?'"$appveyor_params"'&pr=false&job=Configuration%3A%20'"$type"
   log_info "get_appveyor_build: $url"
 

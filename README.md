@@ -7,6 +7,8 @@ However, you won't find the "Genuine People Personalities" technology here.
 
 # Generated Content
 
+`bot-ci` generates or updates all of these things:
+
  - [Documentation/report overview page](https://neovim.io/doc)
  - Documentation:
    - [Doxygen documentation](https://neovim.io/doc/dev)
@@ -18,6 +20,18 @@ However, you won't find the "Genuine People Personalities" technology here.
  - [Coverity](https://scan.coverity.com/projects/2227)
  - [Nightly builds](https://github.com/neovim/neovim/releases)
  - [Generated builds](#generated-builds)
+
+
+# How it works
+
+1. The [scripts](https://github.com/neovim/bot-ci/tree/master/ci) in this repo
+   run as daily [CI jobs](https://travis-ci.org/neovim/bot-ci).
+2. Some of the jobs push updates to the [neovim/doc](https://github.com/neovim/doc) repo. Examples:
+   - [pvs-report.sh](https://github.com/neovim/bot-ci/blob/master/ci/pvs-report.sh) generates the [PVS report](https://neovim.io/doc/reports/pvs/PVS-studio.html.d)
+   - [clang-report.sh](https://github.com/neovim/bot-ci/blob/master/ci/clang-report.sh) generates the [Clang report](https://neovim.io/doc/reports/clang/)
+3. [neovim/doc](https://github.com/neovim/doc) has a `gh-pages` branch. GitHub implicitly
+   creates a website for that repo, which is mapped to the `/doc/` path of the
+   [main website](https://github.com/neovim/neovim.github.io).
 
 
 # Building Locally
