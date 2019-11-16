@@ -319,9 +319,9 @@ main() {
     log_info "building: stable"
     build_nightly stable
     # Push assets to the stable tag.
-    try_update_nightly stable "$stable_commit" "tag=stable"
-    # Push the same assets to the current vX.Y.Z tag.  https://github.com/neovim/neovim/issues/10011
-    try_update_nightly "$stable_semantic_tag" "$stable_commit" "tag=stable"
+    try_update_nightly stable "$stable_commit" "tag=${stable_semantic_tag}"
+    # Push assets to the current vX.Y.Z tag.  https://github.com/neovim/neovim/issues/10011
+    try_update_nightly "$stable_semantic_tag" "$stable_commit" "tag=${stable_semantic_tag}"
   else
     log_info "building: nightly"
     # Don't check. Need different builds for same commit.
