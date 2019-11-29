@@ -1,7 +1,6 @@
 from __future__ import print_function
 import json
 import os
-import sys
 from urllib import urlencode
 import urllib2
 import datetime
@@ -62,9 +61,7 @@ def get_or_request_travis_token(gh_token):
 def lambda_handler(event, context):
     repo_slug = 'neovim/bot-ci'
     branch = 'master'
-    # Use Travis CI "cron" feature for daily job.
-    # job = "ALL" if 20 == datetime.datetime.utcnow().hour else "assign-labels"
-    job = "assign-labels"
+    job = "ALL" if 20 == datetime.datetime.utcnow().hour else "assign-labels"
     travis_token = get_or_request_travis_token('XXX')
 
     print('Restarting "{0}" build on {1}:{2}:'.format(job, repo_slug, branch))
