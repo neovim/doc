@@ -1,14 +1,13 @@
 from __future__ import print_function
 import json
 import os
-import sys
-from urllib import urlencode
-import urllib2
+from urllib.parse import urlencode
+import urllib.request
 import datetime
 
 def travis_request(endpoint, post_data=None, travis_token=None):
     url = 'https://api.travis-ci.org/{0}'.format(endpoint)
-    data = urlencode(post_data) if not post_data is None else None
+    data = None if post_data is None else urlencode(post_data).encode('utf-8')
     headers = {'Accept': 'application/vnd.travis-ci.2+json',
                'User-Agent': 'Travis-justinmk-aws/1.0.0'}
 
@@ -19,9 +18,8 @@ def travis_request(endpoint, post_data=None, travis_token=None):
     print('post_data: '+str(post_data))
     print('headers: '+str(headers))
 
-    response = urllib2.urlopen(urllib2.Request(url=url,
-                               data=data,
-                               headers=headers))
+    response = urllib.request.urlopen(
+            urllib.request.Request(url=url, data=data, headers=headers))
     return json.loads(response.read())
 
 
@@ -44,7 +42,7 @@ def get_latest_job_id(build_id, job_substring):
 def restart(entity_type, build_id, travis_token):
     assert(entity_type == 'job' or entity_type == 'build')
     response = travis_request('{0}s/{1}/restart'.format(entity_type, build_id),
-                              post_data="", #force urllib2 to POST.
+                              post_data="", #force urllib to POST.
                               travis_token=travis_token)
     return os.linesep.join(response['flash'][0].values())
 
@@ -62,9 +60,7 @@ def get_or_request_travis_token(gh_token):
 def lambda_handler(event, context):
     repo_slug = 'neovim/bot-ci'
     branch = 'master'
-    # Use Travis CI "cron" feature for daily job.
-    # job = "ALL" if 20 == datetime.datetime.utcnow().hour else "assign-labels"
-    job = "assign-labels"
+    job = "ALL" if 20 == datetime.datetime.utcnow().hour else "assign-labels"
     travis_token = get_or_request_travis_token('XXX')
 
     print('Restarting "{0}" build on {1}:{2}:'.format(job, repo_slug, branch))
