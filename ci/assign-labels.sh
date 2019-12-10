@@ -2,10 +2,10 @@
 set -e
 
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source ${BUILD_DIR}/ci/common/common.sh
-source ${BUILD_DIR}/ci/common/dependencies.sh
-source ${BUILD_DIR}/ci/common/github-api.sh
-source ${BUILD_DIR}/ci/common/neovim.sh
+source "${BUILD_DIR}/ci/common/common.sh"
+source "${BUILD_DIR}/ci/common/dependencies.sh"
+source "${BUILD_DIR}/ci/common/github-api.sh"
+source "${BUILD_DIR}/ci/common/neovim.sh"
 
 TAGS=('[WIP]' '[RFC]' '[RDY]' 'vim-patch')
 LABELS=('WIP' 'RFC' 'RDY' 'vim-patch')
@@ -32,9 +32,8 @@ label_issue() {
 
     # Remove existing mutually-exclusive labels, if any.
     if is_label_exclusive "$new_label"; then
-      local i
-      for ((i=0; i < ${#LABELS[@]}; i=i+1)); do
-        local old_label="${LABELS[i]}"
+      for label in "${LABELS[@]}"; do
+        local old_label="${label}"
         if is_label_exclusive "$old_label" \
             && [[ "${issue_labels}" == *"${old_label}"* && "${old_label}" != "${new_label}" ]]; then
           echo "  Removing '${old_label}' label (it is mutually-exclusive with '${new_label}')."
@@ -49,7 +48,7 @@ label_issue() {
   fi
 
   if [[ ${DRY_RUN} != true ]]; then
-    send_gh_api_data_request repos/${NEOVIM_REPO}/issues/${issue_id} \
+    send_gh_api_data_request "repos/${NEOVIM_REPO}/issues/${issue_id}" \
       PATCH \
       "{\"labels\": [${issue_labels}]}" \
       > /dev/null
@@ -95,7 +94,7 @@ assign_labels() {
       || exit
 
     # Abort if no more issues returned from API.
-    if [[ -z "${issues}" ]]; then
+    if [[ -z "${issues[*]}" ]]; then
       break
     fi
 
