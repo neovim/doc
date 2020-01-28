@@ -7,15 +7,15 @@ source "${BUILD_DIR}/ci/common/dependencies.sh"
 source "${BUILD_DIR}/ci/common/github-api.sh"
 source "${BUILD_DIR}/ci/common/neovim.sh"
 
-TAGS=('[WIP]' '[RFC]' '[RDY]' 'vim-patch')
-LABELS=('WIP' 'RFC' 'RDY' 'vim-patch')
+TAGS=( '[WIP]' '[RDY]' 'version.c' 'vim-patch')
+LABELS=('WIP'   'RDY'  'vim-patch' 'vim-patch')
 DRY_RUN=${DRY_RUN:-false}
 
 is_label_exclusive() {
   local label="${1}"
   for ((i=0; i < ${#LABELS[@]}; i=i+1)); do
-    # Only the first 3 tags/labels (WIP/RFC/RDY) are mutually-exclusive.
-    [ "$i" -gt 2 ] && return 1
+    # XXX: Only the first 2 tags/labels (WIP/RDY) are mutually-exclusive.
+    [ "$i" -gt 1 ] && return 1
     [ "${label}" = "${LABELS[i]}" ] && return 0
   done
   return 1
