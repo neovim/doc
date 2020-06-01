@@ -13,7 +13,8 @@ generate_vimpatch_report() {
   rm -rf ${DOC_DIR}/reports/vimpatch
   mkdir -p ${DOC_DIR}/reports/vimpatch
 
-  generate_report "Vim Patch Report" "$(get_vimpatch_report_body)" \
+  body=$(get_vimpatch_report_body)
+  generate_report "Vim Patch Report" "${body}" \
     ${DOC_DIR}/reports/vimpatch/index.html
 }
 
