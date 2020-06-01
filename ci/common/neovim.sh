@@ -2,7 +2,7 @@
 
 require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
-NEOVIM_DIR=${NEOVIM_DIR:-${BUILD_DIR}/build/neovim}
+export NEOVIM_DIR=${NEOVIM_DIR:-${BUILD_DIR}/build/neovim}
 NEOVIM_REPO=${NEOVIM_REPO:-neovim/neovim}
 NEOVIM_BRANCH=${NEOVIM_BRANCH:-master}
 
