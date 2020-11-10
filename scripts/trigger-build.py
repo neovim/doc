@@ -5,7 +5,7 @@ import urllib.request
 import datetime
 
 def travis_request(endpoint, post_data=None, travis_token=None):
-    url = 'https://api.travis-ci.org/{0}'.format(endpoint)
+    url = 'https://api.travis-ci.com/{0}'.format(endpoint)
     data = None if post_data is None else urlencode(post_data).encode('utf-8')
     headers = {'Accept': 'application/vnd.travis-ci.2+json',
                'User-Agent': 'Travis-justinmk-aws/1.0.0'}
