@@ -1,0 +1,41 @@
+name: Reports
+on:
+  schedule:
+    - cron: '5 5 * * *'
+
+env:
+  NEOVIM_DIR: ${{ format('{0}/neovim', github.workspace) }}
+  NEOVIM_REPO: 'neovim/neovim'
+  DOC_DIR: ${{ format('{0}/gh-pages', github.workspace) }}
+
+jobs:
+  reports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          path: gh-pages
+          ref: gh-pages
+          fetch-depth: 0
+      - uses: actions/checkout@v2
+        with:
+          repository: ${{ env.NEOVIM_REPO }}
+          path: 'neovim'
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Setup git config
+        run: |
+          git config --global user.name 'marvim'
+          git config --global user.email 'marvim@users.noreply.github.com'
+      - name: Update clint report
+        run: |
+          ${GITHUB_WORKSPACE}/ci/clint-errors.sh
+          cd "$DOC_DIR"
+          git add --update .
+          git commit -m 'clint errors: Automatic update'
+      - name: Push update
+        run: |
+          cd "$DOC_DIR"
+          git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
