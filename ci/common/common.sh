@@ -32,11 +32,11 @@ check_executable() {
 }
 
 log_info() {
-  >&2 printf "bot-ci: %s\n" "$@"
+  printf "ci: %s\n" "$@"
 }
 
 log_error() {
-  >&2 printf "bot-ci: error: %s\n" "$@"
+  >&2 printf "ci: error: %s\n" "$@"
 }
 
 # Output the current OS.
@@ -160,7 +160,7 @@ prompt_key_local() {
 # - `exit $(can_fail_without_private)`
 # - `return $(can_fail_without_private)`
 can_fail_without_private() {
-  if [ "${TRAVIS_EVENT_TYPE:-}" = pull_request ]; then
+  if [ "${GITHUB_EVENT_NAME:-}" = pull_request ]; then
     echo 0
   else
     echo 1
@@ -231,42 +231,6 @@ commit_subtree() {
         git push ${push_args} "https://github.com/${!repo}" ${!branch}
       fi
     fi
-  )
-}
-
-# Creates a pull request from current HEAD.
-# Current directory must be a git repo.
-#
-# ${1}: base, in github_user:branch format
-# ${2}: head, in github_user:branch format
-create_pullrequest() {
-  local base="${1:-}"
-  local head="${2:-}"
-  require_environment_variable base "${BASH_SOURCE[0]}" ${LINENO}
-  require_environment_variable head "${BASH_SOURCE[0]}" ${LINENO}
-
-  if ! check_executable hub; then
-    log_error 'create_pullrequest: "hub" not in $PATH or not executable.'
-    exit 1
-  fi
-
-  (
-    set +o xtrace
-    local rv pr_message
-
-    pr_message="$(printf '%s\n\nThis pull request is [automated](https://github.com/neovim/bot-ci).' "$(git log -1 --format='%s')")"
-
-    if ! has_gh_token ; then
-      log_info 'missing $GH_TOKEN, skipping pull-request'
-      return "$(can_fail_without_private)"
-    fi
-
-    log_info "create_pullrequest: creating pull-request ..."
-    GITHUB_TOKEN="$GH_TOKEN" hub pull-request \
-      -m "$pr_message" \
-      -b "$base" \
-      -h "$head" \
-      || true  # Ignore failure.
   )
 }
 

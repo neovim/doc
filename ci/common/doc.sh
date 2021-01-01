@@ -7,7 +7,7 @@ DOC_REPO=${DOC_REPO:-neovim/doc}
 DOC_BRANCH=${DOC_BRANCH:-gh-pages}
 
 clone_doc() {
-  if is_ci_build ; then
+  if is_ci_build "removing ${DOC_DIR}"; then
     rm -rf ${DOC_DIR}
   fi
 

@@ -7,7 +7,7 @@ NEOVIM_REPO=${NEOVIM_REPO:-neovim/neovim}
 NEOVIM_BRANCH=${NEOVIM_BRANCH:-master}
 
 clone_neovim() {
-  if is_ci_build || ! [ -d ${NEOVIM_DIR} ] ; then
+  if is_ci_build 'cloning neovim' || ! [ -d ${NEOVIM_DIR} ] ; then
     rm -rf ${NEOVIM_DIR}
     git clone --branch ${NEOVIM_BRANCH} git://github.com/${NEOVIM_REPO} ${NEOVIM_DIR}
   else

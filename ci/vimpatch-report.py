@@ -10,7 +10,7 @@ def get_open_pullrequests():
     pr_item = string.Template('<li><a href="${html_url}">${title}</a></li>')
     url = "https://api.github.com/repos/neovim/neovim/pulls?state=open&per_page=100"
     headers = {
-        "User-Agent": "neovim/bot-ci",
+        "User-Agent": "neovim/doc",
     }
     r = requests.get(url, headers)
     r.raise_for_status()
