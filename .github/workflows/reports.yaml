@@ -13,28 +13,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/checkout@v2
         with:
           path: gh-pages
           ref: gh-pages
           fetch-depth: 0
+
       - uses: actions/checkout@v2
         with:
           repository: ${{ env.NEOVIM_REPO }}
           path: 'neovim'
+
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
+
       - name: Setup git config
         run: |
           git config --global user.name 'marvim'
           git config --global user.email 'marvim@users.noreply.github.com'
+
+      - name: Install apt packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y autoconf automake build-essential cmake gcc-multilib gettext gperf libtool-bin locales ninja-build pkg-config clang-tools
+
       - name: Update clint report
         run: |
           ${GITHUB_WORKSPACE}/ci/clint-errors.sh
           cd "$DOC_DIR"
           git add --update .
           git commit -m 'clint errors: Automatic update'
+
+      - name: Update clang report
+        env:
+          CC: clang
+        run: |
+          ${GITHUB_WORKSPACE}/ci/clang-report.sh
+          cd "$DOC_DIR"
+          git add --update .
+          git commit -m 'clang report: Automatic update'
+
       - name: Push update
         run: |
           cd "$DOC_DIR"
