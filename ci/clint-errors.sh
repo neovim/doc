@@ -7,9 +7,11 @@ shopt -s globstar
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$BUILD_DIR/ci/common/common.sh"
 source "$BUILD_DIR/ci/common/doc.sh"
-source "$BUILD_DIR/ci/common/neovim.sh"
 source "$BUILD_DIR/ci/common/html.sh"
 source "$BUILD_DIR/ci/common/badge.sh"
+
+require_environment_variable DOC_DIR "${BASH_SOURCE[0]}" $LINENO
+require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" $LINENO
 
 DOC_SUBTREE="/reports/clint"
 REPORTS_DIR="$DOC_DIR/$DOC_SUBTREE"
@@ -17,9 +19,8 @@ ERRORS_FILE="$REPORTS_DIR/errors.json"
 EXCLUDE_PAT='src/nvim/(testdir|xdiff)'
 
 generate_clint_report() {
-  require_environment_variable NEOVIM_COMMIT "${BASH_SOURCE[0]}" $LINENO
-
   cd "$NEOVIM_DIR"
+  NEOVIM_COMMIT=$(git rev-parse HEAD)
 
   rm "$REPORTS_DIR"/*.json
 
@@ -65,8 +66,5 @@ download_clint_badge() {
     40000
 }
 
-clone_doc
-clone_neovim
 generate_clint_report
 download_clint_badge
-commit_doc

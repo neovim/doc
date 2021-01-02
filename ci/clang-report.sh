@@ -5,12 +5,12 @@ set -o pipefail
 BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$BUILD_DIR/ci/common/common.sh"
 source "$BUILD_DIR/ci/common/doc.sh"
-source "$BUILD_DIR/ci/common/neovim.sh"
 source "$BUILD_DIR/ci/common/html.sh"
 source "$BUILD_DIR/ci/common/badge.sh"
 
 generate_clang_report() {
   cd ${NEOVIM_DIR}
+  NEOVIM_COMMIT=$(git rev-parse HEAD)
 
   mkdir -p build/clang-report
 
@@ -88,10 +88,6 @@ find_all_bugs_number() {
     | sed 's/No/0/'
 }
 
-DOC_SUBTREE="/reports/clang/"
-clone_doc
-clone_neovim
+DOC_SUBTREE="/reports/clang"
 generate_clang_report
 download_clang_badge
-commit_doc
-try_truncate_history
