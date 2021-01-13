@@ -13,10 +13,9 @@ DOC_BRANCH=${DOC_BRANCH:-gh-pages}
 #       respective commit_subtree ("git pull --rebase") steps will fail.
 try_truncate_history() {
   cd "${DOC_DIR}" || { log_error "try_truncate_history: cd failed"; exit 1; }
-  local attempts=4
   local branch=gh-pages
   if NEW_ROOT=$(2>/dev/null git rev-parse "$branch"~11) ; then
-    git fetch https://github.com/neovim/doc "$branch"
+    git fetch https://github.com/"${DOC_REPO}" "$branch"
     git reset --hard FETCH_HEAD
     git_truncate "$branch" "$branch"~10
   else
