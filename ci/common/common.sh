@@ -116,34 +116,6 @@ git_commits_since_tag() {
   echo "$commits_since"
 }
 
-# Clone a Git repository and check out a subtree.
-# ${1}: Variable prefix.
-clone_subtree() {
-  (
-    local prefix="${1}"
-    local subtree="${prefix}_SUBTREE"
-    local dir="${prefix}_DIR"
-    local repo="${prefix}_REPO"
-    local branch="${prefix}_BRANCH"
-
-    require_environment_variable "${subtree}" "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable "${dir}" "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable "${repo}" "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable "${branch}" "${BASH_SOURCE[0]}" ${LINENO}
-
-    [ -d "${!dir}/.git" ] || git init "${!dir}"
-    cd "${!dir}" || return
-    git rev-parse HEAD >/dev/null 2>&1 && git reset --hard HEAD
-
-    is_ci_build "Git subtree" && {
-      git config core.sparsecheckout true
-      echo "${!subtree}" > .git/info/sparse-checkout
-    }
-    git checkout -B "${!branch}"
-    git pull --rebase --force "git://github.com/${!repo}" "${!branch}"
-  )
-}
-
 # Prompt the user to press a key to continue for local builds.
 # ${1}: Shown message.
 prompt_key_local() {
@@ -165,73 +137,6 @@ can_fail_without_private() {
   else
     echo 1
   fi
-}
-
-# Commit and push to a Git repo checked out using clone_subtree.
-#
-# ${1}: Variable prefix.
-# ${2}: (optional) Number of retries.
-# ${3}: (optional) Extra arguments to "git push". If this contains
-#       "--force" then "git pull" is not attempted.
-commit_subtree() {
-  (
-    local prefix="${1}"
-    local attempts="${2:-4}"
-    local push_args="${3:-}"
-    local subtree="${prefix}_SUBTREE"
-    local dir="${prefix}_DIR"
-    local repo="${prefix}_REPO"
-    local branch="${prefix}_BRANCH"
-
-    require_environment_variable CI_TARGET "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable GIT_NAME "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable GIT_EMAIL "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable "${subtree}" "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable "${dir}" "${BASH_SOURCE[0]}" ${LINENO}
-    require_environment_variable "${repo}" "${BASH_SOURCE[0]}" ${LINENO}
-    if ! echo "${push_args}" | >/dev/null 2>&1 grep -- '--all\|--mirror' ; then
-      require_environment_variable "${branch}" "${BASH_SOURCE[0]}" ${LINENO}
-    fi
-
-    cd "${!dir}" || return
-
-    git add --all "./${!subtree}"
-
-    if is_ci_build --silent ; then
-      # Commit on Travis CI.
-      git config --local user.name "${GIT_NAME}"
-      git config --local user.email "${GIT_EMAIL}"
-
-      git commit -m "${CI_TARGET//-/ }: Automatic update" || true
-
-      while test $(( attempts-=1 )) -ge 0 ; do
-        if echo "${push_args}" | >/dev/null 2>&1 grep -- '--force\|--all\|--mirror' \
-            || git pull --rebase "git://github.com/${!repo}" "${!branch}" ; then
-          if ! has_gh_token ; then
-            log_info 'GH_TOKEN not set; push skipped'
-            log_info 'To test pull requests, see instructions in README.md'
-            return "$(can_fail_without_private)"
-          fi
-          if git push ${push_args} "https://github.com/${!repo}" ${!branch}
-          then
-            log_info "Pushed to: ${!repo} ${!branch}"
-            return 0
-          fi
-        fi
-        if test $attempts -gt 0 ; then
-          log_info "Retry push to: ${!repo} ${!branch}"
-        fi
-        sleep 1
-      done
-      return 1
-    else
-      if prompt_key_local "Build finished; commit and push to ${!repo}:${!branch:-*} ? (change by setting ${repo}/${branch})" ; then
-        # Commit in local builds.
-        git commit || true
-        git push ${push_args} "https://github.com/${!repo}" ${!branch}
-      fi
-    fi
-  )
 }
 
 has_gh_token() {

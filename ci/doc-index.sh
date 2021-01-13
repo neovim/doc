@@ -16,9 +16,7 @@ generate_doc_index() {
 }
 
 main() {
-  clone_doc
   generate_doc_index
-  commit_doc
 }
 
 main

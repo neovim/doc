@@ -6,18 +6,6 @@ DOC_DIR=${DOC_DIR:-${BUILD_DIR}/build/doc}
 DOC_REPO=${DOC_REPO:-neovim/doc}
 DOC_BRANCH=${DOC_BRANCH:-gh-pages}
 
-clone_doc() {
-  if is_ci_build "removing ${DOC_DIR}"; then
-    rm -rf ${DOC_DIR}
-  fi
-
-  clone_subtree DOC
-}
-
-commit_doc() {
-  commit_subtree DOC
-}
-
 # Keep the https://github.com/neovim/doc/ repository history trimmed, otherwise
 # it gets huge and slow to clone.  We don't care about its commit history.
 #
@@ -31,7 +19,6 @@ try_truncate_history() {
     git fetch https://github.com/neovim/doc "$branch"
     git reset --hard FETCH_HEAD
     git_truncate "$branch" "$branch"~10
-    commit_subtree DOC 1 --force
   else
     log_info "try_truncate_history: branch ${branch} has too few commits, skipping truncate"
   fi
