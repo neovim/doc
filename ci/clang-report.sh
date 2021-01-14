@@ -10,7 +10,6 @@ source "$BUILD_DIR/ci/common/badge.sh"
 
 generate_clang_report() {
   cd ${NEOVIM_DIR}
-  NEOVIM_COMMIT=$(git rev-parse HEAD)
 
   mkdir -p build/clang-report
 

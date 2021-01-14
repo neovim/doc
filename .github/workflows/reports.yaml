@@ -8,6 +8,7 @@ env:
   NEOVIM_DIR: ${{ format('{0}/neovim', github.workspace) }}
   NEOVIM_REPO: 'neovim/neovim'
   DOC_DIR: ${{ format('{0}/gh-pages', github.workspace) }}
+  DOC_REPO: ${{ github.repository }}
 
 jobs:
   reports:
@@ -29,6 +30,11 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
+
+      - name: Set $NEOVIM_COMMIT
+        run: |
+          cd "$NEOVIM_DIR"
+          printf 'NEOVIM_COMMIT=%s\n' $(git rev-parse HEAD) >> $GITHUB_ENV
 
       - name: Setup git config
         run: |
@@ -56,7 +62,25 @@ jobs:
           git add --all .
           git commit -m 'clang report: Automatic update'
 
+      - name: Update PVS report
+        run: |
+          cd "${NEOVIM_DIR}"
+          make distclean
+          ${GITHUB_WORKSPACE}/ci/pvs-report.sh
+          cd "$DOC_DIR"
+          git add --all .
+          git commit -m 'pvs-report: Automatic update'
+
+      - name: Update vimpatch report
+        run: |
+          python -m pip install --user requests
+          ${GITHUB_WORKSPACE}/ci/vimpatch-report.sh
+          cd "$DOC_DIR"
+          git add --all .
+          git commit -m 'vimpatch report: Automatic update'
+
       - name: Push update
         run: |
           cd "$DOC_DIR"
-          git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}
+          ${GITHUB_WORKSPACE}/ci/truncate-history.sh
+          git push --force https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}

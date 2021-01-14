@@ -5,7 +5,6 @@ BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export BUILD_DIR
 source ${BUILD_DIR}/ci/common/common.sh
 source ${BUILD_DIR}/ci/common/doc.sh
-source ${BUILD_DIR}/ci/common/neovim.sh
 source ${BUILD_DIR}/ci/common/html.sh
 
 generate_vimpatch_report() {
@@ -22,7 +21,4 @@ get_vimpatch_report_body() {
 }
 
 DOC_SUBTREE="/reports/vimpatch/"
-clone_doc
-clone_neovim
 generate_vimpatch_report
-commit_doc

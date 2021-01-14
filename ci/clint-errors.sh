@@ -20,7 +20,6 @@ EXCLUDE_PAT='src/nvim/(testdir|xdiff)'
 
 generate_clint_report() {
   cd "$NEOVIM_DIR"
-  NEOVIM_COMMIT=$(git rev-parse HEAD)
 
   rm "$REPORTS_DIR"/*.json
 
