@@ -12,7 +12,7 @@ generate_user_docu() {
 
   # Generate CMake files
   cd ${NEOVIM_DIR}
-  ${MAKE_CMD} cmake
+  make cmake
 
   # Build user manual HTML
   cd build
