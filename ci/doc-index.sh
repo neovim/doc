@@ -4,7 +4,6 @@ set -e
 set -u
 
 readonly BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-readonly DOC_SUBTREE='index.html'
 
 source "${BUILD_DIR}/ci/common/common.sh"
 source "${BUILD_DIR}/ci/common/doc.sh"
