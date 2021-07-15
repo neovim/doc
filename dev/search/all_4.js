@@ -79,7 +79,7 @@ var searchData=
   ['decr_2123',['decr',['../mouse_8c.html#a13a4c6a227f9a1360aca0539bb18d33a',1,'mouse.c']]],
   ['def_2124',['def',['../structStlClickRecord.html#a4fa85dbdc61450cf6b0bbc907a0c75cf',1,'StlClickRecord']]],
   ['def_5fsde_2125',['DEF_SDE',['../shada_8c.html#a6211c516a7847b64a335c81902bd9853',1,'shada.c']]],
-  ['def_5fval_2126',['def_val',['../structvimoption.html#a02080f31d3828e1dc17c7c302f530ae3',1,'vimoption']]],
+  ['def_5fval_2126',['def_val',['../structvimoption.html#af7fbaf56897e6774bfceef73c4a97e46',1,'vimoption']]],
   ['default_5farg_5ferr_2127',['default_arg_err',['../userfunc_8c.html#a311ae72790bf1727aab515cc652f3f6a',1,'userfunc.c']]],
   ['default_5fcolors_5fset_2128',['default_colors_set',['../ui__events_8in_8h.html#a2577ada6a21afae515a116a8327568d9',1,'ui_events.in.h']]],
   ['default_5fconflict_5fmarker_5fsize_2129',['DEFAULT_CONFLICT_MARKER_SIZE',['../xdiff_8h.html#a61c5972e9e498e46829e14a3eee2fff9',1,'xdiff.h']]],

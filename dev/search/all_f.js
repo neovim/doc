@@ -1,7 +1,7 @@
 var searchData=
 [
   ['o_5facute_6862',['O_acute',['../regexp__nfa_8c.html#abfdf9c1ee261ee98613709e211035529',1,'O_acute():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a75fd7b08045e91bee3077bf37e38afe9',1,'o_acute():&#160;regexp_nfa.c']]],
-  ['o_5fcircumflex_6863',['o_circumflex',['../regexp__nfa_8c.html#abd5302afc1717c0e4a3a11cef45d1c3f',1,'o_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a8487d10b980a3e961e5d60e1c237bf36',1,'O_circumflex():&#160;regexp_nfa.c']]],
+  ['o_5fcircumflex_6863',['O_circumflex',['../regexp__nfa_8c.html#a8487d10b980a3e961e5d60e1c237bf36',1,'O_circumflex():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#abd5302afc1717c0e4a3a11cef45d1c3f',1,'o_circumflex():&#160;regexp_nfa.c']]],
   ['o_5fdiaeresis_6864',['o_diaeresis',['../regexp__nfa_8c.html#abe0e20ee3c71a9b7ba9b7aad920f418e',1,'o_diaeresis():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#a8f70094a512acc687744158e8c673008',1,'O_diaeresis():&#160;regexp_nfa.c']]],
   ['o_5fgrave_6865',['o_grave',['../regexp__nfa_8c.html#affda3b79ef3bdb27b1e8ed0b0cdb316b',1,'o_grave():&#160;regexp_nfa.c'],['../regexp__nfa_8c.html#aad4312ae657afaeedb28327e755851a5',1,'O_grave():&#160;regexp_nfa.c']]],
   ['o_5fnofollow_6866',['O_NOFOLLOW',['../win__defs_8h.html#a82d4d551b214905742c9e045185d352a',1,'win_defs.h']]],
@@ -18,7 +18,7 @@ var searchData=
   ['objecttype_6877',['ObjectType',['../api_2private_2defs_8h.html#a842c5e2e69277690b064bf363c017980',1,'defs.h']]],
   ['objpopstackitem_6878',['ObjPopStackItem',['../structObjPopStackItem.html',1,'']]],
   ['octal_6879',['OCTAL',['../regexp_8c.html#a5cd8b22af5187daa3d34709d3b516851',1,'regexp.c']]],
-  ['off_6880',['off',['../structfline__T.html#a90521e5d2e093753a21c87b398a49ae4',1,'fline_T::off()'],['../structsoffset.html#a5928b530ad589e237f01a5bc5b27c822',1,'soffset::off()'],['../structspat.html#a2ba7582b221f7da5c298dde4749054f4',1,'spat::off()'],['../regexp__nfa_8c.html#a9e515b0315e6fc452a46dc6496979ee3',1,'off():&#160;regexp_nfa.c'],['../strings_8c.html#a925998e1a918d5dbcdacf8d98f837af8',1,'OFF():&#160;strings.c']]],
+  ['off_6880',['off',['../structfline__T.html#a90521e5d2e093753a21c87b398a49ae4',1,'fline_T::off()'],['../structsoffset.html#a5928b530ad589e237f01a5bc5b27c822',1,'soffset::off()'],['../structspat.html#a2ba7582b221f7da5c298dde4749054f4',1,'spat::off()'],['../strings_8c.html#a925998e1a918d5dbcdacf8d98f837af8',1,'OFF():&#160;strings.c'],['../regexp__nfa_8c.html#a9e515b0315e6fc452a46dc6496979ee3',1,'off():&#160;regexp_nfa.c']]],
   ['off_5ft_6881',['off_T',['../globals_8h.html#ac86c7b16baf3bc83bef23b7e5e103ca9',1,'globals.h']]],
   ['offset_6882',['offset',['../structListReaderState.html#a851057b39a300821b5611f4c531abed0',1,'ListReaderState::offset()'],['../structGetStrLineCookie.html#a2f19503ee6609c1d9242496942c9ae53',1,'GetStrLineCookie::offset()'],['../structconvertStruct.html#a816e42b4aae7c4bc2c64236a3d0fce3e',1,'convertStruct::offset()'],['../structShadaEntry.html#a0b504f0c025ff5a424d19d9f96af4341',1,'ShadaEntry::offset()']]],
   ['ok_6883',['OK',['../vim_8h.html#aba51915c87d64af47fb1cc59348961c9',1,'OK():&#160;vim.h'],['../typval_8c.html#af5117f76683525cbba2f4e19cd87d3c6',1,'OK():&#160;typval.c'],['../eval_8c.html#af5117f76683525cbba2f4e19cd87d3c6',1,'OK():&#160;eval.c'],['../ex__docmd_8c.html#af5117f76683525cbba2f4e19cd87d3c6',1,'OK():&#160;ex_docmd.c'],['../mark_8c.html#af5117f76683525cbba2f4e19cd87d3c6',1,'OK():&#160;mark.c'],['../quickfix_8c.html#af5117f76683525cbba2f4e19cd87d3c6',1,'OK():&#160;quickfix.c']]],
