@@ -1,0 +1,2165 @@
+
+<html>
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+  <title>autocmd.c</title>
+
+  <link rel="stylesheet" href="../style.css"/>
+  <script src="../jquery-3.5.1.min.js"></script>
+</head>
+<body>
+
+<pre><code class = "cpp">
+<a name="ln1">// This is an open source non-commercial project. Dear PVS-Studio, please check</a>
+<a name="ln2">// it. PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com</a>
+<a name="ln3"> </a>
+<a name="ln4">// autocmd.c: Autocommand related functions</a>
+<a name="ln5"> </a>
+<a name="ln6">#include &quot;nvim/autocmd.h&quot;</a>
+<a name="ln7"> </a>
+<a name="ln8">#include &quot;nvim/api/private/handle.h&quot;</a>
+<a name="ln9">#include &quot;nvim/ascii.h&quot;</a>
+<a name="ln10">#include &quot;nvim/buffer.h&quot;</a>
+<a name="ln11">#include &quot;nvim/charset.h&quot;</a>
+<a name="ln12">#include &quot;nvim/cursor.h&quot;</a>
+<a name="ln13">#include &quot;nvim/edit.h&quot;</a>
+<a name="ln14">#include &quot;nvim/eval.h&quot;</a>
+<a name="ln15">#include &quot;nvim/eval/userfunc.h&quot;</a>
+<a name="ln16">#include &quot;nvim/ex_docmd.h&quot;</a>
+<a name="ln17">#include &quot;nvim/fileio.h&quot;</a>
+<a name="ln18">#include &quot;nvim/getchar.h&quot;</a>
+<a name="ln19">#include &quot;nvim/misc1.h&quot;</a>
+<a name="ln20">#include &quot;nvim/option.h&quot;</a>
+<a name="ln21">#include &quot;nvim/regexp.h&quot;</a>
+<a name="ln22">#include &quot;nvim/search.h&quot;</a>
+<a name="ln23">#include &quot;nvim/state.h&quot;</a>
+<a name="ln24">#include &quot;nvim/ui_compositor.h&quot;</a>
+<a name="ln25">#include &quot;nvim/vim.h&quot;</a>
+<a name="ln26"> </a>
+<a name="ln27">#ifdef INCLUDE_GENERATED_DECLARATIONS</a>
+<a name="ln28">#include &quot;auevents_name_map.generated.h&quot;</a>
+<a name="ln29">#include &quot;autocmd.c.generated.h&quot;</a>
+<a name="ln30">#endif</a>
+<a name="ln31"> </a>
+<a name="ln32">//</a>
+<a name="ln33">// The autocommands are stored in a list for each event.</a>
+<a name="ln34">// Autocommands for the same pattern, that are consecutive, are joined</a>
+<a name="ln35">// together, to avoid having to match the pattern too often.</a>
+<a name="ln36">// The result is an array of Autopat lists, which point to AutoCmd lists:</a>
+<a name="ln37">//</a>
+<a name="ln38">// last_autopat[0]  -----------------------------+</a>
+<a name="ln39">//                                               V</a>
+<a name="ln40">// first_autopat[0] --&gt; Autopat.next  --&gt;  Autopat.next --&gt;  NULL</a>
+<a name="ln41">//                      Autopat.cmds       Autopat.cmds</a>
+<a name="ln42">//                          |                    |</a>
+<a name="ln43">//                          V                    V</a>
+<a name="ln44">//                      AutoCmd.next       AutoCmd.next</a>
+<a name="ln45">//                          |                    |</a>
+<a name="ln46">//                          V                    V</a>
+<a name="ln47">//                      AutoCmd.next            NULL</a>
+<a name="ln48">//                          |</a>
+<a name="ln49">//                          V</a>
+<a name="ln50">//                         NULL</a>
+<a name="ln51">//</a>
+<a name="ln52">// last_autopat[1]  --------+</a>
+<a name="ln53">//                          V</a>
+<a name="ln54">// first_autopat[1] --&gt; Autopat.next  --&gt;  NULL</a>
+<a name="ln55">//                      Autopat.cmds</a>
+<a name="ln56">//                          |</a>
+<a name="ln57">//                          V</a>
+<a name="ln58">//                      AutoCmd.next</a>
+<a name="ln59">//                          |</a>
+<a name="ln60">//                          V</a>
+<a name="ln61">//                         NULL</a>
+<a name="ln62">//   etc.</a>
+<a name="ln63">//</a>
+<a name="ln64">//   The order of AutoCmds is important, this is the order in which they were</a>
+<a name="ln65">//   defined and will have to be executed.</a>
+<a name="ln66">//</a>
+<a name="ln67"> </a>
+<a name="ln68">// Code for automatic commands.</a>
+<a name="ln69">static AutoPatCmd *active_apc_list = NULL;  // stack of active autocommands</a>
+<a name="ln70"> </a>
+<a name="ln71">/// List of autocmd group names</a>
+<a name="ln72">static garray_T augroups = { 0, 0, sizeof(char_u *), 10, NULL };</a>
+<a name="ln73">#define AUGROUP_NAME(i) (((char **)augroups.ga_data)[i])</a>
+<a name="ln74">#define BUFLOCAL_PAT_LEN 25</a>
+<a name="ln75"> </a>
+<a name="ln76">// use get_deleted_augroup() to get this</a>
+<a name="ln77">static const char *deleted_augroup = NULL;</a>
+<a name="ln78"> </a>
+<a name="ln79">// The ID of the current group.  Group 0 is the default one.</a>
+<a name="ln80">static int current_augroup = AUGROUP_DEFAULT;</a>
+<a name="ln81"> </a>
+<a name="ln82">static int au_need_clean = false;  // need to delete marked patterns</a>
+<a name="ln83"> </a>
+<a name="ln84">static event_T last_event;</a>
+<a name="ln85">static int last_group;</a>
+<a name="ln86">static int autocmd_blocked = 0;  // block all autocmds</a>
+<a name="ln87"> </a>
+<a name="ln88">static bool autocmd_nested = false;</a>
+<a name="ln89">static bool autocmd_include_groups = false;</a>
+<a name="ln90"> </a>
+<a name="ln91">static char_u *old_termresponse = NULL;</a>
+<a name="ln92"> </a>
+<a name="ln93">static inline const char *get_deleted_augroup(void) FUNC_ATTR_ALWAYS_INLINE</a>
+<a name="ln94">{</a>
+<a name="ln95">  if (deleted_augroup == NULL) {</a>
+<a name="ln96">    deleted_augroup = _(&quot;--Deleted--&quot;);</a>
+<a name="ln97">  }</a>
+<a name="ln98">  return deleted_augroup;</a>
+<a name="ln99">}</a>
+<a name="ln100"> </a>
+<a name="ln101">// Show the autocommands for one AutoPat.</a>
+<a name="ln102">static void show_autocmd(AutoPat *ap, event_T event)</a>
+<a name="ln103">{</a>
+<a name="ln104">  AutoCmd *ac;</a>
+<a name="ln105"> </a>
+<a name="ln106">  // Check for &quot;got_int&quot; (here and at various places below), which is set</a>
+<a name="ln107">  // when &quot;q&quot; has been hit for the &quot;--more--&quot; prompt</a>
+<a name="ln108">  if (got_int) {</a>
+<a name="ln109">    return;</a>
+<a name="ln110">  }</a>
+<a name="ln111">  // pattern has been removed</a>
+<a name="ln112">  if (ap-&gt;pat == NULL) {</a>
+<a name="ln113">    return;</a>
+<a name="ln114">  }</a>
+<a name="ln115"> </a>
+<a name="ln116">  msg_putchar('\n');</a>
+<a name="ln117">  if (got_int) {</a>
+<a name="ln118">    return;</a>
+<a name="ln119">  }</a>
+<a name="ln120">  if (event != last_event || ap-&gt;group != last_group) {</a>
+<a name="ln121">    if (ap-&gt;group != AUGROUP_DEFAULT) {</a>
+<a name="ln122">      if (AUGROUP_NAME(ap-&gt;group) == NULL) {</a>
+<a name="ln123">        msg_puts_attr(get_deleted_augroup(), HL_ATTR(HLF_E));</a>
+<a name="ln124">      } else {</a>
+<a name="ln125">        msg_puts_attr(AUGROUP_NAME(ap-&gt;group), HL_ATTR(HLF_T));</a>
+<a name="ln126">      }</a>
+<a name="ln127">      msg_puts(&quot;  &quot;);</a>
+<a name="ln128">    }</a>
+<a name="ln129">    msg_puts_attr(event_nr2name(event), HL_ATTR(HLF_T));</a>
+<a name="ln130">    last_event = event;</a>
+<a name="ln131">    last_group = ap-&gt;group;</a>
+<a name="ln132">    msg_putchar('\n');</a>
+<a name="ln133">    if (got_int) {</a>
+<a name="ln134">      return;</a>
+<a name="ln135">    }</a>
+<a name="ln136">  }</a>
+<a name="ln137">  msg_col = 4;</a>
+<a name="ln138">  msg_outtrans(ap-&gt;pat);</a>
+<a name="ln139"> </a>
+<a name="ln140">  for (ac = ap-&gt;cmds; ac != NULL; ac = ac-&gt;next) {</a>
+<a name="ln141">    if (ac-&gt;cmd == NULL) {  // skip removed commands</a>
+<a name="ln142">      continue;</a>
+<a name="ln143">    }</a>
+<a name="ln144">    if (msg_col &gt;= 14) {</a>
+<a name="ln145">      msg_putchar('\n');</a>
+<a name="ln146">    }</a>
+<a name="ln147">    msg_col = 14;</a>
+<a name="ln148">    if (got_int) {</a>
+<a name="ln149">      return;</a>
+<a name="ln150">    }</a>
+<a name="ln151">    msg_outtrans(ac-&gt;cmd);</a>
+<a name="ln152">    if (p_verbose &gt; 0) {</a>
+<a name="ln153">      last_set_msg(ac-&gt;script_ctx);</a>
+<a name="ln154">    }</a>
+<a name="ln155">    if (got_int) {</a>
+<a name="ln156">      return;</a>
+<a name="ln157">    }</a>
+<a name="ln158">    if (ac-&gt;next != NULL) {</a>
+<a name="ln159">      msg_putchar('\n');</a>
+<a name="ln160">      if (got_int) {</a>
+<a name="ln161">        return;</a>
+<a name="ln162">      }</a>
+<a name="ln163">    }</a>
+<a name="ln164">  }</a>
+<a name="ln165">}</a>
+<a name="ln166"> </a>
+<a name="ln167">// Mark an autocommand handler for deletion.</a>
+<a name="ln168">static void au_remove_pat(AutoPat *ap)</a>
+<a name="ln169">{</a>
+<a name="ln170">  XFREE_CLEAR(ap-&gt;pat);</a>
+<a name="ln171">  ap-&gt;buflocal_nr = -1;</a>
+<a name="ln172">  au_need_clean = true;</a>
+<a name="ln173">}</a>
+<a name="ln174"> </a>
+<a name="ln175">// Mark all commands for a pattern for deletion.</a>
+<a name="ln176">static void au_remove_cmds(AutoPat *ap)</a>
+<a name="ln177">{</a>
+<a name="ln178">  for (AutoCmd *ac = ap-&gt;cmds; ac != NULL; ac = ac-&gt;next) {</a>
+<a name="ln179">    XFREE_CLEAR(ac-&gt;cmd);</a>
+<a name="ln180">  }</a>
+<a name="ln181">  au_need_clean = true;</a>
+<a name="ln182">}</a>
+<a name="ln183"> </a>
+<a name="ln184">// Delete one command from an autocmd pattern.</a>
+<a name="ln185">static void au_del_cmd(AutoCmd *ac)</a>
+<a name="ln186">{</a>
+<a name="ln187">  XFREE_CLEAR(ac-&gt;cmd);</a>
+<a name="ln188">  au_need_clean = true;</a>
+<a name="ln189">}</a>
+<a name="ln190"> </a>
+<a name="ln191">/// Cleanup autocommands and patterns that have been deleted.</a>
+<a name="ln192">/// This is only done when not executing autocommands.</a>
+<a name="ln193">static void au_cleanup(void)</a>
+<a name="ln194">{</a>
+<a name="ln195">  AutoPat *ap, **prev_ap;</a>
+<a name="ln196">  event_T event;</a>
+<a name="ln197"> </a>
+<a name="ln198">  if (autocmd_busy || !au_need_clean) {</a>
+<a name="ln199">    return;</a>
+<a name="ln200">  }</a>
+<a name="ln201"> </a>
+<a name="ln202">  // Loop over all events.</a>
+<a name="ln203">  for (event = (event_T)0; (int)event &lt; (int)NUM_EVENTS;</a>
+<a name="ln204">       event = (event_T)((int)event + 1)) {</a>
+<a name="ln205">    // Loop over all autocommand patterns.</a>
+<a name="ln206">    prev_ap = &amp;(first_autopat[(int)event]);</a>
+<a name="ln207">    for (ap = *prev_ap; ap != NULL; ap = *prev_ap) {</a>
+<a name="ln208">      bool has_cmd = false;</a>
+<a name="ln209"> </a>
+<a name="ln210">      // Loop over all commands for this pattern.</a>
+<a name="ln211">      AutoCmd **prev_ac = &amp;(ap-&gt;cmds);</a>
+<a name="ln212">      for (AutoCmd *ac = *prev_ac; ac != NULL; ac = *prev_ac) {</a>
+<a name="ln213">        // Remove the command if the pattern is to be deleted or when</a>
+<a name="ln214">        // the command has been marked for deletion.</a>
+<a name="ln215">        if (ap-&gt;pat == NULL || ac-&gt;cmd == NULL) {</a>
+<a name="ln216">          *prev_ac = ac-&gt;next;</a>
+<a name="ln217">          xfree(ac-&gt;cmd);</a>
+<a name="ln218">          xfree(ac);</a>
+<a name="ln219">        } else {</a>
+<a name="ln220">          has_cmd = true;</a>
+<a name="ln221">          prev_ac = &amp;(ac-&gt;next);</a>
+<a name="ln222">        }</a>
+<a name="ln223">      }</a>
+<a name="ln224"> </a>
+<a name="ln225">      if (ap-&gt;pat != NULL &amp;&amp; !has_cmd) {</a>
+<a name="ln226">        // Pattern was not marked for deletion, but all of its commands were.</a>
+<a name="ln227">        // So mark the pattern for deletion.</a>
+<a name="ln228">        au_remove_pat(ap);</a>
+<a name="ln229">      }</a>
+<a name="ln230"> </a>
+<a name="ln231">      // Remove the pattern if it has been marked for deletion.</a>
+<a name="ln232">      if (ap-&gt;pat == NULL) {</a>
+<a name="ln233">        if (ap-&gt;next == NULL) {</a>
+<a name="ln234">          if (prev_ap == &amp;(first_autopat[(int)event])) {</a>
+<a name="ln235">            last_autopat[(int)event] = NULL;</a>
+<a name="ln236">          } else {</a>
+<a name="ln237">            // this depends on the &quot;next&quot; field being the first in</a>
+<a name="ln238">            // the struct</a>
+<a name="ln239">            last_autopat[(int)event] = (AutoPat *)prev_ap;</a>
+<a name="ln240">          }</a>
+<a name="ln241">        }</a>
+<a name="ln242">        *prev_ap = ap-&gt;next;</a>
+<a name="ln243">        vim_regfree(ap-&gt;reg_prog);</a>
+<a name="ln244">        xfree(ap);</a>
+<a name="ln245">      } else {</a>
+<a name="ln246">        prev_ap = &amp;(ap-&gt;next);</a>
+<a name="ln247">      }</a>
+<a name="ln248">    }</a>
+<a name="ln249">  }</a>
+<a name="ln250"> </a>
+<a name="ln251">  au_need_clean = false;</a>
+<a name="ln252">}</a>
+<a name="ln253"> </a>
+<a name="ln254">// Called when buffer is freed, to remove/invalidate related buffer-local</a>
+<a name="ln255">// autocmds.</a>
+<a name="ln256">void aubuflocal_remove(buf_T *buf)</a>
+<a name="ln257">{</a>
+<a name="ln258">  AutoPat *ap;</a>
+<a name="ln259">  event_T event;</a>
+<a name="ln260">  AutoPatCmd *apc;</a>
+<a name="ln261"> </a>
+<a name="ln262">  // invalidate currently executing autocommands</a>
+<a name="ln263">  for (apc = active_apc_list; apc; apc = apc-&gt;next) {</a>
+<a name="ln264">    if (buf-&gt;b_fnum == apc-&gt;arg_bufnr) {</a>
+<a name="ln265">      apc-&gt;arg_bufnr = 0;</a>
+<a name="ln266">    }</a>
+<a name="ln267">  }</a>
+<a name="ln268"> </a>
+<a name="ln269">  // invalidate buflocals looping through events</a>
+<a name="ln270">  for (event = (event_T)0; (int)event &lt; (int)NUM_EVENTS;</a>
+<a name="ln271">       event = (event_T)((int)event + 1)) {</a>
+<a name="ln272">    // loop over all autocommand patterns</a>
+<a name="ln273">    for (ap = first_autopat[(int)event]; ap != NULL; ap = ap-&gt;next) {</a>
+<a name="ln274">      if (ap-&gt;buflocal_nr == buf-&gt;b_fnum) {</a>
+<a name="ln275">        au_remove_pat(ap);</a>
+<a name="ln276">        if (p_verbose &gt;= 6) {</a>
+<a name="ln277">          verbose_enter();</a>
+<a name="ln278">          smsg(_(&quot;auto-removing autocommand: %s &lt;buffer=%d&gt;&quot;),</a>
+<a name="ln279">               event_nr2name(event), buf-&gt;b_fnum);</a>
+<a name="ln280">          verbose_leave();</a>
+<a name="ln281">        }</a>
+<a name="ln282">      }</a>
+<a name="ln283">    }</a>
+<a name="ln284">  }</a>
+<a name="ln285">  au_cleanup();</a>
+<a name="ln286">}</a>
+<a name="ln287"> </a>
+<a name="ln288">// Add an autocmd group name.</a>
+<a name="ln289">// Return its ID.  Returns AUGROUP_ERROR (&lt; 0) for error.</a>
+<a name="ln290">static int au_new_group(char_u *name)</a>
+<a name="ln291">{</a>
+<a name="ln292">  int i = au_find_group(name);</a>
+<a name="ln293">  if (i == AUGROUP_ERROR) {  // the group doesn't exist yet, add it.</a>
+<a name="ln294">    // First try using a free entry.</a>
+<a name="ln295">    for (i = 0; i &lt; augroups.ga_len; i++) {</a>
+<a name="ln296">      if (AUGROUP_NAME(i) == NULL) {</a>
+<a name="ln297">        break;</a>
+<a name="ln298">      }</a>
+<a name="ln299">    }</a>
+<a name="ln300">    if (i == augroups.ga_len) {</a>
+<a name="ln301">      ga_grow(&amp;augroups, 1);</a>
+<a name="ln302">    }</a>
+<a name="ln303"> </a>
+<a name="ln304">    AUGROUP_NAME(i) = xstrdup((char *)name);</a>
+<a name="ln305">    if (i == augroups.ga_len) {</a>
+<a name="ln306">      augroups.ga_len++;</a>
+<a name="ln307">    }</a>
+<a name="ln308">  }</a>
+<a name="ln309"> </a>
+<a name="ln310">  return i;</a>
+<a name="ln311">}</a>
+<a name="ln312"> </a>
+<a name="ln313">static void au_del_group(char_u *name)</a>
+<a name="ln314">{</a>
+<a name="ln315">  int i = au_find_group(name);</a>
+<a name="ln316">  if (i == AUGROUP_ERROR) {  // the group doesn't exist</a>
+<a name="ln317">    EMSG2(_(&quot;E367: No such group: \&quot;%s\&quot;&quot;), name);</a>
+<a name="ln318">  } else if (i == current_augroup) {</a>
+<a name="ln319">    EMSG(_(&quot;E936: Cannot delete the current group&quot;));</a>
+<a name="ln320">  } else {</a>
+<a name="ln321">    event_T event;</a>
+<a name="ln322">    AutoPat *ap;</a>
+<a name="ln323">    int in_use = false;</a>
+<a name="ln324"> </a>
+<a name="ln325">    for (event = (event_T)0; (int)event &lt; (int)NUM_EVENTS;</a>
+<a name="ln326">         event = (event_T)((int)event + 1)) {</a>
+<a name="ln327">      for (ap = first_autopat[(int)event]; ap != NULL; ap = ap-&gt;next) {</a>
+<a name="ln328">        if (ap-&gt;group == i &amp;&amp; ap-&gt;pat != NULL) {</a>
+<a name="ln329">          give_warning(</a>
+<a name="ln330">              (char_u *)_(&quot;W19: Deleting augroup that is still in use&quot;), true);</a>
+<a name="ln331">          in_use = true;</a>
+<a name="ln332">          event = NUM_EVENTS;</a>
+<a name="ln333">          break;</a>
+<a name="ln334">        }</a>
+<a name="ln335">      }</a>
+<a name="ln336">    }</a>
+<a name="ln337">    xfree(AUGROUP_NAME(i));</a>
+<a name="ln338">    if (in_use) {</a>
+<a name="ln339">      AUGROUP_NAME(i) = (char *)get_deleted_augroup();</a>
+<a name="ln340">    } else {</a>
+<a name="ln341">      AUGROUP_NAME(i) = NULL;</a>
+<a name="ln342">    }</a>
+<a name="ln343">  }</a>
+<a name="ln344">}</a>
+<a name="ln345"> </a>
+<a name="ln346">/// Find the ID of an autocmd group name.</a>
+<a name="ln347">///</a>
+<a name="ln348">/// @param name augroup name</a>
+<a name="ln349">///</a>
+<a name="ln350">/// @return the ID or AUGROUP_ERROR (&lt; 0) for error.</a>
+<a name="ln351">static int au_find_group(const char_u *name)</a>
+<a name="ln352">  FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln353">{</a>
+<a name="ln354">  for (int i = 0; i &lt; augroups.ga_len; i++) {</a>
+<a name="ln355">    if (AUGROUP_NAME(i) != NULL &amp;&amp; AUGROUP_NAME(i) != get_deleted_augroup()</a>
+<a name="ln356">        &amp;&amp; STRCMP(AUGROUP_NAME(i), name) == 0) {</a>
+<a name="ln357">      return i;</a>
+<a name="ln358">    }</a>
+<a name="ln359">  }</a>
+<a name="ln360">  return AUGROUP_ERROR;</a>
+<a name="ln361">}</a>
+<a name="ln362"> </a>
+<a name="ln363">/// Return true if augroup &quot;name&quot; exists.</a>
+<a name="ln364">///</a>
+<a name="ln365">/// @param name augroup name</a>
+<a name="ln366">bool au_has_group(const char_u *name)</a>
+<a name="ln367">  FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln368">{</a>
+<a name="ln369">  return au_find_group(name) != AUGROUP_ERROR;</a>
+<a name="ln370">}</a>
+<a name="ln371"> </a>
+<a name="ln372">/// &quot;:augroup {name}&quot;.</a>
+<a name="ln373">void do_augroup(char_u *arg, int del_group)</a>
+<a name="ln374">{</a>
+<a name="ln375">  if (del_group) {</a>
+<a name="ln376">    if (*arg == NUL) {</a>
+<a name="ln377">      EMSG(_(e_argreq));</a>
+<a name="ln378">    } else {</a>
+<a name="ln379">      au_del_group(arg);</a>
+<a name="ln380">    }</a>
+<a name="ln381">  } else if (STRICMP(arg, &quot;end&quot;) == 0) {  // &quot;:aug end&quot;: back to group 0</a>
+<a name="ln382">    current_augroup = AUGROUP_DEFAULT;</a>
+<a name="ln383">  } else if (*arg) {  // &quot;:aug xxx&quot;: switch to group xxx</a>
+<a name="ln384">    int i = au_new_group(arg);</a>
+<a name="ln385">    if (i != AUGROUP_ERROR) {</a>
+<a name="ln386">      current_augroup = i;</a>
+<a name="ln387">    }</a>
+<a name="ln388">  } else {  // &quot;:aug&quot;: list the group names</a>
+<a name="ln389">    msg_start();</a>
+<a name="ln390">    for (int i = 0; i &lt; augroups.ga_len; i++) {</a>
+<a name="ln391">      if (AUGROUP_NAME(i) != NULL) {</a>
+<a name="ln392">        msg_puts(AUGROUP_NAME(i));</a>
+<a name="ln393">        msg_puts(&quot;  &quot;);</a>
+<a name="ln394">      }</a>
+<a name="ln395">    }</a>
+<a name="ln396">    msg_clr_eos();</a>
+<a name="ln397">    msg_end();</a>
+<a name="ln398">  }</a>
+<a name="ln399">}</a>
+<a name="ln400"> </a>
+<a name="ln401">#if defined(EXITFREE)</a>
+<a name="ln402">void free_all_autocmds(void)</a>
+<a name="ln403">{</a>
+<a name="ln404">  for (current_augroup = -1; current_augroup &lt; augroups.ga_len;</a>
+<a name="ln405">       current_augroup++) {</a>
+<a name="ln406">    do_autocmd((char_u *)&quot;&quot;, true);</a>
+<a name="ln407">  }</a>
+<a name="ln408"> </a>
+<a name="ln409">  for (int i = 0; i &lt; augroups.ga_len; i++) {</a>
+<a name="ln410">    char *const s = ((char **)(augroups.ga_data))[i];</a>
+<a name="ln411">    if ((const char *)s != get_deleted_augroup()) {</a>
+<a name="ln412">      xfree(s);</a>
+<a name="ln413">    }</a>
+<a name="ln414">  }</a>
+<a name="ln415">  ga_clear(&amp;augroups);</a>
+<a name="ln416">}</a>
+<a name="ln417">#endif</a>
+<a name="ln418"> </a>
+<a name="ln419">// Return the event number for event name &quot;start&quot;.</a>
+<a name="ln420">// Return NUM_EVENTS if the event name was not found.</a>
+<a name="ln421">// Return a pointer to the next event name in &quot;end&quot;.</a>
+<a name="ln422">static event_T event_name2nr(const char_u *start, char_u **end)</a>
+<a name="ln423">{</a>
+<a name="ln424">  const char_u *p;</a>
+<a name="ln425">  int i;</a>
+<a name="ln426">  int len;</a>
+<a name="ln427"> </a>
+<a name="ln428">  // the event name ends with end of line, '|', a blank or a comma</a>
+<a name="ln429">  for (p = start; *p &amp;&amp; !ascii_iswhite(*p) &amp;&amp; *p != ',' &amp;&amp; *p != '|'; p++) {</a>
+<a name="ln430">  }</a>
+<a name="ln431">  for (i = 0; event_names[i].name != NULL; i++) {</a>
+<a name="ln432">    len = (int)event_names[i].len;</a>
+<a name="ln433">    if (len == p - start &amp;&amp; STRNICMP(event_names[i].name, start, len) == 0) {</a>
+<a name="ln434">      break;</a>
+<a name="ln435">    }</a>
+<a name="ln436">  }</a>
+<a name="ln437">  if (*p == ',') {</a>
+<a name="ln438">    p++;</a>
+<a name="ln439">  }</a>
+<a name="ln440">  *end = (char_u *)p;</a>
+<a name="ln441">  if (event_names[i].name == NULL) {</a>
+<a name="ln442">    return NUM_EVENTS;</a>
+<a name="ln443">  }</a>
+<a name="ln444">  return event_names[i].event;</a>
+<a name="ln445">}</a>
+<a name="ln446"> </a>
+<a name="ln447">/// Return the name for event</a>
+<a name="ln448">///</a>
+<a name="ln449">/// @param[in]  event  Event to return name for.</a>
+<a name="ln450">///</a>
+<a name="ln451">/// @return Event name, static string. Returns &quot;Unknown&quot; for unknown events.</a>
+<a name="ln452">static const char *event_nr2name(event_T event)</a>
+<a name="ln453">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_CONST</a>
+<a name="ln454">{</a>
+<a name="ln455">  int i;</a>
+<a name="ln456"> </a>
+<a name="ln457">  for (i = 0; event_names[i].name != NULL; i++) {</a>
+<a name="ln458">    if (event_names[i].event == event) {</a>
+<a name="ln459">      return event_names[i].name;</a>
+<a name="ln460">    }</a>
+<a name="ln461">  }</a>
+<a name="ln462">  return &quot;Unknown&quot;;</a>
+<a name="ln463">}</a>
+<a name="ln464"> </a>
+<a name="ln465">/// Scan over the events.  &quot;*&quot; stands for all events.</a>
+<a name="ln466">/// true when group name was found</a>
+<a name="ln467">static char_u *find_end_event(char_u *arg, int have_group)</a>
+<a name="ln468">{</a>
+<a name="ln469">  char_u *pat;</a>
+<a name="ln470">  char_u *p;</a>
+<a name="ln471"> </a>
+<a name="ln472">  if (*arg == '*') {</a>
+<a name="ln473">    if (arg[1] &amp;&amp; !ascii_iswhite(arg[1])) {</a>
+<a name="ln474">      EMSG2(_(&quot;E215: Illegal character after *: %s&quot;), arg);</a>
+<a name="ln475">      return NULL;</a>
+<a name="ln476">    }</a>
+<a name="ln477">    pat = arg + 1;</a>
+<a name="ln478">  } else {</a>
+<a name="ln479">    for (pat = arg; *pat &amp;&amp; *pat != '|' &amp;&amp; !ascii_iswhite(*pat); pat = p) {</a>
+<a name="ln480">      if ((int)event_name2nr(pat, &amp;p) &gt;= (int)NUM_EVENTS) {</a>
+<a name="ln481">        if (have_group) {</a>
+<a name="ln482">          EMSG2(_(&quot;E216: No such event: %s&quot;), pat);</a>
+<a name="ln483">        } else {</a>
+<a name="ln484">          EMSG2(_(&quot;E216: No such group or event: %s&quot;), pat);</a>
+<a name="ln485">        }</a>
+<a name="ln486">        return NULL;</a>
+<a name="ln487">      }</a>
+<a name="ln488">    }</a>
+<a name="ln489">  }</a>
+<a name="ln490">  return pat;</a>
+<a name="ln491">}</a>
+<a name="ln492"> </a>
+<a name="ln493">/// Return true if &quot;event&quot; is included in 'eventignore'.</a>
+<a name="ln494">///</a>
+<a name="ln495">/// @param event event to check</a>
+<a name="ln496">static bool event_ignored(event_T event)</a>
+<a name="ln497">  FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln498">{</a>
+<a name="ln499">  char_u *p = p_ei;</a>
+<a name="ln500"> </a>
+<a name="ln501">  while (*p != NUL) {</a>
+<a name="ln502">    if (STRNICMP(p, &quot;all&quot;, 3) == 0 &amp;&amp; (p[3] == NUL || p[3] == ',')) {</a>
+<a name="ln503">      return true;</a>
+<a name="ln504">    }</a>
+<a name="ln505">    if (event_name2nr(p, &amp;p) == event) {</a>
+<a name="ln506">      return true;</a>
+<a name="ln507">    }</a>
+<a name="ln508">  }</a>
+<a name="ln509"> </a>
+<a name="ln510">  return false;</a>
+<a name="ln511">}</a>
+<a name="ln512"> </a>
+<a name="ln513">// Return OK when the contents of p_ei is valid, FAIL otherwise.</a>
+<a name="ln514">int check_ei(void)</a>
+<a name="ln515">{</a>
+<a name="ln516">  char_u *p = p_ei;</a>
+<a name="ln517"> </a>
+<a name="ln518">  while (*p) {</a>
+<a name="ln519">    if (STRNICMP(p, &quot;all&quot;, 3) == 0 &amp;&amp; (p[3] == NUL || p[3] == ',')) {</a>
+<a name="ln520">      p += 3;</a>
+<a name="ln521">      if (*p == ',') {</a>
+<a name="ln522">        p++;</a>
+<a name="ln523">      }</a>
+<a name="ln524">    } else if (event_name2nr(p, &amp;p) == NUM_EVENTS) {</a>
+<a name="ln525">      return FAIL;</a>
+<a name="ln526">    }</a>
+<a name="ln527">  }</a>
+<a name="ln528"> </a>
+<a name="ln529">  return OK;</a>
+<a name="ln530">}</a>
+<a name="ln531"> </a>
+<a name="ln532">// Add &quot;what&quot; to 'eventignore' to skip loading syntax highlighting for every</a>
+<a name="ln533">// buffer loaded into the window.  &quot;what&quot; must start with a comma.</a>
+<a name="ln534">// Returns the old value of 'eventignore' in allocated memory.</a>
+<a name="ln535">char_u *au_event_disable(char *what)</a>
+<a name="ln536">{</a>
+<a name="ln537">  char_u *new_ei;</a>
+<a name="ln538">  char_u *save_ei;</a>
+<a name="ln539"> </a>
+<a name="ln540">  save_ei = vim_strsave(p_ei);</a>
+<a name="ln541">  new_ei = vim_strnsave(p_ei, STRLEN(p_ei) + STRLEN(what));</a>
+<a name="ln542">  if (*what == ',' &amp;&amp; *p_ei == NUL) {</a>
+<a name="ln543">    STRCPY(new_ei, what + 1);</a>
+<a name="ln544">  } else {</a>
+<a name="ln545">    STRCAT(new_ei, what);</a>
+<a name="ln546">  }</a>
+<a name="ln547">  set_string_option_direct(&quot;ei&quot;, -1, new_ei, OPT_FREE, SID_NONE);</a>
+<a name="ln548">  xfree(new_ei);</a>
+<a name="ln549"> </a>
+<a name="ln550">  return save_ei;</a>
+<a name="ln551">}</a>
+<a name="ln552"> </a>
+<a name="ln553">void au_event_restore(char_u *old_ei)</a>
+<a name="ln554">{</a>
+<a name="ln555">  if (old_ei != NULL) {</a>
+<a name="ln556">    set_string_option_direct(&quot;ei&quot;, -1, old_ei, OPT_FREE, SID_NONE);</a>
+<a name="ln557">    xfree(old_ei);</a>
+<a name="ln558">  }</a>
+<a name="ln559">}</a>
+<a name="ln560"> </a>
+<a name="ln561">// Implements :autocmd.</a>
+<a name="ln562">// Defines an autocmd (does not execute; cf. apply_autocmds_group).</a>
+<a name="ln563">//</a>
+<a name="ln564">// Can be used in the following ways:</a>
+<a name="ln565">//</a>
+<a name="ln566">// :autocmd &lt;event&gt; &lt;pat&gt; &lt;cmd&gt;     Add &lt;cmd&gt; to the list of commands that</a>
+<a name="ln567">//                                  will be automatically executed for &lt;event&gt;</a>
+<a name="ln568">//                                  when editing a file matching &lt;pat&gt;, in</a>
+<a name="ln569">//                                  the current group.</a>
+<a name="ln570">// :autocmd &lt;event&gt; &lt;pat&gt;           Show the autocommands associated with</a>
+<a name="ln571">//                                  &lt;event&gt; and &lt;pat&gt;.</a>
+<a name="ln572">// :autocmd &lt;event&gt;                 Show the autocommands associated with</a>
+<a name="ln573">//                                  &lt;event&gt;.</a>
+<a name="ln574">// :autocmd                         Show all autocommands.</a>
+<a name="ln575">// :autocmd! &lt;event&gt; &lt;pat&gt; &lt;cmd&gt;    Remove all autocommands associated with</a>
+<a name="ln576">//                                  &lt;event&gt; and &lt;pat&gt;, and add the command</a>
+<a name="ln577">//                                  &lt;cmd&gt;, for the current group.</a>
+<a name="ln578">// :autocmd! &lt;event&gt; &lt;pat&gt;          Remove all autocommands associated with</a>
+<a name="ln579">//                                  &lt;event&gt; and &lt;pat&gt; for the current group.</a>
+<a name="ln580">// :autocmd! &lt;event&gt;                Remove all autocommands associated with</a>
+<a name="ln581">//                                  &lt;event&gt; for the current group.</a>
+<a name="ln582">// :autocmd!                        Remove ALL autocommands for the current</a>
+<a name="ln583">//                                  group.</a>
+<a name="ln584">//</a>
+<a name="ln585">//  Multiple events and patterns may be given separated by commas.  Here are</a>
+<a name="ln586">//  some examples:</a>
+<a name="ln587">// :autocmd bufread,bufenter *.c,*.h    set tw=0 smartindent noic</a>
+<a name="ln588">// :autocmd bufleave         *          set tw=79 nosmartindent ic infercase</a>
+<a name="ln589">//</a>
+<a name="ln590">// :autocmd * *.c               show all autocommands for *.c files.</a>
+<a name="ln591">//</a>
+<a name="ln592">// Mostly a {group} argument can optionally appear before &lt;event&gt;.</a>
+<a name="ln593">void do_autocmd(char_u *arg_in, int forceit)</a>
+<a name="ln594">{</a>
+<a name="ln595">  char_u *arg = arg_in;</a>
+<a name="ln596">  char_u *pat;</a>
+<a name="ln597">  char_u *envpat = NULL;</a>
+<a name="ln598">  char_u *cmd;</a>
+<a name="ln599">  int need_free = false;</a>
+<a name="ln600">  int nested = false;</a>
+<a name="ln601">  bool once = false;</a>
+<a name="ln602">  int group;</a>
+<a name="ln603"> </a>
+<a name="ln604">  if (*arg == '|') {</a>
+<a name="ln605">    arg = (char_u *)&quot;&quot;;</a>
+<a name="ln606">    group = AUGROUP_ALL;  // no argument, use all groups</a>
+<a name="ln607">  } else {</a>
+<a name="ln608">    // Check for a legal group name.  If not, use AUGROUP_ALL.</a>
+<a name="ln609">    group = au_get_grouparg(&amp;arg);</a>
+<a name="ln610">  }</a>
+<a name="ln611"> </a>
+<a name="ln612">  // Scan over the events.</a>
+<a name="ln613">  // If we find an illegal name, return here, don't do anything.</a>
+<a name="ln614">  pat = find_end_event(arg, group != AUGROUP_ALL);</a>
+<a name="ln615">  if (pat == NULL) {</a>
+<a name="ln616">    return;</a>
+<a name="ln617">  }</a>
+<a name="ln618"> </a>
+<a name="ln619">  pat = skipwhite(pat);</a>
+<a name="ln620">  if (*pat == '|') {</a>
+<a name="ln621">    pat = (char_u *)&quot;&quot;;</a>
+<a name="ln622">    cmd = (char_u *)&quot;&quot;;</a>
+<a name="ln623">  } else {</a>
+<a name="ln624">    // Scan over the pattern.  Put a NUL at the end.</a>
+<a name="ln625">    cmd = pat;</a>
+<a name="ln626">    while (*cmd &amp;&amp; (!ascii_iswhite(*cmd) || cmd[-1] == '\\')) {</a>
+<a name="ln627">      cmd++;</a>
+<a name="ln628">    }</a>
+<a name="ln629">    if (*cmd) {</a>
+<a name="ln630">      *cmd++ = NUL;</a>
+<a name="ln631">    }</a>
+<a name="ln632"> </a>
+<a name="ln633">    // Expand environment variables in the pattern.  Set 'shellslash', we want</a>
+<a name="ln634">    // forward slashes here.</a>
+<a name="ln635">    if (vim_strchr(pat, '$') != NULL || vim_strchr(pat, '~') != NULL) {</a>
+<a name="ln636">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln637">      int p_ssl_save = p_ssl;</a>
+<a name="ln638"> </a>
+<a name="ln639">      p_ssl = true;</a>
+<a name="ln640">#endif</a>
+<a name="ln641">      envpat = expand_env_save(pat);</a>
+<a name="ln642">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln643">      p_ssl = p_ssl_save;</a>
+<a name="ln644">#endif</a>
+<a name="ln645">      if (envpat != NULL) {</a>
+<a name="ln646">        pat = envpat;</a>
+<a name="ln647">      }</a>
+<a name="ln648">    }</a>
+<a name="ln649"> </a>
+<a name="ln650">    cmd = skipwhite(cmd);</a>
+<a name="ln651">    for (size_t i = 0; i &lt; 2; i++) {</a>
+<a name="ln652">      if (*cmd != NUL) {</a>
+<a name="ln653">        // Check for &quot;++once&quot; flag.</a>
+<a name="ln654">        if (STRNCMP(cmd, &quot;++once&quot;, 6) == 0 &amp;&amp; ascii_iswhite(cmd[6])) {</a>
+<a name="ln655">          if (once) {</a>
+<a name="ln656">            EMSG2(_(e_duparg2), &quot;++once&quot;);</a>
+<a name="ln657">          }</a>
+<a name="ln658">          once = true;</a>
+<a name="ln659">          cmd = skipwhite(cmd + 6);</a>
+<a name="ln660">        }</a>
+<a name="ln661"> </a>
+<a name="ln662">        // Check for &quot;++nested&quot; flag.</a>
+<a name="ln663">        if ((STRNCMP(cmd, &quot;++nested&quot;, 8) == 0 &amp;&amp; ascii_iswhite(cmd[8]))) {</a>
+<a name="ln664">          if (nested) {</a>
+<a name="ln665">            EMSG2(_(e_duparg2), &quot;++nested&quot;);</a>
+<a name="ln666">          }</a>
+<a name="ln667">          nested = true;</a>
+<a name="ln668">          cmd = skipwhite(cmd + 8);</a>
+<a name="ln669">        }</a>
+<a name="ln670"> </a>
+<a name="ln671">        // Check for the old (deprecated) &quot;nested&quot; flag.</a>
+<a name="ln672">        if (STRNCMP(cmd, &quot;nested&quot;, 6) == 0 &amp;&amp; ascii_iswhite(cmd[6])) {</a>
+<a name="ln673">          if (nested) {</a>
+<a name="ln674">            EMSG2(_(e_duparg2), &quot;nested&quot;);</a>
+<a name="ln675">          }</a>
+<a name="ln676">          nested = true;</a>
+<a name="ln677">          cmd = skipwhite(cmd + 6);</a>
+<a name="ln678">        }</a>
+<a name="ln679">      }</a>
+<a name="ln680">    }</a>
+<a name="ln681"> </a>
+<a name="ln682">    // Find the start of the commands.</a>
+<a name="ln683">    // Expand &lt;sfile&gt; in it.</a>
+<a name="ln684">    if (*cmd != NUL) {</a>
+<a name="ln685">      cmd = expand_sfile(cmd);</a>
+<a name="ln686">      if (cmd == NULL) {  // some error</a>
+<a name="ln687">        return;</a>
+<a name="ln688">      }</a>
+<a name="ln689">      need_free = true;</a>
+<a name="ln690">    }</a>
+<a name="ln691">  }</a>
+<a name="ln692"> </a>
+<a name="ln693">  // Print header when showing autocommands.</a>
+<a name="ln694">  if (!forceit &amp;&amp; *cmd == NUL) {</a>
+<a name="ln695">    // Highlight title</a>
+<a name="ln696">    MSG_PUTS_TITLE(_(&quot;\n--- Autocommands ---&quot;));</a>
+<a name="ln697">  }</a>
+<a name="ln698"> </a>
+<a name="ln699">  // Loop over the events.</a>
+<a name="ln700">  last_event = (event_T)-1;    // for listing the event name</a>
+<a name="ln701">  last_group = AUGROUP_ERROR;  // for listing the group name</a>
+<a name="ln702">  if (*arg == '*' || *arg == NUL || *arg == '|') {</a>
+<a name="ln703">    if (!forceit &amp;&amp; *cmd != NUL) {</a>
+<a name="ln704">      EMSG(_(e_cannot_define_autocommands_for_all_events));</a>
+<a name="ln705">    } else {</a>
+<a name="ln706">      for (event_T event = (event_T)0; event &lt; (int)NUM_EVENTS;</a>
+<a name="ln707">           event = (event_T)(event + 1)) {</a>
+<a name="ln708">        if (do_autocmd_event(event, pat, once, nested, cmd, forceit, group)</a>
+<a name="ln709">            == FAIL) {</a>
+<a name="ln710">          break;</a>
+<a name="ln711">        }</a>
+<a name="ln712">      }</a>
+<a name="ln713">    }</a>
+<a name="ln714">  } else {</a>
+<a name="ln715">    while (*arg &amp;&amp; *arg != '|' &amp;&amp; !ascii_iswhite(*arg)) {</a>
+<a name="ln716">      event_T event = event_name2nr(arg, &amp;arg);</a>
+<a name="ln717">      assert(event &lt; NUM_EVENTS);</a>
+<a name="ln718">      if (do_autocmd_event(event, pat, once, nested, cmd, forceit, group)</a>
+<a name="ln719">          == FAIL) {</a>
+<a name="ln720">        break;</a>
+<a name="ln721">      }</a>
+<a name="ln722">    }</a>
+<a name="ln723">  }</a>
+<a name="ln724"> </a>
+<a name="ln725">  if (need_free) {</a>
+<a name="ln726">    xfree(cmd);</a>
+<a name="ln727">  }</a>
+<a name="ln728">  xfree(envpat);</a>
+<a name="ln729">}</a>
+<a name="ln730"> </a>
+<a name="ln731">// Find the group ID in a &quot;:autocmd&quot; or &quot;:doautocmd&quot; argument.</a>
+<a name="ln732">// The &quot;argp&quot; argument is advanced to the following argument.</a>
+<a name="ln733">//</a>
+<a name="ln734">// Returns the group ID or AUGROUP_ALL.</a>
+<a name="ln735">static int au_get_grouparg(char_u **argp)</a>
+<a name="ln736">{</a>
+<a name="ln737">  char_u *group_name;</a>
+<a name="ln738">  char_u *p;</a>
+<a name="ln739">  char_u *arg = *argp;</a>
+<a name="ln740">  int group = AUGROUP_ALL;</a>
+<a name="ln741"> </a>
+<a name="ln742">  for (p = arg; *p &amp;&amp; !ascii_iswhite(*p) &amp;&amp; *p != '|'; p++) {</a>
+<a name="ln743">  }</a>
+<a name="ln744">  if (p &gt; arg) {</a>
+<a name="ln745">    group_name = vim_strnsave(arg, (size_t)(p - arg));</a>
+<a name="ln746">    group = au_find_group(group_name);</a>
+<a name="ln747">    if (group == AUGROUP_ERROR) {</a>
+<a name="ln748">      group = AUGROUP_ALL;  // no match, use all groups</a>
+<a name="ln749">    } else {</a>
+<a name="ln750">      *argp = skipwhite(p);  // match, skip over group name</a>
+<a name="ln751">    }</a>
+<a name="ln752">    xfree(group_name);</a>
+<a name="ln753">  }</a>
+<a name="ln754">  return group;</a>
+<a name="ln755">}</a>
+<a name="ln756"> </a>
+<a name="ln757">// do_autocmd() for one event.</a>
+<a name="ln758">// Defines an autocmd (does not execute; cf. apply_autocmds_group).</a>
+<a name="ln759">//</a>
+<a name="ln760">// If *pat == NUL: do for all patterns.</a>
+<a name="ln761">// If *cmd == NUL: show entries.</a>
+<a name="ln762">// If forceit == true: delete entries.</a>
+<a name="ln763">// If group is not AUGROUP_ALL: only use this group.</a>
+<a name="ln764">static int do_autocmd_event(event_T event,</a>
+<a name="ln765">                            char_u *pat,</a>
+<a name="ln766">                            bool once,</a>
+<a name="ln767">                            int nested,</a>
+<a name="ln768">                            char_u *cmd,</a>
+<a name="ln769">                            int forceit,</a>
+<a name="ln770">                            int group)</a>
+<a name="ln771">{</a>
+<a name="ln772">  AutoPat *ap;</a>
+<a name="ln773">  AutoPat **prev_ap;</a>
+<a name="ln774">  AutoCmd *ac;</a>
+<a name="ln775">  AutoCmd **prev_ac;</a>
+<a name="ln776">  int brace_level;</a>
+<a name="ln777">  char_u *endpat;</a>
+<a name="ln778">  int findgroup;</a>
+<a name="ln779">  int allgroups;</a>
+<a name="ln780">  int patlen;</a>
+<a name="ln781">  int is_buflocal;</a>
+<a name="ln782">  int buflocal_nr;</a>
+<a name="ln783">  char_u buflocal_pat[BUFLOCAL_PAT_LEN];  // for &quot;&lt;buffer=X&gt;&quot;</a>
+<a name="ln784"> </a>
+<a name="ln785">  if (group == AUGROUP_ALL) {</a>
+<a name="ln786">    findgroup = current_augroup;</a>
+<a name="ln787">  } else {</a>
+<a name="ln788">    findgroup = group;</a>
+<a name="ln789">  }</a>
+<a name="ln790">  allgroups = (group == AUGROUP_ALL &amp;&amp; !forceit &amp;&amp; *cmd == NUL);</a>
+<a name="ln791"> </a>
+<a name="ln792">  // Show or delete all patterns for an event.</a>
+<a name="ln793">  if (*pat == NUL) {</a>
+<a name="ln794">    for (ap = first_autopat[event]; ap != NULL; ap = ap-&gt;next) {</a>
+<a name="ln795">      if (forceit) {  // delete the AutoPat, if it's in the current group</a>
+<a name="ln796">        if (ap-&gt;group == findgroup) {</a>
+<a name="ln797">          au_remove_pat(ap);</a>
+<a name="ln798">        }</a>
+<a name="ln799">      } else if (group == AUGROUP_ALL || ap-&gt;group == group) {</a>
+<a name="ln800">        show_autocmd(ap, event);</a>
+<a name="ln801">      }</a>
+<a name="ln802">    }</a>
+<a name="ln803">  }</a>
+<a name="ln804"> </a>
+<a name="ln805">  // Loop through all the specified patterns.</a>
+<a name="ln806">  for (; *pat; pat = (*endpat == ',' ? endpat + 1 : endpat)) {</a>
+<a name="ln807">    // Find end of the pattern.</a>
+<a name="ln808">    // Watch out for a comma in braces, like &quot;*.\{obj,o\}&quot;.</a>
+<a name="ln809">    endpat = pat;</a>
+<a name="ln810">    // ignore single comma</a>
+<a name="ln811">    if (*endpat == ',') {</a>
+<a name="ln812">      continue;</a>
+<a name="ln813">    }</a>
+<a name="ln814">    brace_level = 0;</a>
+<a name="ln815">    for (; *endpat &amp;&amp; (*endpat != ',' || brace_level || endpat[-1] == '\\');</a>
+<a name="ln816">         endpat++) {</a>
+<a name="ln817">      if (*endpat == '{') {</a>
+<a name="ln818">        brace_level++;</a>
+<a name="ln819">      } else if (*endpat == '}') {</a>
+<a name="ln820">        brace_level--;</a>
+<a name="ln821">      }</a>
+<a name="ln822">    }</a>
+<a name="ln823">    patlen = (int)(endpat - pat);</a>
+<a name="ln824"> </a>
+<a name="ln825">    // detect special &lt;buflocal[=X]&gt; buffer-local patterns</a>
+<a name="ln826">    is_buflocal = false;</a>
+<a name="ln827">    buflocal_nr = 0;</a>
+<a name="ln828"> </a>
+<a name="ln829">    if (patlen &gt;= 8 &amp;&amp; STRNCMP(pat, &quot;&lt;buffer&quot;, 7) == 0</a>
+<a name="ln830">        &amp;&amp; pat[patlen - 1] == '&gt;') {</a>
+<a name="ln831">      // &quot;&lt;buffer...&gt;&quot;: Error will be printed only for addition.</a>
+<a name="ln832">      // printing and removing will proceed silently.</a>
+<a name="ln833">      is_buflocal = true;</a>
+<a name="ln834">      if (patlen == 8) {</a>
+<a name="ln835">        // &quot;&lt;buffer&gt;&quot;</a>
+<a name="ln836">        buflocal_nr = curbuf-&gt;b_fnum;</a>
+<a name="ln837">      } else if (patlen &gt; 9 &amp;&amp; pat[7] == '=') {</a>
+<a name="ln838">        if (patlen == 13 &amp;&amp; STRNICMP(pat, &quot;&lt;buffer=abuf&gt;&quot;, 13) == 0) {</a>
+<a name="ln839">          // &quot;&lt;buffer=abuf&gt;&quot;</a>
+<a name="ln840">          buflocal_nr = autocmd_bufnr;</a>
+<a name="ln841">        } else if (skipdigits(pat + 8) == pat + patlen - 1) {</a>
+<a name="ln842">          // &quot;&lt;buffer=123&gt;&quot;</a>
+<a name="ln843">          buflocal_nr = atoi((char *)pat + 8);</a>
+<a name="ln844">        }</a>
+<a name="ln845">      }</a>
+<a name="ln846">    }</a>
+<a name="ln847"> </a>
+<a name="ln848">    if (is_buflocal) {</a>
+<a name="ln849">      // normalize pat into standard &quot;&lt;buffer&gt;#N&quot; form</a>
+<a name="ln850">      snprintf(</a>
+<a name="ln851">          (char *)buflocal_pat,</a>
+<a name="ln852">          BUFLOCAL_PAT_LEN,</a>
+<a name="ln853">          &quot;&lt;buffer=%d&gt;&quot;,</a>
+<a name="ln854">          buflocal_nr);</a>
+<a name="ln855"> </a>
+<a name="ln856">      pat = buflocal_pat;                  // can modify pat and patlen</a>
+<a name="ln857">      patlen = (int)STRLEN(buflocal_pat);  //   but not endpat</a>
+<a name="ln858">    }</a>
+<a name="ln859"> </a>
+<a name="ln860">    // Find AutoPat entries with this pattern.  When adding a command it</a>
+<a name="ln861">    // always goes at or after the last one, so start at the end.</a>
+<a name="ln862">    if (!forceit &amp;&amp; *cmd != NUL &amp;&amp; last_autopat[(int)event] != NULL) {</a>
+<a name="ln863">      prev_ap = &amp;last_autopat[(int)event];</a>
+<a name="ln864">    } else {</a>
+<a name="ln865">      prev_ap = &amp;first_autopat[(int)event];</a>
+<a name="ln866">    }</a>
+<a name="ln867">    while ((ap = *prev_ap) != NULL) {</a>
+<a name="ln868">      if (ap-&gt;pat != NULL) {</a>
+<a name="ln869">        // Accept a pattern when:</a>
+<a name="ln870">        // - a group was specified and it's that group, or a group was</a>
+<a name="ln871">        //   not specified and it's the current group, or a group was</a>
+<a name="ln872">        //   not specified and we are listing</a>
+<a name="ln873">        // - the length of the pattern matches</a>
+<a name="ln874">        // - the pattern matches.</a>
+<a name="ln875">        // For &lt;buffer[=X]&gt;, this condition works because we normalize</a>
+<a name="ln876">        // all buffer-local patterns.</a>
+<a name="ln877">        if ((allgroups || ap-&gt;group == findgroup) &amp;&amp; ap-&gt;patlen == patlen</a>
+<a name="ln878">            &amp;&amp; STRNCMP(pat, ap-&gt;pat, patlen) == 0) {</a>
+<a name="ln879">          // Remove existing autocommands.</a>
+<a name="ln880">          // If adding any new autocmd's for this AutoPat, don't</a>
+<a name="ln881">          // delete the pattern from the autopat list, append to</a>
+<a name="ln882">          // this list.</a>
+<a name="ln883">          if (forceit) {</a>
+<a name="ln884">            if (*cmd != NUL &amp;&amp; ap-&gt;next == NULL) {</a>
+<a name="ln885">              au_remove_cmds(ap);</a>
+<a name="ln886">              break;</a>
+<a name="ln887">            }</a>
+<a name="ln888">            au_remove_pat(ap);</a>
+<a name="ln889">          } else if (*cmd == NUL) {</a>
+<a name="ln890">            // Show autocmd's for this autopat, or buflocals &lt;buffer=X&gt;</a>
+<a name="ln891">            show_autocmd(ap, event);</a>
+<a name="ln892"> </a>
+<a name="ln893">          } else if (ap-&gt;next == NULL) {</a>
+<a name="ln894">            // Add autocmd to this autopat, if it's the last one.</a>
+<a name="ln895">            break;</a>
+<a name="ln896">          }</a>
+<a name="ln897">        }</a>
+<a name="ln898">      }</a>
+<a name="ln899">      prev_ap = &amp;ap-&gt;next;</a>
+<a name="ln900">    }</a>
+<a name="ln901"> </a>
+<a name="ln902">    // Add a new command.</a>
+<a name="ln903">    if (*cmd != NUL) {</a>
+<a name="ln904">      // If the pattern we want to add a command to does appear at the</a>
+<a name="ln905">      // end of the list (or not is not in the list at all), add the</a>
+<a name="ln906">      // pattern at the end of the list.</a>
+<a name="ln907">      if (ap == NULL) {</a>
+<a name="ln908">        // refuse to add buffer-local ap if buffer number is invalid</a>
+<a name="ln909">        if (is_buflocal</a>
+<a name="ln910">            &amp;&amp; (buflocal_nr == 0 || buflist_findnr(buflocal_nr) == NULL)) {</a>
+<a name="ln911">          emsgf(_(&quot;E680: &lt;buffer=%d&gt;: invalid buffer number &quot;), buflocal_nr);</a>
+<a name="ln912">          return FAIL;</a>
+<a name="ln913">        }</a>
+<a name="ln914"> </a>
+<a name="ln915">        ap = xmalloc(sizeof(AutoPat));</a>
+<a name="ln916">        ap-&gt;pat = vim_strnsave(pat, (size_t)patlen);</a>
+<a name="ln917">        ap-&gt;patlen = patlen;</a>
+<a name="ln918"> </a>
+<a name="ln919">        if (is_buflocal) {</a>
+<a name="ln920">          ap-&gt;buflocal_nr = buflocal_nr;</a>
+<a name="ln921">          ap-&gt;reg_prog = NULL;</a>
+<a name="ln922">        } else {</a>
+<a name="ln923">          char_u *reg_pat;</a>
+<a name="ln924"> </a>
+<a name="ln925">          ap-&gt;buflocal_nr = 0;</a>
+<a name="ln926">          reg_pat = file_pat_to_reg_pat(pat, endpat, &amp;ap-&gt;allow_dirs, true);</a>
+<a name="ln927">          if (reg_pat != NULL) {</a>
+<a name="ln928">            ap-&gt;reg_prog = vim_regcomp(reg_pat, RE_MAGIC);</a>
+<a name="ln929">          }</a>
+<a name="ln930">          xfree(reg_pat);</a>
+<a name="ln931">          if (reg_pat == NULL || ap-&gt;reg_prog == NULL) {</a>
+<a name="ln932">            xfree(ap-&gt;pat);</a>
+<a name="ln933">            xfree(ap);</a>
+<a name="ln934">            return FAIL;</a>
+<a name="ln935">          }</a>
+<a name="ln936">        }</a>
+<a name="ln937">        ap-&gt;cmds = NULL;</a>
+<a name="ln938">        *prev_ap = ap;</a>
+<a name="ln939">        last_autopat[(int)event] = ap;</a>
+<a name="ln940">        ap-&gt;next = NULL;</a>
+<a name="ln941">        if (group == AUGROUP_ALL) {</a>
+<a name="ln942">          ap-&gt;group = current_augroup;</a>
+<a name="ln943">        } else {</a>
+<a name="ln944">          ap-&gt;group = group;</a>
+<a name="ln945">        }</a>
+<a name="ln946">      }</a>
+<a name="ln947"> </a>
+<a name="ln948">      // Add the autocmd at the end of the AutoCmd list.</a>
+<a name="ln949">      prev_ac = &amp;(ap-&gt;cmds);</a>
+<a name="ln950">      while ((ac = *prev_ac) != NULL) {</a>
+<a name="ln951">        prev_ac = &amp;ac-&gt;next;</a>
+<a name="ln952">      }</a>
+<a name="ln953">      ac = xmalloc(sizeof(AutoCmd));</a>
+<a name="ln954">      ac-&gt;cmd = vim_strsave(cmd);</a>
+<a name="ln955">      ac-&gt;script_ctx = current_sctx;</a>
+<a name="ln956">      ac-&gt;script_ctx.sc_lnum += sourcing_lnum;</a>
+<a name="ln957">      ac-&gt;next = NULL;</a>
+<a name="ln958">      *prev_ac = ac;</a>
+<a name="ln959">      ac-&gt;once = once;</a>
+<a name="ln960">      ac-&gt;nested = nested;</a>
+<a name="ln961">    }</a>
+<a name="ln962">  }</a>
+<a name="ln963"> </a>
+<a name="ln964">  au_cleanup();  // may really delete removed patterns/commands now</a>
+<a name="ln965">  return OK;</a>
+<a name="ln966">}</a>
+<a name="ln967"> </a>
+<a name="ln968">// Implementation of &quot;:doautocmd [group] event [fname]&quot;.</a>
+<a name="ln969">// Return OK for success, FAIL for failure;</a>
+<a name="ln970">int do_doautocmd(char_u *arg,</a>
+<a name="ln971">                 bool do_msg,  // give message for no matching autocmds?</a>
+<a name="ln972">                 bool *did_something)</a>
+<a name="ln973">{</a>
+<a name="ln974">  char_u *fname;</a>
+<a name="ln975">  int nothing_done = true;</a>
+<a name="ln976">  int group;</a>
+<a name="ln977"> </a>
+<a name="ln978">  if (did_something != NULL) {</a>
+<a name="ln979">    *did_something = false;</a>
+<a name="ln980">  }</a>
+<a name="ln981"> </a>
+<a name="ln982">  // Check for a legal group name.  If not, use AUGROUP_ALL.</a>
+<a name="ln983">  group = au_get_grouparg(&amp;arg);</a>
+<a name="ln984"> </a>
+<a name="ln985">  if (*arg == '*') {</a>
+<a name="ln986">    EMSG(_(&quot;E217: Can't execute autocommands for ALL events&quot;));</a>
+<a name="ln987">    return FAIL;</a>
+<a name="ln988">  }</a>
+<a name="ln989"> </a>
+<a name="ln990">  // Scan over the events.</a>
+<a name="ln991">  // If we find an illegal name, return here, don't do anything.</a>
+<a name="ln992">  fname = find_end_event(arg, group != AUGROUP_ALL);</a>
+<a name="ln993">  if (fname == NULL) {</a>
+<a name="ln994">    return FAIL;</a>
+<a name="ln995">  }</a>
+<a name="ln996"> </a>
+<a name="ln997">  fname = skipwhite(fname);</a>
+<a name="ln998"> </a>
+<a name="ln999">  // Loop over the events.</a>
+<a name="ln1000">  while (*arg &amp;&amp; !ends_excmd(*arg) &amp;&amp; !ascii_iswhite(*arg)) {</a>
+<a name="ln1001">    if (apply_autocmds_group(event_name2nr(arg, &amp;arg), fname, NULL, true, group,</a>
+<a name="ln1002">                             curbuf, NULL)) {</a>
+<a name="ln1003">      nothing_done = false;</a>
+<a name="ln1004">    }</a>
+<a name="ln1005">  }</a>
+<a name="ln1006"> </a>
+<a name="ln1007">  if (nothing_done &amp;&amp; do_msg) {</a>
+<a name="ln1008">    MSG(_(&quot;No matching autocommands&quot;));</a>
+<a name="ln1009">  }</a>
+<a name="ln1010">  if (did_something != NULL) {</a>
+<a name="ln1011">    *did_something = !nothing_done;</a>
+<a name="ln1012">  }</a>
+<a name="ln1013"> </a>
+<a name="ln1014">  return aborting() ? FAIL : OK;</a>
+<a name="ln1015">}</a>
+<a name="ln1016"> </a>
+<a name="ln1017">// &quot;:doautoall&quot;: execute autocommands for each loaded buffer.</a>
+<a name="ln1018">void ex_doautoall(exarg_T *eap)</a>
+<a name="ln1019">{</a>
+<a name="ln1020">  int retval = OK;</a>
+<a name="ln1021">  aco_save_T aco;</a>
+<a name="ln1022">  char_u *arg = eap-&gt;arg;</a>
+<a name="ln1023">  int call_do_modelines = check_nomodeline(&amp;arg);</a>
+<a name="ln1024">  bufref_T bufref;</a>
+<a name="ln1025">  bool did_aucmd;</a>
+<a name="ln1026"> </a>
+<a name="ln1027">  // This is a bit tricky: For some commands curwin-&gt;w_buffer needs to be</a>
+<a name="ln1028">  // equal to curbuf, but for some buffers there may not be a window.</a>
+<a name="ln1029">  // So we change the buffer for the current window for a moment.  This</a>
+<a name="ln1030">  // gives problems when the autocommands make changes to the list of</a>
+<a name="ln1031">  // buffers or windows...</a>
+<a name="ln1032">  FOR_ALL_BUFFERS(buf) {</a>
+<a name="ln1033">    // Only do loaded buffers and skip the current buffer, it's done last.</a>
+<a name="ln1034">    if (buf-&gt;b_ml.ml_mfp == NULL || buf == curbuf) {</a>
+<a name="ln1035">      continue;</a>
+<a name="ln1036">    }</a>
+<a name="ln1037">    // Find a window for this buffer and save some values.</a>
+<a name="ln1038">    aucmd_prepbuf(&amp;aco, buf);</a>
+<a name="ln1039">    set_bufref(&amp;bufref, buf);</a>
+<a name="ln1040"> </a>
+<a name="ln1041">    // execute the autocommands for this buffer</a>
+<a name="ln1042">    retval = do_doautocmd(arg, false, &amp;did_aucmd);</a>
+<a name="ln1043"> </a>
+<a name="ln1044">    if (call_do_modelines &amp;&amp; did_aucmd) {</a>
+<a name="ln1045">      // Execute the modeline settings, but don't set window-local</a>
+<a name="ln1046">      // options if we are using the current window for another</a>
+<a name="ln1047">      // buffer.</a>
+<a name="ln1048">      do_modelines(curwin == aucmd_win ? OPT_NOWIN : 0);</a>
+<a name="ln1049">    }</a>
+<a name="ln1050"> </a>
+<a name="ln1051">    // restore the current window</a>
+<a name="ln1052">    aucmd_restbuf(&amp;aco);</a>
+<a name="ln1053"> </a>
+<a name="ln1054">    // Stop if there is some error or buffer was deleted.</a>
+<a name="ln1055">    if (retval == FAIL || !bufref_valid(&amp;bufref)) {</a>
+<a name="ln1056">      retval = FAIL;</a>
+<a name="ln1057">      break;</a>
+<a name="ln1058">    }</a>
+<a name="ln1059">  }</a>
+<a name="ln1060"> </a>
+<a name="ln1061">  // Execute autocommands for the current buffer last.</a>
+<a name="ln1062">  if (retval == OK) {</a>
+<a name="ln1063">    (void)do_doautocmd(arg, false, &amp;did_aucmd);</a>
+<a name="ln1064">    if (call_do_modelines &amp;&amp; did_aucmd) {</a>
+<a name="ln1065">      do_modelines(0);</a>
+<a name="ln1066">    }</a>
+<a name="ln1067">  }</a>
+<a name="ln1068"> </a>
+<a name="ln1069">  check_cursor();  // just in case lines got deleted</a>
+<a name="ln1070">}</a>
+<a name="ln1071"> </a>
+<a name="ln1072">/// Check *argp for &lt;nomodeline&gt;.  When it is present return false, otherwise</a>
+<a name="ln1073">/// return true and advance *argp to after it. Thus do_modelines() should be</a>
+<a name="ln1074">/// called when true is returned.</a>
+<a name="ln1075">///</a>
+<a name="ln1076">/// @param[in,out] argp argument string</a>
+<a name="ln1077">bool check_nomodeline(char_u **argp)</a>
+<a name="ln1078">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln1079">{</a>
+<a name="ln1080">  if (STRNCMP(*argp, &quot;&lt;nomodeline&gt;&quot;, 12) == 0) {</a>
+<a name="ln1081">    *argp = skipwhite(*argp + 12);</a>
+<a name="ln1082">    return false;</a>
+<a name="ln1083">  }</a>
+<a name="ln1084">  return true;</a>
+<a name="ln1085">}</a>
+<a name="ln1086"> </a>
+<a name="ln1087">/// Prepare for executing autocommands for (hidden) buffer `buf`.</a>
+<a name="ln1088">/// If the current buffer is not in any visible window, put it in a temporary</a>
+<a name="ln1089">/// floating window `aucmd_win`.</a>
+<a name="ln1090">/// Set `curbuf` and `curwin` to match `buf`.</a>
+<a name="ln1091">///</a>
+<a name="ln1092">/// @param aco  structure to save values in</a>
+<a name="ln1093">/// @param buf  new curbuf</a>
+<a name="ln1094">void aucmd_prepbuf(aco_save_T *aco, buf_T *buf)</a>
+<a name="ln1095">{</a>
+<a name="ln1096">  win_T *win;</a>
+<a name="ln1097">  bool need_append = true;  // Append `aucmd_win` to the window list.</a>
+<a name="ln1098"> </a>
+<a name="ln1099">  // Find a window that is for the new buffer</a>
+<a name="ln1100">  if (buf == curbuf) {  // be quick when buf is curbuf</a>
+<a name="ln1101">    win = curwin;</a>
+<a name="ln1102">  } else {</a>
+<a name="ln1103">    win = NULL;</a>
+<a name="ln1104">    FOR_ALL_WINDOWS_IN_TAB(wp, curtab) {</a>
+<a name="ln1105">      if (wp-&gt;w_buffer == buf) {</a>
+<a name="ln1106">        win = wp;</a>
+<a name="ln1107">        break;</a>
+<a name="ln1108">      }</a>
+<a name="ln1109">    }</a>
+<a name="ln1110">  }</a>
+<a name="ln1111"> </a>
+<a name="ln1112">  // Allocate the `aucmd_win` dummy floating window.</a>
+<a name="ln1113">  if (win == NULL &amp;&amp; aucmd_win == NULL) {</a>
+<a name="ln1114">    win_alloc_aucmd_win();</a>
+<a name="ln1115">    need_append = false;</a>
+<a name="ln1116">  }</a>
+<a name="ln1117">  if (win == NULL &amp;&amp; aucmd_win_used) {</a>
+<a name="ln1118">    // Strange recursive autocommand, fall back to using the current</a>
+<a name="ln1119">    // window.  Expect a few side effects...</a>
+<a name="ln1120">    win = curwin;</a>
+<a name="ln1121">  }</a>
+<a name="ln1122"> </a>
+<a name="ln1123">  aco-&gt;save_curwin_handle = curwin-&gt;handle;</a>
+<a name="ln1124">  aco-&gt;save_curbuf = curbuf;</a>
+<a name="ln1125">  aco-&gt;save_prevwin_handle = prevwin == NULL ? 0 : prevwin-&gt;handle;</a>
+<a name="ln1126">  if (win != NULL) {</a>
+<a name="ln1127">    // There is a window for &quot;buf&quot; in the current tab page, make it the</a>
+<a name="ln1128">    // curwin.  This is preferred, it has the least side effects (esp. if</a>
+<a name="ln1129">    // &quot;buf&quot; is curbuf).</a>
+<a name="ln1130">    aco-&gt;use_aucmd_win = false;</a>
+<a name="ln1131">    curwin = win;</a>
+<a name="ln1132">  } else {</a>
+<a name="ln1133">    // There is no window for &quot;buf&quot;, use &quot;aucmd_win&quot;.  To minimize the side</a>
+<a name="ln1134">    // effects, insert it in the current tab page.</a>
+<a name="ln1135">    // Anything related to a window (e.g., setting folds) may have</a>
+<a name="ln1136">    // unexpected results.</a>
+<a name="ln1137">    aco-&gt;use_aucmd_win = true;</a>
+<a name="ln1138">    aucmd_win_used = true;</a>
+<a name="ln1139">    aucmd_win-&gt;w_buffer = buf;</a>
+<a name="ln1140">    aucmd_win-&gt;w_s = &amp;buf-&gt;b_s;</a>
+<a name="ln1141">    buf-&gt;b_nwindows++;</a>
+<a name="ln1142">    win_init_empty(aucmd_win);  // set cursor and topline to safe values</a>
+<a name="ln1143"> </a>
+<a name="ln1144">    // Make sure w_localdir and globaldir are NULL to avoid a chdir() in</a>
+<a name="ln1145">    // win_enter_ext().</a>
+<a name="ln1146">    XFREE_CLEAR(aucmd_win-&gt;w_localdir);</a>
+<a name="ln1147">    aco-&gt;globaldir = globaldir;</a>
+<a name="ln1148">    globaldir = NULL;</a>
+<a name="ln1149"> </a>
+<a name="ln1150">    block_autocmds();  // We don't want BufEnter/WinEnter autocommands.</a>
+<a name="ln1151">    if (need_append) {</a>
+<a name="ln1152">      win_append(lastwin, aucmd_win);</a>
+<a name="ln1153">      handle_register_window(aucmd_win);</a>
+<a name="ln1154">      win_config_float(aucmd_win, aucmd_win-&gt;w_float_config);</a>
+<a name="ln1155">    }</a>
+<a name="ln1156">    // Prevent chdir() call in win_enter_ext(), through do_autochdir()</a>
+<a name="ln1157">    int save_acd = p_acd;</a>
+<a name="ln1158">    p_acd = false;</a>
+<a name="ln1159">    win_enter(aucmd_win, false);</a>
+<a name="ln1160">    p_acd = save_acd;</a>
+<a name="ln1161">    unblock_autocmds();</a>
+<a name="ln1162">    curwin = aucmd_win;</a>
+<a name="ln1163">  }</a>
+<a name="ln1164">  curbuf = buf;</a>
+<a name="ln1165">  aco-&gt;new_curwin_handle = curwin-&gt;handle;</a>
+<a name="ln1166">  set_bufref(&amp;aco-&gt;new_curbuf, curbuf);</a>
+<a name="ln1167">}</a>
+<a name="ln1168"> </a>
+<a name="ln1169">/// Cleanup after executing autocommands for a (hidden) buffer.</a>
+<a name="ln1170">/// Restore the window as it was (if possible).</a>
+<a name="ln1171">///</a>
+<a name="ln1172">/// @param aco  structure holding saved values</a>
+<a name="ln1173">void aucmd_restbuf(aco_save_T *aco)</a>
+<a name="ln1174">{</a>
+<a name="ln1175">  if (aco-&gt;use_aucmd_win) {</a>
+<a name="ln1176">    curbuf-&gt;b_nwindows--;</a>
+<a name="ln1177">    // Find &quot;aucmd_win&quot;, it can't be closed, but it may be in another tab page.</a>
+<a name="ln1178">    // Do not trigger autocommands here.</a>
+<a name="ln1179">    block_autocmds();</a>
+<a name="ln1180">    if (curwin != aucmd_win) {</a>
+<a name="ln1181">      FOR_ALL_TAB_WINDOWS(tp, wp) {</a>
+<a name="ln1182">        if (wp == aucmd_win) {</a>
+<a name="ln1183">          if (tp != curtab) {</a>
+<a name="ln1184">            goto_tabpage_tp(tp, true, true);</a>
+<a name="ln1185">          }</a>
+<a name="ln1186">          win_goto(aucmd_win);</a>
+<a name="ln1187">          goto win_found;</a>
+<a name="ln1188">        }</a>
+<a name="ln1189">      }</a>
+<a name="ln1190">    }</a>
+<a name="ln1191">  win_found:</a>
+<a name="ln1192"> </a>
+<a name="ln1193">    win_remove(curwin, NULL);</a>
+<a name="ln1194">    handle_unregister_window(curwin);</a>
+<a name="ln1195">    if (curwin-&gt;w_grid_alloc.chars != NULL) {</a>
+<a name="ln1196">      ui_comp_remove_grid(&amp;curwin-&gt;w_grid_alloc);</a>
+<a name="ln1197">      ui_call_win_hide(curwin-&gt;w_grid_alloc.handle);</a>
+<a name="ln1198">      grid_free(&amp;curwin-&gt;w_grid_alloc);</a>
+<a name="ln1199">    }</a>
+<a name="ln1200"> </a>
+<a name="ln1201">    aucmd_win_used = false;</a>
+<a name="ln1202">    last_status(false);  // may need to remove last status line</a>
+<a name="ln1203"> </a>
+<a name="ln1204">    if (!valid_tabpage_win(curtab)) {</a>
+<a name="ln1205">      // no valid window in current tabpage</a>
+<a name="ln1206">      close_tabpage(curtab);</a>
+<a name="ln1207">    }</a>
+<a name="ln1208"> </a>
+<a name="ln1209">    unblock_autocmds();</a>
+<a name="ln1210"> </a>
+<a name="ln1211">    win_T *const save_curwin = win_find_by_handle(aco-&gt;save_curwin_handle);</a>
+<a name="ln1212">    if (save_curwin != NULL) {</a>
+<a name="ln1213">      curwin = save_curwin;</a>
+<a name="ln1214">    } else {</a>
+<a name="ln1215">      // Hmm, original window disappeared.  Just use the first one.</a>
+<a name="ln1216">      curwin = firstwin;</a>
+<a name="ln1217">    }</a>
+<a name="ln1218">    prevwin = win_find_by_handle(aco-&gt;save_prevwin_handle);</a>
+<a name="ln1219">    vars_clear(&amp;aucmd_win-&gt;w_vars-&gt;dv_hashtab);         // free all w: variables</a>
+<a name="ln1220">    hash_init(&amp;aucmd_win-&gt;w_vars-&gt;dv_hashtab);          // re-use the hashtab</a>
+<a name="ln1221">    curbuf = curwin-&gt;w_buffer;</a>
+<a name="ln1222"> </a>
+<a name="ln1223">    xfree(globaldir);</a>
+<a name="ln1224">    globaldir = aco-&gt;globaldir;</a>
+<a name="ln1225"> </a>
+<a name="ln1226">    // the buffer contents may have changed</a>
+<a name="ln1227">    check_cursor();</a>
+<a name="ln1228">    if (curwin-&gt;w_topline &gt; curbuf-&gt;b_ml.ml_line_count) {</a>
+<a name="ln1229">      curwin-&gt;w_topline = curbuf-&gt;b_ml.ml_line_count;</a>
+<a name="ln1230">      curwin-&gt;w_topfill = 0;</a>
+<a name="ln1231">    }</a>
+<a name="ln1232">  } else {</a>
+<a name="ln1233">    // Restore curwin.  Use the window ID, a window may have been closed</a>
+<a name="ln1234">    // and the memory re-used for another one.</a>
+<a name="ln1235">    win_T *const save_curwin = win_find_by_handle(aco-&gt;save_curwin_handle);</a>
+<a name="ln1236">    if (save_curwin != NULL) {</a>
+<a name="ln1237">      // Restore the buffer which was previously edited by curwin, if it was</a>
+<a name="ln1238">      // changed, we are still the same window and the buffer is valid.</a>
+<a name="ln1239">      if (curwin-&gt;handle == aco-&gt;new_curwin_handle</a>
+<a name="ln1240">          &amp;&amp; curbuf != aco-&gt;new_curbuf.br_buf</a>
+<a name="ln1241">          &amp;&amp; bufref_valid(&amp;aco-&gt;new_curbuf)</a>
+<a name="ln1242">          &amp;&amp; aco-&gt;new_curbuf.br_buf-&gt;b_ml.ml_mfp != NULL) {</a>
+<a name="ln1243">        if (curwin-&gt;w_s == &amp;curbuf-&gt;b_s) {</a>
+<a name="ln1244">          curwin-&gt;w_s = &amp;aco-&gt;new_curbuf.br_buf-&gt;b_s;</a>
+<a name="ln1245">        }</a>
+<a name="ln1246">        curbuf-&gt;b_nwindows--;</a>
+<a name="ln1247">        curbuf = aco-&gt;new_curbuf.br_buf;</a>
+<a name="ln1248">        curwin-&gt;w_buffer = curbuf;</a>
+<a name="ln1249">        curbuf-&gt;b_nwindows++;</a>
+<a name="ln1250">      }</a>
+<a name="ln1251"> </a>
+<a name="ln1252">      curwin = save_curwin;</a>
+<a name="ln1253">      curbuf = curwin-&gt;w_buffer;</a>
+<a name="ln1254">      prevwin = win_find_by_handle(aco-&gt;save_prevwin_handle);</a>
+<a name="ln1255">      // In case the autocommand moves the cursor to a position that does not</a>
+<a name="ln1256">      // exist in curbuf</a>
+<a name="ln1257">      check_cursor();</a>
+<a name="ln1258">    }</a>
+<a name="ln1259">  }</a>
+<a name="ln1260">}</a>
+<a name="ln1261"> </a>
+<a name="ln1262">/// Execute autocommands for &quot;event&quot; and file name &quot;fname&quot;.</a>
+<a name="ln1263">///</a>
+<a name="ln1264">/// @param event event that occurred</a>
+<a name="ln1265">/// @param fname filename, NULL or empty means use actual file name</a>
+<a name="ln1266">/// @param fname_io filename to use for &lt;afile&gt; on cmdline</a>
+<a name="ln1267">/// @param force When true, ignore autocmd_busy</a>
+<a name="ln1268">/// @param buf Buffer for &lt;abuf&gt;</a>
+<a name="ln1269">///</a>
+<a name="ln1270">/// @return true if some commands were executed.</a>
+<a name="ln1271">bool apply_autocmds(event_T event,</a>
+<a name="ln1272">                    char_u *fname,</a>
+<a name="ln1273">                    char_u *fname_io,</a>
+<a name="ln1274">                    bool force,</a>
+<a name="ln1275">                    buf_T *buf)</a>
+<a name="ln1276">{</a>
+<a name="ln1277">  return apply_autocmds_group(event, fname, fname_io, force, AUGROUP_ALL, buf,</a>
+<a name="ln1278">                              NULL);</a>
+<a name="ln1279">}</a>
+<a name="ln1280"> </a>
+<a name="ln1281">/// Like apply_autocmds(), but with extra &quot;eap&quot; argument.  This takes care of</a>
+<a name="ln1282">/// setting v:filearg.</a>
+<a name="ln1283">///</a>
+<a name="ln1284">/// @param event event that occurred</a>
+<a name="ln1285">/// @param fname NULL or empty means use actual file name</a>
+<a name="ln1286">/// @param fname_io fname to use for &lt;afile&gt; on cmdline</a>
+<a name="ln1287">/// @param force When true, ignore autocmd_busy</a>
+<a name="ln1288">/// @param buf Buffer for &lt;abuf&gt;</a>
+<a name="ln1289">/// @param exarg Ex command arguments</a>
+<a name="ln1290">///</a>
+<a name="ln1291">/// @return true if some commands were executed.</a>
+<a name="ln1292">bool apply_autocmds_exarg(event_T event,</a>
+<a name="ln1293">                          char_u *fname,</a>
+<a name="ln1294">                          char_u *fname_io,</a>
+<a name="ln1295">                          bool force,</a>
+<a name="ln1296">                          buf_T *buf,</a>
+<a name="ln1297">                          exarg_T *eap)</a>
+<a name="ln1298">{</a>
+<a name="ln1299">  return apply_autocmds_group(event, fname, fname_io, force, AUGROUP_ALL, buf,</a>
+<a name="ln1300">                              eap);</a>
+<a name="ln1301">}</a>
+<a name="ln1302"> </a>
+<a name="ln1303">/// Like apply_autocmds(), but handles the caller's retval.  If the script</a>
+<a name="ln1304">/// processing is being aborted or if retval is FAIL when inside a try</a>
+<a name="ln1305">/// conditional, no autocommands are executed.  If otherwise the autocommands</a>
+<a name="ln1306">/// cause the script to be aborted, retval is set to FAIL.</a>
+<a name="ln1307">///</a>
+<a name="ln1308">/// @param event event that occurred</a>
+<a name="ln1309">/// @param fname NULL or empty means use actual file name</a>
+<a name="ln1310">/// @param fname_io fname to use for &lt;afile&gt; on cmdline</a>
+<a name="ln1311">/// @param force When true, ignore autocmd_busy</a>
+<a name="ln1312">/// @param buf Buffer for &lt;abuf&gt;</a>
+<a name="ln1313">/// @param[in,out] retval caller's retval</a>
+<a name="ln1314">///</a>
+<a name="ln1315">/// @return true if some autocommands were executed</a>
+<a name="ln1316">bool apply_autocmds_retval(event_T event,</a>
+<a name="ln1317">                           char_u *fname,</a>
+<a name="ln1318">                           char_u *fname_io,</a>
+<a name="ln1319">                           bool force,</a>
+<a name="ln1320">                           buf_T *buf,</a>
+<a name="ln1321">                           int *retval)</a>
+<a name="ln1322">{</a>
+<a name="ln1323">  if (should_abort(*retval)) {</a>
+<a name="ln1324">    return false;</a>
+<a name="ln1325">  }</a>
+<a name="ln1326"> </a>
+<a name="ln1327">  bool did_cmd = apply_autocmds_group(event, fname, fname_io, force,</a>
+<a name="ln1328">                                      AUGROUP_ALL, buf, NULL);</a>
+<a name="ln1329">  if (did_cmd &amp;&amp; aborting()) {</a>
+<a name="ln1330">    *retval = FAIL;</a>
+<a name="ln1331">  }</a>
+<a name="ln1332">  return did_cmd;</a>
+<a name="ln1333">}</a>
+<a name="ln1334"> </a>
+<a name="ln1335">/// Return true if &quot;event&quot; autocommand is defined.</a>
+<a name="ln1336">///</a>
+<a name="ln1337">/// @param event the autocommand to check</a>
+<a name="ln1338">bool has_event(event_T event) FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln1339">{</a>
+<a name="ln1340">  return first_autopat[event] != NULL;</a>
+<a name="ln1341">}</a>
+<a name="ln1342"> </a>
+<a name="ln1343">/// Return true when there is a CursorHold/CursorHoldI autocommand defined for</a>
+<a name="ln1344">/// the current mode.</a>
+<a name="ln1345">bool has_cursorhold(void) FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln1346">{</a>
+<a name="ln1347">  return has_event(</a>
+<a name="ln1348">      (get_real_state() == NORMAL_BUSY ? EVENT_CURSORHOLD : EVENT_CURSORHOLDI));</a>
+<a name="ln1349">  // return first_autopat[] != NULL;</a>
+<a name="ln1350">}</a>
+<a name="ln1351"> </a>
+<a name="ln1352">/// Return true if the CursorHold/CursorHoldI event can be triggered.</a>
+<a name="ln1353">bool trigger_cursorhold(void) FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln1354">{</a>
+<a name="ln1355">  int state;</a>
+<a name="ln1356"> </a>
+<a name="ln1357">  if (!did_cursorhold &amp;&amp; has_cursorhold() &amp;&amp; reg_recording == 0</a>
+<a name="ln1358">      &amp;&amp; typebuf.tb_len == 0 &amp;&amp; !ins_compl_active()) {</a>
+<a name="ln1359">    state = get_real_state();</a>
+<a name="ln1360">    if (state == NORMAL_BUSY || (state &amp; INSERT) != 0) {</a>
+<a name="ln1361">      return true;</a>
+<a name="ln1362">    }</a>
+<a name="ln1363">  }</a>
+<a name="ln1364">  return false;</a>
+<a name="ln1365">}</a>
+<a name="ln1366"> </a>
+<a name="ln1367">/// Execute autocommands for &quot;event&quot; and file name &quot;fname&quot;.</a>
+<a name="ln1368">///</a>
+<a name="ln1369">/// @param event event that occurred</a>
+<a name="ln1370">/// @param fname filename, NULL or empty means use actual file name</a>
+<a name="ln1371">/// @param fname_io filename to use for &lt;afile&gt; on cmdline,</a>
+<a name="ln1372">///                 NULL means use `fname`.</a>
+<a name="ln1373">/// @param force When true, ignore autocmd_busy</a>
+<a name="ln1374">/// @param group autocmd group ID or AUGROUP_ALL</a>
+<a name="ln1375">/// @param buf Buffer for &lt;abuf&gt;</a>
+<a name="ln1376">/// @param eap Ex command arguments</a>
+<a name="ln1377">///</a>
+<a name="ln1378">/// @return true if some commands were executed.</a>
+<a name="ln1379">static bool apply_autocmds_group(event_T event,</a>
+<a name="ln1380">                                 char_u *fname,</a>
+<a name="ln1381">                                 char_u *fname_io,</a>
+<a name="ln1382">                                 bool force,</a>
+<a name="ln1383">                                 int group,</a>
+<a name="ln1384">                                 buf_T *buf,</a>
+<a name="ln1385">                                 exarg_T *eap)</a>
+<a name="ln1386">{</a>
+<a name="ln1387">  char_u *sfname = NULL;  // short file name</a>
+<a name="ln1388">  char_u *tail;</a>
+<a name="ln1389">  bool save_changed;</a>
+<a name="ln1390">  buf_T *old_curbuf;</a>
+<a name="ln1391">  bool retval = false;</a>
+<a name="ln1392">  char_u *save_sourcing_name;</a>
+<a name="ln1393">  linenr_T save_sourcing_lnum;</a>
+<a name="ln1394">  char_u *save_autocmd_fname;</a>
+<a name="ln1395">  int save_autocmd_bufnr;</a>
+<a name="ln1396">  char_u *save_autocmd_match;</a>
+<a name="ln1397">  int save_autocmd_busy;</a>
+<a name="ln1398">  int save_autocmd_nested;</a>
+<a name="ln1399">  static int nesting = 0;</a>
+<a name="ln1400">  AutoPatCmd patcmd;</a>
+<a name="ln1401">  AutoPat *ap;</a>
+<a name="ln1402">  char_u *save_cmdarg;</a>
+<a name="ln1403">  long save_cmdbang;</a>
+<a name="ln1404">  static int filechangeshell_busy = false;</a>
+<a name="ln1405">  proftime_T wait_time;</a>
+<a name="ln1406">  bool did_save_redobuff = false;</a>
+<a name="ln1407">  save_redo_T save_redo;</a>
+<a name="ln1408">  const bool save_KeyTyped = KeyTyped;</a>
+<a name="ln1409"> </a>
+<a name="ln1410">  // Quickly return if there are no autocommands for this event or</a>
+<a name="ln1411">  // autocommands are blocked.</a>
+<a name="ln1412">  if (event == NUM_EVENTS || first_autopat[(int)event] == NULL</a>
+<a name="ln1413">      || is_autocmd_blocked()) {</a>
+<a name="ln1414">    goto BYPASS_AU;</a>
+<a name="ln1415">  }</a>
+<a name="ln1416"> </a>
+<a name="ln1417">  // When autocommands are busy, new autocommands are only executed when</a>
+<a name="ln1418">  // explicitly enabled with the &quot;nested&quot; flag.</a>
+<a name="ln1419">  if (autocmd_busy &amp;&amp; !(force || autocmd_nested)) {</a>
+<a name="ln1420">    goto BYPASS_AU;</a>
+<a name="ln1421">  }</a>
+<a name="ln1422"> </a>
+<a name="ln1423">  // Quickly return when immediately aborting on error, or when an interrupt</a>
+<a name="ln1424">  // occurred or an exception was thrown but not caught.</a>
+<a name="ln1425">  if (aborting()) {</a>
+<a name="ln1426">    goto BYPASS_AU;</a>
+<a name="ln1427">  }</a>
+<a name="ln1428"> </a>
+<a name="ln1429">  // FileChangedShell never nests, because it can create an endless loop.</a>
+<a name="ln1430">  if (filechangeshell_busy</a>
+<a name="ln1431">      &amp;&amp; (event == EVENT_FILECHANGEDSHELL</a>
+<a name="ln1432">          || event == EVENT_FILECHANGEDSHELLPOST)) {</a>
+<a name="ln1433">    goto BYPASS_AU;</a>
+<a name="ln1434">  }</a>
+<a name="ln1435"> </a>
+<a name="ln1436">  // Ignore events in 'eventignore'.</a>
+<a name="ln1437">  if (event_ignored(event)) {</a>
+<a name="ln1438">    goto BYPASS_AU;</a>
+<a name="ln1439">  }</a>
+<a name="ln1440"> </a>
+<a name="ln1441">  // Allow nesting of autocommands, but restrict the depth, because it's</a>
+<a name="ln1442">  // possible to create an endless loop.</a>
+<a name="ln1443">  if (nesting == 10) {</a>
+<a name="ln1444">    EMSG(_(&quot;E218: autocommand nesting too deep&quot;));</a>
+<a name="ln1445">    goto BYPASS_AU;</a>
+<a name="ln1446">  }</a>
+<a name="ln1447"> </a>
+<a name="ln1448">  // Check if these autocommands are disabled.  Used when doing &quot;:all&quot; or</a>
+<a name="ln1449">  // &quot;:ball&quot;.</a>
+<a name="ln1450">  if ((autocmd_no_enter &amp;&amp; (event == EVENT_WINENTER || event == EVENT_BUFENTER))</a>
+<a name="ln1451">      || (autocmd_no_leave</a>
+<a name="ln1452">          &amp;&amp; (event == EVENT_WINLEAVE || event == EVENT_BUFLEAVE))) {</a>
+<a name="ln1453">    goto BYPASS_AU;</a>
+<a name="ln1454">  }</a>
+<a name="ln1455"> </a>
+<a name="ln1456">  // Save the autocmd_* variables and info about the current buffer.</a>
+<a name="ln1457">  save_autocmd_fname = autocmd_fname;</a>
+<a name="ln1458">  save_autocmd_bufnr = autocmd_bufnr;</a>
+<a name="ln1459">  save_autocmd_match = autocmd_match;</a>
+<a name="ln1460">  save_autocmd_busy = autocmd_busy;</a>
+<a name="ln1461">  save_autocmd_nested = autocmd_nested;</a>
+<a name="ln1462">  save_changed = curbuf-&gt;b_changed;</a>
+<a name="ln1463">  old_curbuf = curbuf;</a>
+<a name="ln1464"> </a>
+<a name="ln1465">  // Set the file name to be used for &lt;afile&gt;.</a>
+<a name="ln1466">  // Make a copy to avoid that changing a buffer name or directory makes it</a>
+<a name="ln1467">  // invalid.</a>
+<a name="ln1468">  if (fname_io == NULL) {</a>
+<a name="ln1469">    if (event == EVENT_COLORSCHEME || event == EVENT_COLORSCHEMEPRE</a>
+<a name="ln1470">        || event == EVENT_OPTIONSET) {</a>
+<a name="ln1471">      autocmd_fname = NULL;</a>
+<a name="ln1472">    } else if (fname != NULL &amp;&amp; !ends_excmd(*fname)) {</a>
+<a name="ln1473">      autocmd_fname = fname;</a>
+<a name="ln1474">    } else if (buf != NULL) {</a>
+<a name="ln1475">      autocmd_fname = buf-&gt;b_ffname;</a>
+<a name="ln1476">    } else {</a>
+<a name="ln1477">      autocmd_fname = NULL;</a>
+<a name="ln1478">    }</a>
+<a name="ln1479">  } else {</a>
+<a name="ln1480">    autocmd_fname = fname_io;</a>
+<a name="ln1481">  }</a>
+<a name="ln1482">  if (autocmd_fname != NULL) {</a>
+<a name="ln1483">    // Allocate MAXPATHL for when eval_vars() resolves the fullpath.</a>
+<a name="ln1484">    autocmd_fname = vim_strnsave(autocmd_fname, MAXPATHL);</a>
+<a name="ln1485">  }</a>
+<a name="ln1486"> </a>
+<a name="ln1487">  // Set the buffer number to be used for &lt;abuf&gt;.</a>
+<a name="ln1488">  if (buf == NULL) {</a>
+<a name="ln1489">    autocmd_bufnr = 0;</a>
+<a name="ln1490">  } else {</a>
+<a name="ln1491">    autocmd_bufnr = buf-&gt;b_fnum;</a>
+<a name="ln1492">  }</a>
+<a name="ln1493"> </a>
+<a name="ln1494">  // When the file name is NULL or empty, use the file name of buffer &quot;buf&quot;.</a>
+<a name="ln1495">  // Always use the full path of the file name to match with, in case</a>
+<a name="ln1496">  // &quot;allow_dirs&quot; is set.</a>
+<a name="ln1497">  if (fname == NULL || *fname == NUL) {</a>
+<a name="ln1498">    if (buf == NULL) {</a>
+<a name="ln1499">      fname = NULL;</a>
+<a name="ln1500">    } else {</a>
+<a name="ln1501">      if (event == EVENT_SYNTAX) {</a>
+<a name="ln1502">        fname = buf-&gt;b_p_syn;</a>
+<a name="ln1503">      } else if (event == EVENT_FILETYPE) {</a>
+<a name="ln1504">        fname = buf-&gt;b_p_ft;</a>
+<a name="ln1505">      } else {</a>
+<a name="ln1506">        if (buf-&gt;b_sfname != NULL) {</a>
+<a name="ln1507">          sfname = vim_strsave(buf-&gt;b_sfname);</a>
+<a name="ln1508">        }</a>
+<a name="ln1509">        fname = buf-&gt;b_ffname;</a>
+<a name="ln1510">      }</a>
+<a name="ln1511">    }</a>
+<a name="ln1512">    if (fname == NULL) {</a>
+<a name="ln1513">      fname = (char_u *)&quot;&quot;;</a>
+<a name="ln1514">    }</a>
+<a name="ln1515">    fname = vim_strsave(fname);  // make a copy, so we can change it</a>
+<a name="ln1516">  } else {</a>
+<a name="ln1517">    sfname = vim_strsave(fname);</a>
+<a name="ln1518">    // Don't try expanding the following events.</a>
+<a name="ln1519">    if (event == EVENT_CMDLINECHANGED || event == EVENT_CMDLINEENTER</a>
+<a name="ln1520">        || event == EVENT_CMDLINELEAVE || event == EVENT_CMDWINENTER</a>
+<a name="ln1521">        || event == EVENT_CMDWINLEAVE || event == EVENT_CMDUNDEFINED</a>
+<a name="ln1522">        || event == EVENT_COLORSCHEME || event == EVENT_COLORSCHEMEPRE</a>
+<a name="ln1523">        || event == EVENT_DIRCHANGED || event == EVENT_FILETYPE</a>
+<a name="ln1524">        || event == EVENT_FUNCUNDEFINED || event == EVENT_OPTIONSET</a>
+<a name="ln1525">        || event == EVENT_QUICKFIXCMDPOST || event == EVENT_QUICKFIXCMDPRE</a>
+<a name="ln1526">        || event == EVENT_REMOTEREPLY || event == EVENT_SPELLFILEMISSING</a>
+<a name="ln1527">        || event == EVENT_SYNTAX || event == EVENT_SIGNAL</a>
+<a name="ln1528">        || event == EVENT_TABCLOSED || event == EVENT_WINCLOSED) {</a>
+<a name="ln1529">      fname = vim_strsave(fname);</a>
+<a name="ln1530">    } else {</a>
+<a name="ln1531">      fname = (char_u *)FullName_save((char *)fname, false);</a>
+<a name="ln1532">    }</a>
+<a name="ln1533">  }</a>
+<a name="ln1534">  if (fname == NULL) {  // out of memory</a>
+<a name="ln1535">    xfree(sfname);</a>
+<a name="ln1536">    retval = false;</a>
+<a name="ln1537">    goto BYPASS_AU;</a>
+<a name="ln1538">  }</a>
+<a name="ln1539"> </a>
+<a name="ln1540">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln1541">  // Replace all backslashes with forward slashes. This makes the</a>
+<a name="ln1542">  // autocommand patterns portable between Unix and Windows.</a>
+<a name="ln1543">  if (sfname != NULL) {</a>
+<a name="ln1544">    forward_slash(sfname);</a>
+<a name="ln1545">  }</a>
+<a name="ln1546">  forward_slash(fname);</a>
+<a name="ln1547">#endif</a>
+<a name="ln1548"> </a>
+<a name="ln1549">  // Set the name to be used for &lt;amatch&gt;.</a>
+<a name="ln1550">  autocmd_match = fname;</a>
+<a name="ln1551"> </a>
+<a name="ln1552">  // Don't redraw while doing autocommands.</a>
+<a name="ln1553">  RedrawingDisabled++;</a>
+<a name="ln1554">  save_sourcing_name = sourcing_name;</a>
+<a name="ln1555">  sourcing_name = NULL;  // don't free this one</a>
+<a name="ln1556">  save_sourcing_lnum = sourcing_lnum;</a>
+<a name="ln1557">  sourcing_lnum = 0;  // no line number here</a>
+<a name="ln1558"> </a>
+<a name="ln1559">  const sctx_T save_current_sctx = current_sctx;</a>
+<a name="ln1560"> </a>
+<a name="ln1561">  if (do_profiling == PROF_YES) {</a>
+<a name="ln1562">    prof_child_enter(&amp;wait_time);  // doesn't count for the caller itself</a>
+<a name="ln1563">  }</a>
+<a name="ln1564"> </a>
+<a name="ln1565">  // Don't use local function variables, if called from a function.</a>
+<a name="ln1566">  funccal_entry_T funccal_entry;</a>
+<a name="ln1567">  save_funccal(&amp;funccal_entry);</a>
+<a name="ln1568"> </a>
+<a name="ln1569">  // When starting to execute autocommands, save the search patterns.</a>
+<a name="ln1570">  if (!autocmd_busy) {</a>
+<a name="ln1571">    save_search_patterns();</a>
+<a name="ln1572">    if (!ins_compl_active()) {</a>
+<a name="ln1573">      saveRedobuff(&amp;save_redo);</a>
+<a name="ln1574">      did_save_redobuff = true;</a>
+<a name="ln1575">    }</a>
+<a name="ln1576">    did_filetype = keep_filetype;</a>
+<a name="ln1577">  }</a>
+<a name="ln1578"> </a>
+<a name="ln1579">  // Note that we are applying autocmds.  Some commands need to know.</a>
+<a name="ln1580">  autocmd_busy = true;</a>
+<a name="ln1581">  filechangeshell_busy = (event == EVENT_FILECHANGEDSHELL);</a>
+<a name="ln1582">  nesting++;  // see matching decrement below</a>
+<a name="ln1583"> </a>
+<a name="ln1584">  // Remember that FileType was triggered.  Used for did_filetype().</a>
+<a name="ln1585">  if (event == EVENT_FILETYPE) {</a>
+<a name="ln1586">    did_filetype = true;</a>
+<a name="ln1587">  }</a>
+<a name="ln1588"> </a>
+<a name="ln1589">  tail = path_tail(fname);</a>
+<a name="ln1590"> </a>
+<a name="ln1591">  // Find first autocommand that matches</a>
+<a name="ln1592">  patcmd.curpat = first_autopat[(int)event];</a>
+<a name="ln1593">  patcmd.nextcmd = NULL;</a>
+<a name="ln1594">  patcmd.group = group;</a>
+<a name="ln1595">  patcmd.fname = fname;</a>
+<a name="ln1596">  patcmd.sfname = sfname;</a>
+<a name="ln1597">  patcmd.tail = tail;</a>
+<a name="ln1598">  patcmd.event = event;</a>
+<a name="ln1599">  patcmd.arg_bufnr = autocmd_bufnr;</a>
+<a name="ln1600">  patcmd.next = NULL;</a>
+<a name="ln1601">  auto_next_pat(&amp;patcmd, false);</a>
+<a name="ln1602"> </a>
+<a name="ln1603">  // found one, start executing the autocommands</a>
+<a name="ln1604">  if (patcmd.curpat != NULL) {</a>
+<a name="ln1605">    // add to active_apc_list</a>
+<a name="ln1606">    patcmd.next = active_apc_list;</a>
+<a name="ln1607">    active_apc_list = &amp;patcmd;</a>
+<a name="ln1608"> </a>
+<a name="ln1609">    // set v:cmdarg (only when there is a matching pattern)</a>
+<a name="ln1610">    save_cmdbang = (long)get_vim_var_nr(VV_CMDBANG);</a>
+<a name="ln1611">    if (eap != NULL) {</a>
+<a name="ln1612">      save_cmdarg = set_cmdarg(eap, NULL);</a>
+<a name="ln1613">      set_vim_var_nr(VV_CMDBANG, (long)eap-&gt;forceit);</a>
+<a name="ln1614">    } else {</a>
+<a name="ln1615">      save_cmdarg = NULL;  // avoid gcc warning</a>
+<a name="ln1616">    }</a>
+<a name="ln1617">    retval = true;</a>
+<a name="ln1618">    // mark the last pattern, to avoid an endless loop when more patterns</a>
+<a name="ln1619">    // are added when executing autocommands</a>
+<a name="ln1620">    for (ap = patcmd.curpat; ap-&gt;next != NULL; ap = ap-&gt;next) {</a>
+<a name="ln1621">      ap-&gt;last = false;</a>
+<a name="ln1622">    }</a>
+<a name="ln1623">    ap-&gt;last = true;</a>
+<a name="ln1624"> </a>
+<a name="ln1625">    if (nesting == 1) {</a>
+<a name="ln1626">      // make sure cursor and topline are valid</a>
+<a name="ln1627">      check_lnums(true);</a>
+<a name="ln1628">    }</a>
+<a name="ln1629"> </a>
+<a name="ln1630">    // Execute the autocmd. The `getnextac` callback handles iteration.</a>
+<a name="ln1631">    do_cmdline(NULL, getnextac, (void *)&amp;patcmd,</a>
+<a name="ln1632">               DOCMD_NOWAIT | DOCMD_VERBOSE | DOCMD_REPEAT);</a>
+<a name="ln1633"> </a>
+<a name="ln1634">    if (nesting == 1) {</a>
+<a name="ln1635">      // restore cursor and topline, unless they were changed</a>
+<a name="ln1636">      reset_lnums();</a>
+<a name="ln1637">    }</a>
+<a name="ln1638"> </a>
+<a name="ln1639"> </a>
+<a name="ln1640">    if (eap != NULL) {</a>
+<a name="ln1641">      (void)set_cmdarg(NULL, save_cmdarg);</a>
+<a name="ln1642">      set_vim_var_nr(VV_CMDBANG, save_cmdbang);</a>
+<a name="ln1643">    }</a>
+<a name="ln1644">    // delete from active_apc_list</a>
+<a name="ln1645">    if (active_apc_list == &amp;patcmd) {  // just in case</a>
+<a name="ln1646">      active_apc_list = patcmd.next;</a>
+<a name="ln1647">    }</a>
+<a name="ln1648">  }</a>
+<a name="ln1649"> </a>
+<a name="ln1650">  RedrawingDisabled--;</a>
+<a name="ln1651">  autocmd_busy = save_autocmd_busy;</a>
+<a name="ln1652">  filechangeshell_busy = false;</a>
+<a name="ln1653">  autocmd_nested = save_autocmd_nested;</a>
+<a name="ln1654">  xfree(sourcing_name);</a>
+<a name="ln1655">  sourcing_name = save_sourcing_name;</a>
+<a name="ln1656">  sourcing_lnum = save_sourcing_lnum;</a>
+<a name="ln1657">  xfree(autocmd_fname);</a>
+<a name="ln1658">  autocmd_fname = save_autocmd_fname;</a>
+<a name="ln1659">  autocmd_bufnr = save_autocmd_bufnr;</a>
+<a name="ln1660">  autocmd_match = save_autocmd_match;</a>
+<a name="ln1661">  current_sctx = save_current_sctx;</a>
+<a name="ln1662">  restore_funccal();</a>
+<a name="ln1663">  if (do_profiling == PROF_YES) {</a>
+<a name="ln1664">    prof_child_exit(&amp;wait_time);</a>
+<a name="ln1665">  }</a>
+<a name="ln1666">  KeyTyped = save_KeyTyped;</a>
+<a name="ln1667">  xfree(fname);</a>
+<a name="ln1668">  xfree(sfname);</a>
+<a name="ln1669">  nesting--;  // see matching increment above</a>
+<a name="ln1670"> </a>
+<a name="ln1671">  // When stopping to execute autocommands, restore the search patterns and</a>
+<a name="ln1672">  // the redo buffer. Free any buffers in the au_pending_free_buf list and</a>
+<a name="ln1673">  // free any windows in the au_pending_free_win list.</a>
+<a name="ln1674">  if (!autocmd_busy) {</a>
+<a name="ln1675">    restore_search_patterns();</a>
+<a name="ln1676">    if (did_save_redobuff) {</a>
+<a name="ln1677">      restoreRedobuff(&amp;save_redo);</a>
+<a name="ln1678">    }</a>
+<a name="ln1679">    did_filetype = false;</a>
+<a name="ln1680">    while (au_pending_free_buf != NULL) {</a>
+<a name="ln1681">      buf_T *b = au_pending_free_buf-&gt;b_next;</a>
+<a name="ln1682"> </a>
+<a name="ln1683">      xfree(au_pending_free_buf);</a>
+<a name="ln1684">      au_pending_free_buf = b;</a>
+<a name="ln1685">    }</a>
+<a name="ln1686">    while (au_pending_free_win != NULL) {</a>
+<a name="ln1687">      win_T *w = au_pending_free_win-&gt;w_next;</a>
+<a name="ln1688"> </a>
+<a name="ln1689">      xfree(au_pending_free_win);</a>
+<a name="ln1690">      au_pending_free_win = w;</a>
+<a name="ln1691">    }</a>
+<a name="ln1692">  }</a>
+<a name="ln1693"> </a>
+<a name="ln1694">  // Some events don't set or reset the Changed flag.</a>
+<a name="ln1695">  // Check if still in the same buffer!</a>
+<a name="ln1696">  if (curbuf == old_curbuf</a>
+<a name="ln1697">      &amp;&amp; (event == EVENT_BUFREADPOST || event == EVENT_BUFWRITEPOST</a>
+<a name="ln1698">          || event == EVENT_FILEAPPENDPOST || event == EVENT_VIMLEAVE</a>
+<a name="ln1699">          || event == EVENT_VIMLEAVEPRE)) {</a>
+<a name="ln1700">    if (curbuf-&gt;b_changed != save_changed) {</a>
+<a name="ln1701">      need_maketitle = true;</a>
+<a name="ln1702">    }</a>
+<a name="ln1703">    curbuf-&gt;b_changed = save_changed;</a>
+<a name="ln1704">  }</a>
+<a name="ln1705"> </a>
+<a name="ln1706">  au_cleanup();  // may really delete removed patterns/commands now</a>
+<a name="ln1707"> </a>
+<a name="ln1708">BYPASS_AU:</a>
+<a name="ln1709">  // When wiping out a buffer make sure all its buffer-local autocommands</a>
+<a name="ln1710">  // are deleted.</a>
+<a name="ln1711">  if (event == EVENT_BUFWIPEOUT &amp;&amp; buf != NULL) {</a>
+<a name="ln1712">    aubuflocal_remove(buf);</a>
+<a name="ln1713">  }</a>
+<a name="ln1714"> </a>
+<a name="ln1715">  if (retval == OK &amp;&amp; event == EVENT_FILETYPE) {</a>
+<a name="ln1716">    au_did_filetype = true;</a>
+<a name="ln1717">  }</a>
+<a name="ln1718"> </a>
+<a name="ln1719">  return retval;</a>
+<a name="ln1720">}</a>
+<a name="ln1721"> </a>
+<a name="ln1722">// Block triggering autocommands until unblock_autocmd() is called.</a>
+<a name="ln1723">// Can be used recursively, so long as it's symmetric.</a>
+<a name="ln1724">void block_autocmds(void)</a>
+<a name="ln1725">{</a>
+<a name="ln1726">  // Remember the value of v:termresponse.</a>
+<a name="ln1727">  if (is_autocmd_blocked()) {</a>
+<a name="ln1728">    old_termresponse = get_vim_var_str(VV_TERMRESPONSE);</a>
+<a name="ln1729">  }</a>
+<a name="ln1730">  autocmd_blocked++;</a>
+<a name="ln1731">}</a>
+<a name="ln1732"> </a>
+<a name="ln1733">void unblock_autocmds(void)</a>
+<a name="ln1734">{</a>
+<a name="ln1735">  autocmd_blocked--;</a>
+<a name="ln1736"> </a>
+<a name="ln1737">  // When v:termresponse was set while autocommands were blocked, trigger</a>
+<a name="ln1738">  // the autocommands now.  Esp. useful when executing a shell command</a>
+<a name="ln1739">  // during startup (nvim -d).</a>
+<a name="ln1740">  if (is_autocmd_blocked()</a>
+<a name="ln1741">      &amp;&amp; get_vim_var_str(VV_TERMRESPONSE) != old_termresponse) {</a>
+<a name="ln1742">    apply_autocmds(EVENT_TERMRESPONSE, NULL, NULL, false, curbuf);</a>
+<a name="ln1743">  }</a>
+<a name="ln1744">}</a>
+<a name="ln1745"> </a>
+<a name="ln1746">bool is_autocmd_blocked(void)</a>
+<a name="ln1747">  FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln1748">{</a>
+<a name="ln1749">  return autocmd_blocked != 0;</a>
+<a name="ln1750">}</a>
+<a name="ln1751"> </a>
+<a name="ln1752">/// Find next autocommand pattern that matches.</a>
+<a name="ln1753">/// stop when 'last' flag is set</a>
+<a name="ln1754">void auto_next_pat(AutoPatCmd *apc, int stop_at_last)</a>
+<a name="ln1755">{</a>
+<a name="ln1756">  AutoPat *ap;</a>
+<a name="ln1757">  AutoCmd *cp;</a>
+<a name="ln1758">  char *s;</a>
+<a name="ln1759"> </a>
+<a name="ln1760">  XFREE_CLEAR(sourcing_name);</a>
+<a name="ln1761"> </a>
+<a name="ln1762">  for (ap = apc-&gt;curpat; ap != NULL &amp;&amp; !got_int; ap = ap-&gt;next) {</a>
+<a name="ln1763">    apc-&gt;curpat = NULL;</a>
+<a name="ln1764"> </a>
+<a name="ln1765">    // Only use a pattern when it has not been removed, has commands and</a>
+<a name="ln1766">    // the group matches. For buffer-local autocommands only check the</a>
+<a name="ln1767">    // buffer number.</a>
+<a name="ln1768">    if (ap-&gt;pat != NULL &amp;&amp; ap-&gt;cmds != NULL</a>
+<a name="ln1769">        &amp;&amp; (apc-&gt;group == AUGROUP_ALL || apc-&gt;group == ap-&gt;group)) {</a>
+<a name="ln1770">      // execution-condition</a>
+<a name="ln1771">      if (ap-&gt;buflocal_nr == 0</a>
+<a name="ln1772">          ? match_file_pat(</a>
+<a name="ln1773">              NULL,</a>
+<a name="ln1774">              &amp;ap-&gt;reg_prog,</a>
+<a name="ln1775">              apc-&gt;fname,</a>
+<a name="ln1776">              apc-&gt;sfname,</a>
+<a name="ln1777">              apc-&gt;tail,</a>
+<a name="ln1778">              ap-&gt;allow_dirs)</a>
+<a name="ln1779">          : ap-&gt;buflocal_nr == apc-&gt;arg_bufnr) {</a>
+<a name="ln1780">        const char *const name = event_nr2name(apc-&gt;event);</a>
+<a name="ln1781">        s = _(&quot;%s Autocommands for \&quot;%s\&quot;&quot;);</a>
+<a name="ln1782"> </a>
+<a name="ln1783">        const size_t sourcing_name_len</a>
+<a name="ln1784">            = (STRLEN(s) + strlen(name) + (size_t)ap-&gt;patlen + 1);</a>
+<a name="ln1785"> </a>
+<a name="ln1786">        sourcing_name = xmalloc(sourcing_name_len);</a>
+<a name="ln1787">        snprintf((char *)sourcing_name, sourcing_name_len, s, name,</a>
+<a name="ln1788">                 (char *)ap-&gt;pat);</a>
+<a name="ln1789">        if (p_verbose &gt;= 8) {</a>
+<a name="ln1790">          verbose_enter();</a>
+<a name="ln1791">          smsg(_(&quot;Executing %s&quot;), sourcing_name);</a>
+<a name="ln1792">          verbose_leave();</a>
+<a name="ln1793">        }</a>
+<a name="ln1794"> </a>
+<a name="ln1795">        apc-&gt;curpat = ap;</a>
+<a name="ln1796">        apc-&gt;nextcmd = ap-&gt;cmds;</a>
+<a name="ln1797">        // mark last command</a>
+<a name="ln1798">        for (cp = ap-&gt;cmds; cp-&gt;next != NULL; cp = cp-&gt;next) {</a>
+<a name="ln1799">          cp-&gt;last = false;</a>
+<a name="ln1800">        }</a>
+<a name="ln1801">        cp-&gt;last = true;</a>
+<a name="ln1802">      }</a>
+<a name="ln1803">      line_breakcheck();</a>
+<a name="ln1804">      if (apc-&gt;curpat != NULL) {  // found a match</a>
+<a name="ln1805">        break;</a>
+<a name="ln1806">      }</a>
+<a name="ln1807">    }</a>
+<a name="ln1808">    if (stop_at_last &amp;&amp; ap-&gt;last) {</a>
+<a name="ln1809">      break;</a>
+<a name="ln1810">    }</a>
+<a name="ln1811">  }</a>
+<a name="ln1812">}</a>
+<a name="ln1813"> </a>
+<a name="ln1814">/// Get next autocommand command.</a>
+<a name="ln1815">/// Called by do_cmdline() to get the next line for &quot;:if&quot;.</a>
+<a name="ln1816">/// @return allocated string, or NULL for end of autocommands.</a>
+<a name="ln1817">char_u *getnextac(int c, void *cookie, int indent, bool do_concat)</a>
+<a name="ln1818">{</a>
+<a name="ln1819">  AutoPatCmd *acp = (AutoPatCmd *)cookie;</a>
+<a name="ln1820">  char_u *retval;</a>
+<a name="ln1821">  AutoCmd *ac;</a>
+<a name="ln1822"> </a>
+<a name="ln1823">  // Can be called again after returning the last line.</a>
+<a name="ln1824">  if (acp-&gt;curpat == NULL) {</a>
+<a name="ln1825">    return NULL;</a>
+<a name="ln1826">  }</a>
+<a name="ln1827"> </a>
+<a name="ln1828">  // repeat until we find an autocommand to execute</a>
+<a name="ln1829">  for (;;) {</a>
+<a name="ln1830">    // skip removed commands</a>
+<a name="ln1831">    while (acp-&gt;nextcmd != NULL &amp;&amp; acp-&gt;nextcmd-&gt;cmd == NULL) {</a>
+<a name="ln1832">      if (acp-&gt;nextcmd-&gt;last) {</a>
+<a name="ln1833">        acp-&gt;nextcmd = NULL;</a>
+<a name="ln1834">      } else {</a>
+<a name="ln1835">        acp-&gt;nextcmd = acp-&gt;nextcmd-&gt;next;</a>
+<a name="ln1836">      }</a>
+<a name="ln1837">    }</a>
+<a name="ln1838"> </a>
+<a name="ln1839">    if (acp-&gt;nextcmd != NULL) {</a>
+<a name="ln1840">      break;</a>
+<a name="ln1841">    }</a>
+<a name="ln1842"> </a>
+<a name="ln1843">    // at end of commands, find next pattern that matches</a>
+<a name="ln1844">    if (acp-&gt;curpat-&gt;last) {</a>
+<a name="ln1845">      acp-&gt;curpat = NULL;</a>
+<a name="ln1846">    } else {</a>
+<a name="ln1847">      acp-&gt;curpat = acp-&gt;curpat-&gt;next;</a>
+<a name="ln1848">    }</a>
+<a name="ln1849">    if (acp-&gt;curpat != NULL) {</a>
+<a name="ln1850">      auto_next_pat(acp, true);</a>
+<a name="ln1851">    }</a>
+<a name="ln1852">    if (acp-&gt;curpat == NULL) {</a>
+<a name="ln1853">      return NULL;</a>
+<a name="ln1854">    }</a>
+<a name="ln1855">  }</a>
+<a name="ln1856"> </a>
+<a name="ln1857">  ac = acp-&gt;nextcmd;</a>
+<a name="ln1858"> </a>
+<a name="ln1859">  if (p_verbose &gt;= 9) {</a>
+<a name="ln1860">    verbose_enter_scroll();</a>
+<a name="ln1861">    smsg(_(&quot;autocommand %s&quot;), ac-&gt;cmd);</a>
+<a name="ln1862">    msg_puts(&quot;\n&quot;);  // don't overwrite this either</a>
+<a name="ln1863">    verbose_leave_scroll();</a>
+<a name="ln1864">  }</a>
+<a name="ln1865">  retval = vim_strsave(ac-&gt;cmd);</a>
+<a name="ln1866">  // Remove one-shot (&quot;once&quot;) autocmd in anticipation of its execution.</a>
+<a name="ln1867">  if (ac-&gt;once) {</a>
+<a name="ln1868">    au_del_cmd(ac);</a>
+<a name="ln1869">  }</a>
+<a name="ln1870">  autocmd_nested = ac-&gt;nested;</a>
+<a name="ln1871">  current_sctx = ac-&gt;script_ctx;</a>
+<a name="ln1872">  if (ac-&gt;last) {</a>
+<a name="ln1873">    acp-&gt;nextcmd = NULL;</a>
+<a name="ln1874">  } else {</a>
+<a name="ln1875">    acp-&gt;nextcmd = ac-&gt;next;</a>
+<a name="ln1876">  }</a>
+<a name="ln1877"> </a>
+<a name="ln1878">  return retval;</a>
+<a name="ln1879">}</a>
+<a name="ln1880"> </a>
+<a name="ln1881">/// Return true if there is a matching autocommand for &quot;fname&quot;.</a>
+<a name="ln1882">/// To account for buffer-local autocommands, function needs to know</a>
+<a name="ln1883">/// in which buffer the file will be opened.</a>
+<a name="ln1884">///</a>
+<a name="ln1885">/// @param event event that occurred.</a>
+<a name="ln1886">/// @param sfname filename the event occurred in.</a>
+<a name="ln1887">/// @param buf buffer the file is open in</a>
+<a name="ln1888">bool has_autocmd(event_T event,</a>
+<a name="ln1889">                 char_u *sfname,</a>
+<a name="ln1890">                 buf_T *buf) FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln1891">{</a>
+<a name="ln1892">  AutoPat *ap;</a>
+<a name="ln1893">  char_u *fname;</a>
+<a name="ln1894">  char_u *tail = path_tail(sfname);</a>
+<a name="ln1895">  bool retval = false;</a>
+<a name="ln1896"> </a>
+<a name="ln1897">  fname = (char_u *)FullName_save((char *)sfname, false);</a>
+<a name="ln1898">  if (fname == NULL) {</a>
+<a name="ln1899">    return false;</a>
+<a name="ln1900">  }</a>
+<a name="ln1901"> </a>
+<a name="ln1902">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln1903">  // Replace all backslashes with forward slashes. This makes the</a>
+<a name="ln1904">  // autocommand patterns portable between Unix and Windows.</a>
+<a name="ln1905">  sfname = vim_strsave(sfname);</a>
+<a name="ln1906">  forward_slash(sfname);</a>
+<a name="ln1907">  forward_slash(fname);</a>
+<a name="ln1908">#endif</a>
+<a name="ln1909"> </a>
+<a name="ln1910">  for (ap = first_autopat[(int)event]; ap != NULL; ap = ap-&gt;next) {</a>
+<a name="ln1911">    if (ap-&gt;pat != NULL &amp;&amp; ap-&gt;cmds != NULL</a>
+<a name="ln1912">        &amp;&amp; (ap-&gt;buflocal_nr == 0</a>
+<a name="ln1913">            ? match_file_pat(</a>
+<a name="ln1914">                NULL,</a>
+<a name="ln1915">                &amp;ap-&gt;reg_prog,</a>
+<a name="ln1916">                fname,</a>
+<a name="ln1917">                sfname,</a>
+<a name="ln1918">                tail,</a>
+<a name="ln1919">                ap-&gt;allow_dirs)</a>
+<a name="ln1920">            : buf != NULL &amp;&amp; ap-&gt;buflocal_nr == buf-&gt;b_fnum)) {</a>
+<a name="ln1921">      retval = true;</a>
+<a name="ln1922">      break;</a>
+<a name="ln1923">    }</a>
+<a name="ln1924">  }</a>
+<a name="ln1925"> </a>
+<a name="ln1926">  xfree(fname);</a>
+<a name="ln1927">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln1928">  xfree(sfname);</a>
+<a name="ln1929">#endif</a>
+<a name="ln1930"> </a>
+<a name="ln1931">  return retval;</a>
+<a name="ln1932">}</a>
+<a name="ln1933"> </a>
+<a name="ln1934">// Function given to ExpandGeneric() to obtain the list of autocommand group</a>
+<a name="ln1935">// names.</a>
+<a name="ln1936">char_u *get_augroup_name(expand_T *xp, int idx)</a>
+<a name="ln1937">{</a>
+<a name="ln1938">  if (idx == augroups.ga_len) {  // add &quot;END&quot; add the end</a>
+<a name="ln1939">    return (char_u *)&quot;END&quot;;</a>
+<a name="ln1940">  }</a>
+<a name="ln1941">  if (idx &gt;= augroups.ga_len) {  // end of list</a>
+<a name="ln1942">    return NULL;</a>
+<a name="ln1943">  }</a>
+<a name="ln1944">  if (AUGROUP_NAME(idx) == NULL || AUGROUP_NAME(idx) == get_deleted_augroup()) {</a>
+<a name="ln1945">    // skip deleted entries</a>
+<a name="ln1946">    return (char_u *)&quot;&quot;;</a>
+<a name="ln1947">  }</a>
+<a name="ln1948">  return (char_u *)AUGROUP_NAME(idx);</a>
+<a name="ln1949">}</a>
+<a name="ln1950"> </a>
+<a name="ln1951">char_u *set_context_in_autocmd(</a>
+<a name="ln1952">    expand_T *xp,</a>
+<a name="ln1953">    char_u *arg,</a>
+<a name="ln1954">    int doautocmd  // true for :doauto*, false for :autocmd</a>
+<a name="ln1955">)</a>
+<a name="ln1956">{</a>
+<a name="ln1957">  char_u *p;</a>
+<a name="ln1958">  int group;</a>
+<a name="ln1959"> </a>
+<a name="ln1960">  // check for a group name, skip it if present</a>
+<a name="ln1961">  autocmd_include_groups = false;</a>
+<a name="ln1962">  p = arg;</a>
+<a name="ln1963">  group = au_get_grouparg(&amp;arg);</a>
+<a name="ln1964"> </a>
+<a name="ln1965">  // If there only is a group name that's what we expand.</a>
+<a name="ln1966">  if (*arg == NUL &amp;&amp; group != AUGROUP_ALL &amp;&amp; !ascii_iswhite(arg[-1])) {</a>
+<a name="ln1967">    arg = p;</a>
+<a name="ln1968">    group = AUGROUP_ALL;</a>
+<a name="ln1969">  }</a>
+<a name="ln1970"> </a>
+<a name="ln1971">  // skip over event name</a>
+<a name="ln1972">  for (p = arg; *p != NUL &amp;&amp; !ascii_iswhite(*p); p++) {</a>
+<a name="ln1973">    if (*p == ',') {</a>
+<a name="ln1974">      arg = p + 1;</a>
+<a name="ln1975">    }</a>
+<a name="ln1976">  }</a>
+<a name="ln1977">  if (*p == NUL) {</a>
+<a name="ln1978">    if (group == AUGROUP_ALL) {</a>
+<a name="ln1979">      autocmd_include_groups = true;</a>
+<a name="ln1980">    }</a>
+<a name="ln1981">    xp-&gt;xp_context = EXPAND_EVENTS;  // expand event name</a>
+<a name="ln1982">    xp-&gt;xp_pattern = arg;</a>
+<a name="ln1983">    return NULL;</a>
+<a name="ln1984">  }</a>
+<a name="ln1985"> </a>
+<a name="ln1986">  // skip over pattern</a>
+<a name="ln1987">  arg = skipwhite(p);</a>
+<a name="ln1988">  while (*arg &amp;&amp; (!ascii_iswhite(*arg) || arg[-1] == '\\')) {</a>
+<a name="ln1989">    arg++;</a>
+<a name="ln1990">  }</a>
+<a name="ln1991">  if (*arg) {</a>
+<a name="ln1992">    return arg;  // expand (next) command</a>
+<a name="ln1993">  }</a>
+<a name="ln1994"> </a>
+<a name="ln1995">  if (doautocmd) {</a>
+<a name="ln1996">    xp-&gt;xp_context = EXPAND_FILES;  // expand file names</a>
+<a name="ln1997">  } else {</a>
+<a name="ln1998">    xp-&gt;xp_context = EXPAND_NOTHING;  // pattern is not expanded</a>
+<a name="ln1999">  }</a>
+<a name="ln2000">  return NULL;</a>
+<a name="ln2001">}</a>
+<a name="ln2002"> </a>
+<a name="ln2003">// Function given to ExpandGeneric() to obtain the list of event names.</a>
+<a name="ln2004">char_u *get_event_name(expand_T *xp, int idx)</a>
+<a name="ln2005">{</a>
+<a name="ln2006">  if (idx &lt; augroups.ga_len) {  // First list group names, if wanted</a>
+<a name="ln2007">    if (!autocmd_include_groups || AUGROUP_NAME(idx) == NULL</a>
+<a name="ln2008">        || AUGROUP_NAME(idx) == get_deleted_augroup()) {</a>
+<a name="ln2009">      return (char_u *)&quot;&quot;;  // skip deleted entries</a>
+<a name="ln2010">    }</a>
+<a name="ln2011">    return (char_u *)AUGROUP_NAME(idx);</a>
+<a name="ln2012">  }</a>
+<a name="ln2013">  return (char_u *)event_names[idx - augroups.ga_len].name;</a>
+<a name="ln2014">}</a>
+<a name="ln2015"> </a>
+<a name="ln2016">/// Check whether given autocommand is supported</a>
+<a name="ln2017">///</a>
+<a name="ln2018">/// @param[in]  event  Event to check.</a>
+<a name="ln2019">///</a>
+<a name="ln2020">/// @return True if it is, false otherwise.</a>
+<a name="ln2021">bool autocmd_supported(const char *const event)</a>
+<a name="ln2022">  FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln2023">{</a>
+<a name="ln2024">  char_u *p;</a>
+<a name="ln2025">  return event_name2nr((const char_u *)event, &amp;p) != NUM_EVENTS;</a>
+<a name="ln2026">}</a>
+<a name="ln2027"> </a>
+<a name="ln2028">/// Return true if an autocommand is defined for a group, event and</a>
+<a name="ln2029">/// pattern:  The group can be omitted to accept any group.</a>
+<a name="ln2030">/// `event` and `pattern` can be omitted to accept any event and pattern.</a>
+<a name="ln2031">/// Buffer-local patterns &lt;buffer&gt; or &lt;buffer=N&gt; are accepted.</a>
+<a name="ln2032">/// Used for:</a>
+<a name="ln2033">///   exists(&quot;#Group&quot;) or</a>
+<a name="ln2034">///   exists(&quot;#Group#Event&quot;) or</a>
+<a name="ln2035">///   exists(&quot;#Group#Event#pat&quot;) or</a>
+<a name="ln2036">///   exists(&quot;#Event&quot;) or</a>
+<a name="ln2037">///   exists(&quot;#Event#pat&quot;)</a>
+<a name="ln2038">///</a>
+<a name="ln2039">/// @param arg autocommand string</a>
+<a name="ln2040">bool au_exists(const char *const arg) FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln2041">{</a>
+<a name="ln2042">  event_T event;</a>
+<a name="ln2043">  AutoPat *ap;</a>
+<a name="ln2044">  buf_T *buflocal_buf = NULL;</a>
+<a name="ln2045">  int group;</a>
+<a name="ln2046">  bool retval = false;</a>
+<a name="ln2047"> </a>
+<a name="ln2048">  // Make a copy so that we can change the '#' chars to a NUL.</a>
+<a name="ln2049">  char *const arg_save = xstrdup(arg);</a>
+<a name="ln2050">  char *p = strchr(arg_save, '#');</a>
+<a name="ln2051">  if (p != NULL) {</a>
+<a name="ln2052">    *p++ = NUL;</a>
+<a name="ln2053">  }</a>
+<a name="ln2054"> </a>
+<a name="ln2055">  // First, look for an autocmd group name.</a>
+<a name="ln2056">  group = au_find_group((char_u *)arg_save);</a>
+<a name="ln2057">  char *event_name;</a>
+<a name="ln2058">  if (group == AUGROUP_ERROR) {</a>
+<a name="ln2059">    // Didn't match a group name, assume the first argument is an event.</a>
+<a name="ln2060">    group = AUGROUP_ALL;</a>
+<a name="ln2061">    event_name = arg_save;</a>
+<a name="ln2062">  } else {</a>
+<a name="ln2063">    if (p == NULL) {</a>
+<a name="ln2064">      // &quot;Group&quot;: group name is present and it's recognized</a>
+<a name="ln2065">      retval = true;</a>
+<a name="ln2066">      goto theend;</a>
+<a name="ln2067">    }</a>
+<a name="ln2068"> </a>
+<a name="ln2069">    // Must be &quot;Group#Event&quot; or &quot;Group#Event#pat&quot;.</a>
+<a name="ln2070">    event_name = p;</a>
+<a name="ln2071">    p = strchr(event_name, '#');</a>
+<a name="ln2072">    if (p != NULL) {</a>
+<a name="ln2073">      *p++ = NUL;  // &quot;Group#Event#pat&quot;</a>
+<a name="ln2074">    }</a>
+<a name="ln2075">  }</a>
+<a name="ln2076"> </a>
+<a name="ln2077">  char *pattern = p;  // &quot;pattern&quot; is NULL when there is no pattern.</a>
+<a name="ln2078"> </a>
+<a name="ln2079">  // Find the index (enum) for the event name.</a>
+<a name="ln2080">  event = event_name2nr((char_u *)event_name, (char_u **)&amp;p);</a>
+<a name="ln2081"> </a>
+<a name="ln2082">  // return false if the event name is not recognized</a>
+<a name="ln2083">  if (event == NUM_EVENTS) {</a>
+<a name="ln2084">    goto theend;</a>
+<a name="ln2085">  }</a>
+<a name="ln2086"> </a>
+<a name="ln2087">  // Find the first autocommand for this event.</a>
+<a name="ln2088">  // If there isn't any, return false;</a>
+<a name="ln2089">  // If there is one and no pattern given, return true;</a>
+<a name="ln2090">  ap = first_autopat[(int)event];</a>
+<a name="ln2091">  if (ap == NULL) {</a>
+<a name="ln2092">    goto theend;</a>
+<a name="ln2093">  }</a>
+<a name="ln2094"> </a>
+<a name="ln2095">  // if pattern is &quot;&lt;buffer&gt;&quot;, special handling is needed which uses curbuf</a>
+<a name="ln2096">  // for pattern &quot;&lt;buffer=N&gt;, fnamecmp() will work fine</a>
+<a name="ln2097">  if (pattern != NULL &amp;&amp; STRICMP(pattern, &quot;&lt;buffer&gt;&quot;) == 0) {</a>
+<a name="ln2098">    buflocal_buf = curbuf;</a>
+<a name="ln2099">  }</a>
+<a name="ln2100"> </a>
+<a name="ln2101">  // Check if there is an autocommand with the given pattern.</a>
+<a name="ln2102">  for (; ap != NULL; ap = ap-&gt;next) {</a>
+<a name="ln2103">    // only use a pattern when it has not been removed and has commands.</a>
+<a name="ln2104">    // For buffer-local autocommands, fnamecmp() works fine.</a>
+<a name="ln2105">    if (ap-&gt;pat != NULL &amp;&amp; ap-&gt;cmds != NULL</a>
+<a name="ln2106">        &amp;&amp; (group == AUGROUP_ALL || ap-&gt;group == group)</a>
+<a name="ln2107">        &amp;&amp; (pattern == NULL</a>
+<a name="ln2108">            || (buflocal_buf == NULL</a>
+<a name="ln2109">                ? fnamecmp(ap-&gt;pat, (char_u *)pattern) == 0</a>
+<a name="ln2110">                : ap-&gt;buflocal_nr == buflocal_buf-&gt;b_fnum))) {</a>
+<a name="ln2111">      retval = true;</a>
+<a name="ln2112">      break;</a>
+<a name="ln2113">    }</a>
+<a name="ln2114">  }</a>
+<a name="ln2115"> </a>
+<a name="ln2116">theend:</a>
+<a name="ln2117">  xfree(arg_save);</a>
+<a name="ln2118">  return retval;</a>
+<a name="ln2119">}</a>
+
+</code></pre>
+<div class="balloon" rel="385"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v547/" target="_blank">V547</a> Expression 'i != - 2' is always true.</p></div>
+
+<link rel="stylesheet" href="highlight.css">
+<script src="highlight.pack.js"></script>
+<script src="highlightjs-line-numbers.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initLineNumbersOnLoad();</script>
+<script>
+  $(document).ready(function() {
+      $('.balloon').each(function () {
+          var bl = $(this);
+          var line = bl.attr('rel');
+          var text = $('a[name="ln'+line+'"]').text();
+
+          var space_count = 0;
+          for(var i = 0; i<text.length; i++){
+              var char = text[i];
+              if((char !== ' ')&&(char !== '\t'))break;
+              if(char === '\t')space_count++;
+              space_count++;
+          }
+
+          bl.css('margin-left', space_count*8);
+          $('a[name="ln'+line+'"]').after(bl);
+      });
+
+      window.location = window.location;
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1016 @@
+
+<html>
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>keymap.c</title>
+
+  <link rel="stylesheet" href="../style.css"/>
+  <script src="../jquery-3.5.1.min.js"></script>
+</head>
+<body>
+
+<pre><code class = "cpp">
+<a name="ln1">// This is an open source non-commercial project. Dear PVS-Studio, please check</a>
+<a name="ln2">// it. PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com</a>
+<a name="ln3"> </a>
+<a name="ln4">#include &lt;assert.h&gt;</a>
+<a name="ln5">#include &lt;inttypes.h&gt;</a>
+<a name="ln6">#include &lt;limits.h&gt;</a>
+<a name="ln7"> </a>
+<a name="ln8">#include &quot;nvim/vim.h&quot;</a>
+<a name="ln9">#include &quot;nvim/ascii.h&quot;</a>
+<a name="ln10">#include &quot;nvim/keymap.h&quot;</a>
+<a name="ln11">#include &quot;nvim/charset.h&quot;</a>
+<a name="ln12">#include &quot;nvim/memory.h&quot;</a>
+<a name="ln13">#include &quot;nvim/edit.h&quot;</a>
+<a name="ln14">#include &quot;nvim/eval.h&quot;</a>
+<a name="ln15">#include &quot;nvim/message.h&quot;</a>
+<a name="ln16">#include &quot;nvim/strings.h&quot;</a>
+<a name="ln17">#include &quot;nvim/mouse.h&quot;</a>
+<a name="ln18"> </a>
+<a name="ln19">#ifdef INCLUDE_GENERATED_DECLARATIONS</a>
+<a name="ln20"># include &quot;keymap.c.generated.h&quot;</a>
+<a name="ln21">#endif</a>
+<a name="ln22"> </a>
+<a name="ln23">/*</a>
+<a name="ln24"> * Some useful tables.</a>
+<a name="ln25"> */</a>
+<a name="ln26"> </a>
+<a name="ln27">static const struct modmasktable {</a>
+<a name="ln28">  uint16_t mod_mask;  ///&lt; Bit-mask for particular key modifier.</a>
+<a name="ln29">  uint16_t mod_flag;  ///&lt; Bit(s) for particular key modifier.</a>
+<a name="ln30">  char_u name;  ///&lt; Single letter name of modifier.</a>
+<a name="ln31">} mod_mask_table[] = {</a>
+<a name="ln32">  { MOD_MASK_ALT,              MOD_MASK_ALT,           (char_u)'M' },</a>
+<a name="ln33">  { MOD_MASK_META,             MOD_MASK_META,          (char_u)'T' },</a>
+<a name="ln34">  { MOD_MASK_CTRL,             MOD_MASK_CTRL,          (char_u)'C' },</a>
+<a name="ln35">  { MOD_MASK_SHIFT,            MOD_MASK_SHIFT,         (char_u)'S' },</a>
+<a name="ln36">  { MOD_MASK_MULTI_CLICK,      MOD_MASK_2CLICK,        (char_u)'2' },</a>
+<a name="ln37">  { MOD_MASK_MULTI_CLICK,      MOD_MASK_3CLICK,        (char_u)'3' },</a>
+<a name="ln38">  { MOD_MASK_MULTI_CLICK,      MOD_MASK_4CLICK,        (char_u)'4' },</a>
+<a name="ln39">  { MOD_MASK_CMD,              MOD_MASK_CMD,           (char_u)'D' },</a>
+<a name="ln40">  // 'A' must be the last one</a>
+<a name="ln41">  { MOD_MASK_ALT,              MOD_MASK_ALT,           (char_u)'A' },</a>
+<a name="ln42">  { 0, 0, NUL }</a>
+<a name="ln43">  // NOTE: when adding an entry, update MAX_KEY_NAME_LEN!</a>
+<a name="ln44">};</a>
+<a name="ln45"> </a>
+<a name="ln46">/*</a>
+<a name="ln47"> * Shifted key terminal codes and their unshifted equivalent.</a>
+<a name="ln48"> * Don't add mouse codes here, they are handled separately!</a>
+<a name="ln49"> */</a>
+<a name="ln50">#define MOD_KEYS_ENTRY_SIZE 5</a>
+<a name="ln51"> </a>
+<a name="ln52">static char_u modifier_keys_table[] =</a>
+<a name="ln53">{</a>
+<a name="ln54">  /*  mod mask	    with modifier		without modifier */</a>
+<a name="ln55">  MOD_MASK_SHIFT, '&amp;', '9',                   '@', '1',         /* begin */</a>
+<a name="ln56">  MOD_MASK_SHIFT, '&amp;', '0',                   '@', '2',         /* cancel */</a>
+<a name="ln57">  MOD_MASK_SHIFT, '*', '1',                   '@', '4',         /* command */</a>
+<a name="ln58">  MOD_MASK_SHIFT, '*', '2',                   '@', '5',         /* copy */</a>
+<a name="ln59">  MOD_MASK_SHIFT, '*', '3',                   '@', '6',         /* create */</a>
+<a name="ln60">  MOD_MASK_SHIFT, '*', '4',                   'k', 'D',         /* delete char */</a>
+<a name="ln61">  MOD_MASK_SHIFT, '*', '5',                   'k', 'L',         /* delete line */</a>
+<a name="ln62">  MOD_MASK_SHIFT, '*', '7',                   '@', '7',         /* end */</a>
+<a name="ln63">  MOD_MASK_CTRL,  KS_EXTRA, (int)KE_C_END,    '@', '7',         /* end */</a>
+<a name="ln64">  MOD_MASK_SHIFT, '*', '9',                   '@', '9',         /* exit */</a>
+<a name="ln65">  MOD_MASK_SHIFT, '*', '0',                   '@', '0',         /* find */</a>
+<a name="ln66">  MOD_MASK_SHIFT, '#', '1',                   '%', '1',         /* help */</a>
+<a name="ln67">  MOD_MASK_SHIFT, '#', '2',                   'k', 'h',         /* home */</a>
+<a name="ln68">  MOD_MASK_CTRL,  KS_EXTRA, (int)KE_C_HOME,   'k', 'h',         /* home */</a>
+<a name="ln69">  MOD_MASK_SHIFT, '#', '3',                   'k', 'I',         /* insert */</a>
+<a name="ln70">  MOD_MASK_SHIFT, '#', '4',                   'k', 'l',         /* left arrow */</a>
+<a name="ln71">  MOD_MASK_CTRL,  KS_EXTRA, (int)KE_C_LEFT,   'k', 'l',         /* left arrow */</a>
+<a name="ln72">  MOD_MASK_SHIFT, '%', 'a',                   '%', '3',         /* message */</a>
+<a name="ln73">  MOD_MASK_SHIFT, '%', 'b',                   '%', '4',         /* move */</a>
+<a name="ln74">  MOD_MASK_SHIFT, '%', 'c',                   '%', '5',         /* next */</a>
+<a name="ln75">  MOD_MASK_SHIFT, '%', 'd',                   '%', '7',         /* options */</a>
+<a name="ln76">  MOD_MASK_SHIFT, '%', 'e',                   '%', '8',         /* previous */</a>
+<a name="ln77">  MOD_MASK_SHIFT, '%', 'f',                   '%', '9',         /* print */</a>
+<a name="ln78">  MOD_MASK_SHIFT, '%', 'g',                   '%', '0',         /* redo */</a>
+<a name="ln79">  MOD_MASK_SHIFT, '%', 'h',                   '&amp;', '3',         /* replace */</a>
+<a name="ln80">  MOD_MASK_SHIFT, '%', 'i',                   'k', 'r',         /* right arr. */</a>
+<a name="ln81">  MOD_MASK_CTRL,  KS_EXTRA, (int)KE_C_RIGHT,  'k', 'r',         /* right arr. */</a>
+<a name="ln82">  MOD_MASK_SHIFT, '%', 'j',                   '&amp;', '5',         /* resume */</a>
+<a name="ln83">  MOD_MASK_SHIFT, '!', '1',                   '&amp;', '6',         /* save */</a>
+<a name="ln84">  MOD_MASK_SHIFT, '!', '2',                   '&amp;', '7',         /* suspend */</a>
+<a name="ln85">  MOD_MASK_SHIFT, '!', '3',                   '&amp;', '8',         /* undo */</a>
+<a name="ln86">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_UP,     'k', 'u',         /* up arrow */</a>
+<a name="ln87">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_DOWN,   'k', 'd',         /* down arrow */</a>
+<a name="ln88"> </a>
+<a name="ln89">  /* vt100 F1 */</a>
+<a name="ln90">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_XF1,    KS_EXTRA, (int)KE_XF1,</a>
+<a name="ln91">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_XF2,    KS_EXTRA, (int)KE_XF2,</a>
+<a name="ln92">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_XF3,    KS_EXTRA, (int)KE_XF3,</a>
+<a name="ln93">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_XF4,    KS_EXTRA, (int)KE_XF4,</a>
+<a name="ln94"> </a>
+<a name="ln95">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F1,     'k', '1',         /* F1 */</a>
+<a name="ln96">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F2,     'k', '2',</a>
+<a name="ln97">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F3,     'k', '3',</a>
+<a name="ln98">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F4,     'k', '4',</a>
+<a name="ln99">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F5,     'k', '5',</a>
+<a name="ln100">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F6,     'k', '6',</a>
+<a name="ln101">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F7,     'k', '7',</a>
+<a name="ln102">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F8,     'k', '8',</a>
+<a name="ln103">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F9,     'k', '9',</a>
+<a name="ln104">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F10,    'k', ';',         /* F10 */</a>
+<a name="ln105"> </a>
+<a name="ln106">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F11,    'F', '1',</a>
+<a name="ln107">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F12,    'F', '2',</a>
+<a name="ln108">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F13,    'F', '3',</a>
+<a name="ln109">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F14,    'F', '4',</a>
+<a name="ln110">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F15,    'F', '5',</a>
+<a name="ln111">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F16,    'F', '6',</a>
+<a name="ln112">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F17,    'F', '7',</a>
+<a name="ln113">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F18,    'F', '8',</a>
+<a name="ln114">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F19,    'F', '9',</a>
+<a name="ln115">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F20,    'F', 'A',</a>
+<a name="ln116"> </a>
+<a name="ln117">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F21,    'F', 'B',</a>
+<a name="ln118">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F22,    'F', 'C',</a>
+<a name="ln119">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F23,    'F', 'D',</a>
+<a name="ln120">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F24,    'F', 'E',</a>
+<a name="ln121">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F25,    'F', 'F',</a>
+<a name="ln122">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F26,    'F', 'G',</a>
+<a name="ln123">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F27,    'F', 'H',</a>
+<a name="ln124">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F28,    'F', 'I',</a>
+<a name="ln125">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F29,    'F', 'J',</a>
+<a name="ln126">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F30,    'F', 'K',</a>
+<a name="ln127"> </a>
+<a name="ln128">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F31,    'F', 'L',</a>
+<a name="ln129">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F32,    'F', 'M',</a>
+<a name="ln130">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F33,    'F', 'N',</a>
+<a name="ln131">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F34,    'F', 'O',</a>
+<a name="ln132">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F35,    'F', 'P',</a>
+<a name="ln133">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F36,    'F', 'Q',</a>
+<a name="ln134">  MOD_MASK_SHIFT, KS_EXTRA, (int)KE_S_F37,    'F', 'R',</a>
+<a name="ln135"> </a>
+<a name="ln136">  /* TAB pseudo code*/</a>
+<a name="ln137">  MOD_MASK_SHIFT, 'k', 'B',                   KS_EXTRA, (int)KE_TAB,</a>
+<a name="ln138"> </a>
+<a name="ln139">  NUL</a>
+<a name="ln140">};</a>
+<a name="ln141"> </a>
+<a name="ln142">static const struct key_name_entry {</a>
+<a name="ln143">  int key;              // Special key code or ascii value</a>
+<a name="ln144">  const char *name;           // Name of key</a>
+<a name="ln145">} key_names_table[] = {</a>
+<a name="ln146">  { ' ',               &quot;Space&quot; },</a>
+<a name="ln147">  { TAB,               &quot;Tab&quot; },</a>
+<a name="ln148">  { K_TAB,             &quot;Tab&quot; },</a>
+<a name="ln149">  { NL,                &quot;NL&quot; },</a>
+<a name="ln150">  { NL,                &quot;NewLine&quot; },     // Alternative name</a>
+<a name="ln151">  { NL,                &quot;LineFeed&quot; },    // Alternative name</a>
+<a name="ln152">  { NL,                &quot;LF&quot; },          // Alternative name</a>
+<a name="ln153">  { CAR,               &quot;CR&quot; },</a>
+<a name="ln154">  { CAR,               &quot;Return&quot; },      // Alternative name</a>
+<a name="ln155">  { CAR,               &quot;Enter&quot; },       // Alternative name</a>
+<a name="ln156">  { K_BS,              &quot;BS&quot; },</a>
+<a name="ln157">  { K_BS,              &quot;BackSpace&quot; },   // Alternative name</a>
+<a name="ln158">  { ESC,               &quot;Esc&quot; },</a>
+<a name="ln159">  { ESC,               &quot;Escape&quot; },      // Alternative name</a>
+<a name="ln160">  { CSI,               &quot;CSI&quot; },</a>
+<a name="ln161">  { K_CSI,             &quot;xCSI&quot; },</a>
+<a name="ln162">  { '|',               &quot;Bar&quot; },</a>
+<a name="ln163">  { '\\',              &quot;Bslash&quot; },</a>
+<a name="ln164">  { K_DEL,             &quot;Del&quot; },</a>
+<a name="ln165">  { K_DEL,             &quot;Delete&quot; },      // Alternative name</a>
+<a name="ln166">  { K_KDEL,            &quot;kDel&quot; },</a>
+<a name="ln167">  { K_KDEL,            &quot;KPPeriod&quot; },    // libtermkey name</a>
+<a name="ln168">  { K_UP,              &quot;Up&quot; },</a>
+<a name="ln169">  { K_DOWN,            &quot;Down&quot; },</a>
+<a name="ln170">  { K_LEFT,            &quot;Left&quot; },</a>
+<a name="ln171">  { K_RIGHT,           &quot;Right&quot; },</a>
+<a name="ln172">  { K_XUP,             &quot;xUp&quot; },</a>
+<a name="ln173">  { K_XDOWN,           &quot;xDown&quot; },</a>
+<a name="ln174">  { K_XLEFT,           &quot;xLeft&quot; },</a>
+<a name="ln175">  { K_XRIGHT,          &quot;xRight&quot; },</a>
+<a name="ln176">  { K_KUP,             &quot;kUp&quot; },</a>
+<a name="ln177">  { K_KUP,             &quot;KP8&quot; },</a>
+<a name="ln178">  { K_KDOWN,           &quot;kDown&quot; },</a>
+<a name="ln179">  { K_KDOWN,           &quot;KP2&quot; },</a>
+<a name="ln180">  { K_KLEFT,           &quot;kLeft&quot; },</a>
+<a name="ln181">  { K_KLEFT,           &quot;KP4&quot; },</a>
+<a name="ln182">  { K_KRIGHT,          &quot;kRight&quot; },</a>
+<a name="ln183">  { K_KRIGHT,          &quot;KP6&quot; },</a>
+<a name="ln184"> </a>
+<a name="ln185">  { K_F1,              &quot;F1&quot; },</a>
+<a name="ln186">  { K_F2,              &quot;F2&quot; },</a>
+<a name="ln187">  { K_F3,              &quot;F3&quot; },</a>
+<a name="ln188">  { K_F4,              &quot;F4&quot; },</a>
+<a name="ln189">  { K_F5,              &quot;F5&quot; },</a>
+<a name="ln190">  { K_F6,              &quot;F6&quot; },</a>
+<a name="ln191">  { K_F7,              &quot;F7&quot; },</a>
+<a name="ln192">  { K_F8,              &quot;F8&quot; },</a>
+<a name="ln193">  { K_F9,              &quot;F9&quot; },</a>
+<a name="ln194">  { K_F10,             &quot;F10&quot; },</a>
+<a name="ln195"> </a>
+<a name="ln196">  { K_F11,             &quot;F11&quot; },</a>
+<a name="ln197">  { K_F12,             &quot;F12&quot; },</a>
+<a name="ln198">  { K_F13,             &quot;F13&quot; },</a>
+<a name="ln199">  { K_F14,             &quot;F14&quot; },</a>
+<a name="ln200">  { K_F15,             &quot;F15&quot; },</a>
+<a name="ln201">  { K_F16,             &quot;F16&quot; },</a>
+<a name="ln202">  { K_F17,             &quot;F17&quot; },</a>
+<a name="ln203">  { K_F18,             &quot;F18&quot; },</a>
+<a name="ln204">  { K_F19,             &quot;F19&quot; },</a>
+<a name="ln205">  { K_F20,             &quot;F20&quot; },</a>
+<a name="ln206"> </a>
+<a name="ln207">  { K_F21,             &quot;F21&quot; },</a>
+<a name="ln208">  { K_F22,             &quot;F22&quot; },</a>
+<a name="ln209">  { K_F23,             &quot;F23&quot; },</a>
+<a name="ln210">  { K_F24,             &quot;F24&quot; },</a>
+<a name="ln211">  { K_F25,             &quot;F25&quot; },</a>
+<a name="ln212">  { K_F26,             &quot;F26&quot; },</a>
+<a name="ln213">  { K_F27,             &quot;F27&quot; },</a>
+<a name="ln214">  { K_F28,             &quot;F28&quot; },</a>
+<a name="ln215">  { K_F29,             &quot;F29&quot; },</a>
+<a name="ln216">  { K_F30,             &quot;F30&quot; },</a>
+<a name="ln217"> </a>
+<a name="ln218">  { K_F31,             &quot;F31&quot; },</a>
+<a name="ln219">  { K_F32,             &quot;F32&quot; },</a>
+<a name="ln220">  { K_F33,             &quot;F33&quot; },</a>
+<a name="ln221">  { K_F34,             &quot;F34&quot; },</a>
+<a name="ln222">  { K_F35,             &quot;F35&quot; },</a>
+<a name="ln223">  { K_F36,             &quot;F36&quot; },</a>
+<a name="ln224">  { K_F37,             &quot;F37&quot; },</a>
+<a name="ln225"> </a>
+<a name="ln226">  { K_XF1,             &quot;xF1&quot; },</a>
+<a name="ln227">  { K_XF2,             &quot;xF2&quot; },</a>
+<a name="ln228">  { K_XF3,             &quot;xF3&quot; },</a>
+<a name="ln229">  { K_XF4,             &quot;xF4&quot; },</a>
+<a name="ln230"> </a>
+<a name="ln231">  { K_HELP,            &quot;Help&quot; },</a>
+<a name="ln232">  { K_UNDO,            &quot;Undo&quot; },</a>
+<a name="ln233">  { K_INS,             &quot;Insert&quot; },</a>
+<a name="ln234">  { K_INS,             &quot;Ins&quot; },         // Alternative name</a>
+<a name="ln235">  { K_KINS,            &quot;kInsert&quot; },</a>
+<a name="ln236">  { K_KINS,            &quot;KP0&quot; },</a>
+<a name="ln237">  { K_HOME,            &quot;Home&quot; },</a>
+<a name="ln238">  { K_KHOME,           &quot;kHome&quot; },</a>
+<a name="ln239">  { K_KHOME,           &quot;KP7&quot; },</a>
+<a name="ln240">  { K_XHOME,           &quot;xHome&quot; },</a>
+<a name="ln241">  { K_ZHOME,           &quot;zHome&quot; },</a>
+<a name="ln242">  { K_END,             &quot;End&quot; },</a>
+<a name="ln243">  { K_KEND,            &quot;kEnd&quot; },</a>
+<a name="ln244">  { K_KEND,            &quot;KP1&quot; },</a>
+<a name="ln245">  { K_XEND,            &quot;xEnd&quot; },</a>
+<a name="ln246">  { K_ZEND,            &quot;zEnd&quot; },</a>
+<a name="ln247">  { K_PAGEUP,          &quot;PageUp&quot; },</a>
+<a name="ln248">  { K_PAGEDOWN,        &quot;PageDown&quot; },</a>
+<a name="ln249">  { K_KPAGEUP,         &quot;kPageUp&quot; },</a>
+<a name="ln250">  { K_KPAGEUP,         &quot;KP9&quot; },</a>
+<a name="ln251">  { K_KPAGEDOWN,       &quot;kPageDown&quot; },</a>
+<a name="ln252">  { K_KPAGEDOWN,       &quot;KP3&quot; },</a>
+<a name="ln253">  { K_KORIGIN,         &quot;kOrigin&quot; },</a>
+<a name="ln254">  { K_KORIGIN,         &quot;KP5&quot; },</a>
+<a name="ln255"> </a>
+<a name="ln256">  { K_KPLUS,           &quot;kPlus&quot; },</a>
+<a name="ln257">  { K_KPLUS,           &quot;KPPlus&quot; },</a>
+<a name="ln258">  { K_KMINUS,          &quot;kMinus&quot; },</a>
+<a name="ln259">  { K_KMINUS,          &quot;KPMinus&quot; },</a>
+<a name="ln260">  { K_KDIVIDE,         &quot;kDivide&quot; },</a>
+<a name="ln261">  { K_KDIVIDE,         &quot;KPDiv&quot; },</a>
+<a name="ln262">  { K_KMULTIPLY,       &quot;kMultiply&quot; },</a>
+<a name="ln263">  { K_KMULTIPLY,       &quot;KPMult&quot; },</a>
+<a name="ln264">  { K_KENTER,          &quot;kEnter&quot; },</a>
+<a name="ln265">  { K_KENTER,          &quot;KPEnter&quot; },</a>
+<a name="ln266">  { K_KPOINT,          &quot;kPoint&quot; },</a>
+<a name="ln267">  { K_KCOMMA,          &quot;kComma&quot; },</a>
+<a name="ln268">  { K_KCOMMA,          &quot;KPComma&quot; },</a>
+<a name="ln269">  { K_KEQUAL,          &quot;kEqual&quot; },</a>
+<a name="ln270">  { K_KEQUAL,          &quot;KPEquals&quot; },</a>
+<a name="ln271"> </a>
+<a name="ln272">  { K_K0,              &quot;k0&quot; },</a>
+<a name="ln273">  { K_K1,              &quot;k1&quot; },</a>
+<a name="ln274">  { K_K2,              &quot;k2&quot; },</a>
+<a name="ln275">  { K_K3,              &quot;k3&quot; },</a>
+<a name="ln276">  { K_K4,              &quot;k4&quot; },</a>
+<a name="ln277">  { K_K5,              &quot;k5&quot; },</a>
+<a name="ln278">  { K_K6,              &quot;k6&quot; },</a>
+<a name="ln279">  { K_K7,              &quot;k7&quot; },</a>
+<a name="ln280">  { K_K8,              &quot;k8&quot; },</a>
+<a name="ln281">  { K_K9,              &quot;k9&quot; },</a>
+<a name="ln282"> </a>
+<a name="ln283">  { '&lt;',               &quot;lt&quot; },</a>
+<a name="ln284"> </a>
+<a name="ln285">  { K_MOUSE,           &quot;Mouse&quot; },</a>
+<a name="ln286">  { K_LEFTMOUSE,       &quot;LeftMouse&quot; },</a>
+<a name="ln287">  { K_LEFTMOUSE_NM,    &quot;LeftMouseNM&quot; },</a>
+<a name="ln288">  { K_LEFTDRAG,        &quot;LeftDrag&quot; },</a>
+<a name="ln289">  { K_LEFTRELEASE,     &quot;LeftRelease&quot; },</a>
+<a name="ln290">  { K_LEFTRELEASE_NM,  &quot;LeftReleaseNM&quot; },</a>
+<a name="ln291">  { K_MOUSEMOVE,       &quot;MouseMove&quot; },</a>
+<a name="ln292">  { K_MIDDLEMOUSE,     &quot;MiddleMouse&quot; },</a>
+<a name="ln293">  { K_MIDDLEDRAG,      &quot;MiddleDrag&quot; },</a>
+<a name="ln294">  { K_MIDDLERELEASE,   &quot;MiddleRelease&quot; },</a>
+<a name="ln295">  { K_RIGHTMOUSE,      &quot;RightMouse&quot; },</a>
+<a name="ln296">  { K_RIGHTDRAG,       &quot;RightDrag&quot; },</a>
+<a name="ln297">  { K_RIGHTRELEASE,    &quot;RightRelease&quot; },</a>
+<a name="ln298">  { K_MOUSEDOWN,       &quot;ScrollWheelUp&quot; },</a>
+<a name="ln299">  { K_MOUSEUP,         &quot;ScrollWheelDown&quot; },</a>
+<a name="ln300">  { K_MOUSELEFT,       &quot;ScrollWheelRight&quot; },</a>
+<a name="ln301">  { K_MOUSERIGHT,      &quot;ScrollWheelLeft&quot; },</a>
+<a name="ln302">  { K_MOUSEDOWN,       &quot;MouseDown&quot; },   // OBSOLETE: Use</a>
+<a name="ln303">  { K_MOUSEUP,         &quot;MouseUp&quot; },     // ScrollWheelXXX instead</a>
+<a name="ln304">  { K_X1MOUSE,         &quot;X1Mouse&quot; },</a>
+<a name="ln305">  { K_X1DRAG,          &quot;X1Drag&quot; },</a>
+<a name="ln306">  { K_X1RELEASE,       &quot;X1Release&quot; },</a>
+<a name="ln307">  { K_X2MOUSE,         &quot;X2Mouse&quot; },</a>
+<a name="ln308">  { K_X2DRAG,          &quot;X2Drag&quot; },</a>
+<a name="ln309">  { K_X2RELEASE,       &quot;X2Release&quot; },</a>
+<a name="ln310">  { K_DROP,            &quot;Drop&quot; },</a>
+<a name="ln311">  { K_ZERO,            &quot;Nul&quot; },</a>
+<a name="ln312">  { K_SNR,             &quot;SNR&quot; },</a>
+<a name="ln313">  { K_PLUG,            &quot;Plug&quot; },</a>
+<a name="ln314">  { K_IGNORE,          &quot;Ignore&quot; },</a>
+<a name="ln315">  { K_COMMAND,         &quot;Cmd&quot; },</a>
+<a name="ln316">  { 0,                 NULL }</a>
+<a name="ln317">  // NOTE: When adding a long name update MAX_KEY_NAME_LEN.</a>
+<a name="ln318">};</a>
+<a name="ln319"> </a>
+<a name="ln320">static struct mousetable {</a>
+<a name="ln321">  int pseudo_code;            // Code for pseudo mouse event</a>
+<a name="ln322">  int button;                 // Which mouse button is it?</a>
+<a name="ln323">  bool is_click;              // Is it a mouse button click event?</a>
+<a name="ln324">  bool is_drag;               // Is it a mouse drag event?</a>
+<a name="ln325">} mouse_table[] =</a>
+<a name="ln326">{</a>
+<a name="ln327">  { (int)KE_LEFTMOUSE,        MOUSE_LEFT,     true,   false },</a>
+<a name="ln328">  { (int)KE_LEFTDRAG,         MOUSE_LEFT,     false,  true },</a>
+<a name="ln329">  { (int)KE_LEFTRELEASE,      MOUSE_LEFT,     false,  false },</a>
+<a name="ln330">  { (int)KE_MIDDLEMOUSE,      MOUSE_MIDDLE,   true,   false },</a>
+<a name="ln331">  { (int)KE_MIDDLEDRAG,       MOUSE_MIDDLE,   false,  true },</a>
+<a name="ln332">  { (int)KE_MIDDLERELEASE,    MOUSE_MIDDLE,   false,  false },</a>
+<a name="ln333">  { (int)KE_RIGHTMOUSE,       MOUSE_RIGHT,    true,   false },</a>
+<a name="ln334">  { (int)KE_RIGHTDRAG,        MOUSE_RIGHT,    false,  true },</a>
+<a name="ln335">  { (int)KE_RIGHTRELEASE,     MOUSE_RIGHT,    false,  false },</a>
+<a name="ln336">  { (int)KE_X1MOUSE,          MOUSE_X1,       true,   false },</a>
+<a name="ln337">  { (int)KE_X1DRAG,           MOUSE_X1,       false,  true },</a>
+<a name="ln338">  { (int)KE_X1RELEASE,        MOUSE_X1,       false,  false },</a>
+<a name="ln339">  { (int)KE_X2MOUSE,          MOUSE_X2,       true,   false },</a>
+<a name="ln340">  { (int)KE_X2DRAG,           MOUSE_X2,       false,  true },</a>
+<a name="ln341">  { (int)KE_X2RELEASE,        MOUSE_X2,       false,  false },</a>
+<a name="ln342">  // DRAG without CLICK</a>
+<a name="ln343">  { (int)K_MOUSEMOVE,         MOUSE_RELEASE,  false,  true },</a>
+<a name="ln344">  // RELEASE without CLICK</a>
+<a name="ln345">  { (int)KE_IGNORE,           MOUSE_RELEASE,  false,  false },</a>
+<a name="ln346">  { 0,                        0,              0,      0 },</a>
+<a name="ln347">};</a>
+<a name="ln348"> </a>
+<a name="ln349">/// Return the modifier mask bit (#MOD_MASK_*) corresponding to mod name</a>
+<a name="ln350">///</a>
+<a name="ln351">/// E.g. 'S' for shift, 'C' for ctrl.</a>
+<a name="ln352">int name_to_mod_mask(int c)</a>
+<a name="ln353">  FUNC_ATTR_CONST FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln354">{</a>
+<a name="ln355">  c = TOUPPER_ASC(c);</a>
+<a name="ln356">  for (size_t i = 0; mod_mask_table[i].mod_mask != 0; i++) {</a>
+<a name="ln357">    if (c == mod_mask_table[i].name) {</a>
+<a name="ln358">      return mod_mask_table[i].mod_flag;</a>
+<a name="ln359">    }</a>
+<a name="ln360">  }</a>
+<a name="ln361">  return 0;</a>
+<a name="ln362">}</a>
+<a name="ln363"> </a>
+<a name="ln364">/// Check if there is a special key code for &quot;key&quot; with specified modifiers</a>
+<a name="ln365">///</a>
+<a name="ln366">/// @param[in]  key  Initial key code.</a>
+<a name="ln367">/// @param[in,out]  modifiers  Initial modifiers, is adjusted to have simplified</a>
+<a name="ln368">///                            modifiers.</a>
+<a name="ln369">///</a>
+<a name="ln370">/// @return Simplified key code.</a>
+<a name="ln371">int simplify_key(const int key, int *modifiers)</a>
+<a name="ln372">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln373">{</a>
+<a name="ln374">  if (*modifiers &amp; (MOD_MASK_SHIFT | MOD_MASK_CTRL | MOD_MASK_ALT)) {</a>
+<a name="ln375">    // TAB is a special case.</a>
+<a name="ln376">    if (key == TAB &amp;&amp; (*modifiers &amp; MOD_MASK_SHIFT)) {</a>
+<a name="ln377">      *modifiers &amp;= ~MOD_MASK_SHIFT;</a>
+<a name="ln378">      return K_S_TAB;</a>
+<a name="ln379">    }</a>
+<a name="ln380">    const int key0 = KEY2TERMCAP0(key);</a>
+<a name="ln381">    const int key1 = KEY2TERMCAP1(key);</a>
+<a name="ln382">    for (int i = 0; modifier_keys_table[i] != NUL; i += MOD_KEYS_ENTRY_SIZE) {</a>
+<a name="ln383">      if (key0 == modifier_keys_table[i + 3]</a>
+<a name="ln384">          &amp;&amp; key1 == modifier_keys_table[i + 4]</a>
+<a name="ln385">          &amp;&amp; (*modifiers &amp; modifier_keys_table[i])) {</a>
+<a name="ln386">        *modifiers &amp;= ~modifier_keys_table[i];</a>
+<a name="ln387">        return TERMCAP2KEY(modifier_keys_table[i + 1],</a>
+<a name="ln388">                           modifier_keys_table[i + 2]);</a>
+<a name="ln389">      }</a>
+<a name="ln390">    }</a>
+<a name="ln391">  }</a>
+<a name="ln392">  return key;</a>
+<a name="ln393">}</a>
+<a name="ln394"> </a>
+<a name="ln395">/// Change &lt;xKey&gt; to &lt;Key&gt;</a>
+<a name="ln396">int handle_x_keys(const int key)</a>
+<a name="ln397">  FUNC_ATTR_CONST FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln398">{</a>
+<a name="ln399">  switch (key) {</a>
+<a name="ln400">    case K_XUP:     return K_UP;</a>
+<a name="ln401">    case K_XDOWN:   return K_DOWN;</a>
+<a name="ln402">    case K_XLEFT:   return K_LEFT;</a>
+<a name="ln403">    case K_XRIGHT:  return K_RIGHT;</a>
+<a name="ln404">    case K_XHOME:   return K_HOME;</a>
+<a name="ln405">    case K_ZHOME:   return K_HOME;</a>
+<a name="ln406">    case K_XEND:    return K_END;</a>
+<a name="ln407">    case K_ZEND:    return K_END;</a>
+<a name="ln408">    case K_XF1:     return K_F1;</a>
+<a name="ln409">    case K_XF2:     return K_F2;</a>
+<a name="ln410">    case K_XF3:     return K_F3;</a>
+<a name="ln411">    case K_XF4:     return K_F4;</a>
+<a name="ln412">    case K_S_XF1:   return K_S_F1;</a>
+<a name="ln413">    case K_S_XF2:   return K_S_F2;</a>
+<a name="ln414">    case K_S_XF3:   return K_S_F3;</a>
+<a name="ln415">    case K_S_XF4:   return K_S_F4;</a>
+<a name="ln416">  }</a>
+<a name="ln417">  return key;</a>
+<a name="ln418">}</a>
+<a name="ln419"> </a>
+<a name="ln420">/*</a>
+<a name="ln421"> * Return a string which contains the name of the given key when the given</a>
+<a name="ln422"> * modifiers are down.</a>
+<a name="ln423"> */</a>
+<a name="ln424">char_u *get_special_key_name(int c, int modifiers)</a>
+<a name="ln425">{</a>
+<a name="ln426">  static char_u string[MAX_KEY_NAME_LEN + 1];</a>
+<a name="ln427"> </a>
+<a name="ln428">  int i, idx;</a>
+<a name="ln429">  int table_idx;</a>
+<a name="ln430">  char_u  *s;</a>
+<a name="ln431"> </a>
+<a name="ln432">  string[0] = '&lt;';</a>
+<a name="ln433">  idx = 1;</a>
+<a name="ln434"> </a>
+<a name="ln435">  /* Key that stands for a normal character. */</a>
+<a name="ln436">  if (IS_SPECIAL(c) &amp;&amp; KEY2TERMCAP0(c) == KS_KEY)</a>
+<a name="ln437">    c = KEY2TERMCAP1(c);</a>
+<a name="ln438"> </a>
+<a name="ln439">  /*</a>
+<a name="ln440">   * Translate shifted special keys into unshifted keys and set modifier.</a>
+<a name="ln441">   * Same for CTRL and ALT modifiers.</a>
+<a name="ln442">   */</a>
+<a name="ln443">  if (IS_SPECIAL(c)) {</a>
+<a name="ln444">    for (i = 0; modifier_keys_table[i] != 0; i += MOD_KEYS_ENTRY_SIZE)</a>
+<a name="ln445">      if (       KEY2TERMCAP0(c) == (int)modifier_keys_table[i + 1]</a>
+<a name="ln446">                 &amp;&amp; (int)KEY2TERMCAP1(c) == (int)modifier_keys_table[i + 2]) {</a>
+<a name="ln447">        modifiers |= modifier_keys_table[i];</a>
+<a name="ln448">        c = TERMCAP2KEY(modifier_keys_table[i + 3],</a>
+<a name="ln449">            modifier_keys_table[i + 4]);</a>
+<a name="ln450">        break;</a>
+<a name="ln451">      }</a>
+<a name="ln452">  }</a>
+<a name="ln453"> </a>
+<a name="ln454">  /* try to find the key in the special key table */</a>
+<a name="ln455">  table_idx = find_special_key_in_table(c);</a>
+<a name="ln456"> </a>
+<a name="ln457">  /*</a>
+<a name="ln458">   * When not a known special key, and not a printable character, try to</a>
+<a name="ln459">   * extract modifiers.</a>
+<a name="ln460">   */</a>
+<a name="ln461">  if (c &gt; 0</a>
+<a name="ln462">      &amp;&amp; (*mb_char2len)(c) == 1</a>
+<a name="ln463">      ) {</a>
+<a name="ln464">    if (table_idx &lt; 0</a>
+<a name="ln465">        &amp;&amp; (!vim_isprintc(c) || (c &amp; 0x7f) == ' ')</a>
+<a name="ln466">        &amp;&amp; (c &amp; 0x80)) {</a>
+<a name="ln467">      c &amp;= 0x7f;</a>
+<a name="ln468">      modifiers |= MOD_MASK_ALT;</a>
+<a name="ln469">      /* try again, to find the un-alted key in the special key table */</a>
+<a name="ln470">      table_idx = find_special_key_in_table(c);</a>
+<a name="ln471">    }</a>
+<a name="ln472">    if (table_idx &lt; 0 &amp;&amp; !vim_isprintc(c) &amp;&amp; c &lt; ' ') {</a>
+<a name="ln473">      c += '@';</a>
+<a name="ln474">      modifiers |= MOD_MASK_CTRL;</a>
+<a name="ln475">    }</a>
+<a name="ln476">  }</a>
+<a name="ln477"> </a>
+<a name="ln478">  /* translate the modifier into a string */</a>
+<a name="ln479">  for (i = 0; mod_mask_table[i].name != 'A'; i++)</a>
+<a name="ln480">    if ((modifiers &amp; mod_mask_table[i].mod_mask)</a>
+<a name="ln481">        == mod_mask_table[i].mod_flag) {</a>
+<a name="ln482">      string[idx++] = mod_mask_table[i].name;</a>
+<a name="ln483">      string[idx++] = (char_u)'-';</a>
+<a name="ln484">    }</a>
+<a name="ln485"> </a>
+<a name="ln486">  if (table_idx &lt; 0) {          /* unknown special key, may output t_xx */</a>
+<a name="ln487">    if (IS_SPECIAL(c)) {</a>
+<a name="ln488">      string[idx++] = 't';</a>
+<a name="ln489">      string[idx++] = '_';</a>
+<a name="ln490">      string[idx++] = (char_u)KEY2TERMCAP0(c);</a>
+<a name="ln491">      string[idx++] = KEY2TERMCAP1(c);</a>
+<a name="ln492">    } else {</a>
+<a name="ln493">      // Not a special key, only modifiers, output directly.</a>
+<a name="ln494">      if (utf_char2len(c) &gt; 1) {</a>
+<a name="ln495">        idx += utf_char2bytes(c, string + idx);</a>
+<a name="ln496">      } else if (vim_isprintc(c)) {</a>
+<a name="ln497">        string[idx++] = (char_u)c;</a>
+<a name="ln498">      } else {</a>
+<a name="ln499">        s = transchar(c);</a>
+<a name="ln500">        while (*s)</a>
+<a name="ln501">          string[idx++] = *s++;</a>
+<a name="ln502">      }</a>
+<a name="ln503">    }</a>
+<a name="ln504">  } else {            // use name of special key</a>
+<a name="ln505">    size_t len = STRLEN(key_names_table[table_idx].name);</a>
+<a name="ln506"> </a>
+<a name="ln507">    if ((int)len + idx + 2 &lt;= MAX_KEY_NAME_LEN) {</a>
+<a name="ln508">        STRCPY(string + idx, key_names_table[table_idx].name);</a>
+<a name="ln509">        idx += (int)len;</a>
+<a name="ln510">    }</a>
+<a name="ln511">  }</a>
+<a name="ln512">  string[idx++] = '&gt;';</a>
+<a name="ln513">  string[idx] = NUL;</a>
+<a name="ln514">  return string;</a>
+<a name="ln515">}</a>
+<a name="ln516"> </a>
+<a name="ln517">/// Try translating a &lt;&gt; name (&quot;keycode&quot;).</a>
+<a name="ln518">///</a>
+<a name="ln519">/// @param[in,out]  srcp  Source from which &lt;&gt; are translated. Is advanced to</a>
+<a name="ln520">///                       after the &lt;&gt; name if there is a match.</a>
+<a name="ln521">/// @param[in]  src_len  Length of the srcp.</a>
+<a name="ln522">/// @param[out]  dst  Location where translation result will be kept. It must</a>
+<a name="ln523">//                    be at least 19 bytes per &quot;&lt;x&gt;&quot; form.</a>
+<a name="ln524">/// @param[in]  keycode  Prefer key code, e.g. K_DEL in place of DEL.</a>
+<a name="ln525">/// @param[in]  in_string  Inside a double quoted string</a>
+<a name="ln526">///</a>
+<a name="ln527">/// @return Number of characters added to dst, zero for no match.</a>
+<a name="ln528">unsigned int trans_special(const char_u **srcp, const size_t src_len,</a>
+<a name="ln529">                           char_u *const dst, const bool keycode,</a>
+<a name="ln530">                           const bool in_string)</a>
+<a name="ln531">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln532">{</a>
+<a name="ln533">  int modifiers = 0;</a>
+<a name="ln534">  int key;</a>
+<a name="ln535"> </a>
+<a name="ln536">  key = find_special_key(srcp, src_len, &amp;modifiers, keycode, false, in_string);</a>
+<a name="ln537">  if (key == 0) {</a>
+<a name="ln538">    return 0;</a>
+<a name="ln539">  }</a>
+<a name="ln540"> </a>
+<a name="ln541">  return special_to_buf(key, modifiers, keycode, dst);</a>
+<a name="ln542">}</a>
+<a name="ln543"> </a>
+<a name="ln544">/// Put the character sequence for &quot;key&quot; with &quot;modifiers&quot; into &quot;dst&quot; and return</a>
+<a name="ln545">/// the resulting length.</a>
+<a name="ln546">/// When &quot;keycode&quot; is TRUE prefer key code, e.g. K_DEL instead of DEL.</a>
+<a name="ln547">/// The sequence is not NUL terminated.</a>
+<a name="ln548">/// This is how characters in a string are encoded.</a>
+<a name="ln549">unsigned int special_to_buf(int key, int modifiers, bool keycode, char_u *dst)</a>
+<a name="ln550">{</a>
+<a name="ln551">  unsigned int dlen = 0;</a>
+<a name="ln552"> </a>
+<a name="ln553">  // Put the appropriate modifier in a string.</a>
+<a name="ln554">  if (modifiers != 0) {</a>
+<a name="ln555">    dst[dlen++] = K_SPECIAL;</a>
+<a name="ln556">    dst[dlen++] = KS_MODIFIER;</a>
+<a name="ln557">    dst[dlen++] = (char_u)modifiers;</a>
+<a name="ln558">  }</a>
+<a name="ln559"> </a>
+<a name="ln560">  if (IS_SPECIAL(key)) {</a>
+<a name="ln561">    dst[dlen++] = K_SPECIAL;</a>
+<a name="ln562">    dst[dlen++] = (char_u)KEY2TERMCAP0(key);</a>
+<a name="ln563">    dst[dlen++] = KEY2TERMCAP1(key);</a>
+<a name="ln564">  } else if (!keycode) {</a>
+<a name="ln565">    dlen += (unsigned int)utf_char2bytes(key, dst + dlen);</a>
+<a name="ln566">  } else {</a>
+<a name="ln567">    char_u *after = add_char2buf(key, dst + dlen);</a>
+<a name="ln568">    assert(after &gt;= dst &amp;&amp; (uintmax_t)(after - dst) &lt;= UINT_MAX);</a>
+<a name="ln569">    dlen = (unsigned int)(after - dst);</a>
+<a name="ln570">  }</a>
+<a name="ln571"> </a>
+<a name="ln572">  return dlen;</a>
+<a name="ln573">}</a>
+<a name="ln574"> </a>
+<a name="ln575">/// Try translating a &lt;&gt; name</a>
+<a name="ln576">///</a>
+<a name="ln577">/// @param[in,out]  srcp  Translated &lt;&gt; name. Is advanced to after the &lt;&gt; name.</a>
+<a name="ln578">/// @param[in]  src_len  srcp length.</a>
+<a name="ln579">/// @param[out]  modp  Location where information about modifiers is saved.</a>
+<a name="ln580">/// @param[in]  keycode  Prefer key code, e.g. K_DEL in place of DEL.</a>
+<a name="ln581">/// @param[in]  keep_x_key  Don’t translate xHome to Home key.</a>
+<a name="ln582">/// @param[in]  in_string  In string, double quote is escaped</a>
+<a name="ln583">///</a>
+<a name="ln584">/// @return Key and modifiers or 0 if there is no match.</a>
+<a name="ln585">int find_special_key(const char_u **srcp, const size_t src_len, int *const modp,</a>
+<a name="ln586">                     const bool keycode, const bool keep_x_key,</a>
+<a name="ln587">                     const bool in_string)</a>
+<a name="ln588">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln589">{</a>
+<a name="ln590">  const char_u *last_dash;</a>
+<a name="ln591">  const char_u *end_of_name;</a>
+<a name="ln592">  const char_u *src;</a>
+<a name="ln593">  const char_u *bp;</a>
+<a name="ln594">  const char_u *const end = *srcp + src_len - 1;</a>
+<a name="ln595">  int modifiers;</a>
+<a name="ln596">  int bit;</a>
+<a name="ln597">  int key;</a>
+<a name="ln598">  uvarnumber_T n;</a>
+<a name="ln599">  int l;</a>
+<a name="ln600"> </a>
+<a name="ln601">  if (src_len == 0) {</a>
+<a name="ln602">    return 0;</a>
+<a name="ln603">  }</a>
+<a name="ln604"> </a>
+<a name="ln605">  src = *srcp;</a>
+<a name="ln606">  if (src[0] != '&lt;') {</a>
+<a name="ln607">    return 0;</a>
+<a name="ln608">  }</a>
+<a name="ln609"> </a>
+<a name="ln610">  // Find end of modifier list</a>
+<a name="ln611">  last_dash = src;</a>
+<a name="ln612">  for (bp = src + 1; bp &lt;= end &amp;&amp; (*bp == '-' || ascii_isident(*bp)); bp++) {</a>
+<a name="ln613">    if (*bp == '-') {</a>
+<a name="ln614">      last_dash = bp;</a>
+<a name="ln615">      if (bp + 1 &lt;= end) {</a>
+<a name="ln616">        l = utfc_ptr2len_len(bp + 1, (int)(end - bp) + 1);</a>
+<a name="ln617">        // Anything accepted, like &lt;C-?&gt;.</a>
+<a name="ln618">        // &lt;C-&quot;&gt; or &lt;M-&quot;&gt; are not special in strings as &quot; is</a>
+<a name="ln619">        // the string delimiter. With a backslash it works: &lt;M-\&quot;&gt;</a>
+<a name="ln620">        if (end - bp &gt; l &amp;&amp; !(in_string &amp;&amp; bp[1] == '&quot;') &amp;&amp; bp[l+1] == '&gt;') {</a>
+<a name="ln621">          bp += l;</a>
+<a name="ln622">        } else if (end - bp &gt; 2 &amp;&amp; in_string &amp;&amp; bp[1] == '\\'</a>
+<a name="ln623">                   &amp;&amp; bp[2] == '&quot;' &amp;&amp; bp[3] == '&gt;') {</a>
+<a name="ln624">          bp += 2;</a>
+<a name="ln625">        }</a>
+<a name="ln626">      }</a>
+<a name="ln627">    }</a>
+<a name="ln628">    if (end - bp &gt; 3 &amp;&amp; bp[0] == 't' &amp;&amp; bp[1] == '_') {</a>
+<a name="ln629">      bp += 3;  // skip t_xx, xx may be '-' or '&gt;'</a>
+<a name="ln630">    } else if (end - bp &gt; 4 &amp;&amp; STRNICMP(bp, &quot;char-&quot;, 5) == 0) {</a>
+<a name="ln631">      vim_str2nr(bp + 5, NULL, &amp;l, STR2NR_ALL, NULL, NULL, 0);</a>
+<a name="ln632">      bp += l + 5;</a>
+<a name="ln633">      break;</a>
+<a name="ln634">    }</a>
+<a name="ln635">  }</a>
+<a name="ln636"> </a>
+<a name="ln637">  if (bp &lt;= end &amp;&amp; *bp == '&gt;') {  // found matching '&gt;'</a>
+<a name="ln638">    end_of_name = bp + 1;</a>
+<a name="ln639"> </a>
+<a name="ln640">    /* Which modifiers are given? */</a>
+<a name="ln641">    modifiers = 0x0;</a>
+<a name="ln642">    for (bp = src + 1; bp &lt; last_dash; bp++) {</a>
+<a name="ln643">      if (*bp != '-') {</a>
+<a name="ln644">        bit = name_to_mod_mask(*bp);</a>
+<a name="ln645">        if (bit == 0x0) {</a>
+<a name="ln646">          break;                // Illegal modifier name</a>
+<a name="ln647">        }</a>
+<a name="ln648">        modifiers |= bit;</a>
+<a name="ln649">      }</a>
+<a name="ln650">    }</a>
+<a name="ln651"> </a>
+<a name="ln652">    // Legal modifier name.</a>
+<a name="ln653">    if (bp &gt;= last_dash) {</a>
+<a name="ln654">      if (STRNICMP(last_dash + 1, &quot;char-&quot;, 5) == 0</a>
+<a name="ln655">          &amp;&amp; ascii_isdigit(last_dash[6])) {</a>
+<a name="ln656">        // &lt;Char-123&gt; or &lt;Char-033&gt; or &lt;Char-0x33&gt;</a>
+<a name="ln657">        vim_str2nr(last_dash + 6, NULL, NULL, STR2NR_ALL, NULL, &amp;n, 0);</a>
+<a name="ln658">        key = (int)n;</a>
+<a name="ln659">      } else {</a>
+<a name="ln660">        int off = 1;</a>
+<a name="ln661"> </a>
+<a name="ln662">        // Modifier with single letter, or special key name.</a>
+<a name="ln663">        if (in_string &amp;&amp; last_dash[1] == '\\' &amp;&amp; last_dash[2] == '&quot;') {</a>
+<a name="ln664">          // Special case for a double-quoted string</a>
+<a name="ln665">          off = l = 2;</a>
+<a name="ln666">        } else {</a>
+<a name="ln667">          l = mb_ptr2len(last_dash + 1);</a>
+<a name="ln668">        }</a>
+<a name="ln669">        if (modifiers != 0 &amp;&amp; last_dash[l + 1] == '&gt;') {</a>
+<a name="ln670">          key = PTR2CHAR(last_dash + off);</a>
+<a name="ln671">        } else {</a>
+<a name="ln672">          key = get_special_key_code(last_dash + off);</a>
+<a name="ln673">          if (!keep_x_key) {</a>
+<a name="ln674">            key = handle_x_keys(key);</a>
+<a name="ln675">          }</a>
+<a name="ln676">        }</a>
+<a name="ln677">      }</a>
+<a name="ln678"> </a>
+<a name="ln679">      // get_special_key_code() may return NUL for invalid</a>
+<a name="ln680">      // special key name.</a>
+<a name="ln681">      if (key != NUL) {</a>
+<a name="ln682">        // Only use a modifier when there is no special key code that</a>
+<a name="ln683">        // includes the modifier.</a>
+<a name="ln684">        key = simplify_key(key, &amp;modifiers);</a>
+<a name="ln685"> </a>
+<a name="ln686">        if (!keycode) {</a>
+<a name="ln687">          // don't want keycode, use single byte code</a>
+<a name="ln688">          if (key == K_BS) {</a>
+<a name="ln689">            key = BS;</a>
+<a name="ln690">          } else if (key == K_DEL || key == K_KDEL) {</a>
+<a name="ln691">            key = DEL;</a>
+<a name="ln692">          }</a>
+<a name="ln693">        }</a>
+<a name="ln694"> </a>
+<a name="ln695">        // Normal Key with modifier:</a>
+<a name="ln696">        // Try to make a single byte code (except for Alt/Meta modifiers).</a>
+<a name="ln697">        if (!IS_SPECIAL(key)) {</a>
+<a name="ln698">          key = extract_modifiers(key, &amp;modifiers);</a>
+<a name="ln699">        }</a>
+<a name="ln700"> </a>
+<a name="ln701">        *modp = modifiers;</a>
+<a name="ln702">        *srcp = end_of_name;</a>
+<a name="ln703">        return key;</a>
+<a name="ln704">      }  // else { ELOG(&quot;unknown key: '%s'&quot;, src); }</a>
+<a name="ln705">    }</a>
+<a name="ln706">  }</a>
+<a name="ln707">  return 0;</a>
+<a name="ln708">}</a>
+<a name="ln709"> </a>
+<a name="ln710">/// Try to include modifiers (except alt/meta) in the key.</a>
+<a name="ln711">/// Changes &quot;Shift-a&quot; to 'A', &quot;Ctrl-@&quot; to &lt;Nul&gt;, etc.</a>
+<a name="ln712">static int extract_modifiers(int key, int *modp)</a>
+<a name="ln713">{</a>
+<a name="ln714">  int modifiers = *modp;</a>
+<a name="ln715"> </a>
+<a name="ln716">  // Command-key and ctrl are special</a>
+<a name="ln717">  if (!(modifiers &amp; MOD_MASK_CMD) &amp;&amp; !(modifiers &amp; MOD_MASK_CTRL)) {</a>
+<a name="ln718">    if ((modifiers &amp; MOD_MASK_SHIFT) &amp;&amp; ASCII_ISALPHA(key)) {</a>
+<a name="ln719">      key = TOUPPER_ASC(key);</a>
+<a name="ln720">      modifiers &amp;= ~MOD_MASK_SHIFT;</a>
+<a name="ln721">    }</a>
+<a name="ln722">  }</a>
+<a name="ln723">  if ((modifiers &amp; MOD_MASK_CTRL)</a>
+<a name="ln724">      &amp;&amp; ((key &gt;= '?' &amp;&amp; key &lt;= '_') || ASCII_ISALPHA(key))) {</a>
+<a name="ln725">    key = Ctrl_chr(key);</a>
+<a name="ln726">    modifiers &amp;= ~MOD_MASK_CTRL;</a>
+<a name="ln727">    if (key == 0) {  // &lt;C-@&gt; is &lt;Nul&gt;</a>
+<a name="ln728">      key = K_ZERO;</a>
+<a name="ln729">    }</a>
+<a name="ln730">  }</a>
+<a name="ln731"> </a>
+<a name="ln732">  *modp = modifiers;</a>
+<a name="ln733">  return key;</a>
+<a name="ln734">}</a>
+<a name="ln735"> </a>
+<a name="ln736">/*</a>
+<a name="ln737"> * Try to find key &quot;c&quot; in the special key table.</a>
+<a name="ln738"> * Return the index when found, -1 when not found.</a>
+<a name="ln739"> */</a>
+<a name="ln740">int find_special_key_in_table(int c)</a>
+<a name="ln741">{</a>
+<a name="ln742">  int i;</a>
+<a name="ln743"> </a>
+<a name="ln744">  for (i = 0; key_names_table[i].name != NULL; i++) {</a>
+<a name="ln745">    if (c == key_names_table[i].key) {</a>
+<a name="ln746">      break;</a>
+<a name="ln747">    }</a>
+<a name="ln748">  }</a>
+<a name="ln749">  if (key_names_table[i].name == NULL) {</a>
+<a name="ln750">    i = -1;</a>
+<a name="ln751">  }</a>
+<a name="ln752">  return i;</a>
+<a name="ln753">}</a>
+<a name="ln754"> </a>
+<a name="ln755">/// Find the special key with the given name</a>
+<a name="ln756">///</a>
+<a name="ln757">/// @param[in]  name  Name of the special. Does not have to end with NUL, it is</a>
+<a name="ln758">///                   assumed to end before the first non-idchar. If name starts</a>
+<a name="ln759">///                   with &quot;t_&quot; the next two characters are interpreted as</a>
+<a name="ln760">///                   a termcap name.</a>
+<a name="ln761">///</a>
+<a name="ln762">/// @return Key code or 0 if not found.</a>
+<a name="ln763">int get_special_key_code(const char_u *name)</a>
+<a name="ln764">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln765">{</a>
+<a name="ln766">  for (int i = 0; key_names_table[i].name != NULL; i++) {</a>
+<a name="ln767">    const char *const table_name = key_names_table[i].name;</a>
+<a name="ln768">    int j;</a>
+<a name="ln769">    for (j = 0; ascii_isident(name[j]) &amp;&amp; table_name[j] != NUL; j++) {</a>
+<a name="ln770">      if (TOLOWER_ASC(table_name[j]) != TOLOWER_ASC(name[j])) {</a>
+<a name="ln771">        break;</a>
+<a name="ln772">      }</a>
+<a name="ln773">    }</a>
+<a name="ln774">    if (!ascii_isident(name[j]) &amp;&amp; table_name[j] == NUL) {</a>
+<a name="ln775">      return key_names_table[i].key;</a>
+<a name="ln776">    }</a>
+<a name="ln777">  }</a>
+<a name="ln778"> </a>
+<a name="ln779">  return 0;</a>
+<a name="ln780">}</a>
+<a name="ln781"> </a>
+<a name="ln782">/*</a>
+<a name="ln783"> * Look up the given mouse code to return the relevant information in the other</a>
+<a name="ln784"> * arguments.  Return which button is down or was released.</a>
+<a name="ln785"> */</a>
+<a name="ln786">int get_mouse_button(int code, bool *is_click, bool *is_drag)</a>
+<a name="ln787">{</a>
+<a name="ln788">  int i;</a>
+<a name="ln789"> </a>
+<a name="ln790">  for (i = 0; mouse_table[i].pseudo_code; i++)</a>
+<a name="ln791">    if (code == mouse_table[i].pseudo_code) {</a>
+<a name="ln792">      *is_click = mouse_table[i].is_click;</a>
+<a name="ln793">      *is_drag = mouse_table[i].is_drag;</a>
+<a name="ln794">      return mouse_table[i].button;</a>
+<a name="ln795">    }</a>
+<a name="ln796">  return 0;         /* Shouldn't get here */</a>
+<a name="ln797">}</a>
+<a name="ln798"> </a>
+<a name="ln799">/// Replace any terminal code strings with the equivalent internal</a>
+<a name="ln800">/// representation</a>
+<a name="ln801">///</a>
+<a name="ln802">/// Used for the &quot;from&quot; and &quot;to&quot; part of a mapping, and the &quot;to&quot; part of</a>
+<a name="ln803">/// a menu command. Any strings like &quot;&lt;C-UP&gt;&quot; are also replaced, unless</a>
+<a name="ln804">/// `special` is false. K_SPECIAL by itself is replaced by K_SPECIAL</a>
+<a name="ln805">/// KS_SPECIAL KE_FILLER.</a>
+<a name="ln806">///</a>
+<a name="ln807">/// @param[in]  from  What characters to replace.</a>
+<a name="ln808">/// @param[in]  from_len  Length of the &quot;from&quot; argument.</a>
+<a name="ln809">/// @param[out]  bufp  Location where results were saved in case of success</a>
+<a name="ln810">///                    (allocated). Will be set to NULL in case of failure.</a>
+<a name="ln811">/// @param[in]  do_lt  If true, also translate &lt;lt&gt;.</a>
+<a name="ln812">/// @param[in]  from_part  If true, trailing &lt;C-v&gt; is included, otherwise it is</a>
+<a name="ln813">///                        removed (to make &quot;:map xx ^V&quot; map xx to nothing).</a>
+<a name="ln814">///                        When cpo_flags contains #FLAG_CPO_BSLASH, a backslash</a>
+<a name="ln815">///                        can be used in place of &lt;C-v&gt;. All other &lt;C-v&gt;</a>
+<a name="ln816">///                        characters are removed.</a>
+<a name="ln817">/// @param[in]  special    Replace keycodes, e.g. &lt;CR&gt; becomes a &quot;\n&quot; char.</a>
+<a name="ln818">/// @param[in]  cpo_flags  Relevant flags derived from p_cpo, see</a>
+<a name="ln819">///                        #CPO_TO_CPO_FLAGS.</a>
+<a name="ln820">///</a>
+<a name="ln821">/// @return Pointer to an allocated memory in case of success, &quot;from&quot; in case of</a>
+<a name="ln822">///         failure. In case of success returned pointer is also saved to</a>
+<a name="ln823">///         &quot;bufp&quot;.</a>
+<a name="ln824">char_u *replace_termcodes(const char_u *from, const size_t from_len,</a>
+<a name="ln825">                          char_u **bufp, const bool from_part, const bool do_lt,</a>
+<a name="ln826">                          const bool special, int cpo_flags)</a>
+<a name="ln827">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln828">{</a>
+<a name="ln829">  ssize_t i;</a>
+<a name="ln830">  size_t slen;</a>
+<a name="ln831">  char_u key;</a>
+<a name="ln832">  size_t dlen = 0;</a>
+<a name="ln833">  const char_u *src;</a>
+<a name="ln834">  const char_u *const end = from + from_len - 1;</a>
+<a name="ln835">  int do_backslash;             // backslash is a special character</a>
+<a name="ln836">  char_u      *result;          // buffer for resulting string</a>
+<a name="ln837"> </a>
+<a name="ln838">  do_backslash = !(cpo_flags&amp;FLAG_CPO_BSLASH);</a>
+<a name="ln839"> </a>
+<a name="ln840">  // Allocate space for the translation.  Worst case a single character is</a>
+<a name="ln841">  // replaced by 6 bytes (shifted special key), plus a NUL at the end.</a>
+<a name="ln842">  const size_t buf_len = from_len * 6 + 1;</a>
+<a name="ln843">  result = xmalloc(buf_len);</a>
+<a name="ln844"> </a>
+<a name="ln845">  src = from;</a>
+<a name="ln846"> </a>
+<a name="ln847">  // Check for #n at start only: function key n</a>
+<a name="ln848">  if (from_part &amp;&amp; from_len &gt; 1 &amp;&amp; src[0] == '#'</a>
+<a name="ln849">      &amp;&amp; ascii_isdigit(src[1])) {  // function key</a>
+<a name="ln850">    result[dlen++] = K_SPECIAL;</a>
+<a name="ln851">    result[dlen++] = 'k';</a>
+<a name="ln852">    if (src[1] == '0') {</a>
+<a name="ln853">      result[dlen++] = ';';     // #0 is F10 is &quot;k;&quot;</a>
+<a name="ln854">    } else {</a>
+<a name="ln855">      result[dlen++] = src[1];  // #3 is F3 is &quot;k3&quot;</a>
+<a name="ln856">    }</a>
+<a name="ln857">    src += 2;</a>
+<a name="ln858">  }</a>
+<a name="ln859"> </a>
+<a name="ln860">  // Copy each byte from *from to result[dlen]</a>
+<a name="ln861">  while (src &lt;= end) {</a>
+<a name="ln862">    // Check for special &lt;&gt; keycodes, like &quot;&lt;C-S-LeftMouse&gt;&quot;</a>
+<a name="ln863">    if (special &amp;&amp; (do_lt || ((end - src) &gt;= 3</a>
+<a name="ln864">                              &amp;&amp; STRNCMP(src, &quot;&lt;lt&gt;&quot;, 4) != 0))) {</a>
+<a name="ln865">      // Replace &lt;SID&gt; by K_SNR &lt;script-nr&gt; _.</a>
+<a name="ln866">      // (room: 5 * 6 = 30 bytes; needed: 3 + &lt;nr&gt; + 1 &lt;= 14)</a>
+<a name="ln867">      if (end - src &gt;= 4 &amp;&amp; STRNICMP(src, &quot;&lt;SID&gt;&quot;, 5) == 0) {</a>
+<a name="ln868">        if (current_sctx.sc_sid &lt;= 0) {</a>
+<a name="ln869">          EMSG(_(e_usingsid));</a>
+<a name="ln870">        } else {</a>
+<a name="ln871">          src += 5;</a>
+<a name="ln872">          result[dlen++] = K_SPECIAL;</a>
+<a name="ln873">          result[dlen++] = (int)KS_EXTRA;</a>
+<a name="ln874">          result[dlen++] = (int)KE_SNR;</a>
+<a name="ln875">          snprintf((char *)result + dlen, buf_len - dlen, &quot;%&quot; PRId64,</a>
+<a name="ln876">                   (int64_t)current_sctx.sc_sid);</a>
+<a name="ln877">          dlen += STRLEN(result + dlen);</a>
+<a name="ln878">          result[dlen++] = '_';</a>
+<a name="ln879">          continue;</a>
+<a name="ln880">        }</a>
+<a name="ln881">      }</a>
+<a name="ln882"> </a>
+<a name="ln883">      slen = trans_special(&amp;src, (size_t)(end - src) + 1, result + dlen, true,</a>
+<a name="ln884">                           false);</a>
+<a name="ln885">      if (slen) {</a>
+<a name="ln886">        dlen += slen;</a>
+<a name="ln887">        continue;</a>
+<a name="ln888">      }</a>
+<a name="ln889">    }</a>
+<a name="ln890"> </a>
+<a name="ln891">    if (special) {</a>
+<a name="ln892">      char_u  *p, *s, len;</a>
+<a name="ln893"> </a>
+<a name="ln894">      // Replace &lt;Leader&gt; by the value of &quot;mapleader&quot;.</a>
+<a name="ln895">      // Replace &lt;LocalLeader&gt; by the value of &quot;maplocalleader&quot;.</a>
+<a name="ln896">      // If &quot;mapleader&quot; or &quot;maplocalleader&quot; isn't set use a backslash.</a>
+<a name="ln897">      if (end - src &gt;= 7 &amp;&amp; STRNICMP(src, &quot;&lt;Leader&gt;&quot;, 8) == 0) {</a>
+<a name="ln898">        len = 8;</a>
+<a name="ln899">        p = get_var_value(&quot;g:mapleader&quot;);</a>
+<a name="ln900">      } else if (end - src &gt;= 12 &amp;&amp; STRNICMP(src, &quot;&lt;LocalLeader&gt;&quot;, 13) == 0) {</a>
+<a name="ln901">        len = 13;</a>
+<a name="ln902">        p = get_var_value(&quot;g:maplocalleader&quot;);</a>
+<a name="ln903">      } else {</a>
+<a name="ln904">        len = 0;</a>
+<a name="ln905">        p = NULL;</a>
+<a name="ln906">      }</a>
+<a name="ln907"> </a>
+<a name="ln908">      if (len != 0) {</a>
+<a name="ln909">        // Allow up to 8 * 6 characters for &quot;mapleader&quot;.</a>
+<a name="ln910">        if (p == NULL || *p == NUL || STRLEN(p) &gt; 8 * 6) {</a>
+<a name="ln911">          s = (char_u *)&quot;\\&quot;;</a>
+<a name="ln912">        } else {</a>
+<a name="ln913">          s = p;</a>
+<a name="ln914">        }</a>
+<a name="ln915">        while (*s != NUL) {</a>
+<a name="ln916">          result[dlen++] = *s++;</a>
+<a name="ln917">        }</a>
+<a name="ln918">        src += len;</a>
+<a name="ln919">        continue;</a>
+<a name="ln920">      }</a>
+<a name="ln921">    }</a>
+<a name="ln922"> </a>
+<a name="ln923">    // Remove CTRL-V and ignore the next character.</a>
+<a name="ln924">    // For &quot;from&quot; side the CTRL-V at the end is included, for the &quot;to&quot;</a>
+<a name="ln925">    // part it is removed.</a>
+<a name="ln926">    // If 'cpoptions' does not contain 'B', also accept a backslash.</a>
+<a name="ln927">    key = *src;</a>
+<a name="ln928">    if (key == Ctrl_V || (do_backslash &amp;&amp; key == '\\')) {</a>
+<a name="ln929">      src++;  // skip CTRL-V or backslash</a>
+<a name="ln930">      if (src &gt; end) {</a>
+<a name="ln931">        if (from_part) {</a>
+<a name="ln932">          result[dlen++] = key;</a>
+<a name="ln933">        }</a>
+<a name="ln934">        break;</a>
+<a name="ln935">      }</a>
+<a name="ln936">    }</a>
+<a name="ln937"> </a>
+<a name="ln938">    // skip multibyte char correctly</a>
+<a name="ln939">    for (i = utfc_ptr2len_len(src, (int)(end - src) + 1); i &gt; 0; i--) {</a>
+<a name="ln940">      // If the character is K_SPECIAL, replace it with K_SPECIAL</a>
+<a name="ln941">      // KS_SPECIAL KE_FILLER.</a>
+<a name="ln942">      // If compiled with the GUI replace CSI with K_CSI.</a>
+<a name="ln943">      if (*src == K_SPECIAL) {</a>
+<a name="ln944">        result[dlen++] = K_SPECIAL;</a>
+<a name="ln945">        result[dlen++] = KS_SPECIAL;</a>
+<a name="ln946">        result[dlen++] = KE_FILLER;</a>
+<a name="ln947">      } else {</a>
+<a name="ln948">        result[dlen++] = *src;</a>
+<a name="ln949">      }</a>
+<a name="ln950">      ++src;</a>
+<a name="ln951">    }</a>
+<a name="ln952">  }</a>
+<a name="ln953">  result[dlen] = NUL;</a>
+<a name="ln954"> </a>
+<a name="ln955">  *bufp = xrealloc(result, dlen + 1);</a>
+<a name="ln956"> </a>
+<a name="ln957">  return *bufp;</a>
+<a name="ln958">}</a>
+<a name="ln959"> </a>
+<a name="ln960">/// Logs a single key as a human-readable keycode.</a>
+<a name="ln961">void log_key(int log_level, int key)</a>
+<a name="ln962">{</a>
+<a name="ln963">  if (log_level &lt; MIN_LOG_LEVEL) {</a>
+<a name="ln964">    return;</a>
+<a name="ln965">  }</a>
+<a name="ln966">  char *keyname = key == K_EVENT</a>
+<a name="ln967">    ? &quot;K_EVENT&quot;</a>
+<a name="ln968">    : (char *)get_special_key_name(key, mod_mask);</a>
+<a name="ln969">  LOG(log_level, &quot;input: %s&quot;, keyname);</a>
+<a name="ln970">}</a>
+
+</code></pre>
+<div class="balloon" rel="673"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v1051/" target="_blank">V1051</a> Consider checking for misprints. It's possible that the 'key' should be checked here.</p></div>
+
+<link rel="stylesheet" href="highlight.css">
+<script src="highlight.pack.js"></script>
+<script src="highlightjs-line-numbers.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initLineNumbersOnLoad();</script>
+<script>
+  $(document).ready(function() {
+      $('.balloon').each(function () {
+          var bl = $(this);
+          var line = bl.attr('rel');
+          var text = $('a[name="ln'+line+'"]').text();
+
+          var space_count = 0;
+          for(var i = 0; i<text.length; i++){
+              var char = text[i];
+              if((char !== ' ')&&(char !== '\t'))break;
+              if(char === '\t')space_count++;
+              space_count++;
+          }
+
+          bl.css('margin-left', space_count*8);
+          $('a[name="ln'+line+'"]').after(bl);
+      });
+
+      window.location = window.location;
+  });
+</script>
+</body>
+</html>
