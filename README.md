@@ -1,3 +1,3 @@
 Generates doc and reports for neovim.
 
-Serves them at www.neovim.io/doc/user/ afterwards.
+Docs are published at www.neovim.io/doc/user/ afterwards.
