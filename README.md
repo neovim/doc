@@ -1,3 +1,4 @@
-Generates doc and reports for neovim.
+Generates doc and reports for Neovim.
 
-Serves them at www.neovim.io/doc afterwards.
+- Commits to the [**gh-pages** branch](https://github.com/neovim/doc/tree/gh-pages)
+- Serves them at https://neovim.io/doc 
