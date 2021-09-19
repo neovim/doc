@@ -7,9 +7,9 @@ This repo contains automation scripts and CI configuration to run the scripts.
     - GitHub implicitly creates a website from that branch, mapped to the
       `/doc/` path of the [main website](https://github.com/neovim/neovim.github.io).
 - Some assets are served at https://neovim.io/doc
-    - [doc/](https://neovim.io/doc)
+    - [doc/ landing page](https://neovim.io/doc)
         - [Doxygen site](https://neovim.io/doc/dev)
-        - [user/ landing page](https://neovim.io/doc/user)
+        - [user/ docs](https://neovim.io/doc/user)
     - Build reports:
         - [Clang report](https://neovim.io/doc/reports/clang)
         - [PVS-studio report](https://neovim.io/doc/reports/pvs)
