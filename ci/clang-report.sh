@@ -20,7 +20,9 @@ generate_clang_report() {
   if "${SCAN_BUILD:-scan-build}" \
       --status-bugs \
       --html-title="Neovim Static Analysis" \
-      --exclude "src/nvim/xdiff/" \
+      --exclude "src/cjson/" \
+      --exclude "src/mpack/" \
+      --exclude "src/xdiff/" \
       -o build/clang-report \
       ${MAKE_CMD} \
       | tee ${BUILD_DIR}/scan-build.out
