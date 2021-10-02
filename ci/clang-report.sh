@@ -21,7 +21,6 @@ generate_clang_report() {
       --status-bugs \
       --html-title="Neovim Static Analysis" \
       --exclude "src/cjson/" \
-      --exclude "src/mpack/" \
       --exclude "src/xdiff/" \
       -o build/clang-report \
       ${MAKE_CMD} \
