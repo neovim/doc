@@ -33,7 +33,7 @@ generate_user_docu() {
 modify_user_docu() {
   for file in ${DOC_DIR}/user/*.html; do
     local title="$(extract_title ${file})"
-    local body="$(echo "$(extract_body ${file})" | sed -e 's/color="purple"/color="#54A23D"/Ig')"
+    local body="$(echo "$(extract_body ${file})" | sed -e 's/color="purple"/color="#3A6F2B"/Ig')"
     generate_report "${title}" "${body}" "${file}"
   done
 }
