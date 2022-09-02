@@ -17,12 +17,20 @@ generate_user_docu() {
   # Build user manual HTML
   cd build
   echo "CWD: $(pwd)"
+
+  # Legacy HTML (will be removed)
   ${MAKE_CMD} doc_html
 
   # Copy to doc repository
   rm -rf ${DOC_DIR}/user
   mkdir -p ${DOC_DIR}/user
   cp runtime/doc/*.html ${DOC_DIR}/user
+
+  # Generate HTML from :help docs.
+  (
+    cd ..
+    VIMRUNTIME=runtime/ ./build/bin/nvim -V1 -es --clean +"lua require('scripts.gen_help_html').gen('./build/runtime/doc/', '${DOC_DIR}/user2', nil)" +0cq
+  )
 
   # Modify HTML to match Neovim's layout
   modify_user_docu
