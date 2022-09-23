@@ -6,8 +6,8 @@ DOC_DIR=${DOC_DIR:-${BUILD_DIR}/build/doc}
 DOC_REPO=${DOC_REPO:-neovim/doc}
 DOC_BRANCH=${DOC_BRANCH:-gh-pages}
 
-# Keep the https://github.com/neovim/doc/ repository history trimmed, otherwise
-# it gets huge and slow to clone.  We don't care about its commit history.
+# Trim the https://github.com/neovim/doc/ repository history, els it gets huge
+# and slow to clone.  We don't care about the history of the `gh-pages` branch.
 try_truncate_history() {
   cd "${DOC_DIR}" || { log_error "try_truncate_history: cd failed"; exit 1; }
   local branch=gh-pages
