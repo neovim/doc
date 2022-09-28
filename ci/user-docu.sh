@@ -29,7 +29,8 @@ generate_user_docu() {
   # Generate HTML from :help docs.
   (
     cd ..
-    VIMRUNTIME=runtime/ ./build/bin/nvim -V1 -es --clean +"lua require('scripts.gen_help_html').gen('./build/runtime/doc/', '${DOC_DIR}/user2', nil)" +0cq
+    VIMRUNTIME=runtime/ ./build/bin/nvim -V1 -es --clean \
+      +"lua require('scripts.gen_help_html').gen('./build/runtime/doc/', '${DOC_DIR}/user2', nil, '${NEOVIM_COMMIT}')" +0cq
   )
 
   # Modify HTML to match Neovim's layout
