@@ -11,8 +11,8 @@ DOC_BRANCH=${DOC_BRANCH:-gh-pages}
 try_truncate_history() {
   cd "${DOC_DIR}" || { log_error "try_truncate_history: cd failed"; exit 1; }
   local branch=gh-pages
-  if NEW_ROOT=$(2>/dev/null git rev-parse "$branch"~11) ; then
-    git_truncate "$branch" "$branch"~10
+  if NEW_ROOT=$(2>/dev/null git rev-parse "$branch"~101) ; then
+    git_truncate "$branch" "$branch"~100
   else
     log_info "try_truncate_history: branch ${branch} has too few commits, skipping truncate"
   fi
