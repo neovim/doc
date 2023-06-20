@@ -99,6 +99,8 @@
 Vim9script) features are mostly identical.  This document is a complete and
 centralized reference of the differences.</div>
 <div class="old-help-para"><h2 id="nvim-config" class="help-heading">Configuration<span class="help-heading-tags">						    <span class="help-tag">nvim-config</span></h2></div>
+<div class="old-help-para">User configuration and data files are found in standard <a href="starting.html#base-directories">base-directories</a>
+(see also <a href="starting.html#%24NVIM_APPNAME">$NVIM_APPNAME</a>).  Note in particular:</div>
 <div class="old-help-para"><div class="help-li" style=""> Use <code>$XDG_CONFIG_HOME/nvim/init.vim</code> instead of <code>.vimrc</code> for your <a href="starting.html#config">config</a>.
 </div><div class="help-li" style=""> Use <code>$XDG_CONFIG_HOME/nvim</code> instead of <code>.vim</code> to store configuration files.
 </div><div class="help-li" style=""> Use <code>$XDG_STATE_HOME/nvim/shada/main.shada</code> instead of <code>.viminfo</code> for persistent
@@ -111,7 +113,7 @@ centralized reference of the differences.</div>
   ":syntax off" to <a href="starting.html#init.vim">init.vim</a>.
 </div></div>
 <div class="old-help-para"><div class="help-li" style=""> <a href="options.html#'autoindent'">'autoindent'</a> is enabled
-</div><div class="help-li" style=""> <a href="options.html#'autoread'">'autoread'</a> is enabled
+</div><div class="help-li" style=""> <a href="options.html#'autoread'">'autoread'</a> is enabled (works in all UIs, including terminal)
 </div><div class="help-li" style=""> <a href="options.html#'background'">'background'</a> defaults to "dark" (unless set automatically by the terminal/UI)
 </div><div class="help-li" style=""> <a href="options.html#'backspace'">'backspace'</a> defaults to "indent,eol,start"
 </div><div class="help-li" style=""> <a href="options.html#'backupdir'">'backupdir'</a> defaults to .,~/.local/state/nvim/backup// (<a href="starting.html#xdg">xdg</a>), auto-created
@@ -254,7 +256,7 @@ server.</div>
 <div class="old-help-para">External plugins run in separate processes. <a href="remote_plugin.html#remote-plugin">remote-plugin</a> This improves
 stability and allows those plugins to work without blocking the editor. Even
 "legacy" Python and Ruby plugins which use the old Vim interfaces (<a href="if_pyth.html#if_pyth">if_pyth</a>,
-<a href="if_ruby.html#if_ruby">if_ruby</a>) run out-of-process.</div>
+<a href="if_ruby.html#if_ruby">if_ruby</a>) run out-of-process, so they cannot crash Nvim.</div>
 <div class="old-help-para">Platform and I/O facilities are built upon libuv. Nvim benefits from libuv
 features and bug fixes, and other projects benefit from improvements to libuv
 by Nvim developers.</div>
@@ -321,6 +323,7 @@ by Nvim developers.</div>
   <a href="various.html#gO">gO</a> shows a filetype-defined "outline" of the current buffer.
   <a href="repeat.html#Q">Q</a> replays the last recorded macro instead of switching to Ex mode (<a href="intro.html#gQ">gQ</a>).</div>
 <div class="old-help-para">Options:
+  <a href="options.html#'autoread'">'autoread'</a>    works in the terminal (if it supports "focus" events)
   <a href="options.html#'cpoptions'">'cpoptions'</a>   flags: <a href="options.html#cpo-_">cpo-_</a>
   <a href="options.html#'diffopt'">'diffopt'</a>     "linematch" feature
   <a href="options.html#'exrc'">'exrc'</a>        searches for ".nvim.lua", ".nvimrc", or ".exrc" files. The
@@ -341,7 +344,6 @@ by Nvim developers.</div>
   <a href="options.html#'shortmess'">'shortmess'</a>   "F" flag does not affect output from autocommands
   <a href="options.html#'signcolumn'">'signcolumn'</a>  supports up to 9 dynamic/fixed columns
   <a href="options.html#'statuscolumn'">'statuscolumn'</a> full control of columns using <a href="options.html#'statusline'">'statusline'</a> format
-  <a href="options.html#'statusline'">'statusline'</a>  supports unlimited alignment sections
   <a href="options.html#'tabline'">'tabline'</a>     %@Func@foo%X can call any function on mouse-click
   <a href="options.html#'ttimeout'">'ttimeout'</a>, <a href="options.html#'ttimeoutlen'">'ttimeoutlen'</a> behavior was simplified
   <a href="options.html#'winblend'">'winblend'</a>    pseudo-transparency in floating windows <a href="api.html#api-floatwin">api-floatwin</a>
@@ -408,8 +410,8 @@ by Nvim developers.</div>
 </div><div class="help-li" style=""> <a href="repeat.html#%3Asource">:source</a> works with anonymous (no file) scripts
 </div><div class="help-li" style=""> <a href="options.html#'statusline'">'statusline'</a> supports unlimited alignment sections
 </div></div>
-<div class="old-help-para"><h2 id="nvim-changed" class="help-heading">Changed features<span class="help-heading-tags">					 <span class="help-tag">nvim-changed</span></h2></div>
-<div class="old-help-para">This section lists various low-level details about other behavior changes.</div>
+<div class="old-help-para"><h2 id="nvim-changed" class="help-heading">Other changes<span class="help-heading-tags">						 <span class="help-tag">nvim-changed</span></h2></div>
+<div class="old-help-para">This section documents various low-level behavior changes.</div>
 <div class="old-help-para"><a href="builtin.html#mkdir()">mkdir()</a> behaviour changed:
 1. Assuming /tmp/foo does not exist and /tmp can be written to
    mkdir('/tmp/foo/bar', 'p', 0700) will create both /tmp/foo and /tmp/foo/bar
@@ -422,18 +424,18 @@ by Nvim developers.</div>
    structures.
 2. <a href="builtin.html#string()">string()</a> fails immediately on nested containers, not when recursion limit
    was exceeded.
-2. When <a href="eval.html#%3Aecho">:echo</a> encounters duplicate containers like<pre><code class="language-vim">let l = []
+3. When <a href="eval.html#%3Aecho">:echo</a> encounters duplicate containers like<pre><code class="language-vim">let l = []
 echo [l, l]</code></pre></div>
 <div class="old-help-para">   it does not use "[...]" (was: "[[], [...]]", now: "[[], []]"). "..." is
    only used for recursive containers.
-3. <a href="eval.html#%3Aecho">:echo</a> printing nested containers adds "@level" after "..." designating
+4. <a href="eval.html#%3Aecho">:echo</a> printing nested containers adds "@level" after "..." designating
    the level at which recursive container was printed: <a href="eval.html#%3Aecho-self-refer">:echo-self-refer</a>.
    Same thing applies to <a href="builtin.html#string()">string()</a> (though it uses construct like
    "{E724@level}"), but this is not reliable because <a href="builtin.html#string()">string()</a> continues to
    error out.
-4. Stringifyed infinite and NaN values now use <a href="builtin.html#str2float()">str2float()</a> and can be evaled
+5. Stringifyed infinite and NaN values now use <a href="builtin.html#str2float()">str2float()</a> and can be evaled
    back.
-5. (internal) Trying to print or stringify VAR_UNKNOWN in Vim results in
+6. (internal) Trying to print or stringify VAR_UNKNOWN in Vim results in
    nothing, E908, in Nvim it is internal error.</div>
 <div class="old-help-para"><a href="builtin.html#json_decode()">json_decode()</a> behaviour changed:
 1. It may output <a href="builtin.html#msgpack-special-dict">msgpack-special-dict</a>.
@@ -621,8 +623,10 @@ autocmd TermOpen,WinEnter * if &amp;buftype=='terminal'
   <code id="'guipty'" class="help-tag">'guipty'</code> (Nvim uses pipes and PTYs consistently on all platforms.)
   <a href="deprecated.html#'highlight'">'highlight'</a> (Names of builtin <a href="syntax.html#highlight-groups">highlight-groups</a> cannot be changed.)
   <code id="'hkmap'" class="help-tag">'hkmap'</code> <code id="'hk'" class="help-tag">'hk'</code> use <code>set keymap=hebrew</code> instead.
-  <code id="'hkmapp'" class="help-tag">'hkmapp'</code> <code id="'hkp'" class="help-tag">'hkp'</code> use <code>set keymap=hebrewp</code> instead.
-  <code id="'pastetoggle'" class="help-tag">'pastetoggle'</code> <code id="'pt'" class="help-tag">'pt'</code></div>
+  <code id="'hkmapp'" class="help-tag">'hkmapp'</code> <code id="'hkp'" class="help-tag">'hkp'</code> use <code>set keymap=hebrewp</code> instead.</div>
+<div class="old-help-para">  <code id="'pastetoggle'" class="help-tag">'pastetoggle'</code> <code id="'pt'" class="help-tag">'pt'</code> Just Paste It.™ <a href="provider.html#paste">paste</a> is handled automatically when
+  you paste text using your terminal's or GUI's paste feature (<code>CTRL-SHIFT-v</code>,
+  CMD-v (macOS), middle-click, …).</div>
 <div class="old-help-para">  <code id="'imactivatefunc'" class="help-tag">'imactivatefunc'</code> <code id="'imaf'" class="help-tag">'imaf'</code>
   <code id="'imactivatekey'" class="help-tag">'imactivatekey'</code> <code id="'imak'" class="help-tag">'imak'</code>
   <code id="'imstatusfunc'" class="help-tag">'imstatusfunc'</code> <code id="'imsf'" class="help-tag">'imsf'</code>
@@ -687,6 +691,10 @@ EOF</code></pre></div>
   weirdinvert</div>
 <div class="old-help-para">Performance:
   Folds are not updated during insert-mode.</div>
+<div class="old-help-para">Plugins:</div>
+<div class="old-help-para"><div class="help-li" style=""> logiPat
+</div><div class="help-li" style=""> rrhelper
+</div></div>
 <div class="old-help-para">Providers:</div>
 <div class="old-help-para"><div class="help-li" style=""> <code id="if_lua" class="help-tag">if_lua</code> : Nvim <a href="lua.html#Lua">Lua</a> API is not compatible with Vim's "if_lua".
 </div><div class="help-li" style=""> <code id="if_mzscheme" class="help-tag">if_mzscheme</code>
@@ -738,7 +746,8 @@ EOF</code></pre></div>
   always uses 7-bit control sequences.</div>
 <div class="old-help-para">Cscope:
                                                                       <code id="cscope" class="help-tag-right">cscope</code>
-  Cscope support has been removed in favour of plugin-based solutions.</div>
+  Cscope support was removed in favour of plugin-based solutions such as:
+  <a href="https://github.com/dhananjaylatkar/cscope_maps.nvim">https://github.com/dhananjaylatkar/cscope_maps.nvim</a></div>
 <div class="old-help-para">Hardcopy:
                                                                      <code id="hardcopy" class="help-tag-right">hardcopy</code>
   <code>:hardcopy</code> was removed. Instead, use <code>:TOhtml</code> and print the resulting HTML
@@ -768,7 +777,7 @@ New Features						       </a>
 </div><div class="help-toc-h1"><a href="#nvim-upstreamed">
 Upstreamed features					 </a>
 </div><div class="help-toc-h1"><a href="#nvim-changed">
-Changed features					 </a>
+Other changes						 </a>
 </div><div class="help-toc-h1"><a href="#nvim-missing">
 Missing legacy features					 </a>
 </div><div class="help-toc-h1"><a href="#nvim-removed">
@@ -778,7 +787,7 @@ Removed legacy features					 </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-06-19 05:28 from <code><a href="https://github.com/neovim/neovim/commit/8c9dab3e0d788d44c8a2fee83a6193f5955c814e">8c9dab3</a></code>
+        Generated at 2023-06-20 05:35 from <code><a href="https://github.com/neovim/neovim/commit/72a6643b1380cdf6f1153d70eeaffb90bdca30d6">72a6643</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+vim_diff.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/vim_diff.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim

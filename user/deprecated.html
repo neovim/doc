@@ -243,7 +243,14 @@ internally and are no longer exposed as part of the API. Instead, use
 <div class="help-para">
 <h3 id="_lsp-functions" class="help-heading">LSP FUNCTIONS</h3>
 
-<div class="help-li" style=""> <code id="vim.lsp.buf.range_code_action()" class="help-tag">vim.lsp.buf.range_code_action()</code>		Use <a href="lsp.html#vim.lsp.buf.code_action()">vim.lsp.buf.code_action()</a> with
+<div class="help-li" style=""> <code id="vim.lsp.buf.server_ready()" class="help-tag">vim.lsp.buf.server_ready()</code>
+  Use <a href="lsp.html#LspAttach">LspAttach</a> instead, depending on your use-case. "Server ready" is not
+  part of the LSP spec, so the Nvim LSP client cannot meaningfully implement
+  it. "Ready" is ambiguous because:
+</div><div class="help-li" style="margin-left: 3rem;"> Language servers may finish analyzing the workspace, but edits can always
+    re-trigger analysis/builds.
+</div><div class="help-li" style="margin-left: 3rem;"> Language servers can serve some requests even while processing changes.
+</div><div class="help-li" style=""> <code id="vim.lsp.buf.range_code_action()" class="help-tag">vim.lsp.buf.range_code_action()</code>		Use <a href="lsp.html#vim.lsp.buf.code_action()">vim.lsp.buf.code_action()</a> with
 						the <code>range</code> parameter.
 </div><div class="help-li" style=""> <code id="vim.lsp.util.diagnostics_to_items()" class="help-tag">vim.lsp.util.diagnostics_to_items()</code>		Use <a href="diagnostic.html#vim.diagnostic.toqflist()">vim.diagnostic.toqflist()</a> instead.
 </div><div class="help-li" style=""> <code id="vim.lsp.util.set_qflist()" class="help-tag">vim.lsp.util.set_qflist()</code>			Use <a href="builtin.html#setqflist()">setqflist()</a> instead.
@@ -301,27 +308,21 @@ internally and are no longer exposed as part of the API. Instead, use
 </div><div class="help-li" style=""> <a href="options.html#'viewoptions'">'viewoptions'</a>		Flags "unix", "slash" are ignored and always enabled.
 </div><div class="help-li" style=""> <code id="'viminfo'" class="help-tag">'viminfo'</code>		Deprecated alias to <a href="options.html#'shada'">'shada'</a> option.
 </div><div class="help-li" style=""> <code id="'viminfofile'" class="help-tag">'viminfofile'</code>	Deprecated alias to <a href="options.html#'shadafile'">'shadafile'</a> option.
-</div><div class="help-li" style=""> <code id="'paste'" class="help-tag">'paste'</code> <code id="'nopaste'" class="help-tag">'nopaste'</code>	This option is obsolete; <a href="provider.html#paste">paste</a> is handled automatically.
+</div><div class="help-li" style=""> <code id="'paste'" class="help-tag">'paste'</code> <code id="'nopaste'" class="help-tag">'nopaste'</code>	Just Paste It.™  The <a href="deprecated.html#'paste'">'paste'</a> option is obsolete:
+			<a href="provider.html#paste">paste</a> is handled automatically when you paste text
+			using your terminal's or GUI's paste feature
+			(<code>CTRL-SHIFT-v</code>, CMD-v (macOS), middle-click, …).
 			Enables "paste mode":
-</div><div class="help-li" style="margin-left: 3rem;"> mappings in Insert mode and Command-line mode are
-			    disabled
-</div><div class="help-li" style="margin-left: 3rem;"> abbreviations are disabled
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'autoindent'">'autoindent'</a> is reset
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'expandtab'">'expandtab'</a> is reset
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'formatoptions'">'formatoptions'</a> is used like it is empty
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'revins'">'revins'</a> is reset
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'ruler'">'ruler'</a> is reset
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'showmatch'">'showmatch'</a> is reset
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'smartindent'">'smartindent'</a> is reset
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'smarttab'">'smarttab'</a> is reset
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'softtabstop'">'softtabstop'</a> is set to 0
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'textwidth'">'textwidth'</a> is set to 0
-</div><div class="help-li" style=""> <a href="options.html#'wrapmargin'">'wrapmargin'</a> is set to 0
-			These options keep their value, but their effect is
-			disabled:
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'cindent'">'cindent'</a>
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'indentexpr'">'indentexpr'</a>
-</div><div class="help-li" style="margin-left: 3rem;"> <a href="options.html#'lisp'">'lisp'</a>
+</div><div class="help-li" style="margin-left: 3rem;"> Disables mappings in Insert, Cmdline mode.
+</div><div class="help-li" style="margin-left: 3rem;"> Disables abbreviations.
+</div><div class="help-li" style="margin-left: 3rem;"> Resets <a href="options.html#'autoindent'">'autoindent'</a> <a href="options.html#'expandtab'">'expandtab'</a> <a href="options.html#'revins'">'revins'</a> <a href="options.html#'ruler'">'ruler'</a>
+			    <a href="options.html#'showmatch'">'showmatch'</a> <a href="options.html#'smartindent'">'smartindent'</a> <a href="options.html#'smarttab'">'smarttab'</a> <a href="options.html#'softtabstop'">'softtabstop'</a>
+			    <a href="options.html#'textwidth'">'textwidth'</a> <a href="options.html#'wrapmargin'">'wrapmargin'</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> Treats <a href="options.html#'formatoptions'">'formatoptions'</a> as empty.
+</div><div class="help-li" style="margin-left: 3rem;"> Disables the effect of these options:
+</div><div class="help-li" style="margin-left: 4rem;"> <a href="options.html#'cindent'">'cindent'</a>
+</div><div class="help-li" style="margin-left: 4rem;"> <a href="options.html#'indentexpr'">'indentexpr'</a>
+</div><div class="help-li" style="margin-left: 4rem;"> <a href="options.html#'lisp'">'lisp'</a>
 </div>
 </div>
 <div class="help-para">
@@ -370,7 +371,7 @@ Deprecated features</a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-06-19 05:27 from <code><a href="https://github.com/neovim/neovim/commit/8c9dab3e0d788d44c8a2fee83a6193f5955c814e">8c9dab3</a></code>
+        Generated at 2023-06-20 05:34 from <code><a href="https://github.com/neovim/neovim/commit/72a6643b1380cdf6f1153d70eeaffb90bdca30d6">72a6643</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+deprecated.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/deprecated.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="       Nvim

@@ -119,33 +119,36 @@ Follow these steps to get LSP features:</div>
 <div class="old-help-para">     See <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a> for details.</div>
 <div class="old-help-para">  3. Configure keymaps and autocmds to utilize LSP features.
      See <a href="lsp.html#lsp-config">lsp-config</a>.</div>
-<div class="old-help-para">                                                        <code id="lsp-config" class="help-tag-right">lsp-config</code></div>
-<div class="old-help-para">Starting a LSP client will automatically report diagnostics via
-<a href="diagnostic.html#vim.diagnostic">vim.diagnostic</a>. Read <a href="diagnostic.html#vim.diagnostic.config()">vim.diagnostic.config()</a> to learn how to customize the
-display.</div>
-<div class="old-help-para">It also sets some buffer options if the language server supports the
-functionality and if the options are otherwise empty or have the default
-values set by Nvim runtime files (e.g. a ftplugin). In the latter case,
-the default values are not restored when the LSP client is detached from
-the buffer.</div>
-<div class="old-help-para"><div class="help-li" style=""> <a href="options.html#'omnifunc'">'omnifunc'</a> is set to <a href="lsp.html#vim.lsp.omnifunc()">vim.lsp.omnifunc()</a>. This allows to trigger completion
-  using <a href="insert.html#i_CTRL-X_CTRL-O">i_CTRL-X_CTRL-O</a>
+<div class="old-help-para">                                                        <code id="lsp-config" class="help-tag-right">lsp-config</code>
+                                                        <code id="lsp-defaults" class="help-tag-right">lsp-defaults</code>
+When the LSP client starts it enables diagnostics <a href="diagnostic.html#vim.diagnostic">vim.diagnostic</a> (see
+<a href="diagnostic.html#vim.diagnostic.config()">vim.diagnostic.config()</a> to customize). It also sets various default options,
+listed below, if (1) the language server supports the functionality and (2)
+the options are empty or were set by the builtin runtime (ftplugin) files. The
+options are not restored when the LSP client is stopped or detached.</div>
+<div class="old-help-para"><div class="help-li" style=""> <a href="options.html#'omnifunc'">'omnifunc'</a> is set to <a href="lsp.html#vim.lsp.omnifunc()">vim.lsp.omnifunc()</a>, use <a href="insert.html#i_CTRL-X_CTRL-O">i_CTRL-X_CTRL-O</a> to trigger
+  completion.
 </div><div class="help-li" style=""> <a href="options.html#'tagfunc'">'tagfunc'</a> is set to <a href="lsp.html#vim.lsp.tagfunc()">vim.lsp.tagfunc()</a>. This enables features like
   go-to-definition, <a href="tagsrch.html#%3Atjump">:tjump</a>, and keymaps like <a href="tagsrch.html#CTRL-%5D">CTRL-]</a>, <a href="windows.html#CTRL-W_%5D">CTRL-W_]</a>,
   <a href="windows.html#CTRL-W_%7D">CTRL-W_}</a> to utilize the language server.
-</div><div class="help-li" style=""> <a href="options.html#'formatexpr'">'formatexpr'</a> is set to <a href="lsp.html#vim.lsp.formatexpr()">vim.lsp.formatexpr()</a> if both <a href="options.html#'formatprg'">'formatprg'</a> and
-  <a href="options.html#'formatexpr'">'formatexpr'</a> are empty. This allows to format lines via <a href="change.html#gq">gq</a> if the language
-  server supports it.
+</div><div class="help-li" style=""> <a href="options.html#'formatexpr'">'formatexpr'</a> is set to <a href="lsp.html#vim.lsp.formatexpr()">vim.lsp.formatexpr()</a>, so you can format lines via
+  <a href="change.html#gq">gq</a> if the language server supports it.
+</div><div class="help-li" style="margin-left: 3rem;"> To opt out of this use <a href="change.html#gw">gw</a> instead of gq, or set <a href="options.html#'formatexpr'">'formatexpr'</a> on LspAttach.
 </div></div>
-<div class="old-help-para">To use other LSP features like hover, rename, etc. you can setup some
-additional keymaps. It's recommended to setup them in a <a href="lsp.html#LspAttach">LspAttach</a> autocmd to
-ensure they're only active if there is a LSP client running. An example:
-<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspAttach', {
+<div class="old-help-para">                                                        <code id="lsp-defaults-disable" class="help-tag-right">lsp-defaults-disable</code>
+To override the above defaults, set or unset the options on <a href="lsp.html#LspAttach">LspAttach</a>:<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    vim.bo[ev.buf].formatexpr = nil
+    vim.bo[ev.buf].omnifunc = nil
+  end,
+})</code></pre>
+To use other LSP features like hover, rename, etc. you can set other keymaps
+on <a href="lsp.html#LspAttach">LspAttach</a>. Example:<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = args.buf })
   end,
-})</code></pre></div>
-<div class="old-help-para">The most used functions are:</div>
+})</code></pre>
+The most common functions are:</div>
 <div class="old-help-para"><div class="help-li" style=""> <a href="lsp.html#vim.lsp.buf.hover()">vim.lsp.buf.hover()</a>
 </div><div class="help-li" style=""> <a href="lsp.html#vim.lsp.buf.format()">vim.lsp.buf.format()</a>
 </div><div class="help-li" style=""> <a href="lsp.html#vim.lsp.buf.references()">vim.lsp.buf.references()</a>
@@ -185,17 +188,6 @@ a buffer with a started LSP client:</div>
 <div class="old-help-para">     E.g. code formatting:<pre><code class="language-vim">" Auto-format *.rs (rust) files prior to saving them
 " (async = false is the default for format)
 autocmd BufWritePre *.rs lua vim.lsp.buf.format({ async = false })</code></pre></div>
-<div class="old-help-para"><div class="help-li" style=""> Q: How can I disable LSP formatting when using the <a href="change.html#gq">gq</a> command?
-  A: To use the default internal formatting method and bypass the LSP client's
-  <a href="options.html#'formatexpr'">'formatexpr'</a>, use <a href="change.html#gw">gw</a> instead.
-  Alternatively you can completely disable LSP formatting with gq by
-  unsetting <a href="options.html#'formatexpr'">'formatexpr'</a>:
-</div></div>
-<div class="old-help-para"><pre><code class="language-lua">vim.api.nvim_create_autocmd('LspAttach', {
-    callback = function(args)
-        vim.bo[args.buf].formatexpr = nil
-    end,
-})</code></pre></div>
 <div class="old-help-para">                                                           <code id="lsp-vs-treesitter" class="help-tag-right">lsp-vs-treesitter</code>
 <div class="help-li" style=""> Q: How do LSP and Treesitter compare?
   A: LSP requires a client and language server. The language server uses
@@ -250,9 +242,9 @@ specification. These LSP requests/notifications are defined by default:</div>
 <div class="old-help-para"><div class="help-li" style=""> NOTE: These are sometimes not implemented by servers.
 </div></div>
 <div class="old-help-para">                                                                 <code id="lsp-handler" class="help-tag-right">lsp-handler</code></div>
-<div class="old-help-para">lsp-handlers are functions with special signatures that are designed to handle
-responses and notifications from LSP servers.</div>
-<div class="old-help-para">Forlsp-request, each <a href="lsp.html#lsp-handler">lsp-handler</a> has this signature:<pre>function(err, result, ctx, config)</pre></div>
+<div class="old-help-para">LSP handlers are functions with signatures designed to handle LSP responses
+and notifications.</div>
+<div class="old-help-para">For <a href="lsp.html#lsp-response">lsp-response</a>, each <a href="lsp.html#lsp-handler">lsp-handler</a> has this signature:<pre>function(err, result, ctx, config)</pre></div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div>        <code>{err}</code>       (table|nil)
                         When the language server is unable to complete a
                         request, a table with information about the error is
@@ -364,32 +356,29 @@ vim.lsp.handlers["textDocument/references"] = vim.lsp.with(
 <div class="old-help-para">                                                      <code id="lsp-handler-resolution" class="help-tag-right">lsp-handler-resolution</code>
 Handlers can be set by:</div>
 <div class="old-help-para"><div class="help-li" style=""> Setting a field in vim.lsp.handlers.                      <code id="vim.lsp.handlers" class="help-tag-right">vim.lsp.handlers</code>
-    vim.lsp.handlers is a global table that contains the default mapping of
-    <a href="lsp.html#lsp-method">lsp-method</a> names to <a href="lsp.html#lsp-handlers">lsp-handlers</a>.
+  vim.lsp.handlers is a global table that contains the default mapping of
+  <a href="lsp.html#lsp-method">lsp-method</a> names to <a href="lsp.html#lsp-handlers">lsp-handlers</a>. To override the handler for the
+  <code>"textDocument/definition"</code> method:<pre><code class="language-lua">vim.lsp.handlers["textDocument/definition"] = my_custom_default_definition</code></pre>
 </div></div>
-<div class="old-help-para">    To override the handler for the <code>"textDocument/definition"</code> method:<pre><code class="language-lua">vim.lsp.handlers["textDocument/definition"] = my_custom_default_definition</code></pre></div>
-<div class="old-help-para"><div class="help-li" style=""> The <code>{handlers}</code> parameter for <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>.
-    This will set the <a href="lsp.html#lsp-handler">lsp-handler</a> as the default handler for this server.
-</div></div>
-<div class="old-help-para">    For example:<pre><code class="language-lua">vim.lsp.start_client {
+<div class="old-help-para"><div class="help-li" style=""> The <code>{handlers}</code> parameter of <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a>. This sets the default
+  <a href="lsp.html#lsp-handler">lsp-handler</a> for the server being started. Example:<pre><code class="language-lua">vim.lsp.start {
   ..., -- Other configuration omitted.
   handlers = {
     ["textDocument/definition"] = my_custom_server_definition
   },
 }</code></pre>
-<div class="help-li" style=""> The <code>{handler}</code> parameter forvim.lsp.buf_request().
-    This will set the <a href="lsp.html#lsp-handler">lsp-handler</a> ONLY for the current request.
-</div></div>
-<div class="old-help-para">    For example:<pre><code class="language-lua">vim.lsp.buf_request(
+</div><div class="help-li" style=""> The <code>{handler}</code> parameter of <a href="lsp.html#vim.lsp.buf_request_all()">vim.lsp.buf_request_all()</a>. This sets
+  the <a href="lsp.html#lsp-handler">lsp-handler</a> ONLY for the given request(s). Example:<pre><code class="language-lua">vim.lsp.buf_request_all(
   0,
   "textDocument/definition",
-  definition_params,
-  my_request_custom_definition
-)</code></pre></div>
+  my_request_params,
+  my_handler
+)</code></pre>
+</div></div>
 <div class="old-help-para">In summary, the <a href="lsp.html#lsp-handler">lsp-handler</a> will be chosen based on the current <a href="lsp.html#lsp-method">lsp-method</a>
 in the following order:</div>
-<div class="old-help-para">1. Handler passed tovim.lsp.buf_request(), if any.
-2. Handler defined in <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>, if any.
+<div class="old-help-para">1. Handler passed to <a href="lsp.html#vim.lsp.buf_request_all()">vim.lsp.buf_request_all()</a>, if any.
+2. Handler defined in <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a>, if any.
 3. Handler defined in <a href="lsp.html#vim.lsp.handlers">vim.lsp.handlers</a>, if any.</div>
 <div class="old-help-para">                                                            <code id="vim.lsp.log_levels" class="help-tag-right">vim.lsp.log_levels</code>
 Log levels are defined in <a href="lua.html#vim.log.levels">vim.log.levels</a></div>
@@ -612,26 +601,22 @@ callbacks. Example:<pre><code class="language-lua">vim.api.nvim_create_autocmd('
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">    Return:</div>        (boolean) success true if any client returns true; false otherwise</div>
 <div class="old-help-para">                                                   <code id="vim.lsp.buf_request_all()" class="help-tag-right">vim.lsp.buf_request_all()</code>
-buf_request_all(<code>{bufnr}</code>, <code>{method}</code>, <code>{params}</code>, <code>{callback}</code>)
-    Sends an async request for all active clients attached to the buffer.
-    Executes the callback on the combined result. Parameters are the same as
-vim.lsp.buf_request() but the return result and callback are different.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{bufnr}</code>     (integer) Buffer handle, or 0 for current.
-</div><div class="help-li" style=""> <code>{method}</code>    (string) LSP method name
-</div><div class="help-li" style=""> <code>{params}</code>    (table|nil) Parameters to send to the server
-</div><div class="help-li" style=""> <code>{callback}</code>  (function) The callback to call when all requests are
-                    finished. Unlike <code>buf_request</code>, this will collect all the
-                    responses from each server instead of handling them. A map
-                    of client_id:request_result will be provided to the
-                    callback.
+buf_request_all(<code>{bufnr}</code>, <code>{method}</code>, <code>{params}</code>, <code>{handler}</code>)
+    Sends an async request for all active clients attached to the buffer and
+    executes the <code>handler</code> callback with the combined result.</div>
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{bufnr}</code>    (integer) Buffer handle, or 0 for current.
+</div><div class="help-li" style=""> <code>{method}</code>   (string) LSP method name
+</div><div class="help-li" style=""> <code>{params}</code>   (table|nil) Parameters to send to the server
+</div><div class="help-li" style=""> <code>{handler}</code>  (function) Handler called after all requests are completed.
+                   Server results are passed as a <code>client_id:result</code> map.
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">    Return:</div>        fun() cancel A function that will cancel all requests</div>
+<div class="old-help-para"><div class="help-column_heading">    Return:</div>        fun() cancel Function that cancels all requests.</div>
 <div class="old-help-para">                                                  <code id="vim.lsp.buf_request_sync()" class="help-tag-right">vim.lsp.buf_request_sync()</code>
 buf_request_sync(<code>{bufnr}</code>, <code>{method}</code>, <code>{params}</code>, <code>{timeout_ms}</code>)
     Sends a request to all server and waits for the response of all of them.</div>
 <div class="old-help-para">    Calls <a href="lsp.html#vim.lsp.buf_request_all()">vim.lsp.buf_request_all()</a> but blocks Nvim while awaiting the
-    result. Parameters are the same asvim.lsp.buf_request() but the return
-    result is different. Wait maximum of <code>{timeout_ms}</code> (default 1000) ms.</div>
+    result. Parameters are the same as <a href="lsp.html#vim.lsp.buf_request_all()">vim.lsp.buf_request_all()</a> but the
+    result is different. Waits a maximum of <code>{timeout_ms}</code> (default 1000) ms.</div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{bufnr}</code>       (integer) Buffer handle, or 0 for current.
 </div><div class="help-li" style=""> <code>{method}</code>      (string) LSP method name
 </div><div class="help-li" style=""> <code>{params}</code>      (table|nil) Parameters to send to the server
@@ -1767,7 +1752,7 @@ Lua module: vim.lsp.protocol                                    </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-06-19 05:27 from <code><a href="https://github.com/neovim/neovim/commit/8c9dab3e0d788d44c8a2fee83a6193f5955c814e">8c9dab3</a></code>
+        Generated at 2023-06-20 05:34 from <code><a href="https://github.com/neovim/neovim/commit/72a6643b1380cdf6f1153d70eeaffb90bdca30d6">72a6643</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
