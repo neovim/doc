@@ -358,118 +358,6 @@ conversion needs to be done.  These conversions are supported:
 	request a very large buffer, more than Vim is willing to provide).
 	Try getting another iconv() implementation.
 </div></div>
-<div class="old-help-para"><h2 id="mbyte-XIM" class="help-heading">Input on X11<span class="help-heading-tags">					<span class="help-tag">mbyte-XIM</span></h2></div>
-<div class="old-help-para">X INPUT METHOD (XIM) BACKGROUND			<code id="XIM" class="help-tag-right">XIM</code> <code id="xim" class="help-tag">xim</code> <code id="x-input-method" class="help-tag">x-input-method</code></div>
-<div class="old-help-para">XIM is an international input module for X.  There are two kinds of structures,
-Xlib unit type and <a href="mbyte.html#IM-server">IM-server</a> (Input-Method server) type.  <a href="mbyte.html#IM-server">IM-server</a> type
-is suitable for complex input, such as CJK.</div>
-<div class="old-help-para"><div class="help-li" style=""> IM-server
-							<code id="IM-server" class="help-tag-right">IM-server</code>
-  In <a href="mbyte.html#IM-server">IM-server</a> type input structures, the input event is handled by either
-  of the two ways: FrontEnd system and BackEnd system.  In the FrontEnd
-  system, input events are snatched by the <a href="mbyte.html#IM-server">IM-server</a> first, then <a href="mbyte.html#IM-server">IM-server</a>
-  give the application the result of input.  On the other hand, the BackEnd
-  system works reverse order.  MS-Windows adopt BackEnd system.  In X, most of
-  <a href="mbyte.html#IM-server">IM-server</a>s adopt FrontEnd system.  The demerit of BackEnd system is the
-  large overhead in communication, but it provides safe synchronization with
-  no restrictions on applications.
-</div></div>
-<div class="old-help-para"><div class="help-li" style=""> Conversion Server
-							<code id="conversion-server" class="help-tag-right">conversion-server</code>
-  Some system needs additional server: conversion server.  Most of Japanese
-  <a href="mbyte.html#IM-server">IM-server</a>s need it, Kana-Kanji conversion server.  For Chinese inputting,
-  it depends on the method of inputting, in some methods, PinYin or ZhuYin to
-  HanZi conversion server is needed.  For Korean inputting, if you want to
-  input Hanja, Hangul-Hanja conversion server is needed.
-</div></div>
-<div class="old-help-para">  For example, the Japanese inputting process is divided into 2 steps.  First
-  we pre-input Hira-gana, second Kana-Kanji conversion.  There are so many
-  Kanji characters (6349 Kanji characters are defined in JIS X 0208) and the
-  number of Hira-gana characters are 76.  So, first, we pre-input text as
-  pronounced in Hira-gana, second, we convert Hira-gana to Kanji or Kata-Kana,
-  if needed.  There are some Kana-Kanji conversion server: jserver
-  (distributed with Wnn, see below) and canna.  Canna can be found at:
-  <a href="http://canna.sourceforge.jp/">http://canna.sourceforge.jp/</a></div>
-<div class="old-help-para">There is a good input system: Wnn4.2.  Wnn 4.2 contains,
-    xwnmo (<a href="mbyte.html#IM-server">IM-server</a>)
-    jserver (Japanese Kana-Kanji conversion server)
-    cserver (Chinese PinYin or ZhuYin to simplified HanZi conversion server)
-    tserver (Chinese PinYin or ZhuYin to traditional HanZi conversion server)
-    kserver (Hangul-Hanja conversion server)
-Wnn 4.2 for several systems can be found at various places on the internet.
-Use the RPM or port for your system.</div>
-<div class="old-help-para"><div class="help-li" style=""> Input Style
-							<code id="xim-input-style" class="help-tag-right">xim-input-style</code>
-  When inputting CJK, there are four areas:
-      1. The area to display of the input while it is being composed
-      2. The area to display the currently active input mode.
-      3. The area to display the next candidate for the selection.
-      4. The area to display other tools.
-</div></div>
-<div class="old-help-para">  The third area is needed when converting.  For example, in Japanese
-  inputting, multiple Kanji characters could have the same pronunciation, so
-  a sequence of Hira-gana characters could map to a distinct sequence of Kanji
-  characters.</div>
-<div class="old-help-para">  The first and second areas are defined in international input of X with the
-  names of "Preedit Area", "Status Area" respectively.  The third and fourth
-  areas are not defined and are left to be managed by the <a href="mbyte.html#IM-server">IM-server</a>.  In the
-  international input, four input styles have been defined using combinations
-  of Preedit Area and Status Area: <a href="mbyte.html#OnTheSpot">OnTheSpot</a>, <a href="mbyte.html#OffTheSpot">OffTheSpot</a>, <a href="mbyte.html#OverTheSpot">OverTheSpot</a>
-  and <a href="mbyte.html#Root">Root</a>.</div>
-<div class="old-help-para">  Currently, GUI Vim supports three styles, <a href="mbyte.html#OverTheSpot">OverTheSpot</a>, <a href="mbyte.html#OffTheSpot">OffTheSpot</a> and
-  <a href="mbyte.html#Root">Root</a>.</div>
-<div class="old-help-para">.  on-the-spot						<code id="OnTheSpot" class="help-tag-right">OnTheSpot</code>
-    Preedit Area and Status Area are performed by the client application in
-    the area of application.  The client application is directed by the
-    <a href="mbyte.html#IM-server">IM-server</a> to display all pre-edit data at the location of text
-    insertion.  The client registers callbacks invoked by the input method
-    during pre-editing.
-.  over-the-spot					<code id="OverTheSpot" class="help-tag-right">OverTheSpot</code>
-    Status Area is created in a fixed position within the area of application,
-    in case of Vim, the position is the additional status line.  Preedit Area
-    is made at present input position of application.  The input method
-    displays pre-edit data in a window which it brings up directly over the
-    text insertion position.
-.  off-the-spot					<code id="OffTheSpot" class="help-tag-right">OffTheSpot</code>
-    Preedit Area and Status Area are performed in the area of application, in
-    case of Vim, the area is additional status line.  The client application
-    provides display windows for the pre-edit data to the input method which
-    displays into them directly.
-.  root-window						<code id="Root" class="help-tag-right">Root</code>
-    Preedit Area and Status Area are outside of the application.  The input
-    method displays all pre-edit data in a separate area of the screen in a
-    window specific to the input method.</div>
-<div class="old-help-para"><h3 id="multibyte-input" class="help-heading">USING XIM<span class="help-heading-tags">			<span class="help-tag">multibyte-input</span> <span id="E284" class="help-tag">E284</span> <span id="E285" class="help-tag">E285</span> <span id="E286" class="help-tag">E286</span> <span id="E287" class="help-tag">E287</span></span></h3>					<code id="E288" class="help-tag-right">E288</code> <code id="E289" class="help-tag">E289</code></div>
-<div class="old-help-para">Note that Display and Input are independent.  It is possible to see your
-language even though you have no input method for it.  But when your Display
-method doesn't match your Input method, the text will be displayed wrong.</div>
-<div class="old-help-para">To input your language you should run the <a href="mbyte.html#IM-server">IM-server</a> which supports your
-language and <a href="mbyte.html#conversion-server">conversion-server</a> if needed.</div>
-<div class="old-help-para">The next 3 lines should be put in your ~/.Xdefaults file.  They are common for
-all X applications which uses <a href="mbyte.html#XIM">XIM</a>.  If you already use <a href="mbyte.html#XIM">XIM</a>, you can skip
-this.<pre>*international: True
-*.inputMethod: your_input_server_name
-*.preeditType: your_input_style</pre></div>
-<div class="old-help-para">input_server_name	is your <a href="mbyte.html#IM-server">IM-server</a> name (check your <a href="mbyte.html#IM-server">IM-server</a>
-			manual).
-your_input_style	is one of <a href="mbyte.html#OverTheSpot">OverTheSpot</a>, <a href="mbyte.html#OffTheSpot">OffTheSpot</a>, <a href="mbyte.html#Root">Root</a>.  See
-			also <a href="mbyte.html#xim-input-style">xim-input-style</a>.</div>
-<div class="old-help-para">international may not be necessary if you use X11R6.
-.inputMethod and.preeditType are optional if you use X11R6.</div>
-<div class="old-help-para">For example, when you are using kinput2 as <a href="mbyte.html#IM-server">IM-server</a>,<pre>*international: True
-*.inputMethod: kinput2
-*.preeditType: OverTheSpot</pre></div>
-<div class="old-help-para">When using <a href="mbyte.html#OverTheSpot">OverTheSpot</a>, GUI Vim always connects to the IM Server even in
-Normal mode, so you can input your language with commands like "f" and "r".
-But when using one of the other two methods, GUI Vim connects to the IM Server
-only if it is not in Normal mode.</div>
-<div class="old-help-para">If your IM Server does not support <a href="mbyte.html#OverTheSpot">OverTheSpot</a>, and if you want to use your
-language with some Normal mode command like "f" or "r", then you should use a
-localized xterm  or an xterm which supports <a href="mbyte.html#XIM">XIM</a></div>
-<div class="old-help-para">If needed, you can set the XMODIFIERS environment variable:</div>
-<div class="old-help-para">	sh:  export XMODIFIERS="@im=input_server_name"
-	csh: setenv XMODIFIERS "@im=input_server_name"</div>
-<div class="old-help-para">For example, when you are using kinput2 as <a href="mbyte.html#IM-server">IM-server</a> and sh,<pre>export XMODIFIERS="@im=kinput2"</pre></div>
 <div class="old-help-para"><h2 id="mbyte-keymap" class="help-heading">Input with a keymap<span class="help-heading-tags">					<span class="help-tag">mbyte-keymap</span></h2></div>
 <div class="old-help-para">When the keyboard doesn't produce the characters you want to enter in your
 text, you can use the <a href="options.html#'keymap'">'keymap'</a> option.  This will translate one or more
@@ -809,9 +697,6 @@ Locale							</a>
 </div><div class="help-toc-h1"><a href="#mbyte-encoding">
 Encoding				</a>
 <div class="help-toc-h2"><a href="#charset-conversion">CONVERSION						</a></div>
-</div><div class="help-toc-h1"><a href="#mbyte-XIM">
-Input on X11					</a>
-<div class="help-toc-h2"><a href="#multibyte-input">USING XIM			</a></div>
 </div><div class="help-toc-h1"><a href="#mbyte-keymap">
 Input with a keymap					</a>
 <div class="help-toc-h2"><a href="#keymap-hebrew">HEBREW KEYMAP						</a></div>
@@ -830,7 +715,7 @@ Overview of options					</a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-06-25 05:28 from <code><a href="https://github.com/neovim/neovim/commit/e59cf3b3a9ee0f9e9b4d2e01059dbdf185eb5685">e59cf3b</a></code>
+        Generated at 2023-06-25 16:46 from <code><a href="https://github.com/neovim/neovim/commit/5ceb2238d3685255cd517ca87fd7edae9ed88811">5ceb223</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+mbyte.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/mbyte.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="     Nvim

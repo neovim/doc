@@ -244,28 +244,27 @@ events.</div>
 <div class="old-help-para">							<code id="events" class="help-tag-right">events</code> <code id="%7Bevent%7D" class="help-tag">{event}</code>
 Nvim recognizes the following events.  Names are case-insensitive.</div>
 <div class="old-help-para">							<code id="BufAdd" class="help-tag-right">BufAdd</code>
-BufAdd				Just after creating a new buffer which is
-				added to the buffer list, or adding a buffer
-				to the buffer list, a buffer in the buffer
-				list was renamed.
-				Not triggered for the initial buffers created
-				during startup.
+BufAdd				After adding a new buffer or existing unlisted
+				buffer to the buffer list (except during
+				startup, see <a href="autocmd.html#VimEnter">VimEnter</a>), or renaming a listed
+				buffer.
 				Before <a href="autocmd.html#BufEnter">BufEnter</a>.
-				NOTE: Current buffer "%" may be different from
-				the buffer being created "&lt;afile&gt;".
+				NOTE: Current buffer "%" is not the target
+				buffer "&lt;afile&gt;", "&lt;abuf&gt;". <a href="autocmd.html#%3Cbuffer%3Dabuf%3E">&lt;buffer=abuf&gt;</a>
 							<code id="BufDelete" class="help-tag-right">BufDelete</code>
 BufDelete			Before deleting a buffer from the buffer list.
 				The BufUnload may be called first (if the
 				buffer was loaded).
 				Also used just before a buffer in the buffer
 				list is renamed.
-				NOTE: Current buffer "%" may be different from
-				the buffer being deleted "&lt;afile&gt;" and "&lt;abuf&gt;".
+				NOTE: Current buffer "%" is not the target
+				buffer "&lt;afile&gt;", "&lt;abuf&gt;". <a href="autocmd.html#%3Cbuffer%3Dabuf%3E">&lt;buffer=abuf&gt;</a>
 				Do not change to another buffer.
 							<code id="BufEnter" class="help-tag-right">BufEnter</code>
-BufEnter			After entering a buffer.  Useful for setting
-				options for a file type.  Also executed when
-				starting to edit a buffer.
+BufEnter			After entering (visiting, switching-to) a new
+				or existing buffer. Useful for setting
+				filetype options.  Compare <a href="autocmd.html#BufNew">BufNew</a> which
+				does not trigger for existing buffers.
 				After <a href="autocmd.html#BufAdd">BufAdd</a>.
 				After <a href="autocmd.html#BufReadPost">BufReadPost</a>.
 							<code id="BufFilePost" class="help-tag-right">BufFilePost</code>
@@ -279,8 +278,8 @@ BufHidden			Before a buffer becomes hidden: when there are
 				no longer windows that show the buffer, but
 				the buffer is not unloaded or deleted.</div>
 <div class="old-help-para">				Not used for ":qa" or ":q" when exiting Vim.
-				NOTE: current buffer "%" may be different from
-				the buffer being unloaded "&lt;afile&gt;".
+				NOTE: Current buffer "%" is not the target
+				buffer "&lt;afile&gt;", "&lt;abuf&gt;". <a href="autocmd.html#%3Cbuffer%3Dabuf%3E">&lt;buffer=abuf&gt;</a>
 							<code id="BufLeave" class="help-tag-right">BufLeave</code>
 BufLeave			Before leaving to another buffer.  Also when
 				leaving or closing the current window and the
@@ -290,12 +289,14 @@ BufLeave			Before leaving to another buffer.  Also when
 BufModifiedSet			After the <code>'modified'</code> value of a buffer has
 				been changed.
 							<code id="BufNew" class="help-tag-right">BufNew</code>
-BufNew				Just after creating a new buffer.  Also used
-				just after a buffer has been renamed.  When
-				the buffer is added to the buffer list BufAdd
-				will be triggered too.
-				NOTE: Current buffer "%" may be different from
-				the buffer being created "&lt;afile&gt;".
+BufNew				After creating a new buffer (except during
+				startup, see <a href="autocmd.html#VimEnter">VimEnter</a>) or renaming an
+				existing buffer. Unlike <a href="autocmd.html#BufEnter">BufEnter</a>, visiting
+				(switching to) an existing buffer will not
+				trigger this again.
+				NOTE: Current buffer "%" is not the target
+				buffer "&lt;afile&gt;", "&lt;abuf&gt;". <a href="autocmd.html#%3Cbuffer%3Dabuf%3E">&lt;buffer=abuf&gt;</a>
+				See also <a href="autocmd.html#BufAdd">BufAdd</a>, <a href="autocmd.html#BufNewFile">BufNewFile</a>.
 							<code id="BufNewFile" class="help-tag-right">BufNewFile</code>
 BufNewFile			When starting to edit a file that doesn't
 				exist.  Can be used to read in a skeleton
@@ -328,8 +329,8 @@ BufUnload			Before unloading a buffer, when the text in
 				Before BufDelete.
 				Triggers for all loaded buffers when Vim is
 				going to exit.
-				NOTE: Current buffer "%" may be different from
-				the buffer being unloaded "&lt;afile&gt;".
+				NOTE: Current buffer "%" is not the target
+				buffer "&lt;afile&gt;", "&lt;abuf&gt;". <a href="autocmd.html#%3Cbuffer%3Dabuf%3E">&lt;buffer=abuf&gt;</a>
 				Do not switch buffers or windows!
 				Not triggered when exiting and v:dying is 2 or
 				more.
@@ -349,8 +350,8 @@ BufWinLeave			Before a buffer is removed from a window.
 				Not when it's still visible in another window.
 				Also triggered when exiting.
 				Before BufUnload, BufHidden.
-				NOTE: Current buffer "%" may be different from
-				the buffer being unloaded "&lt;afile&gt;".
+				NOTE: Current buffer "%" is not the target
+				buffer "&lt;afile&gt;", "&lt;abuf&gt;". <a href="autocmd.html#%3Cbuffer%3Dabuf%3E">&lt;buffer=abuf&gt;</a>
 				Not triggered when exiting and v:dying is 2 or
 				more.
 							<code id="BufWipeout" class="help-tag-right">BufWipeout</code>
@@ -360,8 +361,8 @@ BufWipeout			Before completely deleting a buffer.  The
 				buffer list).  Also used just before a buffer
 				is renamed (also when it's not in the buffer
 				list).
-				NOTE: Current buffer "%" may be different from
-				the buffer being deleted "&lt;afile&gt;".
+				NOTE: Current buffer "%" is not the target
+				buffer "&lt;afile&gt;", "&lt;abuf&gt;". <a href="autocmd.html#%3Cbuffer%3Dabuf%3E">&lt;buffer=abuf&gt;</a>
 				Do not change to another buffer.
 						<code id="BufWrite" class="help-tag-right">BufWrite</code> <code id="BufWritePre" class="help-tag">BufWritePre</code>
 BufWrite or BufWritePre		Before writing the whole buffer to a file.
@@ -615,8 +616,8 @@ FileChangedShell		When Vim notices that the modification time of
 				prompt is not given.
 				<a href="eval.html#v%3Afcs_reason">v:fcs_reason</a> indicates what happened. Set
 				<a href="eval.html#v%3Afcs_choice">v:fcs_choice</a> to control what happens next.
-				NOTE: Current buffer "%" may be different from
-				the buffer that was changed "&lt;afile&gt;".
+				NOTE: Current buffer "%" is not the target
+				buffer "&lt;afile&gt;" and "&lt;abuf&gt;". <a href="autocmd.html#%3Cbuffer%3Dabuf%3E">&lt;buffer=abuf&gt;</a>
 							<code id="E246" class="help-tag-right">E246</code> <code id="E811" class="help-tag">E811</code>
 				Cannot switch, jump to or delete buffers.
 				Non-recursive (event cannot trigger itself).
@@ -1532,7 +1533,7 @@ This specifically applies to <a href="autocmd.html#CursorMoved">CursorMoved</a> 
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-06-25 05:27 from <code><a href="https://github.com/neovim/neovim/commit/e59cf3b3a9ee0f9e9b4d2e01059dbdf185eb5685">e59cf3b</a></code>
+        Generated at 2023-06-25 16:46 from <code><a href="https://github.com/neovim/neovim/commit/5ceb2238d3685255cd517ca87fd7edae9ed88811">5ceb223</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+autocmd.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/autocmd.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   Nvim
