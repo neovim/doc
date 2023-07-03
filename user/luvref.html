@@ -2683,14 +2683,20 @@ uv.thread_setaffinity(<code>{thread}</code>, <code>{affinity}</code> [, <code>{g
 </div><div class="help-li" style="margin-left: 3rem;"> <code>[1, 2, 3, ..., n]</code> : <code>boolean</code>
 </div><div class="help-li" style=""> <code>get_old_affinity</code>: <code>boolean</code>
 </div></div>
-<div class="old-help-para">                Sets the specified thread's affinity setting. <code>affinity</code> must
-                be an array-like table where each of the keys correspond to a
-                CPU number and the values are booleans that represent whether
-                the <code>thread</code> should be eligible to run on that CPU. The length
-                of the <code>affinity</code> table must be greater than or equal to
-                <code>uv.cpumask_size()</code>. If <code>get_old_affinity</code> is <code>true</code>, the
-                previous affinity settings for the <code>thread</code> will be returned.
-                Otherwise, <code>true</code> is returned after a successful call.</div>
+<div class="old-help-para">                Sets the specified thread's affinity setting.</div>
+<div class="old-help-para">                <code>affinity</code> must be a table where each of the keys are a CPU
+                number and the values are booleans that represent whether the
+                <code>thread</code> should be eligible to run on that CPU. If the length
+                of the <code>affinity</code> table is not greater than or equal to
+                <a href="luvref.html#uv.cpumask_size()">uv.cpumask_size()</a>, any CPU numbers missing from the table
+                will have their affinity set to <code>false</code>. If setting the
+                affinity of more than <a href="luvref.html#uv.cpumask_size()">uv.cpumask_size()</a> CPUs is desired,
+                <code>affinity</code> must be an array-like table with no gaps, since
+                <code>#affinity</code> will be used as the <code>cpumask_size</code> if it is
+                greater than <a href="luvref.html#uv.cpumask_size()">uv.cpumask_size()</a>.</div>
+<div class="old-help-para">                If <code>get_old_affinity</code> is <code>true</code>, the previous affinity
+                settings for the <code>thread</code> will be returned. Otherwise, <code>true</code>
+                is returned after a successful call.</div>
 <div class="old-help-para">                Note: Thread affinity setting is not atomic on Windows.
                 Unsupported on macOS.</div>
 <div class="old-help-para">                Returns: <code>table</code> or <code>boolean</code> or <code>fail</code>
@@ -3071,16 +3077,16 @@ uv.thread_setaffinity(<code>{thread}</code>, <code>{affinity}</code> [, <code>{g
                 <code>"metrics_idle_time"</code>.</div>
 <div class="old-help-para">                Returns: <code>number</code></div>
 <div class="old-help-para">uv.metrics_info()                                            <code id="uv.metrics_info()" class="help-tag-right">uv.metrics_info()</code></div>
-<div class="old-help-para">                Get the metrics table from current set of event loop metrics.</div>
+<div class="old-help-para">                Get the metrics table from current set of event loop metrics.
+                It is recommended to retrieve these metrics in a <code>prepare</code>
+                callback (see <a href="luvref.html#uv.new_prepare()">uv.new_prepare()</a>, <a href="luvref.html#uv.prepare_start()">uv.prepare_start()</a>) in order
+                to make sure there are no inconsistencies with the metrics
+                counters.</div>
 <div class="old-help-para">                Returns: <code>table</code></div>
-<div class="old-help-para">                The table contains event loop metrics. It is recommended to
-                retrieve these metrics in a uv_prepare_cb in order to make
-                sure there are no inconsistencies with the metrics counters.</div>
 <div class="old-help-para"><div class="help-li" style=""> <code>loop_count</code> : <code>integer</code>
 </div><div class="help-li" style=""> <code>events</code> : <code>integer</code>
 </div><div class="help-li" style=""> <code>events_waiting</code> : <code>integer</code>
 </div></div>
-<div class="old-help-para">                Note: New in libuv version 1.45.0.</div>
 <div class="old-help-para"><h2 id="luv-credits" class="help-heading">CREDITS<span class="help-heading-tags">                                                            <span class="help-tag">luv-credits</span></h2></div>
 <div class="old-help-para">This document is a reformatted version of the LUV documentation, up-to-date
 with commit e8e7b7e (3 Feb 2023) of the luv repository
@@ -3158,7 +3164,7 @@ CREDITS                                                            </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-07-02 05:29 from <code><a href="https://github.com/neovim/neovim/commit/2031812348e79e3d854d444b53e69340ab42e5dd">2031812</a></code>
+        Generated at 2023-07-03 05:29 from <code><a href="https://github.com/neovim/neovim/commit/4fd852b8cb88ed035203d3f9ae2e6a8258244974">4fd852b</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+luvref.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/luvref.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="               Nvim
