@@ -1029,10 +1029,10 @@
 <a name="ln1020"> </a>
 <a name="ln1021">    // Get the line number or the search pattern used to locate</a>
 <a name="ln1022">    // the tag.</a>
-<a name="ln1023">    long lnum = 0;</a>
+<a name="ln1023">    linenr_T lnum = 0;</a>
 <a name="ln1024">    if (isdigit((uint8_t)(*tagp.command))) {</a>
 <a name="ln1025">      // Line number is used to locate the tag</a>
-<a name="ln1026">      lnum = atol(tagp.command);</a>
+<a name="ln1026">      lnum = atoi(tagp.command);</a>
 <a name="ln1027">    } else {</a>
 <a name="ln1028">      char *cmd_start, *cmd_end;</a>
 <a name="ln1029"> </a>
@@ -2988,624 +2988,623 @@
 <a name="ln2979">        // start search before first line</a>
 <a name="ln2980">        curwin-&gt;w_cursor.lnum = 0;</a>
 <a name="ln2981">      }</a>
-<a name="ln2982">      if (do_search(NULL, pbuf[0], pbuf[0], pbuf + 1, (long)1,</a>
-<a name="ln2983">                    search_options, NULL)) {</a>
-<a name="ln2984">        retval = OK;</a>
-<a name="ln2985">      } else {</a>
-<a name="ln2986">        int found = 1;</a>
-<a name="ln2987"> </a>
-<a name="ln2988">        // try again, ignore case now</a>
-<a name="ln2989">        p_ic = true;</a>
-<a name="ln2990">        if (!do_search(NULL, pbuf[0], pbuf[0], pbuf + 1, (long)1,</a>
-<a name="ln2991">                       search_options, NULL)) {</a>
-<a name="ln2992">          // Failed to find pattern, take a guess: &quot;^func  (&quot;</a>
-<a name="ln2993">          found = 2;</a>
-<a name="ln2994">          (void)test_for_static(&amp;tagp);</a>
-<a name="ln2995">          char cc = *tagp.tagname_end;</a>
-<a name="ln2996">          *tagp.tagname_end = NUL;</a>
-<a name="ln2997">          snprintf(pbuf, LSIZE, &quot;^%s\\s\\*(&quot;, tagp.tagname);</a>
-<a name="ln2998">          if (!do_search(NULL, '/', '/', pbuf, (long)1, search_options, NULL)) {</a>
-<a name="ln2999">            // Guess again: &quot;^char * \&lt;func  (&quot;</a>
-<a name="ln3000">            snprintf(pbuf, LSIZE, &quot;^\\[#a-zA-Z_]\\.\\*\\&lt;%s\\s\\*(&quot;,</a>
-<a name="ln3001">                     tagp.tagname);</a>
-<a name="ln3002">            if (!do_search(NULL, '/', '/', pbuf, (long)1, search_options, NULL)) {</a>
-<a name="ln3003">              found = 0;</a>
-<a name="ln3004">            }</a>
-<a name="ln3005">          }</a>
-<a name="ln3006">          *tagp.tagname_end = cc;</a>
-<a name="ln3007">        }</a>
-<a name="ln3008">        if (found == 0) {</a>
-<a name="ln3009">          emsg(_(&quot;E434: Can't find tag pattern&quot;));</a>
-<a name="ln3010">          curwin-&gt;w_cursor.lnum = save_lnum;</a>
-<a name="ln3011">        } else {</a>
-<a name="ln3012">          // Only give a message when really guessed, not when 'ic'</a>
-<a name="ln3013">          // is set and match found while ignoring case.</a>
-<a name="ln3014">          if (found == 2 || !save_p_ic) {</a>
-<a name="ln3015">            msg(_(&quot;E435: Couldn't find tag, just guessing!&quot;));</a>
-<a name="ln3016">            if (!msg_scrolled &amp;&amp; msg_silent == 0) {</a>
-<a name="ln3017">              ui_flush();</a>
-<a name="ln3018">              os_delay(1010L, true);</a>
-<a name="ln3019">            }</a>
-<a name="ln3020">          }</a>
-<a name="ln3021">          retval = OK;</a>
-<a name="ln3022">        }</a>
-<a name="ln3023">      }</a>
-<a name="ln3024">      p_ws = save_p_ws;</a>
-<a name="ln3025">      p_ic = save_p_ic;  // -V519</a>
-<a name="ln3026">      p_scs = save_p_scs;</a>
-<a name="ln3027"> </a>
-<a name="ln3028">      // A search command may have positioned the cursor beyond the end</a>
-<a name="ln3029">      // of the line.  May need to correct that here.</a>
-<a name="ln3030">      check_cursor();</a>
-<a name="ln3031">    } else {</a>
-<a name="ln3032">      const int save_secure = secure;</a>
-<a name="ln3033"> </a>
-<a name="ln3034">      // Setup the sandbox for executing the command from the tags file.</a>
-<a name="ln3035">      secure = 1;</a>
-<a name="ln3036">      sandbox++;</a>
-<a name="ln3037">      curwin-&gt;w_cursor.lnum = 1;  // start command in line 1</a>
-<a name="ln3038">      do_cmdline_cmd(pbuf);</a>
-<a name="ln3039">      retval = OK;</a>
-<a name="ln3040"> </a>
-<a name="ln3041">      // When the command has done something that is not allowed make sure</a>
-<a name="ln3042">      // the error message can be seen.</a>
-<a name="ln3043">      if (secure == 2) {</a>
-<a name="ln3044">        wait_return(true);</a>
-<a name="ln3045">      }</a>
-<a name="ln3046">      secure = save_secure;</a>
-<a name="ln3047">      sandbox--;</a>
-<a name="ln3048">    }</a>
-<a name="ln3049"> </a>
-<a name="ln3050">    magic_overruled = save_magic_overruled;</a>
-<a name="ln3051">    // restore no_hlsearch when keeping the old search pattern</a>
-<a name="ln3052">    if (search_options) {</a>
-<a name="ln3053">      set_no_hlsearch(save_no_hlsearch);</a>
-<a name="ln3054">    }</a>
-<a name="ln3055"> </a>
-<a name="ln3056">    // Return OK if jumped to another file (at least we found the file!).</a>
-<a name="ln3057">    if (getfile_result == GETFILE_OPEN_OTHER) {</a>
-<a name="ln3058">      retval = OK;</a>
-<a name="ln3059">    }</a>
-<a name="ln3060"> </a>
-<a name="ln3061">    if (retval == OK) {</a>
-<a name="ln3062">      // For a help buffer: Put the cursor line at the top of the window,</a>
-<a name="ln3063">      // the help subject will be below it.</a>
-<a name="ln3064">      if (curbuf-&gt;b_help) {</a>
-<a name="ln3065">        set_topline(curwin, curwin-&gt;w_cursor.lnum);</a>
-<a name="ln3066">      }</a>
-<a name="ln3067">      if ((fdo_flags &amp; FDO_TAG) &amp;&amp; old_KeyTyped) {</a>
-<a name="ln3068">        foldOpenCursor();</a>
-<a name="ln3069">      }</a>
-<a name="ln3070">    }</a>
-<a name="ln3071"> </a>
-<a name="ln3072">    if (l_g_do_tagpreview != 0</a>
-<a name="ln3073">        &amp;&amp; curwin != curwin_save &amp;&amp; win_valid(curwin_save)) {</a>
-<a name="ln3074">      // Return cursor to where we were</a>
-<a name="ln3075">      validate_cursor();</a>
-<a name="ln3076">      redraw_later(curwin, UPD_VALID);</a>
-<a name="ln3077">      win_enter(curwin_save, true);</a>
-<a name="ln3078">    }</a>
-<a name="ln3079"> </a>
-<a name="ln3080">    RedrawingDisabled--;</a>
-<a name="ln3081">  } else {</a>
-<a name="ln3082">    RedrawingDisabled--;</a>
-<a name="ln3083">    if (postponed_split) {              // close the window</a>
-<a name="ln3084">      win_close(curwin, false, false);</a>
-<a name="ln3085">      postponed_split = 0;</a>
-<a name="ln3086">    }</a>
-<a name="ln3087">  }</a>
-<a name="ln3088"> </a>
-<a name="ln3089">erret:</a>
-<a name="ln3090">  g_do_tagpreview = 0;  // For next time</a>
-<a name="ln3091">  xfree(lbuf);</a>
-<a name="ln3092">  xfree(pbuf);</a>
-<a name="ln3093">  xfree(tofree_fname);</a>
-<a name="ln3094">  xfree(full_fname);</a>
-<a name="ln3095"> </a>
-<a name="ln3096">  return retval;</a>
-<a name="ln3097">}</a>
-<a name="ln3098"> </a>
-<a name="ln3099">/// If &quot;expand&quot; is true, expand wildcards in fname.</a>
-<a name="ln3100">/// If 'tagrelative' option set, change fname (name of file containing tag)</a>
-<a name="ln3101">/// according to tag_fname (name of tag file containing fname).</a>
-<a name="ln3102">///</a>
-<a name="ln3103">/// @return  a pointer to allocated memory.</a>
-<a name="ln3104">static char *expand_tag_fname(char *fname, char *const tag_fname, const bool expand)</a>
-<a name="ln3105">{</a>
-<a name="ln3106">  char *p;</a>
-<a name="ln3107">  char *expanded_fname = NULL;</a>
-<a name="ln3108">  expand_T xpc;</a>
-<a name="ln3109"> </a>
-<a name="ln3110">  // Expand file name (for environment variables) when needed.</a>
-<a name="ln3111">  if (expand &amp;&amp; path_has_wildcard(fname)) {</a>
-<a name="ln3112">    ExpandInit(&amp;xpc);</a>
-<a name="ln3113">    xpc.xp_context = EXPAND_FILES;</a>
-<a name="ln3114">    expanded_fname = ExpandOne(&amp;xpc, fname, NULL,</a>
-<a name="ln3115">                               WILD_LIST_NOTFOUND|WILD_SILENT, WILD_EXPAND_FREE);</a>
-<a name="ln3116">    if (expanded_fname != NULL) {</a>
-<a name="ln3117">      fname = expanded_fname;</a>
-<a name="ln3118">    }</a>
-<a name="ln3119">  }</a>
-<a name="ln3120"> </a>
-<a name="ln3121">  char *retval;</a>
-<a name="ln3122">  if ((p_tr || curbuf-&gt;b_help)</a>
-<a name="ln3123">      &amp;&amp; !vim_isAbsName(fname)</a>
-<a name="ln3124">      &amp;&amp; (p = path_tail(tag_fname)) != tag_fname) {</a>
-<a name="ln3125">    retval = xmalloc(MAXPATHL);</a>
-<a name="ln3126">    STRCPY(retval, tag_fname);</a>
-<a name="ln3127">    xstrlcpy(retval + (p - tag_fname), fname, (size_t)(MAXPATHL - (p - tag_fname)));</a>
-<a name="ln3128">    // Translate names like &quot;src/a/../b/file.c&quot; into &quot;src/b/file.c&quot;.</a>
-<a name="ln3129">    simplify_filename(retval);</a>
-<a name="ln3130">  } else {</a>
-<a name="ln3131">    retval = xstrdup(fname);</a>
-<a name="ln3132">  }</a>
-<a name="ln3133"> </a>
-<a name="ln3134">  xfree(expanded_fname);</a>
-<a name="ln3135"> </a>
-<a name="ln3136">  return retval;</a>
-<a name="ln3137">}</a>
-<a name="ln3138"> </a>
-<a name="ln3139">/// Check if we have a tag for the buffer with name &quot;buf_ffname&quot;.</a>
-<a name="ln3140">/// This is a bit slow, because of the full path compare in path_full_compare().</a>
-<a name="ln3141">///</a>
-<a name="ln3142">/// @return  true if tag for file &quot;fname&quot; if tag file &quot;tag_fname&quot; is for current</a>
-<a name="ln3143">///          file.</a>
-<a name="ln3144">static int test_for_current(char *fname, char *fname_end, char *tag_fname, char *buf_ffname)</a>
-<a name="ln3145">{</a>
-<a name="ln3146">  int retval = false;</a>
-<a name="ln3147"> </a>
-<a name="ln3148">  if (buf_ffname != NULL) {     // if the buffer has a name</a>
-<a name="ln3149">    char c;</a>
-<a name="ln3150">    {</a>
-<a name="ln3151">      c = *fname_end;</a>
-<a name="ln3152">      *fname_end = NUL;</a>
-<a name="ln3153">    }</a>
-<a name="ln3154">    char *fullname = expand_tag_fname(fname, tag_fname, true);</a>
-<a name="ln3155">    retval = (path_full_compare(fullname, buf_ffname, true, true) &amp; kEqualFiles);</a>
-<a name="ln3156">    xfree(fullname);</a>
-<a name="ln3157">    *fname_end = c;</a>
-<a name="ln3158">  }</a>
-<a name="ln3159"> </a>
-<a name="ln3160">  return retval;</a>
-<a name="ln3161">}</a>
-<a name="ln3162"> </a>
-<a name="ln3163">// Find the end of the tagaddress.</a>
-<a name="ln3164">// Return OK if &quot;;\&quot;&quot; is following, FAIL otherwise.</a>
-<a name="ln3165">static int find_extra(char **pp)</a>
-<a name="ln3166">{</a>
-<a name="ln3167">  char *str = *pp;</a>
-<a name="ln3168">  char first_char = **pp;</a>
-<a name="ln3169"> </a>
-<a name="ln3170">  // Repeat for addresses separated with ';'</a>
-<a name="ln3171">  while (true) {</a>
-<a name="ln3172">    if (ascii_isdigit(*str)) {</a>
-<a name="ln3173">      str = skipdigits(str + 1);</a>
-<a name="ln3174">    } else if (*str == '/' || *str == '?') {</a>
-<a name="ln3175">      str = skip_regexp(str + 1, *str, false);</a>
-<a name="ln3176">      if (*str != first_char) {</a>
-<a name="ln3177">        str = NULL;</a>
-<a name="ln3178">      } else {</a>
-<a name="ln3179">        str++;</a>
-<a name="ln3180">      }</a>
-<a name="ln3181">    } else {</a>
-<a name="ln3182">      // not a line number or search string, look for terminator.</a>
-<a name="ln3183">      str = strstr(str, &quot;|;\&quot;&quot;);</a>
-<a name="ln3184">      if (str != NULL) {</a>
-<a name="ln3185">        str++;</a>
-<a name="ln3186">        break;</a>
-<a name="ln3187">      }</a>
-<a name="ln3188">    }</a>
-<a name="ln3189">    if (str == NULL || *str != ';'</a>
-<a name="ln3190">        || !(ascii_isdigit(str[1]) || str[1] == '/' || str[1] == '?')) {</a>
-<a name="ln3191">      break;</a>
-<a name="ln3192">    }</a>
-<a name="ln3193">    str++;  // skip ';'</a>
-<a name="ln3194">    first_char = *str;</a>
-<a name="ln3195">  }</a>
-<a name="ln3196"> </a>
-<a name="ln3197">  if (str != NULL &amp;&amp; strncmp(str, &quot;;\&quot;&quot;, 2) == 0) {</a>
-<a name="ln3198">    *pp = str;</a>
-<a name="ln3199">    return OK;</a>
-<a name="ln3200">  }</a>
-<a name="ln3201">  return FAIL;</a>
-<a name="ln3202">}</a>
-<a name="ln3203"> </a>
-<a name="ln3204">//</a>
-<a name="ln3205">// Free a single entry in a tag stack</a>
-<a name="ln3206">//</a>
-<a name="ln3207">static void tagstack_clear_entry(taggy_T *item)</a>
-<a name="ln3208">{</a>
-<a name="ln3209">  XFREE_CLEAR(item-&gt;tagname);</a>
-<a name="ln3210">  XFREE_CLEAR(item-&gt;user_data);</a>
-<a name="ln3211">}</a>
-<a name="ln3212"> </a>
-<a name="ln3213">/// @param tagnames  expand tag names</a>
-<a name="ln3214">int expand_tags(int tagnames, char *pat, int *num_file, char ***file)</a>
-<a name="ln3215">{</a>
-<a name="ln3216">  int extra_flag;</a>
-<a name="ln3217">  char *name_buf;</a>
-<a name="ln3218">  size_t name_buf_size = 100;</a>
-<a name="ln3219">  tagptrs_T t_p;</a>
-<a name="ln3220">  int ret;</a>
-<a name="ln3221"> </a>
-<a name="ln3222">  name_buf = xmalloc(name_buf_size);</a>
-<a name="ln3223"> </a>
-<a name="ln3224">  if (tagnames) {</a>
-<a name="ln3225">    extra_flag = TAG_NAMES;</a>
-<a name="ln3226">  } else {</a>
-<a name="ln3227">    extra_flag = 0;</a>
-<a name="ln3228">  }</a>
-<a name="ln3229">  if (pat[0] == '/') {</a>
-<a name="ln3230">    ret = find_tags(pat + 1, num_file, file,</a>
-<a name="ln3231">                    TAG_REGEXP | extra_flag | TAG_VERBOSE | TAG_NO_TAGFUNC,</a>
-<a name="ln3232">                    TAG_MANY, curbuf-&gt;b_ffname);</a>
-<a name="ln3233">  } else {</a>
-<a name="ln3234">    ret = find_tags(pat, num_file, file,</a>
-<a name="ln3235">                    TAG_REGEXP | extra_flag | TAG_VERBOSE | TAG_NO_TAGFUNC | TAG_NOIC,</a>
-<a name="ln3236">                    TAG_MANY, curbuf-&gt;b_ffname);</a>
-<a name="ln3237">  }</a>
-<a name="ln3238">  if (ret == OK &amp;&amp; !tagnames) {</a>
-<a name="ln3239">    // Reorganize the tags for display and matching as strings of:</a>
-<a name="ln3240">    // &quot;&lt;tagname&gt;\0&lt;kind&gt;\0&lt;filename&gt;\0&quot;</a>
-<a name="ln3241">    for (int i = 0; i &lt; *num_file; i++) {</a>
-<a name="ln3242">      size_t len;</a>
-<a name="ln3243"> </a>
-<a name="ln3244">      parse_match((*file)[i], &amp;t_p);</a>
-<a name="ln3245">      len = (size_t)(t_p.tagname_end - t_p.tagname);</a>
-<a name="ln3246">      if (len &gt; name_buf_size - 3) {</a>
-<a name="ln3247">        char *buf;</a>
-<a name="ln3248"> </a>
-<a name="ln3249">        name_buf_size = len + 3;</a>
-<a name="ln3250">        buf = xrealloc(name_buf, name_buf_size);</a>
-<a name="ln3251">        name_buf = buf;</a>
-<a name="ln3252">      }</a>
-<a name="ln3253"> </a>
-<a name="ln3254">      memmove(name_buf, t_p.tagname, len);</a>
-<a name="ln3255">      name_buf[len++] = 0;</a>
-<a name="ln3256">      name_buf[len++] = (t_p.tagkind != NULL &amp;&amp; *t_p.tagkind)</a>
-<a name="ln3257">                                                   ? *t_p.tagkind : 'f';</a>
-<a name="ln3258">      name_buf[len++] = 0;</a>
-<a name="ln3259">      memmove((*file)[i] + len, t_p.fname, (size_t)(t_p.fname_end - t_p.fname));</a>
-<a name="ln3260">      (*file)[i][len + (size_t)(t_p.fname_end - t_p.fname)] = 0;</a>
-<a name="ln3261">      memmove((*file)[i], name_buf, len);</a>
-<a name="ln3262">    }</a>
-<a name="ln3263">  }</a>
-<a name="ln3264">  xfree(name_buf);</a>
-<a name="ln3265">  return ret;</a>
-<a name="ln3266">}</a>
-<a name="ln3267"> </a>
-<a name="ln3268">/// Add a tag field to the dictionary &quot;dict&quot;.</a>
-<a name="ln3269">/// Return OK or FAIL.</a>
-<a name="ln3270">///</a>
-<a name="ln3271">/// @param start  start of the value</a>
-<a name="ln3272">/// @param end  after the value; can be NULL</a>
-<a name="ln3273">static int add_tag_field(dict_T *dict, const char *field_name, const char *start, const char *end)</a>
-<a name="ln3274">  FUNC_ATTR_NONNULL_ARG(1, 2)</a>
-<a name="ln3275">{</a>
-<a name="ln3276">  int len = 0;</a>
-<a name="ln3277">  int retval;</a>
-<a name="ln3278"> </a>
-<a name="ln3279">  // Check that the field name doesn't exist yet.</a>
-<a name="ln3280">  if (tv_dict_find(dict, field_name, -1) != NULL) {</a>
-<a name="ln3281">    if (p_verbose &gt; 0) {</a>
-<a name="ln3282">      verbose_enter();</a>
-<a name="ln3283">      smsg(_(&quot;Duplicate field name: %s&quot;), field_name);</a>
-<a name="ln3284">      verbose_leave();</a>
-<a name="ln3285">    }</a>
-<a name="ln3286">    return FAIL;</a>
-<a name="ln3287">  }</a>
-<a name="ln3288">  char *buf = xmalloc(MAXPATHL);</a>
-<a name="ln3289">  if (start != NULL) {</a>
-<a name="ln3290">    if (end == NULL) {</a>
-<a name="ln3291">      end = start + strlen(start);</a>
-<a name="ln3292">      while (end &gt; start &amp;&amp; (end[-1] == '\r' || end[-1] == '\n')) {</a>
-<a name="ln3293">        end--;</a>
-<a name="ln3294">      }</a>
-<a name="ln3295">    }</a>
-<a name="ln3296">    len = (int)(end - start);</a>
-<a name="ln3297">    if (len &gt; MAXPATHL - 1) {</a>
-<a name="ln3298">      len = MAXPATHL - 1;</a>
-<a name="ln3299">    }</a>
-<a name="ln3300">    xstrlcpy(buf, start, (size_t)len + 1);</a>
-<a name="ln3301">  }</a>
-<a name="ln3302">  buf[len] = NUL;</a>
-<a name="ln3303">  retval = tv_dict_add_str(dict, field_name, strlen(field_name), buf);</a>
-<a name="ln3304">  xfree(buf);</a>
-<a name="ln3305">  return retval;</a>
-<a name="ln3306">}</a>
-<a name="ln3307"> </a>
-<a name="ln3308">/// Add the tags matching the specified pattern &quot;pat&quot; to the list &quot;list&quot;</a>
-<a name="ln3309">/// as a dictionary. Use &quot;buf_fname&quot; for priority, unless NULL.</a>
-<a name="ln3310">int get_tags(list_T *list, char *pat, char *buf_fname)</a>
-<a name="ln3311">{</a>
-<a name="ln3312">  int num_matches, i, ret;</a>
-<a name="ln3313">  char **matches;</a>
-<a name="ln3314">  char *full_fname;</a>
-<a name="ln3315">  dict_T *dict;</a>
-<a name="ln3316">  tagptrs_T tp;</a>
-<a name="ln3317"> </a>
-<a name="ln3318">  ret = find_tags(pat, &amp;num_matches, &amp;matches,</a>
-<a name="ln3319">                  TAG_REGEXP | TAG_NOIC, MAXCOL, buf_fname);</a>
-<a name="ln3320">  if (ret != OK || num_matches &lt;= 0) {</a>
-<a name="ln3321">    return ret;</a>
-<a name="ln3322">  }</a>
-<a name="ln3323"> </a>
-<a name="ln3324">  for (i = 0; i &lt; num_matches; i++) {</a>
-<a name="ln3325">    if (parse_match(matches[i], &amp;tp) == FAIL) {</a>
-<a name="ln3326">      xfree(matches[i]);</a>
-<a name="ln3327">      continue;</a>
-<a name="ln3328">    }</a>
-<a name="ln3329"> </a>
-<a name="ln3330">    bool is_static = test_for_static(&amp;tp);</a>
-<a name="ln3331"> </a>
-<a name="ln3332">    // Skip pseudo-tag lines.</a>
-<a name="ln3333">    if (strncmp(tp.tagname, &quot;!_TAG_&quot;, 6) == 0) {</a>
-<a name="ln3334">      xfree(matches[i]);</a>
-<a name="ln3335">      continue;</a>
-<a name="ln3336">    }</a>
-<a name="ln3337"> </a>
-<a name="ln3338">    dict = tv_dict_alloc();</a>
-<a name="ln3339">    tv_list_append_dict(list, dict);</a>
-<a name="ln3340"> </a>
-<a name="ln3341">    full_fname = tag_full_fname(&amp;tp);</a>
-<a name="ln3342">    if (add_tag_field(dict, &quot;name&quot;, tp.tagname, tp.tagname_end) == FAIL</a>
-<a name="ln3343">        || add_tag_field(dict, &quot;filename&quot;, full_fname, NULL) == FAIL</a>
-<a name="ln3344">        || add_tag_field(dict, &quot;cmd&quot;, tp.command, tp.command_end) == FAIL</a>
-<a name="ln3345">        || add_tag_field(dict, &quot;kind&quot;, tp.tagkind,</a>
-<a name="ln3346">                         tp.tagkind ? tp.tagkind_end : NULL) == FAIL</a>
-<a name="ln3347">        || tv_dict_add_nr(dict, S_LEN(&quot;static&quot;), is_static) == FAIL) {</a>
-<a name="ln3348">      ret = FAIL;</a>
-<a name="ln3349">    }</a>
-<a name="ln3350"> </a>
-<a name="ln3351">    xfree(full_fname);</a>
-<a name="ln3352"> </a>
-<a name="ln3353">    if (tp.command_end != NULL) {</a>
-<a name="ln3354">      for (char *p = tp.command_end + 3;</a>
-<a name="ln3355">           *p != NUL &amp;&amp; *p != '\n' &amp;&amp; *p != '\r';</a>
-<a name="ln3356">           MB_PTR_ADV(p)) {</a>
-<a name="ln3357">        if (p == tp.tagkind</a>
-<a name="ln3358">            || (p + 5 == tp.tagkind &amp;&amp; strncmp(p, &quot;kind:&quot;, 5) == 0)) {</a>
-<a name="ln3359">          // skip &quot;kind:&lt;kind&gt;&quot; and &quot;&lt;kind&gt;&quot;</a>
-<a name="ln3360">          p = tp.tagkind_end - 1;</a>
-<a name="ln3361">        } else if (strncmp(p, &quot;file:&quot;, 5) == 0) {</a>
-<a name="ln3362">          // skip &quot;file:&quot; (static tag)</a>
-<a name="ln3363">          p += 4;</a>
-<a name="ln3364">        } else if (!ascii_iswhite(*p)) {</a>
-<a name="ln3365">          char *n;</a>
-<a name="ln3366">          int len;</a>
-<a name="ln3367"> </a>
-<a name="ln3368">          // Add extra field as a dict entry.  Fields are</a>
-<a name="ln3369">          // separated by Tabs.</a>
-<a name="ln3370">          n = p;</a>
-<a name="ln3371">          while (*p != NUL &amp;&amp; *p &gt;= ' ' &amp;&amp; *p &lt; 127 &amp;&amp; *p != ':') {</a>
-<a name="ln3372">            p++;</a>
-<a name="ln3373">          }</a>
-<a name="ln3374">          len = (int)(p - n);</a>
-<a name="ln3375">          if (*p == ':' &amp;&amp; len &gt; 0) {</a>
-<a name="ln3376">            char *s = ++p;</a>
-<a name="ln3377">            while (*p != NUL &amp;&amp; (uint8_t)(*p) &gt;= ' ') {</a>
-<a name="ln3378">              p++;</a>
-<a name="ln3379">            }</a>
-<a name="ln3380">            n[len] = NUL;</a>
-<a name="ln3381">            if (add_tag_field(dict, n, s, p) == FAIL) {</a>
-<a name="ln3382">              ret = FAIL;</a>
-<a name="ln3383">            }</a>
-<a name="ln3384">            n[len] = ':';</a>
-<a name="ln3385">          } else {</a>
-<a name="ln3386">            // Skip field without colon.</a>
-<a name="ln3387">            while (*p != NUL &amp;&amp; (uint8_t)(*p) &gt;= ' ') {</a>
-<a name="ln3388">              p++;</a>
-<a name="ln3389">            }</a>
-<a name="ln3390">          }</a>
-<a name="ln3391">          if (*p == NUL) {</a>
-<a name="ln3392">            break;</a>
-<a name="ln3393">          }</a>
-<a name="ln3394">        }</a>
-<a name="ln3395">      }</a>
-<a name="ln3396">    }</a>
-<a name="ln3397"> </a>
-<a name="ln3398">    xfree(matches[i]);</a>
-<a name="ln3399">  }</a>
-<a name="ln3400">  xfree(matches);</a>
-<a name="ln3401">  return ret;</a>
-<a name="ln3402">}</a>
-<a name="ln3403"> </a>
-<a name="ln3404">// Return information about 'tag' in dict 'retdict'.</a>
-<a name="ln3405">static void get_tag_details(taggy_T *tag, dict_T *retdict)</a>
-<a name="ln3406">{</a>
-<a name="ln3407">  list_T *pos;</a>
-<a name="ln3408">  fmark_T *fmark;</a>
-<a name="ln3409"> </a>
-<a name="ln3410">  tv_dict_add_str(retdict, S_LEN(&quot;tagname&quot;), tag-&gt;tagname);</a>
-<a name="ln3411">  tv_dict_add_nr(retdict, S_LEN(&quot;matchnr&quot;), tag-&gt;cur_match + 1);</a>
-<a name="ln3412">  tv_dict_add_nr(retdict, S_LEN(&quot;bufnr&quot;), tag-&gt;cur_fnum);</a>
-<a name="ln3413">  if (tag-&gt;user_data) {</a>
-<a name="ln3414">    tv_dict_add_str(retdict, S_LEN(&quot;user_data&quot;), tag-&gt;user_data);</a>
-<a name="ln3415">  }</a>
-<a name="ln3416"> </a>
-<a name="ln3417">  pos = tv_list_alloc(4);</a>
-<a name="ln3418">  tv_dict_add_list(retdict, S_LEN(&quot;from&quot;), pos);</a>
-<a name="ln3419"> </a>
-<a name="ln3420">  fmark = &amp;tag-&gt;fmark;</a>
-<a name="ln3421">  tv_list_append_number(pos,</a>
-<a name="ln3422">                        (varnumber_T)(fmark-&gt;fnum != -1 ? fmark-&gt;fnum : 0));</a>
-<a name="ln3423">  tv_list_append_number(pos, (varnumber_T)fmark-&gt;mark.lnum);</a>
-<a name="ln3424">  tv_list_append_number(pos, (varnumber_T)(fmark-&gt;mark.col == MAXCOL</a>
-<a name="ln3425">                                           ? MAXCOL : fmark-&gt;mark.col + 1));</a>
-<a name="ln3426">  tv_list_append_number(pos, (varnumber_T)fmark-&gt;mark.coladd);</a>
-<a name="ln3427">}</a>
-<a name="ln3428"> </a>
-<a name="ln3429">// Return the tag stack entries of the specified window 'wp' in dictionary</a>
-<a name="ln3430">// 'retdict'.</a>
-<a name="ln3431">void get_tagstack(win_T *wp, dict_T *retdict)</a>
-<a name="ln3432">{</a>
-<a name="ln3433">  tv_dict_add_nr(retdict, S_LEN(&quot;length&quot;), wp-&gt;w_tagstacklen);</a>
-<a name="ln3434">  tv_dict_add_nr(retdict, S_LEN(&quot;curidx&quot;), wp-&gt;w_tagstackidx + 1);</a>
-<a name="ln3435">  list_T *l = tv_list_alloc(2);</a>
-<a name="ln3436">  tv_dict_add_list(retdict, S_LEN(&quot;items&quot;), l);</a>
-<a name="ln3437"> </a>
-<a name="ln3438">  for (int i = 0; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
-<a name="ln3439">    dict_T *d = tv_dict_alloc();</a>
-<a name="ln3440">    tv_list_append_dict(l, d);</a>
-<a name="ln3441">    get_tag_details(&amp;wp-&gt;w_tagstack[i], d);</a>
-<a name="ln3442">  }</a>
-<a name="ln3443">}</a>
-<a name="ln3444"> </a>
-<a name="ln3445">// Free all the entries in the tag stack of the specified window</a>
-<a name="ln3446">static void tagstack_clear(win_T *wp)</a>
-<a name="ln3447">{</a>
-<a name="ln3448">  // Free the current tag stack</a>
-<a name="ln3449">  for (int i = 0; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
-<a name="ln3450">    tagstack_clear_entry(&amp;wp-&gt;w_tagstack[i]);</a>
-<a name="ln3451">  }</a>
-<a name="ln3452">  wp-&gt;w_tagstacklen = 0;</a>
-<a name="ln3453">  wp-&gt;w_tagstackidx = 0;</a>
-<a name="ln3454">}</a>
-<a name="ln3455"> </a>
-<a name="ln3456">// Remove the oldest entry from the tag stack and shift the rest of</a>
-<a name="ln3457">// the entries to free up the top of the stack.</a>
-<a name="ln3458">static void tagstack_shift(win_T *wp)</a>
-<a name="ln3459">{</a>
-<a name="ln3460">  taggy_T *tagstack = wp-&gt;w_tagstack;</a>
-<a name="ln3461">  tagstack_clear_entry(&amp;tagstack[0]);</a>
-<a name="ln3462">  for (int i = 1; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
-<a name="ln3463">    tagstack[i - 1] = tagstack[i];</a>
-<a name="ln3464">  }</a>
-<a name="ln3465">  wp-&gt;w_tagstacklen--;</a>
-<a name="ln3466">}</a>
-<a name="ln3467"> </a>
-<a name="ln3468">/// Push a new item to the tag stack</a>
-<a name="ln3469">static void tagstack_push_item(win_T *wp, char *tagname, int cur_fnum, int cur_match, pos_T mark,</a>
-<a name="ln3470">                               int fnum, char *user_data)</a>
-<a name="ln3471">{</a>
-<a name="ln3472">  taggy_T *tagstack = wp-&gt;w_tagstack;</a>
-<a name="ln3473">  int idx = wp-&gt;w_tagstacklen;  // top of the stack</a>
-<a name="ln3474"> </a>
-<a name="ln3475">  // if the tagstack is full: remove the oldest entry</a>
-<a name="ln3476">  if (idx &gt;= TAGSTACKSIZE) {</a>
-<a name="ln3477">    tagstack_shift(wp);</a>
-<a name="ln3478">    idx = TAGSTACKSIZE - 1;</a>
-<a name="ln3479">  }</a>
-<a name="ln3480"> </a>
-<a name="ln3481">  wp-&gt;w_tagstacklen++;</a>
-<a name="ln3482">  tagstack[idx].tagname = tagname;</a>
-<a name="ln3483">  tagstack[idx].cur_fnum = cur_fnum;</a>
-<a name="ln3484">  tagstack[idx].cur_match = cur_match;</a>
-<a name="ln3485">  if (tagstack[idx].cur_match &lt; 0) {</a>
-<a name="ln3486">    tagstack[idx].cur_match = 0;</a>
-<a name="ln3487">  }</a>
-<a name="ln3488">  tagstack[idx].fmark.mark = mark;</a>
-<a name="ln3489">  tagstack[idx].fmark.fnum = fnum;</a>
-<a name="ln3490">  tagstack[idx].user_data = user_data;</a>
-<a name="ln3491">}</a>
-<a name="ln3492"> </a>
-<a name="ln3493">/// Add a list of items to the tag stack in the specified window</a>
-<a name="ln3494">static void tagstack_push_items(win_T *wp, list_T *l)</a>
-<a name="ln3495">{</a>
-<a name="ln3496">  listitem_T *li;</a>
-<a name="ln3497">  dictitem_T *di;</a>
-<a name="ln3498">  dict_T *itemdict;</a>
-<a name="ln3499">  char *tagname;</a>
-<a name="ln3500">  pos_T mark;</a>
-<a name="ln3501">  int fnum;</a>
-<a name="ln3502"> </a>
-<a name="ln3503">  // Add one entry at a time to the tag stack</a>
-<a name="ln3504">  for (li = tv_list_first(l); li != NULL; li = TV_LIST_ITEM_NEXT(l, li)) {</a>
-<a name="ln3505">    if (TV_LIST_ITEM_TV(li)-&gt;v_type != VAR_DICT</a>
-<a name="ln3506">        || TV_LIST_ITEM_TV(li)-&gt;vval.v_dict == NULL) {</a>
-<a name="ln3507">      continue;  // Skip non-dict items</a>
-<a name="ln3508">    }</a>
-<a name="ln3509">    itemdict = TV_LIST_ITEM_TV(li)-&gt;vval.v_dict;</a>
-<a name="ln3510"> </a>
-<a name="ln3511">    // parse 'from' for the cursor position before the tag jump</a>
-<a name="ln3512">    if ((di = tv_dict_find(itemdict, &quot;from&quot;, -1)) == NULL) {</a>
-<a name="ln3513">      continue;</a>
-<a name="ln3514">    }</a>
-<a name="ln3515">    if (list2fpos(&amp;di-&gt;di_tv, &amp;mark, &amp;fnum, NULL, false) != OK) {</a>
-<a name="ln3516">      continue;</a>
-<a name="ln3517">    }</a>
-<a name="ln3518">    if ((tagname = tv_dict_get_string(itemdict, &quot;tagname&quot;, true)) == NULL) {</a>
-<a name="ln3519">      continue;</a>
-<a name="ln3520">    }</a>
-<a name="ln3521"> </a>
-<a name="ln3522">    if (mark.col &gt; 0) {</a>
-<a name="ln3523">      mark.col--;</a>
-<a name="ln3524">    }</a>
-<a name="ln3525">    tagstack_push_item(wp,</a>
-<a name="ln3526">                       tagname,</a>
-<a name="ln3527">                       (int)tv_dict_get_number(itemdict, &quot;bufnr&quot;),</a>
-<a name="ln3528">                       (int)tv_dict_get_number(itemdict, &quot;matchnr&quot;) - 1,</a>
-<a name="ln3529">                       mark, fnum,</a>
-<a name="ln3530">                       tv_dict_get_string(itemdict, &quot;user_data&quot;, true));</a>
-<a name="ln3531">  }</a>
-<a name="ln3532">}</a>
-<a name="ln3533"> </a>
-<a name="ln3534">// Set the current index in the tag stack. Valid values are between 0</a>
-<a name="ln3535">// and the stack length (inclusive).</a>
-<a name="ln3536">static void tagstack_set_curidx(win_T *wp, int curidx)</a>
-<a name="ln3537">{</a>
-<a name="ln3538">  wp-&gt;w_tagstackidx = curidx;</a>
-<a name="ln3539">  if (wp-&gt;w_tagstackidx &lt; 0) {  // sanity check</a>
-<a name="ln3540">    wp-&gt;w_tagstackidx = 0;</a>
-<a name="ln3541">  }</a>
-<a name="ln3542">  if (wp-&gt;w_tagstackidx &gt; wp-&gt;w_tagstacklen) {</a>
-<a name="ln3543">    wp-&gt;w_tagstackidx = wp-&gt;w_tagstacklen;</a>
-<a name="ln3544">  }</a>
-<a name="ln3545">}</a>
-<a name="ln3546"> </a>
-<a name="ln3547">// Set the tag stack entries of the specified window.</a>
-<a name="ln3548">// 'action' is set to one of:</a>
-<a name="ln3549">//    'a' for append</a>
-<a name="ln3550">//    'r' for replace</a>
-<a name="ln3551">//    't' for truncate</a>
-<a name="ln3552">int set_tagstack(win_T *wp, const dict_T *d, int action)</a>
-<a name="ln3553">  FUNC_ATTR_NONNULL_ARG(1)</a>
-<a name="ln3554">{</a>
-<a name="ln3555">  dictitem_T *di;</a>
-<a name="ln3556">  list_T *l = NULL;</a>
-<a name="ln3557"> </a>
-<a name="ln3558">  // not allowed to alter the tag stack entries from inside tagfunc</a>
-<a name="ln3559">  if (tfu_in_use) {</a>
-<a name="ln3560">    emsg(_(e_cannot_modify_tag_stack_within_tagfunc));</a>
-<a name="ln3561">    return FAIL;</a>
-<a name="ln3562">  }</a>
-<a name="ln3563"> </a>
-<a name="ln3564">  if ((di = tv_dict_find(d, &quot;items&quot;, -1)) != NULL) {</a>
-<a name="ln3565">    if (di-&gt;di_tv.v_type != VAR_LIST) {</a>
-<a name="ln3566">      emsg(_(e_listreq));</a>
-<a name="ln3567">      return FAIL;</a>
-<a name="ln3568">    }</a>
-<a name="ln3569">    l = di-&gt;di_tv.vval.v_list;</a>
-<a name="ln3570">  }</a>
-<a name="ln3571"> </a>
-<a name="ln3572">  if ((di = tv_dict_find(d, &quot;curidx&quot;, -1)) != NULL) {</a>
-<a name="ln3573">    tagstack_set_curidx(wp, (int)tv_get_number(&amp;di-&gt;di_tv) - 1);</a>
-<a name="ln3574">  }</a>
-<a name="ln3575"> </a>
-<a name="ln3576">  if (action == 't') {  // truncate the stack</a>
-<a name="ln3577">    taggy_T *const tagstack = wp-&gt;w_tagstack;</a>
-<a name="ln3578">    const int tagstackidx = wp-&gt;w_tagstackidx;</a>
-<a name="ln3579">    int tagstacklen = wp-&gt;w_tagstacklen;</a>
-<a name="ln3580"> </a>
-<a name="ln3581">    // delete all the tag stack entries above the current entry</a>
-<a name="ln3582">    while (tagstackidx &lt; tagstacklen) {</a>
-<a name="ln3583">      tagstack_clear_entry(&amp;tagstack[--tagstacklen]);</a>
-<a name="ln3584">    }</a>
-<a name="ln3585">    wp-&gt;w_tagstacklen = tagstacklen;</a>
-<a name="ln3586">  }</a>
-<a name="ln3587"> </a>
-<a name="ln3588">  if (l != NULL) {</a>
-<a name="ln3589">    if (action == 'r') {  // replace the stack</a>
-<a name="ln3590">      tagstack_clear(wp);</a>
-<a name="ln3591">    }</a>
-<a name="ln3592"> </a>
-<a name="ln3593">    tagstack_push_items(wp, l);</a>
-<a name="ln3594">    // set the current index after the last entry</a>
-<a name="ln3595">    wp-&gt;w_tagstackidx = wp-&gt;w_tagstacklen;</a>
-<a name="ln3596">  }</a>
-<a name="ln3597"> </a>
-<a name="ln3598">  return OK;</a>
-<a name="ln3599">}</a>
+<a name="ln2982">      if (do_search(NULL, pbuf[0], pbuf[0], pbuf + 1, 1, search_options, NULL)) {</a>
+<a name="ln2983">        retval = OK;</a>
+<a name="ln2984">      } else {</a>
+<a name="ln2985">        int found = 1;</a>
+<a name="ln2986"> </a>
+<a name="ln2987">        // try again, ignore case now</a>
+<a name="ln2988">        p_ic = true;</a>
+<a name="ln2989">        if (!do_search(NULL, pbuf[0], pbuf[0], pbuf + 1, 1,</a>
+<a name="ln2990">                       search_options, NULL)) {</a>
+<a name="ln2991">          // Failed to find pattern, take a guess: &quot;^func  (&quot;</a>
+<a name="ln2992">          found = 2;</a>
+<a name="ln2993">          (void)test_for_static(&amp;tagp);</a>
+<a name="ln2994">          char cc = *tagp.tagname_end;</a>
+<a name="ln2995">          *tagp.tagname_end = NUL;</a>
+<a name="ln2996">          snprintf(pbuf, LSIZE, &quot;^%s\\s\\*(&quot;, tagp.tagname);</a>
+<a name="ln2997">          if (!do_search(NULL, '/', '/', pbuf, 1, search_options, NULL)) {</a>
+<a name="ln2998">            // Guess again: &quot;^char * \&lt;func  (&quot;</a>
+<a name="ln2999">            snprintf(pbuf, LSIZE, &quot;^\\[#a-zA-Z_]\\.\\*\\&lt;%s\\s\\*(&quot;,</a>
+<a name="ln3000">                     tagp.tagname);</a>
+<a name="ln3001">            if (!do_search(NULL, '/', '/', pbuf, 1, search_options, NULL)) {</a>
+<a name="ln3002">              found = 0;</a>
+<a name="ln3003">            }</a>
+<a name="ln3004">          }</a>
+<a name="ln3005">          *tagp.tagname_end = cc;</a>
+<a name="ln3006">        }</a>
+<a name="ln3007">        if (found == 0) {</a>
+<a name="ln3008">          emsg(_(&quot;E434: Can't find tag pattern&quot;));</a>
+<a name="ln3009">          curwin-&gt;w_cursor.lnum = save_lnum;</a>
+<a name="ln3010">        } else {</a>
+<a name="ln3011">          // Only give a message when really guessed, not when 'ic'</a>
+<a name="ln3012">          // is set and match found while ignoring case.</a>
+<a name="ln3013">          if (found == 2 || !save_p_ic) {</a>
+<a name="ln3014">            msg(_(&quot;E435: Couldn't find tag, just guessing!&quot;));</a>
+<a name="ln3015">            if (!msg_scrolled &amp;&amp; msg_silent == 0) {</a>
+<a name="ln3016">              ui_flush();</a>
+<a name="ln3017">              os_delay(1010L, true);</a>
+<a name="ln3018">            }</a>
+<a name="ln3019">          }</a>
+<a name="ln3020">          retval = OK;</a>
+<a name="ln3021">        }</a>
+<a name="ln3022">      }</a>
+<a name="ln3023">      p_ws = save_p_ws;</a>
+<a name="ln3024">      p_ic = save_p_ic;  // -V519</a>
+<a name="ln3025">      p_scs = save_p_scs;</a>
+<a name="ln3026"> </a>
+<a name="ln3027">      // A search command may have positioned the cursor beyond the end</a>
+<a name="ln3028">      // of the line.  May need to correct that here.</a>
+<a name="ln3029">      check_cursor();</a>
+<a name="ln3030">    } else {</a>
+<a name="ln3031">      const int save_secure = secure;</a>
+<a name="ln3032"> </a>
+<a name="ln3033">      // Setup the sandbox for executing the command from the tags file.</a>
+<a name="ln3034">      secure = 1;</a>
+<a name="ln3035">      sandbox++;</a>
+<a name="ln3036">      curwin-&gt;w_cursor.lnum = 1;  // start command in line 1</a>
+<a name="ln3037">      do_cmdline_cmd(pbuf);</a>
+<a name="ln3038">      retval = OK;</a>
+<a name="ln3039"> </a>
+<a name="ln3040">      // When the command has done something that is not allowed make sure</a>
+<a name="ln3041">      // the error message can be seen.</a>
+<a name="ln3042">      if (secure == 2) {</a>
+<a name="ln3043">        wait_return(true);</a>
+<a name="ln3044">      }</a>
+<a name="ln3045">      secure = save_secure;</a>
+<a name="ln3046">      sandbox--;</a>
+<a name="ln3047">    }</a>
+<a name="ln3048"> </a>
+<a name="ln3049">    magic_overruled = save_magic_overruled;</a>
+<a name="ln3050">    // restore no_hlsearch when keeping the old search pattern</a>
+<a name="ln3051">    if (search_options) {</a>
+<a name="ln3052">      set_no_hlsearch(save_no_hlsearch);</a>
+<a name="ln3053">    }</a>
+<a name="ln3054"> </a>
+<a name="ln3055">    // Return OK if jumped to another file (at least we found the file!).</a>
+<a name="ln3056">    if (getfile_result == GETFILE_OPEN_OTHER) {</a>
+<a name="ln3057">      retval = OK;</a>
+<a name="ln3058">    }</a>
+<a name="ln3059"> </a>
+<a name="ln3060">    if (retval == OK) {</a>
+<a name="ln3061">      // For a help buffer: Put the cursor line at the top of the window,</a>
+<a name="ln3062">      // the help subject will be below it.</a>
+<a name="ln3063">      if (curbuf-&gt;b_help) {</a>
+<a name="ln3064">        set_topline(curwin, curwin-&gt;w_cursor.lnum);</a>
+<a name="ln3065">      }</a>
+<a name="ln3066">      if ((fdo_flags &amp; FDO_TAG) &amp;&amp; old_KeyTyped) {</a>
+<a name="ln3067">        foldOpenCursor();</a>
+<a name="ln3068">      }</a>
+<a name="ln3069">    }</a>
+<a name="ln3070"> </a>
+<a name="ln3071">    if (l_g_do_tagpreview != 0</a>
+<a name="ln3072">        &amp;&amp; curwin != curwin_save &amp;&amp; win_valid(curwin_save)) {</a>
+<a name="ln3073">      // Return cursor to where we were</a>
+<a name="ln3074">      validate_cursor();</a>
+<a name="ln3075">      redraw_later(curwin, UPD_VALID);</a>
+<a name="ln3076">      win_enter(curwin_save, true);</a>
+<a name="ln3077">    }</a>
+<a name="ln3078"> </a>
+<a name="ln3079">    RedrawingDisabled--;</a>
+<a name="ln3080">  } else {</a>
+<a name="ln3081">    RedrawingDisabled--;</a>
+<a name="ln3082">    if (postponed_split) {              // close the window</a>
+<a name="ln3083">      win_close(curwin, false, false);</a>
+<a name="ln3084">      postponed_split = 0;</a>
+<a name="ln3085">    }</a>
+<a name="ln3086">  }</a>
+<a name="ln3087"> </a>
+<a name="ln3088">erret:</a>
+<a name="ln3089">  g_do_tagpreview = 0;  // For next time</a>
+<a name="ln3090">  xfree(lbuf);</a>
+<a name="ln3091">  xfree(pbuf);</a>
+<a name="ln3092">  xfree(tofree_fname);</a>
+<a name="ln3093">  xfree(full_fname);</a>
+<a name="ln3094"> </a>
+<a name="ln3095">  return retval;</a>
+<a name="ln3096">}</a>
+<a name="ln3097"> </a>
+<a name="ln3098">/// If &quot;expand&quot; is true, expand wildcards in fname.</a>
+<a name="ln3099">/// If 'tagrelative' option set, change fname (name of file containing tag)</a>
+<a name="ln3100">/// according to tag_fname (name of tag file containing fname).</a>
+<a name="ln3101">///</a>
+<a name="ln3102">/// @return  a pointer to allocated memory.</a>
+<a name="ln3103">static char *expand_tag_fname(char *fname, char *const tag_fname, const bool expand)</a>
+<a name="ln3104">{</a>
+<a name="ln3105">  char *p;</a>
+<a name="ln3106">  char *expanded_fname = NULL;</a>
+<a name="ln3107">  expand_T xpc;</a>
+<a name="ln3108"> </a>
+<a name="ln3109">  // Expand file name (for environment variables) when needed.</a>
+<a name="ln3110">  if (expand &amp;&amp; path_has_wildcard(fname)) {</a>
+<a name="ln3111">    ExpandInit(&amp;xpc);</a>
+<a name="ln3112">    xpc.xp_context = EXPAND_FILES;</a>
+<a name="ln3113">    expanded_fname = ExpandOne(&amp;xpc, fname, NULL,</a>
+<a name="ln3114">                               WILD_LIST_NOTFOUND|WILD_SILENT, WILD_EXPAND_FREE);</a>
+<a name="ln3115">    if (expanded_fname != NULL) {</a>
+<a name="ln3116">      fname = expanded_fname;</a>
+<a name="ln3117">    }</a>
+<a name="ln3118">  }</a>
+<a name="ln3119"> </a>
+<a name="ln3120">  char *retval;</a>
+<a name="ln3121">  if ((p_tr || curbuf-&gt;b_help)</a>
+<a name="ln3122">      &amp;&amp; !vim_isAbsName(fname)</a>
+<a name="ln3123">      &amp;&amp; (p = path_tail(tag_fname)) != tag_fname) {</a>
+<a name="ln3124">    retval = xmalloc(MAXPATHL);</a>
+<a name="ln3125">    STRCPY(retval, tag_fname);</a>
+<a name="ln3126">    xstrlcpy(retval + (p - tag_fname), fname, (size_t)(MAXPATHL - (p - tag_fname)));</a>
+<a name="ln3127">    // Translate names like &quot;src/a/../b/file.c&quot; into &quot;src/b/file.c&quot;.</a>
+<a name="ln3128">    simplify_filename(retval);</a>
+<a name="ln3129">  } else {</a>
+<a name="ln3130">    retval = xstrdup(fname);</a>
+<a name="ln3131">  }</a>
+<a name="ln3132"> </a>
+<a name="ln3133">  xfree(expanded_fname);</a>
+<a name="ln3134"> </a>
+<a name="ln3135">  return retval;</a>
+<a name="ln3136">}</a>
+<a name="ln3137"> </a>
+<a name="ln3138">/// Check if we have a tag for the buffer with name &quot;buf_ffname&quot;.</a>
+<a name="ln3139">/// This is a bit slow, because of the full path compare in path_full_compare().</a>
+<a name="ln3140">///</a>
+<a name="ln3141">/// @return  true if tag for file &quot;fname&quot; if tag file &quot;tag_fname&quot; is for current</a>
+<a name="ln3142">///          file.</a>
+<a name="ln3143">static int test_for_current(char *fname, char *fname_end, char *tag_fname, char *buf_ffname)</a>
+<a name="ln3144">{</a>
+<a name="ln3145">  int retval = false;</a>
+<a name="ln3146"> </a>
+<a name="ln3147">  if (buf_ffname != NULL) {     // if the buffer has a name</a>
+<a name="ln3148">    char c;</a>
+<a name="ln3149">    {</a>
+<a name="ln3150">      c = *fname_end;</a>
+<a name="ln3151">      *fname_end = NUL;</a>
+<a name="ln3152">    }</a>
+<a name="ln3153">    char *fullname = expand_tag_fname(fname, tag_fname, true);</a>
+<a name="ln3154">    retval = (path_full_compare(fullname, buf_ffname, true, true) &amp; kEqualFiles);</a>
+<a name="ln3155">    xfree(fullname);</a>
+<a name="ln3156">    *fname_end = c;</a>
+<a name="ln3157">  }</a>
+<a name="ln3158"> </a>
+<a name="ln3159">  return retval;</a>
+<a name="ln3160">}</a>
+<a name="ln3161"> </a>
+<a name="ln3162">// Find the end of the tagaddress.</a>
+<a name="ln3163">// Return OK if &quot;;\&quot;&quot; is following, FAIL otherwise.</a>
+<a name="ln3164">static int find_extra(char **pp)</a>
+<a name="ln3165">{</a>
+<a name="ln3166">  char *str = *pp;</a>
+<a name="ln3167">  char first_char = **pp;</a>
+<a name="ln3168"> </a>
+<a name="ln3169">  // Repeat for addresses separated with ';'</a>
+<a name="ln3170">  while (true) {</a>
+<a name="ln3171">    if (ascii_isdigit(*str)) {</a>
+<a name="ln3172">      str = skipdigits(str + 1);</a>
+<a name="ln3173">    } else if (*str == '/' || *str == '?') {</a>
+<a name="ln3174">      str = skip_regexp(str + 1, *str, false);</a>
+<a name="ln3175">      if (*str != first_char) {</a>
+<a name="ln3176">        str = NULL;</a>
+<a name="ln3177">      } else {</a>
+<a name="ln3178">        str++;</a>
+<a name="ln3179">      }</a>
+<a name="ln3180">    } else {</a>
+<a name="ln3181">      // not a line number or search string, look for terminator.</a>
+<a name="ln3182">      str = strstr(str, &quot;|;\&quot;&quot;);</a>
+<a name="ln3183">      if (str != NULL) {</a>
+<a name="ln3184">        str++;</a>
+<a name="ln3185">        break;</a>
+<a name="ln3186">      }</a>
+<a name="ln3187">    }</a>
+<a name="ln3188">    if (str == NULL || *str != ';'</a>
+<a name="ln3189">        || !(ascii_isdigit(str[1]) || str[1] == '/' || str[1] == '?')) {</a>
+<a name="ln3190">      break;</a>
+<a name="ln3191">    }</a>
+<a name="ln3192">    str++;  // skip ';'</a>
+<a name="ln3193">    first_char = *str;</a>
+<a name="ln3194">  }</a>
+<a name="ln3195"> </a>
+<a name="ln3196">  if (str != NULL &amp;&amp; strncmp(str, &quot;;\&quot;&quot;, 2) == 0) {</a>
+<a name="ln3197">    *pp = str;</a>
+<a name="ln3198">    return OK;</a>
+<a name="ln3199">  }</a>
+<a name="ln3200">  return FAIL;</a>
+<a name="ln3201">}</a>
+<a name="ln3202"> </a>
+<a name="ln3203">//</a>
+<a name="ln3204">// Free a single entry in a tag stack</a>
+<a name="ln3205">//</a>
+<a name="ln3206">static void tagstack_clear_entry(taggy_T *item)</a>
+<a name="ln3207">{</a>
+<a name="ln3208">  XFREE_CLEAR(item-&gt;tagname);</a>
+<a name="ln3209">  XFREE_CLEAR(item-&gt;user_data);</a>
+<a name="ln3210">}</a>
+<a name="ln3211"> </a>
+<a name="ln3212">/// @param tagnames  expand tag names</a>
+<a name="ln3213">int expand_tags(int tagnames, char *pat, int *num_file, char ***file)</a>
+<a name="ln3214">{</a>
+<a name="ln3215">  int extra_flag;</a>
+<a name="ln3216">  char *name_buf;</a>
+<a name="ln3217">  size_t name_buf_size = 100;</a>
+<a name="ln3218">  tagptrs_T t_p;</a>
+<a name="ln3219">  int ret;</a>
+<a name="ln3220"> </a>
+<a name="ln3221">  name_buf = xmalloc(name_buf_size);</a>
+<a name="ln3222"> </a>
+<a name="ln3223">  if (tagnames) {</a>
+<a name="ln3224">    extra_flag = TAG_NAMES;</a>
+<a name="ln3225">  } else {</a>
+<a name="ln3226">    extra_flag = 0;</a>
+<a name="ln3227">  }</a>
+<a name="ln3228">  if (pat[0] == '/') {</a>
+<a name="ln3229">    ret = find_tags(pat + 1, num_file, file,</a>
+<a name="ln3230">                    TAG_REGEXP | extra_flag | TAG_VERBOSE | TAG_NO_TAGFUNC,</a>
+<a name="ln3231">                    TAG_MANY, curbuf-&gt;b_ffname);</a>
+<a name="ln3232">  } else {</a>
+<a name="ln3233">    ret = find_tags(pat, num_file, file,</a>
+<a name="ln3234">                    TAG_REGEXP | extra_flag | TAG_VERBOSE | TAG_NO_TAGFUNC | TAG_NOIC,</a>
+<a name="ln3235">                    TAG_MANY, curbuf-&gt;b_ffname);</a>
+<a name="ln3236">  }</a>
+<a name="ln3237">  if (ret == OK &amp;&amp; !tagnames) {</a>
+<a name="ln3238">    // Reorganize the tags for display and matching as strings of:</a>
+<a name="ln3239">    // &quot;&lt;tagname&gt;\0&lt;kind&gt;\0&lt;filename&gt;\0&quot;</a>
+<a name="ln3240">    for (int i = 0; i &lt; *num_file; i++) {</a>
+<a name="ln3241">      size_t len;</a>
+<a name="ln3242"> </a>
+<a name="ln3243">      parse_match((*file)[i], &amp;t_p);</a>
+<a name="ln3244">      len = (size_t)(t_p.tagname_end - t_p.tagname);</a>
+<a name="ln3245">      if (len &gt; name_buf_size - 3) {</a>
+<a name="ln3246">        char *buf;</a>
+<a name="ln3247"> </a>
+<a name="ln3248">        name_buf_size = len + 3;</a>
+<a name="ln3249">        buf = xrealloc(name_buf, name_buf_size);</a>
+<a name="ln3250">        name_buf = buf;</a>
+<a name="ln3251">      }</a>
+<a name="ln3252"> </a>
+<a name="ln3253">      memmove(name_buf, t_p.tagname, len);</a>
+<a name="ln3254">      name_buf[len++] = 0;</a>
+<a name="ln3255">      name_buf[len++] = (t_p.tagkind != NULL &amp;&amp; *t_p.tagkind)</a>
+<a name="ln3256">                                                   ? *t_p.tagkind : 'f';</a>
+<a name="ln3257">      name_buf[len++] = 0;</a>
+<a name="ln3258">      memmove((*file)[i] + len, t_p.fname, (size_t)(t_p.fname_end - t_p.fname));</a>
+<a name="ln3259">      (*file)[i][len + (size_t)(t_p.fname_end - t_p.fname)] = 0;</a>
+<a name="ln3260">      memmove((*file)[i], name_buf, len);</a>
+<a name="ln3261">    }</a>
+<a name="ln3262">  }</a>
+<a name="ln3263">  xfree(name_buf);</a>
+<a name="ln3264">  return ret;</a>
+<a name="ln3265">}</a>
+<a name="ln3266"> </a>
+<a name="ln3267">/// Add a tag field to the dictionary &quot;dict&quot;.</a>
+<a name="ln3268">/// Return OK or FAIL.</a>
+<a name="ln3269">///</a>
+<a name="ln3270">/// @param start  start of the value</a>
+<a name="ln3271">/// @param end  after the value; can be NULL</a>
+<a name="ln3272">static int add_tag_field(dict_T *dict, const char *field_name, const char *start, const char *end)</a>
+<a name="ln3273">  FUNC_ATTR_NONNULL_ARG(1, 2)</a>
+<a name="ln3274">{</a>
+<a name="ln3275">  int len = 0;</a>
+<a name="ln3276">  int retval;</a>
+<a name="ln3277"> </a>
+<a name="ln3278">  // Check that the field name doesn't exist yet.</a>
+<a name="ln3279">  if (tv_dict_find(dict, field_name, -1) != NULL) {</a>
+<a name="ln3280">    if (p_verbose &gt; 0) {</a>
+<a name="ln3281">      verbose_enter();</a>
+<a name="ln3282">      smsg(_(&quot;Duplicate field name: %s&quot;), field_name);</a>
+<a name="ln3283">      verbose_leave();</a>
+<a name="ln3284">    }</a>
+<a name="ln3285">    return FAIL;</a>
+<a name="ln3286">  }</a>
+<a name="ln3287">  char *buf = xmalloc(MAXPATHL);</a>
+<a name="ln3288">  if (start != NULL) {</a>
+<a name="ln3289">    if (end == NULL) {</a>
+<a name="ln3290">      end = start + strlen(start);</a>
+<a name="ln3291">      while (end &gt; start &amp;&amp; (end[-1] == '\r' || end[-1] == '\n')) {</a>
+<a name="ln3292">        end--;</a>
+<a name="ln3293">      }</a>
+<a name="ln3294">    }</a>
+<a name="ln3295">    len = (int)(end - start);</a>
+<a name="ln3296">    if (len &gt; MAXPATHL - 1) {</a>
+<a name="ln3297">      len = MAXPATHL - 1;</a>
+<a name="ln3298">    }</a>
+<a name="ln3299">    xstrlcpy(buf, start, (size_t)len + 1);</a>
+<a name="ln3300">  }</a>
+<a name="ln3301">  buf[len] = NUL;</a>
+<a name="ln3302">  retval = tv_dict_add_str(dict, field_name, strlen(field_name), buf);</a>
+<a name="ln3303">  xfree(buf);</a>
+<a name="ln3304">  return retval;</a>
+<a name="ln3305">}</a>
+<a name="ln3306"> </a>
+<a name="ln3307">/// Add the tags matching the specified pattern &quot;pat&quot; to the list &quot;list&quot;</a>
+<a name="ln3308">/// as a dictionary. Use &quot;buf_fname&quot; for priority, unless NULL.</a>
+<a name="ln3309">int get_tags(list_T *list, char *pat, char *buf_fname)</a>
+<a name="ln3310">{</a>
+<a name="ln3311">  int num_matches, i, ret;</a>
+<a name="ln3312">  char **matches;</a>
+<a name="ln3313">  char *full_fname;</a>
+<a name="ln3314">  dict_T *dict;</a>
+<a name="ln3315">  tagptrs_T tp;</a>
+<a name="ln3316"> </a>
+<a name="ln3317">  ret = find_tags(pat, &amp;num_matches, &amp;matches,</a>
+<a name="ln3318">                  TAG_REGEXP | TAG_NOIC, MAXCOL, buf_fname);</a>
+<a name="ln3319">  if (ret != OK || num_matches &lt;= 0) {</a>
+<a name="ln3320">    return ret;</a>
+<a name="ln3321">  }</a>
+<a name="ln3322"> </a>
+<a name="ln3323">  for (i = 0; i &lt; num_matches; i++) {</a>
+<a name="ln3324">    if (parse_match(matches[i], &amp;tp) == FAIL) {</a>
+<a name="ln3325">      xfree(matches[i]);</a>
+<a name="ln3326">      continue;</a>
+<a name="ln3327">    }</a>
+<a name="ln3328"> </a>
+<a name="ln3329">    bool is_static = test_for_static(&amp;tp);</a>
+<a name="ln3330"> </a>
+<a name="ln3331">    // Skip pseudo-tag lines.</a>
+<a name="ln3332">    if (strncmp(tp.tagname, &quot;!_TAG_&quot;, 6) == 0) {</a>
+<a name="ln3333">      xfree(matches[i]);</a>
+<a name="ln3334">      continue;</a>
+<a name="ln3335">    }</a>
+<a name="ln3336"> </a>
+<a name="ln3337">    dict = tv_dict_alloc();</a>
+<a name="ln3338">    tv_list_append_dict(list, dict);</a>
+<a name="ln3339"> </a>
+<a name="ln3340">    full_fname = tag_full_fname(&amp;tp);</a>
+<a name="ln3341">    if (add_tag_field(dict, &quot;name&quot;, tp.tagname, tp.tagname_end) == FAIL</a>
+<a name="ln3342">        || add_tag_field(dict, &quot;filename&quot;, full_fname, NULL) == FAIL</a>
+<a name="ln3343">        || add_tag_field(dict, &quot;cmd&quot;, tp.command, tp.command_end) == FAIL</a>
+<a name="ln3344">        || add_tag_field(dict, &quot;kind&quot;, tp.tagkind,</a>
+<a name="ln3345">                         tp.tagkind ? tp.tagkind_end : NULL) == FAIL</a>
+<a name="ln3346">        || tv_dict_add_nr(dict, S_LEN(&quot;static&quot;), is_static) == FAIL) {</a>
+<a name="ln3347">      ret = FAIL;</a>
+<a name="ln3348">    }</a>
+<a name="ln3349"> </a>
+<a name="ln3350">    xfree(full_fname);</a>
+<a name="ln3351"> </a>
+<a name="ln3352">    if (tp.command_end != NULL) {</a>
+<a name="ln3353">      for (char *p = tp.command_end + 3;</a>
+<a name="ln3354">           *p != NUL &amp;&amp; *p != '\n' &amp;&amp; *p != '\r';</a>
+<a name="ln3355">           MB_PTR_ADV(p)) {</a>
+<a name="ln3356">        if (p == tp.tagkind</a>
+<a name="ln3357">            || (p + 5 == tp.tagkind &amp;&amp; strncmp(p, &quot;kind:&quot;, 5) == 0)) {</a>
+<a name="ln3358">          // skip &quot;kind:&lt;kind&gt;&quot; and &quot;&lt;kind&gt;&quot;</a>
+<a name="ln3359">          p = tp.tagkind_end - 1;</a>
+<a name="ln3360">        } else if (strncmp(p, &quot;file:&quot;, 5) == 0) {</a>
+<a name="ln3361">          // skip &quot;file:&quot; (static tag)</a>
+<a name="ln3362">          p += 4;</a>
+<a name="ln3363">        } else if (!ascii_iswhite(*p)) {</a>
+<a name="ln3364">          char *n;</a>
+<a name="ln3365">          int len;</a>
+<a name="ln3366"> </a>
+<a name="ln3367">          // Add extra field as a dict entry.  Fields are</a>
+<a name="ln3368">          // separated by Tabs.</a>
+<a name="ln3369">          n = p;</a>
+<a name="ln3370">          while (*p != NUL &amp;&amp; *p &gt;= ' ' &amp;&amp; *p &lt; 127 &amp;&amp; *p != ':') {</a>
+<a name="ln3371">            p++;</a>
+<a name="ln3372">          }</a>
+<a name="ln3373">          len = (int)(p - n);</a>
+<a name="ln3374">          if (*p == ':' &amp;&amp; len &gt; 0) {</a>
+<a name="ln3375">            char *s = ++p;</a>
+<a name="ln3376">            while (*p != NUL &amp;&amp; (uint8_t)(*p) &gt;= ' ') {</a>
+<a name="ln3377">              p++;</a>
+<a name="ln3378">            }</a>
+<a name="ln3379">            n[len] = NUL;</a>
+<a name="ln3380">            if (add_tag_field(dict, n, s, p) == FAIL) {</a>
+<a name="ln3381">              ret = FAIL;</a>
+<a name="ln3382">            }</a>
+<a name="ln3383">            n[len] = ':';</a>
+<a name="ln3384">          } else {</a>
+<a name="ln3385">            // Skip field without colon.</a>
+<a name="ln3386">            while (*p != NUL &amp;&amp; (uint8_t)(*p) &gt;= ' ') {</a>
+<a name="ln3387">              p++;</a>
+<a name="ln3388">            }</a>
+<a name="ln3389">          }</a>
+<a name="ln3390">          if (*p == NUL) {</a>
+<a name="ln3391">            break;</a>
+<a name="ln3392">          }</a>
+<a name="ln3393">        }</a>
+<a name="ln3394">      }</a>
+<a name="ln3395">    }</a>
+<a name="ln3396"> </a>
+<a name="ln3397">    xfree(matches[i]);</a>
+<a name="ln3398">  }</a>
+<a name="ln3399">  xfree(matches);</a>
+<a name="ln3400">  return ret;</a>
+<a name="ln3401">}</a>
+<a name="ln3402"> </a>
+<a name="ln3403">// Return information about 'tag' in dict 'retdict'.</a>
+<a name="ln3404">static void get_tag_details(taggy_T *tag, dict_T *retdict)</a>
+<a name="ln3405">{</a>
+<a name="ln3406">  list_T *pos;</a>
+<a name="ln3407">  fmark_T *fmark;</a>
+<a name="ln3408"> </a>
+<a name="ln3409">  tv_dict_add_str(retdict, S_LEN(&quot;tagname&quot;), tag-&gt;tagname);</a>
+<a name="ln3410">  tv_dict_add_nr(retdict, S_LEN(&quot;matchnr&quot;), tag-&gt;cur_match + 1);</a>
+<a name="ln3411">  tv_dict_add_nr(retdict, S_LEN(&quot;bufnr&quot;), tag-&gt;cur_fnum);</a>
+<a name="ln3412">  if (tag-&gt;user_data) {</a>
+<a name="ln3413">    tv_dict_add_str(retdict, S_LEN(&quot;user_data&quot;), tag-&gt;user_data);</a>
+<a name="ln3414">  }</a>
+<a name="ln3415"> </a>
+<a name="ln3416">  pos = tv_list_alloc(4);</a>
+<a name="ln3417">  tv_dict_add_list(retdict, S_LEN(&quot;from&quot;), pos);</a>
+<a name="ln3418"> </a>
+<a name="ln3419">  fmark = &amp;tag-&gt;fmark;</a>
+<a name="ln3420">  tv_list_append_number(pos,</a>
+<a name="ln3421">                        (varnumber_T)(fmark-&gt;fnum != -1 ? fmark-&gt;fnum : 0));</a>
+<a name="ln3422">  tv_list_append_number(pos, (varnumber_T)fmark-&gt;mark.lnum);</a>
+<a name="ln3423">  tv_list_append_number(pos, (varnumber_T)(fmark-&gt;mark.col == MAXCOL</a>
+<a name="ln3424">                                           ? MAXCOL : fmark-&gt;mark.col + 1));</a>
+<a name="ln3425">  tv_list_append_number(pos, (varnumber_T)fmark-&gt;mark.coladd);</a>
+<a name="ln3426">}</a>
+<a name="ln3427"> </a>
+<a name="ln3428">// Return the tag stack entries of the specified window 'wp' in dictionary</a>
+<a name="ln3429">// 'retdict'.</a>
+<a name="ln3430">void get_tagstack(win_T *wp, dict_T *retdict)</a>
+<a name="ln3431">{</a>
+<a name="ln3432">  tv_dict_add_nr(retdict, S_LEN(&quot;length&quot;), wp-&gt;w_tagstacklen);</a>
+<a name="ln3433">  tv_dict_add_nr(retdict, S_LEN(&quot;curidx&quot;), wp-&gt;w_tagstackidx + 1);</a>
+<a name="ln3434">  list_T *l = tv_list_alloc(2);</a>
+<a name="ln3435">  tv_dict_add_list(retdict, S_LEN(&quot;items&quot;), l);</a>
+<a name="ln3436"> </a>
+<a name="ln3437">  for (int i = 0; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
+<a name="ln3438">    dict_T *d = tv_dict_alloc();</a>
+<a name="ln3439">    tv_list_append_dict(l, d);</a>
+<a name="ln3440">    get_tag_details(&amp;wp-&gt;w_tagstack[i], d);</a>
+<a name="ln3441">  }</a>
+<a name="ln3442">}</a>
+<a name="ln3443"> </a>
+<a name="ln3444">// Free all the entries in the tag stack of the specified window</a>
+<a name="ln3445">static void tagstack_clear(win_T *wp)</a>
+<a name="ln3446">{</a>
+<a name="ln3447">  // Free the current tag stack</a>
+<a name="ln3448">  for (int i = 0; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
+<a name="ln3449">    tagstack_clear_entry(&amp;wp-&gt;w_tagstack[i]);</a>
+<a name="ln3450">  }</a>
+<a name="ln3451">  wp-&gt;w_tagstacklen = 0;</a>
+<a name="ln3452">  wp-&gt;w_tagstackidx = 0;</a>
+<a name="ln3453">}</a>
+<a name="ln3454"> </a>
+<a name="ln3455">// Remove the oldest entry from the tag stack and shift the rest of</a>
+<a name="ln3456">// the entries to free up the top of the stack.</a>
+<a name="ln3457">static void tagstack_shift(win_T *wp)</a>
+<a name="ln3458">{</a>
+<a name="ln3459">  taggy_T *tagstack = wp-&gt;w_tagstack;</a>
+<a name="ln3460">  tagstack_clear_entry(&amp;tagstack[0]);</a>
+<a name="ln3461">  for (int i = 1; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
+<a name="ln3462">    tagstack[i - 1] = tagstack[i];</a>
+<a name="ln3463">  }</a>
+<a name="ln3464">  wp-&gt;w_tagstacklen--;</a>
+<a name="ln3465">}</a>
+<a name="ln3466"> </a>
+<a name="ln3467">/// Push a new item to the tag stack</a>
+<a name="ln3468">static void tagstack_push_item(win_T *wp, char *tagname, int cur_fnum, int cur_match, pos_T mark,</a>
+<a name="ln3469">                               int fnum, char *user_data)</a>
+<a name="ln3470">{</a>
+<a name="ln3471">  taggy_T *tagstack = wp-&gt;w_tagstack;</a>
+<a name="ln3472">  int idx = wp-&gt;w_tagstacklen;  // top of the stack</a>
+<a name="ln3473"> </a>
+<a name="ln3474">  // if the tagstack is full: remove the oldest entry</a>
+<a name="ln3475">  if (idx &gt;= TAGSTACKSIZE) {</a>
+<a name="ln3476">    tagstack_shift(wp);</a>
+<a name="ln3477">    idx = TAGSTACKSIZE - 1;</a>
+<a name="ln3478">  }</a>
+<a name="ln3479"> </a>
+<a name="ln3480">  wp-&gt;w_tagstacklen++;</a>
+<a name="ln3481">  tagstack[idx].tagname = tagname;</a>
+<a name="ln3482">  tagstack[idx].cur_fnum = cur_fnum;</a>
+<a name="ln3483">  tagstack[idx].cur_match = cur_match;</a>
+<a name="ln3484">  if (tagstack[idx].cur_match &lt; 0) {</a>
+<a name="ln3485">    tagstack[idx].cur_match = 0;</a>
+<a name="ln3486">  }</a>
+<a name="ln3487">  tagstack[idx].fmark.mark = mark;</a>
+<a name="ln3488">  tagstack[idx].fmark.fnum = fnum;</a>
+<a name="ln3489">  tagstack[idx].user_data = user_data;</a>
+<a name="ln3490">}</a>
+<a name="ln3491"> </a>
+<a name="ln3492">/// Add a list of items to the tag stack in the specified window</a>
+<a name="ln3493">static void tagstack_push_items(win_T *wp, list_T *l)</a>
+<a name="ln3494">{</a>
+<a name="ln3495">  listitem_T *li;</a>
+<a name="ln3496">  dictitem_T *di;</a>
+<a name="ln3497">  dict_T *itemdict;</a>
+<a name="ln3498">  char *tagname;</a>
+<a name="ln3499">  pos_T mark;</a>
+<a name="ln3500">  int fnum;</a>
+<a name="ln3501"> </a>
+<a name="ln3502">  // Add one entry at a time to the tag stack</a>
+<a name="ln3503">  for (li = tv_list_first(l); li != NULL; li = TV_LIST_ITEM_NEXT(l, li)) {</a>
+<a name="ln3504">    if (TV_LIST_ITEM_TV(li)-&gt;v_type != VAR_DICT</a>
+<a name="ln3505">        || TV_LIST_ITEM_TV(li)-&gt;vval.v_dict == NULL) {</a>
+<a name="ln3506">      continue;  // Skip non-dict items</a>
+<a name="ln3507">    }</a>
+<a name="ln3508">    itemdict = TV_LIST_ITEM_TV(li)-&gt;vval.v_dict;</a>
+<a name="ln3509"> </a>
+<a name="ln3510">    // parse 'from' for the cursor position before the tag jump</a>
+<a name="ln3511">    if ((di = tv_dict_find(itemdict, &quot;from&quot;, -1)) == NULL) {</a>
+<a name="ln3512">      continue;</a>
+<a name="ln3513">    }</a>
+<a name="ln3514">    if (list2fpos(&amp;di-&gt;di_tv, &amp;mark, &amp;fnum, NULL, false) != OK) {</a>
+<a name="ln3515">      continue;</a>
+<a name="ln3516">    }</a>
+<a name="ln3517">    if ((tagname = tv_dict_get_string(itemdict, &quot;tagname&quot;, true)) == NULL) {</a>
+<a name="ln3518">      continue;</a>
+<a name="ln3519">    }</a>
+<a name="ln3520"> </a>
+<a name="ln3521">    if (mark.col &gt; 0) {</a>
+<a name="ln3522">      mark.col--;</a>
+<a name="ln3523">    }</a>
+<a name="ln3524">    tagstack_push_item(wp,</a>
+<a name="ln3525">                       tagname,</a>
+<a name="ln3526">                       (int)tv_dict_get_number(itemdict, &quot;bufnr&quot;),</a>
+<a name="ln3527">                       (int)tv_dict_get_number(itemdict, &quot;matchnr&quot;) - 1,</a>
+<a name="ln3528">                       mark, fnum,</a>
+<a name="ln3529">                       tv_dict_get_string(itemdict, &quot;user_data&quot;, true));</a>
+<a name="ln3530">  }</a>
+<a name="ln3531">}</a>
+<a name="ln3532"> </a>
+<a name="ln3533">// Set the current index in the tag stack. Valid values are between 0</a>
+<a name="ln3534">// and the stack length (inclusive).</a>
+<a name="ln3535">static void tagstack_set_curidx(win_T *wp, int curidx)</a>
+<a name="ln3536">{</a>
+<a name="ln3537">  wp-&gt;w_tagstackidx = curidx;</a>
+<a name="ln3538">  if (wp-&gt;w_tagstackidx &lt; 0) {  // sanity check</a>
+<a name="ln3539">    wp-&gt;w_tagstackidx = 0;</a>
+<a name="ln3540">  }</a>
+<a name="ln3541">  if (wp-&gt;w_tagstackidx &gt; wp-&gt;w_tagstacklen) {</a>
+<a name="ln3542">    wp-&gt;w_tagstackidx = wp-&gt;w_tagstacklen;</a>
+<a name="ln3543">  }</a>
+<a name="ln3544">}</a>
+<a name="ln3545"> </a>
+<a name="ln3546">// Set the tag stack entries of the specified window.</a>
+<a name="ln3547">// 'action' is set to one of:</a>
+<a name="ln3548">//    'a' for append</a>
+<a name="ln3549">//    'r' for replace</a>
+<a name="ln3550">//    't' for truncate</a>
+<a name="ln3551">int set_tagstack(win_T *wp, const dict_T *d, int action)</a>
+<a name="ln3552">  FUNC_ATTR_NONNULL_ARG(1)</a>
+<a name="ln3553">{</a>
+<a name="ln3554">  dictitem_T *di;</a>
+<a name="ln3555">  list_T *l = NULL;</a>
+<a name="ln3556"> </a>
+<a name="ln3557">  // not allowed to alter the tag stack entries from inside tagfunc</a>
+<a name="ln3558">  if (tfu_in_use) {</a>
+<a name="ln3559">    emsg(_(e_cannot_modify_tag_stack_within_tagfunc));</a>
+<a name="ln3560">    return FAIL;</a>
+<a name="ln3561">  }</a>
+<a name="ln3562"> </a>
+<a name="ln3563">  if ((di = tv_dict_find(d, &quot;items&quot;, -1)) != NULL) {</a>
+<a name="ln3564">    if (di-&gt;di_tv.v_type != VAR_LIST) {</a>
+<a name="ln3565">      emsg(_(e_listreq));</a>
+<a name="ln3566">      return FAIL;</a>
+<a name="ln3567">    }</a>
+<a name="ln3568">    l = di-&gt;di_tv.vval.v_list;</a>
+<a name="ln3569">  }</a>
+<a name="ln3570"> </a>
+<a name="ln3571">  if ((di = tv_dict_find(d, &quot;curidx&quot;, -1)) != NULL) {</a>
+<a name="ln3572">    tagstack_set_curidx(wp, (int)tv_get_number(&amp;di-&gt;di_tv) - 1);</a>
+<a name="ln3573">  }</a>
+<a name="ln3574"> </a>
+<a name="ln3575">  if (action == 't') {  // truncate the stack</a>
+<a name="ln3576">    taggy_T *const tagstack = wp-&gt;w_tagstack;</a>
+<a name="ln3577">    const int tagstackidx = wp-&gt;w_tagstackidx;</a>
+<a name="ln3578">    int tagstacklen = wp-&gt;w_tagstacklen;</a>
+<a name="ln3579"> </a>
+<a name="ln3580">    // delete all the tag stack entries above the current entry</a>
+<a name="ln3581">    while (tagstackidx &lt; tagstacklen) {</a>
+<a name="ln3582">      tagstack_clear_entry(&amp;tagstack[--tagstacklen]);</a>
+<a name="ln3583">    }</a>
+<a name="ln3584">    wp-&gt;w_tagstacklen = tagstacklen;</a>
+<a name="ln3585">  }</a>
+<a name="ln3586"> </a>
+<a name="ln3587">  if (l != NULL) {</a>
+<a name="ln3588">    if (action == 'r') {  // replace the stack</a>
+<a name="ln3589">      tagstack_clear(wp);</a>
+<a name="ln3590">    }</a>
+<a name="ln3591"> </a>
+<a name="ln3592">    tagstack_push_items(wp, l);</a>
+<a name="ln3593">    // set the current index after the last entry</a>
+<a name="ln3594">    wp-&gt;w_tagstackidx = wp-&gt;w_tagstacklen;</a>
+<a name="ln3595">  }</a>
+<a name="ln3596"> </a>
+<a name="ln3597">  return OK;</a>
+<a name="ln3598">}</a>
 </code></pre>
 <div class="balloon" rel="481"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v1048/" target="_blank">V1048</a> The 'prevtagstackidx' variable was assigned the same value.</p></div>
 <link rel="stylesheet" href="highlight.css">
