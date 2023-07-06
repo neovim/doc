@@ -621,7 +621,7 @@
 <a name="ln612">/// @param[out] err Error details, if any</a>
 <a name="ln613">void nvim_set_current_line(String line, Error *err)</a>
 <a name="ln614">  FUNC_API_SINCE(1)</a>
-<a name="ln615">  FUNC_API_CHECK_TEXTLOCK</a>
+<a name="ln615">  FUNC_API_TEXTLOCK_ALLOW_CMDWIN</a>
 <a name="ln616">{</a>
 <a name="ln617">  buffer_set_line(curbuf-&gt;handle, curwin-&gt;w_cursor.lnum - 1, line, err);</a>
 <a name="ln618">}</a>
@@ -631,7 +631,7 @@
 <a name="ln622">/// @param[out] err Error details, if any</a>
 <a name="ln623">void nvim_del_current_line(Error *err)</a>
 <a name="ln624">  FUNC_API_SINCE(1)</a>
-<a name="ln625">  FUNC_API_CHECK_TEXTLOCK</a>
+<a name="ln625">  FUNC_API_TEXTLOCK_ALLOW_CMDWIN</a>
 <a name="ln626">{</a>
 <a name="ln627">  buffer_del_line(curbuf-&gt;handle, curwin-&gt;w_cursor.lnum - 1, err);</a>
 <a name="ln628">}</a>
@@ -812,7 +812,7 @@
 <a name="ln803">/// @param[out] err Error details, if any</a>
 <a name="ln804">void nvim_set_current_buf(Buffer buffer, Error *err)</a>
 <a name="ln805">  FUNC_API_SINCE(1)</a>
-<a name="ln806">  FUNC_API_CHECK_TEXTLOCK</a>
+<a name="ln806">  FUNC_API_TEXTLOCK</a>
 <a name="ln807">{</a>
 <a name="ln808">  buf_T *buf = find_buffer_by_handle(buffer, err);</a>
 <a name="ln809"> </a>
@@ -867,7 +867,7 @@
 <a name="ln858">/// @param[out] err Error details, if any</a>
 <a name="ln859">void nvim_set_current_win(Window window, Error *err)</a>
 <a name="ln860">  FUNC_API_SINCE(1)</a>
-<a name="ln861">  FUNC_API_CHECK_TEXTLOCK</a>
+<a name="ln861">  FUNC_API_TEXTLOCK</a>
 <a name="ln862">{</a>
 <a name="ln863">  win_T *win = find_window_by_handle(window, err);</a>
 <a name="ln864"> </a>
@@ -960,1342 +960,1348 @@
 <a name="ln951">/// @return Channel id, or 0 on error</a>
 <a name="ln952">Integer nvim_open_term(Buffer buffer, DictionaryOf(LuaRef) opts, Error *err)</a>
 <a name="ln953">  FUNC_API_SINCE(7)</a>
-<a name="ln954">{</a>
-<a name="ln955">  buf_T *buf = find_buffer_by_handle(buffer, err);</a>
-<a name="ln956">  if (!buf) {</a>
-<a name="ln957">    return 0;</a>
-<a name="ln958">  }</a>
-<a name="ln959"> </a>
-<a name="ln960">  LuaRef cb = LUA_NOREF;</a>
-<a name="ln961">  for (size_t i = 0; i &lt; opts.size; i++) {</a>
-<a name="ln962">    String k = opts.items[i].key;</a>
-<a name="ln963">    Object *v = &amp;opts.items[i].value;</a>
-<a name="ln964">    if (strequal(&quot;on_input&quot;, k.data)) {</a>
-<a name="ln965">      VALIDATE_T(&quot;on_input&quot;, kObjectTypeLuaRef, v-&gt;type, {</a>
-<a name="ln966">        return 0;</a>
-<a name="ln967">      });</a>
-<a name="ln968">      cb = v-&gt;data.luaref;</a>
-<a name="ln969">      v-&gt;data.luaref = LUA_NOREF;</a>
-<a name="ln970">      break;</a>
-<a name="ln971">    } else {</a>
-<a name="ln972">      VALIDATE_S(false, &quot;'opts' key&quot;, k.data, {});</a>
-<a name="ln973">    }</a>
-<a name="ln974">  }</a>
-<a name="ln975"> </a>
-<a name="ln976">  TerminalOptions topts;</a>
-<a name="ln977">  Channel *chan = channel_alloc(kChannelStreamInternal);</a>
-<a name="ln978">  chan-&gt;stream.internal.cb = cb;</a>
-<a name="ln979">  chan-&gt;stream.internal.closed = false;</a>
-<a name="ln980">  topts.data = chan;</a>
-<a name="ln981">  // NB: overridden in terminal_check_size if a window is already</a>
-<a name="ln982">  // displaying the buffer</a>
-<a name="ln983">  topts.width = (uint16_t)MAX(curwin-&gt;w_width_inner - win_col_off(curwin), 0);</a>
-<a name="ln984">  topts.height = (uint16_t)curwin-&gt;w_height_inner;</a>
-<a name="ln985">  topts.write_cb = term_write;</a>
-<a name="ln986">  topts.resize_cb = term_resize;</a>
-<a name="ln987">  topts.close_cb = term_close;</a>
-<a name="ln988">  Terminal *term = terminal_open(buf, topts);</a>
-<a name="ln989">  terminal_check_size(term);</a>
-<a name="ln990">  chan-&gt;term = term;</a>
-<a name="ln991">  return (Integer)chan-&gt;id;</a>
-<a name="ln992">}</a>
-<a name="ln993"> </a>
-<a name="ln994">static void term_write(char *buf, size_t size, void *data)  // NOLINT(readability-non-const-parameter)</a>
-<a name="ln995">{</a>
-<a name="ln996">  Channel *chan = data;</a>
-<a name="ln997">  LuaRef cb = chan-&gt;stream.internal.cb;</a>
-<a name="ln998">  if (cb == LUA_NOREF) {</a>
-<a name="ln999">    return;</a>
-<a name="ln1000">  }</a>
-<a name="ln1001">  MAXSIZE_TEMP_ARRAY(args, 3);</a>
-<a name="ln1002">  ADD_C(args, INTEGER_OBJ((Integer)chan-&gt;id));</a>
-<a name="ln1003">  ADD_C(args, BUFFER_OBJ(terminal_buf(chan-&gt;term)));</a>
-<a name="ln1004">  ADD_C(args, STRING_OBJ(((String){ .data = buf, .size = size })));</a>
-<a name="ln1005">  textlock++;</a>
-<a name="ln1006">  nlua_call_ref(cb, &quot;input&quot;, args, false, NULL);</a>
-<a name="ln1007">  textlock--;</a>
-<a name="ln1008">}</a>
-<a name="ln1009"> </a>
-<a name="ln1010">static void term_resize(uint16_t width, uint16_t height, void *data)</a>
-<a name="ln1011">{</a>
-<a name="ln1012">  // TODO(bfredl): Lua callback</a>
-<a name="ln1013">}</a>
-<a name="ln1014"> </a>
-<a name="ln1015">static void term_close(void *data)</a>
-<a name="ln1016">{</a>
-<a name="ln1017">  Channel *chan = data;</a>
-<a name="ln1018">  terminal_destroy(&amp;chan-&gt;term);</a>
-<a name="ln1019">  api_free_luaref(chan-&gt;stream.internal.cb);</a>
-<a name="ln1020">  chan-&gt;stream.internal.cb = LUA_NOREF;</a>
-<a name="ln1021">  channel_decref(chan);</a>
-<a name="ln1022">}</a>
-<a name="ln1023"> </a>
-<a name="ln1024">/// Send data to channel `id`. For a job, it writes it to the</a>
-<a name="ln1025">/// stdin of the process. For the stdio channel |channel-stdio|,</a>
-<a name="ln1026">/// it writes to Nvim's stdout.  For an internal terminal instance</a>
-<a name="ln1027">/// (|nvim_open_term()|) it writes directly to terminal output.</a>
-<a name="ln1028">/// See |channel-bytes| for more information.</a>
-<a name="ln1029">///</a>
-<a name="ln1030">/// This function writes raw data, not RPC messages.  If the channel</a>
-<a name="ln1031">/// was created with `rpc=true` then the channel expects RPC</a>
-<a name="ln1032">/// messages, use |vim.rpcnotify()| and |vim.rpcrequest()| instead.</a>
-<a name="ln1033">///</a>
-<a name="ln1034">/// @param chan id of the channel</a>
-<a name="ln1035">/// @param data data to write. 8-bit clean: can contain NUL bytes.</a>
-<a name="ln1036">/// @param[out] err Error details, if any</a>
-<a name="ln1037">void nvim_chan_send(Integer chan, String data, Error *err)</a>
-<a name="ln1038">  FUNC_API_SINCE(7) FUNC_API_REMOTE_ONLY FUNC_API_LUA_ONLY</a>
-<a name="ln1039">{</a>
-<a name="ln1040">  const char *error = NULL;</a>
-<a name="ln1041">  if (!data.size) {</a>
-<a name="ln1042">    return;</a>
-<a name="ln1043">  }</a>
-<a name="ln1044"> </a>
-<a name="ln1045">  channel_send((uint64_t)chan, data.data, data.size,</a>
-<a name="ln1046">               false, &amp;error);</a>
-<a name="ln1047">  VALIDATE(!error, &quot;%s&quot;, error, {});</a>
-<a name="ln1048">}</a>
-<a name="ln1049"> </a>
-<a name="ln1050">/// Gets the current list of tabpage handles.</a>
-<a name="ln1051">///</a>
-<a name="ln1052">/// @return List of tabpage handles</a>
-<a name="ln1053">ArrayOf(Tabpage) nvim_list_tabpages(void)</a>
-<a name="ln1054">  FUNC_API_SINCE(1)</a>
-<a name="ln1055">{</a>
-<a name="ln1056">  Array rv = ARRAY_DICT_INIT;</a>
-<a name="ln1057"> </a>
-<a name="ln1058">  FOR_ALL_TABS(tp) {</a>
-<a name="ln1059">    rv.size++;</a>
-<a name="ln1060">  }</a>
-<a name="ln1061"> </a>
-<a name="ln1062">  rv.items = xmalloc(sizeof(Object) * rv.size);</a>
-<a name="ln1063">  size_t i = 0;</a>
-<a name="ln1064"> </a>
-<a name="ln1065">  FOR_ALL_TABS(tp) {</a>
-<a name="ln1066">    rv.items[i++] = TABPAGE_OBJ(tp-&gt;handle);</a>
-<a name="ln1067">  }</a>
-<a name="ln1068"> </a>
-<a name="ln1069">  return rv;</a>
-<a name="ln1070">}</a>
-<a name="ln1071"> </a>
-<a name="ln1072">/// Gets the current tabpage.</a>
-<a name="ln1073">///</a>
-<a name="ln1074">/// @return Tabpage handle</a>
-<a name="ln1075">Tabpage nvim_get_current_tabpage(void)</a>
-<a name="ln1076">  FUNC_API_SINCE(1)</a>
-<a name="ln1077">{</a>
-<a name="ln1078">  return curtab-&gt;handle;</a>
-<a name="ln1079">}</a>
-<a name="ln1080"> </a>
-<a name="ln1081">/// Sets the current tabpage.</a>
-<a name="ln1082">///</a>
-<a name="ln1083">/// @param tabpage  Tabpage handle</a>
-<a name="ln1084">/// @param[out] err Error details, if any</a>
-<a name="ln1085">void nvim_set_current_tabpage(Tabpage tabpage, Error *err)</a>
-<a name="ln1086">  FUNC_API_SINCE(1)</a>
-<a name="ln1087">  FUNC_API_CHECK_TEXTLOCK</a>
-<a name="ln1088">{</a>
-<a name="ln1089">  tabpage_T *tp = find_tab_by_handle(tabpage, err);</a>
-<a name="ln1090"> </a>
-<a name="ln1091">  if (!tp) {</a>
-<a name="ln1092">    return;</a>
-<a name="ln1093">  }</a>
-<a name="ln1094"> </a>
-<a name="ln1095">  try_start();</a>
-<a name="ln1096">  goto_tabpage_tp(tp, true, true);</a>
-<a name="ln1097">  if (!try_end(err) &amp;&amp; tp != curtab) {</a>
-<a name="ln1098">    api_set_error(err,</a>
-<a name="ln1099">                  kErrorTypeException,</a>
-<a name="ln1100">                  &quot;Failed to switch to tabpage %d&quot;,</a>
-<a name="ln1101">                  tabpage);</a>
-<a name="ln1102">  }</a>
-<a name="ln1103">}</a>
-<a name="ln1104"> </a>
-<a name="ln1105">/// Pastes at cursor, in any mode.</a>
-<a name="ln1106">///</a>
-<a name="ln1107">/// Invokes the `vim.paste` handler, which handles each mode appropriately.</a>
-<a name="ln1108">/// Sets redo/undo. Faster than |nvim_input()|. Lines break at LF (&quot;\n&quot;).</a>
-<a name="ln1109">///</a>
-<a name="ln1110">/// Errors ('nomodifiable', `vim.paste()` failure, …) are reflected in `err`</a>
-<a name="ln1111">/// but do not affect the return value (which is strictly decided by</a>
-<a name="ln1112">/// `vim.paste()`).  On error, subsequent calls are ignored (&quot;drained&quot;) until</a>
-<a name="ln1113">/// the next paste is initiated (phase 1 or -1).</a>
-<a name="ln1114">///</a>
-<a name="ln1115">/// @param data  Multiline input. May be binary (containing NUL bytes).</a>
-<a name="ln1116">/// @param crlf  Also break lines at CR and CRLF.</a>
-<a name="ln1117">/// @param phase  -1: paste in a single call (i.e. without streaming).</a>
-<a name="ln1118">///               To &quot;stream&quot; a paste, call `nvim_paste` sequentially with</a>
-<a name="ln1119">///               these `phase` values:</a>
-<a name="ln1120">///                 - 1: starts the paste (exactly once)</a>
-<a name="ln1121">///                 - 2: continues the paste (zero or more times)</a>
-<a name="ln1122">///                 - 3: ends the paste (exactly once)</a>
-<a name="ln1123">/// @param[out] err Error details, if any</a>
-<a name="ln1124">/// @return</a>
-<a name="ln1125">///     - true: Client may continue pasting.</a>
-<a name="ln1126">///     - false: Client must cancel the paste.</a>
-<a name="ln1127">Boolean nvim_paste(String data, Boolean crlf, Integer phase, Error *err)</a>
-<a name="ln1128">  FUNC_API_SINCE(6)</a>
-<a name="ln1129">  FUNC_API_CHECK_TEXTLOCK</a>
-<a name="ln1130">{</a>
-<a name="ln1131">  static bool draining = false;</a>
-<a name="ln1132">  bool cancel = false;</a>
-<a name="ln1133"> </a>
-<a name="ln1134">  VALIDATE_INT((phase &gt;= -1 &amp;&amp; phase &lt;= 3), &quot;phase&quot;, phase, {</a>
-<a name="ln1135">    return false;</a>
-<a name="ln1136">  });</a>
-<a name="ln1137">  Array args = ARRAY_DICT_INIT;</a>
-<a name="ln1138">  Object rv = OBJECT_INIT;</a>
-<a name="ln1139">  if (phase == -1 || phase == 1) {  // Start of paste-stream.</a>
-<a name="ln1140">    draining = false;</a>
-<a name="ln1141">  } else if (draining) {</a>
-<a name="ln1142">    // Skip remaining chunks.  Report error only once per &quot;stream&quot;.</a>
-<a name="ln1143">    goto theend;</a>
-<a name="ln1144">  }</a>
-<a name="ln1145">  Array lines = string_to_array(data, crlf);</a>
-<a name="ln1146">  ADD(args, ARRAY_OBJ(lines));</a>
-<a name="ln1147">  ADD(args, INTEGER_OBJ(phase));</a>
-<a name="ln1148">  rv = nvim_exec_lua(STATIC_CSTR_AS_STRING(&quot;return vim.paste(...)&quot;), args,</a>
-<a name="ln1149">                     err);</a>
-<a name="ln1150">  if (ERROR_SET(err)) {</a>
-<a name="ln1151">    draining = true;</a>
-<a name="ln1152">    goto theend;</a>
-<a name="ln1153">  }</a>
-<a name="ln1154">  if (!(State &amp; (MODE_CMDLINE | MODE_INSERT)) &amp;&amp; (phase == -1 || phase == 1)) {</a>
-<a name="ln1155">    ResetRedobuff();</a>
-<a name="ln1156">    AppendCharToRedobuff('a');  // Dot-repeat.</a>
-<a name="ln1157">  }</a>
-<a name="ln1158">  // vim.paste() decides if client should cancel.  Errors do NOT cancel: we</a>
-<a name="ln1159">  // want to drain remaining chunks (rather than divert them to main input).</a>
-<a name="ln1160">  cancel = (rv.type == kObjectTypeBoolean &amp;&amp; !rv.data.boolean);</a>
-<a name="ln1161">  if (!cancel &amp;&amp; !(State &amp; MODE_CMDLINE)) {  // Dot-repeat.</a>
-<a name="ln1162">    for (size_t i = 0; i &lt; lines.size; i++) {</a>
-<a name="ln1163">      String s = lines.items[i].data.string;</a>
-<a name="ln1164">      assert(s.size &lt;= INT_MAX);</a>
-<a name="ln1165">      AppendToRedobuffLit(s.data, (int)s.size);</a>
-<a name="ln1166">      // readfile()-style: &quot;\n&quot; is indicated by presence of N+1 item.</a>
-<a name="ln1167">      if (i + 1 &lt; lines.size) {</a>
-<a name="ln1168">        AppendCharToRedobuff(NL);</a>
-<a name="ln1169">      }</a>
-<a name="ln1170">    }</a>
-<a name="ln1171">  }</a>
-<a name="ln1172">  if (!(State &amp; (MODE_CMDLINE | MODE_INSERT)) &amp;&amp; (phase == -1 || phase == 3)) {</a>
-<a name="ln1173">    AppendCharToRedobuff(ESC);  // Dot-repeat.</a>
-<a name="ln1174">  }</a>
-<a name="ln1175">theend:</a>
-<a name="ln1176">  api_free_object(rv);</a>
-<a name="ln1177">  api_free_array(args);</a>
-<a name="ln1178">  if (cancel || phase == -1 || phase == 3) {  // End of paste-stream.</a>
-<a name="ln1179">    draining = false;</a>
+<a name="ln954">  FUNC_API_TEXTLOCK_ALLOW_CMDWIN</a>
+<a name="ln955">{</a>
+<a name="ln956">  buf_T *buf = find_buffer_by_handle(buffer, err);</a>
+<a name="ln957">  if (!buf) {</a>
+<a name="ln958">    return 0;</a>
+<a name="ln959">  }</a>
+<a name="ln960"> </a>
+<a name="ln961">  if (cmdwin_type != 0 &amp;&amp; buf == curbuf) {</a>
+<a name="ln962">    api_set_error(err, kErrorTypeException, &quot;%s&quot;, _(e_cmdwin));</a>
+<a name="ln963">    return 0;</a>
+<a name="ln964">  }</a>
+<a name="ln965"> </a>
+<a name="ln966">  LuaRef cb = LUA_NOREF;</a>
+<a name="ln967">  for (size_t i = 0; i &lt; opts.size; i++) {</a>
+<a name="ln968">    String k = opts.items[i].key;</a>
+<a name="ln969">    Object *v = &amp;opts.items[i].value;</a>
+<a name="ln970">    if (strequal(&quot;on_input&quot;, k.data)) {</a>
+<a name="ln971">      VALIDATE_T(&quot;on_input&quot;, kObjectTypeLuaRef, v-&gt;type, {</a>
+<a name="ln972">        return 0;</a>
+<a name="ln973">      });</a>
+<a name="ln974">      cb = v-&gt;data.luaref;</a>
+<a name="ln975">      v-&gt;data.luaref = LUA_NOREF;</a>
+<a name="ln976">      break;</a>
+<a name="ln977">    } else {</a>
+<a name="ln978">      VALIDATE_S(false, &quot;'opts' key&quot;, k.data, {});</a>
+<a name="ln979">    }</a>
+<a name="ln980">  }</a>
+<a name="ln981"> </a>
+<a name="ln982">  TerminalOptions topts;</a>
+<a name="ln983">  Channel *chan = channel_alloc(kChannelStreamInternal);</a>
+<a name="ln984">  chan-&gt;stream.internal.cb = cb;</a>
+<a name="ln985">  chan-&gt;stream.internal.closed = false;</a>
+<a name="ln986">  topts.data = chan;</a>
+<a name="ln987">  // NB: overridden in terminal_check_size if a window is already</a>
+<a name="ln988">  // displaying the buffer</a>
+<a name="ln989">  topts.width = (uint16_t)MAX(curwin-&gt;w_width_inner - win_col_off(curwin), 0);</a>
+<a name="ln990">  topts.height = (uint16_t)curwin-&gt;w_height_inner;</a>
+<a name="ln991">  topts.write_cb = term_write;</a>
+<a name="ln992">  topts.resize_cb = term_resize;</a>
+<a name="ln993">  topts.close_cb = term_close;</a>
+<a name="ln994">  Terminal *term = terminal_open(buf, topts);</a>
+<a name="ln995">  terminal_check_size(term);</a>
+<a name="ln996">  chan-&gt;term = term;</a>
+<a name="ln997">  return (Integer)chan-&gt;id;</a>
+<a name="ln998">}</a>
+<a name="ln999"> </a>
+<a name="ln1000">static void term_write(char *buf, size_t size, void *data)  // NOLINT(readability-non-const-parameter)</a>
+<a name="ln1001">{</a>
+<a name="ln1002">  Channel *chan = data;</a>
+<a name="ln1003">  LuaRef cb = chan-&gt;stream.internal.cb;</a>
+<a name="ln1004">  if (cb == LUA_NOREF) {</a>
+<a name="ln1005">    return;</a>
+<a name="ln1006">  }</a>
+<a name="ln1007">  MAXSIZE_TEMP_ARRAY(args, 3);</a>
+<a name="ln1008">  ADD_C(args, INTEGER_OBJ((Integer)chan-&gt;id));</a>
+<a name="ln1009">  ADD_C(args, BUFFER_OBJ(terminal_buf(chan-&gt;term)));</a>
+<a name="ln1010">  ADD_C(args, STRING_OBJ(((String){ .data = buf, .size = size })));</a>
+<a name="ln1011">  textlock++;</a>
+<a name="ln1012">  nlua_call_ref(cb, &quot;input&quot;, args, false, NULL);</a>
+<a name="ln1013">  textlock--;</a>
+<a name="ln1014">}</a>
+<a name="ln1015"> </a>
+<a name="ln1016">static void term_resize(uint16_t width, uint16_t height, void *data)</a>
+<a name="ln1017">{</a>
+<a name="ln1018">  // TODO(bfredl): Lua callback</a>
+<a name="ln1019">}</a>
+<a name="ln1020"> </a>
+<a name="ln1021">static void term_close(void *data)</a>
+<a name="ln1022">{</a>
+<a name="ln1023">  Channel *chan = data;</a>
+<a name="ln1024">  terminal_destroy(&amp;chan-&gt;term);</a>
+<a name="ln1025">  api_free_luaref(chan-&gt;stream.internal.cb);</a>
+<a name="ln1026">  chan-&gt;stream.internal.cb = LUA_NOREF;</a>
+<a name="ln1027">  channel_decref(chan);</a>
+<a name="ln1028">}</a>
+<a name="ln1029"> </a>
+<a name="ln1030">/// Send data to channel `id`. For a job, it writes it to the</a>
+<a name="ln1031">/// stdin of the process. For the stdio channel |channel-stdio|,</a>
+<a name="ln1032">/// it writes to Nvim's stdout.  For an internal terminal instance</a>
+<a name="ln1033">/// (|nvim_open_term()|) it writes directly to terminal output.</a>
+<a name="ln1034">/// See |channel-bytes| for more information.</a>
+<a name="ln1035">///</a>
+<a name="ln1036">/// This function writes raw data, not RPC messages.  If the channel</a>
+<a name="ln1037">/// was created with `rpc=true` then the channel expects RPC</a>
+<a name="ln1038">/// messages, use |vim.rpcnotify()| and |vim.rpcrequest()| instead.</a>
+<a name="ln1039">///</a>
+<a name="ln1040">/// @param chan id of the channel</a>
+<a name="ln1041">/// @param data data to write. 8-bit clean: can contain NUL bytes.</a>
+<a name="ln1042">/// @param[out] err Error details, if any</a>
+<a name="ln1043">void nvim_chan_send(Integer chan, String data, Error *err)</a>
+<a name="ln1044">  FUNC_API_SINCE(7) FUNC_API_REMOTE_ONLY FUNC_API_LUA_ONLY</a>
+<a name="ln1045">{</a>
+<a name="ln1046">  const char *error = NULL;</a>
+<a name="ln1047">  if (!data.size) {</a>
+<a name="ln1048">    return;</a>
+<a name="ln1049">  }</a>
+<a name="ln1050"> </a>
+<a name="ln1051">  channel_send((uint64_t)chan, data.data, data.size,</a>
+<a name="ln1052">               false, &amp;error);</a>
+<a name="ln1053">  VALIDATE(!error, &quot;%s&quot;, error, {});</a>
+<a name="ln1054">}</a>
+<a name="ln1055"> </a>
+<a name="ln1056">/// Gets the current list of tabpage handles.</a>
+<a name="ln1057">///</a>
+<a name="ln1058">/// @return List of tabpage handles</a>
+<a name="ln1059">ArrayOf(Tabpage) nvim_list_tabpages(void)</a>
+<a name="ln1060">  FUNC_API_SINCE(1)</a>
+<a name="ln1061">{</a>
+<a name="ln1062">  Array rv = ARRAY_DICT_INIT;</a>
+<a name="ln1063"> </a>
+<a name="ln1064">  FOR_ALL_TABS(tp) {</a>
+<a name="ln1065">    rv.size++;</a>
+<a name="ln1066">  }</a>
+<a name="ln1067"> </a>
+<a name="ln1068">  rv.items = xmalloc(sizeof(Object) * rv.size);</a>
+<a name="ln1069">  size_t i = 0;</a>
+<a name="ln1070"> </a>
+<a name="ln1071">  FOR_ALL_TABS(tp) {</a>
+<a name="ln1072">    rv.items[i++] = TABPAGE_OBJ(tp-&gt;handle);</a>
+<a name="ln1073">  }</a>
+<a name="ln1074"> </a>
+<a name="ln1075">  return rv;</a>
+<a name="ln1076">}</a>
+<a name="ln1077"> </a>
+<a name="ln1078">/// Gets the current tabpage.</a>
+<a name="ln1079">///</a>
+<a name="ln1080">/// @return Tabpage handle</a>
+<a name="ln1081">Tabpage nvim_get_current_tabpage(void)</a>
+<a name="ln1082">  FUNC_API_SINCE(1)</a>
+<a name="ln1083">{</a>
+<a name="ln1084">  return curtab-&gt;handle;</a>
+<a name="ln1085">}</a>
+<a name="ln1086"> </a>
+<a name="ln1087">/// Sets the current tabpage.</a>
+<a name="ln1088">///</a>
+<a name="ln1089">/// @param tabpage  Tabpage handle</a>
+<a name="ln1090">/// @param[out] err Error details, if any</a>
+<a name="ln1091">void nvim_set_current_tabpage(Tabpage tabpage, Error *err)</a>
+<a name="ln1092">  FUNC_API_SINCE(1)</a>
+<a name="ln1093">  FUNC_API_TEXTLOCK</a>
+<a name="ln1094">{</a>
+<a name="ln1095">  tabpage_T *tp = find_tab_by_handle(tabpage, err);</a>
+<a name="ln1096"> </a>
+<a name="ln1097">  if (!tp) {</a>
+<a name="ln1098">    return;</a>
+<a name="ln1099">  }</a>
+<a name="ln1100"> </a>
+<a name="ln1101">  try_start();</a>
+<a name="ln1102">  goto_tabpage_tp(tp, true, true);</a>
+<a name="ln1103">  if (!try_end(err) &amp;&amp; tp != curtab) {</a>
+<a name="ln1104">    api_set_error(err,</a>
+<a name="ln1105">                  kErrorTypeException,</a>
+<a name="ln1106">                  &quot;Failed to switch to tabpage %d&quot;,</a>
+<a name="ln1107">                  tabpage);</a>
+<a name="ln1108">  }</a>
+<a name="ln1109">}</a>
+<a name="ln1110"> </a>
+<a name="ln1111">/// Pastes at cursor, in any mode.</a>
+<a name="ln1112">///</a>
+<a name="ln1113">/// Invokes the `vim.paste` handler, which handles each mode appropriately.</a>
+<a name="ln1114">/// Sets redo/undo. Faster than |nvim_input()|. Lines break at LF (&quot;\n&quot;).</a>
+<a name="ln1115">///</a>
+<a name="ln1116">/// Errors ('nomodifiable', `vim.paste()` failure, …) are reflected in `err`</a>
+<a name="ln1117">/// but do not affect the return value (which is strictly decided by</a>
+<a name="ln1118">/// `vim.paste()`).  On error, subsequent calls are ignored (&quot;drained&quot;) until</a>
+<a name="ln1119">/// the next paste is initiated (phase 1 or -1).</a>
+<a name="ln1120">///</a>
+<a name="ln1121">/// @param data  Multiline input. May be binary (containing NUL bytes).</a>
+<a name="ln1122">/// @param crlf  Also break lines at CR and CRLF.</a>
+<a name="ln1123">/// @param phase  -1: paste in a single call (i.e. without streaming).</a>
+<a name="ln1124">///               To &quot;stream&quot; a paste, call `nvim_paste` sequentially with</a>
+<a name="ln1125">///               these `phase` values:</a>
+<a name="ln1126">///                 - 1: starts the paste (exactly once)</a>
+<a name="ln1127">///                 - 2: continues the paste (zero or more times)</a>
+<a name="ln1128">///                 - 3: ends the paste (exactly once)</a>
+<a name="ln1129">/// @param[out] err Error details, if any</a>
+<a name="ln1130">/// @return</a>
+<a name="ln1131">///     - true: Client may continue pasting.</a>
+<a name="ln1132">///     - false: Client must cancel the paste.</a>
+<a name="ln1133">Boolean nvim_paste(String data, Boolean crlf, Integer phase, Error *err)</a>
+<a name="ln1134">  FUNC_API_SINCE(6)</a>
+<a name="ln1135">  FUNC_API_TEXTLOCK_ALLOW_CMDWIN</a>
+<a name="ln1136">{</a>
+<a name="ln1137">  static bool draining = false;</a>
+<a name="ln1138">  bool cancel = false;</a>
+<a name="ln1139"> </a>
+<a name="ln1140">  VALIDATE_INT((phase &gt;= -1 &amp;&amp; phase &lt;= 3), &quot;phase&quot;, phase, {</a>
+<a name="ln1141">    return false;</a>
+<a name="ln1142">  });</a>
+<a name="ln1143">  Array args = ARRAY_DICT_INIT;</a>
+<a name="ln1144">  Object rv = OBJECT_INIT;</a>
+<a name="ln1145">  if (phase == -1 || phase == 1) {  // Start of paste-stream.</a>
+<a name="ln1146">    draining = false;</a>
+<a name="ln1147">  } else if (draining) {</a>
+<a name="ln1148">    // Skip remaining chunks.  Report error only once per &quot;stream&quot;.</a>
+<a name="ln1149">    goto theend;</a>
+<a name="ln1150">  }</a>
+<a name="ln1151">  Array lines = string_to_array(data, crlf);</a>
+<a name="ln1152">  ADD(args, ARRAY_OBJ(lines));</a>
+<a name="ln1153">  ADD(args, INTEGER_OBJ(phase));</a>
+<a name="ln1154">  rv = nvim_exec_lua(STATIC_CSTR_AS_STRING(&quot;return vim.paste(...)&quot;), args,</a>
+<a name="ln1155">                     err);</a>
+<a name="ln1156">  if (ERROR_SET(err)) {</a>
+<a name="ln1157">    draining = true;</a>
+<a name="ln1158">    goto theend;</a>
+<a name="ln1159">  }</a>
+<a name="ln1160">  if (!(State &amp; (MODE_CMDLINE | MODE_INSERT)) &amp;&amp; (phase == -1 || phase == 1)) {</a>
+<a name="ln1161">    ResetRedobuff();</a>
+<a name="ln1162">    AppendCharToRedobuff('a');  // Dot-repeat.</a>
+<a name="ln1163">  }</a>
+<a name="ln1164">  // vim.paste() decides if client should cancel.  Errors do NOT cancel: we</a>
+<a name="ln1165">  // want to drain remaining chunks (rather than divert them to main input).</a>
+<a name="ln1166">  cancel = (rv.type == kObjectTypeBoolean &amp;&amp; !rv.data.boolean);</a>
+<a name="ln1167">  if (!cancel &amp;&amp; !(State &amp; MODE_CMDLINE)) {  // Dot-repeat.</a>
+<a name="ln1168">    for (size_t i = 0; i &lt; lines.size; i++) {</a>
+<a name="ln1169">      String s = lines.items[i].data.string;</a>
+<a name="ln1170">      assert(s.size &lt;= INT_MAX);</a>
+<a name="ln1171">      AppendToRedobuffLit(s.data, (int)s.size);</a>
+<a name="ln1172">      // readfile()-style: &quot;\n&quot; is indicated by presence of N+1 item.</a>
+<a name="ln1173">      if (i + 1 &lt; lines.size) {</a>
+<a name="ln1174">        AppendCharToRedobuff(NL);</a>
+<a name="ln1175">      }</a>
+<a name="ln1176">    }</a>
+<a name="ln1177">  }</a>
+<a name="ln1178">  if (!(State &amp; (MODE_CMDLINE | MODE_INSERT)) &amp;&amp; (phase == -1 || phase == 3)) {</a>
+<a name="ln1179">    AppendCharToRedobuff(ESC);  // Dot-repeat.</a>
 <a name="ln1180">  }</a>
-<a name="ln1181"> </a>
-<a name="ln1182">  return !cancel;</a>
-<a name="ln1183">}</a>
-<a name="ln1184"> </a>
-<a name="ln1185">/// Puts text at cursor, in any mode.</a>
-<a name="ln1186">///</a>
-<a name="ln1187">/// Compare |:put| and |p| which are always linewise.</a>
-<a name="ln1188">///</a>
-<a name="ln1189">/// @param lines  |readfile()|-style list of lines. |channel-lines|</a>
-<a name="ln1190">/// @param type  Edit behavior: any |getregtype()| result, or:</a>
-<a name="ln1191">///              - &quot;b&quot; |blockwise-visual| mode (may include width, e.g. &quot;b3&quot;)</a>
-<a name="ln1192">///              - &quot;c&quot; |charwise| mode</a>
-<a name="ln1193">///              - &quot;l&quot; |linewise| mode</a>
-<a name="ln1194">///              - &quot;&quot;  guess by contents, see |setreg()|</a>
-<a name="ln1195">/// @param after  If true insert after cursor (like |p|), or before (like |P|).</a>
-<a name="ln1196">/// @param follow  If true place cursor at end of inserted text.</a>
-<a name="ln1197">/// @param[out] err Error details, if any</a>
-<a name="ln1198">void nvim_put(ArrayOf(String) lines, String type, Boolean after, Boolean follow, Error *err)</a>
-<a name="ln1199">  FUNC_API_SINCE(6)</a>
-<a name="ln1200">  FUNC_API_CHECK_TEXTLOCK</a>
-<a name="ln1201">{</a>
-<a name="ln1202">  yankreg_T *reg = xcalloc(1, sizeof(yankreg_T));</a>
-<a name="ln1203">  VALIDATE_S((prepare_yankreg_from_object(reg, type, lines.size)), &quot;type&quot;, type.data, {</a>
-<a name="ln1204">    goto cleanup;</a>
-<a name="ln1205">  });</a>
-<a name="ln1206">  if (lines.size == 0) {</a>
-<a name="ln1207">    goto cleanup;  // Nothing to do.</a>
-<a name="ln1208">  }</a>
-<a name="ln1209"> </a>
-<a name="ln1210">  for (size_t i = 0; i &lt; lines.size; i++) {</a>
-<a name="ln1211">    VALIDATE_T(&quot;line&quot;, kObjectTypeString, lines.items[i].type, {</a>
-<a name="ln1212">      goto cleanup;</a>
-<a name="ln1213">    });</a>
-<a name="ln1214">    String line = lines.items[i].data.string;</a>
-<a name="ln1215">    reg-&gt;y_array[i] = xmemdupz(line.data, line.size);</a>
-<a name="ln1216">    memchrsub(reg-&gt;y_array[i], NUL, NL, line.size);</a>
-<a name="ln1217">  }</a>
-<a name="ln1218"> </a>
-<a name="ln1219">  finish_yankreg_from_object(reg, false);</a>
-<a name="ln1220"> </a>
-<a name="ln1221">  TRY_WRAP(err, {</a>
-<a name="ln1222">    bool VIsual_was_active = VIsual_active;</a>
-<a name="ln1223">    msg_silent++;  // Avoid &quot;N more lines&quot; message.</a>
-<a name="ln1224">    do_put(0, reg, after ? FORWARD : BACKWARD, 1, follow ? PUT_CURSEND : 0);</a>
-<a name="ln1225">    msg_silent--;</a>
-<a name="ln1226">    VIsual_active = VIsual_was_active;</a>
-<a name="ln1227">  });</a>
-<a name="ln1228"> </a>
-<a name="ln1229">cleanup:</a>
-<a name="ln1230">  free_register(reg);</a>
-<a name="ln1231">  xfree(reg);</a>
-<a name="ln1232">}</a>
-<a name="ln1233"> </a>
-<a name="ln1234">/// Subscribes to event broadcasts.</a>
-<a name="ln1235">///</a>
-<a name="ln1236">/// @param channel_id Channel id (passed automatically by the dispatcher)</a>
-<a name="ln1237">/// @param event      Event type string</a>
-<a name="ln1238">void nvim_subscribe(uint64_t channel_id, String event)</a>
-<a name="ln1239">  FUNC_API_SINCE(1) FUNC_API_REMOTE_ONLY</a>
-<a name="ln1240">{</a>
-<a name="ln1241">  size_t length = (event.size &lt; METHOD_MAXLEN ? event.size : METHOD_MAXLEN);</a>
-<a name="ln1242">  char e[METHOD_MAXLEN + 1];</a>
-<a name="ln1243">  memcpy(e, event.data, length);</a>
-<a name="ln1244">  e[length] = NUL;</a>
-<a name="ln1245">  rpc_subscribe(channel_id, e);</a>
-<a name="ln1246">}</a>
-<a name="ln1247"> </a>
-<a name="ln1248">/// Unsubscribes to event broadcasts.</a>
-<a name="ln1249">///</a>
-<a name="ln1250">/// @param channel_id Channel id (passed automatically by the dispatcher)</a>
-<a name="ln1251">/// @param event      Event type string</a>
-<a name="ln1252">void nvim_unsubscribe(uint64_t channel_id, String event)</a>
-<a name="ln1253">  FUNC_API_SINCE(1) FUNC_API_REMOTE_ONLY</a>
-<a name="ln1254">{</a>
-<a name="ln1255">  size_t length = (event.size &lt; METHOD_MAXLEN ?</a>
-<a name="ln1256">                   event.size :</a>
-<a name="ln1257">                   METHOD_MAXLEN);</a>
-<a name="ln1258">  char e[METHOD_MAXLEN + 1];</a>
-<a name="ln1259">  memcpy(e, event.data, length);</a>
-<a name="ln1260">  e[length] = NUL;</a>
-<a name="ln1261">  rpc_unsubscribe(channel_id, e);</a>
-<a name="ln1262">}</a>
-<a name="ln1263"> </a>
-<a name="ln1264">/// Returns the 24-bit RGB value of a |nvim_get_color_map()| color name or</a>
-<a name="ln1265">/// &quot;#rrggbb&quot; hexadecimal string.</a>
-<a name="ln1266">///</a>
-<a name="ln1267">/// Example:</a>
-<a name="ln1268">/// &lt;pre&gt;vim</a>
-<a name="ln1269">///     :echo nvim_get_color_by_name(&quot;Pink&quot;)</a>
-<a name="ln1270">///     :echo nvim_get_color_by_name(&quot;#cbcbcb&quot;)</a>
-<a name="ln1271">/// &lt;/pre&gt;</a>
+<a name="ln1181">theend:</a>
+<a name="ln1182">  api_free_object(rv);</a>
+<a name="ln1183">  api_free_array(args);</a>
+<a name="ln1184">  if (cancel || phase == -1 || phase == 3) {  // End of paste-stream.</a>
+<a name="ln1185">    draining = false;</a>
+<a name="ln1186">  }</a>
+<a name="ln1187"> </a>
+<a name="ln1188">  return !cancel;</a>
+<a name="ln1189">}</a>
+<a name="ln1190"> </a>
+<a name="ln1191">/// Puts text at cursor, in any mode.</a>
+<a name="ln1192">///</a>
+<a name="ln1193">/// Compare |:put| and |p| which are always linewise.</a>
+<a name="ln1194">///</a>
+<a name="ln1195">/// @param lines  |readfile()|-style list of lines. |channel-lines|</a>
+<a name="ln1196">/// @param type  Edit behavior: any |getregtype()| result, or:</a>
+<a name="ln1197">///              - &quot;b&quot; |blockwise-visual| mode (may include width, e.g. &quot;b3&quot;)</a>
+<a name="ln1198">///              - &quot;c&quot; |charwise| mode</a>
+<a name="ln1199">///              - &quot;l&quot; |linewise| mode</a>
+<a name="ln1200">///              - &quot;&quot;  guess by contents, see |setreg()|</a>
+<a name="ln1201">/// @param after  If true insert after cursor (like |p|), or before (like |P|).</a>
+<a name="ln1202">/// @param follow  If true place cursor at end of inserted text.</a>
+<a name="ln1203">/// @param[out] err Error details, if any</a>
+<a name="ln1204">void nvim_put(ArrayOf(String) lines, String type, Boolean after, Boolean follow, Error *err)</a>
+<a name="ln1205">  FUNC_API_SINCE(6)</a>
+<a name="ln1206">  FUNC_API_TEXTLOCK_ALLOW_CMDWIN</a>
+<a name="ln1207">{</a>
+<a name="ln1208">  yankreg_T *reg = xcalloc(1, sizeof(yankreg_T));</a>
+<a name="ln1209">  VALIDATE_S((prepare_yankreg_from_object(reg, type, lines.size)), &quot;type&quot;, type.data, {</a>
+<a name="ln1210">    goto cleanup;</a>
+<a name="ln1211">  });</a>
+<a name="ln1212">  if (lines.size == 0) {</a>
+<a name="ln1213">    goto cleanup;  // Nothing to do.</a>
+<a name="ln1214">  }</a>
+<a name="ln1215"> </a>
+<a name="ln1216">  for (size_t i = 0; i &lt; lines.size; i++) {</a>
+<a name="ln1217">    VALIDATE_T(&quot;line&quot;, kObjectTypeString, lines.items[i].type, {</a>
+<a name="ln1218">      goto cleanup;</a>
+<a name="ln1219">    });</a>
+<a name="ln1220">    String line = lines.items[i].data.string;</a>
+<a name="ln1221">    reg-&gt;y_array[i] = xmemdupz(line.data, line.size);</a>
+<a name="ln1222">    memchrsub(reg-&gt;y_array[i], NUL, NL, line.size);</a>
+<a name="ln1223">  }</a>
+<a name="ln1224"> </a>
+<a name="ln1225">  finish_yankreg_from_object(reg, false);</a>
+<a name="ln1226"> </a>
+<a name="ln1227">  TRY_WRAP(err, {</a>
+<a name="ln1228">    bool VIsual_was_active = VIsual_active;</a>
+<a name="ln1229">    msg_silent++;  // Avoid &quot;N more lines&quot; message.</a>
+<a name="ln1230">    do_put(0, reg, after ? FORWARD : BACKWARD, 1, follow ? PUT_CURSEND : 0);</a>
+<a name="ln1231">    msg_silent--;</a>
+<a name="ln1232">    VIsual_active = VIsual_was_active;</a>
+<a name="ln1233">  });</a>
+<a name="ln1234"> </a>
+<a name="ln1235">cleanup:</a>
+<a name="ln1236">  free_register(reg);</a>
+<a name="ln1237">  xfree(reg);</a>
+<a name="ln1238">}</a>
+<a name="ln1239"> </a>
+<a name="ln1240">/// Subscribes to event broadcasts.</a>
+<a name="ln1241">///</a>
+<a name="ln1242">/// @param channel_id Channel id (passed automatically by the dispatcher)</a>
+<a name="ln1243">/// @param event      Event type string</a>
+<a name="ln1244">void nvim_subscribe(uint64_t channel_id, String event)</a>
+<a name="ln1245">  FUNC_API_SINCE(1) FUNC_API_REMOTE_ONLY</a>
+<a name="ln1246">{</a>
+<a name="ln1247">  size_t length = (event.size &lt; METHOD_MAXLEN ? event.size : METHOD_MAXLEN);</a>
+<a name="ln1248">  char e[METHOD_MAXLEN + 1];</a>
+<a name="ln1249">  memcpy(e, event.data, length);</a>
+<a name="ln1250">  e[length] = NUL;</a>
+<a name="ln1251">  rpc_subscribe(channel_id, e);</a>
+<a name="ln1252">}</a>
+<a name="ln1253"> </a>
+<a name="ln1254">/// Unsubscribes to event broadcasts.</a>
+<a name="ln1255">///</a>
+<a name="ln1256">/// @param channel_id Channel id (passed automatically by the dispatcher)</a>
+<a name="ln1257">/// @param event      Event type string</a>
+<a name="ln1258">void nvim_unsubscribe(uint64_t channel_id, String event)</a>
+<a name="ln1259">  FUNC_API_SINCE(1) FUNC_API_REMOTE_ONLY</a>
+<a name="ln1260">{</a>
+<a name="ln1261">  size_t length = (event.size &lt; METHOD_MAXLEN ?</a>
+<a name="ln1262">                   event.size :</a>
+<a name="ln1263">                   METHOD_MAXLEN);</a>
+<a name="ln1264">  char e[METHOD_MAXLEN + 1];</a>
+<a name="ln1265">  memcpy(e, event.data, length);</a>
+<a name="ln1266">  e[length] = NUL;</a>
+<a name="ln1267">  rpc_unsubscribe(channel_id, e);</a>
+<a name="ln1268">}</a>
+<a name="ln1269"> </a>
+<a name="ln1270">/// Returns the 24-bit RGB value of a |nvim_get_color_map()| color name or</a>
+<a name="ln1271">/// &quot;#rrggbb&quot; hexadecimal string.</a>
 <a name="ln1272">///</a>
-<a name="ln1273">/// @param name Color name or &quot;#rrggbb&quot; string</a>
-<a name="ln1274">/// @return 24-bit RGB value, or -1 for invalid argument.</a>
-<a name="ln1275">Integer nvim_get_color_by_name(String name)</a>
-<a name="ln1276">  FUNC_API_SINCE(1)</a>
-<a name="ln1277">{</a>
-<a name="ln1278">  int dummy;</a>
-<a name="ln1279">  return name_to_color(name.data, &amp;dummy);</a>
-<a name="ln1280">}</a>
-<a name="ln1281"> </a>
-<a name="ln1282">/// Returns a map of color names and RGB values.</a>
-<a name="ln1283">///</a>
-<a name="ln1284">/// Keys are color names (e.g. &quot;Aqua&quot;) and values are 24-bit RGB color values</a>
-<a name="ln1285">/// (e.g. 65535).</a>
-<a name="ln1286">///</a>
-<a name="ln1287">/// @return Map of color names and RGB values.</a>
-<a name="ln1288">Dictionary nvim_get_color_map(void)</a>
-<a name="ln1289">  FUNC_API_SINCE(1)</a>
-<a name="ln1290">{</a>
-<a name="ln1291">  Dictionary colors = ARRAY_DICT_INIT;</a>
-<a name="ln1292"> </a>
-<a name="ln1293">  for (int i = 0; color_name_table[i].name != NULL; i++) {</a>
-<a name="ln1294">    PUT(colors, color_name_table[i].name,</a>
-<a name="ln1295">        INTEGER_OBJ(color_name_table[i].color));</a>
-<a name="ln1296">  }</a>
-<a name="ln1297">  return colors;</a>
-<a name="ln1298">}</a>
-<a name="ln1299"> </a>
-<a name="ln1300">/// Gets a map of the current editor state.</a>
-<a name="ln1301">///</a>
-<a name="ln1302">/// @param opts  Optional parameters.</a>
-<a name="ln1303">///               - types:  List of |context-types| (&quot;regs&quot;, &quot;jumps&quot;, &quot;bufs&quot;,</a>
-<a name="ln1304">///                 &quot;gvars&quot;, …) to gather, or empty for &quot;all&quot;.</a>
-<a name="ln1305">/// @param[out]  err  Error details, if any</a>
-<a name="ln1306">///</a>
-<a name="ln1307">/// @return map of global |context|.</a>
-<a name="ln1308">Dictionary nvim_get_context(Dict(context) *opts, Error *err)</a>
-<a name="ln1309">  FUNC_API_SINCE(6)</a>
-<a name="ln1310">{</a>
-<a name="ln1311">  Array types = ARRAY_DICT_INIT;</a>
-<a name="ln1312">  if (HAS_KEY(opts-&gt;types)) {</a>
-<a name="ln1313">    VALIDATE_T(&quot;types&quot;, kObjectTypeArray, opts-&gt;types.type, {</a>
-<a name="ln1314">      return (Dictionary)ARRAY_DICT_INIT;</a>
-<a name="ln1315">    });</a>
-<a name="ln1316">    types = opts-&gt;types.data.array;</a>
-<a name="ln1317">  }</a>
-<a name="ln1318"> </a>
-<a name="ln1319">  int int_types = types.size &gt; 0 ? 0 : kCtxAll;</a>
-<a name="ln1320">  if (types.size &gt; 0) {</a>
-<a name="ln1321">    for (size_t i = 0; i &lt; types.size; i++) {</a>
-<a name="ln1322">      if (types.items[i].type == kObjectTypeString) {</a>
-<a name="ln1323">        const char *const s = types.items[i].data.string.data;</a>
-<a name="ln1324">        if (strequal(s, &quot;regs&quot;)) {</a>
-<a name="ln1325">          int_types |= kCtxRegs;</a>
-<a name="ln1326">        } else if (strequal(s, &quot;jumps&quot;)) {</a>
-<a name="ln1327">          int_types |= kCtxJumps;</a>
-<a name="ln1328">        } else if (strequal(s, &quot;bufs&quot;)) {</a>
-<a name="ln1329">          int_types |= kCtxBufs;</a>
-<a name="ln1330">        } else if (strequal(s, &quot;gvars&quot;)) {</a>
-<a name="ln1331">          int_types |= kCtxGVars;</a>
-<a name="ln1332">        } else if (strequal(s, &quot;sfuncs&quot;)) {</a>
-<a name="ln1333">          int_types |= kCtxSFuncs;</a>
-<a name="ln1334">        } else if (strequal(s, &quot;funcs&quot;)) {</a>
-<a name="ln1335">          int_types |= kCtxFuncs;</a>
-<a name="ln1336">        } else {</a>
-<a name="ln1337">          VALIDATE_S(false, &quot;type&quot;, s, {</a>
-<a name="ln1338">            return (Dictionary)ARRAY_DICT_INIT;</a>
-<a name="ln1339">          });</a>
-<a name="ln1340">        }</a>
-<a name="ln1341">      }</a>
-<a name="ln1342">    }</a>
-<a name="ln1343">  }</a>
-<a name="ln1344"> </a>
-<a name="ln1345">  Context ctx = CONTEXT_INIT;</a>
-<a name="ln1346">  ctx_save(&amp;ctx, int_types);</a>
-<a name="ln1347">  Dictionary dict = ctx_to_dict(&amp;ctx);</a>
-<a name="ln1348">  ctx_free(&amp;ctx);</a>
-<a name="ln1349">  return dict;</a>
-<a name="ln1350">}</a>
-<a name="ln1351"> </a>
-<a name="ln1352">/// Sets the current editor state from the given |context| map.</a>
-<a name="ln1353">///</a>
-<a name="ln1354">/// @param  dict  |Context| map.</a>
-<a name="ln1355">Object nvim_load_context(Dictionary dict)</a>
-<a name="ln1356">  FUNC_API_SINCE(6)</a>
-<a name="ln1357">{</a>
-<a name="ln1358">  Context ctx = CONTEXT_INIT;</a>
-<a name="ln1359"> </a>
-<a name="ln1360">  int save_did_emsg = did_emsg;</a>
-<a name="ln1361">  did_emsg = false;</a>
-<a name="ln1362"> </a>
-<a name="ln1363">  ctx_from_dict(dict, &amp;ctx);</a>
-<a name="ln1364">  if (!did_emsg) {</a>
-<a name="ln1365">    ctx_restore(&amp;ctx, kCtxAll);</a>
-<a name="ln1366">  }</a>
-<a name="ln1367"> </a>
-<a name="ln1368">  ctx_free(&amp;ctx);</a>
-<a name="ln1369"> </a>
-<a name="ln1370">  did_emsg = save_did_emsg;</a>
-<a name="ln1371">  return (Object)OBJECT_INIT;</a>
-<a name="ln1372">}</a>
+<a name="ln1273">/// Example:</a>
+<a name="ln1274">/// &lt;pre&gt;vim</a>
+<a name="ln1275">///     :echo nvim_get_color_by_name(&quot;Pink&quot;)</a>
+<a name="ln1276">///     :echo nvim_get_color_by_name(&quot;#cbcbcb&quot;)</a>
+<a name="ln1277">/// &lt;/pre&gt;</a>
+<a name="ln1278">///</a>
+<a name="ln1279">/// @param name Color name or &quot;#rrggbb&quot; string</a>
+<a name="ln1280">/// @return 24-bit RGB value, or -1 for invalid argument.</a>
+<a name="ln1281">Integer nvim_get_color_by_name(String name)</a>
+<a name="ln1282">  FUNC_API_SINCE(1)</a>
+<a name="ln1283">{</a>
+<a name="ln1284">  int dummy;</a>
+<a name="ln1285">  return name_to_color(name.data, &amp;dummy);</a>
+<a name="ln1286">}</a>
+<a name="ln1287"> </a>
+<a name="ln1288">/// Returns a map of color names and RGB values.</a>
+<a name="ln1289">///</a>
+<a name="ln1290">/// Keys are color names (e.g. &quot;Aqua&quot;) and values are 24-bit RGB color values</a>
+<a name="ln1291">/// (e.g. 65535).</a>
+<a name="ln1292">///</a>
+<a name="ln1293">/// @return Map of color names and RGB values.</a>
+<a name="ln1294">Dictionary nvim_get_color_map(void)</a>
+<a name="ln1295">  FUNC_API_SINCE(1)</a>
+<a name="ln1296">{</a>
+<a name="ln1297">  Dictionary colors = ARRAY_DICT_INIT;</a>
+<a name="ln1298"> </a>
+<a name="ln1299">  for (int i = 0; color_name_table[i].name != NULL; i++) {</a>
+<a name="ln1300">    PUT(colors, color_name_table[i].name,</a>
+<a name="ln1301">        INTEGER_OBJ(color_name_table[i].color));</a>
+<a name="ln1302">  }</a>
+<a name="ln1303">  return colors;</a>
+<a name="ln1304">}</a>
+<a name="ln1305"> </a>
+<a name="ln1306">/// Gets a map of the current editor state.</a>
+<a name="ln1307">///</a>
+<a name="ln1308">/// @param opts  Optional parameters.</a>
+<a name="ln1309">///               - types:  List of |context-types| (&quot;regs&quot;, &quot;jumps&quot;, &quot;bufs&quot;,</a>
+<a name="ln1310">///                 &quot;gvars&quot;, …) to gather, or empty for &quot;all&quot;.</a>
+<a name="ln1311">/// @param[out]  err  Error details, if any</a>
+<a name="ln1312">///</a>
+<a name="ln1313">/// @return map of global |context|.</a>
+<a name="ln1314">Dictionary nvim_get_context(Dict(context) *opts, Error *err)</a>
+<a name="ln1315">  FUNC_API_SINCE(6)</a>
+<a name="ln1316">{</a>
+<a name="ln1317">  Array types = ARRAY_DICT_INIT;</a>
+<a name="ln1318">  if (HAS_KEY(opts-&gt;types)) {</a>
+<a name="ln1319">    VALIDATE_T(&quot;types&quot;, kObjectTypeArray, opts-&gt;types.type, {</a>
+<a name="ln1320">      return (Dictionary)ARRAY_DICT_INIT;</a>
+<a name="ln1321">    });</a>
+<a name="ln1322">    types = opts-&gt;types.data.array;</a>
+<a name="ln1323">  }</a>
+<a name="ln1324"> </a>
+<a name="ln1325">  int int_types = types.size &gt; 0 ? 0 : kCtxAll;</a>
+<a name="ln1326">  if (types.size &gt; 0) {</a>
+<a name="ln1327">    for (size_t i = 0; i &lt; types.size; i++) {</a>
+<a name="ln1328">      if (types.items[i].type == kObjectTypeString) {</a>
+<a name="ln1329">        const char *const s = types.items[i].data.string.data;</a>
+<a name="ln1330">        if (strequal(s, &quot;regs&quot;)) {</a>
+<a name="ln1331">          int_types |= kCtxRegs;</a>
+<a name="ln1332">        } else if (strequal(s, &quot;jumps&quot;)) {</a>
+<a name="ln1333">          int_types |= kCtxJumps;</a>
+<a name="ln1334">        } else if (strequal(s, &quot;bufs&quot;)) {</a>
+<a name="ln1335">          int_types |= kCtxBufs;</a>
+<a name="ln1336">        } else if (strequal(s, &quot;gvars&quot;)) {</a>
+<a name="ln1337">          int_types |= kCtxGVars;</a>
+<a name="ln1338">        } else if (strequal(s, &quot;sfuncs&quot;)) {</a>
+<a name="ln1339">          int_types |= kCtxSFuncs;</a>
+<a name="ln1340">        } else if (strequal(s, &quot;funcs&quot;)) {</a>
+<a name="ln1341">          int_types |= kCtxFuncs;</a>
+<a name="ln1342">        } else {</a>
+<a name="ln1343">          VALIDATE_S(false, &quot;type&quot;, s, {</a>
+<a name="ln1344">            return (Dictionary)ARRAY_DICT_INIT;</a>
+<a name="ln1345">          });</a>
+<a name="ln1346">        }</a>
+<a name="ln1347">      }</a>
+<a name="ln1348">    }</a>
+<a name="ln1349">  }</a>
+<a name="ln1350"> </a>
+<a name="ln1351">  Context ctx = CONTEXT_INIT;</a>
+<a name="ln1352">  ctx_save(&amp;ctx, int_types);</a>
+<a name="ln1353">  Dictionary dict = ctx_to_dict(&amp;ctx);</a>
+<a name="ln1354">  ctx_free(&amp;ctx);</a>
+<a name="ln1355">  return dict;</a>
+<a name="ln1356">}</a>
+<a name="ln1357"> </a>
+<a name="ln1358">/// Sets the current editor state from the given |context| map.</a>
+<a name="ln1359">///</a>
+<a name="ln1360">/// @param  dict  |Context| map.</a>
+<a name="ln1361">Object nvim_load_context(Dictionary dict)</a>
+<a name="ln1362">  FUNC_API_SINCE(6)</a>
+<a name="ln1363">{</a>
+<a name="ln1364">  Context ctx = CONTEXT_INIT;</a>
+<a name="ln1365"> </a>
+<a name="ln1366">  int save_did_emsg = did_emsg;</a>
+<a name="ln1367">  did_emsg = false;</a>
+<a name="ln1368"> </a>
+<a name="ln1369">  ctx_from_dict(dict, &amp;ctx);</a>
+<a name="ln1370">  if (!did_emsg) {</a>
+<a name="ln1371">    ctx_restore(&amp;ctx, kCtxAll);</a>
+<a name="ln1372">  }</a>
 <a name="ln1373"> </a>
-<a name="ln1374">/// Gets the current mode. |mode()|</a>
-<a name="ln1375">/// &quot;blocking&quot; is true if Nvim is waiting for input.</a>
-<a name="ln1376">///</a>
-<a name="ln1377">/// @returns Dictionary { &quot;mode&quot;: String, &quot;blocking&quot;: Boolean }</a>
-<a name="ln1378">Dictionary nvim_get_mode(void)</a>
-<a name="ln1379">  FUNC_API_SINCE(2) FUNC_API_FAST</a>
-<a name="ln1380">{</a>
-<a name="ln1381">  Dictionary rv = ARRAY_DICT_INIT;</a>
-<a name="ln1382">  char modestr[MODE_MAX_LENGTH];</a>
-<a name="ln1383">  get_mode(modestr);</a>
-<a name="ln1384">  bool blocked = input_blocking();</a>
-<a name="ln1385"> </a>
-<a name="ln1386">  PUT(rv, &quot;mode&quot;, CSTR_TO_OBJ(modestr));</a>
-<a name="ln1387">  PUT(rv, &quot;blocking&quot;, BOOLEAN_OBJ(blocked));</a>
-<a name="ln1388"> </a>
-<a name="ln1389">  return rv;</a>
-<a name="ln1390">}</a>
+<a name="ln1374">  ctx_free(&amp;ctx);</a>
+<a name="ln1375"> </a>
+<a name="ln1376">  did_emsg = save_did_emsg;</a>
+<a name="ln1377">  return (Object)OBJECT_INIT;</a>
+<a name="ln1378">}</a>
+<a name="ln1379"> </a>
+<a name="ln1380">/// Gets the current mode. |mode()|</a>
+<a name="ln1381">/// &quot;blocking&quot; is true if Nvim is waiting for input.</a>
+<a name="ln1382">///</a>
+<a name="ln1383">/// @returns Dictionary { &quot;mode&quot;: String, &quot;blocking&quot;: Boolean }</a>
+<a name="ln1384">Dictionary nvim_get_mode(void)</a>
+<a name="ln1385">  FUNC_API_SINCE(2) FUNC_API_FAST</a>
+<a name="ln1386">{</a>
+<a name="ln1387">  Dictionary rv = ARRAY_DICT_INIT;</a>
+<a name="ln1388">  char modestr[MODE_MAX_LENGTH];</a>
+<a name="ln1389">  get_mode(modestr);</a>
+<a name="ln1390">  bool blocked = input_blocking();</a>
 <a name="ln1391"> </a>
-<a name="ln1392">/// Gets a list of global (non-buffer-local) |mapping| definitions.</a>
-<a name="ln1393">///</a>
-<a name="ln1394">/// @param  mode       Mode short-name (&quot;n&quot;, &quot;i&quot;, &quot;v&quot;, ...)</a>
-<a name="ln1395">/// @returns Array of |maparg()|-like dictionaries describing mappings.</a>
-<a name="ln1396">///          The &quot;buffer&quot; key is always zero.</a>
-<a name="ln1397">ArrayOf(Dictionary) nvim_get_keymap(String mode)</a>
-<a name="ln1398">  FUNC_API_SINCE(3)</a>
-<a name="ln1399">{</a>
-<a name="ln1400">  return keymap_array(mode, NULL);</a>
-<a name="ln1401">}</a>
-<a name="ln1402"> </a>
-<a name="ln1403">/// Sets a global |mapping| for the given mode.</a>
-<a name="ln1404">///</a>
-<a name="ln1405">/// To set a buffer-local mapping, use |nvim_buf_set_keymap()|.</a>
-<a name="ln1406">///</a>
-<a name="ln1407">/// Unlike |:map|, leading/trailing whitespace is accepted as part of the {lhs} or {rhs}.</a>
-<a name="ln1408">/// Empty {rhs} is |&lt;Nop&gt;|. |keycodes| are replaced as usual.</a>
-<a name="ln1409">///</a>
-<a name="ln1410">/// Example:</a>
-<a name="ln1411">/// &lt;pre&gt;vim</a>
-<a name="ln1412">///     call nvim_set_keymap('n', ' &lt;NL&gt;', '', {'nowait': v:true})</a>
-<a name="ln1413">/// &lt;/pre&gt;</a>
-<a name="ln1414">///</a>
-<a name="ln1415">/// is equivalent to:</a>
-<a name="ln1416">/// &lt;pre&gt;vim</a>
-<a name="ln1417">///     nmap &lt;nowait&gt; &lt;Space&gt;&lt;NL&gt; &lt;Nop&gt;</a>
-<a name="ln1418">/// &lt;/pre&gt;</a>
-<a name="ln1419">///</a>
-<a name="ln1420">/// @param channel_id</a>
-<a name="ln1421">/// @param  mode  Mode short-name (map command prefix: &quot;n&quot;, &quot;i&quot;, &quot;v&quot;, &quot;x&quot;, …)</a>
-<a name="ln1422">///               or &quot;!&quot; for |:map!|, or empty string for |:map|.</a>
-<a name="ln1423">///               &quot;ia&quot;, &quot;ca&quot; or &quot;!a&quot; for abbreviation in Insert mode, Cmdline mode, or both, respectively</a>
-<a name="ln1424">/// @param  lhs   Left-hand-side |{lhs}| of the mapping.</a>
-<a name="ln1425">/// @param  rhs   Right-hand-side |{rhs}| of the mapping.</a>
-<a name="ln1426">/// @param  opts  Optional parameters map: Accepts all |:map-arguments| as keys except |&lt;buffer&gt;|,</a>
-<a name="ln1427">///               values are booleans (default false). Also:</a>
-<a name="ln1428">///               - &quot;noremap&quot; non-recursive mapping |:noremap|</a>
-<a name="ln1429">///               - &quot;desc&quot; human-readable description.</a>
-<a name="ln1430">///               - &quot;callback&quot; Lua function called in place of {rhs}.</a>
-<a name="ln1431">///               - &quot;replace_keycodes&quot; (boolean) When &quot;expr&quot; is true, replace keycodes in the</a>
-<a name="ln1432">///                 resulting string (see |nvim_replace_termcodes()|). Returning nil from the Lua</a>
-<a name="ln1433">///                 &quot;callback&quot; is equivalent to returning an empty string.</a>
-<a name="ln1434">/// @param[out]   err   Error details, if any.</a>
-<a name="ln1435">void nvim_set_keymap(uint64_t channel_id, String mode, String lhs, String rhs, Dict(keymap) *opts,</a>
-<a name="ln1436">                     Error *err)</a>
-<a name="ln1437">  FUNC_API_SINCE(6)</a>
-<a name="ln1438">{</a>
-<a name="ln1439">  modify_keymap(channel_id, -1, false, mode, lhs, rhs, opts, err);</a>
-<a name="ln1440">}</a>
-<a name="ln1441"> </a>
-<a name="ln1442">/// Unmaps a global |mapping| for the given mode.</a>
-<a name="ln1443">///</a>
-<a name="ln1444">/// To unmap a buffer-local mapping, use |nvim_buf_del_keymap()|.</a>
-<a name="ln1445">///</a>
-<a name="ln1446">/// @see |nvim_set_keymap()|</a>
-<a name="ln1447">void nvim_del_keymap(uint64_t channel_id, String mode, String lhs, Error *err)</a>
-<a name="ln1448">  FUNC_API_SINCE(6)</a>
-<a name="ln1449">{</a>
-<a name="ln1450">  nvim_buf_del_keymap(channel_id, -1, mode, lhs, err);</a>
-<a name="ln1451">}</a>
-<a name="ln1452"> </a>
-<a name="ln1453">/// Returns a 2-tuple (Array), where item 0 is the current channel id and item</a>
-<a name="ln1454">/// 1 is the |api-metadata| map (Dictionary).</a>
-<a name="ln1455">///</a>
-<a name="ln1456">/// @returns 2-tuple [{channel-id}, {api-metadata}]</a>
-<a name="ln1457">Array nvim_get_api_info(uint64_t channel_id, Arena *arena)</a>
-<a name="ln1458">  FUNC_API_SINCE(1) FUNC_API_FAST FUNC_API_REMOTE_ONLY</a>
-<a name="ln1459">{</a>
-<a name="ln1460">  Array rv = arena_array(arena, 2);</a>
-<a name="ln1461"> </a>
-<a name="ln1462">  assert(channel_id &lt;= INT64_MAX);</a>
-<a name="ln1463">  ADD_C(rv, INTEGER_OBJ((int64_t)channel_id));</a>
-<a name="ln1464">  ADD_C(rv, DICTIONARY_OBJ(api_metadata()));</a>
-<a name="ln1465"> </a>
-<a name="ln1466">  return rv;</a>
-<a name="ln1467">}</a>
-<a name="ln1468"> </a>
-<a name="ln1469">/// Self-identifies the client.</a>
-<a name="ln1470">///</a>
-<a name="ln1471">/// The client/plugin/application should call this after connecting, to provide</a>
-<a name="ln1472">/// hints about its identity and purpose, for debugging and orchestration.</a>
-<a name="ln1473">///</a>
-<a name="ln1474">/// Can be called more than once; the caller should merge old info if</a>
-<a name="ln1475">/// appropriate. Example: library first identifies the channel, then a plugin</a>
-<a name="ln1476">/// using that library later identifies itself.</a>
-<a name="ln1477">///</a>
-<a name="ln1478">/// @note &quot;Something is better than nothing&quot;. You don't need to include all the</a>
-<a name="ln1479">///       fields.</a>
-<a name="ln1480">///</a>
-<a name="ln1481">/// @param channel_id</a>
-<a name="ln1482">/// @param name Short name for the connected client</a>
-<a name="ln1483">/// @param version  Dictionary describing the version, with these</a>
-<a name="ln1484">///                 (optional) keys:</a>
-<a name="ln1485">///     - &quot;major&quot; major version (defaults to 0 if not set, for no release yet)</a>
-<a name="ln1486">///     - &quot;minor&quot; minor version</a>
-<a name="ln1487">///     - &quot;patch&quot; patch number</a>
-<a name="ln1488">///     - &quot;prerelease&quot; string describing a prerelease, like &quot;dev&quot; or &quot;beta1&quot;</a>
-<a name="ln1489">///     - &quot;commit&quot; hash or similar identifier of commit</a>
-<a name="ln1490">/// @param type Must be one of the following values. Client libraries should</a>
-<a name="ln1491">///             default to &quot;remote&quot; unless overridden by the user.</a>
-<a name="ln1492">///     - &quot;remote&quot; remote client connected to Nvim.</a>
-<a name="ln1493">///     - &quot;ui&quot; gui frontend</a>
-<a name="ln1494">///     - &quot;embedder&quot; application using Nvim as a component (for example,</a>
-<a name="ln1495">///                  IDE/editor implementing a vim mode).</a>
-<a name="ln1496">///     - &quot;host&quot; plugin host, typically started by nvim</a>
-<a name="ln1497">///     - &quot;plugin&quot; single plugin, started by nvim</a>
-<a name="ln1498">/// @param methods Builtin methods in the client. For a host, this does not</a>
-<a name="ln1499">///                include plugin methods which will be discovered later.</a>
-<a name="ln1500">///                The key should be the method name, the values are dicts with</a>
-<a name="ln1501">///                these (optional) keys (more keys may be added in future</a>
-<a name="ln1502">///                versions of Nvim, thus unknown keys are ignored. Clients</a>
-<a name="ln1503">///                must only use keys defined in this or later versions of</a>
-<a name="ln1504">///                Nvim):</a>
-<a name="ln1505">///     - &quot;async&quot;  if true, send as a notification. If false or unspecified,</a>
-<a name="ln1506">///                use a blocking request</a>
-<a name="ln1507">///     - &quot;nargs&quot; Number of arguments. Could be a single integer or an array</a>
-<a name="ln1508">///                of two integers, minimum and maximum inclusive.</a>
-<a name="ln1509">///</a>
-<a name="ln1510">/// @param attributes Arbitrary string:string map of informal client properties.</a>
-<a name="ln1511">///     Suggested keys:</a>
-<a name="ln1512">///     - &quot;website&quot;: Client homepage URL (e.g. GitHub repository)</a>
-<a name="ln1513">///     - &quot;license&quot;: License description (&quot;Apache 2&quot;, &quot;GPLv3&quot;, &quot;MIT&quot;, …)</a>
-<a name="ln1514">///     - &quot;logo&quot;:    URI or path to image, preferably small logo or icon.</a>
-<a name="ln1515">///                  .png or .svg format is preferred.</a>
-<a name="ln1516">///</a>
-<a name="ln1517">/// @param[out] err Error details, if any</a>
-<a name="ln1518">void nvim_set_client_info(uint64_t channel_id, String name, Dictionary version, String type,</a>
-<a name="ln1519">                          Dictionary methods, Dictionary attributes, Error *err)</a>
-<a name="ln1520">  FUNC_API_SINCE(4) FUNC_API_REMOTE_ONLY</a>
-<a name="ln1521">{</a>
-<a name="ln1522">  Dictionary info = ARRAY_DICT_INIT;</a>
-<a name="ln1523">  PUT(info, &quot;name&quot;, copy_object(STRING_OBJ(name), NULL));</a>
-<a name="ln1524"> </a>
-<a name="ln1525">  version = copy_dictionary(version, NULL);</a>
-<a name="ln1526">  bool has_major = false;</a>
-<a name="ln1527">  for (size_t i = 0; i &lt; version.size; i++) {</a>
-<a name="ln1528">    if (strequal(version.items[i].key.data, &quot;major&quot;)) {</a>
-<a name="ln1529">      has_major = true;</a>
-<a name="ln1530">      break;</a>
-<a name="ln1531">    }</a>
-<a name="ln1532">  }</a>
-<a name="ln1533">  if (!has_major) {</a>
-<a name="ln1534">    PUT(version, &quot;major&quot;, INTEGER_OBJ(0));</a>
-<a name="ln1535">  }</a>
-<a name="ln1536">  PUT(info, &quot;version&quot;, DICTIONARY_OBJ(version));</a>
-<a name="ln1537"> </a>
-<a name="ln1538">  PUT(info, &quot;type&quot;, copy_object(STRING_OBJ(type), NULL));</a>
-<a name="ln1539">  PUT(info, &quot;methods&quot;, DICTIONARY_OBJ(copy_dictionary(methods, NULL)));</a>
-<a name="ln1540">  PUT(info, &quot;attributes&quot;, DICTIONARY_OBJ(copy_dictionary(attributes, NULL)));</a>
-<a name="ln1541"> </a>
-<a name="ln1542">  rpc_set_client_info(channel_id, info);</a>
-<a name="ln1543">}</a>
-<a name="ln1544"> </a>
-<a name="ln1545">/// Gets information about a channel.</a>
-<a name="ln1546">///</a>
-<a name="ln1547">/// @returns Dictionary describing a channel, with these keys:</a>
-<a name="ln1548">///    - &quot;id&quot;       Channel id.</a>
-<a name="ln1549">///    - &quot;argv&quot;     (optional) Job arguments list.</a>
-<a name="ln1550">///    - &quot;stream&quot;   Stream underlying the channel.</a>
-<a name="ln1551">///         - &quot;stdio&quot;      stdin and stdout of this Nvim instance</a>
-<a name="ln1552">///         - &quot;stderr&quot;     stderr of this Nvim instance</a>
-<a name="ln1553">///         - &quot;socket&quot;     TCP/IP socket or named pipe</a>
-<a name="ln1554">///         - &quot;job&quot;        Job with communication over its stdio.</a>
-<a name="ln1555">///    -  &quot;mode&quot;    How data received on the channel is interpreted.</a>
-<a name="ln1556">///         - &quot;bytes&quot;      Send and receive raw bytes.</a>
-<a name="ln1557">///         - &quot;terminal&quot;   |terminal| instance interprets ASCII sequences.</a>
-<a name="ln1558">///         - &quot;rpc&quot;        |RPC| communication on the channel is active.</a>
-<a name="ln1559">///    -  &quot;pty&quot;     (optional) Name of pseudoterminal. On a POSIX system this</a>
-<a name="ln1560">///                 is a device path like &quot;/dev/pts/1&quot;. If the name is unknown,</a>
-<a name="ln1561">///                 the key will still be present if a pty is used (e.g. for</a>
-<a name="ln1562">///                 conpty on Windows).</a>
-<a name="ln1563">///    -  &quot;buffer&quot;  (optional) Buffer with connected |terminal| instance.</a>
-<a name="ln1564">///    -  &quot;client&quot;  (optional) Info about the peer (client on the other end of</a>
-<a name="ln1565">///                 the RPC channel), if provided by it via</a>
-<a name="ln1566">///                 |nvim_set_client_info()|.</a>
-<a name="ln1567">///</a>
-<a name="ln1568">Dictionary nvim_get_chan_info(Integer chan, Error *err)</a>
-<a name="ln1569">  FUNC_API_SINCE(4)</a>
-<a name="ln1570">{</a>
-<a name="ln1571">  if (chan &lt; 0) {</a>
-<a name="ln1572">    return (Dictionary)ARRAY_DICT_INIT;</a>
-<a name="ln1573">  }</a>
-<a name="ln1574">  return channel_info((uint64_t)chan);</a>
-<a name="ln1575">}</a>
-<a name="ln1576"> </a>
-<a name="ln1577">/// Get information about all open channels.</a>
-<a name="ln1578">///</a>
-<a name="ln1579">/// @returns Array of Dictionaries, each describing a channel with</a>
-<a name="ln1580">///          the format specified at |nvim_get_chan_info()|.</a>
-<a name="ln1581">Array nvim_list_chans(void)</a>
-<a name="ln1582">  FUNC_API_SINCE(4)</a>
-<a name="ln1583">{</a>
-<a name="ln1584">  return channel_all_info();</a>
-<a name="ln1585">}</a>
-<a name="ln1586"> </a>
-<a name="ln1587">/// Calls many API methods atomically.</a>
-<a name="ln1588">///</a>
-<a name="ln1589">/// This has two main usages:</a>
-<a name="ln1590">/// 1. To perform several requests from an async context atomically, i.e.</a>
-<a name="ln1591">///    without interleaving redraws, RPC requests from other clients, or user</a>
-<a name="ln1592">///    interactions (however API methods may trigger autocommands or event</a>
-<a name="ln1593">///    processing which have such side effects, e.g. |:sleep| may wake timers).</a>
-<a name="ln1594">/// 2. To minimize RPC overhead (roundtrips) of a sequence of many requests.</a>
-<a name="ln1595">///</a>
-<a name="ln1596">/// @param channel_id</a>
-<a name="ln1597">/// @param calls an array of calls, where each call is described by an array</a>
-<a name="ln1598">///              with two elements: the request name, and an array of arguments.</a>
-<a name="ln1599">/// @param[out] err Validation error details (malformed `calls` parameter),</a>
-<a name="ln1600">///             if any. Errors from batched calls are given in the return value.</a>
+<a name="ln1392">  PUT(rv, &quot;mode&quot;, CSTR_TO_OBJ(modestr));</a>
+<a name="ln1393">  PUT(rv, &quot;blocking&quot;, BOOLEAN_OBJ(blocked));</a>
+<a name="ln1394"> </a>
+<a name="ln1395">  return rv;</a>
+<a name="ln1396">}</a>
+<a name="ln1397"> </a>
+<a name="ln1398">/// Gets a list of global (non-buffer-local) |mapping| definitions.</a>
+<a name="ln1399">///</a>
+<a name="ln1400">/// @param  mode       Mode short-name (&quot;n&quot;, &quot;i&quot;, &quot;v&quot;, ...)</a>
+<a name="ln1401">/// @returns Array of |maparg()|-like dictionaries describing mappings.</a>
+<a name="ln1402">///          The &quot;buffer&quot; key is always zero.</a>
+<a name="ln1403">ArrayOf(Dictionary) nvim_get_keymap(String mode)</a>
+<a name="ln1404">  FUNC_API_SINCE(3)</a>
+<a name="ln1405">{</a>
+<a name="ln1406">  return keymap_array(mode, NULL);</a>
+<a name="ln1407">}</a>
+<a name="ln1408"> </a>
+<a name="ln1409">/// Sets a global |mapping| for the given mode.</a>
+<a name="ln1410">///</a>
+<a name="ln1411">/// To set a buffer-local mapping, use |nvim_buf_set_keymap()|.</a>
+<a name="ln1412">///</a>
+<a name="ln1413">/// Unlike |:map|, leading/trailing whitespace is accepted as part of the {lhs} or {rhs}.</a>
+<a name="ln1414">/// Empty {rhs} is |&lt;Nop&gt;|. |keycodes| are replaced as usual.</a>
+<a name="ln1415">///</a>
+<a name="ln1416">/// Example:</a>
+<a name="ln1417">/// &lt;pre&gt;vim</a>
+<a name="ln1418">///     call nvim_set_keymap('n', ' &lt;NL&gt;', '', {'nowait': v:true})</a>
+<a name="ln1419">/// &lt;/pre&gt;</a>
+<a name="ln1420">///</a>
+<a name="ln1421">/// is equivalent to:</a>
+<a name="ln1422">/// &lt;pre&gt;vim</a>
+<a name="ln1423">///     nmap &lt;nowait&gt; &lt;Space&gt;&lt;NL&gt; &lt;Nop&gt;</a>
+<a name="ln1424">/// &lt;/pre&gt;</a>
+<a name="ln1425">///</a>
+<a name="ln1426">/// @param channel_id</a>
+<a name="ln1427">/// @param  mode  Mode short-name (map command prefix: &quot;n&quot;, &quot;i&quot;, &quot;v&quot;, &quot;x&quot;, …)</a>
+<a name="ln1428">///               or &quot;!&quot; for |:map!|, or empty string for |:map|.</a>
+<a name="ln1429">///               &quot;ia&quot;, &quot;ca&quot; or &quot;!a&quot; for abbreviation in Insert mode, Cmdline mode, or both, respectively</a>
+<a name="ln1430">/// @param  lhs   Left-hand-side |{lhs}| of the mapping.</a>
+<a name="ln1431">/// @param  rhs   Right-hand-side |{rhs}| of the mapping.</a>
+<a name="ln1432">/// @param  opts  Optional parameters map: Accepts all |:map-arguments| as keys except |&lt;buffer&gt;|,</a>
+<a name="ln1433">///               values are booleans (default false). Also:</a>
+<a name="ln1434">///               - &quot;noremap&quot; non-recursive mapping |:noremap|</a>
+<a name="ln1435">///               - &quot;desc&quot; human-readable description.</a>
+<a name="ln1436">///               - &quot;callback&quot; Lua function called in place of {rhs}.</a>
+<a name="ln1437">///               - &quot;replace_keycodes&quot; (boolean) When &quot;expr&quot; is true, replace keycodes in the</a>
+<a name="ln1438">///                 resulting string (see |nvim_replace_termcodes()|). Returning nil from the Lua</a>
+<a name="ln1439">///                 &quot;callback&quot; is equivalent to returning an empty string.</a>
+<a name="ln1440">/// @param[out]   err   Error details, if any.</a>
+<a name="ln1441">void nvim_set_keymap(uint64_t channel_id, String mode, String lhs, String rhs, Dict(keymap) *opts,</a>
+<a name="ln1442">                     Error *err)</a>
+<a name="ln1443">  FUNC_API_SINCE(6)</a>
+<a name="ln1444">{</a>
+<a name="ln1445">  modify_keymap(channel_id, -1, false, mode, lhs, rhs, opts, err);</a>
+<a name="ln1446">}</a>
+<a name="ln1447"> </a>
+<a name="ln1448">/// Unmaps a global |mapping| for the given mode.</a>
+<a name="ln1449">///</a>
+<a name="ln1450">/// To unmap a buffer-local mapping, use |nvim_buf_del_keymap()|.</a>
+<a name="ln1451">///</a>
+<a name="ln1452">/// @see |nvim_set_keymap()|</a>
+<a name="ln1453">void nvim_del_keymap(uint64_t channel_id, String mode, String lhs, Error *err)</a>
+<a name="ln1454">  FUNC_API_SINCE(6)</a>
+<a name="ln1455">{</a>
+<a name="ln1456">  nvim_buf_del_keymap(channel_id, -1, mode, lhs, err);</a>
+<a name="ln1457">}</a>
+<a name="ln1458"> </a>
+<a name="ln1459">/// Returns a 2-tuple (Array), where item 0 is the current channel id and item</a>
+<a name="ln1460">/// 1 is the |api-metadata| map (Dictionary).</a>
+<a name="ln1461">///</a>
+<a name="ln1462">/// @returns 2-tuple [{channel-id}, {api-metadata}]</a>
+<a name="ln1463">Array nvim_get_api_info(uint64_t channel_id, Arena *arena)</a>
+<a name="ln1464">  FUNC_API_SINCE(1) FUNC_API_FAST FUNC_API_REMOTE_ONLY</a>
+<a name="ln1465">{</a>
+<a name="ln1466">  Array rv = arena_array(arena, 2);</a>
+<a name="ln1467"> </a>
+<a name="ln1468">  assert(channel_id &lt;= INT64_MAX);</a>
+<a name="ln1469">  ADD_C(rv, INTEGER_OBJ((int64_t)channel_id));</a>
+<a name="ln1470">  ADD_C(rv, DICTIONARY_OBJ(api_metadata()));</a>
+<a name="ln1471"> </a>
+<a name="ln1472">  return rv;</a>
+<a name="ln1473">}</a>
+<a name="ln1474"> </a>
+<a name="ln1475">/// Self-identifies the client.</a>
+<a name="ln1476">///</a>
+<a name="ln1477">/// The client/plugin/application should call this after connecting, to provide</a>
+<a name="ln1478">/// hints about its identity and purpose, for debugging and orchestration.</a>
+<a name="ln1479">///</a>
+<a name="ln1480">/// Can be called more than once; the caller should merge old info if</a>
+<a name="ln1481">/// appropriate. Example: library first identifies the channel, then a plugin</a>
+<a name="ln1482">/// using that library later identifies itself.</a>
+<a name="ln1483">///</a>
+<a name="ln1484">/// @note &quot;Something is better than nothing&quot;. You don't need to include all the</a>
+<a name="ln1485">///       fields.</a>
+<a name="ln1486">///</a>
+<a name="ln1487">/// @param channel_id</a>
+<a name="ln1488">/// @param name Short name for the connected client</a>
+<a name="ln1489">/// @param version  Dictionary describing the version, with these</a>
+<a name="ln1490">///                 (optional) keys:</a>
+<a name="ln1491">///     - &quot;major&quot; major version (defaults to 0 if not set, for no release yet)</a>
+<a name="ln1492">///     - &quot;minor&quot; minor version</a>
+<a name="ln1493">///     - &quot;patch&quot; patch number</a>
+<a name="ln1494">///     - &quot;prerelease&quot; string describing a prerelease, like &quot;dev&quot; or &quot;beta1&quot;</a>
+<a name="ln1495">///     - &quot;commit&quot; hash or similar identifier of commit</a>
+<a name="ln1496">/// @param type Must be one of the following values. Client libraries should</a>
+<a name="ln1497">///             default to &quot;remote&quot; unless overridden by the user.</a>
+<a name="ln1498">///     - &quot;remote&quot; remote client connected to Nvim.</a>
+<a name="ln1499">///     - &quot;ui&quot; gui frontend</a>
+<a name="ln1500">///     - &quot;embedder&quot; application using Nvim as a component (for example,</a>
+<a name="ln1501">///                  IDE/editor implementing a vim mode).</a>
+<a name="ln1502">///     - &quot;host&quot; plugin host, typically started by nvim</a>
+<a name="ln1503">///     - &quot;plugin&quot; single plugin, started by nvim</a>
+<a name="ln1504">/// @param methods Builtin methods in the client. For a host, this does not</a>
+<a name="ln1505">///                include plugin methods which will be discovered later.</a>
+<a name="ln1506">///                The key should be the method name, the values are dicts with</a>
+<a name="ln1507">///                these (optional) keys (more keys may be added in future</a>
+<a name="ln1508">///                versions of Nvim, thus unknown keys are ignored. Clients</a>
+<a name="ln1509">///                must only use keys defined in this or later versions of</a>
+<a name="ln1510">///                Nvim):</a>
+<a name="ln1511">///     - &quot;async&quot;  if true, send as a notification. If false or unspecified,</a>
+<a name="ln1512">///                use a blocking request</a>
+<a name="ln1513">///     - &quot;nargs&quot; Number of arguments. Could be a single integer or an array</a>
+<a name="ln1514">///                of two integers, minimum and maximum inclusive.</a>
+<a name="ln1515">///</a>
+<a name="ln1516">/// @param attributes Arbitrary string:string map of informal client properties.</a>
+<a name="ln1517">///     Suggested keys:</a>
+<a name="ln1518">///     - &quot;website&quot;: Client homepage URL (e.g. GitHub repository)</a>
+<a name="ln1519">///     - &quot;license&quot;: License description (&quot;Apache 2&quot;, &quot;GPLv3&quot;, &quot;MIT&quot;, …)</a>
+<a name="ln1520">///     - &quot;logo&quot;:    URI or path to image, preferably small logo or icon.</a>
+<a name="ln1521">///                  .png or .svg format is preferred.</a>
+<a name="ln1522">///</a>
+<a name="ln1523">/// @param[out] err Error details, if any</a>
+<a name="ln1524">void nvim_set_client_info(uint64_t channel_id, String name, Dictionary version, String type,</a>
+<a name="ln1525">                          Dictionary methods, Dictionary attributes, Error *err)</a>
+<a name="ln1526">  FUNC_API_SINCE(4) FUNC_API_REMOTE_ONLY</a>
+<a name="ln1527">{</a>
+<a name="ln1528">  Dictionary info = ARRAY_DICT_INIT;</a>
+<a name="ln1529">  PUT(info, &quot;name&quot;, copy_object(STRING_OBJ(name), NULL));</a>
+<a name="ln1530"> </a>
+<a name="ln1531">  version = copy_dictionary(version, NULL);</a>
+<a name="ln1532">  bool has_major = false;</a>
+<a name="ln1533">  for (size_t i = 0; i &lt; version.size; i++) {</a>
+<a name="ln1534">    if (strequal(version.items[i].key.data, &quot;major&quot;)) {</a>
+<a name="ln1535">      has_major = true;</a>
+<a name="ln1536">      break;</a>
+<a name="ln1537">    }</a>
+<a name="ln1538">  }</a>
+<a name="ln1539">  if (!has_major) {</a>
+<a name="ln1540">    PUT(version, &quot;major&quot;, INTEGER_OBJ(0));</a>
+<a name="ln1541">  }</a>
+<a name="ln1542">  PUT(info, &quot;version&quot;, DICTIONARY_OBJ(version));</a>
+<a name="ln1543"> </a>
+<a name="ln1544">  PUT(info, &quot;type&quot;, copy_object(STRING_OBJ(type), NULL));</a>
+<a name="ln1545">  PUT(info, &quot;methods&quot;, DICTIONARY_OBJ(copy_dictionary(methods, NULL)));</a>
+<a name="ln1546">  PUT(info, &quot;attributes&quot;, DICTIONARY_OBJ(copy_dictionary(attributes, NULL)));</a>
+<a name="ln1547"> </a>
+<a name="ln1548">  rpc_set_client_info(channel_id, info);</a>
+<a name="ln1549">}</a>
+<a name="ln1550"> </a>
+<a name="ln1551">/// Gets information about a channel.</a>
+<a name="ln1552">///</a>
+<a name="ln1553">/// @returns Dictionary describing a channel, with these keys:</a>
+<a name="ln1554">///    - &quot;id&quot;       Channel id.</a>
+<a name="ln1555">///    - &quot;argv&quot;     (optional) Job arguments list.</a>
+<a name="ln1556">///    - &quot;stream&quot;   Stream underlying the channel.</a>
+<a name="ln1557">///         - &quot;stdio&quot;      stdin and stdout of this Nvim instance</a>
+<a name="ln1558">///         - &quot;stderr&quot;     stderr of this Nvim instance</a>
+<a name="ln1559">///         - &quot;socket&quot;     TCP/IP socket or named pipe</a>
+<a name="ln1560">///         - &quot;job&quot;        Job with communication over its stdio.</a>
+<a name="ln1561">///    -  &quot;mode&quot;    How data received on the channel is interpreted.</a>
+<a name="ln1562">///         - &quot;bytes&quot;      Send and receive raw bytes.</a>
+<a name="ln1563">///         - &quot;terminal&quot;   |terminal| instance interprets ASCII sequences.</a>
+<a name="ln1564">///         - &quot;rpc&quot;        |RPC| communication on the channel is active.</a>
+<a name="ln1565">///    -  &quot;pty&quot;     (optional) Name of pseudoterminal. On a POSIX system this</a>
+<a name="ln1566">///                 is a device path like &quot;/dev/pts/1&quot;. If the name is unknown,</a>
+<a name="ln1567">///                 the key will still be present if a pty is used (e.g. for</a>
+<a name="ln1568">///                 conpty on Windows).</a>
+<a name="ln1569">///    -  &quot;buffer&quot;  (optional) Buffer with connected |terminal| instance.</a>
+<a name="ln1570">///    -  &quot;client&quot;  (optional) Info about the peer (client on the other end of</a>
+<a name="ln1571">///                 the RPC channel), if provided by it via</a>
+<a name="ln1572">///                 |nvim_set_client_info()|.</a>
+<a name="ln1573">///</a>
+<a name="ln1574">Dictionary nvim_get_chan_info(Integer chan, Error *err)</a>
+<a name="ln1575">  FUNC_API_SINCE(4)</a>
+<a name="ln1576">{</a>
+<a name="ln1577">  if (chan &lt; 0) {</a>
+<a name="ln1578">    return (Dictionary)ARRAY_DICT_INIT;</a>
+<a name="ln1579">  }</a>
+<a name="ln1580">  return channel_info((uint64_t)chan);</a>
+<a name="ln1581">}</a>
+<a name="ln1582"> </a>
+<a name="ln1583">/// Get information about all open channels.</a>
+<a name="ln1584">///</a>
+<a name="ln1585">/// @returns Array of Dictionaries, each describing a channel with</a>
+<a name="ln1586">///          the format specified at |nvim_get_chan_info()|.</a>
+<a name="ln1587">Array nvim_list_chans(void)</a>
+<a name="ln1588">  FUNC_API_SINCE(4)</a>
+<a name="ln1589">{</a>
+<a name="ln1590">  return channel_all_info();</a>
+<a name="ln1591">}</a>
+<a name="ln1592"> </a>
+<a name="ln1593">/// Calls many API methods atomically.</a>
+<a name="ln1594">///</a>
+<a name="ln1595">/// This has two main usages:</a>
+<a name="ln1596">/// 1. To perform several requests from an async context atomically, i.e.</a>
+<a name="ln1597">///    without interleaving redraws, RPC requests from other clients, or user</a>
+<a name="ln1598">///    interactions (however API methods may trigger autocommands or event</a>
+<a name="ln1599">///    processing which have such side effects, e.g. |:sleep| may wake timers).</a>
+<a name="ln1600">/// 2. To minimize RPC overhead (roundtrips) of a sequence of many requests.</a>
 <a name="ln1601">///</a>
-<a name="ln1602">/// @return Array of two elements. The first is an array of return</a>
-<a name="ln1603">/// values. The second is NIL if all calls succeeded. If a call resulted in</a>
-<a name="ln1604">/// an error, it is a three-element array with the zero-based index of the call</a>
-<a name="ln1605">/// which resulted in an error, the error type and the error message. If an</a>
-<a name="ln1606">/// error occurred, the values from all preceding calls will still be returned.</a>
-<a name="ln1607">Array nvim_call_atomic(uint64_t channel_id, Array calls, Arena *arena, Error *err)</a>
-<a name="ln1608">  FUNC_API_SINCE(1) FUNC_API_REMOTE_ONLY</a>
-<a name="ln1609">{</a>
-<a name="ln1610">  Array rv = arena_array(arena, 2);</a>
-<a name="ln1611">  Array results = arena_array(arena, calls.size);</a>
-<a name="ln1612">  Error nested_error = ERROR_INIT;</a>
-<a name="ln1613"> </a>
-<a name="ln1614">  size_t i;  // also used for freeing the variables</a>
-<a name="ln1615">  for (i = 0; i &lt; calls.size; i++) {</a>
-<a name="ln1616">    VALIDATE_T(&quot;'calls' item&quot;, kObjectTypeArray, calls.items[i].type, {</a>
-<a name="ln1617">      goto theend;</a>
-<a name="ln1618">    });</a>
-<a name="ln1619">    Array call = calls.items[i].data.array;</a>
-<a name="ln1620">    VALIDATE_EXP((call.size == 2), &quot;'calls' item&quot;, &quot;2-item Array&quot;, NULL, {</a>
-<a name="ln1621">      goto theend;</a>
-<a name="ln1622">    });</a>
-<a name="ln1623">    VALIDATE_T(&quot;name&quot;, kObjectTypeString, call.items[0].type, {</a>
-<a name="ln1624">      goto theend;</a>
-<a name="ln1625">    });</a>
-<a name="ln1626">    String name = call.items[0].data.string;</a>
-<a name="ln1627">    VALIDATE_T(&quot;call args&quot;, kObjectTypeArray, call.items[1].type, {</a>
-<a name="ln1628">      goto theend;</a>
-<a name="ln1629">    });</a>
-<a name="ln1630">    Array args = call.items[1].data.array;</a>
-<a name="ln1631"> </a>
-<a name="ln1632">    MsgpackRpcRequestHandler handler =</a>
-<a name="ln1633">      msgpack_rpc_get_handler_for(name.data,</a>
-<a name="ln1634">                                  name.size,</a>
-<a name="ln1635">                                  &amp;nested_error);</a>
-<a name="ln1636"> </a>
-<a name="ln1637">    if (ERROR_SET(&amp;nested_error)) {</a>
-<a name="ln1638">      break;</a>
-<a name="ln1639">    }</a>
-<a name="ln1640"> </a>
-<a name="ln1641">    Object result = handler.fn(channel_id, args, arena, &amp;nested_error);</a>
-<a name="ln1642">    if (ERROR_SET(&amp;nested_error)) {</a>
-<a name="ln1643">      // error handled after loop</a>
+<a name="ln1602">/// @param channel_id</a>
+<a name="ln1603">/// @param calls an array of calls, where each call is described by an array</a>
+<a name="ln1604">///              with two elements: the request name, and an array of arguments.</a>
+<a name="ln1605">/// @param[out] err Validation error details (malformed `calls` parameter),</a>
+<a name="ln1606">///             if any. Errors from batched calls are given in the return value.</a>
+<a name="ln1607">///</a>
+<a name="ln1608">/// @return Array of two elements. The first is an array of return</a>
+<a name="ln1609">/// values. The second is NIL if all calls succeeded. If a call resulted in</a>
+<a name="ln1610">/// an error, it is a three-element array with the zero-based index of the call</a>
+<a name="ln1611">/// which resulted in an error, the error type and the error message. If an</a>
+<a name="ln1612">/// error occurred, the values from all preceding calls will still be returned.</a>
+<a name="ln1613">Array nvim_call_atomic(uint64_t channel_id, Array calls, Arena *arena, Error *err)</a>
+<a name="ln1614">  FUNC_API_SINCE(1) FUNC_API_REMOTE_ONLY</a>
+<a name="ln1615">{</a>
+<a name="ln1616">  Array rv = arena_array(arena, 2);</a>
+<a name="ln1617">  Array results = arena_array(arena, calls.size);</a>
+<a name="ln1618">  Error nested_error = ERROR_INIT;</a>
+<a name="ln1619"> </a>
+<a name="ln1620">  size_t i;  // also used for freeing the variables</a>
+<a name="ln1621">  for (i = 0; i &lt; calls.size; i++) {</a>
+<a name="ln1622">    VALIDATE_T(&quot;'calls' item&quot;, kObjectTypeArray, calls.items[i].type, {</a>
+<a name="ln1623">      goto theend;</a>
+<a name="ln1624">    });</a>
+<a name="ln1625">    Array call = calls.items[i].data.array;</a>
+<a name="ln1626">    VALIDATE_EXP((call.size == 2), &quot;'calls' item&quot;, &quot;2-item Array&quot;, NULL, {</a>
+<a name="ln1627">      goto theend;</a>
+<a name="ln1628">    });</a>
+<a name="ln1629">    VALIDATE_T(&quot;name&quot;, kObjectTypeString, call.items[0].type, {</a>
+<a name="ln1630">      goto theend;</a>
+<a name="ln1631">    });</a>
+<a name="ln1632">    String name = call.items[0].data.string;</a>
+<a name="ln1633">    VALIDATE_T(&quot;call args&quot;, kObjectTypeArray, call.items[1].type, {</a>
+<a name="ln1634">      goto theend;</a>
+<a name="ln1635">    });</a>
+<a name="ln1636">    Array args = call.items[1].data.array;</a>
+<a name="ln1637"> </a>
+<a name="ln1638">    MsgpackRpcRequestHandler handler =</a>
+<a name="ln1639">      msgpack_rpc_get_handler_for(name.data,</a>
+<a name="ln1640">                                  name.size,</a>
+<a name="ln1641">                                  &amp;nested_error);</a>
+<a name="ln1642"> </a>
+<a name="ln1643">    if (ERROR_SET(&amp;nested_error)) {</a>
 <a name="ln1644">      break;</a>
 <a name="ln1645">    }</a>
-<a name="ln1646">    // TODO(bfredl): wasteful copy. It could be avoided to encoding to msgpack</a>
-<a name="ln1647">    // directly here. But `result` might become invalid when next api function</a>
-<a name="ln1648">    // is called in the loop.</a>
-<a name="ln1649">    ADD_C(results, copy_object(result, arena));</a>
-<a name="ln1650">    if (!handler.arena_return) {</a>
-<a name="ln1651">      api_free_object(result);</a>
-<a name="ln1652">    }</a>
-<a name="ln1653">  }</a>
-<a name="ln1654"> </a>
-<a name="ln1655">  ADD_C(rv, ARRAY_OBJ(results));</a>
-<a name="ln1656">  if (ERROR_SET(&amp;nested_error)) {</a>
-<a name="ln1657">    Array errval = arena_array(arena, 3);</a>
-<a name="ln1658">    ADD_C(errval, INTEGER_OBJ((Integer)i));</a>
-<a name="ln1659">    ADD_C(errval, INTEGER_OBJ(nested_error.type));</a>
-<a name="ln1660">    ADD_C(errval, STRING_OBJ(copy_string(cstr_as_string(nested_error.msg), arena)));</a>
-<a name="ln1661">    ADD_C(rv, ARRAY_OBJ(errval));</a>
-<a name="ln1662">  } else {</a>
-<a name="ln1663">    ADD_C(rv, NIL);</a>
-<a name="ln1664">  }</a>
-<a name="ln1665"> </a>
-<a name="ln1666">theend:</a>
-<a name="ln1667">  api_clear_error(&amp;nested_error);</a>
-<a name="ln1668">  return rv;</a>
-<a name="ln1669">}</a>
-<a name="ln1670"> </a>
-<a name="ln1671">/// Writes a message to vim output or error buffer. The string is split</a>
-<a name="ln1672">/// and flushed after each newline. Incomplete lines are kept for writing</a>
-<a name="ln1673">/// later.</a>
-<a name="ln1674">///</a>
-<a name="ln1675">/// @param message  Message to write</a>
-<a name="ln1676">/// @param to_err   true: message is an error (uses `emsg` instead of `msg`)</a>
-<a name="ln1677">/// @param writeln  Append a trailing newline</a>
-<a name="ln1678">static void write_msg(String message, bool to_err, bool writeln)</a>
-<a name="ln1679">{</a>
-<a name="ln1680">  static StringBuilder out_line_buf = KV_INITIAL_VALUE;</a>
-<a name="ln1681">  static StringBuilder err_line_buf = KV_INITIAL_VALUE;</a>
-<a name="ln1682"> </a>
-<a name="ln1683">#define PUSH_CHAR(c, line_buf, msg) \</a>
-<a name="ln1684">  if (kv_max(line_buf) == 0) { \</a>
-<a name="ln1685">    kv_resize(line_buf, LINE_BUFFER_MIN_SIZE); \</a>
-<a name="ln1686">  } \</a>
-<a name="ln1687">  if (c == NL) { \</a>
-<a name="ln1688">    kv_push(line_buf, NUL); \</a>
-<a name="ln1689">    msg(line_buf.items); \</a>
-<a name="ln1690">    msg_didout = true; \</a>
-<a name="ln1691">    kv_drop(line_buf, kv_size(line_buf)); \</a>
-<a name="ln1692">    kv_resize(line_buf, LINE_BUFFER_MIN_SIZE); \</a>
-<a name="ln1693">  } else { \</a>
-<a name="ln1694">    kv_push(line_buf, c); \</a>
-<a name="ln1695">  }</a>
-<a name="ln1696"> </a>
-<a name="ln1697">  no_wait_return++;</a>
-<a name="ln1698">  for (uint32_t i = 0; i &lt; message.size; i++) {</a>
-<a name="ln1699">    if (got_int) {</a>
-<a name="ln1700">      break;</a>
-<a name="ln1701">    }</a>
-<a name="ln1702">    if (to_err) {</a>
-<a name="ln1703">      PUSH_CHAR(message.data[i], err_line_buf, emsg);</a>
-<a name="ln1704">    } else {</a>
-<a name="ln1705">      PUSH_CHAR(message.data[i], out_line_buf, msg);</a>
-<a name="ln1706">    }</a>
-<a name="ln1707">  }</a>
-<a name="ln1708">  if (writeln) {</a>
-<a name="ln1709">    if (to_err) {</a>
-<a name="ln1710">      PUSH_CHAR(NL, err_line_buf, emsg);</a>
-<a name="ln1711">    } else {</a>
-<a name="ln1712">      PUSH_CHAR(NL, out_line_buf, msg);</a>
-<a name="ln1713">    }</a>
-<a name="ln1714">  }</a>
-<a name="ln1715">  no_wait_return--;</a>
-<a name="ln1716">  msg_end();</a>
-<a name="ln1717">}</a>
-<a name="ln1718"> </a>
-<a name="ln1719">// Functions used for testing purposes</a>
-<a name="ln1720"> </a>
-<a name="ln1721">/// Returns object given as argument.</a>
-<a name="ln1722">///</a>
-<a name="ln1723">/// This API function is used for testing. One should not rely on its presence</a>
-<a name="ln1724">/// in plugins.</a>
-<a name="ln1725">///</a>
-<a name="ln1726">/// @param[in]  obj  Object to return.</a>
-<a name="ln1727">///</a>
-<a name="ln1728">/// @return its argument.</a>
-<a name="ln1729">Object nvim__id(Object obj)</a>
-<a name="ln1730">{</a>
-<a name="ln1731">  return copy_object(obj, NULL);</a>
-<a name="ln1732">}</a>
-<a name="ln1733"> </a>
-<a name="ln1734">/// Returns array given as argument.</a>
-<a name="ln1735">///</a>
-<a name="ln1736">/// This API function is used for testing. One should not rely on its presence</a>
-<a name="ln1737">/// in plugins.</a>
-<a name="ln1738">///</a>
-<a name="ln1739">/// @param[in]  arr  Array to return.</a>
-<a name="ln1740">///</a>
-<a name="ln1741">/// @return its argument.</a>
-<a name="ln1742">Array nvim__id_array(Array arr)</a>
-<a name="ln1743">{</a>
-<a name="ln1744">  return copy_array(arr, NULL);</a>
-<a name="ln1745">}</a>
-<a name="ln1746"> </a>
-<a name="ln1747">/// Returns dictionary given as argument.</a>
-<a name="ln1748">///</a>
-<a name="ln1749">/// This API function is used for testing. One should not rely on its presence</a>
-<a name="ln1750">/// in plugins.</a>
-<a name="ln1751">///</a>
-<a name="ln1752">/// @param[in]  dct  Dictionary to return.</a>
-<a name="ln1753">///</a>
-<a name="ln1754">/// @return its argument.</a>
-<a name="ln1755">Dictionary nvim__id_dictionary(Dictionary dct)</a>
-<a name="ln1756">{</a>
-<a name="ln1757">  return copy_dictionary(dct, NULL);</a>
-<a name="ln1758">}</a>
-<a name="ln1759"> </a>
-<a name="ln1760">/// Returns floating-point value given as argument.</a>
-<a name="ln1761">///</a>
-<a name="ln1762">/// This API function is used for testing. One should not rely on its presence</a>
-<a name="ln1763">/// in plugins.</a>
-<a name="ln1764">///</a>
-<a name="ln1765">/// @param[in]  flt  Value to return.</a>
-<a name="ln1766">///</a>
-<a name="ln1767">/// @return its argument.</a>
-<a name="ln1768">Float nvim__id_float(Float flt)</a>
-<a name="ln1769">{</a>
-<a name="ln1770">  return flt;</a>
-<a name="ln1771">}</a>
-<a name="ln1772"> </a>
-<a name="ln1773">/// Gets internal stats.</a>
-<a name="ln1774">///</a>
-<a name="ln1775">/// @return Map of various internal stats.</a>
-<a name="ln1776">Dictionary nvim__stats(void)</a>
-<a name="ln1777">{</a>
-<a name="ln1778">  Dictionary rv = ARRAY_DICT_INIT;</a>
-<a name="ln1779">  PUT(rv, &quot;fsync&quot;, INTEGER_OBJ(g_stats.fsync));</a>
-<a name="ln1780">  PUT(rv, &quot;log_skip&quot;, INTEGER_OBJ(g_stats.log_skip));</a>
-<a name="ln1781">  PUT(rv, &quot;lua_refcount&quot;, INTEGER_OBJ(nlua_get_global_ref_count()));</a>
-<a name="ln1782">  PUT(rv, &quot;redraw&quot;, INTEGER_OBJ(g_stats.redraw));</a>
-<a name="ln1783">  PUT(rv, &quot;arena_alloc_count&quot;, INTEGER_OBJ((Integer)arena_alloc_count));</a>
-<a name="ln1784">  return rv;</a>
-<a name="ln1785">}</a>
-<a name="ln1786"> </a>
-<a name="ln1787">/// Gets a list of dictionaries representing attached UIs.</a>
-<a name="ln1788">///</a>
-<a name="ln1789">/// @return Array of UI dictionaries, each with these keys:</a>
-<a name="ln1790">///   - &quot;height&quot;  Requested height of the UI</a>
-<a name="ln1791">///   - &quot;width&quot;   Requested width of the UI</a>
-<a name="ln1792">///   - &quot;rgb&quot;     true if the UI uses RGB colors (false implies |cterm-colors|)</a>
-<a name="ln1793">///   - &quot;ext_...&quot; Requested UI extensions, see |ui-option|</a>
-<a name="ln1794">///   - &quot;chan&quot;    |channel-id| of remote UI</a>
-<a name="ln1795">Array nvim_list_uis(void)</a>
-<a name="ln1796">  FUNC_API_SINCE(4)</a>
-<a name="ln1797">{</a>
-<a name="ln1798">  return ui_array();</a>
-<a name="ln1799">}</a>
-<a name="ln1800"> </a>
-<a name="ln1801">/// Gets the immediate children of process `pid`.</a>
-<a name="ln1802">///</a>
-<a name="ln1803">/// @return Array of child process ids, empty if process not found.</a>
-<a name="ln1804">Array nvim_get_proc_children(Integer pid, Error *err)</a>
-<a name="ln1805">  FUNC_API_SINCE(4)</a>
-<a name="ln1806">{</a>
-<a name="ln1807">  Array rvobj = ARRAY_DICT_INIT;</a>
-<a name="ln1808">  int *proc_list = NULL;</a>
-<a name="ln1809"> </a>
-<a name="ln1810">  VALIDATE_INT((pid &gt; 0 &amp;&amp; pid &lt;= INT_MAX), &quot;pid&quot;, pid, {</a>
-<a name="ln1811">    goto end;</a>
-<a name="ln1812">  });</a>
-<a name="ln1813"> </a>
-<a name="ln1814">  size_t proc_count;</a>
-<a name="ln1815">  int rv = os_proc_children((int)pid, &amp;proc_list, &amp;proc_count);</a>
-<a name="ln1816">  if (rv == 2) {</a>
-<a name="ln1817">    // syscall failed (possibly because of kernel options), try shelling out.</a>
-<a name="ln1818">    DLOG(&quot;fallback to vim._os_proc_children()&quot;);</a>
-<a name="ln1819">    MAXSIZE_TEMP_ARRAY(a, 1);</a>
-<a name="ln1820">    ADD(a, INTEGER_OBJ(pid));</a>
-<a name="ln1821">    Object o = NLUA_EXEC_STATIC(&quot;return vim._os_proc_children(...)&quot;, a, err);</a>
-<a name="ln1822">    if (o.type == kObjectTypeArray) {</a>
-<a name="ln1823">      rvobj = o.data.array;</a>
-<a name="ln1824">    } else if (!ERROR_SET(err)) {</a>
-<a name="ln1825">      api_set_error(err, kErrorTypeException,</a>
-<a name="ln1826">                    &quot;Failed to get process children. pid=%&quot; PRId64 &quot; error=%d&quot;,</a>
-<a name="ln1827">                    pid, rv);</a>
-<a name="ln1828">    }</a>
-<a name="ln1829">    goto end;</a>
-<a name="ln1830">  }</a>
-<a name="ln1831"> </a>
-<a name="ln1832">  for (size_t i = 0; i &lt; proc_count; i++) {</a>
-<a name="ln1833">    ADD(rvobj, INTEGER_OBJ(proc_list[i]));</a>
-<a name="ln1834">  }</a>
-<a name="ln1835"> </a>
-<a name="ln1836">end:</a>
-<a name="ln1837">  xfree(proc_list);</a>
-<a name="ln1838">  return rvobj;</a>
-<a name="ln1839">}</a>
-<a name="ln1840"> </a>
-<a name="ln1841">/// Gets info describing process `pid`.</a>
-<a name="ln1842">///</a>
-<a name="ln1843">/// @return Map of process properties, or NIL if process not found.</a>
-<a name="ln1844">Object nvim_get_proc(Integer pid, Error *err)</a>
-<a name="ln1845">  FUNC_API_SINCE(4)</a>
-<a name="ln1846">{</a>
-<a name="ln1847">  Object rvobj = OBJECT_INIT;</a>
-<a name="ln1848">  rvobj.data.dictionary = (Dictionary)ARRAY_DICT_INIT;</a>
-<a name="ln1849">  rvobj.type = kObjectTypeDictionary;</a>
-<a name="ln1850"> </a>
-<a name="ln1851">  VALIDATE_INT((pid &gt; 0 &amp;&amp; pid &lt;= INT_MAX), &quot;pid&quot;, pid, {</a>
-<a name="ln1852">    return NIL;</a>
-<a name="ln1853">  });</a>
-<a name="ln1854"> </a>
-<a name="ln1855">#ifdef MSWIN</a>
-<a name="ln1856">  rvobj.data.dictionary = os_proc_info((int)pid);</a>
-<a name="ln1857">  if (rvobj.data.dictionary.size == 0) {  // Process not found.</a>
+<a name="ln1646"> </a>
+<a name="ln1647">    Object result = handler.fn(channel_id, args, arena, &amp;nested_error);</a>
+<a name="ln1648">    if (ERROR_SET(&amp;nested_error)) {</a>
+<a name="ln1649">      // error handled after loop</a>
+<a name="ln1650">      break;</a>
+<a name="ln1651">    }</a>
+<a name="ln1652">    // TODO(bfredl): wasteful copy. It could be avoided to encoding to msgpack</a>
+<a name="ln1653">    // directly here. But `result` might become invalid when next api function</a>
+<a name="ln1654">    // is called in the loop.</a>
+<a name="ln1655">    ADD_C(results, copy_object(result, arena));</a>
+<a name="ln1656">    if (!handler.arena_return) {</a>
+<a name="ln1657">      api_free_object(result);</a>
+<a name="ln1658">    }</a>
+<a name="ln1659">  }</a>
+<a name="ln1660"> </a>
+<a name="ln1661">  ADD_C(rv, ARRAY_OBJ(results));</a>
+<a name="ln1662">  if (ERROR_SET(&amp;nested_error)) {</a>
+<a name="ln1663">    Array errval = arena_array(arena, 3);</a>
+<a name="ln1664">    ADD_C(errval, INTEGER_OBJ((Integer)i));</a>
+<a name="ln1665">    ADD_C(errval, INTEGER_OBJ(nested_error.type));</a>
+<a name="ln1666">    ADD_C(errval, STRING_OBJ(copy_string(cstr_as_string(nested_error.msg), arena)));</a>
+<a name="ln1667">    ADD_C(rv, ARRAY_OBJ(errval));</a>
+<a name="ln1668">  } else {</a>
+<a name="ln1669">    ADD_C(rv, NIL);</a>
+<a name="ln1670">  }</a>
+<a name="ln1671"> </a>
+<a name="ln1672">theend:</a>
+<a name="ln1673">  api_clear_error(&amp;nested_error);</a>
+<a name="ln1674">  return rv;</a>
+<a name="ln1675">}</a>
+<a name="ln1676"> </a>
+<a name="ln1677">/// Writes a message to vim output or error buffer. The string is split</a>
+<a name="ln1678">/// and flushed after each newline. Incomplete lines are kept for writing</a>
+<a name="ln1679">/// later.</a>
+<a name="ln1680">///</a>
+<a name="ln1681">/// @param message  Message to write</a>
+<a name="ln1682">/// @param to_err   true: message is an error (uses `emsg` instead of `msg`)</a>
+<a name="ln1683">/// @param writeln  Append a trailing newline</a>
+<a name="ln1684">static void write_msg(String message, bool to_err, bool writeln)</a>
+<a name="ln1685">{</a>
+<a name="ln1686">  static StringBuilder out_line_buf = KV_INITIAL_VALUE;</a>
+<a name="ln1687">  static StringBuilder err_line_buf = KV_INITIAL_VALUE;</a>
+<a name="ln1688"> </a>
+<a name="ln1689">#define PUSH_CHAR(c, line_buf, msg) \</a>
+<a name="ln1690">  if (kv_max(line_buf) == 0) { \</a>
+<a name="ln1691">    kv_resize(line_buf, LINE_BUFFER_MIN_SIZE); \</a>
+<a name="ln1692">  } \</a>
+<a name="ln1693">  if (c == NL) { \</a>
+<a name="ln1694">    kv_push(line_buf, NUL); \</a>
+<a name="ln1695">    msg(line_buf.items); \</a>
+<a name="ln1696">    msg_didout = true; \</a>
+<a name="ln1697">    kv_drop(line_buf, kv_size(line_buf)); \</a>
+<a name="ln1698">    kv_resize(line_buf, LINE_BUFFER_MIN_SIZE); \</a>
+<a name="ln1699">  } else { \</a>
+<a name="ln1700">    kv_push(line_buf, c); \</a>
+<a name="ln1701">  }</a>
+<a name="ln1702"> </a>
+<a name="ln1703">  no_wait_return++;</a>
+<a name="ln1704">  for (uint32_t i = 0; i &lt; message.size; i++) {</a>
+<a name="ln1705">    if (got_int) {</a>
+<a name="ln1706">      break;</a>
+<a name="ln1707">    }</a>
+<a name="ln1708">    if (to_err) {</a>
+<a name="ln1709">      PUSH_CHAR(message.data[i], err_line_buf, emsg);</a>
+<a name="ln1710">    } else {</a>
+<a name="ln1711">      PUSH_CHAR(message.data[i], out_line_buf, msg);</a>
+<a name="ln1712">    }</a>
+<a name="ln1713">  }</a>
+<a name="ln1714">  if (writeln) {</a>
+<a name="ln1715">    if (to_err) {</a>
+<a name="ln1716">      PUSH_CHAR(NL, err_line_buf, emsg);</a>
+<a name="ln1717">    } else {</a>
+<a name="ln1718">      PUSH_CHAR(NL, out_line_buf, msg);</a>
+<a name="ln1719">    }</a>
+<a name="ln1720">  }</a>
+<a name="ln1721">  no_wait_return--;</a>
+<a name="ln1722">  msg_end();</a>
+<a name="ln1723">}</a>
+<a name="ln1724"> </a>
+<a name="ln1725">// Functions used for testing purposes</a>
+<a name="ln1726"> </a>
+<a name="ln1727">/// Returns object given as argument.</a>
+<a name="ln1728">///</a>
+<a name="ln1729">/// This API function is used for testing. One should not rely on its presence</a>
+<a name="ln1730">/// in plugins.</a>
+<a name="ln1731">///</a>
+<a name="ln1732">/// @param[in]  obj  Object to return.</a>
+<a name="ln1733">///</a>
+<a name="ln1734">/// @return its argument.</a>
+<a name="ln1735">Object nvim__id(Object obj)</a>
+<a name="ln1736">{</a>
+<a name="ln1737">  return copy_object(obj, NULL);</a>
+<a name="ln1738">}</a>
+<a name="ln1739"> </a>
+<a name="ln1740">/// Returns array given as argument.</a>
+<a name="ln1741">///</a>
+<a name="ln1742">/// This API function is used for testing. One should not rely on its presence</a>
+<a name="ln1743">/// in plugins.</a>
+<a name="ln1744">///</a>
+<a name="ln1745">/// @param[in]  arr  Array to return.</a>
+<a name="ln1746">///</a>
+<a name="ln1747">/// @return its argument.</a>
+<a name="ln1748">Array nvim__id_array(Array arr)</a>
+<a name="ln1749">{</a>
+<a name="ln1750">  return copy_array(arr, NULL);</a>
+<a name="ln1751">}</a>
+<a name="ln1752"> </a>
+<a name="ln1753">/// Returns dictionary given as argument.</a>
+<a name="ln1754">///</a>
+<a name="ln1755">/// This API function is used for testing. One should not rely on its presence</a>
+<a name="ln1756">/// in plugins.</a>
+<a name="ln1757">///</a>
+<a name="ln1758">/// @param[in]  dct  Dictionary to return.</a>
+<a name="ln1759">///</a>
+<a name="ln1760">/// @return its argument.</a>
+<a name="ln1761">Dictionary nvim__id_dictionary(Dictionary dct)</a>
+<a name="ln1762">{</a>
+<a name="ln1763">  return copy_dictionary(dct, NULL);</a>
+<a name="ln1764">}</a>
+<a name="ln1765"> </a>
+<a name="ln1766">/// Returns floating-point value given as argument.</a>
+<a name="ln1767">///</a>
+<a name="ln1768">/// This API function is used for testing. One should not rely on its presence</a>
+<a name="ln1769">/// in plugins.</a>
+<a name="ln1770">///</a>
+<a name="ln1771">/// @param[in]  flt  Value to return.</a>
+<a name="ln1772">///</a>
+<a name="ln1773">/// @return its argument.</a>
+<a name="ln1774">Float nvim__id_float(Float flt)</a>
+<a name="ln1775">{</a>
+<a name="ln1776">  return flt;</a>
+<a name="ln1777">}</a>
+<a name="ln1778"> </a>
+<a name="ln1779">/// Gets internal stats.</a>
+<a name="ln1780">///</a>
+<a name="ln1781">/// @return Map of various internal stats.</a>
+<a name="ln1782">Dictionary nvim__stats(void)</a>
+<a name="ln1783">{</a>
+<a name="ln1784">  Dictionary rv = ARRAY_DICT_INIT;</a>
+<a name="ln1785">  PUT(rv, &quot;fsync&quot;, INTEGER_OBJ(g_stats.fsync));</a>
+<a name="ln1786">  PUT(rv, &quot;log_skip&quot;, INTEGER_OBJ(g_stats.log_skip));</a>
+<a name="ln1787">  PUT(rv, &quot;lua_refcount&quot;, INTEGER_OBJ(nlua_get_global_ref_count()));</a>
+<a name="ln1788">  PUT(rv, &quot;redraw&quot;, INTEGER_OBJ(g_stats.redraw));</a>
+<a name="ln1789">  PUT(rv, &quot;arena_alloc_count&quot;, INTEGER_OBJ((Integer)arena_alloc_count));</a>
+<a name="ln1790">  return rv;</a>
+<a name="ln1791">}</a>
+<a name="ln1792"> </a>
+<a name="ln1793">/// Gets a list of dictionaries representing attached UIs.</a>
+<a name="ln1794">///</a>
+<a name="ln1795">/// @return Array of UI dictionaries, each with these keys:</a>
+<a name="ln1796">///   - &quot;height&quot;  Requested height of the UI</a>
+<a name="ln1797">///   - &quot;width&quot;   Requested width of the UI</a>
+<a name="ln1798">///   - &quot;rgb&quot;     true if the UI uses RGB colors (false implies |cterm-colors|)</a>
+<a name="ln1799">///   - &quot;ext_...&quot; Requested UI extensions, see |ui-option|</a>
+<a name="ln1800">///   - &quot;chan&quot;    |channel-id| of remote UI</a>
+<a name="ln1801">Array nvim_list_uis(void)</a>
+<a name="ln1802">  FUNC_API_SINCE(4)</a>
+<a name="ln1803">{</a>
+<a name="ln1804">  return ui_array();</a>
+<a name="ln1805">}</a>
+<a name="ln1806"> </a>
+<a name="ln1807">/// Gets the immediate children of process `pid`.</a>
+<a name="ln1808">///</a>
+<a name="ln1809">/// @return Array of child process ids, empty if process not found.</a>
+<a name="ln1810">Array nvim_get_proc_children(Integer pid, Error *err)</a>
+<a name="ln1811">  FUNC_API_SINCE(4)</a>
+<a name="ln1812">{</a>
+<a name="ln1813">  Array rvobj = ARRAY_DICT_INIT;</a>
+<a name="ln1814">  int *proc_list = NULL;</a>
+<a name="ln1815"> </a>
+<a name="ln1816">  VALIDATE_INT((pid &gt; 0 &amp;&amp; pid &lt;= INT_MAX), &quot;pid&quot;, pid, {</a>
+<a name="ln1817">    goto end;</a>
+<a name="ln1818">  });</a>
+<a name="ln1819"> </a>
+<a name="ln1820">  size_t proc_count;</a>
+<a name="ln1821">  int rv = os_proc_children((int)pid, &amp;proc_list, &amp;proc_count);</a>
+<a name="ln1822">  if (rv == 2) {</a>
+<a name="ln1823">    // syscall failed (possibly because of kernel options), try shelling out.</a>
+<a name="ln1824">    DLOG(&quot;fallback to vim._os_proc_children()&quot;);</a>
+<a name="ln1825">    MAXSIZE_TEMP_ARRAY(a, 1);</a>
+<a name="ln1826">    ADD(a, INTEGER_OBJ(pid));</a>
+<a name="ln1827">    Object o = NLUA_EXEC_STATIC(&quot;return vim._os_proc_children(...)&quot;, a, err);</a>
+<a name="ln1828">    if (o.type == kObjectTypeArray) {</a>
+<a name="ln1829">      rvobj = o.data.array;</a>
+<a name="ln1830">    } else if (!ERROR_SET(err)) {</a>
+<a name="ln1831">      api_set_error(err, kErrorTypeException,</a>
+<a name="ln1832">                    &quot;Failed to get process children. pid=%&quot; PRId64 &quot; error=%d&quot;,</a>
+<a name="ln1833">                    pid, rv);</a>
+<a name="ln1834">    }</a>
+<a name="ln1835">    goto end;</a>
+<a name="ln1836">  }</a>
+<a name="ln1837"> </a>
+<a name="ln1838">  for (size_t i = 0; i &lt; proc_count; i++) {</a>
+<a name="ln1839">    ADD(rvobj, INTEGER_OBJ(proc_list[i]));</a>
+<a name="ln1840">  }</a>
+<a name="ln1841"> </a>
+<a name="ln1842">end:</a>
+<a name="ln1843">  xfree(proc_list);</a>
+<a name="ln1844">  return rvobj;</a>
+<a name="ln1845">}</a>
+<a name="ln1846"> </a>
+<a name="ln1847">/// Gets info describing process `pid`.</a>
+<a name="ln1848">///</a>
+<a name="ln1849">/// @return Map of process properties, or NIL if process not found.</a>
+<a name="ln1850">Object nvim_get_proc(Integer pid, Error *err)</a>
+<a name="ln1851">  FUNC_API_SINCE(4)</a>
+<a name="ln1852">{</a>
+<a name="ln1853">  Object rvobj = OBJECT_INIT;</a>
+<a name="ln1854">  rvobj.data.dictionary = (Dictionary)ARRAY_DICT_INIT;</a>
+<a name="ln1855">  rvobj.type = kObjectTypeDictionary;</a>
+<a name="ln1856"> </a>
+<a name="ln1857">  VALIDATE_INT((pid &gt; 0 &amp;&amp; pid &lt;= INT_MAX), &quot;pid&quot;, pid, {</a>
 <a name="ln1858">    return NIL;</a>
-<a name="ln1859">  }</a>
-<a name="ln1860">#else</a>
-<a name="ln1861">  // Cross-platform process info APIs are miserable, so use `ps` instead.</a>
-<a name="ln1862">  MAXSIZE_TEMP_ARRAY(a, 1);</a>
-<a name="ln1863">  ADD(a, INTEGER_OBJ(pid));</a>
-<a name="ln1864">  Object o = NLUA_EXEC_STATIC(&quot;return vim._os_proc_info(...)&quot;, a, err);</a>
-<a name="ln1865">  if (o.type == kObjectTypeArray &amp;&amp; o.data.array.size == 0) {</a>
-<a name="ln1866">    return NIL;  // Process not found.</a>
-<a name="ln1867">  } else if (o.type == kObjectTypeDictionary) {</a>
-<a name="ln1868">    rvobj.data.dictionary = o.data.dictionary;</a>
-<a name="ln1869">  } else if (!ERROR_SET(err)) {</a>
-<a name="ln1870">    api_set_error(err, kErrorTypeException,</a>
-<a name="ln1871">                  &quot;Failed to get process info. pid=%&quot; PRId64, pid);</a>
-<a name="ln1872">  }</a>
-<a name="ln1873">#endif</a>
-<a name="ln1874">  return rvobj;</a>
-<a name="ln1875">}</a>
-<a name="ln1876"> </a>
-<a name="ln1877">/// Selects an item in the completion popup menu.</a>
-<a name="ln1878">///</a>
-<a name="ln1879">/// If neither |ins-completion| nor |cmdline-completion| popup menu is active</a>
-<a name="ln1880">/// this API call is silently ignored.</a>
-<a name="ln1881">/// Useful for an external UI using |ui-popupmenu| to control the popup menu with the mouse.</a>
-<a name="ln1882">/// Can also be used in a mapping; use &lt;Cmd&gt; |:map-cmd| or a Lua mapping to ensure the mapping</a>
-<a name="ln1883">/// doesn't end completion mode.</a>
+<a name="ln1859">  });</a>
+<a name="ln1860"> </a>
+<a name="ln1861">#ifdef MSWIN</a>
+<a name="ln1862">  rvobj.data.dictionary = os_proc_info((int)pid);</a>
+<a name="ln1863">  if (rvobj.data.dictionary.size == 0) {  // Process not found.</a>
+<a name="ln1864">    return NIL;</a>
+<a name="ln1865">  }</a>
+<a name="ln1866">#else</a>
+<a name="ln1867">  // Cross-platform process info APIs are miserable, so use `ps` instead.</a>
+<a name="ln1868">  MAXSIZE_TEMP_ARRAY(a, 1);</a>
+<a name="ln1869">  ADD(a, INTEGER_OBJ(pid));</a>
+<a name="ln1870">  Object o = NLUA_EXEC_STATIC(&quot;return vim._os_proc_info(...)&quot;, a, err);</a>
+<a name="ln1871">  if (o.type == kObjectTypeArray &amp;&amp; o.data.array.size == 0) {</a>
+<a name="ln1872">    return NIL;  // Process not found.</a>
+<a name="ln1873">  } else if (o.type == kObjectTypeDictionary) {</a>
+<a name="ln1874">    rvobj.data.dictionary = o.data.dictionary;</a>
+<a name="ln1875">  } else if (!ERROR_SET(err)) {</a>
+<a name="ln1876">    api_set_error(err, kErrorTypeException,</a>
+<a name="ln1877">                  &quot;Failed to get process info. pid=%&quot; PRId64, pid);</a>
+<a name="ln1878">  }</a>
+<a name="ln1879">#endif</a>
+<a name="ln1880">  return rvobj;</a>
+<a name="ln1881">}</a>
+<a name="ln1882"> </a>
+<a name="ln1883">/// Selects an item in the completion popup menu.</a>
 <a name="ln1884">///</a>
-<a name="ln1885">/// @param item    Index (zero-based) of the item to select. Value of -1 selects nothing</a>
-<a name="ln1886">///                and restores the original text.</a>
-<a name="ln1887">/// @param insert  For |ins-completion|, whether the selection should be inserted in the buffer.</a>
-<a name="ln1888">///                Ignored for |cmdline-completion|.</a>
-<a name="ln1889">/// @param finish  Finish the completion and dismiss the popup menu. Implies {insert}.</a>
-<a name="ln1890">/// @param opts    Optional parameters. Reserved for future use.</a>
-<a name="ln1891">/// @param[out] err Error details, if any</a>
-<a name="ln1892">void nvim_select_popupmenu_item(Integer item, Boolean insert, Boolean finish, Dictionary opts,</a>
-<a name="ln1893">                                Error *err)</a>
-<a name="ln1894">  FUNC_API_SINCE(6)</a>
-<a name="ln1895">{</a>
-<a name="ln1896">  VALIDATE((opts.size == 0), &quot;%s&quot;, &quot;opts dict isn't empty&quot;, {</a>
-<a name="ln1897">    return;</a>
-<a name="ln1898">  });</a>
-<a name="ln1899"> </a>
-<a name="ln1900">  if (finish) {</a>
-<a name="ln1901">    insert = true;</a>
-<a name="ln1902">  }</a>
-<a name="ln1903"> </a>
-<a name="ln1904">  pum_ext_select_item((int)item, insert, finish);</a>
-<a name="ln1905">}</a>
-<a name="ln1906"> </a>
-<a name="ln1907">/// NB: if your UI doesn't use hlstate, this will not return hlstate first time</a>
-<a name="ln1908">Array nvim__inspect_cell(Integer grid, Integer row, Integer col, Arena *arena, Error *err)</a>
-<a name="ln1909">{</a>
-<a name="ln1910">  Array ret = ARRAY_DICT_INIT;</a>
-<a name="ln1911"> </a>
-<a name="ln1912">  // TODO(bfredl): if grid == 0 we should read from the compositor's buffer.</a>
-<a name="ln1913">  // The only problem is that it does not yet exist.</a>
-<a name="ln1914">  ScreenGrid *g = &amp;default_grid;</a>
-<a name="ln1915">  if (grid == pum_grid.handle) {</a>
-<a name="ln1916">    g = &amp;pum_grid;</a>
-<a name="ln1917">  } else if (grid &gt; 1) {</a>
-<a name="ln1918">    win_T *wp = get_win_by_grid_handle((handle_T)grid);</a>
-<a name="ln1919">    VALIDATE_INT((wp != NULL &amp;&amp; wp-&gt;w_grid_alloc.chars != NULL), &quot;grid handle&quot;, grid, {</a>
-<a name="ln1920">      return ret;</a>
-<a name="ln1921">    });</a>
-<a name="ln1922">    g = &amp;wp-&gt;w_grid_alloc;</a>
-<a name="ln1923">  }</a>
-<a name="ln1924"> </a>
-<a name="ln1925">  if (row &lt; 0 || row &gt;= g-&gt;rows</a>
-<a name="ln1926">      || col &lt; 0 || col &gt;= g-&gt;cols) {</a>
-<a name="ln1927">    return ret;</a>
-<a name="ln1928">  }</a>
-<a name="ln1929">  ret = arena_array(arena, 3);</a>
-<a name="ln1930">  size_t off = g-&gt;line_offset[(size_t)row] + (size_t)col;</a>
-<a name="ln1931">  ADD_C(ret, CSTR_AS_OBJ((char *)g-&gt;chars[off]));</a>
-<a name="ln1932">  int attr = g-&gt;attrs[off];</a>
-<a name="ln1933">  ADD_C(ret, DICTIONARY_OBJ(hl_get_attr_by_id(attr, true, arena, err)));</a>
-<a name="ln1934">  // will not work first time</a>
-<a name="ln1935">  if (!highlight_use_hlstate()) {</a>
-<a name="ln1936">    ADD_C(ret, ARRAY_OBJ(hl_inspect(attr)));</a>
-<a name="ln1937">  }</a>
-<a name="ln1938">  return ret;</a>
-<a name="ln1939">}</a>
-<a name="ln1940"> </a>
-<a name="ln1941">void nvim__screenshot(String path)</a>
-<a name="ln1942">  FUNC_API_FAST</a>
-<a name="ln1943">{</a>
-<a name="ln1944">  ui_call_screenshot(path);</a>
+<a name="ln1885">/// If neither |ins-completion| nor |cmdline-completion| popup menu is active</a>
+<a name="ln1886">/// this API call is silently ignored.</a>
+<a name="ln1887">/// Useful for an external UI using |ui-popupmenu| to control the popup menu with the mouse.</a>
+<a name="ln1888">/// Can also be used in a mapping; use &lt;Cmd&gt; |:map-cmd| or a Lua mapping to ensure the mapping</a>
+<a name="ln1889">/// doesn't end completion mode.</a>
+<a name="ln1890">///</a>
+<a name="ln1891">/// @param item    Index (zero-based) of the item to select. Value of -1 selects nothing</a>
+<a name="ln1892">///                and restores the original text.</a>
+<a name="ln1893">/// @param insert  For |ins-completion|, whether the selection should be inserted in the buffer.</a>
+<a name="ln1894">///                Ignored for |cmdline-completion|.</a>
+<a name="ln1895">/// @param finish  Finish the completion and dismiss the popup menu. Implies {insert}.</a>
+<a name="ln1896">/// @param opts    Optional parameters. Reserved for future use.</a>
+<a name="ln1897">/// @param[out] err Error details, if any</a>
+<a name="ln1898">void nvim_select_popupmenu_item(Integer item, Boolean insert, Boolean finish, Dictionary opts,</a>
+<a name="ln1899">                                Error *err)</a>
+<a name="ln1900">  FUNC_API_SINCE(6)</a>
+<a name="ln1901">{</a>
+<a name="ln1902">  VALIDATE((opts.size == 0), &quot;%s&quot;, &quot;opts dict isn't empty&quot;, {</a>
+<a name="ln1903">    return;</a>
+<a name="ln1904">  });</a>
+<a name="ln1905"> </a>
+<a name="ln1906">  if (finish) {</a>
+<a name="ln1907">    insert = true;</a>
+<a name="ln1908">  }</a>
+<a name="ln1909"> </a>
+<a name="ln1910">  pum_ext_select_item((int)item, insert, finish);</a>
+<a name="ln1911">}</a>
+<a name="ln1912"> </a>
+<a name="ln1913">/// NB: if your UI doesn't use hlstate, this will not return hlstate first time</a>
+<a name="ln1914">Array nvim__inspect_cell(Integer grid, Integer row, Integer col, Arena *arena, Error *err)</a>
+<a name="ln1915">{</a>
+<a name="ln1916">  Array ret = ARRAY_DICT_INIT;</a>
+<a name="ln1917"> </a>
+<a name="ln1918">  // TODO(bfredl): if grid == 0 we should read from the compositor's buffer.</a>
+<a name="ln1919">  // The only problem is that it does not yet exist.</a>
+<a name="ln1920">  ScreenGrid *g = &amp;default_grid;</a>
+<a name="ln1921">  if (grid == pum_grid.handle) {</a>
+<a name="ln1922">    g = &amp;pum_grid;</a>
+<a name="ln1923">  } else if (grid &gt; 1) {</a>
+<a name="ln1924">    win_T *wp = get_win_by_grid_handle((handle_T)grid);</a>
+<a name="ln1925">    VALIDATE_INT((wp != NULL &amp;&amp; wp-&gt;w_grid_alloc.chars != NULL), &quot;grid handle&quot;, grid, {</a>
+<a name="ln1926">      return ret;</a>
+<a name="ln1927">    });</a>
+<a name="ln1928">    g = &amp;wp-&gt;w_grid_alloc;</a>
+<a name="ln1929">  }</a>
+<a name="ln1930"> </a>
+<a name="ln1931">  if (row &lt; 0 || row &gt;= g-&gt;rows</a>
+<a name="ln1932">      || col &lt; 0 || col &gt;= g-&gt;cols) {</a>
+<a name="ln1933">    return ret;</a>
+<a name="ln1934">  }</a>
+<a name="ln1935">  ret = arena_array(arena, 3);</a>
+<a name="ln1936">  size_t off = g-&gt;line_offset[(size_t)row] + (size_t)col;</a>
+<a name="ln1937">  ADD_C(ret, CSTR_AS_OBJ((char *)g-&gt;chars[off]));</a>
+<a name="ln1938">  int attr = g-&gt;attrs[off];</a>
+<a name="ln1939">  ADD_C(ret, DICTIONARY_OBJ(hl_get_attr_by_id(attr, true, arena, err)));</a>
+<a name="ln1940">  // will not work first time</a>
+<a name="ln1941">  if (!highlight_use_hlstate()) {</a>
+<a name="ln1942">    ADD_C(ret, ARRAY_OBJ(hl_inspect(attr)));</a>
+<a name="ln1943">  }</a>
+<a name="ln1944">  return ret;</a>
 <a name="ln1945">}</a>
 <a name="ln1946"> </a>
-<a name="ln1947">Object nvim__unpack(String str, Error *err)</a>
+<a name="ln1947">void nvim__screenshot(String path)</a>
 <a name="ln1948">  FUNC_API_FAST</a>
 <a name="ln1949">{</a>
-<a name="ln1950">  return unpack(str.data, str.size, err);</a>
+<a name="ln1950">  ui_call_screenshot(path);</a>
 <a name="ln1951">}</a>
 <a name="ln1952"> </a>
-<a name="ln1953">/// Deletes an uppercase/file named mark. See |mark-motions|.</a>
-<a name="ln1954">///</a>
-<a name="ln1955">/// @note fails with error if a lowercase or buffer local named mark is used.</a>
-<a name="ln1956">/// @param name       Mark name</a>
-<a name="ln1957">/// @return true if the mark was deleted, else false.</a>
-<a name="ln1958">/// @see |nvim_buf_del_mark()|</a>
-<a name="ln1959">/// @see |nvim_get_mark()|</a>
-<a name="ln1960">Boolean nvim_del_mark(String name, Error *err)</a>
-<a name="ln1961">  FUNC_API_SINCE(8)</a>
-<a name="ln1962">{</a>
-<a name="ln1963">  bool res = false;</a>
-<a name="ln1964">  VALIDATE_S((name.size == 1), &quot;mark name (must be a single char)&quot;, name.data, {</a>
-<a name="ln1965">    return res;</a>
-<a name="ln1966">  });</a>
-<a name="ln1967">  // Only allow file/uppercase marks</a>
-<a name="ln1968">  // TODO(muniter): Refactor this ASCII_ISUPPER macro to a proper function</a>
-<a name="ln1969">  VALIDATE_S((ASCII_ISUPPER(*name.data) || ascii_isdigit(*name.data)),</a>
-<a name="ln1970">             &quot;mark name (must be file/uppercase)&quot;, name.data, {</a>
+<a name="ln1953">Object nvim__unpack(String str, Error *err)</a>
+<a name="ln1954">  FUNC_API_FAST</a>
+<a name="ln1955">{</a>
+<a name="ln1956">  return unpack(str.data, str.size, err);</a>
+<a name="ln1957">}</a>
+<a name="ln1958"> </a>
+<a name="ln1959">/// Deletes an uppercase/file named mark. See |mark-motions|.</a>
+<a name="ln1960">///</a>
+<a name="ln1961">/// @note fails with error if a lowercase or buffer local named mark is used.</a>
+<a name="ln1962">/// @param name       Mark name</a>
+<a name="ln1963">/// @return true if the mark was deleted, else false.</a>
+<a name="ln1964">/// @see |nvim_buf_del_mark()|</a>
+<a name="ln1965">/// @see |nvim_get_mark()|</a>
+<a name="ln1966">Boolean nvim_del_mark(String name, Error *err)</a>
+<a name="ln1967">  FUNC_API_SINCE(8)</a>
+<a name="ln1968">{</a>
+<a name="ln1969">  bool res = false;</a>
+<a name="ln1970">  VALIDATE_S((name.size == 1), &quot;mark name (must be a single char)&quot;, name.data, {</a>
 <a name="ln1971">    return res;</a>
 <a name="ln1972">  });</a>
-<a name="ln1973">  res = set_mark(NULL, name, 0, 0, err);</a>
-<a name="ln1974">  return res;</a>
-<a name="ln1975">}</a>
-<a name="ln1976"> </a>
-<a name="ln1977">/// Return a tuple (row, col, buffer, buffername) representing the position of</a>
-<a name="ln1978">/// the uppercase/file named mark. See |mark-motions|.</a>
-<a name="ln1979">///</a>
-<a name="ln1980">/// Marks are (1,0)-indexed. |api-indexing|</a>
-<a name="ln1981">///</a>
-<a name="ln1982">/// @note fails with error if a lowercase or buffer local named mark is used.</a>
-<a name="ln1983">/// @param name       Mark name</a>
-<a name="ln1984">/// @param opts       Optional parameters. Reserved for future use.</a>
-<a name="ln1985">/// @return 4-tuple (row, col, buffer, buffername), (0, 0, 0, '') if the mark is</a>
-<a name="ln1986">/// not set.</a>
-<a name="ln1987">/// @see |nvim_buf_set_mark()|</a>
-<a name="ln1988">/// @see |nvim_del_mark()|</a>
-<a name="ln1989">Array nvim_get_mark(String name, Dictionary opts, Error *err)</a>
-<a name="ln1990">  FUNC_API_SINCE(8)</a>
-<a name="ln1991">{</a>
-<a name="ln1992">  Array rv = ARRAY_DICT_INIT;</a>
-<a name="ln1993"> </a>
-<a name="ln1994">  VALIDATE_S((name.size == 1), &quot;mark name (must be a single char)&quot;, name.data, {</a>
-<a name="ln1995">    return rv;</a>
-<a name="ln1996">  });</a>
-<a name="ln1997">  VALIDATE_S((ASCII_ISUPPER(*name.data) || ascii_isdigit(*name.data)),</a>
-<a name="ln1998">             &quot;mark name (must be file/uppercase)&quot;, name.data, {</a>
-<a name="ln1999">    return rv;</a>
-<a name="ln2000">  });</a>
-<a name="ln2001"> </a>
-<a name="ln2002">  xfmark_T *mark = mark_get_global(false, *name.data);  // false avoids loading the mark buffer</a>
-<a name="ln2003">  pos_T pos = mark-&gt;fmark.mark;</a>
-<a name="ln2004">  bool allocated = false;</a>
-<a name="ln2005">  int bufnr;</a>
-<a name="ln2006">  char *filename;</a>
+<a name="ln1973">  // Only allow file/uppercase marks</a>
+<a name="ln1974">  // TODO(muniter): Refactor this ASCII_ISUPPER macro to a proper function</a>
+<a name="ln1975">  VALIDATE_S((ASCII_ISUPPER(*name.data) || ascii_isdigit(*name.data)),</a>
+<a name="ln1976">             &quot;mark name (must be file/uppercase)&quot;, name.data, {</a>
+<a name="ln1977">    return res;</a>
+<a name="ln1978">  });</a>
+<a name="ln1979">  res = set_mark(NULL, name, 0, 0, err);</a>
+<a name="ln1980">  return res;</a>
+<a name="ln1981">}</a>
+<a name="ln1982"> </a>
+<a name="ln1983">/// Return a tuple (row, col, buffer, buffername) representing the position of</a>
+<a name="ln1984">/// the uppercase/file named mark. See |mark-motions|.</a>
+<a name="ln1985">///</a>
+<a name="ln1986">/// Marks are (1,0)-indexed. |api-indexing|</a>
+<a name="ln1987">///</a>
+<a name="ln1988">/// @note fails with error if a lowercase or buffer local named mark is used.</a>
+<a name="ln1989">/// @param name       Mark name</a>
+<a name="ln1990">/// @param opts       Optional parameters. Reserved for future use.</a>
+<a name="ln1991">/// @return 4-tuple (row, col, buffer, buffername), (0, 0, 0, '') if the mark is</a>
+<a name="ln1992">/// not set.</a>
+<a name="ln1993">/// @see |nvim_buf_set_mark()|</a>
+<a name="ln1994">/// @see |nvim_del_mark()|</a>
+<a name="ln1995">Array nvim_get_mark(String name, Dictionary opts, Error *err)</a>
+<a name="ln1996">  FUNC_API_SINCE(8)</a>
+<a name="ln1997">{</a>
+<a name="ln1998">  Array rv = ARRAY_DICT_INIT;</a>
+<a name="ln1999"> </a>
+<a name="ln2000">  VALIDATE_S((name.size == 1), &quot;mark name (must be a single char)&quot;, name.data, {</a>
+<a name="ln2001">    return rv;</a>
+<a name="ln2002">  });</a>
+<a name="ln2003">  VALIDATE_S((ASCII_ISUPPER(*name.data) || ascii_isdigit(*name.data)),</a>
+<a name="ln2004">             &quot;mark name (must be file/uppercase)&quot;, name.data, {</a>
+<a name="ln2005">    return rv;</a>
+<a name="ln2006">  });</a>
 <a name="ln2007"> </a>
-<a name="ln2008">  // Marks are from an open buffer it fnum is non zero</a>
-<a name="ln2009">  if (mark-&gt;fmark.fnum != 0) {</a>
-<a name="ln2010">    bufnr = mark-&gt;fmark.fnum;</a>
-<a name="ln2011">    filename = buflist_nr2name(bufnr, true, true);</a>
-<a name="ln2012">    allocated = true;</a>
-<a name="ln2013">    // Marks comes from shada</a>
-<a name="ln2014">  } else {</a>
-<a name="ln2015">    filename = mark-&gt;fname;</a>
-<a name="ln2016">    bufnr = 0;</a>
-<a name="ln2017">  }</a>
-<a name="ln2018"> </a>
-<a name="ln2019">  bool exists = filename != NULL;</a>
-<a name="ln2020">  Integer row;</a>
-<a name="ln2021">  Integer col;</a>
-<a name="ln2022"> </a>
-<a name="ln2023">  if (!exists || pos.lnum &lt;= 0) {</a>
-<a name="ln2024">    if (allocated) {</a>
-<a name="ln2025">      xfree(filename);</a>
-<a name="ln2026">      allocated = false;</a>
-<a name="ln2027">    }</a>
-<a name="ln2028">    filename = &quot;&quot;;</a>
-<a name="ln2029">    bufnr = 0;</a>
-<a name="ln2030">    row = 0;</a>
-<a name="ln2031">    col = 0;</a>
-<a name="ln2032">  } else {</a>
-<a name="ln2033">    row = pos.lnum;</a>
-<a name="ln2034">    col = pos.col;</a>
-<a name="ln2035">  }</a>
-<a name="ln2036"> </a>
-<a name="ln2037">  ADD(rv, INTEGER_OBJ(row));</a>
-<a name="ln2038">  ADD(rv, INTEGER_OBJ(col));</a>
-<a name="ln2039">  ADD(rv, INTEGER_OBJ(bufnr));</a>
-<a name="ln2040">  ADD(rv, CSTR_TO_OBJ(filename));</a>
-<a name="ln2041"> </a>
-<a name="ln2042">  if (allocated) {</a>
-<a name="ln2043">    xfree(filename);</a>
-<a name="ln2044">  }</a>
-<a name="ln2045"> </a>
-<a name="ln2046">  return rv;</a>
-<a name="ln2047">}</a>
-<a name="ln2048"> </a>
-<a name="ln2049">/// Evaluates statusline string.</a>
-<a name="ln2050">///</a>
-<a name="ln2051">/// @param str Statusline string (see 'statusline').</a>
-<a name="ln2052">/// @param opts Optional parameters.</a>
-<a name="ln2053">///           - winid: (number) |window-ID| of the window to use as context for statusline.</a>
-<a name="ln2054">///           - maxwidth: (number) Maximum width of statusline.</a>
-<a name="ln2055">///           - fillchar: (string) Character to fill blank spaces in the statusline (see</a>
-<a name="ln2056">///                                'fillchars'). Treated as single-width even if it isn't.</a>
-<a name="ln2057">///           - highlights: (boolean) Return highlight information.</a>
-<a name="ln2058">///           - use_winbar: (boolean) Evaluate winbar instead of statusline.</a>
-<a name="ln2059">///           - use_tabline: (boolean) Evaluate tabline instead of statusline. When true, {winid}</a>
-<a name="ln2060">///                                    is ignored. Mutually exclusive with {use_winbar}.</a>
-<a name="ln2061">///           - use_statuscol_lnum: (number) Evaluate statuscolumn for this line number instead of statusline.</a>
-<a name="ln2062">///</a>
-<a name="ln2063">/// @param[out] err Error details, if any.</a>
-<a name="ln2064">/// @return Dictionary containing statusline information, with these keys:</a>
-<a name="ln2065">///       - str: (string) Characters that will be displayed on the statusline.</a>
-<a name="ln2066">///       - width: (number) Display width of the statusline.</a>
-<a name="ln2067">///       - highlights: Array containing highlight information of the statusline. Only included when</a>
-<a name="ln2068">///                     the &quot;highlights&quot; key in {opts} is true. Each element of the array is a</a>
-<a name="ln2069">///                     |Dictionary| with these keys:</a>
-<a name="ln2070">///           - start: (number) Byte index (0-based) of first character that uses the highlight.</a>
-<a name="ln2071">///           - group: (string) Name of highlight group.</a>
-<a name="ln2072">Dictionary nvim_eval_statusline(String str, Dict(eval_statusline) *opts, Error *err)</a>
-<a name="ln2073">  FUNC_API_SINCE(8) FUNC_API_FAST</a>
-<a name="ln2074">{</a>
-<a name="ln2075">  Dictionary result = ARRAY_DICT_INIT;</a>
-<a name="ln2076"> </a>
-<a name="ln2077">  int maxwidth;</a>
-<a name="ln2078">  int fillchar = 0;</a>
-<a name="ln2079">  int use_bools = 0;</a>
-<a name="ln2080">  int statuscol_lnum = 0;</a>
-<a name="ln2081">  Window window = 0;</a>
-<a name="ln2082">  bool use_winbar = false;</a>
-<a name="ln2083">  bool use_tabline = false;</a>
-<a name="ln2084">  bool highlights = false;</a>
-<a name="ln2085"> </a>
-<a name="ln2086">  if (str.size &lt; 2 || memcmp(str.data, &quot;%!&quot;, 2) != 0) {</a>
-<a name="ln2087">    const char *const errmsg = check_stl_option(str.data);</a>
-<a name="ln2088">    VALIDATE(!errmsg, &quot;%s&quot;, errmsg, {</a>
-<a name="ln2089">      return result;</a>
-<a name="ln2090">    });</a>
-<a name="ln2091">  }</a>
-<a name="ln2092"> </a>
-<a name="ln2093">  if (HAS_KEY(opts-&gt;winid)) {</a>
-<a name="ln2094">    VALIDATE_T(&quot;winid&quot;, kObjectTypeInteger, opts-&gt;winid.type, {</a>
+<a name="ln2008">  xfmark_T *mark = mark_get_global(false, *name.data);  // false avoids loading the mark buffer</a>
+<a name="ln2009">  pos_T pos = mark-&gt;fmark.mark;</a>
+<a name="ln2010">  bool allocated = false;</a>
+<a name="ln2011">  int bufnr;</a>
+<a name="ln2012">  char *filename;</a>
+<a name="ln2013"> </a>
+<a name="ln2014">  // Marks are from an open buffer it fnum is non zero</a>
+<a name="ln2015">  if (mark-&gt;fmark.fnum != 0) {</a>
+<a name="ln2016">    bufnr = mark-&gt;fmark.fnum;</a>
+<a name="ln2017">    filename = buflist_nr2name(bufnr, true, true);</a>
+<a name="ln2018">    allocated = true;</a>
+<a name="ln2019">    // Marks comes from shada</a>
+<a name="ln2020">  } else {</a>
+<a name="ln2021">    filename = mark-&gt;fname;</a>
+<a name="ln2022">    bufnr = 0;</a>
+<a name="ln2023">  }</a>
+<a name="ln2024"> </a>
+<a name="ln2025">  bool exists = filename != NULL;</a>
+<a name="ln2026">  Integer row;</a>
+<a name="ln2027">  Integer col;</a>
+<a name="ln2028"> </a>
+<a name="ln2029">  if (!exists || pos.lnum &lt;= 0) {</a>
+<a name="ln2030">    if (allocated) {</a>
+<a name="ln2031">      xfree(filename);</a>
+<a name="ln2032">      allocated = false;</a>
+<a name="ln2033">    }</a>
+<a name="ln2034">    filename = &quot;&quot;;</a>
+<a name="ln2035">    bufnr = 0;</a>
+<a name="ln2036">    row = 0;</a>
+<a name="ln2037">    col = 0;</a>
+<a name="ln2038">  } else {</a>
+<a name="ln2039">    row = pos.lnum;</a>
+<a name="ln2040">    col = pos.col;</a>
+<a name="ln2041">  }</a>
+<a name="ln2042"> </a>
+<a name="ln2043">  ADD(rv, INTEGER_OBJ(row));</a>
+<a name="ln2044">  ADD(rv, INTEGER_OBJ(col));</a>
+<a name="ln2045">  ADD(rv, INTEGER_OBJ(bufnr));</a>
+<a name="ln2046">  ADD(rv, CSTR_TO_OBJ(filename));</a>
+<a name="ln2047"> </a>
+<a name="ln2048">  if (allocated) {</a>
+<a name="ln2049">    xfree(filename);</a>
+<a name="ln2050">  }</a>
+<a name="ln2051"> </a>
+<a name="ln2052">  return rv;</a>
+<a name="ln2053">}</a>
+<a name="ln2054"> </a>
+<a name="ln2055">/// Evaluates statusline string.</a>
+<a name="ln2056">///</a>
+<a name="ln2057">/// @param str Statusline string (see 'statusline').</a>
+<a name="ln2058">/// @param opts Optional parameters.</a>
+<a name="ln2059">///           - winid: (number) |window-ID| of the window to use as context for statusline.</a>
+<a name="ln2060">///           - maxwidth: (number) Maximum width of statusline.</a>
+<a name="ln2061">///           - fillchar: (string) Character to fill blank spaces in the statusline (see</a>
+<a name="ln2062">///                                'fillchars'). Treated as single-width even if it isn't.</a>
+<a name="ln2063">///           - highlights: (boolean) Return highlight information.</a>
+<a name="ln2064">///           - use_winbar: (boolean) Evaluate winbar instead of statusline.</a>
+<a name="ln2065">///           - use_tabline: (boolean) Evaluate tabline instead of statusline. When true, {winid}</a>
+<a name="ln2066">///                                    is ignored. Mutually exclusive with {use_winbar}.</a>
+<a name="ln2067">///           - use_statuscol_lnum: (number) Evaluate statuscolumn for this line number instead of statusline.</a>
+<a name="ln2068">///</a>
+<a name="ln2069">/// @param[out] err Error details, if any.</a>
+<a name="ln2070">/// @return Dictionary containing statusline information, with these keys:</a>
+<a name="ln2071">///       - str: (string) Characters that will be displayed on the statusline.</a>
+<a name="ln2072">///       - width: (number) Display width of the statusline.</a>
+<a name="ln2073">///       - highlights: Array containing highlight information of the statusline. Only included when</a>
+<a name="ln2074">///                     the &quot;highlights&quot; key in {opts} is true. Each element of the array is a</a>
+<a name="ln2075">///                     |Dictionary| with these keys:</a>
+<a name="ln2076">///           - start: (number) Byte index (0-based) of first character that uses the highlight.</a>
+<a name="ln2077">///           - group: (string) Name of highlight group.</a>
+<a name="ln2078">Dictionary nvim_eval_statusline(String str, Dict(eval_statusline) *opts, Error *err)</a>
+<a name="ln2079">  FUNC_API_SINCE(8) FUNC_API_FAST</a>
+<a name="ln2080">{</a>
+<a name="ln2081">  Dictionary result = ARRAY_DICT_INIT;</a>
+<a name="ln2082"> </a>
+<a name="ln2083">  int maxwidth;</a>
+<a name="ln2084">  int fillchar = 0;</a>
+<a name="ln2085">  int use_bools = 0;</a>
+<a name="ln2086">  int statuscol_lnum = 0;</a>
+<a name="ln2087">  Window window = 0;</a>
+<a name="ln2088">  bool use_winbar = false;</a>
+<a name="ln2089">  bool use_tabline = false;</a>
+<a name="ln2090">  bool highlights = false;</a>
+<a name="ln2091"> </a>
+<a name="ln2092">  if (str.size &lt; 2 || memcmp(str.data, &quot;%!&quot;, 2) != 0) {</a>
+<a name="ln2093">    const char *const errmsg = check_stl_option(str.data);</a>
+<a name="ln2094">    VALIDATE(!errmsg, &quot;%s&quot;, errmsg, {</a>
 <a name="ln2095">      return result;</a>
 <a name="ln2096">    });</a>
-<a name="ln2097"> </a>
-<a name="ln2098">    window = (Window)opts-&gt;winid.data.integer;</a>
-<a name="ln2099">  }</a>
-<a name="ln2100">  if (HAS_KEY(opts-&gt;fillchar)) {</a>
-<a name="ln2101">    VALIDATE_T(&quot;fillchar&quot;, kObjectTypeString, opts-&gt;fillchar.type, {</a>
-<a name="ln2102">      return result;</a>
-<a name="ln2103">    });</a>
-<a name="ln2104">    VALIDATE_EXP((opts-&gt;fillchar.data.string.size != 0</a>
-<a name="ln2105">                  &amp;&amp; ((size_t)utf_ptr2len(opts-&gt;fillchar.data.string.data)</a>
-<a name="ln2106">                      == opts-&gt;fillchar.data.string.size)),</a>
-<a name="ln2107">                 &quot;fillchar&quot;, &quot;single character&quot;, NULL, {</a>
+<a name="ln2097">  }</a>
+<a name="ln2098"> </a>
+<a name="ln2099">  if (HAS_KEY(opts-&gt;winid)) {</a>
+<a name="ln2100">    VALIDATE_T(&quot;winid&quot;, kObjectTypeInteger, opts-&gt;winid.type, {</a>
+<a name="ln2101">      return result;</a>
+<a name="ln2102">    });</a>
+<a name="ln2103"> </a>
+<a name="ln2104">    window = (Window)opts-&gt;winid.data.integer;</a>
+<a name="ln2105">  }</a>
+<a name="ln2106">  if (HAS_KEY(opts-&gt;fillchar)) {</a>
+<a name="ln2107">    VALIDATE_T(&quot;fillchar&quot;, kObjectTypeString, opts-&gt;fillchar.type, {</a>
 <a name="ln2108">      return result;</a>
 <a name="ln2109">    });</a>
-<a name="ln2110">    fillchar = utf_ptr2char(opts-&gt;fillchar.data.string.data);</a>
-<a name="ln2111">  }</a>
-<a name="ln2112">  if (HAS_KEY(opts-&gt;highlights)) {</a>
-<a name="ln2113">    highlights = api_object_to_bool(opts-&gt;highlights, &quot;highlights&quot;, false, err);</a>
-<a name="ln2114"> </a>
-<a name="ln2115">    if (ERROR_SET(err)) {</a>
-<a name="ln2116">      return result;</a>
-<a name="ln2117">    }</a>
-<a name="ln2118">  }</a>
-<a name="ln2119">  if (HAS_KEY(opts-&gt;use_winbar)) {</a>
-<a name="ln2120">    use_winbar = api_object_to_bool(opts-&gt;use_winbar, &quot;use_winbar&quot;, false, err);</a>
+<a name="ln2110">    VALIDATE_EXP((opts-&gt;fillchar.data.string.size != 0</a>
+<a name="ln2111">                  &amp;&amp; ((size_t)utf_ptr2len(opts-&gt;fillchar.data.string.data)</a>
+<a name="ln2112">                      == opts-&gt;fillchar.data.string.size)),</a>
+<a name="ln2113">                 &quot;fillchar&quot;, &quot;single character&quot;, NULL, {</a>
+<a name="ln2114">      return result;</a>
+<a name="ln2115">    });</a>
+<a name="ln2116">    fillchar = utf_ptr2char(opts-&gt;fillchar.data.string.data);</a>
+<a name="ln2117">  }</a>
+<a name="ln2118">  if (HAS_KEY(opts-&gt;highlights)) {</a>
+<a name="ln2119">    highlights = api_object_to_bool(opts-&gt;highlights, &quot;highlights&quot;, false, err);</a>
+<a name="ln2120"> </a>
 <a name="ln2121">    if (ERROR_SET(err)) {</a>
 <a name="ln2122">      return result;</a>
 <a name="ln2123">    }</a>
-<a name="ln2124">    use_bools++;</a>
-<a name="ln2125">  }</a>
-<a name="ln2126">  if (HAS_KEY(opts-&gt;use_tabline)) {</a>
-<a name="ln2127">    use_tabline = api_object_to_bool(opts-&gt;use_tabline, &quot;use_tabline&quot;, false, err);</a>
-<a name="ln2128">    if (ERROR_SET(err)) {</a>
-<a name="ln2129">      return result;</a>
-<a name="ln2130">    }</a>
-<a name="ln2131">    use_bools++;</a>
-<a name="ln2132">  }</a>
-<a name="ln2133"> </a>
-<a name="ln2134">  win_T *wp = use_tabline ? curwin : find_window_by_handle(window, err);</a>
-<a name="ln2135">  if (wp == NULL) {</a>
-<a name="ln2136">    api_set_error(err, kErrorTypeException, &quot;unknown winid %d&quot;, window);</a>
-<a name="ln2137">    return result;</a>
+<a name="ln2124">  }</a>
+<a name="ln2125">  if (HAS_KEY(opts-&gt;use_winbar)) {</a>
+<a name="ln2126">    use_winbar = api_object_to_bool(opts-&gt;use_winbar, &quot;use_winbar&quot;, false, err);</a>
+<a name="ln2127">    if (ERROR_SET(err)) {</a>
+<a name="ln2128">      return result;</a>
+<a name="ln2129">    }</a>
+<a name="ln2130">    use_bools++;</a>
+<a name="ln2131">  }</a>
+<a name="ln2132">  if (HAS_KEY(opts-&gt;use_tabline)) {</a>
+<a name="ln2133">    use_tabline = api_object_to_bool(opts-&gt;use_tabline, &quot;use_tabline&quot;, false, err);</a>
+<a name="ln2134">    if (ERROR_SET(err)) {</a>
+<a name="ln2135">      return result;</a>
+<a name="ln2136">    }</a>
+<a name="ln2137">    use_bools++;</a>
 <a name="ln2138">  }</a>
 <a name="ln2139"> </a>
-<a name="ln2140">  if (HAS_KEY(opts-&gt;use_statuscol_lnum)) {</a>
-<a name="ln2141">    VALIDATE_T(&quot;use_statuscol_lnum&quot;, kObjectTypeInteger, opts-&gt;use_statuscol_lnum.type, {</a>
-<a name="ln2142">      return result;</a>
-<a name="ln2143">    });</a>
-<a name="ln2144">    statuscol_lnum = (int)opts-&gt;use_statuscol_lnum.data.integer;</a>
-<a name="ln2145">    VALIDATE_RANGE(statuscol_lnum &gt; 0 &amp;&amp; statuscol_lnum &lt;= wp-&gt;w_buffer-&gt;b_ml.ml_line_count,</a>
-<a name="ln2146">                   &quot;use_statuscol_lnum&quot;, {</a>
-<a name="ln2147">      return result;</a>
-<a name="ln2148">    });</a>
-<a name="ln2149">    use_bools++;</a>
-<a name="ln2150">  }</a>
-<a name="ln2151">  VALIDATE(use_bools &lt;= 1, &quot;%s&quot;,</a>
-<a name="ln2152">           &quot;Can only use one of 'use_winbar', 'use_tabline' and 'use_statuscol_lnum'&quot;, {</a>
-<a name="ln2153">    return result;</a>
-<a name="ln2154">  });</a>
-<a name="ln2155"> </a>
-<a name="ln2156">  int stc_hl_id = 0;</a>
-<a name="ln2157">  statuscol_T statuscol = { 0 };</a>
-<a name="ln2158">  SignTextAttrs sattrs[SIGN_SHOW_MAX] = { 0 };</a>
-<a name="ln2159"> </a>
-<a name="ln2160">  if (use_tabline) {</a>
-<a name="ln2161">    fillchar = ' ';</a>
-<a name="ln2162">  } else {</a>
-<a name="ln2163">    if (fillchar == 0) {</a>
-<a name="ln2164">      if (use_winbar) {</a>
-<a name="ln2165">        fillchar = wp-&gt;w_p_fcs_chars.wbr;</a>
-<a name="ln2166">      } else {</a>
-<a name="ln2167">        int attr;</a>
-<a name="ln2168">        fillchar = fillchar_status(&amp;attr, wp);</a>
-<a name="ln2169">      }</a>
-<a name="ln2170">    }</a>
-<a name="ln2171">    if (statuscol_lnum) {</a>
-<a name="ln2172">      HlPriId line = { 0 };</a>
-<a name="ln2173">      HlPriId cul  = { 0 };</a>
-<a name="ln2174">      HlPriId num  = { 0 };</a>
-<a name="ln2175">      linenr_T lnum = statuscol_lnum;</a>
-<a name="ln2176">      int num_signs = buf_get_signattrs(wp-&gt;w_buffer, lnum, sattrs, &amp;num, &amp;line, &amp;cul);</a>
-<a name="ln2177">      decor_redraw_signs(wp-&gt;w_buffer, lnum - 1, &amp;num_signs, sattrs, &amp;num, &amp;line, &amp;cul);</a>
-<a name="ln2178">      wp-&gt;w_scwidth = win_signcol_count(wp);</a>
-<a name="ln2179"> </a>
-<a name="ln2180">      statuscol.sattrs = sattrs;</a>
-<a name="ln2181">      statuscol.foldinfo = fold_info(wp, lnum);</a>
-<a name="ln2182">      wp-&gt;w_cursorline = win_cursorline_standout(wp) ? wp-&gt;w_cursor.lnum : 0;</a>
-<a name="ln2183"> </a>
-<a name="ln2184">      if (wp-&gt;w_p_cul) {</a>
-<a name="ln2185">        if (statuscol.foldinfo.fi_level != 0 &amp;&amp; statuscol.foldinfo.fi_lines &gt; 0) {</a>
-<a name="ln2186">          wp-&gt;w_cursorline = statuscol.foldinfo.fi_lnum;</a>
-<a name="ln2187">        }</a>
-<a name="ln2188">        statuscol.use_cul = lnum == wp-&gt;w_cursorline &amp;&amp; (wp-&gt;w_p_culopt_flags &amp; CULOPT_NBR);</a>
-<a name="ln2189">      }</a>
-<a name="ln2190"> </a>
-<a name="ln2191">      statuscol.sign_cul_id = statuscol.use_cul ? cul.hl_id : 0;</a>
-<a name="ln2192">      if (num.hl_id) {</a>
-<a name="ln2193">        stc_hl_id = num.hl_id;</a>
-<a name="ln2194">      } else if (statuscol.use_cul) {</a>
-<a name="ln2195">        stc_hl_id = HLF_CLN + 1;</a>
-<a name="ln2196">      } else if (wp-&gt;w_p_rnu) {</a>
-<a name="ln2197">        stc_hl_id = (lnum &lt; wp-&gt;w_cursor.lnum ? HLF_LNA : HLF_LNB) + 1;</a>
-<a name="ln2198">      } else {</a>
-<a name="ln2199">        stc_hl_id = HLF_N + 1;</a>
-<a name="ln2200">      }</a>
-<a name="ln2201"> </a>
-<a name="ln2202">      set_vim_var_nr(VV_LNUM, lnum);</a>
-<a name="ln2203">      set_vim_var_nr(VV_RELNUM, labs(get_cursor_rel_lnum(wp, lnum)));</a>
-<a name="ln2204">      set_vim_var_nr(VV_VIRTNUM, 0);</a>
-<a name="ln2205">    }</a>
-<a name="ln2206">  }</a>
+<a name="ln2140">  win_T *wp = use_tabline ? curwin : find_window_by_handle(window, err);</a>
+<a name="ln2141">  if (wp == NULL) {</a>
+<a name="ln2142">    api_set_error(err, kErrorTypeException, &quot;unknown winid %d&quot;, window);</a>
+<a name="ln2143">    return result;</a>
+<a name="ln2144">  }</a>
+<a name="ln2145"> </a>
+<a name="ln2146">  if (HAS_KEY(opts-&gt;use_statuscol_lnum)) {</a>
+<a name="ln2147">    VALIDATE_T(&quot;use_statuscol_lnum&quot;, kObjectTypeInteger, opts-&gt;use_statuscol_lnum.type, {</a>
+<a name="ln2148">      return result;</a>
+<a name="ln2149">    });</a>
+<a name="ln2150">    statuscol_lnum = (int)opts-&gt;use_statuscol_lnum.data.integer;</a>
+<a name="ln2151">    VALIDATE_RANGE(statuscol_lnum &gt; 0 &amp;&amp; statuscol_lnum &lt;= wp-&gt;w_buffer-&gt;b_ml.ml_line_count,</a>
+<a name="ln2152">                   &quot;use_statuscol_lnum&quot;, {</a>
+<a name="ln2153">      return result;</a>
+<a name="ln2154">    });</a>
+<a name="ln2155">    use_bools++;</a>
+<a name="ln2156">  }</a>
+<a name="ln2157">  VALIDATE(use_bools &lt;= 1, &quot;%s&quot;,</a>
+<a name="ln2158">           &quot;Can only use one of 'use_winbar', 'use_tabline' and 'use_statuscol_lnum'&quot;, {</a>
+<a name="ln2159">    return result;</a>
+<a name="ln2160">  });</a>
+<a name="ln2161"> </a>
+<a name="ln2162">  int stc_hl_id = 0;</a>
+<a name="ln2163">  statuscol_T statuscol = { 0 };</a>
+<a name="ln2164">  SignTextAttrs sattrs[SIGN_SHOW_MAX] = { 0 };</a>
+<a name="ln2165"> </a>
+<a name="ln2166">  if (use_tabline) {</a>
+<a name="ln2167">    fillchar = ' ';</a>
+<a name="ln2168">  } else {</a>
+<a name="ln2169">    if (fillchar == 0) {</a>
+<a name="ln2170">      if (use_winbar) {</a>
+<a name="ln2171">        fillchar = wp-&gt;w_p_fcs_chars.wbr;</a>
+<a name="ln2172">      } else {</a>
+<a name="ln2173">        int attr;</a>
+<a name="ln2174">        fillchar = fillchar_status(&amp;attr, wp);</a>
+<a name="ln2175">      }</a>
+<a name="ln2176">    }</a>
+<a name="ln2177">    if (statuscol_lnum) {</a>
+<a name="ln2178">      HlPriId line = { 0 };</a>
+<a name="ln2179">      HlPriId cul  = { 0 };</a>
+<a name="ln2180">      HlPriId num  = { 0 };</a>
+<a name="ln2181">      linenr_T lnum = statuscol_lnum;</a>
+<a name="ln2182">      int num_signs = buf_get_signattrs(wp-&gt;w_buffer, lnum, sattrs, &amp;num, &amp;line, &amp;cul);</a>
+<a name="ln2183">      decor_redraw_signs(wp-&gt;w_buffer, lnum - 1, &amp;num_signs, sattrs, &amp;num, &amp;line, &amp;cul);</a>
+<a name="ln2184">      wp-&gt;w_scwidth = win_signcol_count(wp);</a>
+<a name="ln2185"> </a>
+<a name="ln2186">      statuscol.sattrs = sattrs;</a>
+<a name="ln2187">      statuscol.foldinfo = fold_info(wp, lnum);</a>
+<a name="ln2188">      wp-&gt;w_cursorline = win_cursorline_standout(wp) ? wp-&gt;w_cursor.lnum : 0;</a>
+<a name="ln2189"> </a>
+<a name="ln2190">      if (wp-&gt;w_p_cul) {</a>
+<a name="ln2191">        if (statuscol.foldinfo.fi_level != 0 &amp;&amp; statuscol.foldinfo.fi_lines &gt; 0) {</a>
+<a name="ln2192">          wp-&gt;w_cursorline = statuscol.foldinfo.fi_lnum;</a>
+<a name="ln2193">        }</a>
+<a name="ln2194">        statuscol.use_cul = lnum == wp-&gt;w_cursorline &amp;&amp; (wp-&gt;w_p_culopt_flags &amp; CULOPT_NBR);</a>
+<a name="ln2195">      }</a>
+<a name="ln2196"> </a>
+<a name="ln2197">      statuscol.sign_cul_id = statuscol.use_cul ? cul.hl_id : 0;</a>
+<a name="ln2198">      if (num.hl_id) {</a>
+<a name="ln2199">        stc_hl_id = num.hl_id;</a>
+<a name="ln2200">      } else if (statuscol.use_cul) {</a>
+<a name="ln2201">        stc_hl_id = HLF_CLN + 1;</a>
+<a name="ln2202">      } else if (wp-&gt;w_p_rnu) {</a>
+<a name="ln2203">        stc_hl_id = (lnum &lt; wp-&gt;w_cursor.lnum ? HLF_LNA : HLF_LNB) + 1;</a>
+<a name="ln2204">      } else {</a>
+<a name="ln2205">        stc_hl_id = HLF_N + 1;</a>
+<a name="ln2206">      }</a>
 <a name="ln2207"> </a>
-<a name="ln2208">  if (HAS_KEY(opts-&gt;maxwidth)) {</a>
-<a name="ln2209">    VALIDATE_T(&quot;maxwidth&quot;, kObjectTypeInteger, opts-&gt;maxwidth.type, {</a>
-<a name="ln2210">      return result;</a>
-<a name="ln2211">    });</a>
-<a name="ln2212"> </a>
-<a name="ln2213">    maxwidth = (int)opts-&gt;maxwidth.data.integer;</a>
-<a name="ln2214">  } else {</a>
-<a name="ln2215">    maxwidth = statuscol_lnum ? win_col_off(wp)</a>
-<a name="ln2216">               : (use_tabline || (!use_winbar &amp;&amp; global_stl_height() &gt; 0)) ? Columns : wp-&gt;w_width;</a>
-<a name="ln2217">  }</a>
+<a name="ln2208">      set_vim_var_nr(VV_LNUM, lnum);</a>
+<a name="ln2209">      set_vim_var_nr(VV_RELNUM, labs(get_cursor_rel_lnum(wp, lnum)));</a>
+<a name="ln2210">      set_vim_var_nr(VV_VIRTNUM, 0);</a>
+<a name="ln2211">    }</a>
+<a name="ln2212">  }</a>
+<a name="ln2213"> </a>
+<a name="ln2214">  if (HAS_KEY(opts-&gt;maxwidth)) {</a>
+<a name="ln2215">    VALIDATE_T(&quot;maxwidth&quot;, kObjectTypeInteger, opts-&gt;maxwidth.type, {</a>
+<a name="ln2216">      return result;</a>
+<a name="ln2217">    });</a>
 <a name="ln2218"> </a>
-<a name="ln2219">  char buf[MAXPATHL];</a>
-<a name="ln2220">  stl_hlrec_t *hltab;</a>
-<a name="ln2221"> </a>
-<a name="ln2222">  // Temporarily reset 'cursorbind' to prevent side effects from moving the cursor away and back.</a>
-<a name="ln2223">  int p_crb_save = wp-&gt;w_p_crb;</a>
-<a name="ln2224">  wp-&gt;w_p_crb = false;</a>
-<a name="ln2225"> </a>
-<a name="ln2226">  int width = build_stl_str_hl(wp,</a>
-<a name="ln2227">                               buf,</a>
-<a name="ln2228">                               sizeof(buf),</a>
-<a name="ln2229">                               str.data,</a>
-<a name="ln2230">                               NULL,</a>
-<a name="ln2231">                               0,</a>
-<a name="ln2232">                               fillchar,</a>
-<a name="ln2233">                               maxwidth,</a>
-<a name="ln2234">                               highlights ? &amp;hltab : NULL,</a>
-<a name="ln2235">                               NULL,</a>
-<a name="ln2236">                               statuscol_lnum ? &amp;statuscol : NULL);</a>
-<a name="ln2237"> </a>
-<a name="ln2238">  PUT(result, &quot;width&quot;, INTEGER_OBJ(width));</a>
-<a name="ln2239"> </a>
-<a name="ln2240">  // Restore original value of 'cursorbind'</a>
-<a name="ln2241">  wp-&gt;w_p_crb = p_crb_save;</a>
-<a name="ln2242"> </a>
-<a name="ln2243">  if (highlights) {</a>
-<a name="ln2244">    Array hl_values = ARRAY_DICT_INIT;</a>
-<a name="ln2245">    const char *grpname;</a>
-<a name="ln2246">    char user_group[15];  // strlen(&quot;User&quot;) + strlen(&quot;2147483647&quot;) + NUL</a>
-<a name="ln2247"> </a>
-<a name="ln2248">    // If first character doesn't have a defined highlight,</a>
-<a name="ln2249">    // add the default highlight at the beginning of the highlight list</a>
-<a name="ln2250">    if (hltab-&gt;start == NULL || (hltab-&gt;start - buf) != 0) {</a>
-<a name="ln2251">      Dictionary hl_info = ARRAY_DICT_INIT;</a>
-<a name="ln2252">      grpname = get_default_stl_hl(use_tabline ? NULL : wp, use_winbar, stc_hl_id);</a>
+<a name="ln2219">    maxwidth = (int)opts-&gt;maxwidth.data.integer;</a>
+<a name="ln2220">  } else {</a>
+<a name="ln2221">    maxwidth = statuscol_lnum ? win_col_off(wp)</a>
+<a name="ln2222">               : (use_tabline || (!use_winbar &amp;&amp; global_stl_height() &gt; 0)) ? Columns : wp-&gt;w_width;</a>
+<a name="ln2223">  }</a>
+<a name="ln2224"> </a>
+<a name="ln2225">  char buf[MAXPATHL];</a>
+<a name="ln2226">  stl_hlrec_t *hltab;</a>
+<a name="ln2227"> </a>
+<a name="ln2228">  // Temporarily reset 'cursorbind' to prevent side effects from moving the cursor away and back.</a>
+<a name="ln2229">  int p_crb_save = wp-&gt;w_p_crb;</a>
+<a name="ln2230">  wp-&gt;w_p_crb = false;</a>
+<a name="ln2231"> </a>
+<a name="ln2232">  int width = build_stl_str_hl(wp,</a>
+<a name="ln2233">                               buf,</a>
+<a name="ln2234">                               sizeof(buf),</a>
+<a name="ln2235">                               str.data,</a>
+<a name="ln2236">                               NULL,</a>
+<a name="ln2237">                               0,</a>
+<a name="ln2238">                               fillchar,</a>
+<a name="ln2239">                               maxwidth,</a>
+<a name="ln2240">                               highlights ? &amp;hltab : NULL,</a>
+<a name="ln2241">                               NULL,</a>
+<a name="ln2242">                               statuscol_lnum ? &amp;statuscol : NULL);</a>
+<a name="ln2243"> </a>
+<a name="ln2244">  PUT(result, &quot;width&quot;, INTEGER_OBJ(width));</a>
+<a name="ln2245"> </a>
+<a name="ln2246">  // Restore original value of 'cursorbind'</a>
+<a name="ln2247">  wp-&gt;w_p_crb = p_crb_save;</a>
+<a name="ln2248"> </a>
+<a name="ln2249">  if (highlights) {</a>
+<a name="ln2250">    Array hl_values = ARRAY_DICT_INIT;</a>
+<a name="ln2251">    const char *grpname;</a>
+<a name="ln2252">    char user_group[15];  // strlen(&quot;User&quot;) + strlen(&quot;2147483647&quot;) + NUL</a>
 <a name="ln2253"> </a>
-<a name="ln2254">      PUT(hl_info, &quot;start&quot;, INTEGER_OBJ(0));</a>
-<a name="ln2255">      PUT(hl_info, &quot;group&quot;, CSTR_TO_OBJ(grpname));</a>
-<a name="ln2256"> </a>
-<a name="ln2257">      ADD(hl_values, DICTIONARY_OBJ(hl_info));</a>
-<a name="ln2258">    }</a>
+<a name="ln2254">    // If first character doesn't have a defined highlight,</a>
+<a name="ln2255">    // add the default highlight at the beginning of the highlight list</a>
+<a name="ln2256">    if (hltab-&gt;start == NULL || (hltab-&gt;start - buf) != 0) {</a>
+<a name="ln2257">      Dictionary hl_info = ARRAY_DICT_INIT;</a>
+<a name="ln2258">      grpname = get_default_stl_hl(use_tabline ? NULL : wp, use_winbar, stc_hl_id);</a>
 <a name="ln2259"> </a>
-<a name="ln2260">    for (stl_hlrec_t *sp = hltab; sp-&gt;start != NULL; sp++) {</a>
-<a name="ln2261">      Dictionary hl_info = ARRAY_DICT_INIT;</a>
+<a name="ln2260">      PUT(hl_info, &quot;start&quot;, INTEGER_OBJ(0));</a>
+<a name="ln2261">      PUT(hl_info, &quot;group&quot;, CSTR_TO_OBJ(grpname));</a>
 <a name="ln2262"> </a>
-<a name="ln2263">      PUT(hl_info, &quot;start&quot;, INTEGER_OBJ(sp-&gt;start - buf));</a>
-<a name="ln2264"> </a>
-<a name="ln2265">      if (sp-&gt;userhl == 0) {</a>
-<a name="ln2266">        grpname = get_default_stl_hl(use_tabline ? NULL : wp, use_winbar, stc_hl_id);</a>
-<a name="ln2267">      } else if (sp-&gt;userhl &lt; 0) {</a>
-<a name="ln2268">        grpname = syn_id2name(-sp-&gt;userhl);</a>
-<a name="ln2269">      } else {</a>
-<a name="ln2270">        snprintf(user_group, sizeof(user_group), &quot;User%d&quot;, sp-&gt;userhl);</a>
-<a name="ln2271">        grpname = user_group;</a>
-<a name="ln2272">      }</a>
-<a name="ln2273">      PUT(hl_info, &quot;group&quot;, CSTR_TO_OBJ(grpname));</a>
-<a name="ln2274">      ADD(hl_values, DICTIONARY_OBJ(hl_info));</a>
-<a name="ln2275">    }</a>
-<a name="ln2276">    PUT(result, &quot;highlights&quot;, ARRAY_OBJ(hl_values));</a>
-<a name="ln2277">  }</a>
-<a name="ln2278">  PUT(result, &quot;str&quot;, CSTR_TO_OBJ(buf));</a>
-<a name="ln2279"> </a>
-<a name="ln2280">  return result;</a>
-<a name="ln2281">}</a>
-<a name="ln2282"> </a>
-<a name="ln2283">void nvim_error_event(uint64_t channel_id, Integer lvl, String data)</a>
-<a name="ln2284">  FUNC_API_REMOTE_ONLY</a>
-<a name="ln2285">{</a>
-<a name="ln2286">  // TODO(bfredl): consider printing message to user, as will be relevant</a>
-<a name="ln2287">  // if we fork nvim processes as async workers</a>
-<a name="ln2288">  ELOG(&quot;async error on channel %&quot; PRId64 &quot;: %s&quot;, channel_id, data.size ? data.data : &quot;&quot;);</a>
-<a name="ln2289">}</a>
+<a name="ln2263">      ADD(hl_values, DICTIONARY_OBJ(hl_info));</a>
+<a name="ln2264">    }</a>
+<a name="ln2265"> </a>
+<a name="ln2266">    for (stl_hlrec_t *sp = hltab; sp-&gt;start != NULL; sp++) {</a>
+<a name="ln2267">      Dictionary hl_info = ARRAY_DICT_INIT;</a>
+<a name="ln2268"> </a>
+<a name="ln2269">      PUT(hl_info, &quot;start&quot;, INTEGER_OBJ(sp-&gt;start - buf));</a>
+<a name="ln2270"> </a>
+<a name="ln2271">      if (sp-&gt;userhl == 0) {</a>
+<a name="ln2272">        grpname = get_default_stl_hl(use_tabline ? NULL : wp, use_winbar, stc_hl_id);</a>
+<a name="ln2273">      } else if (sp-&gt;userhl &lt; 0) {</a>
+<a name="ln2274">        grpname = syn_id2name(-sp-&gt;userhl);</a>
+<a name="ln2275">      } else {</a>
+<a name="ln2276">        snprintf(user_group, sizeof(user_group), &quot;User%d&quot;, sp-&gt;userhl);</a>
+<a name="ln2277">        grpname = user_group;</a>
+<a name="ln2278">      }</a>
+<a name="ln2279">      PUT(hl_info, &quot;group&quot;, CSTR_TO_OBJ(grpname));</a>
+<a name="ln2280">      ADD(hl_values, DICTIONARY_OBJ(hl_info));</a>
+<a name="ln2281">    }</a>
+<a name="ln2282">    PUT(result, &quot;highlights&quot;, ARRAY_OBJ(hl_values));</a>
+<a name="ln2283">  }</a>
+<a name="ln2284">  PUT(result, &quot;str&quot;, CSTR_TO_OBJ(buf));</a>
+<a name="ln2285"> </a>
+<a name="ln2286">  return result;</a>
+<a name="ln2287">}</a>
+<a name="ln2288"> </a>
+<a name="ln2289">void nvim_error_event(uint64_t channel_id, Integer lvl, String data)</a>
+<a name="ln2290">  FUNC_API_REMOTE_ONLY</a>
+<a name="ln2291">{</a>
+<a name="ln2292">  // TODO(bfredl): consider printing message to user, as will be relevant</a>
+<a name="ln2293">  // if we fork nvim processes as async workers</a>
+<a name="ln2294">  ELOG(&quot;async error on channel %&quot; PRId64 &quot;: %s&quot;, channel_id, data.size ? data.data : &quot;&quot;);</a>
+<a name="ln2295">}</a>
 </code></pre>
 <div class="balloon" rel="555"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v592/" target="_blank">V592</a> The expression was enclosed by parentheses twice: '((!source || nlua_is_deferred_safe()))'. One pair of parentheses is unnecessary or misprint is present.</p></div>
 <link rel="stylesheet" href="highlight.css">
