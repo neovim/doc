@@ -5,15 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Neovim user documentation">
+
+    <!-- algolia docsearch https://docsearch.algolia.com/docs/docsearch-v3/ -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
+    <link rel="preconnect" href="https://X185E15FPG-dsn.algolia.net" crossorigin />
+
     <link href="/css/normalize.min.css" rel="stylesheet">
     <link href="/css/bootstrap.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet">
     <link href="help.css" rel="stylesheet">
     <link href="/highlight/styles/neovim.min.css" rel="stylesheet">
-
-    <!-- algolia docsearch https://docsearch.algolia.com/docs/docsearch-v3/ -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
-    <link rel="preconnect" href="https://X185E15FPG-dsn.algolia.net" crossorigin />
 
     <script src="/highlight/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
@@ -1908,21 +1909,17 @@ on_key(<code>{fn}</code>, <code>{ns_id}</code>)                                 
 
 </div>
 <div class="help-para">
-    Note:
-        <code>{fn}</code> will not be cleared by <a href="api.html#nvim_buf_clear_namespace()">nvim_buf_clear_namespace()</a>
-
+<div class="help-column_heading">    Note:</div>
+<div class="help-li" style=""> <code>{fn}</code> will be removed on error.
+</div><div class="help-li" style=""> <code>{fn}</code> will not be cleared by <a href="api.html#nvim_buf_clear_namespace()">nvim_buf_clear_namespace()</a>
+</div><div class="help-li" style=""> <code>{fn}</code> will receive the keys after mappings have been evaluated
 </div>
-<div class="help-para">
-    Note:
-        <code>{fn}</code> will receive the keys after mappings have been evaluated
-
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{fn}</code>     (function) Callback function. It should take one string
-                 argument. On each key press, Nvim passes the key char to
-                 fn(). <a href="insert.html#i_CTRL-V">i_CTRL-V</a> If <code>{fn}</code> is nil, it removes the callback for
-                 the associated <code>{ns_id}</code>
+<div class="help-li" style=""> <code>{fn}</code>     fun(key: string) Function invoked on every key press.
+                 <a href="insert.html#i_CTRL-V">i_CTRL-V</a> Returning nil removes the callback associated with
+                 namespace <code>{ns_id}</code>.
 </div><div class="help-li" style=""> <code>{ns_id}</code>  integer? Namespace ID. If nil or 0, generates and returns a
                  new <a href="api.html#nvim_create_namespace()">nvim_create_namespace()</a> id.
 </div>
@@ -1931,11 +1928,6 @@ on_key(<code>{fn}</code>, <code>{ns_id}</code>)                                 
 <div class="help-column_heading">    Return:</div>
         (integer) Namespace id associated with <code>{fn}</code>. Or count of all callbacks
         if on_key() is called without arguments.
-
-</div>
-<div class="help-para">
-    Note:
-        <code>{fn}</code> will be removed if an error occurs while calling.
 
 </div>
 <div class="help-para">
@@ -1999,26 +1991,32 @@ print(<code>{...}</code>)                                                     <c
 </div>
 <div class="help-para">
 region(<code>{bufnr}</code>, <code>{pos1}</code>, <code>{pos2}</code>, <code>{regtype}</code>, <code>{inclusive}</code>)         <code id="vim.region()" class="help-tag-right">vim.region()</code>
-    Get a table of lines with start, end columns for a region marked by two
-    points. Input and output positions are (0,0)-indexed and indicate byte
-    positions.
+    Gets a dict of line segment ("chunk") positions for the region from <code>pos1</code>
+    to <code>pos2</code>.
+
+</div>
+<div class="help-para">
+    Input and output positions are byte positions, (0,0)-indexed. "End of
+    line" column position (for example, <a href="motion.html#linewise">linewise</a> visual selection) is
+    returned as <a href="eval.html#v%3Amaxcol">v:maxcol</a> (big number).
 
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{bufnr}</code>      (integer) number of buffer
-</div><div class="help-li" style=""> <code>{pos1}</code>       integer[]|string start of region as a (line, column)
-                     tuple or string accepted by <a href="builtin.html#getpos()">getpos()</a>
-</div><div class="help-li" style=""> <code>{pos2}</code>       integer[]|string end of region as a (line, column) tuple
-                     or string accepted by <a href="builtin.html#getpos()">getpos()</a>
-</div><div class="help-li" style=""> <code>{regtype}</code>    (string) type of selection, see <a href="builtin.html#setreg()">setreg()</a>
-</div><div class="help-li" style=""> <code>{inclusive}</code>  (boolean) indicating whether column of pos2 is inclusive
+<div class="help-li" style=""> <code>{bufnr}</code>      (integer) Buffer number, or 0 for current buffer
+</div><div class="help-li" style=""> <code>{pos1}</code>       integer[]|string Start of region as a (line, column)
+                     tuple or <a href="builtin.html#getpos()">getpos()</a>-compatible string
+</div><div class="help-li" style=""> <code>{pos2}</code>       integer[]|string End of region as a (line, column) tuple
+                     or <a href="builtin.html#getpos()">getpos()</a>-compatible string
+</div><div class="help-li" style=""> <code>{regtype}</code>    (string) <a href="builtin.html#setreg()">setreg()</a>-style selection type
+</div><div class="help-li" style=""> <code>{inclusive}</code>  (boolean) Controls whether <code>pos2</code> column is inclusive
+                     (see also <a href="options.html#'selection'">'selection'</a>).
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return:</div>
-        (table) region Table of the form <code>{linenr = {startcol,endcol}}</code>.
-        <code>endcol</code> is exclusive, and whole lines are marked with
+        (table) region Dict of the form <code>{linenr = {startcol,endcol}}</code>.
+        <code>endcol</code> is exclusive, and whole lines are returned as
         <code>{startcol,endcol} = {0,-1}</code>.
 
 </div>
@@ -3122,7 +3120,7 @@ vim.ui.open("$VIMRUNTIME")</code></pre>
 </div>
 </div>
 <div class="help-para">
-<div class="help-column_heading">    Return:</div>
+<div class="help-column_heading">    Return (multiple):</div>
         SystemCompleted|nil # Command result, or nil if not found.
         (string|nil) # Error message on failure
 
@@ -3359,7 +3357,7 @@ vim.filetype.match({ contents = {'#!/usr/bin/env bash'} })</code></pre>
 </div>
 </div>
 <div class="help-para">
-<div class="help-column_heading">    Return:</div>
+<div class="help-column_heading">    Return (multiple):</div>
         (string|nil) If a match was found, the matched filetype.
         (function|nil) A function that modifies buffer state when called (for
         example, to set some filetype specific buffer variables). The function
@@ -3775,10 +3773,10 @@ end</code></pre>
 
 </div>
 <div class="help-para">
-    Note:
-        Per semver, build metadata is ignored when comparing two
+<div class="help-column_heading">    Note:</div>
+<div class="help-li" style=""> Per semver, build metadata is ignored when comparing two
         otherwise-equivalent versions.
-
+</div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
@@ -4619,7 +4617,7 @@ Lua module: iter                                                    </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-07-08 05:27 from <code><a href="https://github.com/neovim/neovim/commit/c4df2f08b689a17f838d40c6921a1d67c45995ad">c4df2f0</a></code>
+        Generated at 2023-07-08 14:23 from <code><a href="https://github.com/neovim/neovim/commit/0a90e4b05ad3263bf656e24f616b6dadf6ba92e4">0a90e4b</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
