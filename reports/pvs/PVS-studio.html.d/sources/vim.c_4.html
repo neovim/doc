@@ -96,19 +96,19 @@
 <a name="ln87"> </a>
 <a name="ln88">/// Gets all or specific highlight groups in a namespace.</a>
 <a name="ln89">///</a>
-<a name="ln90">/// @param ns_id Get highlight groups for namespace ns_id |nvim_get_namespaces()|.</a>
-<a name="ln91">///              Use 0 to get global highlight groups |:highlight|.</a>
-<a name="ln92">/// @param opts  Options dict:</a>
-<a name="ln93">///                 - name: (string) Get a highlight definition by name.</a>
-<a name="ln94">///                 - id: (integer) Get a highlight definition by id.</a>
-<a name="ln95">///                 - link: (boolean, default true) Show linked group name instead of effective definition |:hi-link|.</a>
-<a name="ln96">///</a>
-<a name="ln97">/// @param[out] err Error details, if any.</a>
-<a name="ln98">/// @return Highlight groups as a map from group name to a highlight definition map as in |nvim_set_hl()|,</a>
-<a name="ln99">///                   or only a single highlight definition map if requested by name or id.</a>
-<a name="ln100">///</a>
-<a name="ln101">/// @note When the `link` attribute is defined in the highlight definition</a>
-<a name="ln102">///       map, other attributes will not be taking effect (see |:hi-link|).</a>
+<a name="ln90">/// @note When the `link` attribute is defined in the highlight definition</a>
+<a name="ln91">///       map, other attributes will not be taking effect (see |:hi-link|).</a>
+<a name="ln92">///</a>
+<a name="ln93">/// @param ns_id Get highlight groups for namespace ns_id |nvim_get_namespaces()|.</a>
+<a name="ln94">///              Use 0 to get global highlight groups |:highlight|.</a>
+<a name="ln95">/// @param opts  Options dict:</a>
+<a name="ln96">///                 - name: (string) Get a highlight definition by name.</a>
+<a name="ln97">///                 - id: (integer) Get a highlight definition by id.</a>
+<a name="ln98">///                 - link: (boolean, default true) Show linked group name instead of effective definition |:hi-link|.</a>
+<a name="ln99">///</a>
+<a name="ln100">/// @param[out] err Error details, if any.</a>
+<a name="ln101">/// @return Highlight groups as a map from group name to a highlight definition map as in |nvim_set_hl()|,</a>
+<a name="ln102">///                   or only a single highlight definition map if requested by name or id.</a>
 <a name="ln103">Dictionary nvim_get_hl(Integer ns_id, Dict(get_highlight) *opts, Arena *arena, Error *err)</a>
 <a name="ln104">  FUNC_API_SINCE(11)</a>
 <a name="ln105">{</a>
@@ -1967,7 +1967,7 @@
 <a name="ln1958"> </a>
 <a name="ln1959">/// Deletes an uppercase/file named mark. See |mark-motions|.</a>
 <a name="ln1960">///</a>
-<a name="ln1961">/// @note fails with error if a lowercase or buffer local named mark is used.</a>
+<a name="ln1961">/// @note Lowercase name (or other buffer-local mark) is an error.</a>
 <a name="ln1962">/// @param name       Mark name</a>
 <a name="ln1963">/// @return true if the mark was deleted, else false.</a>
 <a name="ln1964">/// @see |nvim_buf_del_mark()|</a>
@@ -1989,319 +1989,320 @@
 <a name="ln1980">  return res;</a>
 <a name="ln1981">}</a>
 <a name="ln1982"> </a>
-<a name="ln1983">/// Return a tuple (row, col, buffer, buffername) representing the position of</a>
-<a name="ln1984">/// the uppercase/file named mark. See |mark-motions|.</a>
-<a name="ln1985">///</a>
-<a name="ln1986">/// Marks are (1,0)-indexed. |api-indexing|</a>
-<a name="ln1987">///</a>
-<a name="ln1988">/// @note fails with error if a lowercase or buffer local named mark is used.</a>
-<a name="ln1989">/// @param name       Mark name</a>
-<a name="ln1990">/// @param opts       Optional parameters. Reserved for future use.</a>
-<a name="ln1991">/// @return 4-tuple (row, col, buffer, buffername), (0, 0, 0, '') if the mark is</a>
-<a name="ln1992">/// not set.</a>
-<a name="ln1993">/// @see |nvim_buf_set_mark()|</a>
-<a name="ln1994">/// @see |nvim_del_mark()|</a>
-<a name="ln1995">Array nvim_get_mark(String name, Dictionary opts, Error *err)</a>
-<a name="ln1996">  FUNC_API_SINCE(8)</a>
-<a name="ln1997">{</a>
-<a name="ln1998">  Array rv = ARRAY_DICT_INIT;</a>
-<a name="ln1999"> </a>
-<a name="ln2000">  VALIDATE_S((name.size == 1), &quot;mark name (must be a single char)&quot;, name.data, {</a>
-<a name="ln2001">    return rv;</a>
-<a name="ln2002">  });</a>
-<a name="ln2003">  VALIDATE_S((ASCII_ISUPPER(*name.data) || ascii_isdigit(*name.data)),</a>
-<a name="ln2004">             &quot;mark name (must be file/uppercase)&quot;, name.data, {</a>
-<a name="ln2005">    return rv;</a>
-<a name="ln2006">  });</a>
-<a name="ln2007"> </a>
-<a name="ln2008">  xfmark_T *mark = mark_get_global(false, *name.data);  // false avoids loading the mark buffer</a>
-<a name="ln2009">  pos_T pos = mark-&gt;fmark.mark;</a>
-<a name="ln2010">  bool allocated = false;</a>
-<a name="ln2011">  int bufnr;</a>
-<a name="ln2012">  char *filename;</a>
-<a name="ln2013"> </a>
-<a name="ln2014">  // Marks are from an open buffer it fnum is non zero</a>
-<a name="ln2015">  if (mark-&gt;fmark.fnum != 0) {</a>
-<a name="ln2016">    bufnr = mark-&gt;fmark.fnum;</a>
-<a name="ln2017">    filename = buflist_nr2name(bufnr, true, true);</a>
-<a name="ln2018">    allocated = true;</a>
-<a name="ln2019">    // Marks comes from shada</a>
-<a name="ln2020">  } else {</a>
-<a name="ln2021">    filename = mark-&gt;fname;</a>
-<a name="ln2022">    bufnr = 0;</a>
-<a name="ln2023">  }</a>
-<a name="ln2024"> </a>
-<a name="ln2025">  bool exists = filename != NULL;</a>
-<a name="ln2026">  Integer row;</a>
-<a name="ln2027">  Integer col;</a>
-<a name="ln2028"> </a>
-<a name="ln2029">  if (!exists || pos.lnum &lt;= 0) {</a>
-<a name="ln2030">    if (allocated) {</a>
-<a name="ln2031">      xfree(filename);</a>
-<a name="ln2032">      allocated = false;</a>
-<a name="ln2033">    }</a>
-<a name="ln2034">    filename = &quot;&quot;;</a>
-<a name="ln2035">    bufnr = 0;</a>
-<a name="ln2036">    row = 0;</a>
-<a name="ln2037">    col = 0;</a>
-<a name="ln2038">  } else {</a>
-<a name="ln2039">    row = pos.lnum;</a>
-<a name="ln2040">    col = pos.col;</a>
-<a name="ln2041">  }</a>
-<a name="ln2042"> </a>
-<a name="ln2043">  ADD(rv, INTEGER_OBJ(row));</a>
-<a name="ln2044">  ADD(rv, INTEGER_OBJ(col));</a>
-<a name="ln2045">  ADD(rv, INTEGER_OBJ(bufnr));</a>
-<a name="ln2046">  ADD(rv, CSTR_TO_OBJ(filename));</a>
-<a name="ln2047"> </a>
-<a name="ln2048">  if (allocated) {</a>
-<a name="ln2049">    xfree(filename);</a>
-<a name="ln2050">  }</a>
-<a name="ln2051"> </a>
-<a name="ln2052">  return rv;</a>
-<a name="ln2053">}</a>
-<a name="ln2054"> </a>
-<a name="ln2055">/// Evaluates statusline string.</a>
-<a name="ln2056">///</a>
-<a name="ln2057">/// @param str Statusline string (see 'statusline').</a>
-<a name="ln2058">/// @param opts Optional parameters.</a>
-<a name="ln2059">///           - winid: (number) |window-ID| of the window to use as context for statusline.</a>
-<a name="ln2060">///           - maxwidth: (number) Maximum width of statusline.</a>
-<a name="ln2061">///           - fillchar: (string) Character to fill blank spaces in the statusline (see</a>
-<a name="ln2062">///                                'fillchars'). Treated as single-width even if it isn't.</a>
-<a name="ln2063">///           - highlights: (boolean) Return highlight information.</a>
-<a name="ln2064">///           - use_winbar: (boolean) Evaluate winbar instead of statusline.</a>
-<a name="ln2065">///           - use_tabline: (boolean) Evaluate tabline instead of statusline. When true, {winid}</a>
-<a name="ln2066">///                                    is ignored. Mutually exclusive with {use_winbar}.</a>
-<a name="ln2067">///           - use_statuscol_lnum: (number) Evaluate statuscolumn for this line number instead of statusline.</a>
-<a name="ln2068">///</a>
-<a name="ln2069">/// @param[out] err Error details, if any.</a>
-<a name="ln2070">/// @return Dictionary containing statusline information, with these keys:</a>
-<a name="ln2071">///       - str: (string) Characters that will be displayed on the statusline.</a>
-<a name="ln2072">///       - width: (number) Display width of the statusline.</a>
-<a name="ln2073">///       - highlights: Array containing highlight information of the statusline. Only included when</a>
-<a name="ln2074">///                     the &quot;highlights&quot; key in {opts} is true. Each element of the array is a</a>
-<a name="ln2075">///                     |Dictionary| with these keys:</a>
-<a name="ln2076">///           - start: (number) Byte index (0-based) of first character that uses the highlight.</a>
-<a name="ln2077">///           - group: (string) Name of highlight group.</a>
-<a name="ln2078">Dictionary nvim_eval_statusline(String str, Dict(eval_statusline) *opts, Error *err)</a>
-<a name="ln2079">  FUNC_API_SINCE(8) FUNC_API_FAST</a>
-<a name="ln2080">{</a>
-<a name="ln2081">  Dictionary result = ARRAY_DICT_INIT;</a>
-<a name="ln2082"> </a>
-<a name="ln2083">  int maxwidth;</a>
-<a name="ln2084">  int fillchar = 0;</a>
-<a name="ln2085">  int use_bools = 0;</a>
-<a name="ln2086">  int statuscol_lnum = 0;</a>
-<a name="ln2087">  Window window = 0;</a>
-<a name="ln2088">  bool use_winbar = false;</a>
-<a name="ln2089">  bool use_tabline = false;</a>
-<a name="ln2090">  bool highlights = false;</a>
-<a name="ln2091"> </a>
-<a name="ln2092">  if (str.size &lt; 2 || memcmp(str.data, &quot;%!&quot;, 2) != 0) {</a>
-<a name="ln2093">    const char *const errmsg = check_stl_option(str.data);</a>
-<a name="ln2094">    VALIDATE(!errmsg, &quot;%s&quot;, errmsg, {</a>
-<a name="ln2095">      return result;</a>
-<a name="ln2096">    });</a>
-<a name="ln2097">  }</a>
-<a name="ln2098"> </a>
-<a name="ln2099">  if (HAS_KEY(opts-&gt;winid)) {</a>
-<a name="ln2100">    VALIDATE_T(&quot;winid&quot;, kObjectTypeInteger, opts-&gt;winid.type, {</a>
-<a name="ln2101">      return result;</a>
-<a name="ln2102">    });</a>
-<a name="ln2103"> </a>
-<a name="ln2104">    window = (Window)opts-&gt;winid.data.integer;</a>
-<a name="ln2105">  }</a>
-<a name="ln2106">  if (HAS_KEY(opts-&gt;fillchar)) {</a>
-<a name="ln2107">    VALIDATE_T(&quot;fillchar&quot;, kObjectTypeString, opts-&gt;fillchar.type, {</a>
-<a name="ln2108">      return result;</a>
-<a name="ln2109">    });</a>
-<a name="ln2110">    VALIDATE_EXP((opts-&gt;fillchar.data.string.size != 0</a>
-<a name="ln2111">                  &amp;&amp; ((size_t)utf_ptr2len(opts-&gt;fillchar.data.string.data)</a>
-<a name="ln2112">                      == opts-&gt;fillchar.data.string.size)),</a>
-<a name="ln2113">                 &quot;fillchar&quot;, &quot;single character&quot;, NULL, {</a>
-<a name="ln2114">      return result;</a>
-<a name="ln2115">    });</a>
-<a name="ln2116">    fillchar = utf_ptr2char(opts-&gt;fillchar.data.string.data);</a>
-<a name="ln2117">  }</a>
-<a name="ln2118">  if (HAS_KEY(opts-&gt;highlights)) {</a>
-<a name="ln2119">    highlights = api_object_to_bool(opts-&gt;highlights, &quot;highlights&quot;, false, err);</a>
-<a name="ln2120"> </a>
-<a name="ln2121">    if (ERROR_SET(err)) {</a>
-<a name="ln2122">      return result;</a>
-<a name="ln2123">    }</a>
-<a name="ln2124">  }</a>
-<a name="ln2125">  if (HAS_KEY(opts-&gt;use_winbar)) {</a>
-<a name="ln2126">    use_winbar = api_object_to_bool(opts-&gt;use_winbar, &quot;use_winbar&quot;, false, err);</a>
-<a name="ln2127">    if (ERROR_SET(err)) {</a>
-<a name="ln2128">      return result;</a>
-<a name="ln2129">    }</a>
-<a name="ln2130">    use_bools++;</a>
-<a name="ln2131">  }</a>
-<a name="ln2132">  if (HAS_KEY(opts-&gt;use_tabline)) {</a>
-<a name="ln2133">    use_tabline = api_object_to_bool(opts-&gt;use_tabline, &quot;use_tabline&quot;, false, err);</a>
-<a name="ln2134">    if (ERROR_SET(err)) {</a>
-<a name="ln2135">      return result;</a>
-<a name="ln2136">    }</a>
-<a name="ln2137">    use_bools++;</a>
-<a name="ln2138">  }</a>
-<a name="ln2139"> </a>
-<a name="ln2140">  win_T *wp = use_tabline ? curwin : find_window_by_handle(window, err);</a>
-<a name="ln2141">  if (wp == NULL) {</a>
-<a name="ln2142">    api_set_error(err, kErrorTypeException, &quot;unknown winid %d&quot;, window);</a>
-<a name="ln2143">    return result;</a>
-<a name="ln2144">  }</a>
-<a name="ln2145"> </a>
-<a name="ln2146">  if (HAS_KEY(opts-&gt;use_statuscol_lnum)) {</a>
-<a name="ln2147">    VALIDATE_T(&quot;use_statuscol_lnum&quot;, kObjectTypeInteger, opts-&gt;use_statuscol_lnum.type, {</a>
-<a name="ln2148">      return result;</a>
-<a name="ln2149">    });</a>
-<a name="ln2150">    statuscol_lnum = (int)opts-&gt;use_statuscol_lnum.data.integer;</a>
-<a name="ln2151">    VALIDATE_RANGE(statuscol_lnum &gt; 0 &amp;&amp; statuscol_lnum &lt;= wp-&gt;w_buffer-&gt;b_ml.ml_line_count,</a>
-<a name="ln2152">                   &quot;use_statuscol_lnum&quot;, {</a>
-<a name="ln2153">      return result;</a>
-<a name="ln2154">    });</a>
-<a name="ln2155">    use_bools++;</a>
-<a name="ln2156">  }</a>
-<a name="ln2157">  VALIDATE(use_bools &lt;= 1, &quot;%s&quot;,</a>
-<a name="ln2158">           &quot;Can only use one of 'use_winbar', 'use_tabline' and 'use_statuscol_lnum'&quot;, {</a>
-<a name="ln2159">    return result;</a>
-<a name="ln2160">  });</a>
-<a name="ln2161"> </a>
-<a name="ln2162">  int stc_hl_id = 0;</a>
-<a name="ln2163">  statuscol_T statuscol = { 0 };</a>
-<a name="ln2164">  SignTextAttrs sattrs[SIGN_SHOW_MAX] = { 0 };</a>
-<a name="ln2165"> </a>
-<a name="ln2166">  if (use_tabline) {</a>
-<a name="ln2167">    fillchar = ' ';</a>
-<a name="ln2168">  } else {</a>
-<a name="ln2169">    if (fillchar == 0) {</a>
-<a name="ln2170">      if (use_winbar) {</a>
-<a name="ln2171">        fillchar = wp-&gt;w_p_fcs_chars.wbr;</a>
-<a name="ln2172">      } else {</a>
-<a name="ln2173">        int attr;</a>
-<a name="ln2174">        fillchar = fillchar_status(&amp;attr, wp);</a>
-<a name="ln2175">      }</a>
-<a name="ln2176">    }</a>
-<a name="ln2177">    if (statuscol_lnum) {</a>
-<a name="ln2178">      HlPriId line = { 0 };</a>
-<a name="ln2179">      HlPriId cul  = { 0 };</a>
-<a name="ln2180">      HlPriId num  = { 0 };</a>
-<a name="ln2181">      linenr_T lnum = statuscol_lnum;</a>
-<a name="ln2182">      int num_signs = buf_get_signattrs(wp-&gt;w_buffer, lnum, sattrs, &amp;num, &amp;line, &amp;cul);</a>
-<a name="ln2183">      decor_redraw_signs(wp-&gt;w_buffer, lnum - 1, &amp;num_signs, sattrs, &amp;num, &amp;line, &amp;cul);</a>
-<a name="ln2184">      wp-&gt;w_scwidth = win_signcol_count(wp);</a>
-<a name="ln2185"> </a>
-<a name="ln2186">      statuscol.sattrs = sattrs;</a>
-<a name="ln2187">      statuscol.foldinfo = fold_info(wp, lnum);</a>
-<a name="ln2188">      wp-&gt;w_cursorline = win_cursorline_standout(wp) ? wp-&gt;w_cursor.lnum : 0;</a>
-<a name="ln2189"> </a>
-<a name="ln2190">      if (wp-&gt;w_p_cul) {</a>
-<a name="ln2191">        if (statuscol.foldinfo.fi_level != 0 &amp;&amp; statuscol.foldinfo.fi_lines &gt; 0) {</a>
-<a name="ln2192">          wp-&gt;w_cursorline = statuscol.foldinfo.fi_lnum;</a>
-<a name="ln2193">        }</a>
-<a name="ln2194">        statuscol.use_cul = lnum == wp-&gt;w_cursorline &amp;&amp; (wp-&gt;w_p_culopt_flags &amp; CULOPT_NBR);</a>
-<a name="ln2195">      }</a>
-<a name="ln2196"> </a>
-<a name="ln2197">      statuscol.sign_cul_id = statuscol.use_cul ? cul.hl_id : 0;</a>
-<a name="ln2198">      if (num.hl_id) {</a>
-<a name="ln2199">        stc_hl_id = num.hl_id;</a>
-<a name="ln2200">      } else if (statuscol.use_cul) {</a>
-<a name="ln2201">        stc_hl_id = HLF_CLN + 1;</a>
-<a name="ln2202">      } else if (wp-&gt;w_p_rnu) {</a>
-<a name="ln2203">        stc_hl_id = (lnum &lt; wp-&gt;w_cursor.lnum ? HLF_LNA : HLF_LNB) + 1;</a>
-<a name="ln2204">      } else {</a>
-<a name="ln2205">        stc_hl_id = HLF_N + 1;</a>
-<a name="ln2206">      }</a>
-<a name="ln2207"> </a>
-<a name="ln2208">      set_vim_var_nr(VV_LNUM, lnum);</a>
-<a name="ln2209">      set_vim_var_nr(VV_RELNUM, labs(get_cursor_rel_lnum(wp, lnum)));</a>
-<a name="ln2210">      set_vim_var_nr(VV_VIRTNUM, 0);</a>
-<a name="ln2211">    }</a>
-<a name="ln2212">  }</a>
-<a name="ln2213"> </a>
-<a name="ln2214">  if (HAS_KEY(opts-&gt;maxwidth)) {</a>
-<a name="ln2215">    VALIDATE_T(&quot;maxwidth&quot;, kObjectTypeInteger, opts-&gt;maxwidth.type, {</a>
-<a name="ln2216">      return result;</a>
-<a name="ln2217">    });</a>
-<a name="ln2218"> </a>
-<a name="ln2219">    maxwidth = (int)opts-&gt;maxwidth.data.integer;</a>
-<a name="ln2220">  } else {</a>
-<a name="ln2221">    maxwidth = statuscol_lnum ? win_col_off(wp)</a>
-<a name="ln2222">               : (use_tabline || (!use_winbar &amp;&amp; global_stl_height() &gt; 0)) ? Columns : wp-&gt;w_width;</a>
-<a name="ln2223">  }</a>
-<a name="ln2224"> </a>
-<a name="ln2225">  char buf[MAXPATHL];</a>
-<a name="ln2226">  stl_hlrec_t *hltab;</a>
-<a name="ln2227"> </a>
-<a name="ln2228">  // Temporarily reset 'cursorbind' to prevent side effects from moving the cursor away and back.</a>
-<a name="ln2229">  int p_crb_save = wp-&gt;w_p_crb;</a>
-<a name="ln2230">  wp-&gt;w_p_crb = false;</a>
-<a name="ln2231"> </a>
-<a name="ln2232">  int width = build_stl_str_hl(wp,</a>
-<a name="ln2233">                               buf,</a>
-<a name="ln2234">                               sizeof(buf),</a>
-<a name="ln2235">                               str.data,</a>
-<a name="ln2236">                               NULL,</a>
-<a name="ln2237">                               0,</a>
-<a name="ln2238">                               fillchar,</a>
-<a name="ln2239">                               maxwidth,</a>
-<a name="ln2240">                               highlights ? &amp;hltab : NULL,</a>
-<a name="ln2241">                               NULL,</a>
-<a name="ln2242">                               statuscol_lnum ? &amp;statuscol : NULL);</a>
-<a name="ln2243"> </a>
-<a name="ln2244">  PUT(result, &quot;width&quot;, INTEGER_OBJ(width));</a>
-<a name="ln2245"> </a>
-<a name="ln2246">  // Restore original value of 'cursorbind'</a>
-<a name="ln2247">  wp-&gt;w_p_crb = p_crb_save;</a>
-<a name="ln2248"> </a>
-<a name="ln2249">  if (highlights) {</a>
-<a name="ln2250">    Array hl_values = ARRAY_DICT_INIT;</a>
-<a name="ln2251">    const char *grpname;</a>
-<a name="ln2252">    char user_group[15];  // strlen(&quot;User&quot;) + strlen(&quot;2147483647&quot;) + NUL</a>
-<a name="ln2253"> </a>
-<a name="ln2254">    // If first character doesn't have a defined highlight,</a>
-<a name="ln2255">    // add the default highlight at the beginning of the highlight list</a>
-<a name="ln2256">    if (hltab-&gt;start == NULL || (hltab-&gt;start - buf) != 0) {</a>
-<a name="ln2257">      Dictionary hl_info = ARRAY_DICT_INIT;</a>
-<a name="ln2258">      grpname = get_default_stl_hl(use_tabline ? NULL : wp, use_winbar, stc_hl_id);</a>
-<a name="ln2259"> </a>
-<a name="ln2260">      PUT(hl_info, &quot;start&quot;, INTEGER_OBJ(0));</a>
-<a name="ln2261">      PUT(hl_info, &quot;group&quot;, CSTR_TO_OBJ(grpname));</a>
-<a name="ln2262"> </a>
-<a name="ln2263">      ADD(hl_values, DICTIONARY_OBJ(hl_info));</a>
-<a name="ln2264">    }</a>
-<a name="ln2265"> </a>
-<a name="ln2266">    for (stl_hlrec_t *sp = hltab; sp-&gt;start != NULL; sp++) {</a>
-<a name="ln2267">      Dictionary hl_info = ARRAY_DICT_INIT;</a>
-<a name="ln2268"> </a>
-<a name="ln2269">      PUT(hl_info, &quot;start&quot;, INTEGER_OBJ(sp-&gt;start - buf));</a>
-<a name="ln2270"> </a>
-<a name="ln2271">      if (sp-&gt;userhl == 0) {</a>
-<a name="ln2272">        grpname = get_default_stl_hl(use_tabline ? NULL : wp, use_winbar, stc_hl_id);</a>
-<a name="ln2273">      } else if (sp-&gt;userhl &lt; 0) {</a>
-<a name="ln2274">        grpname = syn_id2name(-sp-&gt;userhl);</a>
-<a name="ln2275">      } else {</a>
-<a name="ln2276">        snprintf(user_group, sizeof(user_group), &quot;User%d&quot;, sp-&gt;userhl);</a>
-<a name="ln2277">        grpname = user_group;</a>
-<a name="ln2278">      }</a>
-<a name="ln2279">      PUT(hl_info, &quot;group&quot;, CSTR_TO_OBJ(grpname));</a>
-<a name="ln2280">      ADD(hl_values, DICTIONARY_OBJ(hl_info));</a>
-<a name="ln2281">    }</a>
-<a name="ln2282">    PUT(result, &quot;highlights&quot;, ARRAY_OBJ(hl_values));</a>
-<a name="ln2283">  }</a>
-<a name="ln2284">  PUT(result, &quot;str&quot;, CSTR_TO_OBJ(buf));</a>
-<a name="ln2285"> </a>
-<a name="ln2286">  return result;</a>
-<a name="ln2287">}</a>
-<a name="ln2288"> </a>
-<a name="ln2289">void nvim_error_event(uint64_t channel_id, Integer lvl, String data)</a>
-<a name="ln2290">  FUNC_API_REMOTE_ONLY</a>
-<a name="ln2291">{</a>
-<a name="ln2292">  // TODO(bfredl): consider printing message to user, as will be relevant</a>
-<a name="ln2293">  // if we fork nvim processes as async workers</a>
-<a name="ln2294">  ELOG(&quot;async error on channel %&quot; PRId64 &quot;: %s&quot;, channel_id, data.size ? data.data : &quot;&quot;);</a>
-<a name="ln2295">}</a>
+<a name="ln1983">/// Returns a `(row, col, buffer, buffername)` tuple representing the position</a>
+<a name="ln1984">/// of the uppercase/file named mark. &quot;End of line&quot; column position is returned</a>
+<a name="ln1985">/// as |v:maxcol| (big number). See |mark-motions|.</a>
+<a name="ln1986">///</a>
+<a name="ln1987">/// Marks are (1,0)-indexed. |api-indexing|</a>
+<a name="ln1988">///</a>
+<a name="ln1989">/// @note Lowercase name (or other buffer-local mark) is an error.</a>
+<a name="ln1990">/// @param name       Mark name</a>
+<a name="ln1991">/// @param opts       Optional parameters. Reserved for future use.</a>
+<a name="ln1992">/// @return 4-tuple (row, col, buffer, buffername), (0, 0, 0, '') if the mark is</a>
+<a name="ln1993">/// not set.</a>
+<a name="ln1994">/// @see |nvim_buf_set_mark()|</a>
+<a name="ln1995">/// @see |nvim_del_mark()|</a>
+<a name="ln1996">Array nvim_get_mark(String name, Dictionary opts, Error *err)</a>
+<a name="ln1997">  FUNC_API_SINCE(8)</a>
+<a name="ln1998">{</a>
+<a name="ln1999">  Array rv = ARRAY_DICT_INIT;</a>
+<a name="ln2000"> </a>
+<a name="ln2001">  VALIDATE_S((name.size == 1), &quot;mark name (must be a single char)&quot;, name.data, {</a>
+<a name="ln2002">    return rv;</a>
+<a name="ln2003">  });</a>
+<a name="ln2004">  VALIDATE_S((ASCII_ISUPPER(*name.data) || ascii_isdigit(*name.data)),</a>
+<a name="ln2005">             &quot;mark name (must be file/uppercase)&quot;, name.data, {</a>
+<a name="ln2006">    return rv;</a>
+<a name="ln2007">  });</a>
+<a name="ln2008"> </a>
+<a name="ln2009">  xfmark_T *mark = mark_get_global(false, *name.data);  // false avoids loading the mark buffer</a>
+<a name="ln2010">  pos_T pos = mark-&gt;fmark.mark;</a>
+<a name="ln2011">  bool allocated = false;</a>
+<a name="ln2012">  int bufnr;</a>
+<a name="ln2013">  char *filename;</a>
+<a name="ln2014"> </a>
+<a name="ln2015">  // Marks are from an open buffer it fnum is non zero</a>
+<a name="ln2016">  if (mark-&gt;fmark.fnum != 0) {</a>
+<a name="ln2017">    bufnr = mark-&gt;fmark.fnum;</a>
+<a name="ln2018">    filename = buflist_nr2name(bufnr, true, true);</a>
+<a name="ln2019">    allocated = true;</a>
+<a name="ln2020">    // Marks comes from shada</a>
+<a name="ln2021">  } else {</a>
+<a name="ln2022">    filename = mark-&gt;fname;</a>
+<a name="ln2023">    bufnr = 0;</a>
+<a name="ln2024">  }</a>
+<a name="ln2025"> </a>
+<a name="ln2026">  bool exists = filename != NULL;</a>
+<a name="ln2027">  Integer row;</a>
+<a name="ln2028">  Integer col;</a>
+<a name="ln2029"> </a>
+<a name="ln2030">  if (!exists || pos.lnum &lt;= 0) {</a>
+<a name="ln2031">    if (allocated) {</a>
+<a name="ln2032">      xfree(filename);</a>
+<a name="ln2033">      allocated = false;</a>
+<a name="ln2034">    }</a>
+<a name="ln2035">    filename = &quot;&quot;;</a>
+<a name="ln2036">    bufnr = 0;</a>
+<a name="ln2037">    row = 0;</a>
+<a name="ln2038">    col = 0;</a>
+<a name="ln2039">  } else {</a>
+<a name="ln2040">    row = pos.lnum;</a>
+<a name="ln2041">    col = pos.col;</a>
+<a name="ln2042">  }</a>
+<a name="ln2043"> </a>
+<a name="ln2044">  ADD(rv, INTEGER_OBJ(row));</a>
+<a name="ln2045">  ADD(rv, INTEGER_OBJ(col));</a>
+<a name="ln2046">  ADD(rv, INTEGER_OBJ(bufnr));</a>
+<a name="ln2047">  ADD(rv, CSTR_TO_OBJ(filename));</a>
+<a name="ln2048"> </a>
+<a name="ln2049">  if (allocated) {</a>
+<a name="ln2050">    xfree(filename);</a>
+<a name="ln2051">  }</a>
+<a name="ln2052"> </a>
+<a name="ln2053">  return rv;</a>
+<a name="ln2054">}</a>
+<a name="ln2055"> </a>
+<a name="ln2056">/// Evaluates statusline string.</a>
+<a name="ln2057">///</a>
+<a name="ln2058">/// @param str Statusline string (see 'statusline').</a>
+<a name="ln2059">/// @param opts Optional parameters.</a>
+<a name="ln2060">///           - winid: (number) |window-ID| of the window to use as context for statusline.</a>
+<a name="ln2061">///           - maxwidth: (number) Maximum width of statusline.</a>
+<a name="ln2062">///           - fillchar: (string) Character to fill blank spaces in the statusline (see</a>
+<a name="ln2063">///                                'fillchars'). Treated as single-width even if it isn't.</a>
+<a name="ln2064">///           - highlights: (boolean) Return highlight information.</a>
+<a name="ln2065">///           - use_winbar: (boolean) Evaluate winbar instead of statusline.</a>
+<a name="ln2066">///           - use_tabline: (boolean) Evaluate tabline instead of statusline. When true, {winid}</a>
+<a name="ln2067">///                                    is ignored. Mutually exclusive with {use_winbar}.</a>
+<a name="ln2068">///           - use_statuscol_lnum: (number) Evaluate statuscolumn for this line number instead of statusline.</a>
+<a name="ln2069">///</a>
+<a name="ln2070">/// @param[out] err Error details, if any.</a>
+<a name="ln2071">/// @return Dictionary containing statusline information, with these keys:</a>
+<a name="ln2072">///       - str: (string) Characters that will be displayed on the statusline.</a>
+<a name="ln2073">///       - width: (number) Display width of the statusline.</a>
+<a name="ln2074">///       - highlights: Array containing highlight information of the statusline. Only included when</a>
+<a name="ln2075">///                     the &quot;highlights&quot; key in {opts} is true. Each element of the array is a</a>
+<a name="ln2076">///                     |Dictionary| with these keys:</a>
+<a name="ln2077">///           - start: (number) Byte index (0-based) of first character that uses the highlight.</a>
+<a name="ln2078">///           - group: (string) Name of highlight group.</a>
+<a name="ln2079">Dictionary nvim_eval_statusline(String str, Dict(eval_statusline) *opts, Error *err)</a>
+<a name="ln2080">  FUNC_API_SINCE(8) FUNC_API_FAST</a>
+<a name="ln2081">{</a>
+<a name="ln2082">  Dictionary result = ARRAY_DICT_INIT;</a>
+<a name="ln2083"> </a>
+<a name="ln2084">  int maxwidth;</a>
+<a name="ln2085">  int fillchar = 0;</a>
+<a name="ln2086">  int use_bools = 0;</a>
+<a name="ln2087">  int statuscol_lnum = 0;</a>
+<a name="ln2088">  Window window = 0;</a>
+<a name="ln2089">  bool use_winbar = false;</a>
+<a name="ln2090">  bool use_tabline = false;</a>
+<a name="ln2091">  bool highlights = false;</a>
+<a name="ln2092"> </a>
+<a name="ln2093">  if (str.size &lt; 2 || memcmp(str.data, &quot;%!&quot;, 2) != 0) {</a>
+<a name="ln2094">    const char *const errmsg = check_stl_option(str.data);</a>
+<a name="ln2095">    VALIDATE(!errmsg, &quot;%s&quot;, errmsg, {</a>
+<a name="ln2096">      return result;</a>
+<a name="ln2097">    });</a>
+<a name="ln2098">  }</a>
+<a name="ln2099"> </a>
+<a name="ln2100">  if (HAS_KEY(opts-&gt;winid)) {</a>
+<a name="ln2101">    VALIDATE_T(&quot;winid&quot;, kObjectTypeInteger, opts-&gt;winid.type, {</a>
+<a name="ln2102">      return result;</a>
+<a name="ln2103">    });</a>
+<a name="ln2104"> </a>
+<a name="ln2105">    window = (Window)opts-&gt;winid.data.integer;</a>
+<a name="ln2106">  }</a>
+<a name="ln2107">  if (HAS_KEY(opts-&gt;fillchar)) {</a>
+<a name="ln2108">    VALIDATE_T(&quot;fillchar&quot;, kObjectTypeString, opts-&gt;fillchar.type, {</a>
+<a name="ln2109">      return result;</a>
+<a name="ln2110">    });</a>
+<a name="ln2111">    VALIDATE_EXP((opts-&gt;fillchar.data.string.size != 0</a>
+<a name="ln2112">                  &amp;&amp; ((size_t)utf_ptr2len(opts-&gt;fillchar.data.string.data)</a>
+<a name="ln2113">                      == opts-&gt;fillchar.data.string.size)),</a>
+<a name="ln2114">                 &quot;fillchar&quot;, &quot;single character&quot;, NULL, {</a>
+<a name="ln2115">      return result;</a>
+<a name="ln2116">    });</a>
+<a name="ln2117">    fillchar = utf_ptr2char(opts-&gt;fillchar.data.string.data);</a>
+<a name="ln2118">  }</a>
+<a name="ln2119">  if (HAS_KEY(opts-&gt;highlights)) {</a>
+<a name="ln2120">    highlights = api_object_to_bool(opts-&gt;highlights, &quot;highlights&quot;, false, err);</a>
+<a name="ln2121"> </a>
+<a name="ln2122">    if (ERROR_SET(err)) {</a>
+<a name="ln2123">      return result;</a>
+<a name="ln2124">    }</a>
+<a name="ln2125">  }</a>
+<a name="ln2126">  if (HAS_KEY(opts-&gt;use_winbar)) {</a>
+<a name="ln2127">    use_winbar = api_object_to_bool(opts-&gt;use_winbar, &quot;use_winbar&quot;, false, err);</a>
+<a name="ln2128">    if (ERROR_SET(err)) {</a>
+<a name="ln2129">      return result;</a>
+<a name="ln2130">    }</a>
+<a name="ln2131">    use_bools++;</a>
+<a name="ln2132">  }</a>
+<a name="ln2133">  if (HAS_KEY(opts-&gt;use_tabline)) {</a>
+<a name="ln2134">    use_tabline = api_object_to_bool(opts-&gt;use_tabline, &quot;use_tabline&quot;, false, err);</a>
+<a name="ln2135">    if (ERROR_SET(err)) {</a>
+<a name="ln2136">      return result;</a>
+<a name="ln2137">    }</a>
+<a name="ln2138">    use_bools++;</a>
+<a name="ln2139">  }</a>
+<a name="ln2140"> </a>
+<a name="ln2141">  win_T *wp = use_tabline ? curwin : find_window_by_handle(window, err);</a>
+<a name="ln2142">  if (wp == NULL) {</a>
+<a name="ln2143">    api_set_error(err, kErrorTypeException, &quot;unknown winid %d&quot;, window);</a>
+<a name="ln2144">    return result;</a>
+<a name="ln2145">  }</a>
+<a name="ln2146"> </a>
+<a name="ln2147">  if (HAS_KEY(opts-&gt;use_statuscol_lnum)) {</a>
+<a name="ln2148">    VALIDATE_T(&quot;use_statuscol_lnum&quot;, kObjectTypeInteger, opts-&gt;use_statuscol_lnum.type, {</a>
+<a name="ln2149">      return result;</a>
+<a name="ln2150">    });</a>
+<a name="ln2151">    statuscol_lnum = (int)opts-&gt;use_statuscol_lnum.data.integer;</a>
+<a name="ln2152">    VALIDATE_RANGE(statuscol_lnum &gt; 0 &amp;&amp; statuscol_lnum &lt;= wp-&gt;w_buffer-&gt;b_ml.ml_line_count,</a>
+<a name="ln2153">                   &quot;use_statuscol_lnum&quot;, {</a>
+<a name="ln2154">      return result;</a>
+<a name="ln2155">    });</a>
+<a name="ln2156">    use_bools++;</a>
+<a name="ln2157">  }</a>
+<a name="ln2158">  VALIDATE(use_bools &lt;= 1, &quot;%s&quot;,</a>
+<a name="ln2159">           &quot;Can only use one of 'use_winbar', 'use_tabline' and 'use_statuscol_lnum'&quot;, {</a>
+<a name="ln2160">    return result;</a>
+<a name="ln2161">  });</a>
+<a name="ln2162"> </a>
+<a name="ln2163">  int stc_hl_id = 0;</a>
+<a name="ln2164">  statuscol_T statuscol = { 0 };</a>
+<a name="ln2165">  SignTextAttrs sattrs[SIGN_SHOW_MAX] = { 0 };</a>
+<a name="ln2166"> </a>
+<a name="ln2167">  if (use_tabline) {</a>
+<a name="ln2168">    fillchar = ' ';</a>
+<a name="ln2169">  } else {</a>
+<a name="ln2170">    if (fillchar == 0) {</a>
+<a name="ln2171">      if (use_winbar) {</a>
+<a name="ln2172">        fillchar = wp-&gt;w_p_fcs_chars.wbr;</a>
+<a name="ln2173">      } else {</a>
+<a name="ln2174">        int attr;</a>
+<a name="ln2175">        fillchar = fillchar_status(&amp;attr, wp);</a>
+<a name="ln2176">      }</a>
+<a name="ln2177">    }</a>
+<a name="ln2178">    if (statuscol_lnum) {</a>
+<a name="ln2179">      HlPriId line = { 0 };</a>
+<a name="ln2180">      HlPriId cul  = { 0 };</a>
+<a name="ln2181">      HlPriId num  = { 0 };</a>
+<a name="ln2182">      linenr_T lnum = statuscol_lnum;</a>
+<a name="ln2183">      int num_signs = buf_get_signattrs(wp-&gt;w_buffer, lnum, sattrs, &amp;num, &amp;line, &amp;cul);</a>
+<a name="ln2184">      decor_redraw_signs(wp-&gt;w_buffer, lnum - 1, &amp;num_signs, sattrs, &amp;num, &amp;line, &amp;cul);</a>
+<a name="ln2185">      wp-&gt;w_scwidth = win_signcol_count(wp);</a>
+<a name="ln2186"> </a>
+<a name="ln2187">      statuscol.sattrs = sattrs;</a>
+<a name="ln2188">      statuscol.foldinfo = fold_info(wp, lnum);</a>
+<a name="ln2189">      wp-&gt;w_cursorline = win_cursorline_standout(wp) ? wp-&gt;w_cursor.lnum : 0;</a>
+<a name="ln2190"> </a>
+<a name="ln2191">      if (wp-&gt;w_p_cul) {</a>
+<a name="ln2192">        if (statuscol.foldinfo.fi_level != 0 &amp;&amp; statuscol.foldinfo.fi_lines &gt; 0) {</a>
+<a name="ln2193">          wp-&gt;w_cursorline = statuscol.foldinfo.fi_lnum;</a>
+<a name="ln2194">        }</a>
+<a name="ln2195">        statuscol.use_cul = lnum == wp-&gt;w_cursorline &amp;&amp; (wp-&gt;w_p_culopt_flags &amp; CULOPT_NBR);</a>
+<a name="ln2196">      }</a>
+<a name="ln2197"> </a>
+<a name="ln2198">      statuscol.sign_cul_id = statuscol.use_cul ? cul.hl_id : 0;</a>
+<a name="ln2199">      if (num.hl_id) {</a>
+<a name="ln2200">        stc_hl_id = num.hl_id;</a>
+<a name="ln2201">      } else if (statuscol.use_cul) {</a>
+<a name="ln2202">        stc_hl_id = HLF_CLN + 1;</a>
+<a name="ln2203">      } else if (wp-&gt;w_p_rnu) {</a>
+<a name="ln2204">        stc_hl_id = (lnum &lt; wp-&gt;w_cursor.lnum ? HLF_LNA : HLF_LNB) + 1;</a>
+<a name="ln2205">      } else {</a>
+<a name="ln2206">        stc_hl_id = HLF_N + 1;</a>
+<a name="ln2207">      }</a>
+<a name="ln2208"> </a>
+<a name="ln2209">      set_vim_var_nr(VV_LNUM, lnum);</a>
+<a name="ln2210">      set_vim_var_nr(VV_RELNUM, labs(get_cursor_rel_lnum(wp, lnum)));</a>
+<a name="ln2211">      set_vim_var_nr(VV_VIRTNUM, 0);</a>
+<a name="ln2212">    }</a>
+<a name="ln2213">  }</a>
+<a name="ln2214"> </a>
+<a name="ln2215">  if (HAS_KEY(opts-&gt;maxwidth)) {</a>
+<a name="ln2216">    VALIDATE_T(&quot;maxwidth&quot;, kObjectTypeInteger, opts-&gt;maxwidth.type, {</a>
+<a name="ln2217">      return result;</a>
+<a name="ln2218">    });</a>
+<a name="ln2219"> </a>
+<a name="ln2220">    maxwidth = (int)opts-&gt;maxwidth.data.integer;</a>
+<a name="ln2221">  } else {</a>
+<a name="ln2222">    maxwidth = statuscol_lnum ? win_col_off(wp)</a>
+<a name="ln2223">               : (use_tabline || (!use_winbar &amp;&amp; global_stl_height() &gt; 0)) ? Columns : wp-&gt;w_width;</a>
+<a name="ln2224">  }</a>
+<a name="ln2225"> </a>
+<a name="ln2226">  char buf[MAXPATHL];</a>
+<a name="ln2227">  stl_hlrec_t *hltab;</a>
+<a name="ln2228"> </a>
+<a name="ln2229">  // Temporarily reset 'cursorbind' to prevent side effects from moving the cursor away and back.</a>
+<a name="ln2230">  int p_crb_save = wp-&gt;w_p_crb;</a>
+<a name="ln2231">  wp-&gt;w_p_crb = false;</a>
+<a name="ln2232"> </a>
+<a name="ln2233">  int width = build_stl_str_hl(wp,</a>
+<a name="ln2234">                               buf,</a>
+<a name="ln2235">                               sizeof(buf),</a>
+<a name="ln2236">                               str.data,</a>
+<a name="ln2237">                               NULL,</a>
+<a name="ln2238">                               0,</a>
+<a name="ln2239">                               fillchar,</a>
+<a name="ln2240">                               maxwidth,</a>
+<a name="ln2241">                               highlights ? &amp;hltab : NULL,</a>
+<a name="ln2242">                               NULL,</a>
+<a name="ln2243">                               statuscol_lnum ? &amp;statuscol : NULL);</a>
+<a name="ln2244"> </a>
+<a name="ln2245">  PUT(result, &quot;width&quot;, INTEGER_OBJ(width));</a>
+<a name="ln2246"> </a>
+<a name="ln2247">  // Restore original value of 'cursorbind'</a>
+<a name="ln2248">  wp-&gt;w_p_crb = p_crb_save;</a>
+<a name="ln2249"> </a>
+<a name="ln2250">  if (highlights) {</a>
+<a name="ln2251">    Array hl_values = ARRAY_DICT_INIT;</a>
+<a name="ln2252">    const char *grpname;</a>
+<a name="ln2253">    char user_group[15];  // strlen(&quot;User&quot;) + strlen(&quot;2147483647&quot;) + NUL</a>
+<a name="ln2254"> </a>
+<a name="ln2255">    // If first character doesn't have a defined highlight,</a>
+<a name="ln2256">    // add the default highlight at the beginning of the highlight list</a>
+<a name="ln2257">    if (hltab-&gt;start == NULL || (hltab-&gt;start - buf) != 0) {</a>
+<a name="ln2258">      Dictionary hl_info = ARRAY_DICT_INIT;</a>
+<a name="ln2259">      grpname = get_default_stl_hl(use_tabline ? NULL : wp, use_winbar, stc_hl_id);</a>
+<a name="ln2260"> </a>
+<a name="ln2261">      PUT(hl_info, &quot;start&quot;, INTEGER_OBJ(0));</a>
+<a name="ln2262">      PUT(hl_info, &quot;group&quot;, CSTR_TO_OBJ(grpname));</a>
+<a name="ln2263"> </a>
+<a name="ln2264">      ADD(hl_values, DICTIONARY_OBJ(hl_info));</a>
+<a name="ln2265">    }</a>
+<a name="ln2266"> </a>
+<a name="ln2267">    for (stl_hlrec_t *sp = hltab; sp-&gt;start != NULL; sp++) {</a>
+<a name="ln2268">      Dictionary hl_info = ARRAY_DICT_INIT;</a>
+<a name="ln2269"> </a>
+<a name="ln2270">      PUT(hl_info, &quot;start&quot;, INTEGER_OBJ(sp-&gt;start - buf));</a>
+<a name="ln2271"> </a>
+<a name="ln2272">      if (sp-&gt;userhl == 0) {</a>
+<a name="ln2273">        grpname = get_default_stl_hl(use_tabline ? NULL : wp, use_winbar, stc_hl_id);</a>
+<a name="ln2274">      } else if (sp-&gt;userhl &lt; 0) {</a>
+<a name="ln2275">        grpname = syn_id2name(-sp-&gt;userhl);</a>
+<a name="ln2276">      } else {</a>
+<a name="ln2277">        snprintf(user_group, sizeof(user_group), &quot;User%d&quot;, sp-&gt;userhl);</a>
+<a name="ln2278">        grpname = user_group;</a>
+<a name="ln2279">      }</a>
+<a name="ln2280">      PUT(hl_info, &quot;group&quot;, CSTR_TO_OBJ(grpname));</a>
+<a name="ln2281">      ADD(hl_values, DICTIONARY_OBJ(hl_info));</a>
+<a name="ln2282">    }</a>
+<a name="ln2283">    PUT(result, &quot;highlights&quot;, ARRAY_OBJ(hl_values));</a>
+<a name="ln2284">  }</a>
+<a name="ln2285">  PUT(result, &quot;str&quot;, CSTR_TO_OBJ(buf));</a>
+<a name="ln2286"> </a>
+<a name="ln2287">  return result;</a>
+<a name="ln2288">}</a>
+<a name="ln2289"> </a>
+<a name="ln2290">void nvim_error_event(uint64_t channel_id, Integer lvl, String data)</a>
+<a name="ln2291">  FUNC_API_REMOTE_ONLY</a>
+<a name="ln2292">{</a>
+<a name="ln2293">  // TODO(bfredl): consider printing message to user, as will be relevant</a>
+<a name="ln2294">  // if we fork nvim processes as async workers</a>
+<a name="ln2295">  ELOG(&quot;async error on channel %&quot; PRId64 &quot;: %s&quot;, channel_id, data.size ? data.data : &quot;&quot;);</a>
+<a name="ln2296">}</a>
 </code></pre>
 <div class="balloon" rel="555"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v592/" target="_blank">V592</a> The expression was enclosed by parentheses twice: '((!source || nlua_is_deferred_safe()))'. One pair of parentheses is unnecessary or misprint is present.</p></div>
 <link rel="stylesheet" href="highlight.css">
