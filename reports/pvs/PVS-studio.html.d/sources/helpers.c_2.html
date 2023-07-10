@@ -1,0 +1,1043 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>helpers.c</title>
+  <link rel="stylesheet" href="../style.css"/>
+  <script src="../jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<pre><code class = "cpp">
+<a name="ln1">// This is an open source non-commercial project. Dear PVS-Studio, please check</a>
+<a name="ln2">// it. PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com</a>
+<a name="ln3"> </a>
+<a name="ln4">#include &lt;assert.h&gt;</a>
+<a name="ln5">#include &lt;inttypes.h&gt;</a>
+<a name="ln6">#include &lt;limits.h&gt;</a>
+<a name="ln7">#include &lt;msgpack/unpack.h&gt;</a>
+<a name="ln8">#include &lt;stdarg.h&gt;</a>
+<a name="ln9">#include &lt;stdbool.h&gt;</a>
+<a name="ln10">#include &lt;stddef.h&gt;</a>
+<a name="ln11">#include &lt;stdio.h&gt;</a>
+<a name="ln12">#include &lt;stdlib.h&gt;</a>
+<a name="ln13">#include &lt;string.h&gt;</a>
+<a name="ln14"> </a>
+<a name="ln15">#include &quot;klib/kvec.h&quot;</a>
+<a name="ln16">#include &quot;nvim/api/private/converter.h&quot;</a>
+<a name="ln17">#include &quot;nvim/api/private/defs.h&quot;</a>
+<a name="ln18">#include &quot;nvim/api/private/helpers.h&quot;</a>
+<a name="ln19">#include &quot;nvim/ascii.h&quot;</a>
+<a name="ln20">#include &quot;nvim/buffer_defs.h&quot;</a>
+<a name="ln21">#include &quot;nvim/eval/typval.h&quot;</a>
+<a name="ln22">#include &quot;nvim/eval/typval_defs.h&quot;</a>
+<a name="ln23">#include &quot;nvim/ex_eval.h&quot;</a>
+<a name="ln24">#include &quot;nvim/garray.h&quot;</a>
+<a name="ln25">#include &quot;nvim/highlight_group.h&quot;</a>
+<a name="ln26">#include &quot;nvim/lua/executor.h&quot;</a>
+<a name="ln27">#include &quot;nvim/map.h&quot;</a>
+<a name="ln28">#include &quot;nvim/mark.h&quot;</a>
+<a name="ln29">#include &quot;nvim/memline.h&quot;</a>
+<a name="ln30">#include &quot;nvim/memory.h&quot;</a>
+<a name="ln31">#include &quot;nvim/message.h&quot;</a>
+<a name="ln32">#include &quot;nvim/msgpack_rpc/helpers.h&quot;</a>
+<a name="ln33">#include &quot;nvim/pos.h&quot;</a>
+<a name="ln34">#include &quot;nvim/ui.h&quot;</a>
+<a name="ln35">#include &quot;nvim/version.h&quot;</a>
+<a name="ln36"> </a>
+<a name="ln37">#ifdef INCLUDE_GENERATED_DECLARATIONS</a>
+<a name="ln38"># include &quot;api/private/funcs_metadata.generated.h&quot;</a>
+<a name="ln39"># include &quot;api/private/helpers.c.generated.h&quot;</a>
+<a name="ln40"># include &quot;api/private/ui_events_metadata.generated.h&quot;</a>
+<a name="ln41">#endif</a>
+<a name="ln42"> </a>
+<a name="ln43">/// Start block that may cause VimL exceptions while evaluating another code</a>
+<a name="ln44">///</a>
+<a name="ln45">/// Used when caller is supposed to be operating when other VimL code is being</a>
+<a name="ln46">/// processed and that “other VimL code” must not be affected.</a>
+<a name="ln47">///</a>
+<a name="ln48">/// @param[out]  tstate  Location where try state should be saved.</a>
+<a name="ln49">void try_enter(TryState *const tstate)</a>
+<a name="ln50">{</a>
+<a name="ln51">  // TODO(ZyX-I): Check whether try_enter()/try_leave() may use</a>
+<a name="ln52">  //              enter_cleanup()/leave_cleanup(). Or</a>
+<a name="ln53">  //              save_dbg_stuff()/restore_dbg_stuff().</a>
+<a name="ln54">  *tstate = (TryState) {</a>
+<a name="ln55">    .current_exception = current_exception,</a>
+<a name="ln56">    .msg_list = (const msglist_T *const *)msg_list,</a>
+<a name="ln57">    .private_msg_list = NULL,</a>
+<a name="ln58">    .trylevel = trylevel,</a>
+<a name="ln59">    .got_int = got_int,</a>
+<a name="ln60">    .did_throw = did_throw,</a>
+<a name="ln61">    .need_rethrow = need_rethrow,</a>
+<a name="ln62">    .did_emsg = did_emsg,</a>
+<a name="ln63">  };</a>
+<a name="ln64">  msg_list = &amp;tstate-&gt;private_msg_list;</a>
+<a name="ln65">  current_exception = NULL;</a>
+<a name="ln66">  trylevel = 1;</a>
+<a name="ln67">  got_int = false;</a>
+<a name="ln68">  did_throw = false;</a>
+<a name="ln69">  need_rethrow = false;</a>
+<a name="ln70">  did_emsg = false;</a>
+<a name="ln71">}</a>
+<a name="ln72"> </a>
+<a name="ln73">/// End try block, set the error message if any and restore previous state</a>
+<a name="ln74">///</a>
+<a name="ln75">/// @warning Return is consistent with most functions (false on error), not with</a>
+<a name="ln76">///          try_end (true on error).</a>
+<a name="ln77">///</a>
+<a name="ln78">/// @param[in]  tstate  Previous state to restore.</a>
+<a name="ln79">/// @param[out]  err  Location where error should be saved.</a>
+<a name="ln80">///</a>
+<a name="ln81">/// @return false if error occurred, true otherwise.</a>
+<a name="ln82">bool try_leave(const TryState *const tstate, Error *const err)</a>
+<a name="ln83">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln84">{</a>
+<a name="ln85">  const bool ret = !try_end(err);</a>
+<a name="ln86">  assert(trylevel == 0);</a>
+<a name="ln87">  assert(!need_rethrow);</a>
+<a name="ln88">  assert(!got_int);</a>
+<a name="ln89">  assert(!did_throw);</a>
+<a name="ln90">  assert(!did_emsg);</a>
+<a name="ln91">  assert(msg_list == &amp;tstate-&gt;private_msg_list);</a>
+<a name="ln92">  assert(*msg_list == NULL);</a>
+<a name="ln93">  assert(current_exception == NULL);</a>
+<a name="ln94">  msg_list = (msglist_T **)tstate-&gt;msg_list;</a>
+<a name="ln95">  current_exception = tstate-&gt;current_exception;</a>
+<a name="ln96">  trylevel = tstate-&gt;trylevel;</a>
+<a name="ln97">  got_int = tstate-&gt;got_int;</a>
+<a name="ln98">  did_throw = tstate-&gt;did_throw;</a>
+<a name="ln99">  need_rethrow = tstate-&gt;need_rethrow;</a>
+<a name="ln100">  did_emsg = tstate-&gt;did_emsg;</a>
+<a name="ln101">  return ret;</a>
+<a name="ln102">}</a>
+<a name="ln103"> </a>
+<a name="ln104">/// Start block that may cause vimscript exceptions</a>
+<a name="ln105">///</a>
+<a name="ln106">/// Each try_start() call should be mirrored by try_end() call.</a>
+<a name="ln107">///</a>
+<a name="ln108">/// To be used as a replacement of `:try … catch … endtry` in C code, in cases</a>
+<a name="ln109">/// when error flag could not already be set. If there may be pending error</a>
+<a name="ln110">/// state at the time try_start() is executed which needs to be preserved,</a>
+<a name="ln111">/// try_enter()/try_leave() pair should be used instead.</a>
+<a name="ln112">void try_start(void)</a>
+<a name="ln113">{</a>
+<a name="ln114">  trylevel++;</a>
+<a name="ln115">}</a>
+<a name="ln116"> </a>
+<a name="ln117">/// End try block, set the error message if any and return true if an error</a>
+<a name="ln118">/// occurred.</a>
+<a name="ln119">///</a>
+<a name="ln120">/// @param err Pointer to the stack-allocated error object</a>
+<a name="ln121">/// @return true if an error occurred</a>
+<a name="ln122">bool try_end(Error *err)</a>
+<a name="ln123">{</a>
+<a name="ln124">  // Note: all globals manipulated here should be saved/restored in</a>
+<a name="ln125">  // try_enter/try_leave.</a>
+<a name="ln126">  trylevel--;</a>
+<a name="ln127"> </a>
+<a name="ln128">  // Set by emsg(), affects aborting().  See also enter_cleanup().</a>
+<a name="ln129">  did_emsg = false;</a>
+<a name="ln130">  force_abort = false;</a>
+<a name="ln131"> </a>
+<a name="ln132">  if (got_int) {</a>
+<a name="ln133">    if (did_throw) {</a>
+<a name="ln134">      // If we got an interrupt, discard the current exception</a>
+<a name="ln135">      discard_current_exception();</a>
+<a name="ln136">    }</a>
+<a name="ln137"> </a>
+<a name="ln138">    api_set_error(err, kErrorTypeException, &quot;Keyboard interrupt&quot;);</a>
+<a name="ln139">    got_int = false;</a>
+<a name="ln140">  } else if (msg_list != NULL &amp;&amp; *msg_list != NULL) {</a>
+<a name="ln141">    int should_free;</a>
+<a name="ln142">    char *msg = get_exception_string(*msg_list,</a>
+<a name="ln143">                                     ET_ERROR,</a>
+<a name="ln144">                                     NULL,</a>
+<a name="ln145">                                     &amp;should_free);</a>
+<a name="ln146">    api_set_error(err, kErrorTypeException, &quot;%s&quot;, msg);</a>
+<a name="ln147">    free_global_msglist();</a>
+<a name="ln148"> </a>
+<a name="ln149">    if (should_free) {</a>
+<a name="ln150">      xfree(msg);</a>
+<a name="ln151">    }</a>
+<a name="ln152">  } else if (did_throw) {</a>
+<a name="ln153">    if (*current_exception-&gt;throw_name != NUL) {</a>
+<a name="ln154">      if (current_exception-&gt;throw_lnum != 0) {</a>
+<a name="ln155">        api_set_error(err, kErrorTypeException, &quot;%s, line %&quot; PRIdLINENR &quot;: %s&quot;,</a>
+<a name="ln156">                      current_exception-&gt;throw_name, current_exception-&gt;throw_lnum,</a>
+<a name="ln157">                      current_exception-&gt;value);</a>
+<a name="ln158">      } else {</a>
+<a name="ln159">        api_set_error(err, kErrorTypeException, &quot;%s: %s&quot;,</a>
+<a name="ln160">                      current_exception-&gt;throw_name, current_exception-&gt;value);</a>
+<a name="ln161">      }</a>
+<a name="ln162">    } else {</a>
+<a name="ln163">      api_set_error(err, kErrorTypeException, &quot;%s&quot;, current_exception-&gt;value);</a>
+<a name="ln164">    }</a>
+<a name="ln165">    discard_current_exception();</a>
+<a name="ln166">  }</a>
+<a name="ln167"> </a>
+<a name="ln168">  return ERROR_SET(err);</a>
+<a name="ln169">}</a>
+<a name="ln170"> </a>
+<a name="ln171">/// Recursively expands a vimscript value in a dict</a>
+<a name="ln172">///</a>
+<a name="ln173">/// @param dict The vimscript dict</a>
+<a name="ln174">/// @param key The key</a>
+<a name="ln175">/// @param[out] err Details of an error that may have occurred</a>
+<a name="ln176">Object dict_get_value(dict_T *dict, String key, Error *err)</a>
+<a name="ln177">{</a>
+<a name="ln178">  dictitem_T *const di = tv_dict_find(dict, key.data, (ptrdiff_t)key.size);</a>
+<a name="ln179"> </a>
+<a name="ln180">  if (di == NULL) {</a>
+<a name="ln181">    api_set_error(err, kErrorTypeValidation, &quot;Key not found: %s&quot;, key.data);</a>
+<a name="ln182">    return (Object)OBJECT_INIT;</a>
+<a name="ln183">  }</a>
+<a name="ln184"> </a>
+<a name="ln185">  return vim_to_object(&amp;di-&gt;di_tv);</a>
+<a name="ln186">}</a>
+<a name="ln187"> </a>
+<a name="ln188">dictitem_T *dict_check_writable(dict_T *dict, String key, bool del, Error *err)</a>
+<a name="ln189">{</a>
+<a name="ln190">  dictitem_T *di = tv_dict_find(dict, key.data, (ptrdiff_t)key.size);</a>
+<a name="ln191"> </a>
+<a name="ln192">  if (di != NULL) {</a>
+<a name="ln193">    if (di-&gt;di_flags &amp; DI_FLAGS_RO) {</a>
+<a name="ln194">      api_set_error(err, kErrorTypeException, &quot;Key is read-only: %s&quot;, key.data);</a>
+<a name="ln195">    } else if (di-&gt;di_flags &amp; DI_FLAGS_LOCK) {</a>
+<a name="ln196">      api_set_error(err, kErrorTypeException, &quot;Key is locked: %s&quot;, key.data);</a>
+<a name="ln197">    } else if (del &amp;&amp; (di-&gt;di_flags &amp; DI_FLAGS_FIX)) {</a>
+<a name="ln198">      api_set_error(err, kErrorTypeException, &quot;Key is fixed: %s&quot;, key.data);</a>
+<a name="ln199">    }</a>
+<a name="ln200">  } else if (dict-&gt;dv_lock) {</a>
+<a name="ln201">    api_set_error(err, kErrorTypeException, &quot;Dictionary is locked&quot;);</a>
+<a name="ln202">  } else if (key.size == 0) {</a>
+<a name="ln203">    api_set_error(err, kErrorTypeValidation, &quot;Key name is empty&quot;);</a>
+<a name="ln204">  } else if (key.size &gt; INT_MAX) {</a>
+<a name="ln205">    api_set_error(err, kErrorTypeValidation, &quot;Key name is too long&quot;);</a>
+<a name="ln206">  }</a>
+<a name="ln207"> </a>
+<a name="ln208">  return di;</a>
+<a name="ln209">}</a>
+<a name="ln210"> </a>
+<a name="ln211">/// Set a value in a scope dict. Objects are recursively expanded into their</a>
+<a name="ln212">/// vimscript equivalents.</a>
+<a name="ln213">///</a>
+<a name="ln214">/// @param dict The vimscript dict</a>
+<a name="ln215">/// @param key The key</a>
+<a name="ln216">/// @param value The new value</a>
+<a name="ln217">/// @param del Delete key in place of setting it. Argument `value` is ignored in</a>
+<a name="ln218">///            this case.</a>
+<a name="ln219">/// @param retval If true the old value will be converted and returned.</a>
+<a name="ln220">/// @param[out] err Details of an error that may have occurred</a>
+<a name="ln221">/// @return The old value if `retval` is true and the key was present, else NIL</a>
+<a name="ln222">Object dict_set_var(dict_T *dict, String key, Object value, bool del, bool retval, Error *err)</a>
+<a name="ln223">{</a>
+<a name="ln224">  Object rv = OBJECT_INIT;</a>
+<a name="ln225">  dictitem_T *di = dict_check_writable(dict, key, del, err);</a>
+<a name="ln226"> </a>
+<a name="ln227">  if (ERROR_SET(err)) {</a>
+<a name="ln228">    return rv;</a>
+<a name="ln229">  }</a>
+<a name="ln230"> </a>
+<a name="ln231">  bool watched = tv_dict_is_watched(dict);</a>
+<a name="ln232"> </a>
+<a name="ln233">  if (del) {</a>
+<a name="ln234">    // Delete the key</a>
+<a name="ln235">    if (di == NULL) {</a>
+<a name="ln236">      // Doesn't exist, fail</a>
+<a name="ln237">      api_set_error(err, kErrorTypeValidation, &quot;Key not found: %s&quot;,</a>
+<a name="ln238">                    key.data);</a>
+<a name="ln239">    } else {</a>
+<a name="ln240">      // Notify watchers</a>
+<a name="ln241">      if (watched) {</a>
+<a name="ln242">        tv_dict_watcher_notify(dict, key.data, NULL, &amp;di-&gt;di_tv);</a>
+<a name="ln243">      }</a>
+<a name="ln244">      // Return the old value</a>
+<a name="ln245">      if (retval) {</a>
+<a name="ln246">        rv = vim_to_object(&amp;di-&gt;di_tv);</a>
+<a name="ln247">      }</a>
+<a name="ln248">      // Delete the entry</a>
+<a name="ln249">      tv_dict_item_remove(dict, di);</a>
+<a name="ln250">    }</a>
+<a name="ln251">  } else {</a>
+<a name="ln252">    // Update the key</a>
+<a name="ln253">    typval_T tv;</a>
+<a name="ln254"> </a>
+<a name="ln255">    // Convert the object to a vimscript type in the temporary variable</a>
+<a name="ln256">    if (!object_to_vim(value, &amp;tv, err)) {</a>
+<a name="ln257">      return rv;</a>
+<a name="ln258">    }</a>
+<a name="ln259"> </a>
+<a name="ln260">    typval_T oldtv = TV_INITIAL_VALUE;</a>
+<a name="ln261"> </a>
+<a name="ln262">    if (di == NULL) {</a>
+<a name="ln263">      // Need to create an entry</a>
+<a name="ln264">      di = tv_dict_item_alloc_len(key.data, key.size);</a>
+<a name="ln265">      tv_dict_add(dict, di);</a>
+<a name="ln266">    } else {</a>
+<a name="ln267">      if (watched) {</a>
+<a name="ln268">        tv_copy(&amp;di-&gt;di_tv, &amp;oldtv);</a>
+<a name="ln269">      }</a>
+<a name="ln270">      // Return the old value</a>
+<a name="ln271">      if (retval) {</a>
+<a name="ln272">        rv = vim_to_object(&amp;di-&gt;di_tv);</a>
+<a name="ln273">      }</a>
+<a name="ln274">      tv_clear(&amp;di-&gt;di_tv);</a>
+<a name="ln275">    }</a>
+<a name="ln276"> </a>
+<a name="ln277">    // Update the value</a>
+<a name="ln278">    tv_copy(&amp;tv, &amp;di-&gt;di_tv);</a>
+<a name="ln279"> </a>
+<a name="ln280">    // Notify watchers</a>
+<a name="ln281">    if (watched) {</a>
+<a name="ln282">      tv_dict_watcher_notify(dict, key.data, &amp;tv, &amp;oldtv);</a>
+<a name="ln283">      tv_clear(&amp;oldtv);</a>
+<a name="ln284">    }</a>
+<a name="ln285"> </a>
+<a name="ln286">    // Clear the temporary variable</a>
+<a name="ln287">    tv_clear(&amp;tv);</a>
+<a name="ln288">  }</a>
+<a name="ln289"> </a>
+<a name="ln290">  return rv;</a>
+<a name="ln291">}</a>
+<a name="ln292"> </a>
+<a name="ln293">buf_T *find_buffer_by_handle(Buffer buffer, Error *err)</a>
+<a name="ln294">{</a>
+<a name="ln295">  if (buffer == 0) {</a>
+<a name="ln296">    return curbuf;</a>
+<a name="ln297">  }</a>
+<a name="ln298"> </a>
+<a name="ln299">  buf_T *rv = handle_get_buffer(buffer);</a>
+<a name="ln300"> </a>
+<a name="ln301">  if (!rv) {</a>
+<a name="ln302">    api_set_error(err, kErrorTypeValidation, &quot;Invalid buffer id: %d&quot;, buffer);</a>
+<a name="ln303">  }</a>
+<a name="ln304"> </a>
+<a name="ln305">  return rv;</a>
+<a name="ln306">}</a>
+<a name="ln307"> </a>
+<a name="ln308">win_T *find_window_by_handle(Window window, Error *err)</a>
+<a name="ln309">{</a>
+<a name="ln310">  if (window == 0) {</a>
+<a name="ln311">    return curwin;</a>
+<a name="ln312">  }</a>
+<a name="ln313"> </a>
+<a name="ln314">  win_T *rv = handle_get_window(window);</a>
+<a name="ln315"> </a>
+<a name="ln316">  if (!rv) {</a>
+<a name="ln317">    api_set_error(err, kErrorTypeValidation, &quot;Invalid window id: %d&quot;, window);</a>
+<a name="ln318">  }</a>
+<a name="ln319"> </a>
+<a name="ln320">  return rv;</a>
+<a name="ln321">}</a>
+<a name="ln322"> </a>
+<a name="ln323">tabpage_T *find_tab_by_handle(Tabpage tabpage, Error *err)</a>
+<a name="ln324">{</a>
+<a name="ln325">  if (tabpage == 0) {</a>
+<a name="ln326">    return curtab;</a>
+<a name="ln327">  }</a>
+<a name="ln328"> </a>
+<a name="ln329">  tabpage_T *rv = handle_get_tabpage(tabpage);</a>
+<a name="ln330"> </a>
+<a name="ln331">  if (!rv) {</a>
+<a name="ln332">    api_set_error(err, kErrorTypeValidation, &quot;Invalid tabpage id: %d&quot;, tabpage);</a>
+<a name="ln333">  }</a>
+<a name="ln334"> </a>
+<a name="ln335">  return rv;</a>
+<a name="ln336">}</a>
+<a name="ln337"> </a>
+<a name="ln338">/// Allocates a String consisting of a single char. Does not support multibyte</a>
+<a name="ln339">/// characters. The resulting string is also NUL-terminated, to facilitate</a>
+<a name="ln340">/// interoperating with code using C strings.</a>
+<a name="ln341">///</a>
+<a name="ln342">/// @param char the char to convert</a>
+<a name="ln343">/// @return the resulting String, if the input char was NUL, an</a>
+<a name="ln344">///         empty String is returned</a>
+<a name="ln345">String cchar_to_string(char c)</a>
+<a name="ln346">{</a>
+<a name="ln347">  char buf[] = { c, NUL };</a>
+<a name="ln348">  return (String){</a>
+<a name="ln349">    .data = xmemdupz(buf, 1),</a>
+<a name="ln350">    .size = (c != NUL) ? 1 : 0</a>
+<a name="ln351">  };</a>
+<a name="ln352">}</a>
+<a name="ln353"> </a>
+<a name="ln354">/// Copies a C string into a String (binary safe string, characters + length).</a>
+<a name="ln355">/// The resulting string is also NUL-terminated, to facilitate interoperating</a>
+<a name="ln356">/// with code using C strings.</a>
+<a name="ln357">///</a>
+<a name="ln358">/// @param str the C string to copy</a>
+<a name="ln359">/// @return the resulting String, if the input string was NULL, an</a>
+<a name="ln360">///         empty String is returned</a>
+<a name="ln361">String cstr_to_string(const char *str)</a>
+<a name="ln362">{</a>
+<a name="ln363">  if (str == NULL) {</a>
+<a name="ln364">    return (String)STRING_INIT;</a>
+<a name="ln365">  }</a>
+<a name="ln366"> </a>
+<a name="ln367">  size_t len = strlen(str);</a>
+<a name="ln368">  return (String){</a>
+<a name="ln369">    .data = xmemdupz(str, len),</a>
+<a name="ln370">    .size = len,</a>
+<a name="ln371">  };</a>
+<a name="ln372">}</a>
+<a name="ln373"> </a>
+<a name="ln374">/// Copies a String to an allocated, NUL-terminated C string.</a>
+<a name="ln375">///</a>
+<a name="ln376">/// @param str the String to copy</a>
+<a name="ln377">/// @return the resulting C string</a>
+<a name="ln378">char *string_to_cstr(String str)</a>
+<a name="ln379">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln380">{</a>
+<a name="ln381">  return xstrndup(str.data, str.size);</a>
+<a name="ln382">}</a>
+<a name="ln383"> </a>
+<a name="ln384">/// Copies buffer to an allocated String.</a>
+<a name="ln385">/// The resulting string is also NUL-terminated, to facilitate interoperating</a>
+<a name="ln386">/// with code using C strings.</a>
+<a name="ln387">///</a>
+<a name="ln388">/// @param buf the buffer to copy</a>
+<a name="ln389">/// @param size length of the buffer</a>
+<a name="ln390">/// @return the resulting String, if the input string was NULL, an</a>
+<a name="ln391">///         empty String is returned</a>
+<a name="ln392">String cbuf_to_string(const char *buf, size_t size)</a>
+<a name="ln393">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln394">{</a>
+<a name="ln395">  return (String){</a>
+<a name="ln396">    .data = xmemdupz(buf, size),</a>
+<a name="ln397">    .size = size</a>
+<a name="ln398">  };</a>
+<a name="ln399">}</a>
+<a name="ln400"> </a>
+<a name="ln401">String cstrn_to_string(const char *str, size_t maxsize)</a>
+<a name="ln402">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln403">{</a>
+<a name="ln404">  return cbuf_to_string(str, strnlen(str, maxsize));</a>
+<a name="ln405">}</a>
+<a name="ln406"> </a>
+<a name="ln407">String cstrn_as_string(char *str, size_t maxsize)</a>
+<a name="ln408">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln409">{</a>
+<a name="ln410">  return cbuf_as_string(str, strnlen(str, maxsize));</a>
+<a name="ln411">}</a>
+<a name="ln412"> </a>
+<a name="ln413">/// Creates a String using the given C string. Unlike</a>
+<a name="ln414">/// cstr_to_string this function DOES NOT copy the C string.</a>
+<a name="ln415">///</a>
+<a name="ln416">/// @param str the C string to use</a>
+<a name="ln417">/// @return The resulting String, or an empty String if</a>
+<a name="ln418">///           str was NULL</a>
+<a name="ln419">String cstr_as_string(char *str) FUNC_ATTR_PURE</a>
+<a name="ln420">{</a>
+<a name="ln421">  if (str == NULL) {</a>
+<a name="ln422">    return (String)STRING_INIT;</a>
+<a name="ln423">  }</a>
+<a name="ln424">  return (String){ .data = str, .size = strlen(str) };</a>
+<a name="ln425">}</a>
+<a name="ln426"> </a>
+<a name="ln427">/// Return the owned memory of a ga as a String</a>
+<a name="ln428">///</a>
+<a name="ln429">/// Reinitializes the ga to a valid empty state.</a>
+<a name="ln430">String ga_take_string(garray_T *ga)</a>
+<a name="ln431">{</a>
+<a name="ln432">  String str = { .data = (char *)ga-&gt;ga_data, .size = (size_t)ga-&gt;ga_len };</a>
+<a name="ln433">  ga-&gt;ga_data = NULL;</a>
+<a name="ln434">  ga-&gt;ga_len = 0;</a>
+<a name="ln435">  ga-&gt;ga_maxlen = 0;</a>
+<a name="ln436">  return str;</a>
+<a name="ln437">}</a>
+<a name="ln438"> </a>
+<a name="ln439">/// Creates &quot;readfile()-style&quot; ArrayOf(String) from a binary string.</a>
+<a name="ln440">///</a>
+<a name="ln441">/// - Lines break at \n (NL/LF/line-feed).</a>
+<a name="ln442">/// - NUL bytes are replaced with NL.</a>
+<a name="ln443">/// - If the last byte is a linebreak an extra empty list item is added.</a>
+<a name="ln444">///</a>
+<a name="ln445">/// @param input  Binary string</a>
+<a name="ln446">/// @param crlf  Also break lines at CR and CRLF.</a>
+<a name="ln447">/// @return [allocated] String array</a>
+<a name="ln448">Array string_to_array(const String input, bool crlf)</a>
+<a name="ln449">{</a>
+<a name="ln450">  Array ret = ARRAY_DICT_INIT;</a>
+<a name="ln451">  for (size_t i = 0; i &lt; input.size; i++) {</a>
+<a name="ln452">    const char *start = input.data + i;</a>
+<a name="ln453">    const char *end = start;</a>
+<a name="ln454">    size_t line_len = 0;</a>
+<a name="ln455">    for (; line_len &lt; input.size - i; line_len++) {</a>
+<a name="ln456">      end = start + line_len;</a>
+<a name="ln457">      if (*end == NL || (crlf &amp;&amp; *end == CAR)) {</a>
+<a name="ln458">        break;</a>
+<a name="ln459">      }</a>
+<a name="ln460">    }</a>
+<a name="ln461">    i += line_len;</a>
+<a name="ln462">    if (crlf &amp;&amp; *end == CAR &amp;&amp; i + 1 &lt; input.size &amp;&amp; *(end + 1) == NL) {</a>
+<a name="ln463">      i += 1;  // Advance past CRLF.</a>
+<a name="ln464">    }</a>
+<a name="ln465">    String s = {</a>
+<a name="ln466">      .size = line_len,</a>
+<a name="ln467">      .data = xmemdupz(start, line_len),</a>
+<a name="ln468">    };</a>
+<a name="ln469">    memchrsub(s.data, NUL, NL, line_len);</a>
+<a name="ln470">    ADD(ret, STRING_OBJ(s));</a>
+<a name="ln471">    // If line ends at end-of-buffer, add empty final item.</a>
+<a name="ln472">    // This is &quot;readfile()-style&quot;, see also &quot;:help channel-lines&quot;.</a>
+<a name="ln473">    if (i + 1 == input.size &amp;&amp; (*end == NL || (crlf &amp;&amp; *end == CAR))) {</a>
+<a name="ln474">      ADD(ret, STRING_OBJ(STRING_INIT));</a>
+<a name="ln475">    }</a>
+<a name="ln476">  }</a>
+<a name="ln477"> </a>
+<a name="ln478">  return ret;</a>
+<a name="ln479">}</a>
+<a name="ln480"> </a>
+<a name="ln481">/// Returns a substring of a buffer line</a>
+<a name="ln482">///</a>
+<a name="ln483">/// @param buf          Buffer handle</a>
+<a name="ln484">/// @param lnum         Line number (1-based)</a>
+<a name="ln485">/// @param start_col    Starting byte offset into line (0-based)</a>
+<a name="ln486">/// @param end_col      Ending byte offset into line (0-based, exclusive)</a>
+<a name="ln487">/// @param err          Error object</a>
+<a name="ln488">/// @return The text between start_col and end_col on line lnum of buffer buf</a>
+<a name="ln489">String buf_get_text(buf_T *buf, int64_t lnum, int64_t start_col, int64_t end_col, Error *err)</a>
+<a name="ln490">{</a>
+<a name="ln491">  String rv = STRING_INIT;</a>
+<a name="ln492"> </a>
+<a name="ln493">  if (lnum &gt;= MAXLNUM) {</a>
+<a name="ln494">    api_set_error(err, kErrorTypeValidation, &quot;Line index is too high&quot;);</a>
+<a name="ln495">    return rv;</a>
+<a name="ln496">  }</a>
+<a name="ln497"> </a>
+<a name="ln498">  char *bufstr = ml_get_buf(buf, (linenr_T)lnum, false);</a>
+<a name="ln499">  size_t line_length = strlen(bufstr);</a>
+<a name="ln500"> </a>
+<a name="ln501">  start_col = start_col &lt; 0 ? (int64_t)line_length + start_col + 1 : start_col;</a>
+<a name="ln502">  end_col = end_col &lt; 0 ? (int64_t)line_length + end_col + 1 : end_col;</a>
+<a name="ln503"> </a>
+<a name="ln504">  if (start_col &gt;= MAXCOL || end_col &gt;= MAXCOL) {</a>
+<a name="ln505">    api_set_error(err, kErrorTypeValidation, &quot;Column index is too high&quot;);</a>
+<a name="ln506">    return rv;</a>
+<a name="ln507">  }</a>
+<a name="ln508"> </a>
+<a name="ln509">  if (start_col &gt; end_col) {</a>
+<a name="ln510">    api_set_error(err, kErrorTypeValidation, &quot;start_col must be less than end_col&quot;);</a>
+<a name="ln511">    return rv;</a>
+<a name="ln512">  }</a>
+<a name="ln513"> </a>
+<a name="ln514">  if ((size_t)start_col &gt;= line_length) {</a>
+<a name="ln515">    return rv;</a>
+<a name="ln516">  }</a>
+<a name="ln517"> </a>
+<a name="ln518">  return cstrn_as_string(&amp;bufstr[start_col], (size_t)(end_col - start_col));</a>
+<a name="ln519">}</a>
+<a name="ln520"> </a>
+<a name="ln521">void api_free_string(String value)</a>
+<a name="ln522">{</a>
+<a name="ln523">  if (!value.data) {</a>
+<a name="ln524">    return;</a>
+<a name="ln525">  }</a>
+<a name="ln526"> </a>
+<a name="ln527">  xfree(value.data);</a>
+<a name="ln528">}</a>
+<a name="ln529"> </a>
+<a name="ln530">Array arena_array(Arena *arena, size_t max_size)</a>
+<a name="ln531">{</a>
+<a name="ln532">  Array arr = ARRAY_DICT_INIT;</a>
+<a name="ln533">  kv_fixsize_arena(arena, arr, max_size);</a>
+<a name="ln534">  return arr;</a>
+<a name="ln535">}</a>
+<a name="ln536"> </a>
+<a name="ln537">Dictionary arena_dict(Arena *arena, size_t max_size)</a>
+<a name="ln538">{</a>
+<a name="ln539">  Dictionary dict = ARRAY_DICT_INIT;</a>
+<a name="ln540">  kv_fixsize_arena(arena, dict, max_size);</a>
+<a name="ln541">  return dict;</a>
+<a name="ln542">}</a>
+<a name="ln543"> </a>
+<a name="ln544">String arena_string(Arena *arena, String str)</a>
+<a name="ln545">{</a>
+<a name="ln546">  if (str.size) {</a>
+<a name="ln547">    return cbuf_as_string(arena_memdupz(arena, str.data, str.size), str.size);</a>
+<a name="ln548">  } else {</a>
+<a name="ln549">    return (String)STRING_INIT;</a>
+<a name="ln550">  }</a>
+<a name="ln551">}</a>
+<a name="ln552"> </a>
+<a name="ln553">void api_free_object(Object value)</a>
+<a name="ln554">{</a>
+<a name="ln555">  switch (value.type) {</a>
+<a name="ln556">  case kObjectTypeNil:</a>
+<a name="ln557">  case kObjectTypeBoolean:</a>
+<a name="ln558">  case kObjectTypeInteger:</a>
+<a name="ln559">  case kObjectTypeFloat:</a>
+<a name="ln560">  case kObjectTypeBuffer:</a>
+<a name="ln561">  case kObjectTypeWindow:</a>
+<a name="ln562">  case kObjectTypeTabpage:</a>
+<a name="ln563">    break;</a>
+<a name="ln564"> </a>
+<a name="ln565">  case kObjectTypeString:</a>
+<a name="ln566">    api_free_string(value.data.string);</a>
+<a name="ln567">    break;</a>
+<a name="ln568"> </a>
+<a name="ln569">  case kObjectTypeArray:</a>
+<a name="ln570">    api_free_array(value.data.array);</a>
+<a name="ln571">    break;</a>
+<a name="ln572"> </a>
+<a name="ln573">  case kObjectTypeDictionary:</a>
+<a name="ln574">    api_free_dictionary(value.data.dictionary);</a>
+<a name="ln575">    break;</a>
+<a name="ln576"> </a>
+<a name="ln577">  case kObjectTypeLuaRef:</a>
+<a name="ln578">    api_free_luaref(value.data.luaref);</a>
+<a name="ln579">    break;</a>
+<a name="ln580"> </a>
+<a name="ln581">  default:</a>
+<a name="ln582">    abort();</a>
+<a name="ln583">  }</a>
+<a name="ln584">}</a>
+<a name="ln585"> </a>
+<a name="ln586">void api_free_array(Array value)</a>
+<a name="ln587">{</a>
+<a name="ln588">  for (size_t i = 0; i &lt; value.size; i++) {</a>
+<a name="ln589">    api_free_object(value.items[i]);</a>
+<a name="ln590">  }</a>
+<a name="ln591"> </a>
+<a name="ln592">  xfree(value.items);</a>
+<a name="ln593">}</a>
+<a name="ln594"> </a>
+<a name="ln595">void api_free_dictionary(Dictionary value)</a>
+<a name="ln596">{</a>
+<a name="ln597">  for (size_t i = 0; i &lt; value.size; i++) {</a>
+<a name="ln598">    api_free_string(value.items[i].key);</a>
+<a name="ln599">    api_free_object(value.items[i].value);</a>
+<a name="ln600">  }</a>
+<a name="ln601"> </a>
+<a name="ln602">  xfree(value.items);</a>
+<a name="ln603">}</a>
+<a name="ln604"> </a>
+<a name="ln605">void api_clear_error(Error *value)</a>
+<a name="ln606">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln607">{</a>
+<a name="ln608">  if (!ERROR_SET(value)) {</a>
+<a name="ln609">    return;</a>
+<a name="ln610">  }</a>
+<a name="ln611">  xfree(value-&gt;msg);</a>
+<a name="ln612">  value-&gt;msg = NULL;</a>
+<a name="ln613">  value-&gt;type = kErrorTypeNone;</a>
+<a name="ln614">}</a>
+<a name="ln615"> </a>
+<a name="ln616">/// @returns a shared value. caller must not modify it!</a>
+<a name="ln617">Dictionary api_metadata(void)</a>
+<a name="ln618">{</a>
+<a name="ln619">  static Dictionary metadata = ARRAY_DICT_INIT;</a>
+<a name="ln620"> </a>
+<a name="ln621">  if (!metadata.size) {</a>
+<a name="ln622">    PUT(metadata, &quot;version&quot;, DICTIONARY_OBJ(version_dict()));</a>
+<a name="ln623">    init_function_metadata(&amp;metadata);</a>
+<a name="ln624">    init_ui_event_metadata(&amp;metadata);</a>
+<a name="ln625">    init_error_type_metadata(&amp;metadata);</a>
+<a name="ln626">    init_type_metadata(&amp;metadata);</a>
+<a name="ln627">  }</a>
+<a name="ln628"> </a>
+<a name="ln629">  return metadata;</a>
+<a name="ln630">}</a>
+<a name="ln631"> </a>
+<a name="ln632">static void init_function_metadata(Dictionary *metadata)</a>
+<a name="ln633">{</a>
+<a name="ln634">  msgpack_unpacked unpacked;</a>
+<a name="ln635">  msgpack_unpacked_init(&amp;unpacked);</a>
+<a name="ln636">  if (msgpack_unpack_next(&amp;unpacked,</a>
+<a name="ln637">                          (const char *)funcs_metadata,</a>
+<a name="ln638">                          sizeof(funcs_metadata),</a>
+<a name="ln639">                          NULL) != MSGPACK_UNPACK_SUCCESS) {</a>
+<a name="ln640">    abort();</a>
+<a name="ln641">  }</a>
+<a name="ln642">  Object functions;</a>
+<a name="ln643">  msgpack_rpc_to_object(&amp;unpacked.data, &amp;functions);</a>
+<a name="ln644">  msgpack_unpacked_destroy(&amp;unpacked);</a>
+<a name="ln645">  PUT(*metadata, &quot;functions&quot;, functions);</a>
+<a name="ln646">}</a>
+<a name="ln647"> </a>
+<a name="ln648">static void init_ui_event_metadata(Dictionary *metadata)</a>
+<a name="ln649">{</a>
+<a name="ln650">  msgpack_unpacked unpacked;</a>
+<a name="ln651">  msgpack_unpacked_init(&amp;unpacked);</a>
+<a name="ln652">  if (msgpack_unpack_next(&amp;unpacked,</a>
+<a name="ln653">                          (const char *)ui_events_metadata,</a>
+<a name="ln654">                          sizeof(ui_events_metadata),</a>
+<a name="ln655">                          NULL) != MSGPACK_UNPACK_SUCCESS) {</a>
+<a name="ln656">    abort();</a>
+<a name="ln657">  }</a>
+<a name="ln658">  Object ui_events;</a>
+<a name="ln659">  msgpack_rpc_to_object(&amp;unpacked.data, &amp;ui_events);</a>
+<a name="ln660">  msgpack_unpacked_destroy(&amp;unpacked);</a>
+<a name="ln661">  PUT(*metadata, &quot;ui_events&quot;, ui_events);</a>
+<a name="ln662">  Array ui_options = ARRAY_DICT_INIT;</a>
+<a name="ln663">  ADD(ui_options, CSTR_TO_OBJ(&quot;rgb&quot;));</a>
+<a name="ln664">  for (UIExtension i = 0; i &lt; kUIExtCount; i++) {</a>
+<a name="ln665">    if (ui_ext_names[i][0] != '_') {</a>
+<a name="ln666">      ADD(ui_options, CSTR_TO_OBJ(ui_ext_names[i]));</a>
+<a name="ln667">    }</a>
+<a name="ln668">  }</a>
+<a name="ln669">  PUT(*metadata, &quot;ui_options&quot;, ARRAY_OBJ(ui_options));</a>
+<a name="ln670">}</a>
+<a name="ln671"> </a>
+<a name="ln672">static void init_error_type_metadata(Dictionary *metadata)</a>
+<a name="ln673">{</a>
+<a name="ln674">  Dictionary types = ARRAY_DICT_INIT;</a>
+<a name="ln675"> </a>
+<a name="ln676">  Dictionary exception_metadata = ARRAY_DICT_INIT;</a>
+<a name="ln677">  PUT(exception_metadata, &quot;id&quot;, INTEGER_OBJ(kErrorTypeException));</a>
+<a name="ln678"> </a>
+<a name="ln679">  Dictionary validation_metadata = ARRAY_DICT_INIT;</a>
+<a name="ln680">  PUT(validation_metadata, &quot;id&quot;, INTEGER_OBJ(kErrorTypeValidation));</a>
+<a name="ln681"> </a>
+<a name="ln682">  PUT(types, &quot;Exception&quot;, DICTIONARY_OBJ(exception_metadata));</a>
+<a name="ln683">  PUT(types, &quot;Validation&quot;, DICTIONARY_OBJ(validation_metadata));</a>
+<a name="ln684"> </a>
+<a name="ln685">  PUT(*metadata, &quot;error_types&quot;, DICTIONARY_OBJ(types));</a>
+<a name="ln686">}</a>
+<a name="ln687"> </a>
+<a name="ln688">static void init_type_metadata(Dictionary *metadata)</a>
+<a name="ln689">{</a>
+<a name="ln690">  Dictionary types = ARRAY_DICT_INIT;</a>
+<a name="ln691"> </a>
+<a name="ln692">  Dictionary buffer_metadata = ARRAY_DICT_INIT;</a>
+<a name="ln693">  PUT(buffer_metadata, &quot;id&quot;,</a>
+<a name="ln694">      INTEGER_OBJ(kObjectTypeBuffer - EXT_OBJECT_TYPE_SHIFT));</a>
+<a name="ln695">  PUT(buffer_metadata, &quot;prefix&quot;, CSTR_TO_OBJ(&quot;nvim_buf_&quot;));</a>
+<a name="ln696"> </a>
+<a name="ln697">  Dictionary window_metadata = ARRAY_DICT_INIT;</a>
+<a name="ln698">  PUT(window_metadata, &quot;id&quot;,</a>
+<a name="ln699">      INTEGER_OBJ(kObjectTypeWindow - EXT_OBJECT_TYPE_SHIFT));</a>
+<a name="ln700">  PUT(window_metadata, &quot;prefix&quot;, CSTR_TO_OBJ(&quot;nvim_win_&quot;));</a>
+<a name="ln701"> </a>
+<a name="ln702">  Dictionary tabpage_metadata = ARRAY_DICT_INIT;</a>
+<a name="ln703">  PUT(tabpage_metadata, &quot;id&quot;,</a>
+<a name="ln704">      INTEGER_OBJ(kObjectTypeTabpage - EXT_OBJECT_TYPE_SHIFT));</a>
+<a name="ln705">  PUT(tabpage_metadata, &quot;prefix&quot;, CSTR_TO_OBJ(&quot;nvim_tabpage_&quot;));</a>
+<a name="ln706"> </a>
+<a name="ln707">  PUT(types, &quot;Buffer&quot;, DICTIONARY_OBJ(buffer_metadata));</a>
+<a name="ln708">  PUT(types, &quot;Window&quot;, DICTIONARY_OBJ(window_metadata));</a>
+<a name="ln709">  PUT(types, &quot;Tabpage&quot;, DICTIONARY_OBJ(tabpage_metadata));</a>
+<a name="ln710"> </a>
+<a name="ln711">  PUT(*metadata, &quot;types&quot;, DICTIONARY_OBJ(types));</a>
+<a name="ln712">}</a>
+<a name="ln713"> </a>
+<a name="ln714">// all the copy_[object] functions allow arena=NULL,</a>
+<a name="ln715">// then global allocations are used, and the resulting object</a>
+<a name="ln716">// should be freed with an api_free_[object] function</a>
+<a name="ln717"> </a>
+<a name="ln718">String copy_string(String str, Arena *arena)</a>
+<a name="ln719">{</a>
+<a name="ln720">  if (str.data != NULL) {</a>
+<a name="ln721">    return (String){ .data = arena_memdupz(arena, str.data, str.size), .size = str.size };</a>
+<a name="ln722">  } else {</a>
+<a name="ln723">    return (String)STRING_INIT;</a>
+<a name="ln724">  }</a>
+<a name="ln725">}</a>
+<a name="ln726"> </a>
+<a name="ln727">Array copy_array(Array array, Arena *arena)</a>
+<a name="ln728">{</a>
+<a name="ln729">  Array rv = arena_array(arena, array.size);</a>
+<a name="ln730">  for (size_t i = 0; i &lt; array.size; i++) {</a>
+<a name="ln731">    ADD(rv, copy_object(array.items[i], arena));</a>
+<a name="ln732">  }</a>
+<a name="ln733">  return rv;</a>
+<a name="ln734">}</a>
+<a name="ln735"> </a>
+<a name="ln736">Dictionary copy_dictionary(Dictionary dict, Arena *arena)</a>
+<a name="ln737">{</a>
+<a name="ln738">  Dictionary rv = arena_dict(arena, dict.size);</a>
+<a name="ln739">  for (size_t i = 0; i &lt; dict.size; i++) {</a>
+<a name="ln740">    KeyValuePair item = dict.items[i];</a>
+<a name="ln741">    PUT_C(rv, copy_string(item.key, arena).data, copy_object(item.value, arena));</a>
+<a name="ln742">  }</a>
+<a name="ln743">  return rv;</a>
+<a name="ln744">}</a>
+<a name="ln745"> </a>
+<a name="ln746">/// Creates a deep clone of an object</a>
+<a name="ln747">Object copy_object(Object obj, Arena *arena)</a>
+<a name="ln748">{</a>
+<a name="ln749">  switch (obj.type) {</a>
+<a name="ln750">  case kObjectTypeBuffer:</a>
+<a name="ln751">  case kObjectTypeTabpage:</a>
+<a name="ln752">  case kObjectTypeWindow:</a>
+<a name="ln753">  case kObjectTypeNil:</a>
+<a name="ln754">  case kObjectTypeBoolean:</a>
+<a name="ln755">  case kObjectTypeInteger:</a>
+<a name="ln756">  case kObjectTypeFloat:</a>
+<a name="ln757">    return obj;</a>
+<a name="ln758"> </a>
+<a name="ln759">  case kObjectTypeString:</a>
+<a name="ln760">    return STRING_OBJ(copy_string(obj.data.string, arena));</a>
+<a name="ln761"> </a>
+<a name="ln762">  case kObjectTypeArray:</a>
+<a name="ln763">    return ARRAY_OBJ(copy_array(obj.data.array, arena));</a>
+<a name="ln764"> </a>
+<a name="ln765">  case kObjectTypeDictionary:</a>
+<a name="ln766">    return DICTIONARY_OBJ(copy_dictionary(obj.data.dictionary, arena));</a>
+<a name="ln767"> </a>
+<a name="ln768">  case kObjectTypeLuaRef:</a>
+<a name="ln769">    return LUAREF_OBJ(api_new_luaref(obj.data.luaref));</a>
+<a name="ln770"> </a>
+<a name="ln771">  default:</a>
+<a name="ln772">    abort();</a>
+<a name="ln773">  }</a>
+<a name="ln774">}</a>
+<a name="ln775"> </a>
+<a name="ln776">void api_set_error(Error *err, ErrorType errType, const char *format, ...)</a>
+<a name="ln777">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_PRINTF(3, 4)</a>
+<a name="ln778">{</a>
+<a name="ln779">  assert(kErrorTypeNone != errType);</a>
+<a name="ln780">  va_list args1;</a>
+<a name="ln781">  va_list args2;</a>
+<a name="ln782">  va_start(args1, format);</a>
+<a name="ln783">  va_copy(args2, args1);</a>
+<a name="ln784">  int len = vsnprintf(NULL, 0, format, args1);</a>
+<a name="ln785">  va_end(args1);</a>
+<a name="ln786">  assert(len &gt;= 0);</a>
+<a name="ln787">  // Limit error message to 1 MB.</a>
+<a name="ln788">  size_t bufsize = MIN((size_t)len + 1, 1024 * 1024);</a>
+<a name="ln789">  err-&gt;msg = xmalloc(bufsize);</a>
+<a name="ln790">  vsnprintf(err-&gt;msg, bufsize, format, args2);</a>
+<a name="ln791">  va_end(args2);</a>
+<a name="ln792"> </a>
+<a name="ln793">  err-&gt;type = errType;</a>
+<a name="ln794">}</a>
+<a name="ln795"> </a>
+<a name="ln796">/// Force obj to bool.</a>
+<a name="ln797">/// If it fails, returns false and sets err</a>
+<a name="ln798">/// @param obj          The object to coerce to a boolean</a>
+<a name="ln799">/// @param what         The name of the object, used for error message</a>
+<a name="ln800">/// @param nil_value    What to return if the type is nil.</a>
+<a name="ln801">/// @param err          Set if there was an error in converting to a bool</a>
+<a name="ln802">bool api_object_to_bool(Object obj, const char *what, bool nil_value, Error *err)</a>
+<a name="ln803">{</a>
+<a name="ln804">  if (obj.type == kObjectTypeBoolean) {</a>
+<a name="ln805">    return obj.data.boolean;</a>
+<a name="ln806">  } else if (obj.type == kObjectTypeInteger) {</a>
+<a name="ln807">    return obj.data.integer;  // C semantics: non-zero int is true</a>
+<a name="ln808">  } else if (obj.type == kObjectTypeNil) {</a>
+<a name="ln809">    return nil_value;  // caller decides what NIL (missing retval in lua) means</a>
+<a name="ln810">  } else {</a>
+<a name="ln811">    api_set_error(err, kErrorTypeValidation, &quot;%s is not a boolean&quot;, what);</a>
+<a name="ln812">    return false;</a>
+<a name="ln813">  }</a>
+<a name="ln814">}</a>
+<a name="ln815"> </a>
+<a name="ln816">int object_to_hl_id(Object obj, const char *what, Error *err)</a>
+<a name="ln817">{</a>
+<a name="ln818">  if (obj.type == kObjectTypeString) {</a>
+<a name="ln819">    String str = obj.data.string;</a>
+<a name="ln820">    return str.size ? syn_check_group(str.data, str.size) : 0;</a>
+<a name="ln821">  } else if (obj.type == kObjectTypeInteger) {</a>
+<a name="ln822">    return MAX((int)obj.data.integer, 0);</a>
+<a name="ln823">  } else {</a>
+<a name="ln824">    api_set_error(err, kErrorTypeValidation, &quot;Invalid highlight: %s&quot;, what);</a>
+<a name="ln825">    return 0;</a>
+<a name="ln826">  }</a>
+<a name="ln827">}</a>
+<a name="ln828"> </a>
+<a name="ln829">char *api_typename(ObjectType t)</a>
+<a name="ln830">{</a>
+<a name="ln831">  switch (t) {</a>
+<a name="ln832">  case kObjectTypeNil:</a>
+<a name="ln833">    return &quot;nil&quot;;</a>
+<a name="ln834">  case kObjectTypeBoolean:</a>
+<a name="ln835">    return &quot;Boolean&quot;;</a>
+<a name="ln836">  case kObjectTypeInteger:</a>
+<a name="ln837">    return &quot;Integer&quot;;</a>
+<a name="ln838">  case kObjectTypeFloat:</a>
+<a name="ln839">    return &quot;Float&quot;;</a>
+<a name="ln840">  case kObjectTypeString:</a>
+<a name="ln841">    return &quot;String&quot;;</a>
+<a name="ln842">  case kObjectTypeArray:</a>
+<a name="ln843">    return &quot;Array&quot;;</a>
+<a name="ln844">  case kObjectTypeDictionary:</a>
+<a name="ln845">    return &quot;Dict&quot;;</a>
+<a name="ln846">  case kObjectTypeLuaRef:</a>
+<a name="ln847">    return &quot;Function&quot;;</a>
+<a name="ln848">  case kObjectTypeBuffer:</a>
+<a name="ln849">    return &quot;Buffer&quot;;</a>
+<a name="ln850">  case kObjectTypeWindow:</a>
+<a name="ln851">    return &quot;Window&quot;;</a>
+<a name="ln852">  case kObjectTypeTabpage:</a>
+<a name="ln853">    return &quot;Tabpage&quot;;</a>
+<a name="ln854">  default:</a>
+<a name="ln855">    abort();</a>
+<a name="ln856">  }</a>
+<a name="ln857">}</a>
+<a name="ln858"> </a>
+<a name="ln859">HlMessage parse_hl_msg(Array chunks, Error *err)</a>
+<a name="ln860">{</a>
+<a name="ln861">  HlMessage hl_msg = KV_INITIAL_VALUE;</a>
+<a name="ln862">  for (size_t i = 0; i &lt; chunks.size; i++) {</a>
+<a name="ln863">    if (chunks.items[i].type != kObjectTypeArray) {</a>
+<a name="ln864">      api_set_error(err, kErrorTypeValidation, &quot;Chunk is not an array&quot;);</a>
+<a name="ln865">      goto free_exit;</a>
+<a name="ln866">    }</a>
+<a name="ln867">    Array chunk = chunks.items[i].data.array;</a>
+<a name="ln868">    if (chunk.size == 0 || chunk.size &gt; 2</a>
+<a name="ln869">        || chunk.items[0].type != kObjectTypeString</a>
+<a name="ln870">        || (chunk.size == 2 &amp;&amp; chunk.items[1].type != kObjectTypeString)) {</a>
+<a name="ln871">      api_set_error(err, kErrorTypeValidation,</a>
+<a name="ln872">                    &quot;Chunk is not an array with one or two strings&quot;);</a>
+<a name="ln873">      goto free_exit;</a>
+<a name="ln874">    }</a>
+<a name="ln875"> </a>
+<a name="ln876">    String str = copy_string(chunk.items[0].data.string, NULL);</a>
+<a name="ln877"> </a>
+<a name="ln878">    int attr = 0;</a>
+<a name="ln879">    if (chunk.size == 2) {</a>
+<a name="ln880">      String hl = chunk.items[1].data.string;</a>
+<a name="ln881">      if (hl.size &gt; 0) {</a>
+<a name="ln882">        // TODO(bfredl): use object_to_hl_id and allow integer</a>
+<a name="ln883">        int hl_id = syn_check_group(hl.data, hl.size);</a>
+<a name="ln884">        attr = hl_id &gt; 0 ? syn_id2attr(hl_id) : 0;</a>
+<a name="ln885">      }</a>
+<a name="ln886">    }</a>
+<a name="ln887">    kv_push(hl_msg, ((HlMessageChunk){ .text = str, .attr = attr }));</a>
+<a name="ln888">  }</a>
+<a name="ln889"> </a>
+<a name="ln890">  return hl_msg;</a>
+<a name="ln891"> </a>
+<a name="ln892">free_exit:</a>
+<a name="ln893">  hl_msg_free(hl_msg);</a>
+<a name="ln894">  return (HlMessage)KV_INITIAL_VALUE;</a>
+<a name="ln895">}</a>
+<a name="ln896"> </a>
+<a name="ln897">bool api_dict_to_keydict(void *rv, field_hash hashy, Dictionary dict, Error *err)</a>
+<a name="ln898">{</a>
+<a name="ln899">  for (size_t i = 0; i &lt; dict.size; i++) {</a>
+<a name="ln900">    String k = dict.items[i].key;</a>
+<a name="ln901">    Object *field = hashy(rv, k.data, k.size);</a>
+<a name="ln902">    if (!field) {</a>
+<a name="ln903">      api_set_error(err, kErrorTypeValidation, &quot;Invalid key: '%.*s'&quot;, (int)k.size, k.data);</a>
+<a name="ln904">      return false;</a>
+<a name="ln905">    }</a>
+<a name="ln906"> </a>
+<a name="ln907">    *field = dict.items[i].value;</a>
+<a name="ln908">  }</a>
+<a name="ln909"> </a>
+<a name="ln910">  return true;</a>
+<a name="ln911">}</a>
+<a name="ln912"> </a>
+<a name="ln913">void api_free_keydict(void *dict, KeySetLink *table)</a>
+<a name="ln914">{</a>
+<a name="ln915">  for (size_t i = 0; table[i].str; i++) {</a>
+<a name="ln916">    api_free_object(*(Object *)((char *)dict + table[i].ptr_off));</a>
+<a name="ln917">  }</a>
+<a name="ln918">}</a>
+<a name="ln919"> </a>
+<a name="ln920">/// Set a named mark</a>
+<a name="ln921">/// buffer and mark name must be validated already</a>
+<a name="ln922">/// @param buffer     Buffer to set the mark on</a>
+<a name="ln923">/// @param name       Mark name</a>
+<a name="ln924">/// @param line       Line number</a>
+<a name="ln925">/// @param col        Column/row number</a>
+<a name="ln926">/// @return true if the mark was set, else false</a>
+<a name="ln927">bool set_mark(buf_T *buf, String name, Integer line, Integer col, Error *err)</a>
+<a name="ln928">{</a>
+<a name="ln929">  buf = buf == NULL ? curbuf : buf;</a>
+<a name="ln930">  // If line == 0 the marks is being deleted</a>
+<a name="ln931">  bool res = false;</a>
+<a name="ln932">  bool deleting = false;</a>
+<a name="ln933">  if (line == 0) {</a>
+<a name="ln934">    col = 0;</a>
+<a name="ln935">    deleting = true;</a>
+<a name="ln936">  } else {</a>
+<a name="ln937">    if (col &gt; MAXCOL) {</a>
+<a name="ln938">      api_set_error(err, kErrorTypeValidation, &quot;Column value outside range&quot;);</a>
+<a name="ln939">      return res;</a>
+<a name="ln940">    }</a>
+<a name="ln941">    if (line &lt; 1 || line &gt; buf-&gt;b_ml.ml_line_count) {</a>
+<a name="ln942">      api_set_error(err, kErrorTypeValidation, &quot;Line value outside range&quot;);</a>
+<a name="ln943">      return res;</a>
+<a name="ln944">    }</a>
+<a name="ln945">  }</a>
+<a name="ln946">  assert(INT32_MIN &lt;= line &amp;&amp; line &lt;= INT32_MAX);</a>
+<a name="ln947">  pos_T pos = { (linenr_T)line, (int)col, (int)col };</a>
+<a name="ln948">  res = setmark_pos(*name.data, &amp;pos, buf-&gt;handle, NULL);</a>
+<a name="ln949">  if (!res) {</a>
+<a name="ln950">    if (deleting) {</a>
+<a name="ln951">      api_set_error(err, kErrorTypeException,</a>
+<a name="ln952">                    &quot;Failed to delete named mark: %c&quot;, *name.data);</a>
+<a name="ln953">    } else {</a>
+<a name="ln954">      api_set_error(err, kErrorTypeException,</a>
+<a name="ln955">                    &quot;Failed to set named mark: %c&quot;, *name.data);</a>
+<a name="ln956">    }</a>
+<a name="ln957">  }</a>
+<a name="ln958">  return res;</a>
+<a name="ln959">}</a>
+<a name="ln960"> </a>
+<a name="ln961">/// Get default statusline highlight for window</a>
+<a name="ln962">const char *get_default_stl_hl(win_T *wp, bool use_winbar, int stc_hl_id)</a>
+<a name="ln963">{</a>
+<a name="ln964">  if (wp == NULL) {</a>
+<a name="ln965">    return &quot;TabLineFill&quot;;</a>
+<a name="ln966">  } else if (use_winbar) {</a>
+<a name="ln967">    return (wp == curwin) ? &quot;WinBar&quot; : &quot;WinBarNC&quot;;</a>
+<a name="ln968">  } else if (stc_hl_id &gt; 0) {</a>
+<a name="ln969">    return syn_id2name(stc_hl_id);</a>
+<a name="ln970">  } else {</a>
+<a name="ln971">    return (wp == curwin) ? &quot;StatusLine&quot; : &quot;StatusLineNC&quot;;</a>
+<a name="ln972">  }</a>
+<a name="ln973">}</a>
+<a name="ln974"> </a>
+<a name="ln975">int find_sid(uint64_t channel_id)</a>
+<a name="ln976">{</a>
+<a name="ln977">  switch (channel_id) {</a>
+<a name="ln978">  case VIML_INTERNAL_CALL:</a>
+<a name="ln979">  // TODO(autocmd): Figure out what this should be</a>
+<a name="ln980">  // return SID_API_CLIENT;</a>
+<a name="ln981">  case LUA_INTERNAL_CALL:</a>
+<a name="ln982">    return SID_LUA;</a>
+<a name="ln983">  default:</a>
+<a name="ln984">    return SID_API_CLIENT;</a>
+<a name="ln985">  }</a>
+<a name="ln986">}</a>
+<a name="ln987"> </a>
+<a name="ln988">/// Sets sctx for API calls.</a>
+<a name="ln989">///</a>
+<a name="ln990">/// @param channel_id     api clients id. Used to determine if it's a internal</a>
+<a name="ln991">///                       call or a rpc call.</a>
+<a name="ln992">/// @return returns       previous value of current_sctx. To be used</a>
+<a name="ln993">///                       to be used for restoring sctx to previous state.</a>
+<a name="ln994">sctx_T api_set_sctx(uint64_t channel_id)</a>
+<a name="ln995">{</a>
+<a name="ln996">  sctx_T old_current_sctx = current_sctx;</a>
+<a name="ln997">  if (channel_id != VIML_INTERNAL_CALL) {</a>
+<a name="ln998">    current_sctx.sc_sid =</a>
+<a name="ln999">      channel_id == LUA_INTERNAL_CALL ? SID_LUA : SID_API_CLIENT;</a>
+<a name="ln1000">    current_sctx.sc_lnum = 0;</a>
+<a name="ln1001">  }</a>
+<a name="ln1002">  return old_current_sctx;</a>
+<a name="ln1003">}</a>
+</code></pre>
+<div class="balloon" rel="782"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v601/" target="_blank">V601</a> Pointer is implicitly cast to an integer type. Inspect the second argument.</p></div>
+<link rel="stylesheet" href="highlight.css">
+<script src="highlight.pack.js"></script>
+<script src="highlightjs-line-numbers.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initLineNumbersOnLoad();</script>
+<script>
+  $(document).ready(function() {
+      $('.balloon').each(function () {
+          var bl = $(this);
+          var line = bl.attr('rel');
+          var text = $('a[name="ln'+line+'"]').text();
+
+          var space_count = 0;
+          for(var i = 0; i<text.length; i++){
+              var char = text[i];
+              if((char !== ' ')&&(char !== '\t'))break;
+              if(char === '\t')space_count++;
+              space_count++;
+          }
+
+          bl.css('margin-left', space_count*8);
+          $('a[name="ln'+line+'"]').after(bl);
+      });
+
+      window.location = window.location;
+  });
+</script>
+</body>
+</html>

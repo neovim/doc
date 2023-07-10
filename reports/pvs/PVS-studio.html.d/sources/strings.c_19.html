@@ -1,0 +1,2301 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+  <title>strings.c</title>
+  <link rel="stylesheet" href="../style.css"/>
+  <script src="../jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<pre><code class = "cpp">
+<a name="ln1">// This is an open source non-commercial project. Dear PVS-Studio, please check</a>
+<a name="ln2">// it. PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com</a>
+<a name="ln3"> </a>
+<a name="ln4">#include &lt;assert.h&gt;</a>
+<a name="ln5">#include &lt;inttypes.h&gt;</a>
+<a name="ln6">#include &lt;math.h&gt;</a>
+<a name="ln7">#include &lt;stdarg.h&gt;</a>
+<a name="ln8">#include &lt;stdbool.h&gt;</a>
+<a name="ln9">#include &lt;stddef.h&gt;</a>
+<a name="ln10">#include &lt;stdio.h&gt;</a>
+<a name="ln11">#include &lt;stdlib.h&gt;</a>
+<a name="ln12">#include &lt;string.h&gt;</a>
+<a name="ln13"> </a>
+<a name="ln14">#include &quot;auto/config.h&quot;</a>
+<a name="ln15">#include &quot;nvim/ascii.h&quot;</a>
+<a name="ln16">#include &quot;nvim/assert.h&quot;</a>
+<a name="ln17">#include &quot;nvim/charset.h&quot;</a>
+<a name="ln18">#include &quot;nvim/eval/encode.h&quot;</a>
+<a name="ln19">#include &quot;nvim/eval/typval.h&quot;</a>
+<a name="ln20">#include &quot;nvim/eval/typval_defs.h&quot;</a>
+<a name="ln21">#include &quot;nvim/ex_docmd.h&quot;</a>
+<a name="ln22">#include &quot;nvim/garray.h&quot;</a>
+<a name="ln23">#include &quot;nvim/gettext.h&quot;</a>
+<a name="ln24">#include &quot;nvim/macros.h&quot;</a>
+<a name="ln25">#include &quot;nvim/math.h&quot;</a>
+<a name="ln26">#include &quot;nvim/mbyte.h&quot;</a>
+<a name="ln27">#include &quot;nvim/memory.h&quot;</a>
+<a name="ln28">#include &quot;nvim/message.h&quot;</a>
+<a name="ln29">#include &quot;nvim/option.h&quot;</a>
+<a name="ln30">#include &quot;nvim/plines.h&quot;</a>
+<a name="ln31">#include &quot;nvim/strings.h&quot;</a>
+<a name="ln32">#include &quot;nvim/types.h&quot;</a>
+<a name="ln33">#include &quot;nvim/vim.h&quot;</a>
+<a name="ln34"> </a>
+<a name="ln35">/// Copy up to `len` bytes of `string` into newly allocated memory and</a>
+<a name="ln36">/// terminate with a NUL. The allocated memory always has size `len + 1`, even</a>
+<a name="ln37">/// when `string` is shorter.</a>
+<a name="ln38">char *xstrnsave(const char *string, size_t len)</a>
+<a name="ln39">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln40">{</a>
+<a name="ln41">  return strncpy(xmallocz(len), string, len);  // NOLINT(runtime/printf)</a>
+<a name="ln42">}</a>
+<a name="ln43"> </a>
+<a name="ln44">// Same as vim_strsave(), but any characters found in esc_chars are preceded</a>
+<a name="ln45">// by a backslash.</a>
+<a name="ln46">char *vim_strsave_escaped(const char *string, const char *esc_chars)</a>
+<a name="ln47">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln48">{</a>
+<a name="ln49">  return vim_strsave_escaped_ext(string, esc_chars, '\\', false);</a>
+<a name="ln50">}</a>
+<a name="ln51"> </a>
+<a name="ln52">// Same as vim_strsave_escaped(), but when &quot;bsl&quot; is true also escape</a>
+<a name="ln53">// characters where rem_backslash() would remove the backslash.</a>
+<a name="ln54">// Escape the characters with &quot;cc&quot;.</a>
+<a name="ln55">char *vim_strsave_escaped_ext(const char *string, const char *esc_chars, char cc, bool bsl)</a>
+<a name="ln56">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln57">{</a>
+<a name="ln58">  // First count the number of backslashes required.</a>
+<a name="ln59">  // Then allocate the memory and insert them.</a>
+<a name="ln60">  size_t length = 1;                    // count the trailing NUL</a>
+<a name="ln61">  for (const char *p = string; *p; p++) {</a>
+<a name="ln62">    const size_t l = (size_t)(utfc_ptr2len(p));</a>
+<a name="ln63">    if (l &gt; 1) {</a>
+<a name="ln64">      length += l;                      // count a multibyte char</a>
+<a name="ln65">      p += l - 1;</a>
+<a name="ln66">      continue;</a>
+<a name="ln67">    }</a>
+<a name="ln68">    if (vim_strchr(esc_chars, (uint8_t)(*p)) != NULL || (bsl &amp;&amp; rem_backslash(p))) {</a>
+<a name="ln69">      length++;                         // count a backslash</a>
+<a name="ln70">    }</a>
+<a name="ln71">    length++;                           // count an ordinary char</a>
+<a name="ln72">  }</a>
+<a name="ln73"> </a>
+<a name="ln74">  char *escaped_string = xmalloc(length);</a>
+<a name="ln75">  char *p2 = escaped_string;</a>
+<a name="ln76">  for (const char *p = string; *p; p++) {</a>
+<a name="ln77">    const size_t l = (size_t)(utfc_ptr2len(p));</a>
+<a name="ln78">    if (l &gt; 1) {</a>
+<a name="ln79">      memcpy(p2, p, l);</a>
+<a name="ln80">      p2 += l;</a>
+<a name="ln81">      p += l - 1;                     // skip multibyte char</a>
+<a name="ln82">      continue;</a>
+<a name="ln83">    }</a>
+<a name="ln84">    if (vim_strchr(esc_chars, (uint8_t)(*p)) != NULL || (bsl &amp;&amp; rem_backslash(p))) {</a>
+<a name="ln85">      *p2++ = cc;</a>
+<a name="ln86">    }</a>
+<a name="ln87">    *p2++ = *p;</a>
+<a name="ln88">  }</a>
+<a name="ln89">  *p2 = NUL;</a>
+<a name="ln90"> </a>
+<a name="ln91">  return escaped_string;</a>
+<a name="ln92">}</a>
+<a name="ln93"> </a>
+<a name="ln94">/// Save a copy of an unquoted string</a>
+<a name="ln95">///</a>
+<a name="ln96">/// Turns string like `a\bc&quot;def\&quot;ghi\\\n&quot;jkl` into `a\bcdef&quot;ghi\\njkl`, for use</a>
+<a name="ln97">/// in shell_build_argv: the only purpose of backslash is making next character</a>
+<a name="ln98">/// be treated literally inside the double quotes, if this character is</a>
+<a name="ln99">/// backslash or quote.</a>
+<a name="ln100">///</a>
+<a name="ln101">/// @param[in]  string  String to copy.</a>
+<a name="ln102">/// @param[in]  length  Length of the string to copy.</a>
+<a name="ln103">///</a>
+<a name="ln104">/// @return [allocated] Copy of the string.</a>
+<a name="ln105">char *vim_strnsave_unquoted(const char *const string, const size_t length)</a>
+<a name="ln106">  FUNC_ATTR_MALLOC FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln107">  FUNC_ATTR_NONNULL_RET</a>
+<a name="ln108">{</a>
+<a name="ln109">#define ESCAPE_COND(p, inquote, string_end) \</a>
+<a name="ln110">  (*(p) == '\\' &amp;&amp; (inquote) &amp;&amp; (p) + 1 &lt; (string_end) &amp;&amp; ((p)[1] == '\\' || (p)[1] == '&quot;'))</a>
+<a name="ln111">  size_t ret_length = 0;</a>
+<a name="ln112">  bool inquote = false;</a>
+<a name="ln113">  const char *const string_end = string + length;</a>
+<a name="ln114">  for (const char *p = string; p &lt; string_end; p++) {</a>
+<a name="ln115">    if (*p == '&quot;') {</a>
+<a name="ln116">      inquote = !inquote;</a>
+<a name="ln117">    } else if (ESCAPE_COND(p, inquote, string_end)) {</a>
+<a name="ln118">      ret_length++;</a>
+<a name="ln119">      p++;</a>
+<a name="ln120">    } else {</a>
+<a name="ln121">      ret_length++;</a>
+<a name="ln122">    }</a>
+<a name="ln123">  }</a>
+<a name="ln124"> </a>
+<a name="ln125">  char *const ret = xmallocz(ret_length);</a>
+<a name="ln126">  char *rp = ret;</a>
+<a name="ln127">  inquote = false;</a>
+<a name="ln128">  for (const char *p = string; p &lt; string_end; p++) {</a>
+<a name="ln129">    if (*p == '&quot;') {</a>
+<a name="ln130">      inquote = !inquote;</a>
+<a name="ln131">    } else if (ESCAPE_COND(p, inquote, string_end)) {</a>
+<a name="ln132">      *rp++ = *(++p);</a>
+<a name="ln133">    } else {</a>
+<a name="ln134">      *rp++ = *p;</a>
+<a name="ln135">    }</a>
+<a name="ln136">  }</a>
+<a name="ln137">#undef ESCAPE_COND</a>
+<a name="ln138"> </a>
+<a name="ln139">  return ret;</a>
+<a name="ln140">}</a>
+<a name="ln141"> </a>
+<a name="ln142">/// Escape &quot;string&quot; for use as a shell argument with system().</a>
+<a name="ln143">/// This uses single quotes, except when we know we need to use double quotes</a>
+<a name="ln144">/// (MS-Windows without 'shellslash' set).</a>
+<a name="ln145">/// Escape a newline, depending on the 'shell' option.</a>
+<a name="ln146">/// When &quot;do_special&quot; is true also replace &quot;!&quot;, &quot;%&quot;, &quot;#&quot; and things starting</a>
+<a name="ln147">/// with &quot;&lt;&quot; like &quot;&lt;cfile&gt;&quot;.</a>
+<a name="ln148">/// When &quot;do_newline&quot; is false do not escape newline unless it is csh shell.</a>
+<a name="ln149">///</a>
+<a name="ln150">/// @return  the result in allocated memory.</a>
+<a name="ln151">char *vim_strsave_shellescape(const char *string, bool do_special, bool do_newline)</a>
+<a name="ln152">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln153">{</a>
+<a name="ln154">  char *d;</a>
+<a name="ln155">  char *escaped_string;</a>
+<a name="ln156">  size_t l;</a>
+<a name="ln157">  int csh_like;</a>
+<a name="ln158">  bool fish_like;</a>
+<a name="ln159"> </a>
+<a name="ln160">  // Only csh and similar shells expand '!' within single quotes.  For sh and</a>
+<a name="ln161">  // the like we must not put a backslash before it, it will be taken</a>
+<a name="ln162">  // literally.  If do_special is set the '!' will be escaped twice.</a>
+<a name="ln163">  // Csh also needs to have &quot;\n&quot; escaped twice when do_special is set.</a>
+<a name="ln164">  csh_like = csh_like_shell();</a>
+<a name="ln165"> </a>
+<a name="ln166">  // Fish shell uses '\' as an escape character within single quotes, so '\'</a>
+<a name="ln167">  // itself must be escaped to get a literal '\'.</a>
+<a name="ln168">  fish_like = fish_like_shell();</a>
+<a name="ln169"> </a>
+<a name="ln170">  // First count the number of extra bytes required.</a>
+<a name="ln171">  size_t length = strlen(string) + 3;       // two quotes and a trailing NUL</a>
+<a name="ln172">  for (const char *p = string; *p != NUL; MB_PTR_ADV(p)) {</a>
+<a name="ln173">#ifdef MSWIN</a>
+<a name="ln174">    if (!p_ssl) {</a>
+<a name="ln175">      if (*p == '&quot;') {</a>
+<a name="ln176">        length++;                       // &quot; -&gt; &quot;&quot;</a>
+<a name="ln177">      }</a>
+<a name="ln178">    } else</a>
+<a name="ln179">#endif</a>
+<a name="ln180">    if (*p == '\'') {</a>
+<a name="ln181">      length += 3;                      // ' =&gt; '\''</a>
+<a name="ln182">    }</a>
+<a name="ln183">    if ((*p == '\n' &amp;&amp; (csh_like || do_newline))</a>
+<a name="ln184">        || (*p == '!' &amp;&amp; (csh_like || do_special))) {</a>
+<a name="ln185">      length++;                         // insert backslash</a>
+<a name="ln186">      if (csh_like &amp;&amp; do_special) {</a>
+<a name="ln187">        length++;                       // insert backslash</a>
+<a name="ln188">      }</a>
+<a name="ln189">    }</a>
+<a name="ln190">    if (do_special &amp;&amp; find_cmdline_var(p, &amp;l) &gt;= 0) {</a>
+<a name="ln191">      length++;                         // insert backslash</a>
+<a name="ln192">      p += l - 1;</a>
+<a name="ln193">    }</a>
+<a name="ln194">    if (*p == '\\' &amp;&amp; fish_like) {</a>
+<a name="ln195">      length++;  // insert backslash</a>
+<a name="ln196">    }</a>
+<a name="ln197">  }</a>
+<a name="ln198"> </a>
+<a name="ln199">  // Allocate memory for the result and fill it.</a>
+<a name="ln200">  escaped_string = xmalloc(length);</a>
+<a name="ln201">  d = escaped_string;</a>
+<a name="ln202"> </a>
+<a name="ln203">  // add opening quote</a>
+<a name="ln204">#ifdef MSWIN</a>
+<a name="ln205">  if (!p_ssl) {</a>
+<a name="ln206">    *d++ = '&quot;';</a>
+<a name="ln207">  } else</a>
+<a name="ln208">#endif</a>
+<a name="ln209">  *d++ = '\'';</a>
+<a name="ln210"> </a>
+<a name="ln211">  for (const char *p = string; *p != NUL;) {</a>
+<a name="ln212">#ifdef MSWIN</a>
+<a name="ln213">    if (!p_ssl) {</a>
+<a name="ln214">      if (*p == '&quot;') {</a>
+<a name="ln215">        *d++ = '&quot;';</a>
+<a name="ln216">        *d++ = '&quot;';</a>
+<a name="ln217">        p++;</a>
+<a name="ln218">        continue;</a>
+<a name="ln219">      }</a>
+<a name="ln220">    } else</a>
+<a name="ln221">#endif</a>
+<a name="ln222">    if (*p == '\'') {</a>
+<a name="ln223">      *d++ = '\'';</a>
+<a name="ln224">      *d++ = '\\';</a>
+<a name="ln225">      *d++ = '\'';</a>
+<a name="ln226">      *d++ = '\'';</a>
+<a name="ln227">      p++;</a>
+<a name="ln228">      continue;</a>
+<a name="ln229">    }</a>
+<a name="ln230">    if ((*p == '\n' &amp;&amp; (csh_like || do_newline))</a>
+<a name="ln231">        || (*p == '!' &amp;&amp; (csh_like || do_special))) {</a>
+<a name="ln232">      *d++ = '\\';</a>
+<a name="ln233">      if (csh_like &amp;&amp; do_special) {</a>
+<a name="ln234">        *d++ = '\\';</a>
+<a name="ln235">      }</a>
+<a name="ln236">      *d++ = *p++;</a>
+<a name="ln237">      continue;</a>
+<a name="ln238">    }</a>
+<a name="ln239">    if (do_special &amp;&amp; find_cmdline_var(p, &amp;l) &gt;= 0) {</a>
+<a name="ln240">      *d++ = '\\';                    // insert backslash</a>
+<a name="ln241">      while (--l != SIZE_MAX) {  // copy the var</a>
+<a name="ln242">        *d++ = *p++;</a>
+<a name="ln243">      }</a>
+<a name="ln244">      continue;</a>
+<a name="ln245">    }</a>
+<a name="ln246">    if (*p == '\\' &amp;&amp; fish_like) {</a>
+<a name="ln247">      *d++ = '\\';</a>
+<a name="ln248">      *d++ = *p++;</a>
+<a name="ln249">      continue;</a>
+<a name="ln250">    }</a>
+<a name="ln251"> </a>
+<a name="ln252">    mb_copy_char(&amp;p, &amp;d);</a>
+<a name="ln253">  }</a>
+<a name="ln254"> </a>
+<a name="ln255">  // add terminating quote and finish with a NUL</a>
+<a name="ln256">#ifdef MSWIN</a>
+<a name="ln257">  if (!p_ssl) {</a>
+<a name="ln258">    *d++ = '&quot;';</a>
+<a name="ln259">  } else</a>
+<a name="ln260">#endif</a>
+<a name="ln261">  *d++ = '\'';</a>
+<a name="ln262">  *d = NUL;</a>
+<a name="ln263"> </a>
+<a name="ln264">  return escaped_string;</a>
+<a name="ln265">}</a>
+<a name="ln266"> </a>
+<a name="ln267">// Like vim_strsave(), but make all characters uppercase.</a>
+<a name="ln268">// This uses ASCII lower-to-upper case translation, language independent.</a>
+<a name="ln269">char *vim_strsave_up(const char *string)</a>
+<a name="ln270">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln271">{</a>
+<a name="ln272">  char *p1;</a>
+<a name="ln273"> </a>
+<a name="ln274">  p1 = xstrdup(string);</a>
+<a name="ln275">  vim_strup(p1);</a>
+<a name="ln276">  return p1;</a>
+<a name="ln277">}</a>
+<a name="ln278"> </a>
+<a name="ln279">/// Like xstrnsave(), but make all characters uppercase.</a>
+<a name="ln280">/// This uses ASCII lower-to-upper case translation, language independent.</a>
+<a name="ln281">char *vim_strnsave_up(const char *string, size_t len)</a>
+<a name="ln282">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln283">{</a>
+<a name="ln284">  char *p1 = xstrnsave(string, len);</a>
+<a name="ln285">  vim_strup(p1);</a>
+<a name="ln286">  return p1;</a>
+<a name="ln287">}</a>
+<a name="ln288"> </a>
+<a name="ln289">// ASCII lower-to-upper case translation, language independent.</a>
+<a name="ln290">void vim_strup(char *p)</a>
+<a name="ln291">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln292">{</a>
+<a name="ln293">  uint8_t c;</a>
+<a name="ln294">  while ((c = (uint8_t)(*p)) != NUL) {</a>
+<a name="ln295">    *p++ = (char)(uint8_t)(c &lt; 'a' || c &gt; 'z' ? c : c - 0x20);</a>
+<a name="ln296">  }</a>
+<a name="ln297">}</a>
+<a name="ln298"> </a>
+<a name="ln299">/// Make given string all upper-case or all lower-case</a>
+<a name="ln300">///</a>
+<a name="ln301">/// Handles multi-byte characters as good as possible.</a>
+<a name="ln302">///</a>
+<a name="ln303">/// @param[in]  orig  Input string.</a>
+<a name="ln304">/// @param[in]  upper If true make uppercase, otherwise lowercase</a>
+<a name="ln305">///</a>
+<a name="ln306">/// @return [allocated] upper-cased string.</a>
+<a name="ln307">char *strcase_save(const char *const orig, bool upper)</a>
+<a name="ln308">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln309">{</a>
+<a name="ln310">  char *res = xstrdup(orig);</a>
+<a name="ln311"> </a>
+<a name="ln312">  char *p = res;</a>
+<a name="ln313">  while (*p != NUL) {</a>
+<a name="ln314">    int c = utf_ptr2char(p);</a>
+<a name="ln315">    int l = utf_ptr2len(p);</a>
+<a name="ln316">    if (c == 0) {</a>
+<a name="ln317">      // overlong sequence, use only the first byte</a>
+<a name="ln318">      c = (uint8_t)(*p);</a>
+<a name="ln319">      l = 1;</a>
+<a name="ln320">    }</a>
+<a name="ln321">    int uc = upper ? mb_toupper(c) : mb_tolower(c);</a>
+<a name="ln322"> </a>
+<a name="ln323">    // Reallocate string when byte count changes.  This is rare,</a>
+<a name="ln324">    // thus it's OK to do another malloc()/free().</a>
+<a name="ln325">    int newl = utf_char2len(uc);</a>
+<a name="ln326">    if (newl != l) {</a>
+<a name="ln327">      // TODO(philix): use xrealloc() in strcase_save()</a>
+<a name="ln328">      char *s = xmalloc(strlen(res) + (size_t)(1 + newl - l));</a>
+<a name="ln329">      memcpy(s, res, (size_t)(p - res));</a>
+<a name="ln330">      STRCPY(s + (p - res) + newl, p + l);</a>
+<a name="ln331">      p = s + (p - res);</a>
+<a name="ln332">      xfree(res);</a>
+<a name="ln333">      res = s;</a>
+<a name="ln334">    }</a>
+<a name="ln335"> </a>
+<a name="ln336">    utf_char2bytes(uc, p);</a>
+<a name="ln337">    p += newl;</a>
+<a name="ln338">  }</a>
+<a name="ln339"> </a>
+<a name="ln340">  return res;</a>
+<a name="ln341">}</a>
+<a name="ln342"> </a>
+<a name="ln343">// delete spaces at the end of a string</a>
+<a name="ln344">void del_trailing_spaces(char *ptr)</a>
+<a name="ln345">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln346">{</a>
+<a name="ln347">  char *q;</a>
+<a name="ln348"> </a>
+<a name="ln349">  q = ptr + strlen(ptr);</a>
+<a name="ln350">  while (--q &gt; ptr &amp;&amp; ascii_iswhite(q[0]) &amp;&amp; q[-1] != '\\' &amp;&amp; q[-1] != Ctrl_V) {</a>
+<a name="ln351">    *q = NUL;</a>
+<a name="ln352">  }</a>
+<a name="ln353">}</a>
+<a name="ln354"> </a>
+<a name="ln355">#if !defined(HAVE_STRNLEN)</a>
+<a name="ln356">size_t xstrnlen(const char *s, size_t n)</a>
+<a name="ln357">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_PURE</a>
+<a name="ln358">{</a>
+<a name="ln359">  const char *end = memchr(s, '\0', n);</a>
+<a name="ln360">  if (end == NULL) {</a>
+<a name="ln361">    return n;</a>
+<a name="ln362">  }</a>
+<a name="ln363">  return (size_t)(end - s);</a>
+<a name="ln364">}</a>
+<a name="ln365">#endif</a>
+<a name="ln366"> </a>
+<a name="ln367">#if (!defined(HAVE_STRCASECMP) &amp;&amp; !defined(HAVE_STRICMP))</a>
+<a name="ln368">// Compare two strings, ignoring case, using current locale.</a>
+<a name="ln369">// Doesn't work for multi-byte characters.</a>
+<a name="ln370">// return 0 for match, &lt; 0 for smaller, &gt; 0 for bigger</a>
+<a name="ln371">int vim_stricmp(const char *s1, const char *s2)</a>
+<a name="ln372">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_PURE</a>
+<a name="ln373">{</a>
+<a name="ln374">  int i;</a>
+<a name="ln375"> </a>
+<a name="ln376">  while (true) {</a>
+<a name="ln377">    i = (int)TOLOWER_LOC((uint8_t)(*s1)) - (int)TOLOWER_LOC((uint8_t)(*s2));</a>
+<a name="ln378">    if (i != 0) {</a>
+<a name="ln379">      return i;                             // this character different</a>
+<a name="ln380">    }</a>
+<a name="ln381">    if (*s1 == NUL) {</a>
+<a name="ln382">      break;                                // strings match until NUL</a>
+<a name="ln383">    }</a>
+<a name="ln384">    s1++;</a>
+<a name="ln385">    s2++;</a>
+<a name="ln386">  }</a>
+<a name="ln387">  return 0;                                 // strings match</a>
+<a name="ln388">}</a>
+<a name="ln389">#endif</a>
+<a name="ln390"> </a>
+<a name="ln391">#if (!defined(HAVE_STRNCASECMP) &amp;&amp; !defined(HAVE_STRNICMP))</a>
+<a name="ln392">// Compare two strings, for length &quot;len&quot;, ignoring case, using current locale.</a>
+<a name="ln393">// Doesn't work for multi-byte characters.</a>
+<a name="ln394">// return 0 for match, &lt; 0 for smaller, &gt; 0 for bigger</a>
+<a name="ln395">int vim_strnicmp(const char *s1, const char *s2, size_t len)</a>
+<a name="ln396">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_PURE</a>
+<a name="ln397">{</a>
+<a name="ln398">  int i;</a>
+<a name="ln399"> </a>
+<a name="ln400">  while (len &gt; 0) {</a>
+<a name="ln401">    i = (int)TOLOWER_LOC((uint8_t)(*s1)) - (int)TOLOWER_LOC((uint8_t)(*s2));</a>
+<a name="ln402">    if (i != 0) {</a>
+<a name="ln403">      return i;                             // this character different</a>
+<a name="ln404">    }</a>
+<a name="ln405">    if (*s1 == NUL) {</a>
+<a name="ln406">      break;                                // strings match until NUL</a>
+<a name="ln407">    }</a>
+<a name="ln408">    s1++;</a>
+<a name="ln409">    s2++;</a>
+<a name="ln410">    len--;</a>
+<a name="ln411">  }</a>
+<a name="ln412">  return 0;                                 // strings match</a>
+<a name="ln413">}</a>
+<a name="ln414">#endif</a>
+<a name="ln415"> </a>
+<a name="ln416">/// strchr() version which handles multibyte strings</a>
+<a name="ln417">///</a>
+<a name="ln418">/// @param[in]  string  String to search in.</a>
+<a name="ln419">/// @param[in]  c  Character to search for.</a>
+<a name="ln420">///</a>
+<a name="ln421">/// @return Pointer to the first byte of the found character in string or NULL</a>
+<a name="ln422">///         if it was not found or character is invalid. NUL character is never</a>
+<a name="ln423">///         found, use `strlen()` instead.</a>
+<a name="ln424">char *vim_strchr(const char *const string, const int c)</a>
+<a name="ln425">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln426">{</a>
+<a name="ln427">  if (c &lt;= 0) {</a>
+<a name="ln428">    return NULL;</a>
+<a name="ln429">  } else if (c &lt; 0x80) {</a>
+<a name="ln430">    return strchr(string, c);</a>
+<a name="ln431">  } else {</a>
+<a name="ln432">    char u8char[MB_MAXBYTES + 1];</a>
+<a name="ln433">    const int len = utf_char2bytes(c, u8char);</a>
+<a name="ln434">    u8char[len] = NUL;</a>
+<a name="ln435">    return strstr(string, u8char);</a>
+<a name="ln436">  }</a>
+<a name="ln437">}</a>
+<a name="ln438"> </a>
+<a name="ln439">// Sort an array of strings.</a>
+<a name="ln440"> </a>
+<a name="ln441">#ifdef INCLUDE_GENERATED_DECLARATIONS</a>
+<a name="ln442"># include &quot;strings.c.generated.h&quot;</a>
+<a name="ln443">#endif</a>
+<a name="ln444">static int sort_compare(const void *s1, const void *s2)</a>
+<a name="ln445">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln446">{</a>
+<a name="ln447">  return strcmp(*(char **)s1, *(char **)s2);</a>
+<a name="ln448">}</a>
+<a name="ln449"> </a>
+<a name="ln450">void sort_strings(char **files, int count)</a>
+<a name="ln451">{</a>
+<a name="ln452">  qsort((void *)files, (size_t)count, sizeof(char *), sort_compare);</a>
+<a name="ln453">}</a>
+<a name="ln454"> </a>
+<a name="ln455">// Return true if string &quot;s&quot; contains a non-ASCII character (128 or higher).</a>
+<a name="ln456">// When &quot;s&quot; is NULL false is returned.</a>
+<a name="ln457">bool has_non_ascii(const char *s)</a>
+<a name="ln458">  FUNC_ATTR_PURE</a>
+<a name="ln459">{</a>
+<a name="ln460">  const char *p;</a>
+<a name="ln461"> </a>
+<a name="ln462">  if (s != NULL) {</a>
+<a name="ln463">    for (p = s; *p != NUL; p++) {</a>
+<a name="ln464">      if ((uint8_t)(*p) &gt;= 128) {</a>
+<a name="ln465">        return true;</a>
+<a name="ln466">      }</a>
+<a name="ln467">    }</a>
+<a name="ln468">  }</a>
+<a name="ln469">  return false;</a>
+<a name="ln470">}</a>
+<a name="ln471"> </a>
+<a name="ln472">/// Return true if string &quot;s&quot; contains a non-ASCII character (128 or higher).</a>
+<a name="ln473">/// When &quot;s&quot; is NULL false is returned.</a>
+<a name="ln474">bool has_non_ascii_len(const char *const s, const size_t len)</a>
+<a name="ln475">  FUNC_ATTR_PURE</a>
+<a name="ln476">{</a>
+<a name="ln477">  if (s != NULL) {</a>
+<a name="ln478">    for (size_t i = 0; i &lt; len; i++) {</a>
+<a name="ln479">      if ((uint8_t)s[i] &gt;= 128) {</a>
+<a name="ln480">        return true;</a>
+<a name="ln481">      }</a>
+<a name="ln482">    }</a>
+<a name="ln483">  }</a>
+<a name="ln484">  return false;</a>
+<a name="ln485">}</a>
+<a name="ln486"> </a>
+<a name="ln487">/// Concatenate two strings and return the result in allocated memory.</a>
+<a name="ln488">char *concat_str(const char *restrict str1, const char *restrict str2)</a>
+<a name="ln489">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln490">{</a>
+<a name="ln491">  size_t l = strlen(str1);</a>
+<a name="ln492">  char *dest = xmalloc(l + strlen(str2) + 1);</a>
+<a name="ln493">  STRCPY(dest, str1);</a>
+<a name="ln494">  STRCPY(dest + l, str2);</a>
+<a name="ln495">  return dest;</a>
+<a name="ln496">}</a>
+<a name="ln497"> </a>
+<a name="ln498">static const char *const e_printf =</a>
+<a name="ln499">  N_(&quot;E766: Insufficient arguments for printf()&quot;);</a>
+<a name="ln500"> </a>
+<a name="ln501">/// Get number argument from idxp entry in tvs</a>
+<a name="ln502">///</a>
+<a name="ln503">/// Will give an error message for VimL entry with invalid type or for</a>
+<a name="ln504">/// insufficient entries.</a>
+<a name="ln505">///</a>
+<a name="ln506">/// @param[in]  tvs  List of VimL values. List is terminated by VAR_UNKNOWN</a>
+<a name="ln507">///                  value.</a>
+<a name="ln508">/// @param[in,out]  idxp  Index in a list. Will be incremented. Indexing starts</a>
+<a name="ln509">///                       at 1.</a>
+<a name="ln510">///</a>
+<a name="ln511">/// @return Number value or 0 in case of error.</a>
+<a name="ln512">static varnumber_T tv_nr(typval_T *tvs, int *idxp)</a>
+<a name="ln513">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln514">{</a>
+<a name="ln515">  int idx = *idxp - 1;</a>
+<a name="ln516">  varnumber_T n = 0;</a>
+<a name="ln517"> </a>
+<a name="ln518">  if (tvs[idx].v_type == VAR_UNKNOWN) {</a>
+<a name="ln519">    emsg(_(e_printf));</a>
+<a name="ln520">  } else {</a>
+<a name="ln521">    (*idxp)++;</a>
+<a name="ln522">    bool err = false;</a>
+<a name="ln523">    n = tv_get_number_chk(&amp;tvs[idx], &amp;err);</a>
+<a name="ln524">    if (err) {</a>
+<a name="ln525">      n = 0;</a>
+<a name="ln526">    }</a>
+<a name="ln527">  }</a>
+<a name="ln528">  return n;</a>
+<a name="ln529">}</a>
+<a name="ln530"> </a>
+<a name="ln531">/// Get string argument from idxp entry in tvs</a>
+<a name="ln532">///</a>
+<a name="ln533">/// Will give an error message for VimL entry with invalid type or for</a>
+<a name="ln534">/// insufficient entries.</a>
+<a name="ln535">///</a>
+<a name="ln536">/// @param[in]  tvs  List of VimL values. List is terminated by VAR_UNKNOWN</a>
+<a name="ln537">///                  value.</a>
+<a name="ln538">/// @param[in,out]  idxp  Index in a list. Will be incremented.</a>
+<a name="ln539">/// @param[out]  tofree  If the idxp entry in tvs is not a String or a Number,</a>
+<a name="ln540">///                      it will be converted to String in the same format</a>
+<a name="ln541">///                      as &quot;:echo&quot; and stored in &quot;*tofree&quot;. The caller must</a>
+<a name="ln542">///                      free &quot;*tofree&quot;.</a>
+<a name="ln543">///</a>
+<a name="ln544">/// @return String value or NULL in case of error.</a>
+<a name="ln545">static const char *tv_str(typval_T *tvs, int *idxp, char **const tofree)</a>
+<a name="ln546">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln547">{</a>
+<a name="ln548">  int idx = *idxp - 1;</a>
+<a name="ln549">  const char *s = NULL;</a>
+<a name="ln550"> </a>
+<a name="ln551">  if (tvs[idx].v_type == VAR_UNKNOWN) {</a>
+<a name="ln552">    emsg(_(e_printf));</a>
+<a name="ln553">  } else {</a>
+<a name="ln554">    (*idxp)++;</a>
+<a name="ln555">    if (tvs[idx].v_type == VAR_STRING || tvs[idx].v_type == VAR_NUMBER) {</a>
+<a name="ln556">      s = tv_get_string_chk(&amp;tvs[idx]);</a>
+<a name="ln557">      *tofree = NULL;</a>
+<a name="ln558">    } else {</a>
+<a name="ln559">      s = *tofree = encode_tv2echo(&amp;tvs[idx], NULL);</a>
+<a name="ln560">    }</a>
+<a name="ln561">  }</a>
+<a name="ln562">  return s;</a>
+<a name="ln563">}</a>
+<a name="ln564"> </a>
+<a name="ln565">/// Get pointer argument from the next entry in tvs</a>
+<a name="ln566">///</a>
+<a name="ln567">/// Will give an error message for VimL entry with invalid type or for</a>
+<a name="ln568">/// insufficient entries.</a>
+<a name="ln569">///</a>
+<a name="ln570">/// @param[in]  tvs  List of typval_T values.</a>
+<a name="ln571">/// @param[in,out]  idxp  Pointer to the index of the current value.</a>
+<a name="ln572">///</a>
+<a name="ln573">/// @return Pointer stored in typval_T or NULL.</a>
+<a name="ln574">static const void *tv_ptr(const typval_T *const tvs, int *const idxp)</a>
+<a name="ln575">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln576">{</a>
+<a name="ln577">#define OFF(attr) offsetof(union typval_vval_union, attr)</a>
+<a name="ln578">  STATIC_ASSERT(OFF(v_string) == OFF(v_list)  // -V568</a>
+<a name="ln579">                &amp;&amp; OFF(v_string) == OFF(v_dict)</a>
+<a name="ln580">                &amp;&amp; OFF(v_string) == OFF(v_partial)</a>
+<a name="ln581">                &amp;&amp; sizeof(tvs[0].vval.v_string) == sizeof(tvs[0].vval.v_list)</a>
+<a name="ln582">                &amp;&amp; sizeof(tvs[0].vval.v_string) == sizeof(tvs[0].vval.v_dict)</a>
+<a name="ln583">                &amp;&amp; sizeof(tvs[0].vval.v_string) == sizeof(tvs[0].vval.v_partial),</a>
+<a name="ln584">                &quot;Strings, dictionaries, lists and partials are expected to be pointers, &quot;</a>
+<a name="ln585">                &quot;so that all three of them can be accessed via v_string&quot;);</a>
+<a name="ln586">#undef OFF</a>
+<a name="ln587">  const int idx = *idxp - 1;</a>
+<a name="ln588">  if (tvs[idx].v_type == VAR_UNKNOWN) {</a>
+<a name="ln589">    emsg(_(e_printf));</a>
+<a name="ln590">    return NULL;</a>
+<a name="ln591">  }</a>
+<a name="ln592">  (*idxp)++;</a>
+<a name="ln593">  return tvs[idx].vval.v_string;</a>
+<a name="ln594">}</a>
+<a name="ln595"> </a>
+<a name="ln596">/// Get float argument from idxp entry in tvs</a>
+<a name="ln597">///</a>
+<a name="ln598">/// Will give an error message for VimL entry with invalid type or for</a>
+<a name="ln599">/// insufficient entries.</a>
+<a name="ln600">///</a>
+<a name="ln601">/// @param[in]  tvs  List of VimL values. List is terminated by VAR_UNKNOWN</a>
+<a name="ln602">///                  value.</a>
+<a name="ln603">/// @param[in,out]  idxp  Index in a list. Will be incremented.</a>
+<a name="ln604">///</a>
+<a name="ln605">/// @return Floating-point value or zero in case of error.</a>
+<a name="ln606">static float_T tv_float(typval_T *const tvs, int *const idxp)</a>
+<a name="ln607">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln608">{</a>
+<a name="ln609">  int idx = *idxp - 1;</a>
+<a name="ln610">  float_T f = 0;</a>
+<a name="ln611"> </a>
+<a name="ln612">  if (tvs[idx].v_type == VAR_UNKNOWN) {</a>
+<a name="ln613">    emsg(_(e_printf));</a>
+<a name="ln614">  } else {</a>
+<a name="ln615">    (*idxp)++;</a>
+<a name="ln616">    if (tvs[idx].v_type == VAR_FLOAT) {</a>
+<a name="ln617">      f = tvs[idx].vval.v_float;</a>
+<a name="ln618">    } else if (tvs[idx].v_type == VAR_NUMBER) {</a>
+<a name="ln619">      f = (float_T)tvs[idx].vval.v_number;</a>
+<a name="ln620">    } else {</a>
+<a name="ln621">      emsg(_(&quot;E807: Expected Float argument for printf()&quot;));</a>
+<a name="ln622">    }</a>
+<a name="ln623">  }</a>
+<a name="ln624">  return f;</a>
+<a name="ln625">}</a>
+<a name="ln626"> </a>
+<a name="ln627">// This code was included to provide a portable vsnprintf() and snprintf().</a>
+<a name="ln628">// Some systems may provide their own, but we always use this one for</a>
+<a name="ln629">// consistency.</a>
+<a name="ln630">//</a>
+<a name="ln631">// This code is based on snprintf.c - a portable implementation of snprintf</a>
+<a name="ln632">// by Mark Martinec &lt;mark.martinec@ijs.si&gt;, Version 2.2, 2000-10-06.</a>
+<a name="ln633">// Included with permission.  It was heavily modified to fit in Vim.</a>
+<a name="ln634">// The original code, including useful comments, can be found here:</a>
+<a name="ln635">//</a>
+<a name="ln636">//     http://www.ijs.si/software/snprintf/</a>
+<a name="ln637">//</a>
+<a name="ln638">// This snprintf() only supports the following conversion specifiers:</a>
+<a name="ln639">// s, c, b, B, d, u, o, x, X, p  (and synonyms: i, D, U, O - see below)</a>
+<a name="ln640">// with flags: '-', '+', ' ', '0' and '#'.</a>
+<a name="ln641">// An asterisk is supported for field width as well as precision.</a>
+<a name="ln642">//</a>
+<a name="ln643">// Limited support for floating point was added: 'f', 'e', 'E', 'g', 'G'.</a>
+<a name="ln644">//</a>
+<a name="ln645">// Length modifiers 'h' (short int), 'l' (long int) and &quot;ll&quot; (long long int) are</a>
+<a name="ln646">// supported.</a>
+<a name="ln647">//</a>
+<a name="ln648">// The locale is not used, the string is used as a byte string.  This is only</a>
+<a name="ln649">// relevant for double-byte encodings where the second byte may be '%'.</a>
+<a name="ln650">//</a>
+<a name="ln651">// It is permitted for &quot;str_m&quot; to be zero, and it is permitted to specify NULL</a>
+<a name="ln652">// pointer for resulting string argument if &quot;str_m&quot; is zero (as per ISO C99).</a>
+<a name="ln653">//</a>
+<a name="ln654">// The return value is the number of characters which would be generated</a>
+<a name="ln655">// for the given input, excluding the trailing NUL. If this value</a>
+<a name="ln656">// is greater or equal to &quot;str_m&quot;, not all characters from the result</a>
+<a name="ln657">// have been stored in str, output bytes beyond the (&quot;str_m&quot;-1) -th character</a>
+<a name="ln658">// are discarded. If &quot;str_m&quot; is greater than zero it is guaranteed</a>
+<a name="ln659">// the resulting string will be NUL-terminated.</a>
+<a name="ln660"> </a>
+<a name="ln661">// vim_vsnprintf_typval() can be invoked with either &quot;va_list&quot; or a list of</a>
+<a name="ln662">// &quot;typval_T&quot;.  When the latter is not used it must be NULL.</a>
+<a name="ln663"> </a>
+<a name="ln664">/// Append a formatted value to the string</a>
+<a name="ln665">///</a>
+<a name="ln666">/// @see vim_vsnprintf_typval().</a>
+<a name="ln667">int vim_snprintf_add(char *str, size_t str_m, const char *fmt, ...)</a>
+<a name="ln668">  FUNC_ATTR_PRINTF(3, 4)</a>
+<a name="ln669">{</a>
+<a name="ln670">  const size_t len = strlen(str);</a>
+<a name="ln671">  size_t space;</a>
+<a name="ln672"> </a>
+<a name="ln673">  if (str_m &lt;= len) {</a>
+<a name="ln674">    space = 0;</a>
+<a name="ln675">  } else {</a>
+<a name="ln676">    space = str_m - len;</a>
+<a name="ln677">  }</a>
+<a name="ln678">  va_list ap;</a>
+<a name="ln679">  va_start(ap, fmt);</a>
+<a name="ln680">  const int str_l = vim_vsnprintf(str + len, space, fmt, ap);</a>
+<a name="ln681">  va_end(ap);</a>
+<a name="ln682">  return str_l;</a>
+<a name="ln683">}</a>
+<a name="ln684"> </a>
+<a name="ln685">/// Write formatted value to the string</a>
+<a name="ln686">///</a>
+<a name="ln687">/// @param[out]  str  String to write to.</a>
+<a name="ln688">/// @param[in]  str_m  String length.</a>
+<a name="ln689">/// @param[in]  fmt  String format.</a>
+<a name="ln690">///</a>
+<a name="ln691">/// @return Number of bytes excluding NUL byte that would be written to the</a>
+<a name="ln692">///         string if str_m was greater or equal to the return value.</a>
+<a name="ln693">int vim_snprintf(char *str, size_t str_m, const char *fmt, ...)</a>
+<a name="ln694">  FUNC_ATTR_PRINTF(3, 4)</a>
+<a name="ln695">{</a>
+<a name="ln696">  va_list ap;</a>
+<a name="ln697">  va_start(ap, fmt);</a>
+<a name="ln698">  const int str_l = vim_vsnprintf(str, str_m, fmt, ap);</a>
+<a name="ln699">  va_end(ap);</a>
+<a name="ln700">  return str_l;</a>
+<a name="ln701">}</a>
+<a name="ln702"> </a>
+<a name="ln703">// Return the representation of infinity for printf() function:</a>
+<a name="ln704">// &quot;-inf&quot;, &quot;inf&quot;, &quot;+inf&quot;, &quot; inf&quot;, &quot;-INF&quot;, &quot;INF&quot;, &quot;+INF&quot; or &quot; INF&quot;.</a>
+<a name="ln705">static const char *infinity_str(bool positive, char fmt_spec, int force_sign,</a>
+<a name="ln706">                                int space_for_positive)</a>
+<a name="ln707">{</a>
+<a name="ln708">  static const char *table[] = {</a>
+<a name="ln709">    &quot;-inf&quot;, &quot;inf&quot;, &quot;+inf&quot;, &quot; inf&quot;,</a>
+<a name="ln710">    &quot;-INF&quot;, &quot;INF&quot;, &quot;+INF&quot;, &quot; INF&quot;</a>
+<a name="ln711">  };</a>
+<a name="ln712">  int idx = positive * (1 + force_sign + force_sign * space_for_positive);</a>
+<a name="ln713">  if (ASCII_ISUPPER(fmt_spec)) {</a>
+<a name="ln714">    idx += 4;</a>
+<a name="ln715">  }</a>
+<a name="ln716">  return table[idx];</a>
+<a name="ln717">}</a>
+<a name="ln718"> </a>
+<a name="ln719">int vim_vsnprintf(char *str, size_t str_m, const char *fmt, va_list ap)</a>
+<a name="ln720">{</a>
+<a name="ln721">  return vim_vsnprintf_typval(str, str_m, fmt, ap, NULL);</a>
+<a name="ln722">}</a>
+<a name="ln723"> </a>
+<a name="ln724">/// Write formatted value to the string</a>
+<a name="ln725">///</a>
+<a name="ln726">/// @param[out]  str  String to write to.</a>
+<a name="ln727">/// @param[in]  str_m  String length.</a>
+<a name="ln728">/// @param[in]  fmt  String format.</a>
+<a name="ln729">/// @param[in]  ap  Values that should be formatted. Ignored if tvs is not NULL.</a>
+<a name="ln730">/// @param[in]  tvs  Values that should be formatted, for printf() VimL</a>
+<a name="ln731">///                  function. Must be NULL in other cases.</a>
+<a name="ln732">///</a>
+<a name="ln733">/// @return Number of bytes excluding NUL byte that would be written to the</a>
+<a name="ln734">///         string if str_m was greater or equal to the return value.</a>
+<a name="ln735">int vim_vsnprintf_typval(char *str, size_t str_m, const char *fmt, va_list ap, typval_T *const tvs)</a>
+<a name="ln736">{</a>
+<a name="ln737">  size_t str_l = 0;</a>
+<a name="ln738">  bool str_avail = str_l &lt; str_m;</a>
+<a name="ln739">  const char *p = fmt;</a>
+<a name="ln740">  int arg_idx = 1;</a>
+<a name="ln741"> </a>
+<a name="ln742">  if (!p) {</a>
+<a name="ln743">    p = &quot;&quot;;</a>
+<a name="ln744">  }</a>
+<a name="ln745">  while (*p) {</a>
+<a name="ln746">    if (*p != '%') {</a>
+<a name="ln747">      // copy up to the next '%' or NUL without any changes</a>
+<a name="ln748">      size_t n = (size_t)(xstrchrnul(p + 1, '%') - p);</a>
+<a name="ln749">      if (str_avail) {</a>
+<a name="ln750">        size_t avail = str_m - str_l;</a>
+<a name="ln751">        memmove(str + str_l, p, MIN(n, avail));</a>
+<a name="ln752">        str_avail = n &lt; avail;</a>
+<a name="ln753">      }</a>
+<a name="ln754">      p += n;</a>
+<a name="ln755">      assert(n &lt;= SIZE_MAX - str_l);</a>
+<a name="ln756">      str_l += n;</a>
+<a name="ln757">    } else {</a>
+<a name="ln758">      size_t min_field_width = 0, precision = 0;</a>
+<a name="ln759">      int zero_padding = 0, precision_specified = 0, justify_left = 0;</a>
+<a name="ln760">      int alternate_form = 0, force_sign = 0;</a>
+<a name="ln761"> </a>
+<a name="ln762">      // if both ' ' and '+' flags appear, ' ' flag should be ignored</a>
+<a name="ln763">      int space_for_positive = 1;</a>
+<a name="ln764"> </a>
+<a name="ln765">      // allowed values: \0, h, l, 2 (for ll), z, L</a>
+<a name="ln766">      char length_modifier = '\0';</a>
+<a name="ln767"> </a>
+<a name="ln768">      // temporary buffer for simple numeric-&gt;string conversion</a>
+<a name="ln769">#define TMP_LEN 350    // 1e308 seems reasonable as the maximum printable</a>
+<a name="ln770">      char tmp[TMP_LEN];</a>
+<a name="ln771"> </a>
+<a name="ln772">      // string address in case of string argument</a>
+<a name="ln773">      const char *str_arg = NULL;</a>
+<a name="ln774"> </a>
+<a name="ln775">      // natural field width of arg without padding and sign</a>
+<a name="ln776">      size_t str_arg_l;</a>
+<a name="ln777"> </a>
+<a name="ln778">      // unsigned char argument value (only defined for c conversion);</a>
+<a name="ln779">      // standard explicitly states the char argument for the c</a>
+<a name="ln780">      // conversion is unsigned</a>
+<a name="ln781">      unsigned char uchar_arg;</a>
+<a name="ln782"> </a>
+<a name="ln783">      // number of zeros to be inserted for numeric conversions as</a>
+<a name="ln784">      // required by the precision or minimal field width</a>
+<a name="ln785">      size_t number_of_zeros_to_pad = 0;</a>
+<a name="ln786"> </a>
+<a name="ln787">      // index into tmp where zero padding is to be inserted</a>
+<a name="ln788">      size_t zero_padding_insertion_ind = 0;</a>
+<a name="ln789"> </a>
+<a name="ln790">      // current conversion specifier character</a>
+<a name="ln791">      char fmt_spec = '\0';</a>
+<a name="ln792"> </a>
+<a name="ln793">      // buffer for 's' and 'S' specs</a>
+<a name="ln794">      char *tofree = NULL;</a>
+<a name="ln795"> </a>
+<a name="ln796">      p++;  // skip '%'</a>
+<a name="ln797"> </a>
+<a name="ln798">      // parse flags</a>
+<a name="ln799">      while (true) {</a>
+<a name="ln800">        switch (*p) {</a>
+<a name="ln801">        case '0':</a>
+<a name="ln802">          zero_padding = 1; p++; continue;</a>
+<a name="ln803">        case '-':</a>
+<a name="ln804">          justify_left = 1; p++; continue;</a>
+<a name="ln805">        // if both '0' and '-' flags appear, '0' should be ignored</a>
+<a name="ln806">        case '+':</a>
+<a name="ln807">          force_sign = 1; space_for_positive = 0; p++; continue;</a>
+<a name="ln808">        case ' ':</a>
+<a name="ln809">          force_sign = 1; p++; continue;</a>
+<a name="ln810">        // if both ' ' and '+' flags appear, ' ' should be ignored</a>
+<a name="ln811">        case '#':</a>
+<a name="ln812">          alternate_form = 1; p++; continue;</a>
+<a name="ln813">        case '\'':</a>
+<a name="ln814">          p++; continue;</a>
+<a name="ln815">        default:</a>
+<a name="ln816">          break;</a>
+<a name="ln817">        }</a>
+<a name="ln818">        break;</a>
+<a name="ln819">      }</a>
+<a name="ln820"> </a>
+<a name="ln821">      // parse field width</a>
+<a name="ln822">      if (*p == '*') {</a>
+<a name="ln823">        p++;</a>
+<a name="ln824">        const int j = tvs ? (int)tv_nr(tvs, &amp;arg_idx) : va_arg(ap, int);</a>
+<a name="ln825">        if (j &gt;= 0) {</a>
+<a name="ln826">          min_field_width = (size_t)j;</a>
+<a name="ln827">        } else {</a>
+<a name="ln828">          min_field_width = (size_t)-j;</a>
+<a name="ln829">          justify_left = 1;</a>
+<a name="ln830">        }</a>
+<a name="ln831">      } else if (ascii_isdigit((int)(*p))) {</a>
+<a name="ln832">        // size_t could be wider than unsigned int; make sure we treat</a>
+<a name="ln833">        // argument like common implementations do</a>
+<a name="ln834">        unsigned uj = (unsigned)(*p++ - '0');</a>
+<a name="ln835"> </a>
+<a name="ln836">        while (ascii_isdigit((int)(*p))) {</a>
+<a name="ln837">          uj = 10 * uj + (unsigned)(*p++ - '0');</a>
+<a name="ln838">        }</a>
+<a name="ln839">        min_field_width = uj;</a>
+<a name="ln840">      }</a>
+<a name="ln841"> </a>
+<a name="ln842">      // parse precision</a>
+<a name="ln843">      if (*p == '.') {</a>
+<a name="ln844">        p++;</a>
+<a name="ln845">        precision_specified = 1;</a>
+<a name="ln846">        if (*p == '*') {</a>
+<a name="ln847">          const int j = tvs ? (int)tv_nr(tvs, &amp;arg_idx) : va_arg(ap, int);</a>
+<a name="ln848">          p++;</a>
+<a name="ln849">          if (j &gt;= 0) {</a>
+<a name="ln850">            precision = (size_t)j;</a>
+<a name="ln851">          } else {</a>
+<a name="ln852">            precision_specified = 0;</a>
+<a name="ln853">            precision = 0;</a>
+<a name="ln854">          }</a>
+<a name="ln855">        } else if (ascii_isdigit((int)(*p))) {</a>
+<a name="ln856">          // size_t could be wider than unsigned int; make sure we</a>
+<a name="ln857">          // treat argument like common implementations do</a>
+<a name="ln858">          unsigned uj = (unsigned)(*p++ - '0');</a>
+<a name="ln859"> </a>
+<a name="ln860">          while (ascii_isdigit((int)(*p))) {</a>
+<a name="ln861">            uj = 10 * uj + (unsigned)(*p++ - '0');</a>
+<a name="ln862">          }</a>
+<a name="ln863">          precision = uj;</a>
+<a name="ln864">        }</a>
+<a name="ln865">      }</a>
+<a name="ln866"> </a>
+<a name="ln867">      // parse 'h', 'l', 'll' and 'z' length modifiers</a>
+<a name="ln868">      if (*p == 'h' || *p == 'l' || *p == 'z') {</a>
+<a name="ln869">        length_modifier = *p;</a>
+<a name="ln870">        p++;</a>
+<a name="ln871">        if (length_modifier == 'l' &amp;&amp; *p == 'l') {  // ll, encoded as 2</a>
+<a name="ln872">          length_modifier = '2';</a>
+<a name="ln873">          p++;</a>
+<a name="ln874">        }</a>
+<a name="ln875">      }</a>
+<a name="ln876"> </a>
+<a name="ln877">      fmt_spec = *p;</a>
+<a name="ln878"> </a>
+<a name="ln879">      // common synonyms</a>
+<a name="ln880">      switch (fmt_spec) {</a>
+<a name="ln881">      case 'i':</a>
+<a name="ln882">        fmt_spec = 'd'; break;</a>
+<a name="ln883">      case 'D':</a>
+<a name="ln884">        fmt_spec = 'd'; length_modifier = 'l'; break;</a>
+<a name="ln885">      case 'U':</a>
+<a name="ln886">        fmt_spec = 'u'; length_modifier = 'l'; break;</a>
+<a name="ln887">      case 'O':</a>
+<a name="ln888">        fmt_spec = 'o'; length_modifier = 'l'; break;</a>
+<a name="ln889">      default:</a>
+<a name="ln890">        break;</a>
+<a name="ln891">      }</a>
+<a name="ln892"> </a>
+<a name="ln893">      switch (fmt_spec) {</a>
+<a name="ln894">      case 'b':</a>
+<a name="ln895">      case 'B':</a>
+<a name="ln896">      case 'd':</a>
+<a name="ln897">      case 'u':</a>
+<a name="ln898">      case 'o':</a>
+<a name="ln899">      case 'x':</a>
+<a name="ln900">      case 'X':</a>
+<a name="ln901">        if (tvs &amp;&amp; length_modifier == '\0') {</a>
+<a name="ln902">          length_modifier = '2';</a>
+<a name="ln903">        }</a>
+<a name="ln904">      }</a>
+<a name="ln905"> </a>
+<a name="ln906">      // get parameter value, do initial processing</a>
+<a name="ln907">      switch (fmt_spec) {</a>
+<a name="ln908">      // '%' and 'c' behave similar to 's' regarding flags and field widths</a>
+<a name="ln909">      case '%':</a>
+<a name="ln910">      case 'c':</a>
+<a name="ln911">      case 's':</a>
+<a name="ln912">      case 'S':</a>
+<a name="ln913">        str_arg_l = 1;</a>
+<a name="ln914">        switch (fmt_spec) {</a>
+<a name="ln915">        case '%':</a>
+<a name="ln916">          str_arg = p;</a>
+<a name="ln917">          break;</a>
+<a name="ln918"> </a>
+<a name="ln919">        case 'c': {</a>
+<a name="ln920">          const int j = tvs ? (int)tv_nr(tvs, &amp;arg_idx) : va_arg(ap, int);</a>
+<a name="ln921">          // standard demands unsigned char</a>
+<a name="ln922">          uchar_arg = (unsigned char)j;</a>
+<a name="ln923">          str_arg = (char *)&amp;uchar_arg;</a>
+<a name="ln924">          break;</a>
+<a name="ln925">        }</a>
+<a name="ln926"> </a>
+<a name="ln927">        case 's':</a>
+<a name="ln928">        case 'S':</a>
+<a name="ln929">          str_arg = tvs ? tv_str(tvs, &amp;arg_idx, &amp;tofree)</a>
+<a name="ln930">                        : va_arg(ap, const char *);</a>
+<a name="ln931">          if (!str_arg) {</a>
+<a name="ln932">            str_arg = &quot;[NULL]&quot;;</a>
+<a name="ln933">            str_arg_l = 6;</a>
+<a name="ln934">          } else if (!precision_specified) {</a>
+<a name="ln935">            // make sure not to address string beyond the specified</a>
+<a name="ln936">            // precision</a>
+<a name="ln937">            str_arg_l = strlen(str_arg);</a>
+<a name="ln938">          } else if (precision == 0) {</a>
+<a name="ln939">            // truncate string if necessary as requested by precision</a>
+<a name="ln940">            str_arg_l = 0;</a>
+<a name="ln941">          } else {</a>
+<a name="ln942">            // memchr on HP does not like n &gt; 2^31</a>
+<a name="ln943">            // TODO(elmart): check if this still holds / is relevant</a>
+<a name="ln944">            str_arg_l = (size_t)((char *)xmemscan(str_arg,</a>
+<a name="ln945">                                                  NUL,</a>
+<a name="ln946">                                                  MIN(precision,</a>
+<a name="ln947">                                                      0x7fffffff))</a>
+<a name="ln948">                                 - str_arg);</a>
+<a name="ln949">          }</a>
+<a name="ln950">          if (fmt_spec == 'S') {</a>
+<a name="ln951">            const char *p1;</a>
+<a name="ln952">            size_t i;</a>
+<a name="ln953"> </a>
+<a name="ln954">            for (i = 0, p1 = str_arg; *p1; p1 += utfc_ptr2len(p1)) {</a>
+<a name="ln955">              size_t cell = (size_t)utf_ptr2cells(p1);</a>
+<a name="ln956">              if (precision_specified &amp;&amp; i + cell &gt; precision) {</a>
+<a name="ln957">                break;</a>
+<a name="ln958">              }</a>
+<a name="ln959">              i += cell;</a>
+<a name="ln960">            }</a>
+<a name="ln961"> </a>
+<a name="ln962">            str_arg_l = (size_t)(p1 - str_arg);</a>
+<a name="ln963">            if (min_field_width != 0) {</a>
+<a name="ln964">              min_field_width += str_arg_l - i;</a>
+<a name="ln965">            }</a>
+<a name="ln966">          }</a>
+<a name="ln967">          break;</a>
+<a name="ln968"> </a>
+<a name="ln969">        default:</a>
+<a name="ln970">          break;</a>
+<a name="ln971">        }</a>
+<a name="ln972">        break;</a>
+<a name="ln973"> </a>
+<a name="ln974">      case 'd':</a>
+<a name="ln975">      case 'u':</a>
+<a name="ln976">      case 'b':</a>
+<a name="ln977">      case 'B':</a>
+<a name="ln978">      case 'o':</a>
+<a name="ln979">      case 'x':</a>
+<a name="ln980">      case 'X':</a>
+<a name="ln981">      case 'p': {</a>
+<a name="ln982">        // u, b, B, o, x, X and p conversion specifiers imply</a>
+<a name="ln983">        // the value is unsigned; d implies a signed value</a>
+<a name="ln984"> </a>
+<a name="ln985">        // 0 if numeric argument is zero (or if pointer is NULL for 'p'),</a>
+<a name="ln986">        // +1 if greater than zero (or non NULL for 'p'),</a>
+<a name="ln987">        // -1 if negative (unsigned argument is never negative)</a>
+<a name="ln988">        int arg_sign = 0;</a>
+<a name="ln989"> </a>
+<a name="ln990">        intmax_t arg = 0;</a>
+<a name="ln991">        uintmax_t uarg = 0;</a>
+<a name="ln992"> </a>
+<a name="ln993">        // only defined for p conversion</a>
+<a name="ln994">        const void *ptr_arg = NULL;</a>
+<a name="ln995"> </a>
+<a name="ln996">        if (fmt_spec == 'p') {</a>
+<a name="ln997">          ptr_arg = tvs ? tv_ptr(tvs, &amp;arg_idx) : va_arg(ap, void *);</a>
+<a name="ln998">          if (ptr_arg) {</a>
+<a name="ln999">            arg_sign = 1;</a>
+<a name="ln1000">          }</a>
+<a name="ln1001">        } else if (fmt_spec == 'd') {</a>
+<a name="ln1002">          // signed</a>
+<a name="ln1003">          switch (length_modifier) {</a>
+<a name="ln1004">          case '\0':</a>
+<a name="ln1005">            arg = (int)(tvs ? tv_nr(tvs, &amp;arg_idx) : va_arg(ap, int));</a>
+<a name="ln1006">            break;</a>
+<a name="ln1007">          case 'h':</a>
+<a name="ln1008">            // char and short arguments are passed as int16_t</a>
+<a name="ln1009">            arg = (int16_t)(tvs ? tv_nr(tvs, &amp;arg_idx) : va_arg(ap, int));</a>
+<a name="ln1010">            break;</a>
+<a name="ln1011">          case 'l':</a>
+<a name="ln1012">            arg = (tvs ? (long)tv_nr(tvs, &amp;arg_idx) : va_arg(ap, long));</a>
+<a name="ln1013">            break;</a>
+<a name="ln1014">          case '2':</a>
+<a name="ln1015">            arg = (</a>
+<a name="ln1016">                   tvs</a>
+<a name="ln1017">                    ? (long long)tv_nr(tvs, &amp;arg_idx)  // NOLINT (runtime/int)</a>
+<a name="ln1018">                    : va_arg(ap, long long));  // NOLINT (runtime/int)</a>
+<a name="ln1019">            break;</a>
+<a name="ln1020">          case 'z':</a>
+<a name="ln1021">            arg = (tvs ? (ptrdiff_t)tv_nr(tvs, &amp;arg_idx) : va_arg(ap, ptrdiff_t));</a>
+<a name="ln1022">            break;</a>
+<a name="ln1023">          }</a>
+<a name="ln1024">          if (arg &gt; 0) {</a>
+<a name="ln1025">            arg_sign = 1;</a>
+<a name="ln1026">          } else if (arg &lt; 0) {</a>
+<a name="ln1027">            arg_sign = -1;</a>
+<a name="ln1028">          }</a>
+<a name="ln1029">        } else {</a>
+<a name="ln1030">          // unsigned</a>
+<a name="ln1031">          switch (length_modifier) {</a>
+<a name="ln1032">          case '\0':</a>
+<a name="ln1033">            uarg = (unsigned)(tvs ? tv_nr(tvs, &amp;arg_idx) : va_arg(ap, unsigned));</a>
+<a name="ln1034">            break;</a>
+<a name="ln1035">          case 'h':</a>
+<a name="ln1036">            uarg = (uint16_t)(tvs ? tv_nr(tvs, &amp;arg_idx) : va_arg(ap, unsigned));</a>
+<a name="ln1037">            break;</a>
+<a name="ln1038">          case 'l':</a>
+<a name="ln1039">            uarg = (tvs ? (unsigned long)tv_nr(tvs, &amp;arg_idx) : va_arg(ap, unsigned long));</a>
+<a name="ln1040">            break;</a>
+<a name="ln1041">          case '2':</a>
+<a name="ln1042">            uarg = (uintmax_t)(unsigned long long)(  // NOLINT (runtime/int)</a>
+<a name="ln1043">                                                     tvs</a>
+<a name="ln1044">                    ? ((unsigned long long)  // NOLINT (runtime/int)</a>
+<a name="ln1045">                       tv_nr(tvs, &amp;arg_idx))</a>
+<a name="ln1046">                    : va_arg(ap, unsigned long long));  // NOLINT (runtime/int)</a>
+<a name="ln1047">            break;</a>
+<a name="ln1048">          case 'z':</a>
+<a name="ln1049">            uarg = (tvs ? (size_t)tv_nr(tvs, &amp;arg_idx) : va_arg(ap, size_t));</a>
+<a name="ln1050">            break;</a>
+<a name="ln1051">          }</a>
+<a name="ln1052">          arg_sign = (uarg != 0);</a>
+<a name="ln1053">        }</a>
+<a name="ln1054"> </a>
+<a name="ln1055">        str_arg = tmp;</a>
+<a name="ln1056">        str_arg_l = 0;</a>
+<a name="ln1057"> </a>
+<a name="ln1058">        // For d, i, u, o, x, and X conversions, if precision is specified,</a>
+<a name="ln1059">        // '0' flag should be ignored. This is so with Solaris 2.6, Digital</a>
+<a name="ln1060">        // UNIX 4.0, HPUX 10, Linux, FreeBSD, NetBSD; but not with Perl.</a>
+<a name="ln1061">        if (precision_specified) {</a>
+<a name="ln1062">          zero_padding = 0;</a>
+<a name="ln1063">        }</a>
+<a name="ln1064"> </a>
+<a name="ln1065">        if (fmt_spec == 'd') {</a>
+<a name="ln1066">          if (force_sign &amp;&amp; arg_sign &gt;= 0) {</a>
+<a name="ln1067">            tmp[str_arg_l++] = space_for_positive ? ' ' : '+';</a>
+<a name="ln1068">          }</a>
+<a name="ln1069">          // leave negative numbers for snprintf to handle, to</a>
+<a name="ln1070">          // avoid handling tricky cases like (short int)-32768</a>
+<a name="ln1071">        } else if (alternate_form) {</a>
+<a name="ln1072">          if (arg_sign != 0 &amp;&amp; (fmt_spec == 'x' || fmt_spec == 'X'</a>
+<a name="ln1073">                                || fmt_spec == 'b' || fmt_spec == 'B')) {</a>
+<a name="ln1074">            tmp[str_arg_l++] = '0';</a>
+<a name="ln1075">            tmp[str_arg_l++] = fmt_spec;</a>
+<a name="ln1076">          }</a>
+<a name="ln1077">          // alternate form should have no effect for p * conversion, but ...</a>
+<a name="ln1078">        }</a>
+<a name="ln1079"> </a>
+<a name="ln1080">        zero_padding_insertion_ind = str_arg_l;</a>
+<a name="ln1081">        if (!precision_specified) {</a>
+<a name="ln1082">          precision = 1;  // default precision is 1</a>
+<a name="ln1083">        }</a>
+<a name="ln1084">        if (precision == 0 &amp;&amp; arg_sign == 0) {</a>
+<a name="ln1085">          // when zero value is formatted with an explicit precision 0,</a>
+<a name="ln1086">          // resulting formatted string is empty (d, i, u, b, B, o, x, X, p)</a>
+<a name="ln1087">        } else {</a>
+<a name="ln1088">          switch (fmt_spec) {</a>
+<a name="ln1089">          case 'p':    // pointer</a>
+<a name="ln1090">            str_arg_l += (size_t)snprintf(tmp + str_arg_l,</a>
+<a name="ln1091">                                          sizeof(tmp) - str_arg_l,</a>
+<a name="ln1092">                                          &quot;%p&quot;, ptr_arg);</a>
+<a name="ln1093">            break;</a>
+<a name="ln1094">          case 'd':    // signed</a>
+<a name="ln1095">            str_arg_l += (size_t)snprintf(tmp + str_arg_l,</a>
+<a name="ln1096">                                          sizeof(tmp) - str_arg_l,</a>
+<a name="ln1097">                                          &quot;%&quot; PRIdMAX, arg);</a>
+<a name="ln1098">            break;</a>
+<a name="ln1099">          case 'b':</a>
+<a name="ln1100">          case 'B': {  // binary</a>
+<a name="ln1101">            size_t bits = 0;</a>
+<a name="ln1102">            for (bits = sizeof(uintmax_t) * 8; bits &gt; 0; bits--) {</a>
+<a name="ln1103">              if ((uarg &gt;&gt; (bits - 1)) &amp; 0x1) {</a>
+<a name="ln1104">                break;</a>
+<a name="ln1105">              }</a>
+<a name="ln1106">            }</a>
+<a name="ln1107"> </a>
+<a name="ln1108">            while (bits &gt; 0) {</a>
+<a name="ln1109">              tmp[str_arg_l++] = ((uarg &gt;&gt; --bits) &amp; 0x1) ? '1' : '0';</a>
+<a name="ln1110">            }</a>
+<a name="ln1111">            break;</a>
+<a name="ln1112">          }</a>
+<a name="ln1113">          default: {  // unsigned</a>
+<a name="ln1114">            // construct a simple format string for snprintf</a>
+<a name="ln1115">            char f[] = &quot;%&quot; PRIuMAX;</a>
+<a name="ln1116">            f[sizeof(&quot;%&quot; PRIuMAX) - 1 - 1] = fmt_spec;</a>
+<a name="ln1117">            assert(PRIuMAX[sizeof(PRIuMAX) - 1 - 1] == 'u');</a>
+<a name="ln1118">            str_arg_l += (size_t)snprintf(tmp + str_arg_l,</a>
+<a name="ln1119">                                          sizeof(tmp) - str_arg_l,</a>
+<a name="ln1120">                                          f, uarg);</a>
+<a name="ln1121">            break;</a>
+<a name="ln1122">          }</a>
+<a name="ln1123">          }</a>
+<a name="ln1124">          assert(str_arg_l &lt; sizeof(tmp));</a>
+<a name="ln1125"> </a>
+<a name="ln1126">          // include the optional minus sign and possible &quot;0x&quot; in the region</a>
+<a name="ln1127">          // before the zero padding insertion point</a>
+<a name="ln1128">          if (zero_padding_insertion_ind &lt; str_arg_l</a>
+<a name="ln1129">              &amp;&amp; tmp[zero_padding_insertion_ind] == '-') {</a>
+<a name="ln1130">            zero_padding_insertion_ind++;</a>
+<a name="ln1131">          }</a>
+<a name="ln1132">          if (zero_padding_insertion_ind + 1 &lt; str_arg_l</a>
+<a name="ln1133">              &amp;&amp; tmp[zero_padding_insertion_ind] == '0'</a>
+<a name="ln1134">              &amp;&amp; (tmp[zero_padding_insertion_ind + 1] == 'x'</a>
+<a name="ln1135">                  || tmp[zero_padding_insertion_ind + 1] == 'X'</a>
+<a name="ln1136">                  || tmp[zero_padding_insertion_ind + 1] == 'b'</a>
+<a name="ln1137">                  || tmp[zero_padding_insertion_ind + 1] == 'B')) {</a>
+<a name="ln1138">            zero_padding_insertion_ind += 2;</a>
+<a name="ln1139">          }</a>
+<a name="ln1140">        }</a>
+<a name="ln1141"> </a>
+<a name="ln1142">        {</a>
+<a name="ln1143">          size_t num_of_digits = str_arg_l - zero_padding_insertion_ind;</a>
+<a name="ln1144"> </a>
+<a name="ln1145">          if (alternate_form &amp;&amp; fmt_spec == 'o'</a>
+<a name="ln1146">              // unless zero is already the first character</a>
+<a name="ln1147">              &amp;&amp; !(zero_padding_insertion_ind &lt; str_arg_l</a>
+<a name="ln1148">                   &amp;&amp; tmp[zero_padding_insertion_ind] == '0')) {</a>
+<a name="ln1149">            // assure leading zero for alternate-form octal numbers</a>
+<a name="ln1150">            if (!precision_specified</a>
+<a name="ln1151">                || precision &lt; num_of_digits + 1) {</a>
+<a name="ln1152">              // precision is increased to force the first character to be</a>
+<a name="ln1153">              // zero, except if a zero value is formatted with an explicit</a>
+<a name="ln1154">              // precision of zero</a>
+<a name="ln1155">              precision = num_of_digits + 1;</a>
+<a name="ln1156">            }</a>
+<a name="ln1157">          }</a>
+<a name="ln1158">          // zero padding to specified precision?</a>
+<a name="ln1159">          if (num_of_digits &lt; precision) {</a>
+<a name="ln1160">            number_of_zeros_to_pad = precision - num_of_digits;</a>
+<a name="ln1161">          }</a>
+<a name="ln1162">        }</a>
+<a name="ln1163">        // zero padding to specified minimal field width?</a>
+<a name="ln1164">        if (!justify_left &amp;&amp; zero_padding) {</a>
+<a name="ln1165">          const int n = (int)(min_field_width - (str_arg_l</a>
+<a name="ln1166">                                                 + number_of_zeros_to_pad));</a>
+<a name="ln1167">          if (n &gt; 0) {</a>
+<a name="ln1168">            number_of_zeros_to_pad += (size_t)n;</a>
+<a name="ln1169">          }</a>
+<a name="ln1170">        }</a>
+<a name="ln1171">        break;</a>
+<a name="ln1172">      }</a>
+<a name="ln1173"> </a>
+<a name="ln1174">      case 'f':</a>
+<a name="ln1175">      case 'F':</a>
+<a name="ln1176">      case 'e':</a>
+<a name="ln1177">      case 'E':</a>
+<a name="ln1178">      case 'g':</a>
+<a name="ln1179">      case 'G': {</a>
+<a name="ln1180">        // floating point</a>
+<a name="ln1181">        char format[40];</a>
+<a name="ln1182">        int remove_trailing_zeroes = false;</a>
+<a name="ln1183"> </a>
+<a name="ln1184">        double f = tvs ? tv_float(tvs, &amp;arg_idx) : va_arg(ap, double);</a>
+<a name="ln1185">        double abs_f = f &lt; 0 ? -f : f;</a>
+<a name="ln1186"> </a>
+<a name="ln1187">        if (fmt_spec == 'g' || fmt_spec == 'G') {</a>
+<a name="ln1188">          // can't use %g directly, cause it prints &quot;1.0&quot; as &quot;1&quot;</a>
+<a name="ln1189">          if ((abs_f &gt;= 0.001 &amp;&amp; abs_f &lt; 10000000.0) || abs_f == 0.0) {</a>
+<a name="ln1190">            fmt_spec = ASCII_ISUPPER(fmt_spec) ? 'F' : 'f';</a>
+<a name="ln1191">          } else {</a>
+<a name="ln1192">            fmt_spec = fmt_spec == 'g' ? 'e' : 'E';</a>
+<a name="ln1193">          }</a>
+<a name="ln1194">          remove_trailing_zeroes = true;</a>
+<a name="ln1195">        }</a>
+<a name="ln1196"> </a>
+<a name="ln1197">        if (xisinf(f)</a>
+<a name="ln1198">            || (strchr(&quot;fF&quot;, fmt_spec) != NULL &amp;&amp; abs_f &gt; 1.0e307)) {</a>
+<a name="ln1199">          xstrlcpy(tmp, infinity_str(f &gt; 0.0, fmt_spec,</a>
+<a name="ln1200">                                     force_sign, space_for_positive),</a>
+<a name="ln1201">                   sizeof(tmp));</a>
+<a name="ln1202">          str_arg_l = strlen(tmp);</a>
+<a name="ln1203">          zero_padding = 0;</a>
+<a name="ln1204">        } else if (xisnan(f)) {</a>
+<a name="ln1205">          // Not a number: nan or NAN</a>
+<a name="ln1206">          memmove(tmp, ASCII_ISUPPER(fmt_spec) ? &quot;NAN&quot; : &quot;nan&quot;, 4);</a>
+<a name="ln1207">          str_arg_l = 3;</a>
+<a name="ln1208">          zero_padding = 0;</a>
+<a name="ln1209">        } else {</a>
+<a name="ln1210">          // Regular float number</a>
+<a name="ln1211">          format[0] = '%';</a>
+<a name="ln1212">          size_t l = 1;</a>
+<a name="ln1213">          if (force_sign) {</a>
+<a name="ln1214">            format[l++] = space_for_positive ? ' ' : '+';</a>
+<a name="ln1215">          }</a>
+<a name="ln1216">          if (precision_specified) {</a>
+<a name="ln1217">            size_t max_prec = TMP_LEN - 10;</a>
+<a name="ln1218"> </a>
+<a name="ln1219">            // make sure we don't get more digits than we have room for</a>
+<a name="ln1220">            if ((fmt_spec == 'f' || fmt_spec == 'F') &amp;&amp; abs_f &gt; 1.0) {</a>
+<a name="ln1221">              max_prec -= (size_t)log10(abs_f);</a>
+<a name="ln1222">            }</a>
+<a name="ln1223">            if (precision &gt; max_prec) {</a>
+<a name="ln1224">              precision = max_prec;</a>
+<a name="ln1225">            }</a>
+<a name="ln1226">            l += (size_t)snprintf(format + l, sizeof(format) - l, &quot;.%d&quot;,</a>
+<a name="ln1227">                                  (int)precision);</a>
+<a name="ln1228">          }</a>
+<a name="ln1229"> </a>
+<a name="ln1230">          // Cast to char to avoid a conversion warning on Ubuntu 12.04.</a>
+<a name="ln1231">          assert(l + 1 &lt; sizeof(format));</a>
+<a name="ln1232">          format[l] = (char)(fmt_spec == 'F' ? 'f' : fmt_spec);</a>
+<a name="ln1233">          format[l + 1] = NUL;</a>
+<a name="ln1234"> </a>
+<a name="ln1235">          str_arg_l = (size_t)snprintf(tmp, sizeof(tmp), format, f);</a>
+<a name="ln1236">          assert(str_arg_l &lt; sizeof(tmp));</a>
+<a name="ln1237"> </a>
+<a name="ln1238">          if (remove_trailing_zeroes) {</a>
+<a name="ln1239">            int i;</a>
+<a name="ln1240">            char *tp;</a>
+<a name="ln1241"> </a>
+<a name="ln1242">            // using %g or %G: remove superfluous zeroes</a>
+<a name="ln1243">            if (fmt_spec == 'f' || fmt_spec == 'F') {</a>
+<a name="ln1244">              tp = tmp + str_arg_l - 1;</a>
+<a name="ln1245">            } else {</a>
+<a name="ln1246">              tp = vim_strchr(tmp, fmt_spec == 'e' ? 'e' : 'E');</a>
+<a name="ln1247">              if (tp) {</a>
+<a name="ln1248">                // remove superfluous '+' and leading zeroes from exponent</a>
+<a name="ln1249">                if (tp[1] == '+') {</a>
+<a name="ln1250">                  // change &quot;1.0e+07&quot; to &quot;1.0e07&quot;</a>
+<a name="ln1251">                  STRMOVE(tp + 1, tp + 2);</a>
+<a name="ln1252">                  str_arg_l--;</a>
+<a name="ln1253">                }</a>
+<a name="ln1254">                i = (tp[1] == '-') ? 2 : 1;</a>
+<a name="ln1255">                while (tp[i] == '0') {</a>
+<a name="ln1256">                  // change &quot;1.0e07&quot; to &quot;1.0e7&quot;</a>
+<a name="ln1257">                  STRMOVE(tp + i, tp + i + 1);</a>
+<a name="ln1258">                  str_arg_l--;</a>
+<a name="ln1259">                }</a>
+<a name="ln1260">                tp--;</a>
+<a name="ln1261">              }</a>
+<a name="ln1262">            }</a>
+<a name="ln1263"> </a>
+<a name="ln1264">            if (tp != NULL &amp;&amp; !precision_specified) {</a>
+<a name="ln1265">              // remove trailing zeroes, but keep the one just after a dot</a>
+<a name="ln1266">              while (tp &gt; tmp + 2 &amp;&amp; *tp == '0' &amp;&amp; tp[-1] != '.') {</a>
+<a name="ln1267">                STRMOVE(tp, tp + 1);</a>
+<a name="ln1268">                tp--;</a>
+<a name="ln1269">                str_arg_l--;</a>
+<a name="ln1270">              }</a>
+<a name="ln1271">            }</a>
+<a name="ln1272">          } else {</a>
+<a name="ln1273">            // Be consistent: some printf(&quot;%e&quot;) use 1.0e+12 and some</a>
+<a name="ln1274">            // 1.0e+012; remove one zero in the last case.</a>
+<a name="ln1275">            char *tp = vim_strchr(tmp, fmt_spec == 'e' ? 'e' : 'E');</a>
+<a name="ln1276">            if (tp &amp;&amp; (tp[1] == '+' || tp[1] == '-') &amp;&amp; tp[2] == '0'</a>
+<a name="ln1277">                &amp;&amp; ascii_isdigit(tp[3]) &amp;&amp; ascii_isdigit(tp[4])) {</a>
+<a name="ln1278">              STRMOVE(tp + 2, tp + 3);</a>
+<a name="ln1279">              str_arg_l--;</a>
+<a name="ln1280">            }</a>
+<a name="ln1281">          }</a>
+<a name="ln1282">        }</a>
+<a name="ln1283">        if (zero_padding &amp;&amp; min_field_width &gt; str_arg_l</a>
+<a name="ln1284">            &amp;&amp; (tmp[0] == '-' || force_sign)) {</a>
+<a name="ln1285">          // Padding 0's should be inserted after the sign.</a>
+<a name="ln1286">          number_of_zeros_to_pad = min_field_width - str_arg_l;</a>
+<a name="ln1287">          zero_padding_insertion_ind = 1;</a>
+<a name="ln1288">        }</a>
+<a name="ln1289">        str_arg = tmp;</a>
+<a name="ln1290">        break;</a>
+<a name="ln1291">      }</a>
+<a name="ln1292"> </a>
+<a name="ln1293">      default:</a>
+<a name="ln1294">        // unrecognized conversion specifier, keep format string as-is</a>
+<a name="ln1295">        zero_padding = 0;  // turn zero padding off for non-numeric conversion</a>
+<a name="ln1296">        justify_left = 1;</a>
+<a name="ln1297">        min_field_width = 0;  // reset flags</a>
+<a name="ln1298"> </a>
+<a name="ln1299">        // discard the unrecognized conversion, just keep</a>
+<a name="ln1300">        // the unrecognized conversion character</a>
+<a name="ln1301">        str_arg = p;</a>
+<a name="ln1302">        str_arg_l = 0;</a>
+<a name="ln1303">        if (*p) {</a>
+<a name="ln1304">          str_arg_l++;  // include invalid conversion specifier</a>
+<a name="ln1305">        }</a>
+<a name="ln1306">        // unchanged if not at end-of-string</a>
+<a name="ln1307">        break;</a>
+<a name="ln1308">      }</a>
+<a name="ln1309"> </a>
+<a name="ln1310">      if (*p) {</a>
+<a name="ln1311">        p++;  // step over the just processed conversion specifier</a>
+<a name="ln1312">      }</a>
+<a name="ln1313"> </a>
+<a name="ln1314">      // insert padding to the left as requested by min_field_width;</a>
+<a name="ln1315">      // this does not include the zero padding in case of numerical conversions</a>
+<a name="ln1316">      if (!justify_left) {</a>
+<a name="ln1317">        assert(str_arg_l &lt;= SIZE_MAX - number_of_zeros_to_pad);</a>
+<a name="ln1318">        if (min_field_width &gt; str_arg_l + number_of_zeros_to_pad) {</a>
+<a name="ln1319">          // left padding with blank or zero</a>
+<a name="ln1320">          size_t pn = min_field_width - (str_arg_l + number_of_zeros_to_pad);</a>
+<a name="ln1321">          if (str_avail) {</a>
+<a name="ln1322">            size_t avail = str_m - str_l;</a>
+<a name="ln1323">            memset(str + str_l, zero_padding ? '0' : ' ', MIN(pn, avail));</a>
+<a name="ln1324">            str_avail = pn &lt; avail;</a>
+<a name="ln1325">          }</a>
+<a name="ln1326">          assert(pn &lt;= SIZE_MAX - str_l);</a>
+<a name="ln1327">          str_l += pn;</a>
+<a name="ln1328">        }</a>
+<a name="ln1329">      }</a>
+<a name="ln1330"> </a>
+<a name="ln1331">      // zero padding as requested by the precision or by the minimal</a>
+<a name="ln1332">      // field width for numeric conversions required?</a>
+<a name="ln1333">      if (number_of_zeros_to_pad == 0) {</a>
+<a name="ln1334">        // will not copy first part of numeric right now,</a>
+<a name="ln1335">        // force it to be copied later in its entirety</a>
+<a name="ln1336">        zero_padding_insertion_ind = 0;</a>
+<a name="ln1337">      } else {</a>
+<a name="ln1338">        // insert first part of numerics (sign or '0x') before zero padding</a>
+<a name="ln1339">        if (zero_padding_insertion_ind &gt; 0) {</a>
+<a name="ln1340">          size_t zn = zero_padding_insertion_ind;</a>
+<a name="ln1341">          if (str_avail) {</a>
+<a name="ln1342">            size_t avail = str_m - str_l;</a>
+<a name="ln1343">            memmove(str + str_l, str_arg, MIN(zn, avail));</a>
+<a name="ln1344">            str_avail = zn &lt; avail;</a>
+<a name="ln1345">          }</a>
+<a name="ln1346">          assert(zn &lt;= SIZE_MAX - str_l);</a>
+<a name="ln1347">          str_l += zn;</a>
+<a name="ln1348">        }</a>
+<a name="ln1349"> </a>
+<a name="ln1350">        // insert zero padding as requested by precision or min field width</a>
+<a name="ln1351">        size_t zn = number_of_zeros_to_pad;</a>
+<a name="ln1352">        if (str_avail) {</a>
+<a name="ln1353">          size_t avail = str_m - str_l;</a>
+<a name="ln1354">          memset(str + str_l, '0', MIN(zn, avail));</a>
+<a name="ln1355">          str_avail = zn &lt; avail;</a>
+<a name="ln1356">        }</a>
+<a name="ln1357">        assert(zn &lt;= SIZE_MAX - str_l);</a>
+<a name="ln1358">        str_l += zn;</a>
+<a name="ln1359">      }</a>
+<a name="ln1360"> </a>
+<a name="ln1361">      // insert formatted string</a>
+<a name="ln1362">      // (or as-is conversion specifier for unknown conversions)</a>
+<a name="ln1363">      if (str_arg_l &gt; zero_padding_insertion_ind) {</a>
+<a name="ln1364">        size_t sn = str_arg_l - zero_padding_insertion_ind;</a>
+<a name="ln1365">        if (str_avail) {</a>
+<a name="ln1366">          size_t avail = str_m - str_l;</a>
+<a name="ln1367">          memmove(str + str_l,</a>
+<a name="ln1368">                  str_arg + zero_padding_insertion_ind,</a>
+<a name="ln1369">                  MIN(sn, avail));</a>
+<a name="ln1370">          str_avail = sn &lt; avail;</a>
+<a name="ln1371">        }</a>
+<a name="ln1372">        assert(sn &lt;= SIZE_MAX - str_l);</a>
+<a name="ln1373">        str_l += sn;</a>
+<a name="ln1374">      }</a>
+<a name="ln1375"> </a>
+<a name="ln1376">      // insert right padding</a>
+<a name="ln1377">      if (justify_left) {</a>
+<a name="ln1378">        assert(str_arg_l &lt;= SIZE_MAX - number_of_zeros_to_pad);</a>
+<a name="ln1379">        if (min_field_width &gt; str_arg_l + number_of_zeros_to_pad) {</a>
+<a name="ln1380">          // right blank padding to the field width</a>
+<a name="ln1381">          size_t pn = min_field_width - (str_arg_l + number_of_zeros_to_pad);</a>
+<a name="ln1382">          if (str_avail) {</a>
+<a name="ln1383">            size_t avail = str_m - str_l;</a>
+<a name="ln1384">            memset(str + str_l, ' ', MIN(pn, avail));</a>
+<a name="ln1385">            str_avail = pn &lt; avail;</a>
+<a name="ln1386">          }</a>
+<a name="ln1387">          assert(pn &lt;= SIZE_MAX - str_l);</a>
+<a name="ln1388">          str_l += pn;</a>
+<a name="ln1389">        }</a>
+<a name="ln1390">      }</a>
+<a name="ln1391"> </a>
+<a name="ln1392">      xfree(tofree);</a>
+<a name="ln1393">    }</a>
+<a name="ln1394">  }</a>
+<a name="ln1395"> </a>
+<a name="ln1396">  if (str_m &gt; 0) {</a>
+<a name="ln1397">    // make sure the string is nul-terminated even at the expense of</a>
+<a name="ln1398">    // overwriting the last character (shouldn't happen, but just in case)</a>
+<a name="ln1399">    str[str_l &lt;= str_m - 1 ? str_l : str_m - 1] = '\0';</a>
+<a name="ln1400">  }</a>
+<a name="ln1401"> </a>
+<a name="ln1402">  if (tvs &amp;&amp; tvs[arg_idx - 1].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1403">    emsg(_(&quot;E767: Too many arguments to printf()&quot;));</a>
+<a name="ln1404">  }</a>
+<a name="ln1405"> </a>
+<a name="ln1406">  // return the number of characters formatted (excluding trailing nul</a>
+<a name="ln1407">  // character); that is, the number of characters that would have been</a>
+<a name="ln1408">  // written to the buffer if it were large enough.</a>
+<a name="ln1409">  return (int)str_l;</a>
+<a name="ln1410">}</a>
+<a name="ln1411"> </a>
+<a name="ln1412">int kv_do_printf(StringBuilder *str, const char *fmt, ...)</a>
+<a name="ln1413">  FUNC_ATTR_PRINTF(2, 3)</a>
+<a name="ln1414">{</a>
+<a name="ln1415">  size_t remaining = str-&gt;capacity - str-&gt;size;</a>
+<a name="ln1416"> </a>
+<a name="ln1417">  va_list ap;</a>
+<a name="ln1418">  va_start(ap, fmt);</a>
+<a name="ln1419">  int printed = vsnprintf(str-&gt;items ? str-&gt;items + str-&gt;size : NULL, remaining, fmt, ap);</a>
+<a name="ln1420">  va_end(ap);</a>
+<a name="ln1421"> </a>
+<a name="ln1422">  if (printed &lt; 0) {</a>
+<a name="ln1423">    return -1;</a>
+<a name="ln1424">  }</a>
+<a name="ln1425"> </a>
+<a name="ln1426">  // printed string didn't fit, resize and try again</a>
+<a name="ln1427">  if ((size_t)printed &gt;= remaining) {</a>
+<a name="ln1428">    kv_ensure_space(*str, (size_t)printed + 1);  // include space for NUL terminator at the end</a>
+<a name="ln1429">    assert(str-&gt;items != NULL);</a>
+<a name="ln1430">    va_start(ap, fmt);</a>
+<a name="ln1431">    printed = vsnprintf(str-&gt;items + str-&gt;size, str-&gt;capacity - str-&gt;size, fmt, ap);</a>
+<a name="ln1432">    va_end(ap);</a>
+<a name="ln1433">    if (printed &lt; 0) {</a>
+<a name="ln1434">      return -1;</a>
+<a name="ln1435">    }</a>
+<a name="ln1436">  }</a>
+<a name="ln1437"> </a>
+<a name="ln1438">  str-&gt;size += (size_t)printed;</a>
+<a name="ln1439">  return printed;</a>
+<a name="ln1440">}</a>
+<a name="ln1441"> </a>
+<a name="ln1442">/// Reverse text into allocated memory.</a>
+<a name="ln1443">///</a>
+<a name="ln1444">/// @return  the allocated string.</a>
+<a name="ln1445">char *reverse_text(char *s)</a>
+<a name="ln1446">  FUNC_ATTR_NONNULL_RET</a>
+<a name="ln1447">{</a>
+<a name="ln1448">  // Reverse the pattern.</a>
+<a name="ln1449">  size_t len = strlen(s);</a>
+<a name="ln1450">  char *rev = xmalloc(len + 1);</a>
+<a name="ln1451">  size_t rev_i = len;</a>
+<a name="ln1452">  for (size_t s_i = 0; s_i &lt; len; s_i++) {</a>
+<a name="ln1453">    const int mb_len = utfc_ptr2len(s + s_i);</a>
+<a name="ln1454">    rev_i -= (size_t)mb_len;</a>
+<a name="ln1455">    memmove(rev + rev_i, s + s_i, (size_t)mb_len);</a>
+<a name="ln1456">    s_i += (size_t)mb_len - 1;</a>
+<a name="ln1457">  }</a>
+<a name="ln1458">  rev[len] = NUL;</a>
+<a name="ln1459"> </a>
+<a name="ln1460">  return rev;</a>
+<a name="ln1461">}</a>
+<a name="ln1462"> </a>
+<a name="ln1463">/// Replace all occurrences of &quot;what&quot; with &quot;rep&quot; in &quot;src&quot;. If no replacement happens then NULL is</a>
+<a name="ln1464">/// returned otherwise return a newly allocated string.</a>
+<a name="ln1465">///</a>
+<a name="ln1466">/// @param[in] src  Source text</a>
+<a name="ln1467">/// @param[in] what Substring to replace</a>
+<a name="ln1468">/// @param[in] rep  Substring to replace with</a>
+<a name="ln1469">///</a>
+<a name="ln1470">/// @return [allocated] Copy of the string.</a>
+<a name="ln1471">char *strrep(const char *src, const char *what, const char *rep)</a>
+<a name="ln1472">{</a>
+<a name="ln1473">  const char *pos = src;</a>
+<a name="ln1474">  size_t whatlen = strlen(what);</a>
+<a name="ln1475"> </a>
+<a name="ln1476">  // Count occurrences</a>
+<a name="ln1477">  size_t count = 0;</a>
+<a name="ln1478">  while ((pos = strstr(pos, what)) != NULL) {</a>
+<a name="ln1479">    count++;</a>
+<a name="ln1480">    pos += whatlen;</a>
+<a name="ln1481">  }</a>
+<a name="ln1482"> </a>
+<a name="ln1483">  if (count == 0) {</a>
+<a name="ln1484">    return NULL;</a>
+<a name="ln1485">  }</a>
+<a name="ln1486"> </a>
+<a name="ln1487">  size_t replen = strlen(rep);</a>
+<a name="ln1488">  char *ret = xmalloc(strlen(src) + count * (replen - whatlen) + 1);</a>
+<a name="ln1489">  char *ptr = ret;</a>
+<a name="ln1490">  while ((pos = strstr(src, what)) != NULL) {</a>
+<a name="ln1491">    size_t idx = (size_t)(pos - src);</a>
+<a name="ln1492">    memcpy(ptr, src, idx);</a>
+<a name="ln1493">    ptr += idx;</a>
+<a name="ln1494">    STRCPY(ptr, rep);</a>
+<a name="ln1495">    ptr += replen;</a>
+<a name="ln1496">    src = pos + whatlen;</a>
+<a name="ln1497">  }</a>
+<a name="ln1498"> </a>
+<a name="ln1499">  // Copy remaining</a>
+<a name="ln1500">  STRCPY(ptr, src);</a>
+<a name="ln1501"> </a>
+<a name="ln1502">  return ret;</a>
+<a name="ln1503">}</a>
+<a name="ln1504"> </a>
+<a name="ln1505">/// Implementation of &quot;byteidx()&quot; and &quot;byteidxcomp()&quot; functions</a>
+<a name="ln1506">static void byteidx_common(typval_T *argvars, typval_T *rettv, int comp)</a>
+<a name="ln1507">{</a>
+<a name="ln1508">  rettv-&gt;vval.v_number = -1;</a>
+<a name="ln1509"> </a>
+<a name="ln1510">  const char *const str = tv_get_string_chk(&amp;argvars[0]);</a>
+<a name="ln1511">  varnumber_T idx = tv_get_number_chk(&amp;argvars[1], NULL);</a>
+<a name="ln1512">  if (str == NULL || idx &lt; 0) {</a>
+<a name="ln1513">    return;</a>
+<a name="ln1514">  }</a>
+<a name="ln1515"> </a>
+<a name="ln1516">  varnumber_T utf16idx = false;</a>
+<a name="ln1517">  if (argvars[2].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1518">    bool error = false;</a>
+<a name="ln1519">    utf16idx = tv_get_bool_chk(&amp;argvars[2], &amp;error);</a>
+<a name="ln1520">    if (error) {</a>
+<a name="ln1521">      return;</a>
+<a name="ln1522">    }</a>
+<a name="ln1523">    if (utf16idx &lt; 0 || utf16idx &gt; 1) {</a>
+<a name="ln1524">      semsg(_(e_using_number_as_bool_nr), utf16idx);</a>
+<a name="ln1525">      return;</a>
+<a name="ln1526">    }</a>
+<a name="ln1527">  }</a>
+<a name="ln1528"> </a>
+<a name="ln1529">  int (*ptr2len)(const char *);</a>
+<a name="ln1530">  if (comp) {</a>
+<a name="ln1531">    ptr2len = utf_ptr2len;</a>
+<a name="ln1532">  } else {</a>
+<a name="ln1533">    ptr2len = utfc_ptr2len;</a>
+<a name="ln1534">  }</a>
+<a name="ln1535"> </a>
+<a name="ln1536">  const char *t = str;</a>
+<a name="ln1537">  for (; idx &gt; 0; idx--) {</a>
+<a name="ln1538">    if (*t == NUL) {  // EOL reached.</a>
+<a name="ln1539">      return;</a>
+<a name="ln1540">    }</a>
+<a name="ln1541">    if (utf16idx) {</a>
+<a name="ln1542">      const int clen = ptr2len(t);</a>
+<a name="ln1543">      const int c = (clen &gt; 1) ? utf_ptr2char(t) : *t;</a>
+<a name="ln1544">      if (c &gt; 0xFFFF) {</a>
+<a name="ln1545">        idx--;</a>
+<a name="ln1546">      }</a>
+<a name="ln1547">    }</a>
+<a name="ln1548">    if (idx &gt; 0) {</a>
+<a name="ln1549">      t += ptr2len(t);</a>
+<a name="ln1550">    }</a>
+<a name="ln1551">  }</a>
+<a name="ln1552">  rettv-&gt;vval.v_number = (varnumber_T)(t - str);</a>
+<a name="ln1553">}</a>
+<a name="ln1554"> </a>
+<a name="ln1555">/// &quot;byteidx()&quot; function</a>
+<a name="ln1556">void f_byteidx(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1557">{</a>
+<a name="ln1558">  byteidx_common(argvars, rettv, false);</a>
+<a name="ln1559">}</a>
+<a name="ln1560"> </a>
+<a name="ln1561">/// &quot;byteidxcomp()&quot; function</a>
+<a name="ln1562">void f_byteidxcomp(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1563">{</a>
+<a name="ln1564">  byteidx_common(argvars, rettv, true);</a>
+<a name="ln1565">}</a>
+<a name="ln1566"> </a>
+<a name="ln1567">/// &quot;charidx()&quot; function</a>
+<a name="ln1568">void f_charidx(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1569">{</a>
+<a name="ln1570">  rettv-&gt;vval.v_number = -1;</a>
+<a name="ln1571"> </a>
+<a name="ln1572">  if (tv_check_for_string_arg(argvars, 0) == FAIL</a>
+<a name="ln1573">      || tv_check_for_number_arg(argvars, 1) == FAIL</a>
+<a name="ln1574">      || tv_check_for_opt_bool_arg(argvars, 2) == FAIL</a>
+<a name="ln1575">      || (argvars[2].v_type != VAR_UNKNOWN</a>
+<a name="ln1576">          &amp;&amp; tv_check_for_opt_bool_arg(argvars, 3) == FAIL)) {</a>
+<a name="ln1577">    return;</a>
+<a name="ln1578">  }</a>
+<a name="ln1579"> </a>
+<a name="ln1580">  const char *const str = tv_get_string_chk(&amp;argvars[0]);</a>
+<a name="ln1581">  varnumber_T idx = tv_get_number_chk(&amp;argvars[1], NULL);</a>
+<a name="ln1582">  if (str == NULL || idx &lt; 0) {</a>
+<a name="ln1583">    return;</a>
+<a name="ln1584">  }</a>
+<a name="ln1585"> </a>
+<a name="ln1586">  varnumber_T countcc = false;</a>
+<a name="ln1587">  varnumber_T utf16idx = false;</a>
+<a name="ln1588">  if (argvars[2].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1589">    countcc = tv_get_bool(&amp;argvars[2]);</a>
+<a name="ln1590">    if (argvars[3].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1591">      utf16idx = tv_get_bool(&amp;argvars[3]);</a>
+<a name="ln1592">    }</a>
+<a name="ln1593">  }</a>
+<a name="ln1594"> </a>
+<a name="ln1595">  int (*ptr2len)(const char *);</a>
+<a name="ln1596">  if (countcc) {</a>
+<a name="ln1597">    ptr2len = utf_ptr2len;</a>
+<a name="ln1598">  } else {</a>
+<a name="ln1599">    ptr2len = utfc_ptr2len;</a>
+<a name="ln1600">  }</a>
+<a name="ln1601"> </a>
+<a name="ln1602">  const char *p;</a>
+<a name="ln1603">  int len;</a>
+<a name="ln1604">  for (p = str, len = 0; utf16idx ? idx &gt;= 0 : p &lt;= str + idx; len++) {</a>
+<a name="ln1605">    if (*p == NUL) {</a>
+<a name="ln1606">      // If the index is exactly the number of bytes or utf-16 code units</a>
+<a name="ln1607">      // in the string then return the length of the string in characters.</a>
+<a name="ln1608">      if (utf16idx ? (idx == 0) : (p == (str + idx))) {</a>
+<a name="ln1609">        rettv-&gt;vval.v_number = len;</a>
+<a name="ln1610">      }</a>
+<a name="ln1611">      return;</a>
+<a name="ln1612">    }</a>
+<a name="ln1613">    if (utf16idx) {</a>
+<a name="ln1614">      idx--;</a>
+<a name="ln1615">      const int clen = ptr2len(p);</a>
+<a name="ln1616">      const int c = (clen &gt; 1) ? utf_ptr2char(p) : *p;</a>
+<a name="ln1617">      if (c &gt; 0xFFFF) {</a>
+<a name="ln1618">        idx--;</a>
+<a name="ln1619">      }</a>
+<a name="ln1620">    }</a>
+<a name="ln1621">    p += ptr2len(p);</a>
+<a name="ln1622">  }</a>
+<a name="ln1623"> </a>
+<a name="ln1624">  rettv-&gt;vval.v_number = len &gt; 0 ? len - 1 : 0;</a>
+<a name="ln1625">}</a>
+<a name="ln1626"> </a>
+<a name="ln1627">/// &quot;str2list()&quot; function</a>
+<a name="ln1628">void f_str2list(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1629">{</a>
+<a name="ln1630">  tv_list_alloc_ret(rettv, kListLenUnknown);</a>
+<a name="ln1631">  const char *p = tv_get_string(&amp;argvars[0]);</a>
+<a name="ln1632"> </a>
+<a name="ln1633">  for (; *p != NUL; p += utf_ptr2len(p)) {</a>
+<a name="ln1634">    tv_list_append_number(rettv-&gt;vval.v_list, utf_ptr2char(p));</a>
+<a name="ln1635">  }</a>
+<a name="ln1636">}</a>
+<a name="ln1637"> </a>
+<a name="ln1638">/// &quot;str2nr()&quot; function</a>
+<a name="ln1639">void f_str2nr(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1640">{</a>
+<a name="ln1641">  int base = 10;</a>
+<a name="ln1642">  int what = 0;</a>
+<a name="ln1643"> </a>
+<a name="ln1644">  if (argvars[1].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1645">    base = (int)tv_get_number(&amp;argvars[1]);</a>
+<a name="ln1646">    if (base != 2 &amp;&amp; base != 8 &amp;&amp; base != 10 &amp;&amp; base != 16) {</a>
+<a name="ln1647">      emsg(_(e_invarg));</a>
+<a name="ln1648">      return;</a>
+<a name="ln1649">    }</a>
+<a name="ln1650">    if (argvars[2].v_type != VAR_UNKNOWN &amp;&amp; tv_get_bool(&amp;argvars[2])) {</a>
+<a name="ln1651">      what |= STR2NR_QUOTE;</a>
+<a name="ln1652">    }</a>
+<a name="ln1653">  }</a>
+<a name="ln1654"> </a>
+<a name="ln1655">  char *p = skipwhite(tv_get_string(&amp;argvars[0]));</a>
+<a name="ln1656">  bool isneg = (*p == '-');</a>
+<a name="ln1657">  if (*p == '+' || *p == '-') {</a>
+<a name="ln1658">    p = skipwhite(p + 1);</a>
+<a name="ln1659">  }</a>
+<a name="ln1660">  switch (base) {</a>
+<a name="ln1661">  case 2:</a>
+<a name="ln1662">    what |= STR2NR_BIN | STR2NR_FORCE;</a>
+<a name="ln1663">    break;</a>
+<a name="ln1664">  case 8:</a>
+<a name="ln1665">    what |= STR2NR_OCT | STR2NR_OOCT | STR2NR_FORCE;</a>
+<a name="ln1666">    break;</a>
+<a name="ln1667">  case 16:</a>
+<a name="ln1668">    what |= STR2NR_HEX | STR2NR_FORCE;</a>
+<a name="ln1669">    break;</a>
+<a name="ln1670">  }</a>
+<a name="ln1671">  varnumber_T n;</a>
+<a name="ln1672">  vim_str2nr(p, NULL, NULL, what, &amp;n, NULL, 0, false, NULL);</a>
+<a name="ln1673">  // Text after the number is silently ignored.</a>
+<a name="ln1674">  if (isneg) {</a>
+<a name="ln1675">    rettv-&gt;vval.v_number = -n;</a>
+<a name="ln1676">  } else {</a>
+<a name="ln1677">    rettv-&gt;vval.v_number = n;</a>
+<a name="ln1678">  }</a>
+<a name="ln1679">}</a>
+<a name="ln1680"> </a>
+<a name="ln1681">/// &quot;strgetchar()&quot; function</a>
+<a name="ln1682">void f_strgetchar(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1683">{</a>
+<a name="ln1684">  rettv-&gt;vval.v_number = -1;</a>
+<a name="ln1685"> </a>
+<a name="ln1686">  const char *const str = tv_get_string_chk(&amp;argvars[0]);</a>
+<a name="ln1687">  if (str == NULL) {</a>
+<a name="ln1688">    return;</a>
+<a name="ln1689">  }</a>
+<a name="ln1690">  bool error = false;</a>
+<a name="ln1691">  varnumber_T charidx = tv_get_number_chk(&amp;argvars[1], &amp;error);</a>
+<a name="ln1692">  if (error) {</a>
+<a name="ln1693">    return;</a>
+<a name="ln1694">  }</a>
+<a name="ln1695"> </a>
+<a name="ln1696">  const size_t len = strlen(str);</a>
+<a name="ln1697">  size_t byteidx = 0;</a>
+<a name="ln1698"> </a>
+<a name="ln1699">  while (charidx &gt;= 0 &amp;&amp; byteidx &lt; len) {</a>
+<a name="ln1700">    if (charidx == 0) {</a>
+<a name="ln1701">      rettv-&gt;vval.v_number = utf_ptr2char(str + byteidx);</a>
+<a name="ln1702">      break;</a>
+<a name="ln1703">    }</a>
+<a name="ln1704">    charidx--;</a>
+<a name="ln1705">    byteidx += (size_t)utf_ptr2len(str + byteidx);</a>
+<a name="ln1706">  }</a>
+<a name="ln1707">}</a>
+<a name="ln1708"> </a>
+<a name="ln1709">/// &quot;stridx()&quot; function</a>
+<a name="ln1710">void f_stridx(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1711">{</a>
+<a name="ln1712">  rettv-&gt;vval.v_number = -1;</a>
+<a name="ln1713"> </a>
+<a name="ln1714">  char buf[NUMBUFLEN];</a>
+<a name="ln1715">  const char *const needle = tv_get_string_chk(&amp;argvars[1]);</a>
+<a name="ln1716">  const char *haystack = tv_get_string_buf_chk(&amp;argvars[0], buf);</a>
+<a name="ln1717">  const char *const haystack_start = haystack;</a>
+<a name="ln1718">  if (needle == NULL || haystack == NULL) {</a>
+<a name="ln1719">    return;  // Type error; errmsg already given.</a>
+<a name="ln1720">  }</a>
+<a name="ln1721"> </a>
+<a name="ln1722">  if (argvars[2].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1723">    bool error = false;</a>
+<a name="ln1724"> </a>
+<a name="ln1725">    const ptrdiff_t start_idx = (ptrdiff_t)tv_get_number_chk(&amp;argvars[2],</a>
+<a name="ln1726">                                                             &amp;error);</a>
+<a name="ln1727">    if (error || start_idx &gt;= (ptrdiff_t)strlen(haystack)) {</a>
+<a name="ln1728">      return;</a>
+<a name="ln1729">    }</a>
+<a name="ln1730">    if (start_idx &gt;= 0) {</a>
+<a name="ln1731">      haystack += start_idx;</a>
+<a name="ln1732">    }</a>
+<a name="ln1733">  }</a>
+<a name="ln1734"> </a>
+<a name="ln1735">  const char *pos = strstr(haystack, needle);</a>
+<a name="ln1736">  if (pos != NULL) {</a>
+<a name="ln1737">    rettv-&gt;vval.v_number = (varnumber_T)(pos - haystack_start);</a>
+<a name="ln1738">  }</a>
+<a name="ln1739">}</a>
+<a name="ln1740"> </a>
+<a name="ln1741">/// &quot;string()&quot; function</a>
+<a name="ln1742">void f_string(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1743">{</a>
+<a name="ln1744">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln1745">  rettv-&gt;vval.v_string = encode_tv2string(&amp;argvars[0], NULL);</a>
+<a name="ln1746">}</a>
+<a name="ln1747"> </a>
+<a name="ln1748">/// &quot;strlen()&quot; function</a>
+<a name="ln1749">void f_strlen(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1750">{</a>
+<a name="ln1751">  rettv-&gt;vval.v_number = (varnumber_T)strlen(tv_get_string(&amp;argvars[0]));</a>
+<a name="ln1752">}</a>
+<a name="ln1753"> </a>
+<a name="ln1754">static void strchar_common(typval_T *argvars, typval_T *rettv, bool skipcc)</a>
+<a name="ln1755">{</a>
+<a name="ln1756">  const char *s = tv_get_string(&amp;argvars[0]);</a>
+<a name="ln1757">  varnumber_T len = 0;</a>
+<a name="ln1758">  int (*func_mb_ptr2char_adv)(const char **pp);</a>
+<a name="ln1759"> </a>
+<a name="ln1760">  func_mb_ptr2char_adv = skipcc ? mb_ptr2char_adv : mb_cptr2char_adv;</a>
+<a name="ln1761">  while (*s != NUL) {</a>
+<a name="ln1762">    func_mb_ptr2char_adv(&amp;s);</a>
+<a name="ln1763">    len++;</a>
+<a name="ln1764">  }</a>
+<a name="ln1765">  rettv-&gt;vval.v_number = len;</a>
+<a name="ln1766">}</a>
+<a name="ln1767"> </a>
+<a name="ln1768">/// &quot;strcharlen()&quot; function</a>
+<a name="ln1769">void f_strcharlen(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1770">{</a>
+<a name="ln1771">  strchar_common(argvars, rettv, true);</a>
+<a name="ln1772">}</a>
+<a name="ln1773"> </a>
+<a name="ln1774">/// &quot;strchars()&quot; function</a>
+<a name="ln1775">void f_strchars(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1776">{</a>
+<a name="ln1777">  varnumber_T skipcc = false;</a>
+<a name="ln1778"> </a>
+<a name="ln1779">  if (argvars[1].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1780">    bool error = false;</a>
+<a name="ln1781">    skipcc = tv_get_bool_chk(&amp;argvars[1], &amp;error);</a>
+<a name="ln1782">    if (error) {</a>
+<a name="ln1783">      return;</a>
+<a name="ln1784">    }</a>
+<a name="ln1785">    if (skipcc &lt; 0 || skipcc &gt; 1) {</a>
+<a name="ln1786">      semsg(_(e_using_number_as_bool_nr), skipcc);</a>
+<a name="ln1787">      return;</a>
+<a name="ln1788">    }</a>
+<a name="ln1789">  }</a>
+<a name="ln1790"> </a>
+<a name="ln1791">  strchar_common(argvars, rettv, skipcc);</a>
+<a name="ln1792">}</a>
+<a name="ln1793"> </a>
+<a name="ln1794">/// &quot;strutf16len()&quot; function</a>
+<a name="ln1795">void f_strutf16len(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1796">{</a>
+<a name="ln1797">  rettv-&gt;vval.v_number = -1;</a>
+<a name="ln1798"> </a>
+<a name="ln1799">  if (tv_check_for_string_arg(argvars, 0) == FAIL</a>
+<a name="ln1800">      || tv_check_for_opt_bool_arg(argvars, 1) == FAIL) {</a>
+<a name="ln1801">    return;</a>
+<a name="ln1802">  }</a>
+<a name="ln1803"> </a>
+<a name="ln1804">  varnumber_T countcc = false;</a>
+<a name="ln1805">  if (argvars[1].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1806">    countcc = tv_get_bool(&amp;argvars[1]);</a>
+<a name="ln1807">  }</a>
+<a name="ln1808"> </a>
+<a name="ln1809">  const char *s = tv_get_string(&amp;argvars[0]);</a>
+<a name="ln1810">  varnumber_T len = 0;</a>
+<a name="ln1811">  int (*func_mb_ptr2char_adv)(const char **pp);</a>
+<a name="ln1812"> </a>
+<a name="ln1813">  func_mb_ptr2char_adv = countcc ? mb_cptr2char_adv : mb_ptr2char_adv;</a>
+<a name="ln1814">  while (*s != NUL) {</a>
+<a name="ln1815">    const int ch = func_mb_ptr2char_adv(&amp;s);</a>
+<a name="ln1816">    if (ch &gt; 0xFFFF) {</a>
+<a name="ln1817">      len++;</a>
+<a name="ln1818">    }</a>
+<a name="ln1819">    len++;</a>
+<a name="ln1820">  }</a>
+<a name="ln1821">  rettv-&gt;vval.v_number = len;</a>
+<a name="ln1822">}</a>
+<a name="ln1823"> </a>
+<a name="ln1824">/// &quot;strdisplaywidth()&quot; function</a>
+<a name="ln1825">void f_strdisplaywidth(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1826">{</a>
+<a name="ln1827">  const char *const s = tv_get_string(&amp;argvars[0]);</a>
+<a name="ln1828">  int col = 0;</a>
+<a name="ln1829"> </a>
+<a name="ln1830">  if (argvars[1].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1831">    col = (int)tv_get_number(&amp;argvars[1]);</a>
+<a name="ln1832">  }</a>
+<a name="ln1833"> </a>
+<a name="ln1834">  rettv-&gt;vval.v_number = (varnumber_T)(linetabsize_col(col, (char *)s) - col);</a>
+<a name="ln1835">}</a>
+<a name="ln1836"> </a>
+<a name="ln1837">/// &quot;strwidth()&quot; function</a>
+<a name="ln1838">void f_strwidth(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1839">{</a>
+<a name="ln1840">  const char *const s = tv_get_string(&amp;argvars[0]);</a>
+<a name="ln1841"> </a>
+<a name="ln1842">  rettv-&gt;vval.v_number = (varnumber_T)mb_string2cells(s);</a>
+<a name="ln1843">}</a>
+<a name="ln1844"> </a>
+<a name="ln1845">/// &quot;strcharpart()&quot; function</a>
+<a name="ln1846">void f_strcharpart(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1847">{</a>
+<a name="ln1848">  const char *const p = tv_get_string(&amp;argvars[0]);</a>
+<a name="ln1849">  const size_t slen = strlen(p);</a>
+<a name="ln1850"> </a>
+<a name="ln1851">  int nbyte = 0;</a>
+<a name="ln1852">  varnumber_T skipcc = false;</a>
+<a name="ln1853">  bool error = false;</a>
+<a name="ln1854">  varnumber_T nchar = tv_get_number_chk(&amp;argvars[1], &amp;error);</a>
+<a name="ln1855">  if (!error) {</a>
+<a name="ln1856">    if (argvars[2].v_type != VAR_UNKNOWN</a>
+<a name="ln1857">        &amp;&amp; argvars[3].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1858">      skipcc = tv_get_bool_chk(&amp;argvars[3], &amp;error);</a>
+<a name="ln1859">      if (error) {</a>
+<a name="ln1860">        return;</a>
+<a name="ln1861">      }</a>
+<a name="ln1862">      if (skipcc &lt; 0 || skipcc &gt; 1) {</a>
+<a name="ln1863">        semsg(_(e_using_number_as_bool_nr), skipcc);</a>
+<a name="ln1864">        return;</a>
+<a name="ln1865">      }</a>
+<a name="ln1866">    }</a>
+<a name="ln1867"> </a>
+<a name="ln1868">    if (nchar &gt; 0) {</a>
+<a name="ln1869">      while (nchar &gt; 0 &amp;&amp; (size_t)nbyte &lt; slen) {</a>
+<a name="ln1870">        if (skipcc) {</a>
+<a name="ln1871">          nbyte += utfc_ptr2len(p + nbyte);</a>
+<a name="ln1872">        } else {</a>
+<a name="ln1873">          nbyte += utf_ptr2len(p + nbyte);</a>
+<a name="ln1874">        }</a>
+<a name="ln1875">        nchar--;</a>
+<a name="ln1876">      }</a>
+<a name="ln1877">    } else {</a>
+<a name="ln1878">      nbyte = (int)nchar;</a>
+<a name="ln1879">    }</a>
+<a name="ln1880">  }</a>
+<a name="ln1881">  int len = 0;</a>
+<a name="ln1882">  if (argvars[2].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1883">    int charlen = (int)tv_get_number(&amp;argvars[2]);</a>
+<a name="ln1884">    while (charlen &gt; 0 &amp;&amp; nbyte + len &lt; (int)slen) {</a>
+<a name="ln1885">      int off = nbyte + len;</a>
+<a name="ln1886"> </a>
+<a name="ln1887">      if (off &lt; 0) {</a>
+<a name="ln1888">        len += 1;</a>
+<a name="ln1889">      } else {</a>
+<a name="ln1890">        if (skipcc) {</a>
+<a name="ln1891">          len += utfc_ptr2len(p + off);</a>
+<a name="ln1892">        } else {</a>
+<a name="ln1893">          len += utf_ptr2len(p + off);</a>
+<a name="ln1894">        }</a>
+<a name="ln1895">      }</a>
+<a name="ln1896">      charlen--;</a>
+<a name="ln1897">    }</a>
+<a name="ln1898">  } else {</a>
+<a name="ln1899">    len = (int)slen - nbyte;    // default: all bytes that are available.</a>
+<a name="ln1900">  }</a>
+<a name="ln1901"> </a>
+<a name="ln1902">  // Only return the overlap between the specified part and the actual</a>
+<a name="ln1903">  // string.</a>
+<a name="ln1904">  if (nbyte &lt; 0) {</a>
+<a name="ln1905">    len += nbyte;</a>
+<a name="ln1906">    nbyte = 0;</a>
+<a name="ln1907">  } else if ((size_t)nbyte &gt; slen) {</a>
+<a name="ln1908">    nbyte = (int)slen;</a>
+<a name="ln1909">  }</a>
+<a name="ln1910">  if (len &lt; 0) {</a>
+<a name="ln1911">    len = 0;</a>
+<a name="ln1912">  } else if (nbyte + len &gt; (int)slen) {</a>
+<a name="ln1913">    len = (int)slen - nbyte;</a>
+<a name="ln1914">  }</a>
+<a name="ln1915"> </a>
+<a name="ln1916">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln1917">  rettv-&gt;vval.v_string = xstrndup(p + nbyte, (size_t)len);</a>
+<a name="ln1918">}</a>
+<a name="ln1919"> </a>
+<a name="ln1920">/// &quot;strpart()&quot; function</a>
+<a name="ln1921">void f_strpart(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1922">{</a>
+<a name="ln1923">  bool error = false;</a>
+<a name="ln1924"> </a>
+<a name="ln1925">  const char *const p = tv_get_string(&amp;argvars[0]);</a>
+<a name="ln1926">  const size_t slen = strlen(p);</a>
+<a name="ln1927"> </a>
+<a name="ln1928">  varnumber_T n = tv_get_number_chk(&amp;argvars[1], &amp;error);</a>
+<a name="ln1929">  varnumber_T len;</a>
+<a name="ln1930">  if (error) {</a>
+<a name="ln1931">    len = 0;</a>
+<a name="ln1932">  } else if (argvars[2].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1933">    len = tv_get_number(&amp;argvars[2]);</a>
+<a name="ln1934">  } else {</a>
+<a name="ln1935">    len = (varnumber_T)slen - n;  // Default len: all bytes that are available.</a>
+<a name="ln1936">  }</a>
+<a name="ln1937"> </a>
+<a name="ln1938">  // Only return the overlap between the specified part and the actual</a>
+<a name="ln1939">  // string.</a>
+<a name="ln1940">  if (n &lt; 0) {</a>
+<a name="ln1941">    len += n;</a>
+<a name="ln1942">    n = 0;</a>
+<a name="ln1943">  } else if (n &gt; (varnumber_T)slen) {</a>
+<a name="ln1944">    n = (varnumber_T)slen;</a>
+<a name="ln1945">  }</a>
+<a name="ln1946">  if (len &lt; 0) {</a>
+<a name="ln1947">    len = 0;</a>
+<a name="ln1948">  } else if (n + len &gt; (varnumber_T)slen) {</a>
+<a name="ln1949">    len = (varnumber_T)slen - n;</a>
+<a name="ln1950">  }</a>
+<a name="ln1951"> </a>
+<a name="ln1952">  if (argvars[2].v_type != VAR_UNKNOWN &amp;&amp; argvars[3].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1953">    int off;</a>
+<a name="ln1954"> </a>
+<a name="ln1955">    // length in characters</a>
+<a name="ln1956">    for (off = (int)n; off &lt; (int)slen &amp;&amp; len &gt; 0; len--) {</a>
+<a name="ln1957">      off += utfc_ptr2len(p + off);</a>
+<a name="ln1958">    }</a>
+<a name="ln1959">    len = off - n;</a>
+<a name="ln1960">  }</a>
+<a name="ln1961"> </a>
+<a name="ln1962">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln1963">  rettv-&gt;vval.v_string = xmemdupz(p + n, (size_t)len);</a>
+<a name="ln1964">}</a>
+<a name="ln1965"> </a>
+<a name="ln1966">/// &quot;strridx()&quot; function</a>
+<a name="ln1967">void f_strridx(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln1968">{</a>
+<a name="ln1969">  char buf[NUMBUFLEN];</a>
+<a name="ln1970">  const char *const needle = tv_get_string_chk(&amp;argvars[1]);</a>
+<a name="ln1971">  const char *const haystack = tv_get_string_buf_chk(&amp;argvars[0], buf);</a>
+<a name="ln1972"> </a>
+<a name="ln1973">  rettv-&gt;vval.v_number = -1;</a>
+<a name="ln1974">  if (needle == NULL || haystack == NULL) {</a>
+<a name="ln1975">    return;  // Type error; errmsg already given.</a>
+<a name="ln1976">  }</a>
+<a name="ln1977"> </a>
+<a name="ln1978">  const size_t haystack_len = strlen(haystack);</a>
+<a name="ln1979">  ptrdiff_t end_idx;</a>
+<a name="ln1980">  if (argvars[2].v_type != VAR_UNKNOWN) {</a>
+<a name="ln1981">    // Third argument: upper limit for index.</a>
+<a name="ln1982">    end_idx = (ptrdiff_t)tv_get_number_chk(&amp;argvars[2], NULL);</a>
+<a name="ln1983">    if (end_idx &lt; 0) {</a>
+<a name="ln1984">      return;  // Can never find a match.</a>
+<a name="ln1985">    }</a>
+<a name="ln1986">  } else {</a>
+<a name="ln1987">    end_idx = (ptrdiff_t)haystack_len;</a>
+<a name="ln1988">  }</a>
+<a name="ln1989"> </a>
+<a name="ln1990">  const char *lastmatch = NULL;</a>
+<a name="ln1991">  if (*needle == NUL) {</a>
+<a name="ln1992">    // Empty string matches past the end.</a>
+<a name="ln1993">    lastmatch = haystack + end_idx;</a>
+<a name="ln1994">  } else {</a>
+<a name="ln1995">    for (const char *rest = haystack; *rest != NUL; rest++) {</a>
+<a name="ln1996">      rest = strstr(rest, needle);</a>
+<a name="ln1997">      if (rest == NULL || rest &gt; haystack + end_idx) {</a>
+<a name="ln1998">        break;</a>
+<a name="ln1999">      }</a>
+<a name="ln2000">      lastmatch = rest;</a>
+<a name="ln2001">    }</a>
+<a name="ln2002">  }</a>
+<a name="ln2003"> </a>
+<a name="ln2004">  if (lastmatch != NULL) {</a>
+<a name="ln2005">    rettv-&gt;vval.v_number = (varnumber_T)(lastmatch - haystack);</a>
+<a name="ln2006">  }</a>
+<a name="ln2007">}</a>
+<a name="ln2008"> </a>
+<a name="ln2009">/// &quot;strtrans()&quot; function</a>
+<a name="ln2010">void f_strtrans(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln2011">{</a>
+<a name="ln2012">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln2013">  rettv-&gt;vval.v_string = transstr(tv_get_string(&amp;argvars[0]), true);</a>
+<a name="ln2014">}</a>
+<a name="ln2015"> </a>
+<a name="ln2016">/// &quot;utf16idx()&quot; function</a>
+<a name="ln2017">///</a>
+<a name="ln2018">/// Converts a byte or character offset in a string to the corresponding UTF-16</a>
+<a name="ln2019">/// code unit offset.</a>
+<a name="ln2020">void f_utf16idx(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln2021">{</a>
+<a name="ln2022">  rettv-&gt;vval.v_number = -1;</a>
+<a name="ln2023"> </a>
+<a name="ln2024">  if (tv_check_for_string_arg(argvars, 0) == FAIL</a>
+<a name="ln2025">      || tv_check_for_opt_number_arg(argvars, 1) == FAIL</a>
+<a name="ln2026">      || tv_check_for_opt_bool_arg(argvars, 2) == FAIL</a>
+<a name="ln2027">      || (argvars[2].v_type != VAR_UNKNOWN</a>
+<a name="ln2028">          &amp;&amp; tv_check_for_opt_bool_arg(argvars, 3) == FAIL)) {</a>
+<a name="ln2029">    return;</a>
+<a name="ln2030">  }</a>
+<a name="ln2031"> </a>
+<a name="ln2032">  const char *const str = tv_get_string_chk(&amp;argvars[0]);</a>
+<a name="ln2033">  varnumber_T idx = tv_get_number_chk(&amp;argvars[1], NULL);</a>
+<a name="ln2034">  if (str == NULL || idx &lt; 0) {</a>
+<a name="ln2035">    return;</a>
+<a name="ln2036">  }</a>
+<a name="ln2037"> </a>
+<a name="ln2038">  varnumber_T countcc = false;</a>
+<a name="ln2039">  varnumber_T charidx = false;</a>
+<a name="ln2040">  if (argvars[2].v_type != VAR_UNKNOWN) {</a>
+<a name="ln2041">    countcc = tv_get_bool(&amp;argvars[2]);</a>
+<a name="ln2042">    if (argvars[3].v_type != VAR_UNKNOWN) {</a>
+<a name="ln2043">      charidx = tv_get_bool(&amp;argvars[3]);</a>
+<a name="ln2044">    }</a>
+<a name="ln2045">  }</a>
+<a name="ln2046"> </a>
+<a name="ln2047">  int (*ptr2len)(const char *);</a>
+<a name="ln2048">  if (countcc) {</a>
+<a name="ln2049">    ptr2len = utf_ptr2len;</a>
+<a name="ln2050">  } else {</a>
+<a name="ln2051">    ptr2len = utfc_ptr2len;</a>
+<a name="ln2052">  }</a>
+<a name="ln2053"> </a>
+<a name="ln2054">  const char *p;</a>
+<a name="ln2055">  int len;</a>
+<a name="ln2056">  int utf16idx = 0;</a>
+<a name="ln2057">  for (p = str, len = 0; charidx ? idx &gt;= 0 : p &lt;= str + idx; len++) {</a>
+<a name="ln2058">    if (*p == NUL) {</a>
+<a name="ln2059">      // If the index is exactly the number of bytes or characters in the</a>
+<a name="ln2060">      // string then return the length of the string in utf-16 code units.</a>
+<a name="ln2061">      if (charidx ? (idx == 0) : (p == (str + idx))) {</a>
+<a name="ln2062">        rettv-&gt;vval.v_number = len;</a>
+<a name="ln2063">      }</a>
+<a name="ln2064">      return;</a>
+<a name="ln2065">    }</a>
+<a name="ln2066">    utf16idx = len;</a>
+<a name="ln2067">    const int clen = ptr2len(p);</a>
+<a name="ln2068">    const int c = (clen &gt; 1) ? utf_ptr2char(p) : *p;</a>
+<a name="ln2069">    if (c &gt; 0xFFFF) {</a>
+<a name="ln2070">      len++;</a>
+<a name="ln2071">    }</a>
+<a name="ln2072">    p += ptr2len(p);</a>
+<a name="ln2073">    if (charidx) {</a>
+<a name="ln2074">      idx--;</a>
+<a name="ln2075">    }</a>
+<a name="ln2076">  }</a>
+<a name="ln2077"> </a>
+<a name="ln2078">  rettv-&gt;vval.v_number = utf16idx;</a>
+<a name="ln2079">}</a>
+<a name="ln2080"> </a>
+<a name="ln2081">/// &quot;tolower(string)&quot; function</a>
+<a name="ln2082">void f_tolower(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln2083">{</a>
+<a name="ln2084">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln2085">  rettv-&gt;vval.v_string = strcase_save(tv_get_string(&amp;argvars[0]), false);</a>
+<a name="ln2086">}</a>
+<a name="ln2087"> </a>
+<a name="ln2088">/// &quot;toupper(string)&quot; function</a>
+<a name="ln2089">void f_toupper(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln2090">{</a>
+<a name="ln2091">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln2092">  rettv-&gt;vval.v_string = strcase_save(tv_get_string(&amp;argvars[0]), true);</a>
+<a name="ln2093">}</a>
+<a name="ln2094"> </a>
+<a name="ln2095">/// &quot;tr(string, fromstr, tostr)&quot; function</a>
+<a name="ln2096">void f_tr(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln2097">{</a>
+<a name="ln2098">  char buf[NUMBUFLEN];</a>
+<a name="ln2099">  char buf2[NUMBUFLEN];</a>
+<a name="ln2100"> </a>
+<a name="ln2101">  const char *in_str = tv_get_string(&amp;argvars[0]);</a>
+<a name="ln2102">  const char *fromstr = tv_get_string_buf_chk(&amp;argvars[1], buf);</a>
+<a name="ln2103">  const char *tostr = tv_get_string_buf_chk(&amp;argvars[2], buf2);</a>
+<a name="ln2104"> </a>
+<a name="ln2105">  // Default return value: empty string.</a>
+<a name="ln2106">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln2107">  rettv-&gt;vval.v_string = NULL;</a>
+<a name="ln2108">  if (fromstr == NULL || tostr == NULL) {</a>
+<a name="ln2109">    return;  // Type error; errmsg already given.</a>
+<a name="ln2110">  }</a>
+<a name="ln2111">  garray_T ga;</a>
+<a name="ln2112">  ga_init(&amp;ga, (int)sizeof(char), 80);</a>
+<a name="ln2113"> </a>
+<a name="ln2114">  // fromstr and tostr have to contain the same number of chars.</a>
+<a name="ln2115">  bool first = true;</a>
+<a name="ln2116">  while (*in_str != NUL) {</a>
+<a name="ln2117">    const char *cpstr = in_str;</a>
+<a name="ln2118">    const int inlen = utfc_ptr2len(in_str);</a>
+<a name="ln2119">    int cplen = inlen;</a>
+<a name="ln2120">    int idx = 0;</a>
+<a name="ln2121">    int fromlen;</a>
+<a name="ln2122">    for (const char *p = fromstr; *p != NUL; p += fromlen) {</a>
+<a name="ln2123">      fromlen = utfc_ptr2len(p);</a>
+<a name="ln2124">      if (fromlen == inlen &amp;&amp; strncmp(in_str, p, (size_t)inlen) == 0) {</a>
+<a name="ln2125">        int tolen;</a>
+<a name="ln2126">        for (p = tostr; *p != NUL; p += tolen) {</a>
+<a name="ln2127">          tolen = utfc_ptr2len(p);</a>
+<a name="ln2128">          if (idx-- == 0) {</a>
+<a name="ln2129">            cplen = tolen;</a>
+<a name="ln2130">            cpstr = p;</a>
+<a name="ln2131">            break;</a>
+<a name="ln2132">          }</a>
+<a name="ln2133">        }</a>
+<a name="ln2134">        if (*p == NUL) {  // tostr is shorter than fromstr.</a>
+<a name="ln2135">          goto error;</a>
+<a name="ln2136">        }</a>
+<a name="ln2137">        break;</a>
+<a name="ln2138">      }</a>
+<a name="ln2139">      idx++;</a>
+<a name="ln2140">    }</a>
+<a name="ln2141"> </a>
+<a name="ln2142">    if (first &amp;&amp; cpstr == in_str) {</a>
+<a name="ln2143">      // Check that fromstr and tostr have the same number of</a>
+<a name="ln2144">      // (multi-byte) characters.  Done only once when a character</a>
+<a name="ln2145">      // of in_str doesn't appear in fromstr.</a>
+<a name="ln2146">      first = false;</a>
+<a name="ln2147">      int tolen;</a>
+<a name="ln2148">      for (const char *p = tostr; *p != NUL; p += tolen) {</a>
+<a name="ln2149">        tolen = utfc_ptr2len(p);</a>
+<a name="ln2150">        idx--;</a>
+<a name="ln2151">      }</a>
+<a name="ln2152">      if (idx != 0) {</a>
+<a name="ln2153">        goto error;</a>
+<a name="ln2154">      }</a>
+<a name="ln2155">    }</a>
+<a name="ln2156"> </a>
+<a name="ln2157">    ga_grow(&amp;ga, cplen);</a>
+<a name="ln2158">    memmove((char *)ga.ga_data + ga.ga_len, cpstr, (size_t)cplen);</a>
+<a name="ln2159">    ga.ga_len += cplen;</a>
+<a name="ln2160"> </a>
+<a name="ln2161">    in_str += inlen;</a>
+<a name="ln2162">  }</a>
+<a name="ln2163"> </a>
+<a name="ln2164">  // add a terminating NUL</a>
+<a name="ln2165">  ga_append(&amp;ga, NUL);</a>
+<a name="ln2166"> </a>
+<a name="ln2167">  rettv-&gt;vval.v_string = ga.ga_data;</a>
+<a name="ln2168">  return;</a>
+<a name="ln2169">error:</a>
+<a name="ln2170">  semsg(_(e_invarg2), fromstr);</a>
+<a name="ln2171">  ga_clear(&amp;ga);</a>
+<a name="ln2172">}</a>
+<a name="ln2173"> </a>
+<a name="ln2174">/// &quot;trim({expr})&quot; function</a>
+<a name="ln2175">void f_trim(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln2176">{</a>
+<a name="ln2177">  char buf1[NUMBUFLEN];</a>
+<a name="ln2178">  char buf2[NUMBUFLEN];</a>
+<a name="ln2179">  const char *head = tv_get_string_buf_chk(&amp;argvars[0], buf1);</a>
+<a name="ln2180">  const char *mask = NULL;</a>
+<a name="ln2181">  const char *prev;</a>
+<a name="ln2182">  const char *p;</a>
+<a name="ln2183">  int dir = 0;</a>
+<a name="ln2184"> </a>
+<a name="ln2185">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln2186">  rettv-&gt;vval.v_string = NULL;</a>
+<a name="ln2187">  if (head == NULL) {</a>
+<a name="ln2188">    return;</a>
+<a name="ln2189">  }</a>
+<a name="ln2190"> </a>
+<a name="ln2191">  if (tv_check_for_opt_string_arg(argvars, 1) == FAIL) {</a>
+<a name="ln2192">    return;</a>
+<a name="ln2193">  }</a>
+<a name="ln2194"> </a>
+<a name="ln2195">  if (argvars[1].v_type == VAR_STRING) {</a>
+<a name="ln2196">    mask = tv_get_string_buf_chk(&amp;argvars[1], buf2);</a>
+<a name="ln2197">    if (argvars[2].v_type != VAR_UNKNOWN) {</a>
+<a name="ln2198">      bool error = false;</a>
+<a name="ln2199">      // leading or trailing characters to trim</a>
+<a name="ln2200">      dir = (int)tv_get_number_chk(&amp;argvars[2], &amp;error);</a>
+<a name="ln2201">      if (error) {</a>
+<a name="ln2202">        return;</a>
+<a name="ln2203">      }</a>
+<a name="ln2204">      if (dir &lt; 0 || dir &gt; 2) {</a>
+<a name="ln2205">        semsg(_(e_invarg2), tv_get_string(&amp;argvars[2]));</a>
+<a name="ln2206">        return;</a>
+<a name="ln2207">      }</a>
+<a name="ln2208">    }</a>
+<a name="ln2209">  }</a>
+<a name="ln2210"> </a>
+<a name="ln2211">  int c1;</a>
+<a name="ln2212">  if (dir == 0 || dir == 1) {</a>
+<a name="ln2213">    // Trim leading characters</a>
+<a name="ln2214">    while (*head != NUL) {</a>
+<a name="ln2215">      c1 = utf_ptr2char(head);</a>
+<a name="ln2216">      if (mask == NULL) {</a>
+<a name="ln2217">        if (c1 &gt; ' ' &amp;&amp; c1 != 0xa0) {</a>
+<a name="ln2218">          break;</a>
+<a name="ln2219">        }</a>
+<a name="ln2220">      } else {</a>
+<a name="ln2221">        for (p = mask; *p != NUL; MB_PTR_ADV(p)) {</a>
+<a name="ln2222">          if (c1 == utf_ptr2char(p)) {</a>
+<a name="ln2223">            break;</a>
+<a name="ln2224">          }</a>
+<a name="ln2225">        }</a>
+<a name="ln2226">        if (*p == NUL) {</a>
+<a name="ln2227">          break;</a>
+<a name="ln2228">        }</a>
+<a name="ln2229">      }</a>
+<a name="ln2230">      MB_PTR_ADV(head);</a>
+<a name="ln2231">    }</a>
+<a name="ln2232">  }</a>
+<a name="ln2233"> </a>
+<a name="ln2234">  const char *tail = head + strlen(head);</a>
+<a name="ln2235">  if (dir == 0 || dir == 2) {</a>
+<a name="ln2236">    // Trim trailing characters</a>
+<a name="ln2237">    for (; tail &gt; head; tail = prev) {</a>
+<a name="ln2238">      prev = tail;</a>
+<a name="ln2239">      MB_PTR_BACK(head, prev);</a>
+<a name="ln2240">      c1 = utf_ptr2char(prev);</a>
+<a name="ln2241">      if (mask == NULL) {</a>
+<a name="ln2242">        if (c1 &gt; ' ' &amp;&amp; c1 != 0xa0) {</a>
+<a name="ln2243">          break;</a>
+<a name="ln2244">        }</a>
+<a name="ln2245">      } else {</a>
+<a name="ln2246">        for (p = mask; *p != NUL; MB_PTR_ADV(p)) {</a>
+<a name="ln2247">          if (c1 == utf_ptr2char(p)) {</a>
+<a name="ln2248">            break;</a>
+<a name="ln2249">          }</a>
+<a name="ln2250">        }</a>
+<a name="ln2251">        if (*p == NUL) {</a>
+<a name="ln2252">          break;</a>
+<a name="ln2253">        }</a>
+<a name="ln2254">      }</a>
+<a name="ln2255">    }</a>
+<a name="ln2256">  }</a>
+<a name="ln2257">  rettv-&gt;vval.v_string = xstrnsave(head, (size_t)(tail - head));</a>
+<a name="ln2258">}</a>
+</code></pre>
+<div class="balloon" rel="679"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v601/" target="_blank">V601</a> Pointer is implicitly cast to an integer type. Inspect the second argument.</p></div>
+<div class="balloon" rel="697"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v601/" target="_blank">V601</a> Pointer is implicitly cast to an integer type. Inspect the second argument.</p></div>
+<div class="balloon" rel="1418"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v601/" target="_blank">V601</a> Pointer is implicitly cast to an integer type. Inspect the second argument.</p></div>
+<div class="balloon" rel="1430"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v601/" target="_blank">V601</a> Pointer is implicitly cast to an integer type. Inspect the second argument.</p></div>
+<link rel="stylesheet" href="highlight.css">
+<script src="highlight.pack.js"></script>
+<script src="highlightjs-line-numbers.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initLineNumbersOnLoad();</script>
+<script>
+  $(document).ready(function() {
+      $('.balloon').each(function () {
+          var bl = $(this);
+          var line = bl.attr('rel');
+          var text = $('a[name="ln'+line+'"]').text();
+
+          var space_count = 0;
+          for(var i = 0; i<text.length; i++){
+              var char = text[i];
+              if((char !== ' ')&&(char !== '\t'))break;
+              if(char === '\t')space_count++;
+              space_count++;
+          }
+
+          bl.css('margin-left', space_count*8);
+          $('a[name="ln'+line+'"]').after(bl);
+      });
+
+      window.location = window.location;
+  });
+</script>
+</body>
+</html>

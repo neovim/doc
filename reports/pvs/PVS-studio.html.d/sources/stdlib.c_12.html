@@ -1,0 +1,692 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+  <title>stdlib.c</title>
+  <link rel="stylesheet" href="../style.css"/>
+  <script src="../jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<pre><code class = "cpp">
+<a name="ln1">// This is an open source non-commercial project. Dear PVS-Studio, please check</a>
+<a name="ln2">// it. PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com</a>
+<a name="ln3"> </a>
+<a name="ln4">#include &lt;assert.h&gt;</a>
+<a name="ln5">#include &lt;lauxlib.h&gt;</a>
+<a name="ln6">#include &lt;lua.h&gt;</a>
+<a name="ln7">#include &lt;stdarg.h&gt;</a>
+<a name="ln8">#include &lt;stdbool.h&gt;</a>
+<a name="ln9">#include &lt;stddef.h&gt;</a>
+<a name="ln10">#include &lt;stdint.h&gt;</a>
+<a name="ln11">#include &lt;string.h&gt;</a>
+<a name="ln12">#include &lt;sys/types.h&gt;</a>
+<a name="ln13"> </a>
+<a name="ln14">#ifdef NVIM_VENDOR_BIT</a>
+<a name="ln15"># include &quot;bit.h&quot;</a>
+<a name="ln16">#endif</a>
+<a name="ln17"> </a>
+<a name="ln18">#include &quot;auto/config.h&quot;</a>
+<a name="ln19">#include &quot;cjson/lua_cjson.h&quot;</a>
+<a name="ln20">#include &quot;mpack/lmpack.h&quot;</a>
+<a name="ln21">#include &quot;nvim/api/private/defs.h&quot;</a>
+<a name="ln22">#include &quot;nvim/api/private/helpers.h&quot;</a>
+<a name="ln23">#include &quot;nvim/ascii.h&quot;</a>
+<a name="ln24">#include &quot;nvim/buffer_defs.h&quot;</a>
+<a name="ln25">#include &quot;nvim/eval/typval.h&quot;</a>
+<a name="ln26">#include &quot;nvim/eval/typval_defs.h&quot;</a>
+<a name="ln27">#include &quot;nvim/ex_eval.h&quot;</a>
+<a name="ln28">#include &quot;nvim/fold.h&quot;</a>
+<a name="ln29">#include &quot;nvim/globals.h&quot;</a>
+<a name="ln30">#include &quot;nvim/lua/converter.h&quot;</a>
+<a name="ln31">#include &quot;nvim/lua/spell.h&quot;</a>
+<a name="ln32">#include &quot;nvim/lua/stdlib.h&quot;</a>
+<a name="ln33">#include &quot;nvim/lua/xdiff.h&quot;</a>
+<a name="ln34">#include &quot;nvim/map.h&quot;</a>
+<a name="ln35">#include &quot;nvim/mbyte.h&quot;</a>
+<a name="ln36">#include &quot;nvim/memline.h&quot;</a>
+<a name="ln37">#include &quot;nvim/memory.h&quot;</a>
+<a name="ln38">#include &quot;nvim/pos.h&quot;</a>
+<a name="ln39">#include &quot;nvim/regexp.h&quot;</a>
+<a name="ln40">#include &quot;nvim/runtime.h&quot;</a>
+<a name="ln41">#include &quot;nvim/types.h&quot;</a>
+<a name="ln42">#include &quot;nvim/vim.h&quot;</a>
+<a name="ln43"> </a>
+<a name="ln44">#ifdef INCLUDE_GENERATED_DECLARATIONS</a>
+<a name="ln45"># include &quot;lua/stdlib.c.generated.h&quot;</a>
+<a name="ln46">#endif</a>
+<a name="ln47"> </a>
+<a name="ln48">static int regex_match(lua_State *lstate, regprog_T **prog, char *str)</a>
+<a name="ln49">{</a>
+<a name="ln50">  regmatch_T rm;</a>
+<a name="ln51">  rm.regprog = *prog;</a>
+<a name="ln52">  rm.rm_ic = false;</a>
+<a name="ln53">  bool match = vim_regexec(&amp;rm, str, 0);</a>
+<a name="ln54">  *prog = rm.regprog;</a>
+<a name="ln55"> </a>
+<a name="ln56">  if (match) {</a>
+<a name="ln57">    lua_pushinteger(lstate, (lua_Integer)(rm.startp[0] - str));</a>
+<a name="ln58">    lua_pushinteger(lstate, (lua_Integer)(rm.endp[0] - str));</a>
+<a name="ln59">    return 2;</a>
+<a name="ln60">  }</a>
+<a name="ln61">  return 0;</a>
+<a name="ln62">}</a>
+<a name="ln63"> </a>
+<a name="ln64">static int regex_match_str(lua_State *lstate)</a>
+<a name="ln65">{</a>
+<a name="ln66">  regprog_T **prog = regex_check(lstate);</a>
+<a name="ln67">  const char *str = luaL_checkstring(lstate, 2);</a>
+<a name="ln68">  int nret = regex_match(lstate, prog, (char *)str);</a>
+<a name="ln69"> </a>
+<a name="ln70">  if (!*prog) {</a>
+<a name="ln71">    return luaL_error(lstate, &quot;regex: internal error&quot;);</a>
+<a name="ln72">  }</a>
+<a name="ln73"> </a>
+<a name="ln74">  return nret;</a>
+<a name="ln75">}</a>
+<a name="ln76"> </a>
+<a name="ln77">static int regex_match_line(lua_State *lstate)</a>
+<a name="ln78">{</a>
+<a name="ln79">  regprog_T **prog = regex_check(lstate);</a>
+<a name="ln80"> </a>
+<a name="ln81">  int narg = lua_gettop(lstate);</a>
+<a name="ln82">  if (narg &lt; 3) {</a>
+<a name="ln83">    return luaL_error(lstate, &quot;not enough args&quot;);</a>
+<a name="ln84">  }</a>
+<a name="ln85"> </a>
+<a name="ln86">  handle_T bufnr = (handle_T)luaL_checkinteger(lstate, 2);</a>
+<a name="ln87">  linenr_T rownr = (linenr_T)luaL_checkinteger(lstate, 3);</a>
+<a name="ln88">  int start = 0, end = -1;</a>
+<a name="ln89">  if (narg &gt;= 4) {</a>
+<a name="ln90">    start = (int)luaL_checkinteger(lstate, 4);</a>
+<a name="ln91">  }</a>
+<a name="ln92">  if (narg &gt;= 5) {</a>
+<a name="ln93">    end = (int)luaL_checkinteger(lstate, 5);</a>
+<a name="ln94">    if (end &lt; 0) {</a>
+<a name="ln95">      return luaL_error(lstate, &quot;invalid end&quot;);</a>
+<a name="ln96">    }</a>
+<a name="ln97">  }</a>
+<a name="ln98"> </a>
+<a name="ln99">  buf_T *buf = bufnr ? handle_get_buffer(bufnr) : curbuf;</a>
+<a name="ln100">  if (!buf || buf-&gt;b_ml.ml_mfp == NULL) {</a>
+<a name="ln101">    return luaL_error(lstate, &quot;invalid buffer&quot;);</a>
+<a name="ln102">  }</a>
+<a name="ln103"> </a>
+<a name="ln104">  if (rownr &gt;= buf-&gt;b_ml.ml_line_count) {</a>
+<a name="ln105">    return luaL_error(lstate, &quot;invalid row&quot;);</a>
+<a name="ln106">  }</a>
+<a name="ln107"> </a>
+<a name="ln108">  char *line = ml_get_buf(buf, rownr + 1, false);</a>
+<a name="ln109">  size_t len = strlen(line);</a>
+<a name="ln110"> </a>
+<a name="ln111">  if (start &lt; 0 || (size_t)start &gt; len) {</a>
+<a name="ln112">    return luaL_error(lstate, &quot;invalid start&quot;);</a>
+<a name="ln113">  }</a>
+<a name="ln114"> </a>
+<a name="ln115">  char save = NUL;</a>
+<a name="ln116">  if (end &gt;= 0) {</a>
+<a name="ln117">    if ((size_t)end &gt; len || end &lt; start) {</a>
+<a name="ln118">      return luaL_error(lstate, &quot;invalid end&quot;);</a>
+<a name="ln119">    }</a>
+<a name="ln120">    save = line[end];</a>
+<a name="ln121">    line[end] = NUL;</a>
+<a name="ln122">  }</a>
+<a name="ln123"> </a>
+<a name="ln124">  int nret = regex_match(lstate, prog, line + start);</a>
+<a name="ln125"> </a>
+<a name="ln126">  if (end &gt;= 0) {</a>
+<a name="ln127">    line[end] = save;</a>
+<a name="ln128">  }</a>
+<a name="ln129"> </a>
+<a name="ln130">  if (!*prog) {</a>
+<a name="ln131">    return luaL_error(lstate, &quot;regex: internal error&quot;);</a>
+<a name="ln132">  }</a>
+<a name="ln133"> </a>
+<a name="ln134">  return nret;</a>
+<a name="ln135">}</a>
+<a name="ln136"> </a>
+<a name="ln137">static regprog_T **regex_check(lua_State *L)</a>
+<a name="ln138">{</a>
+<a name="ln139">  return luaL_checkudata(L, 1, &quot;nvim_regex&quot;);</a>
+<a name="ln140">}</a>
+<a name="ln141"> </a>
+<a name="ln142">static int regex_gc(lua_State *lstate)</a>
+<a name="ln143">{</a>
+<a name="ln144">  regprog_T **prog = regex_check(lstate);</a>
+<a name="ln145">  vim_regfree(*prog);</a>
+<a name="ln146">  return 0;</a>
+<a name="ln147">}</a>
+<a name="ln148"> </a>
+<a name="ln149">static int regex_tostring(lua_State *lstate)</a>
+<a name="ln150">{</a>
+<a name="ln151">  lua_pushstring(lstate, &quot;&lt;regex&gt;&quot;);</a>
+<a name="ln152">  return 1;</a>
+<a name="ln153">}</a>
+<a name="ln154"> </a>
+<a name="ln155">static struct luaL_Reg regex_meta[] = {</a>
+<a name="ln156">  { &quot;__gc&quot;, regex_gc },</a>
+<a name="ln157">  { &quot;__tostring&quot;, regex_tostring },</a>
+<a name="ln158">  { &quot;match_str&quot;, regex_match_str },</a>
+<a name="ln159">  { &quot;match_line&quot;, regex_match_line },</a>
+<a name="ln160">  { NULL, NULL }</a>
+<a name="ln161">};</a>
+<a name="ln162"> </a>
+<a name="ln163">/// convert byte index to UTF-32 and UTF-16 indices</a>
+<a name="ln164">///</a>
+<a name="ln165">/// Expects a string and an optional index. If no index is supplied, the length</a>
+<a name="ln166">/// of the string is returned.</a>
+<a name="ln167">///</a>
+<a name="ln168">/// Returns two values: the UTF-32 and UTF-16 indices.</a>
+<a name="ln169">int nlua_str_utfindex(lua_State *const lstate) FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln170">{</a>
+<a name="ln171">  size_t s1_len;</a>
+<a name="ln172">  const char *s1 = luaL_checklstring(lstate, 1, &amp;s1_len);</a>
+<a name="ln173">  intptr_t idx;</a>
+<a name="ln174">  if (lua_isnoneornil(lstate, 2)) {</a>
+<a name="ln175">    idx = (intptr_t)s1_len;</a>
+<a name="ln176">  } else {</a>
+<a name="ln177">    idx = luaL_checkinteger(lstate, 2);</a>
+<a name="ln178">    if (idx &lt; 0 || idx &gt; (intptr_t)s1_len) {</a>
+<a name="ln179">      return luaL_error(lstate, &quot;index out of range&quot;);</a>
+<a name="ln180">    }</a>
+<a name="ln181">  }</a>
+<a name="ln182"> </a>
+<a name="ln183">  size_t codepoints = 0, codeunits = 0;</a>
+<a name="ln184">  mb_utflen(s1, (size_t)idx, &amp;codepoints, &amp;codeunits);</a>
+<a name="ln185"> </a>
+<a name="ln186">  lua_pushinteger(lstate, (long)codepoints);</a>
+<a name="ln187">  lua_pushinteger(lstate, (long)codeunits);</a>
+<a name="ln188"> </a>
+<a name="ln189">  return 2;</a>
+<a name="ln190">}</a>
+<a name="ln191"> </a>
+<a name="ln192">/// return byte indices of codepoints in a string (only supports utf-8 currently).</a>
+<a name="ln193">///</a>
+<a name="ln194">/// Expects a string.</a>
+<a name="ln195">///</a>
+<a name="ln196">/// Returns a list of codepoints.</a>
+<a name="ln197">static int nlua_str_utf_pos(lua_State *const lstate) FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln198">{</a>
+<a name="ln199">  size_t s1_len;</a>
+<a name="ln200">  const char *s1 = luaL_checklstring(lstate, 1, &amp;s1_len);</a>
+<a name="ln201">  lua_newtable(lstate);</a>
+<a name="ln202"> </a>
+<a name="ln203">  size_t idx = 1;</a>
+<a name="ln204">  size_t clen;</a>
+<a name="ln205">  for (size_t i = 0; i &lt; s1_len &amp;&amp; s1[i] != NUL; i += clen) {</a>
+<a name="ln206">    clen = (size_t)utf_ptr2len_len(s1 + i, (int)(s1_len - i));</a>
+<a name="ln207">    lua_pushinteger(lstate, (long)i + 1);</a>
+<a name="ln208">    lua_rawseti(lstate, -2, (int)idx);</a>
+<a name="ln209">    idx++;</a>
+<a name="ln210">  }</a>
+<a name="ln211"> </a>
+<a name="ln212">  return 1;</a>
+<a name="ln213">}</a>
+<a name="ln214"> </a>
+<a name="ln215">/// Return the offset from the 1-indexed byte position to the first byte of the</a>
+<a name="ln216">/// current character.</a>
+<a name="ln217">///</a>
+<a name="ln218">/// Expects a string and an int.</a>
+<a name="ln219">///</a>
+<a name="ln220">/// Returns the byte offset to the first byte of the current character</a>
+<a name="ln221">/// pointed into by the offset.</a>
+<a name="ln222">static int nlua_str_utf_start(lua_State *const lstate) FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln223">{</a>
+<a name="ln224">  size_t s1_len;</a>
+<a name="ln225">  const char *s1 = luaL_checklstring(lstate, 1, &amp;s1_len);</a>
+<a name="ln226">  ptrdiff_t offset = luaL_checkinteger(lstate, 2);</a>
+<a name="ln227">  if (offset &lt; 0 || offset &gt; (intptr_t)s1_len) {</a>
+<a name="ln228">    return luaL_error(lstate, &quot;index out of range&quot;);</a>
+<a name="ln229">  }</a>
+<a name="ln230">  int head_offset = utf_cp_head_off(s1, s1 + offset - 1);</a>
+<a name="ln231">  lua_pushinteger(lstate, head_offset);</a>
+<a name="ln232">  return 1;</a>
+<a name="ln233">}</a>
+<a name="ln234"> </a>
+<a name="ln235">/// Return the offset from the 1-indexed byte position to the last</a>
+<a name="ln236">/// byte of the current character.</a>
+<a name="ln237">///</a>
+<a name="ln238">/// Expects a string and an int.</a>
+<a name="ln239">///</a>
+<a name="ln240">/// Returns the byte offset to the last byte of the current character</a>
+<a name="ln241">/// pointed into by the offset.</a>
+<a name="ln242">static int nlua_str_utf_end(lua_State *const lstate) FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln243">{</a>
+<a name="ln244">  size_t s1_len;</a>
+<a name="ln245">  const char *s1 = luaL_checklstring(lstate, 1, &amp;s1_len);</a>
+<a name="ln246">  ptrdiff_t offset = luaL_checkinteger(lstate, 2);</a>
+<a name="ln247">  if (offset &lt; 0 || offset &gt; (intptr_t)s1_len) {</a>
+<a name="ln248">    return luaL_error(lstate, &quot;index out of range&quot;);</a>
+<a name="ln249">  }</a>
+<a name="ln250">  int tail_offset = utf_cp_tail_off(s1, s1 + offset - 1);</a>
+<a name="ln251">  lua_pushinteger(lstate, tail_offset);</a>
+<a name="ln252">  return 1;</a>
+<a name="ln253">}</a>
+<a name="ln254"> </a>
+<a name="ln255">/// convert UTF-32 or UTF-16 indices to byte index.</a>
+<a name="ln256">///</a>
+<a name="ln257">/// Expects up to three args: string, index and use_utf16.</a>
+<a name="ln258">/// If use_utf16 is not supplied it defaults to false (use UTF-32)</a>
+<a name="ln259">///</a>
+<a name="ln260">/// Returns the byte index.</a>
+<a name="ln261">int nlua_str_byteindex(lua_State *const lstate) FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln262">{</a>
+<a name="ln263">  size_t s1_len;</a>
+<a name="ln264">  const char *s1 = luaL_checklstring(lstate, 1, &amp;s1_len);</a>
+<a name="ln265">  intptr_t idx = luaL_checkinteger(lstate, 2);</a>
+<a name="ln266">  if (idx &lt; 0) {</a>
+<a name="ln267">    return luaL_error(lstate, &quot;index out of range&quot;);</a>
+<a name="ln268">  }</a>
+<a name="ln269">  bool use_utf16 = false;</a>
+<a name="ln270">  if (lua_gettop(lstate) &gt;= 3) {</a>
+<a name="ln271">    use_utf16 = lua_toboolean(lstate, 3);</a>
+<a name="ln272">  }</a>
+<a name="ln273"> </a>
+<a name="ln274">  ssize_t byteidx = mb_utf_index_to_bytes(s1, s1_len, (size_t)idx, use_utf16);</a>
+<a name="ln275">  if (byteidx == -1) {</a>
+<a name="ln276">    return luaL_error(lstate, &quot;index out of range&quot;);</a>
+<a name="ln277">  }</a>
+<a name="ln278"> </a>
+<a name="ln279">  lua_pushinteger(lstate, (long)byteidx);</a>
+<a name="ln280"> </a>
+<a name="ln281">  return 1;</a>
+<a name="ln282">}</a>
+<a name="ln283"> </a>
+<a name="ln284">int nlua_regex(lua_State *lstate)</a>
+<a name="ln285">{</a>
+<a name="ln286">  Error err = ERROR_INIT;</a>
+<a name="ln287">  const char *text = luaL_checkstring(lstate, 1);</a>
+<a name="ln288">  regprog_T *prog = NULL;</a>
+<a name="ln289"> </a>
+<a name="ln290">  TRY_WRAP(&amp;err, {</a>
+<a name="ln291">    prog = vim_regcomp(text, RE_AUTO | RE_MAGIC | RE_STRICT);</a>
+<a name="ln292">  });</a>
+<a name="ln293"> </a>
+<a name="ln294">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln295">    nlua_push_errstr(lstate, &quot;couldn't parse regex: %s&quot;, err.msg);</a>
+<a name="ln296">    api_clear_error(&amp;err);</a>
+<a name="ln297">    return lua_error(lstate);</a>
+<a name="ln298">  } else if (prog == NULL) {</a>
+<a name="ln299">    nlua_push_errstr(lstate, &quot;couldn't parse regex&quot;);</a>
+<a name="ln300">    return lua_error(lstate);</a>
+<a name="ln301">  }</a>
+<a name="ln302"> </a>
+<a name="ln303">  regprog_T **p = lua_newuserdata(lstate, sizeof(regprog_T *));</a>
+<a name="ln304">  *p = prog;</a>
+<a name="ln305"> </a>
+<a name="ln306">  lua_getfield(lstate, LUA_REGISTRYINDEX, &quot;nvim_regex&quot;);  // [udata, meta]</a>
+<a name="ln307">  lua_setmetatable(lstate, -2);  // [udata]</a>
+<a name="ln308">  return 1;</a>
+<a name="ln309">}</a>
+<a name="ln310"> </a>
+<a name="ln311">static dict_T *nlua_get_var_scope(lua_State *lstate)</a>
+<a name="ln312">{</a>
+<a name="ln313">  const char *scope = luaL_checkstring(lstate, 1);</a>
+<a name="ln314">  handle_T handle = (handle_T)luaL_checkinteger(lstate, 2);</a>
+<a name="ln315">  dict_T *dict = NULL;</a>
+<a name="ln316">  Error err = ERROR_INIT;</a>
+<a name="ln317">  if (strequal(scope, &quot;g&quot;)) {</a>
+<a name="ln318">    dict = &amp;globvardict;</a>
+<a name="ln319">  } else if (strequal(scope, &quot;v&quot;)) {</a>
+<a name="ln320">    dict = &amp;vimvardict;</a>
+<a name="ln321">  } else if (strequal(scope, &quot;b&quot;)) {</a>
+<a name="ln322">    buf_T *buf = find_buffer_by_handle(handle, &amp;err);</a>
+<a name="ln323">    if (buf) {</a>
+<a name="ln324">      dict = buf-&gt;b_vars;</a>
+<a name="ln325">    }</a>
+<a name="ln326">  } else if (strequal(scope, &quot;w&quot;)) {</a>
+<a name="ln327">    win_T *win = find_window_by_handle(handle, &amp;err);</a>
+<a name="ln328">    if (win) {</a>
+<a name="ln329">      dict = win-&gt;w_vars;</a>
+<a name="ln330">    }</a>
+<a name="ln331">  } else if (strequal(scope, &quot;t&quot;)) {</a>
+<a name="ln332">    tabpage_T *tabpage = find_tab_by_handle(handle, &amp;err);</a>
+<a name="ln333">    if (tabpage) {</a>
+<a name="ln334">      dict = tabpage-&gt;tp_vars;</a>
+<a name="ln335">    }</a>
+<a name="ln336">  } else {</a>
+<a name="ln337">    luaL_error(lstate, &quot;invalid scope&quot;);</a>
+<a name="ln338">    return NULL;</a>
+<a name="ln339">  }</a>
+<a name="ln340"> </a>
+<a name="ln341">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln342">    nlua_push_errstr(lstate, &quot;scoped variable: %s&quot;, err.msg);</a>
+<a name="ln343">    api_clear_error(&amp;err);</a>
+<a name="ln344">    lua_error(lstate);</a>
+<a name="ln345">    return NULL;</a>
+<a name="ln346">  }</a>
+<a name="ln347">  return dict;</a>
+<a name="ln348">}</a>
+<a name="ln349"> </a>
+<a name="ln350">int nlua_setvar(lua_State *lstate)</a>
+<a name="ln351">{</a>
+<a name="ln352">  // non-local return if not found</a>
+<a name="ln353">  dict_T *dict = nlua_get_var_scope(lstate);</a>
+<a name="ln354">  String key;</a>
+<a name="ln355">  key.data = (char *)luaL_checklstring(lstate, 3, &amp;key.size);</a>
+<a name="ln356"> </a>
+<a name="ln357">  bool del = (lua_gettop(lstate) &lt; 4) || lua_isnil(lstate, 4);</a>
+<a name="ln358"> </a>
+<a name="ln359">  Error err = ERROR_INIT;</a>
+<a name="ln360">  dictitem_T *di = dict_check_writable(dict, key, del, &amp;err);</a>
+<a name="ln361">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln362">    return 0;</a>
+<a name="ln363">  }</a>
+<a name="ln364"> </a>
+<a name="ln365">  bool watched = tv_dict_is_watched(dict);</a>
+<a name="ln366"> </a>
+<a name="ln367">  if (del) {</a>
+<a name="ln368">    // Delete the key</a>
+<a name="ln369">    if (di == NULL) {</a>
+<a name="ln370">      // Doesn't exist, nothing to do</a>
+<a name="ln371">      return 0;</a>
+<a name="ln372">    }</a>
+<a name="ln373">    // Notify watchers</a>
+<a name="ln374">    if (watched) {</a>
+<a name="ln375">      tv_dict_watcher_notify(dict, key.data, NULL, &amp;di-&gt;di_tv);</a>
+<a name="ln376">    }</a>
+<a name="ln377"> </a>
+<a name="ln378">    // Delete the entry</a>
+<a name="ln379">    tv_dict_item_remove(dict, di);</a>
+<a name="ln380">  } else {</a>
+<a name="ln381">    // Update the key</a>
+<a name="ln382">    typval_T tv;</a>
+<a name="ln383"> </a>
+<a name="ln384">    // Convert the lua value to a vimscript type in the temporary variable</a>
+<a name="ln385">    lua_pushvalue(lstate, 4);</a>
+<a name="ln386">    if (!nlua_pop_typval(lstate, &amp;tv)) {</a>
+<a name="ln387">      return luaL_error(lstate, &quot;Couldn't convert lua value&quot;);</a>
+<a name="ln388">    }</a>
+<a name="ln389"> </a>
+<a name="ln390">    typval_T oldtv = TV_INITIAL_VALUE;</a>
+<a name="ln391"> </a>
+<a name="ln392">    if (di == NULL) {</a>
+<a name="ln393">      // Need to create an entry</a>
+<a name="ln394">      di = tv_dict_item_alloc_len(key.data, key.size);</a>
+<a name="ln395">      tv_dict_add(dict, di);</a>
+<a name="ln396">    } else {</a>
+<a name="ln397">      if (watched) {</a>
+<a name="ln398">        tv_copy(&amp;di-&gt;di_tv, &amp;oldtv);</a>
+<a name="ln399">      }</a>
+<a name="ln400">      // Clear the old value</a>
+<a name="ln401">      tv_clear(&amp;di-&gt;di_tv);</a>
+<a name="ln402">    }</a>
+<a name="ln403"> </a>
+<a name="ln404">    // Update the value</a>
+<a name="ln405">    tv_copy(&amp;tv, &amp;di-&gt;di_tv);</a>
+<a name="ln406"> </a>
+<a name="ln407">    // Notify watchers</a>
+<a name="ln408">    if (watched) {</a>
+<a name="ln409">      tv_dict_watcher_notify(dict, key.data, &amp;tv, &amp;oldtv);</a>
+<a name="ln410">      tv_clear(&amp;oldtv);</a>
+<a name="ln411">    }</a>
+<a name="ln412"> </a>
+<a name="ln413">    // Clear the temporary variable</a>
+<a name="ln414">    tv_clear(&amp;tv);</a>
+<a name="ln415">  }</a>
+<a name="ln416">  return 0;</a>
+<a name="ln417">}</a>
+<a name="ln418"> </a>
+<a name="ln419">int nlua_getvar(lua_State *lstate)</a>
+<a name="ln420">{</a>
+<a name="ln421">  // non-local return if not found</a>
+<a name="ln422">  dict_T *dict = nlua_get_var_scope(lstate);</a>
+<a name="ln423">  size_t len;</a>
+<a name="ln424">  const char *name = luaL_checklstring(lstate, 3, &amp;len);</a>
+<a name="ln425"> </a>
+<a name="ln426">  dictitem_T *di = tv_dict_find(dict, name, (ptrdiff_t)len);</a>
+<a name="ln427">  if (di == NULL &amp;&amp; dict == &amp;globvardict) {  // try to autoload script</a>
+<a name="ln428">    if (!script_autoload(name, len, false) || aborting()) {</a>
+<a name="ln429">      return 0;  // nil</a>
+<a name="ln430">    }</a>
+<a name="ln431">    di = tv_dict_find(dict, name, (ptrdiff_t)len);</a>
+<a name="ln432">  }</a>
+<a name="ln433">  if (di == NULL) {</a>
+<a name="ln434">    return 0;  // nil</a>
+<a name="ln435">  }</a>
+<a name="ln436">  nlua_push_typval(lstate, &amp;di-&gt;di_tv, false);</a>
+<a name="ln437">  return 1;</a>
+<a name="ln438">}</a>
+<a name="ln439"> </a>
+<a name="ln440">/// Compare two strings, ignoring case</a>
+<a name="ln441">///</a>
+<a name="ln442">/// Expects two values on the stack: compared strings. Returns one of the</a>
+<a name="ln443">/// following numbers: 0, -1 or 1.</a>
+<a name="ln444">///</a>
+<a name="ln445">/// Does no error handling: never call it with non-string or with some arguments</a>
+<a name="ln446">/// omitted.</a>
+<a name="ln447">static int nlua_stricmp(lua_State *const lstate) FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln448">{</a>
+<a name="ln449">  size_t s1_len;</a>
+<a name="ln450">  size_t s2_len;</a>
+<a name="ln451">  const char *s1 = luaL_checklstring(lstate, 1, &amp;s1_len);</a>
+<a name="ln452">  const char *s2 = luaL_checklstring(lstate, 2, &amp;s2_len);</a>
+<a name="ln453">  char *nul1;</a>
+<a name="ln454">  char *nul2;</a>
+<a name="ln455">  int ret = 0;</a>
+<a name="ln456">  assert(s1[s1_len] == NUL);</a>
+<a name="ln457">  assert(s2[s2_len] == NUL);</a>
+<a name="ln458">  while (true) {</a>
+<a name="ln459">    nul1 = memchr(s1, NUL, s1_len);</a>
+<a name="ln460">    nul2 = memchr(s2, NUL, s2_len);</a>
+<a name="ln461">    ret = STRICMP(s1, s2);</a>
+<a name="ln462">    if (ret == 0) {</a>
+<a name="ln463">      // Compare &quot;a\0&quot; greater then &quot;a&quot;.</a>
+<a name="ln464">      if ((nul1 == NULL) != (nul2 == NULL)) {</a>
+<a name="ln465">        ret = ((nul1 != NULL) - (nul2 != NULL));</a>
+<a name="ln466">        break;</a>
+<a name="ln467">      }</a>
+<a name="ln468">      if (nul1 != NULL) {</a>
+<a name="ln469">        assert(nul2 != NULL);</a>
+<a name="ln470">        // Can't shift both strings by the same amount of bytes: lowercase</a>
+<a name="ln471">        // letter may have different byte-length than uppercase.</a>
+<a name="ln472">        s1_len -= (size_t)(nul1 - s1) + 1;</a>
+<a name="ln473">        s2_len -= (size_t)(nul2 - s2) + 1;</a>
+<a name="ln474">        s1 = nul1 + 1;</a>
+<a name="ln475">        s2 = nul2 + 1;</a>
+<a name="ln476">      } else {</a>
+<a name="ln477">        break;</a>
+<a name="ln478">      }</a>
+<a name="ln479">    } else {</a>
+<a name="ln480">      break;</a>
+<a name="ln481">    }</a>
+<a name="ln482">  }</a>
+<a name="ln483">  lua_pop(lstate, 2);</a>
+<a name="ln484">  lua_pushnumber(lstate, (lua_Number)((ret &gt; 0) - (ret &lt; 0)));</a>
+<a name="ln485">  return 1;</a>
+<a name="ln486">}</a>
+<a name="ln487"> </a>
+<a name="ln488">/// Convert string from one encoding to another</a>
+<a name="ln489">static int nlua_iconv(lua_State *lstate)</a>
+<a name="ln490">{</a>
+<a name="ln491">  int narg = lua_gettop(lstate);</a>
+<a name="ln492"> </a>
+<a name="ln493">  if (narg &lt; 3) {</a>
+<a name="ln494">    return luaL_error(lstate, &quot;Expected at least 3 arguments&quot;);</a>
+<a name="ln495">  }</a>
+<a name="ln496"> </a>
+<a name="ln497">  for (int i = 1; i &lt;= 3; i++) {</a>
+<a name="ln498">    if (lua_type(lstate, i) != LUA_TSTRING) {</a>
+<a name="ln499">      return luaL_argerror(lstate, i, &quot;expected string&quot;);</a>
+<a name="ln500">    }</a>
+<a name="ln501">  }</a>
+<a name="ln502"> </a>
+<a name="ln503">  size_t str_len = 0;</a>
+<a name="ln504">  const char *str = lua_tolstring(lstate, 1, &amp;str_len);</a>
+<a name="ln505"> </a>
+<a name="ln506">  char *from = enc_canonize(enc_skip((char *)lua_tolstring(lstate, 2, NULL)));</a>
+<a name="ln507">  char *to   = enc_canonize(enc_skip((char *)lua_tolstring(lstate, 3, NULL)));</a>
+<a name="ln508"> </a>
+<a name="ln509">  vimconv_T vimconv;</a>
+<a name="ln510">  vimconv.vc_type = CONV_NONE;</a>
+<a name="ln511">  convert_setup_ext(&amp;vimconv, from, false, to, false);</a>
+<a name="ln512"> </a>
+<a name="ln513">  char *ret = string_convert(&amp;vimconv, (char *)str, &amp;str_len);</a>
+<a name="ln514"> </a>
+<a name="ln515">  convert_setup(&amp;vimconv, NULL, NULL);</a>
+<a name="ln516"> </a>
+<a name="ln517">  xfree(from);</a>
+<a name="ln518">  xfree(to);</a>
+<a name="ln519"> </a>
+<a name="ln520">  if (ret == NULL) {</a>
+<a name="ln521">    lua_pushnil(lstate);</a>
+<a name="ln522">  } else {</a>
+<a name="ln523">    lua_pushlstring(lstate, ret, str_len);</a>
+<a name="ln524">    xfree(ret);</a>
+<a name="ln525">  }</a>
+<a name="ln526"> </a>
+<a name="ln527">  return 1;</a>
+<a name="ln528">}</a>
+<a name="ln529"> </a>
+<a name="ln530">// Like 'zx' but don't call newFoldLevel()</a>
+<a name="ln531">static int nlua_foldupdate(lua_State *lstate)</a>
+<a name="ln532">{</a>
+<a name="ln533">  curwin-&gt;w_foldinvalid = true;  // recompute folds</a>
+<a name="ln534">  foldOpenCursor();</a>
+<a name="ln535"> </a>
+<a name="ln536">  return 0;</a>
+<a name="ln537">}</a>
+<a name="ln538"> </a>
+<a name="ln539">// Access to internal functions. For use in runtime/</a>
+<a name="ln540">static void nlua_state_add_internal(lua_State *const lstate)</a>
+<a name="ln541">{</a>
+<a name="ln542">  // _getvar</a>
+<a name="ln543">  lua_pushcfunction(lstate, &amp;nlua_getvar);</a>
+<a name="ln544">  lua_setfield(lstate, -2, &quot;_getvar&quot;);</a>
+<a name="ln545"> </a>
+<a name="ln546">  // _setvar</a>
+<a name="ln547">  lua_pushcfunction(lstate, &amp;nlua_setvar);</a>
+<a name="ln548">  lua_setfield(lstate, -2, &quot;_setvar&quot;);</a>
+<a name="ln549"> </a>
+<a name="ln550">  // _updatefolds</a>
+<a name="ln551">  lua_pushcfunction(lstate, &amp;nlua_foldupdate);</a>
+<a name="ln552">  lua_setfield(lstate, -2, &quot;_foldupdate&quot;);</a>
+<a name="ln553">}</a>
+<a name="ln554"> </a>
+<a name="ln555">void nlua_state_add_stdlib(lua_State *const lstate, bool is_thread)</a>
+<a name="ln556">{</a>
+<a name="ln557">  if (!is_thread) {</a>
+<a name="ln558">    // TODO(bfredl): some of basic string functions should already be</a>
+<a name="ln559">    // (or be easy to make) threadsafe</a>
+<a name="ln560"> </a>
+<a name="ln561">    // stricmp</a>
+<a name="ln562">    lua_pushcfunction(lstate, &amp;nlua_stricmp);</a>
+<a name="ln563">    lua_setfield(lstate, -2, &quot;stricmp&quot;);</a>
+<a name="ln564">    // str_utfindex</a>
+<a name="ln565">    lua_pushcfunction(lstate, &amp;nlua_str_utfindex);</a>
+<a name="ln566">    lua_setfield(lstate, -2, &quot;str_utfindex&quot;);</a>
+<a name="ln567">    // str_byteindex</a>
+<a name="ln568">    lua_pushcfunction(lstate, &amp;nlua_str_byteindex);</a>
+<a name="ln569">    lua_setfield(lstate, -2, &quot;str_byteindex&quot;);</a>
+<a name="ln570">    // str_utf_pos</a>
+<a name="ln571">    lua_pushcfunction(lstate, &amp;nlua_str_utf_pos);</a>
+<a name="ln572">    lua_setfield(lstate, -2, &quot;str_utf_pos&quot;);</a>
+<a name="ln573">    // str_utf_start</a>
+<a name="ln574">    lua_pushcfunction(lstate, &amp;nlua_str_utf_start);</a>
+<a name="ln575">    lua_setfield(lstate, -2, &quot;str_utf_start&quot;);</a>
+<a name="ln576">    // str_utf_end</a>
+<a name="ln577">    lua_pushcfunction(lstate, &amp;nlua_str_utf_end);</a>
+<a name="ln578">    lua_setfield(lstate, -2, &quot;str_utf_end&quot;);</a>
+<a name="ln579">    // regex</a>
+<a name="ln580">    lua_pushcfunction(lstate, &amp;nlua_regex);</a>
+<a name="ln581">    lua_setfield(lstate, -2, &quot;regex&quot;);</a>
+<a name="ln582">    luaL_newmetatable(lstate, &quot;nvim_regex&quot;);</a>
+<a name="ln583">    luaL_register(lstate, NULL, regex_meta);</a>
+<a name="ln584"> </a>
+<a name="ln585">    lua_pushvalue(lstate, -1);  // [meta, meta]</a>
+<a name="ln586">    lua_setfield(lstate, -2, &quot;__index&quot;);  // [meta]</a>
+<a name="ln587">    lua_pop(lstate, 1);  // don't use metatable now</a>
+<a name="ln588"> </a>
+<a name="ln589">    // vim.spell</a>
+<a name="ln590">    luaopen_spell(lstate);</a>
+<a name="ln591">    lua_setfield(lstate, -2, &quot;spell&quot;);</a>
+<a name="ln592"> </a>
+<a name="ln593">    // vim.iconv</a>
+<a name="ln594">    // depends on p_ambw, p_emoji</a>
+<a name="ln595">    lua_pushcfunction(lstate, &amp;nlua_iconv);</a>
+<a name="ln596">    lua_setfield(lstate, -2, &quot;iconv&quot;);</a>
+<a name="ln597"> </a>
+<a name="ln598">    nlua_state_add_internal(lstate);</a>
+<a name="ln599">  }</a>
+<a name="ln600"> </a>
+<a name="ln601">  // vim.mpack</a>
+<a name="ln602">  luaopen_mpack(lstate);</a>
+<a name="ln603">  lua_pushvalue(lstate, -1);</a>
+<a name="ln604">  lua_setfield(lstate, -3, &quot;mpack&quot;);</a>
+<a name="ln605"> </a>
+<a name="ln606">  // package.loaded.mpack = vim.mpack</a>
+<a name="ln607">  // otherwise luv will be reinitialized when require'mpack'</a>
+<a name="ln608">  lua_getglobal(lstate, &quot;package&quot;);</a>
+<a name="ln609">  lua_getfield(lstate, -1, &quot;loaded&quot;);</a>
+<a name="ln610">  lua_pushvalue(lstate, -3);</a>
+<a name="ln611">  lua_setfield(lstate, -2, &quot;mpack&quot;);</a>
+<a name="ln612">  lua_pop(lstate, 3);</a>
+<a name="ln613"> </a>
+<a name="ln614">  // vim.lpeg</a>
+<a name="ln615">  int luaopen_lpeg(lua_State *);</a>
+<a name="ln616">  luaopen_lpeg(lstate);</a>
+<a name="ln617">  lua_pushvalue(lstate, -1);</a>
+<a name="ln618">  lua_setfield(lstate, -4, &quot;lpeg&quot;);</a>
+<a name="ln619"> </a>
+<a name="ln620">  // package.loaded.lpeg = vim.lpeg</a>
+<a name="ln621">  lua_getglobal(lstate, &quot;package&quot;);</a>
+<a name="ln622">  lua_getfield(lstate, -1, &quot;loaded&quot;);</a>
+<a name="ln623">  lua_pushvalue(lstate, -3);</a>
+<a name="ln624">  lua_setfield(lstate, -2, &quot;lpeg&quot;);</a>
+<a name="ln625">  lua_pop(lstate, 4);</a>
+<a name="ln626"> </a>
+<a name="ln627">  // vim.diff</a>
+<a name="ln628">  lua_pushcfunction(lstate, &amp;nlua_xdl_diff);</a>
+<a name="ln629">  lua_setfield(lstate, -2, &quot;diff&quot;);</a>
+<a name="ln630"> </a>
+<a name="ln631">  // vim.json</a>
+<a name="ln632">  lua_cjson_new(lstate);</a>
+<a name="ln633">  lua_setfield(lstate, -2, &quot;json&quot;);</a>
+<a name="ln634"> </a>
+<a name="ln635">#ifdef NVIM_VENDOR_BIT</a>
+<a name="ln636">  // if building with puc lua, use internal fallback for require'bit'</a>
+<a name="ln637">  int top = lua_gettop(lstate);</a>
+<a name="ln638">  luaopen_bit(lstate);</a>
+<a name="ln639">  lua_settop(lstate, top);</a>
+<a name="ln640">#endif</a>
+<a name="ln641">}</a>
+<a name="ln642"> </a>
+<a name="ln643">/// like luaL_error, but allow cleanup</a>
+<a name="ln644">void nlua_push_errstr(lua_State *L, const char *fmt, ...)</a>
+<a name="ln645">{</a>
+<a name="ln646">  va_list argp;</a>
+<a name="ln647">  va_start(argp, fmt);</a>
+<a name="ln648">  luaL_where(L, 1);</a>
+<a name="ln649">  lua_pushvfstring(L, fmt, argp);</a>
+<a name="ln650">  va_end(argp);</a>
+<a name="ln651">  lua_concat(L, 2);</a>
+<a name="ln652">}</a>
+</code></pre>
+<div class="balloon" rel="647"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v601/" target="_blank">V601</a> Pointer is implicitly cast to an integer type. Inspect the second argument.</p></div>
+<link rel="stylesheet" href="highlight.css">
+<script src="highlight.pack.js"></script>
+<script src="highlightjs-line-numbers.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initLineNumbersOnLoad();</script>
+<script>
+  $(document).ready(function() {
+      $('.balloon').each(function () {
+          var bl = $(this);
+          var line = bl.attr('rel');
+          var text = $('a[name="ln'+line+'"]').text();
+
+          var space_count = 0;
+          for(var i = 0; i<text.length; i++){
+              var char = text[i];
+              if((char !== ' ')&&(char !== '\t'))break;
+              if(char === '\t')space_count++;
+              space_count++;
+          }
+
+          bl.css('margin-left', space_count*8);
+          $('a[name="ln'+line+'"]').after(bl);
+      });
+
+      window.location = window.location;
+  });
+</script>
+</body>
+</html>
