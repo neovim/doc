@@ -6055,1737 +6055,1770 @@
 <a name="ln6046">  return 0;</a>
 <a name="ln6047">}</a>
 <a name="ln6048"> </a>
-<a name="ln6049">static int nlua_api_nvim__unpack(lua_State *lstate)</a>
+<a name="ln6049">static int nlua_api_nvim__invalidate_glyph_cache(lua_State *lstate)</a>
 <a name="ln6050">{</a>
 <a name="ln6051">  Error err = ERROR_INIT;</a>
 <a name="ln6052">  char *err_param = 0;</a>
-<a name="ln6053">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6054">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6053">  if (lua_gettop(lstate) != 0) {</a>
+<a name="ln6054">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 0 arguments&quot;);</a>
 <a name="ln6055">    goto exit_0;</a>
 <a name="ln6056">  }</a>
-<a name="ln6057">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6058">  if (ERROR_SET(&amp;err)) {      err_param = &quot;str&quot;;      goto exit_0;</a>
+<a name="ln6057">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6058">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim__invalidate_glyph_cache&quot;);</a>
 <a name="ln6059">  }</a>
-<a name="ln6060"> </a>
-<a name="ln6061">  const Object ret = nvim__unpack(arg1, &amp;err);</a>
-<a name="ln6062">  nlua_push_Object(lstate, ret, true);</a>
-<a name="ln6063">api_free_object(ret);</a>
-<a name="ln6064"> </a>
-<a name="ln6065">  api_free_string(arg1);</a>
-<a name="ln6066"> </a>
-<a name="ln6067">exit_0:</a>
-<a name="ln6068">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6069">    luaL_where(lstate, 1);</a>
-<a name="ln6070">    if (err_param) {</a>
-<a name="ln6071">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6072">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6073">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6074">    }</a>
-<a name="ln6075">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6076">    api_clear_error(&amp;err);</a>
-<a name="ln6077">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6078">    return lua_error(lstate);</a>
-<a name="ln6079">  }</a>
-<a name="ln6080"> </a>
-<a name="ln6081">  return 1;</a>
-<a name="ln6082">}</a>
-<a name="ln6083"> </a>
-<a name="ln6084">static int nlua_api_nvim_del_mark(lua_State *lstate)</a>
-<a name="ln6085">{</a>
-<a name="ln6086">  Error err = ERROR_INIT;</a>
-<a name="ln6087">  char *err_param = 0;</a>
-<a name="ln6088">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6089">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln6090">    goto exit_0;</a>
-<a name="ln6091">  }</a>
-<a name="ln6092">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6093">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_del_mark&quot;);</a>
-<a name="ln6094">  }</a>
-<a name="ln6095">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6096">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_0;</a>
-<a name="ln6097">  }</a>
-<a name="ln6098"> </a>
-<a name="ln6099">  const Boolean ret = nvim_del_mark(arg1, &amp;err);</a>
-<a name="ln6100">  nlua_push_Boolean(lstate, ret, true);</a>
-<a name="ln6101">api_free_boolean(ret);</a>
-<a name="ln6102"> </a>
-<a name="ln6103">  api_free_string(arg1);</a>
-<a name="ln6104"> </a>
-<a name="ln6105">exit_0:</a>
-<a name="ln6106">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6107">    luaL_where(lstate, 1);</a>
-<a name="ln6108">    if (err_param) {</a>
-<a name="ln6109">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6110">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6111">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6112">    }</a>
-<a name="ln6113">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6114">    api_clear_error(&amp;err);</a>
-<a name="ln6115">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6116">    return lua_error(lstate);</a>
-<a name="ln6117">  }</a>
-<a name="ln6118"> </a>
-<a name="ln6119">  return 1;</a>
-<a name="ln6120">}</a>
-<a name="ln6121"> </a>
-<a name="ln6122">static int nlua_api_nvim_get_mark(lua_State *lstate)</a>
-<a name="ln6123">{</a>
-<a name="ln6124">  Error err = ERROR_INIT;</a>
-<a name="ln6125">  char *err_param = 0;</a>
-<a name="ln6126">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6127">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6128">    goto exit_0;</a>
-<a name="ln6129">  }</a>
-<a name="ln6130">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6131">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_get_mark&quot;);</a>
-<a name="ln6132">  }</a>
-<a name="ln6133">    const Dictionary arg2 = nlua_pop_Dictionary(lstate, false, &amp;err);</a>
-<a name="ln6134">  if (ERROR_SET(&amp;err)) {      err_param = &quot;opts&quot;;      goto exit_0;</a>
-<a name="ln6135">  }</a>
-<a name="ln6136"> </a>
-<a name="ln6137">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6138">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_1;</a>
-<a name="ln6139">  }</a>
-<a name="ln6140"> </a>
-<a name="ln6141">  const Array ret = nvim_get_mark(arg1, arg2, &amp;err);</a>
-<a name="ln6142">  nlua_push_Array(lstate, ret, true);</a>
-<a name="ln6143">api_free_array(ret);</a>
-<a name="ln6144"> </a>
-<a name="ln6145">  api_free_string(arg1);</a>
-<a name="ln6146">exit_1:</a>
-<a name="ln6147">  api_free_dictionary(arg2);</a>
-<a name="ln6148"> </a>
-<a name="ln6149">exit_0:</a>
-<a name="ln6150">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6151">    luaL_where(lstate, 1);</a>
-<a name="ln6152">    if (err_param) {</a>
-<a name="ln6153">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6154">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6155">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6156">    }</a>
-<a name="ln6157">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6158">    api_clear_error(&amp;err);</a>
-<a name="ln6159">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6160">    return lua_error(lstate);</a>
-<a name="ln6161">  }</a>
-<a name="ln6162"> </a>
-<a name="ln6163">  return 1;</a>
-<a name="ln6164">}</a>
-<a name="ln6165"> </a>
-<a name="ln6166">static int nlua_api_nvim_eval_statusline(lua_State *lstate)</a>
-<a name="ln6167">{</a>
-<a name="ln6168">  Error err = ERROR_INIT;</a>
-<a name="ln6169">  char *err_param = 0;</a>
-<a name="ln6170">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6171">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6172">    goto exit_0;</a>
-<a name="ln6173">  }</a>
-<a name="ln6174">    KeyDict_eval_statusline arg2 = { 0 }; nlua_pop_keydict(lstate, &amp;arg2, KeyDict_eval_statusline_get_field, &amp;err_param, &amp;err);</a>
-<a name="ln6175">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
-<a name="ln6176">  }</a>
-<a name="ln6177"> </a>
-<a name="ln6178">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6179">  if (ERROR_SET(&amp;err)) {      err_param = &quot;str&quot;;      goto exit_1;</a>
-<a name="ln6180">  }</a>
-<a name="ln6181"> </a>
-<a name="ln6182">  const Dictionary ret = nvim_eval_statusline(arg1, &amp;arg2, &amp;err);</a>
-<a name="ln6183">  nlua_push_Dictionary(lstate, ret, true);</a>
-<a name="ln6184">api_free_dictionary(ret);</a>
-<a name="ln6185"> </a>
-<a name="ln6186">  api_free_string(arg1);</a>
-<a name="ln6187">exit_1:</a>
-<a name="ln6188">  api_free_keydict_eval_statusline(&amp;arg2);</a>
-<a name="ln6189"> </a>
-<a name="ln6190">exit_0:</a>
-<a name="ln6191">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6192">    luaL_where(lstate, 1);</a>
-<a name="ln6193">    if (err_param) {</a>
-<a name="ln6194">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6195">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6196">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6197">    }</a>
-<a name="ln6198">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6199">    api_clear_error(&amp;err);</a>
-<a name="ln6200">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6201">    return lua_error(lstate);</a>
-<a name="ln6202">  }</a>
-<a name="ln6203"> </a>
-<a name="ln6204">  return 1;</a>
-<a name="ln6205">}</a>
-<a name="ln6206"> </a>
-<a name="ln6207">static int nlua_api_nvim_exec2(lua_State *lstate)</a>
-<a name="ln6208">{</a>
-<a name="ln6209">  Error err = ERROR_INIT;</a>
-<a name="ln6210">  char *err_param = 0;</a>
-<a name="ln6211">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6212">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6213">    goto exit_0;</a>
-<a name="ln6214">  }</a>
-<a name="ln6215">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6216">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_exec2&quot;);</a>
-<a name="ln6217">  }</a>
-<a name="ln6218">    KeyDict_exec_opts arg2 = { 0 }; nlua_pop_keydict(lstate, &amp;arg2, KeyDict_exec_opts_get_field, &amp;err_param, &amp;err);</a>
-<a name="ln6219">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
-<a name="ln6220">  }</a>
-<a name="ln6221"> </a>
-<a name="ln6222">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6223">  if (ERROR_SET(&amp;err)) {      err_param = &quot;src&quot;;      goto exit_1;</a>
-<a name="ln6224">  }</a>
-<a name="ln6225"> </a>
-<a name="ln6226">  const Dictionary ret = nvim_exec2(LUA_INTERNAL_CALL, arg1, &amp;arg2, &amp;err);</a>
-<a name="ln6227">  nlua_push_Dictionary(lstate, ret, false);</a>
-<a name="ln6228">api_free_dictionary(ret);</a>
-<a name="ln6229"> </a>
-<a name="ln6230">  api_free_string(arg1);</a>
-<a name="ln6231">exit_1:</a>
-<a name="ln6232">  api_free_keydict_exec_opts(&amp;arg2);</a>
-<a name="ln6233"> </a>
-<a name="ln6234">exit_0:</a>
-<a name="ln6235">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6236">    luaL_where(lstate, 1);</a>
-<a name="ln6237">    if (err_param) {</a>
-<a name="ln6238">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6239">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6240">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6241">    }</a>
-<a name="ln6242">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6243">    api_clear_error(&amp;err);</a>
-<a name="ln6244">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6245">    return lua_error(lstate);</a>
-<a name="ln6246">  }</a>
-<a name="ln6247"> </a>
-<a name="ln6248">  return 1;</a>
-<a name="ln6249">}</a>
-<a name="ln6250"> </a>
-<a name="ln6251">static int nlua_api_nvim_command(lua_State *lstate)</a>
-<a name="ln6252">{</a>
-<a name="ln6253">  Error err = ERROR_INIT;</a>
-<a name="ln6254">  char *err_param = 0;</a>
-<a name="ln6255">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6256">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln6257">    goto exit_0;</a>
-<a name="ln6258">  }</a>
-<a name="ln6259">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6260">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_command&quot;);</a>
-<a name="ln6261">  }</a>
-<a name="ln6262">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6263">  if (ERROR_SET(&amp;err)) {      err_param = &quot;command&quot;;      goto exit_0;</a>
-<a name="ln6264">  }</a>
-<a name="ln6265"> </a>
-<a name="ln6266">  nvim_command(arg1, &amp;err);</a>
-<a name="ln6267"> </a>
-<a name="ln6268">  api_free_string(arg1);</a>
-<a name="ln6269"> </a>
-<a name="ln6270">exit_0:</a>
-<a name="ln6271">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6272">    luaL_where(lstate, 1);</a>
-<a name="ln6273">    if (err_param) {</a>
-<a name="ln6274">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6275">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6276">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6277">    }</a>
-<a name="ln6278">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6279">    api_clear_error(&amp;err);</a>
-<a name="ln6280">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6281">    return lua_error(lstate);</a>
-<a name="ln6282">  }</a>
-<a name="ln6283"> </a>
-<a name="ln6284">  return 0;</a>
-<a name="ln6285">}</a>
-<a name="ln6286"> </a>
-<a name="ln6287">static int nlua_api_nvim_eval(lua_State *lstate)</a>
-<a name="ln6288">{</a>
-<a name="ln6289">  Error err = ERROR_INIT;</a>
-<a name="ln6290">  char *err_param = 0;</a>
-<a name="ln6291">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6292">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln6293">    goto exit_0;</a>
-<a name="ln6294">  }</a>
-<a name="ln6295">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6296">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_eval&quot;);</a>
-<a name="ln6297">  }</a>
-<a name="ln6298">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6299">  if (ERROR_SET(&amp;err)) {      err_param = &quot;expr&quot;;      goto exit_0;</a>
-<a name="ln6300">  }</a>
-<a name="ln6301"> </a>
-<a name="ln6302">  const Object ret = nvim_eval(arg1, &amp;err);</a>
-<a name="ln6303">  nlua_push_Object(lstate, ret, true);</a>
-<a name="ln6304">api_free_object(ret);</a>
-<a name="ln6305"> </a>
-<a name="ln6306">  api_free_string(arg1);</a>
-<a name="ln6307"> </a>
-<a name="ln6308">exit_0:</a>
-<a name="ln6309">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6310">    luaL_where(lstate, 1);</a>
-<a name="ln6311">    if (err_param) {</a>
-<a name="ln6312">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6313">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6314">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6315">    }</a>
-<a name="ln6316">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6317">    api_clear_error(&amp;err);</a>
-<a name="ln6318">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6319">    return lua_error(lstate);</a>
-<a name="ln6320">  }</a>
-<a name="ln6321"> </a>
-<a name="ln6322">  return 1;</a>
-<a name="ln6323">}</a>
-<a name="ln6324"> </a>
-<a name="ln6325">static int nlua_api_nvim_call_function(lua_State *lstate)</a>
-<a name="ln6326">{</a>
-<a name="ln6327">  Error err = ERROR_INIT;</a>
-<a name="ln6328">  char *err_param = 0;</a>
-<a name="ln6329">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6330">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6331">    goto exit_0;</a>
-<a name="ln6332">  }</a>
-<a name="ln6333">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6334">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_call_function&quot;);</a>
-<a name="ln6335">  }</a>
-<a name="ln6336">    const Array arg2 = nlua_pop_Array(lstate, &amp;err);</a>
-<a name="ln6337">  if (ERROR_SET(&amp;err)) {      err_param = &quot;args&quot;;      goto exit_0;</a>
-<a name="ln6338">  }</a>
-<a name="ln6339"> </a>
-<a name="ln6340">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6341">  if (ERROR_SET(&amp;err)) {      err_param = &quot;fn&quot;;      goto exit_1;</a>
-<a name="ln6342">  }</a>
-<a name="ln6343"> </a>
-<a name="ln6344">  const Object ret = nvim_call_function(arg1, arg2, &amp;err);</a>
-<a name="ln6345">  nlua_push_Object(lstate, ret, true);</a>
-<a name="ln6346">api_free_object(ret);</a>
-<a name="ln6347"> </a>
-<a name="ln6348">  api_free_string(arg1);</a>
-<a name="ln6349">exit_1:</a>
-<a name="ln6350">  api_free_array(arg2);</a>
-<a name="ln6351"> </a>
-<a name="ln6352">exit_0:</a>
-<a name="ln6353">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6354">    luaL_where(lstate, 1);</a>
-<a name="ln6355">    if (err_param) {</a>
-<a name="ln6356">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6357">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6358">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6359">    }</a>
-<a name="ln6360">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6361">    api_clear_error(&amp;err);</a>
-<a name="ln6362">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6363">    return lua_error(lstate);</a>
-<a name="ln6364">  }</a>
-<a name="ln6365"> </a>
-<a name="ln6366">  return 1;</a>
-<a name="ln6367">}</a>
-<a name="ln6368"> </a>
-<a name="ln6369">static int nlua_api_nvim_call_dict_function(lua_State *lstate)</a>
-<a name="ln6370">{</a>
-<a name="ln6371">  Error err = ERROR_INIT;</a>
-<a name="ln6372">  char *err_param = 0;</a>
-<a name="ln6373">  if (lua_gettop(lstate) != 3) {</a>
-<a name="ln6374">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 3 arguments&quot;);</a>
-<a name="ln6375">    goto exit_0;</a>
-<a name="ln6376">  }</a>
-<a name="ln6377">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6378">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_call_dict_function&quot;);</a>
-<a name="ln6379">  }</a>
-<a name="ln6380">    const Array arg3 = nlua_pop_Array(lstate, &amp;err);</a>
-<a name="ln6381">  if (ERROR_SET(&amp;err)) {      err_param = &quot;args&quot;;      goto exit_0;</a>
-<a name="ln6382">  }</a>
-<a name="ln6383"> </a>
-<a name="ln6384">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6385">  if (ERROR_SET(&amp;err)) {      err_param = &quot;fn&quot;;      goto exit_1;</a>
-<a name="ln6386">  }</a>
-<a name="ln6387"> </a>
-<a name="ln6388">    const Object arg1 = nlua_pop_Object(lstate, true, &amp;err);</a>
-<a name="ln6389">  if (ERROR_SET(&amp;err)) {      err_param = &quot;dict&quot;;      goto exit_2;</a>
-<a name="ln6390">  }</a>
-<a name="ln6391"> </a>
-<a name="ln6392">  const Object ret = nvim_call_dict_function(arg1, arg2, arg3, &amp;err);</a>
-<a name="ln6393">  nlua_push_Object(lstate, ret, true);</a>
-<a name="ln6394">api_free_object(ret);</a>
-<a name="ln6395"> </a>
-<a name="ln6396">  api_free_object(arg1);</a>
-<a name="ln6397">exit_2:</a>
-<a name="ln6398">  api_free_string(arg2);</a>
-<a name="ln6399">exit_1:</a>
-<a name="ln6400">  api_free_array(arg3);</a>
-<a name="ln6401"> </a>
-<a name="ln6402">exit_0:</a>
-<a name="ln6403">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6404">    luaL_where(lstate, 1);</a>
-<a name="ln6405">    if (err_param) {</a>
-<a name="ln6406">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6407">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6408">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6409">    }</a>
-<a name="ln6410">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6411">    api_clear_error(&amp;err);</a>
-<a name="ln6412">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6413">    return lua_error(lstate);</a>
-<a name="ln6414">  }</a>
-<a name="ln6415"> </a>
-<a name="ln6416">  return 1;</a>
-<a name="ln6417">}</a>
+<a name="ln6060">  nvim__invalidate_glyph_cache();</a>
+<a name="ln6061"> </a>
+<a name="ln6062"> </a>
+<a name="ln6063">exit_0:</a>
+<a name="ln6064">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6065">    luaL_where(lstate, 1);</a>
+<a name="ln6066">    if (err_param) {</a>
+<a name="ln6067">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6068">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6069">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6070">    }</a>
+<a name="ln6071">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6072">    api_clear_error(&amp;err);</a>
+<a name="ln6073">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6074">    return lua_error(lstate);</a>
+<a name="ln6075">  }</a>
+<a name="ln6076"> </a>
+<a name="ln6077">  return 0;</a>
+<a name="ln6078">}</a>
+<a name="ln6079"> </a>
+<a name="ln6080">static int nlua_api_nvim__unpack(lua_State *lstate)</a>
+<a name="ln6081">{</a>
+<a name="ln6082">  Error err = ERROR_INIT;</a>
+<a name="ln6083">  char *err_param = 0;</a>
+<a name="ln6084">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6085">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6086">    goto exit_0;</a>
+<a name="ln6087">  }</a>
+<a name="ln6088">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6089">  if (ERROR_SET(&amp;err)) {      err_param = &quot;str&quot;;      goto exit_0;</a>
+<a name="ln6090">  }</a>
+<a name="ln6091"> </a>
+<a name="ln6092">  const Object ret = nvim__unpack(arg1, &amp;err);</a>
+<a name="ln6093">  nlua_push_Object(lstate, ret, true);</a>
+<a name="ln6094">api_free_object(ret);</a>
+<a name="ln6095"> </a>
+<a name="ln6096">  api_free_string(arg1);</a>
+<a name="ln6097"> </a>
+<a name="ln6098">exit_0:</a>
+<a name="ln6099">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6100">    luaL_where(lstate, 1);</a>
+<a name="ln6101">    if (err_param) {</a>
+<a name="ln6102">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6103">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6104">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6105">    }</a>
+<a name="ln6106">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6107">    api_clear_error(&amp;err);</a>
+<a name="ln6108">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6109">    return lua_error(lstate);</a>
+<a name="ln6110">  }</a>
+<a name="ln6111"> </a>
+<a name="ln6112">  return 1;</a>
+<a name="ln6113">}</a>
+<a name="ln6114"> </a>
+<a name="ln6115">static int nlua_api_nvim_del_mark(lua_State *lstate)</a>
+<a name="ln6116">{</a>
+<a name="ln6117">  Error err = ERROR_INIT;</a>
+<a name="ln6118">  char *err_param = 0;</a>
+<a name="ln6119">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6120">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6121">    goto exit_0;</a>
+<a name="ln6122">  }</a>
+<a name="ln6123">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6124">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_del_mark&quot;);</a>
+<a name="ln6125">  }</a>
+<a name="ln6126">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6127">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_0;</a>
+<a name="ln6128">  }</a>
+<a name="ln6129"> </a>
+<a name="ln6130">  const Boolean ret = nvim_del_mark(arg1, &amp;err);</a>
+<a name="ln6131">  nlua_push_Boolean(lstate, ret, true);</a>
+<a name="ln6132">api_free_boolean(ret);</a>
+<a name="ln6133"> </a>
+<a name="ln6134">  api_free_string(arg1);</a>
+<a name="ln6135"> </a>
+<a name="ln6136">exit_0:</a>
+<a name="ln6137">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6138">    luaL_where(lstate, 1);</a>
+<a name="ln6139">    if (err_param) {</a>
+<a name="ln6140">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6141">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6142">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6143">    }</a>
+<a name="ln6144">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6145">    api_clear_error(&amp;err);</a>
+<a name="ln6146">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6147">    return lua_error(lstate);</a>
+<a name="ln6148">  }</a>
+<a name="ln6149"> </a>
+<a name="ln6150">  return 1;</a>
+<a name="ln6151">}</a>
+<a name="ln6152"> </a>
+<a name="ln6153">static int nlua_api_nvim_get_mark(lua_State *lstate)</a>
+<a name="ln6154">{</a>
+<a name="ln6155">  Error err = ERROR_INIT;</a>
+<a name="ln6156">  char *err_param = 0;</a>
+<a name="ln6157">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6158">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6159">    goto exit_0;</a>
+<a name="ln6160">  }</a>
+<a name="ln6161">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6162">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_get_mark&quot;);</a>
+<a name="ln6163">  }</a>
+<a name="ln6164">    const Dictionary arg2 = nlua_pop_Dictionary(lstate, false, &amp;err);</a>
+<a name="ln6165">  if (ERROR_SET(&amp;err)) {      err_param = &quot;opts&quot;;      goto exit_0;</a>
+<a name="ln6166">  }</a>
+<a name="ln6167"> </a>
+<a name="ln6168">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6169">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_1;</a>
+<a name="ln6170">  }</a>
+<a name="ln6171"> </a>
+<a name="ln6172">  const Array ret = nvim_get_mark(arg1, arg2, &amp;err);</a>
+<a name="ln6173">  nlua_push_Array(lstate, ret, true);</a>
+<a name="ln6174">api_free_array(ret);</a>
+<a name="ln6175"> </a>
+<a name="ln6176">  api_free_string(arg1);</a>
+<a name="ln6177">exit_1:</a>
+<a name="ln6178">  api_free_dictionary(arg2);</a>
+<a name="ln6179"> </a>
+<a name="ln6180">exit_0:</a>
+<a name="ln6181">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6182">    luaL_where(lstate, 1);</a>
+<a name="ln6183">    if (err_param) {</a>
+<a name="ln6184">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6185">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6186">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6187">    }</a>
+<a name="ln6188">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6189">    api_clear_error(&amp;err);</a>
+<a name="ln6190">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6191">    return lua_error(lstate);</a>
+<a name="ln6192">  }</a>
+<a name="ln6193"> </a>
+<a name="ln6194">  return 1;</a>
+<a name="ln6195">}</a>
+<a name="ln6196"> </a>
+<a name="ln6197">static int nlua_api_nvim_eval_statusline(lua_State *lstate)</a>
+<a name="ln6198">{</a>
+<a name="ln6199">  Error err = ERROR_INIT;</a>
+<a name="ln6200">  char *err_param = 0;</a>
+<a name="ln6201">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6202">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6203">    goto exit_0;</a>
+<a name="ln6204">  }</a>
+<a name="ln6205">    KeyDict_eval_statusline arg2 = { 0 }; nlua_pop_keydict(lstate, &amp;arg2, KeyDict_eval_statusline_get_field, &amp;err_param, &amp;err);</a>
+<a name="ln6206">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
+<a name="ln6207">  }</a>
+<a name="ln6208"> </a>
+<a name="ln6209">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6210">  if (ERROR_SET(&amp;err)) {      err_param = &quot;str&quot;;      goto exit_1;</a>
+<a name="ln6211">  }</a>
+<a name="ln6212"> </a>
+<a name="ln6213">  const Dictionary ret = nvim_eval_statusline(arg1, &amp;arg2, &amp;err);</a>
+<a name="ln6214">  nlua_push_Dictionary(lstate, ret, true);</a>
+<a name="ln6215">api_free_dictionary(ret);</a>
+<a name="ln6216"> </a>
+<a name="ln6217">  api_free_string(arg1);</a>
+<a name="ln6218">exit_1:</a>
+<a name="ln6219">  api_free_keydict_eval_statusline(&amp;arg2);</a>
+<a name="ln6220"> </a>
+<a name="ln6221">exit_0:</a>
+<a name="ln6222">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6223">    luaL_where(lstate, 1);</a>
+<a name="ln6224">    if (err_param) {</a>
+<a name="ln6225">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6226">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6227">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6228">    }</a>
+<a name="ln6229">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6230">    api_clear_error(&amp;err);</a>
+<a name="ln6231">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6232">    return lua_error(lstate);</a>
+<a name="ln6233">  }</a>
+<a name="ln6234"> </a>
+<a name="ln6235">  return 1;</a>
+<a name="ln6236">}</a>
+<a name="ln6237"> </a>
+<a name="ln6238">static int nlua_api_nvim_exec2(lua_State *lstate)</a>
+<a name="ln6239">{</a>
+<a name="ln6240">  Error err = ERROR_INIT;</a>
+<a name="ln6241">  char *err_param = 0;</a>
+<a name="ln6242">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6243">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6244">    goto exit_0;</a>
+<a name="ln6245">  }</a>
+<a name="ln6246">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6247">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_exec2&quot;);</a>
+<a name="ln6248">  }</a>
+<a name="ln6249">    KeyDict_exec_opts arg2 = { 0 }; nlua_pop_keydict(lstate, &amp;arg2, KeyDict_exec_opts_get_field, &amp;err_param, &amp;err);</a>
+<a name="ln6250">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
+<a name="ln6251">  }</a>
+<a name="ln6252"> </a>
+<a name="ln6253">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6254">  if (ERROR_SET(&amp;err)) {      err_param = &quot;src&quot;;      goto exit_1;</a>
+<a name="ln6255">  }</a>
+<a name="ln6256"> </a>
+<a name="ln6257">  const Dictionary ret = nvim_exec2(LUA_INTERNAL_CALL, arg1, &amp;arg2, &amp;err);</a>
+<a name="ln6258">  nlua_push_Dictionary(lstate, ret, false);</a>
+<a name="ln6259">api_free_dictionary(ret);</a>
+<a name="ln6260"> </a>
+<a name="ln6261">  api_free_string(arg1);</a>
+<a name="ln6262">exit_1:</a>
+<a name="ln6263">  api_free_keydict_exec_opts(&amp;arg2);</a>
+<a name="ln6264"> </a>
+<a name="ln6265">exit_0:</a>
+<a name="ln6266">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6267">    luaL_where(lstate, 1);</a>
+<a name="ln6268">    if (err_param) {</a>
+<a name="ln6269">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6270">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6271">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6272">    }</a>
+<a name="ln6273">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6274">    api_clear_error(&amp;err);</a>
+<a name="ln6275">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6276">    return lua_error(lstate);</a>
+<a name="ln6277">  }</a>
+<a name="ln6278"> </a>
+<a name="ln6279">  return 1;</a>
+<a name="ln6280">}</a>
+<a name="ln6281"> </a>
+<a name="ln6282">static int nlua_api_nvim_command(lua_State *lstate)</a>
+<a name="ln6283">{</a>
+<a name="ln6284">  Error err = ERROR_INIT;</a>
+<a name="ln6285">  char *err_param = 0;</a>
+<a name="ln6286">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6287">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6288">    goto exit_0;</a>
+<a name="ln6289">  }</a>
+<a name="ln6290">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6291">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_command&quot;);</a>
+<a name="ln6292">  }</a>
+<a name="ln6293">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6294">  if (ERROR_SET(&amp;err)) {      err_param = &quot;command&quot;;      goto exit_0;</a>
+<a name="ln6295">  }</a>
+<a name="ln6296"> </a>
+<a name="ln6297">  nvim_command(arg1, &amp;err);</a>
+<a name="ln6298"> </a>
+<a name="ln6299">  api_free_string(arg1);</a>
+<a name="ln6300"> </a>
+<a name="ln6301">exit_0:</a>
+<a name="ln6302">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6303">    luaL_where(lstate, 1);</a>
+<a name="ln6304">    if (err_param) {</a>
+<a name="ln6305">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6306">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6307">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6308">    }</a>
+<a name="ln6309">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6310">    api_clear_error(&amp;err);</a>
+<a name="ln6311">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6312">    return lua_error(lstate);</a>
+<a name="ln6313">  }</a>
+<a name="ln6314"> </a>
+<a name="ln6315">  return 0;</a>
+<a name="ln6316">}</a>
+<a name="ln6317"> </a>
+<a name="ln6318">static int nlua_api_nvim_eval(lua_State *lstate)</a>
+<a name="ln6319">{</a>
+<a name="ln6320">  Error err = ERROR_INIT;</a>
+<a name="ln6321">  char *err_param = 0;</a>
+<a name="ln6322">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6323">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6324">    goto exit_0;</a>
+<a name="ln6325">  }</a>
+<a name="ln6326">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6327">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_eval&quot;);</a>
+<a name="ln6328">  }</a>
+<a name="ln6329">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6330">  if (ERROR_SET(&amp;err)) {      err_param = &quot;expr&quot;;      goto exit_0;</a>
+<a name="ln6331">  }</a>
+<a name="ln6332"> </a>
+<a name="ln6333">  const Object ret = nvim_eval(arg1, &amp;err);</a>
+<a name="ln6334">  nlua_push_Object(lstate, ret, true);</a>
+<a name="ln6335">api_free_object(ret);</a>
+<a name="ln6336"> </a>
+<a name="ln6337">  api_free_string(arg1);</a>
+<a name="ln6338"> </a>
+<a name="ln6339">exit_0:</a>
+<a name="ln6340">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6341">    luaL_where(lstate, 1);</a>
+<a name="ln6342">    if (err_param) {</a>
+<a name="ln6343">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6344">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6345">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6346">    }</a>
+<a name="ln6347">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6348">    api_clear_error(&amp;err);</a>
+<a name="ln6349">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6350">    return lua_error(lstate);</a>
+<a name="ln6351">  }</a>
+<a name="ln6352"> </a>
+<a name="ln6353">  return 1;</a>
+<a name="ln6354">}</a>
+<a name="ln6355"> </a>
+<a name="ln6356">static int nlua_api_nvim_call_function(lua_State *lstate)</a>
+<a name="ln6357">{</a>
+<a name="ln6358">  Error err = ERROR_INIT;</a>
+<a name="ln6359">  char *err_param = 0;</a>
+<a name="ln6360">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6361">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6362">    goto exit_0;</a>
+<a name="ln6363">  }</a>
+<a name="ln6364">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6365">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_call_function&quot;);</a>
+<a name="ln6366">  }</a>
+<a name="ln6367">    const Array arg2 = nlua_pop_Array(lstate, &amp;err);</a>
+<a name="ln6368">  if (ERROR_SET(&amp;err)) {      err_param = &quot;args&quot;;      goto exit_0;</a>
+<a name="ln6369">  }</a>
+<a name="ln6370"> </a>
+<a name="ln6371">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6372">  if (ERROR_SET(&amp;err)) {      err_param = &quot;fn&quot;;      goto exit_1;</a>
+<a name="ln6373">  }</a>
+<a name="ln6374"> </a>
+<a name="ln6375">  const Object ret = nvim_call_function(arg1, arg2, &amp;err);</a>
+<a name="ln6376">  nlua_push_Object(lstate, ret, true);</a>
+<a name="ln6377">api_free_object(ret);</a>
+<a name="ln6378"> </a>
+<a name="ln6379">  api_free_string(arg1);</a>
+<a name="ln6380">exit_1:</a>
+<a name="ln6381">  api_free_array(arg2);</a>
+<a name="ln6382"> </a>
+<a name="ln6383">exit_0:</a>
+<a name="ln6384">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6385">    luaL_where(lstate, 1);</a>
+<a name="ln6386">    if (err_param) {</a>
+<a name="ln6387">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6388">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6389">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6390">    }</a>
+<a name="ln6391">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6392">    api_clear_error(&amp;err);</a>
+<a name="ln6393">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6394">    return lua_error(lstate);</a>
+<a name="ln6395">  }</a>
+<a name="ln6396"> </a>
+<a name="ln6397">  return 1;</a>
+<a name="ln6398">}</a>
+<a name="ln6399"> </a>
+<a name="ln6400">static int nlua_api_nvim_call_dict_function(lua_State *lstate)</a>
+<a name="ln6401">{</a>
+<a name="ln6402">  Error err = ERROR_INIT;</a>
+<a name="ln6403">  char *err_param = 0;</a>
+<a name="ln6404">  if (lua_gettop(lstate) != 3) {</a>
+<a name="ln6405">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 3 arguments&quot;);</a>
+<a name="ln6406">    goto exit_0;</a>
+<a name="ln6407">  }</a>
+<a name="ln6408">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6409">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_call_dict_function&quot;);</a>
+<a name="ln6410">  }</a>
+<a name="ln6411">    const Array arg3 = nlua_pop_Array(lstate, &amp;err);</a>
+<a name="ln6412">  if (ERROR_SET(&amp;err)) {      err_param = &quot;args&quot;;      goto exit_0;</a>
+<a name="ln6413">  }</a>
+<a name="ln6414"> </a>
+<a name="ln6415">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6416">  if (ERROR_SET(&amp;err)) {      err_param = &quot;fn&quot;;      goto exit_1;</a>
+<a name="ln6417">  }</a>
 <a name="ln6418"> </a>
-<a name="ln6419">static int nlua_api_nvim_parse_expression(lua_State *lstate)</a>
-<a name="ln6420">{</a>
-<a name="ln6421">  Error err = ERROR_INIT;</a>
-<a name="ln6422">  char *err_param = 0;</a>
-<a name="ln6423">  if (lua_gettop(lstate) != 3) {</a>
-<a name="ln6424">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 3 arguments&quot;);</a>
-<a name="ln6425">    goto exit_0;</a>
-<a name="ln6426">  }</a>
-<a name="ln6427">    const Boolean arg3 = nlua_pop_Boolean(lstate, &amp;err);</a>
-<a name="ln6428">  if (ERROR_SET(&amp;err)) {      err_param = &quot;highlight&quot;;      goto exit_0;</a>
-<a name="ln6429">  }</a>
-<a name="ln6430"> </a>
-<a name="ln6431">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6432">  if (ERROR_SET(&amp;err)) {      err_param = &quot;flags&quot;;      goto exit_1;</a>
-<a name="ln6433">  }</a>
-<a name="ln6434"> </a>
-<a name="ln6435">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6436">  if (ERROR_SET(&amp;err)) {      err_param = &quot;expr&quot;;      goto exit_2;</a>
-<a name="ln6437">  }</a>
-<a name="ln6438"> </a>
-<a name="ln6439">  const Dictionary ret = nvim_parse_expression(arg1, arg2, arg3, &amp;err);</a>
-<a name="ln6440">  nlua_push_Dictionary(lstate, ret, true);</a>
-<a name="ln6441">api_free_dictionary(ret);</a>
-<a name="ln6442"> </a>
-<a name="ln6443">  api_free_string(arg1);</a>
-<a name="ln6444">exit_2:</a>
-<a name="ln6445">  api_free_string(arg2);</a>
-<a name="ln6446">exit_1:</a>
-<a name="ln6447">  api_free_boolean(arg3);</a>
-<a name="ln6448"> </a>
-<a name="ln6449">exit_0:</a>
-<a name="ln6450">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6451">    luaL_where(lstate, 1);</a>
-<a name="ln6452">    if (err_param) {</a>
-<a name="ln6453">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6454">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6455">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6456">    }</a>
-<a name="ln6457">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6458">    api_clear_error(&amp;err);</a>
-<a name="ln6459">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6460">    return lua_error(lstate);</a>
-<a name="ln6461">  }</a>
-<a name="ln6462"> </a>
-<a name="ln6463">  return 1;</a>
-<a name="ln6464">}</a>
+<a name="ln6419">    const Object arg1 = nlua_pop_Object(lstate, true, &amp;err);</a>
+<a name="ln6420">  if (ERROR_SET(&amp;err)) {      err_param = &quot;dict&quot;;      goto exit_2;</a>
+<a name="ln6421">  }</a>
+<a name="ln6422"> </a>
+<a name="ln6423">  const Object ret = nvim_call_dict_function(arg1, arg2, arg3, &amp;err);</a>
+<a name="ln6424">  nlua_push_Object(lstate, ret, true);</a>
+<a name="ln6425">api_free_object(ret);</a>
+<a name="ln6426"> </a>
+<a name="ln6427">  api_free_object(arg1);</a>
+<a name="ln6428">exit_2:</a>
+<a name="ln6429">  api_free_string(arg2);</a>
+<a name="ln6430">exit_1:</a>
+<a name="ln6431">  api_free_array(arg3);</a>
+<a name="ln6432"> </a>
+<a name="ln6433">exit_0:</a>
+<a name="ln6434">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6435">    luaL_where(lstate, 1);</a>
+<a name="ln6436">    if (err_param) {</a>
+<a name="ln6437">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6438">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6439">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6440">    }</a>
+<a name="ln6441">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6442">    api_clear_error(&amp;err);</a>
+<a name="ln6443">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6444">    return lua_error(lstate);</a>
+<a name="ln6445">  }</a>
+<a name="ln6446"> </a>
+<a name="ln6447">  return 1;</a>
+<a name="ln6448">}</a>
+<a name="ln6449"> </a>
+<a name="ln6450">static int nlua_api_nvim_parse_expression(lua_State *lstate)</a>
+<a name="ln6451">{</a>
+<a name="ln6452">  Error err = ERROR_INIT;</a>
+<a name="ln6453">  char *err_param = 0;</a>
+<a name="ln6454">  if (lua_gettop(lstate) != 3) {</a>
+<a name="ln6455">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 3 arguments&quot;);</a>
+<a name="ln6456">    goto exit_0;</a>
+<a name="ln6457">  }</a>
+<a name="ln6458">    const Boolean arg3 = nlua_pop_Boolean(lstate, &amp;err);</a>
+<a name="ln6459">  if (ERROR_SET(&amp;err)) {      err_param = &quot;highlight&quot;;      goto exit_0;</a>
+<a name="ln6460">  }</a>
+<a name="ln6461"> </a>
+<a name="ln6462">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6463">  if (ERROR_SET(&amp;err)) {      err_param = &quot;flags&quot;;      goto exit_1;</a>
+<a name="ln6464">  }</a>
 <a name="ln6465"> </a>
-<a name="ln6466">static int nlua_api_nvim_open_win(lua_State *lstate)</a>
-<a name="ln6467">{</a>
-<a name="ln6468">  Error err = ERROR_INIT;</a>
-<a name="ln6469">  char *err_param = 0;</a>
-<a name="ln6470">  if (lua_gettop(lstate) != 3) {</a>
-<a name="ln6471">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 3 arguments&quot;);</a>
-<a name="ln6472">    goto exit_0;</a>
-<a name="ln6473">  }</a>
-<a name="ln6474">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6475">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_open_win&quot;);</a>
-<a name="ln6476">  }</a>
-<a name="ln6477">  if (textlock != 0 || expr_map_locked()) {</a>
-<a name="ln6478">    api_set_error(&amp;err, kErrorTypeException, &quot;%s&quot;, e_textlock);</a>
-<a name="ln6479">    goto exit_0;</a>
-<a name="ln6480">  }</a>
-<a name="ln6481">    KeyDict_float_config arg3 = { 0 }; nlua_pop_keydict(lstate, &amp;arg3, KeyDict_float_config_get_field, &amp;err_param, &amp;err);</a>
-<a name="ln6482">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
-<a name="ln6483">  }</a>
-<a name="ln6484"> </a>
-<a name="ln6485">    const Boolean arg2 = nlua_pop_Boolean(lstate, &amp;err);</a>
-<a name="ln6486">  if (ERROR_SET(&amp;err)) {      err_param = &quot;enter&quot;;      goto exit_1;</a>
-<a name="ln6487">  }</a>
-<a name="ln6488"> </a>
-<a name="ln6489">    const Buffer arg1 = nlua_pop_Buffer(lstate, &amp;err);</a>
-<a name="ln6490">  if (ERROR_SET(&amp;err)) {      err_param = &quot;buffer&quot;;      goto exit_2;</a>
-<a name="ln6491">  }</a>
-<a name="ln6492"> </a>
-<a name="ln6493">  const Window ret = nvim_open_win(arg1, arg2, &amp;arg3, &amp;err);</a>
-<a name="ln6494">  nlua_push_Window(lstate, ret, true);</a>
-<a name="ln6495">api_free_window(ret);</a>
+<a name="ln6466">    const String arg1 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6467">  if (ERROR_SET(&amp;err)) {      err_param = &quot;expr&quot;;      goto exit_2;</a>
+<a name="ln6468">  }</a>
+<a name="ln6469"> </a>
+<a name="ln6470">  const Dictionary ret = nvim_parse_expression(arg1, arg2, arg3, &amp;err);</a>
+<a name="ln6471">  nlua_push_Dictionary(lstate, ret, true);</a>
+<a name="ln6472">api_free_dictionary(ret);</a>
+<a name="ln6473"> </a>
+<a name="ln6474">  api_free_string(arg1);</a>
+<a name="ln6475">exit_2:</a>
+<a name="ln6476">  api_free_string(arg2);</a>
+<a name="ln6477">exit_1:</a>
+<a name="ln6478">  api_free_boolean(arg3);</a>
+<a name="ln6479"> </a>
+<a name="ln6480">exit_0:</a>
+<a name="ln6481">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6482">    luaL_where(lstate, 1);</a>
+<a name="ln6483">    if (err_param) {</a>
+<a name="ln6484">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6485">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6486">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6487">    }</a>
+<a name="ln6488">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6489">    api_clear_error(&amp;err);</a>
+<a name="ln6490">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6491">    return lua_error(lstate);</a>
+<a name="ln6492">  }</a>
+<a name="ln6493"> </a>
+<a name="ln6494">  return 1;</a>
+<a name="ln6495">}</a>
 <a name="ln6496"> </a>
-<a name="ln6497">  api_free_buffer(arg1);</a>
-<a name="ln6498">exit_2:</a>
-<a name="ln6499">  api_free_boolean(arg2);</a>
-<a name="ln6500">exit_1:</a>
-<a name="ln6501">  api_free_keydict_float_config(&amp;arg3);</a>
-<a name="ln6502"> </a>
-<a name="ln6503">exit_0:</a>
-<a name="ln6504">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6505">    luaL_where(lstate, 1);</a>
-<a name="ln6506">    if (err_param) {</a>
-<a name="ln6507">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6508">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6509">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6510">    }</a>
-<a name="ln6511">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6512">    api_clear_error(&amp;err);</a>
-<a name="ln6513">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6514">    return lua_error(lstate);</a>
-<a name="ln6515">  }</a>
-<a name="ln6516"> </a>
-<a name="ln6517">  return 1;</a>
-<a name="ln6518">}</a>
+<a name="ln6497">static int nlua_api_nvim_open_win(lua_State *lstate)</a>
+<a name="ln6498">{</a>
+<a name="ln6499">  Error err = ERROR_INIT;</a>
+<a name="ln6500">  char *err_param = 0;</a>
+<a name="ln6501">  if (lua_gettop(lstate) != 3) {</a>
+<a name="ln6502">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 3 arguments&quot;);</a>
+<a name="ln6503">    goto exit_0;</a>
+<a name="ln6504">  }</a>
+<a name="ln6505">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6506">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_open_win&quot;);</a>
+<a name="ln6507">  }</a>
+<a name="ln6508">  if (textlock != 0 || expr_map_locked()) {</a>
+<a name="ln6509">    api_set_error(&amp;err, kErrorTypeException, &quot;%s&quot;, e_textlock);</a>
+<a name="ln6510">    goto exit_0;</a>
+<a name="ln6511">  }</a>
+<a name="ln6512">    KeyDict_float_config arg3 = { 0 }; nlua_pop_keydict(lstate, &amp;arg3, KeyDict_float_config_get_field, &amp;err_param, &amp;err);</a>
+<a name="ln6513">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
+<a name="ln6514">  }</a>
+<a name="ln6515"> </a>
+<a name="ln6516">    const Boolean arg2 = nlua_pop_Boolean(lstate, &amp;err);</a>
+<a name="ln6517">  if (ERROR_SET(&amp;err)) {      err_param = &quot;enter&quot;;      goto exit_1;</a>
+<a name="ln6518">  }</a>
 <a name="ln6519"> </a>
-<a name="ln6520">static int nlua_api_nvim_win_set_config(lua_State *lstate)</a>
-<a name="ln6521">{</a>
-<a name="ln6522">  Error err = ERROR_INIT;</a>
-<a name="ln6523">  char *err_param = 0;</a>
-<a name="ln6524">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6525">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6526">    goto exit_0;</a>
-<a name="ln6527">  }</a>
-<a name="ln6528">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6529">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_config&quot;);</a>
-<a name="ln6530">  }</a>
-<a name="ln6531">    KeyDict_float_config arg2 = { 0 }; nlua_pop_keydict(lstate, &amp;arg2, KeyDict_float_config_get_field, &amp;err_param, &amp;err);</a>
-<a name="ln6532">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
-<a name="ln6533">  }</a>
-<a name="ln6534"> </a>
-<a name="ln6535">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6536">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln6537">  }</a>
-<a name="ln6538"> </a>
-<a name="ln6539">  nvim_win_set_config(arg1, &amp;arg2, &amp;err);</a>
-<a name="ln6540"> </a>
-<a name="ln6541">  api_free_window(arg1);</a>
-<a name="ln6542">exit_1:</a>
-<a name="ln6543">  api_free_keydict_float_config(&amp;arg2);</a>
-<a name="ln6544"> </a>
-<a name="ln6545">exit_0:</a>
-<a name="ln6546">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6547">    luaL_where(lstate, 1);</a>
-<a name="ln6548">    if (err_param) {</a>
-<a name="ln6549">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6550">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6551">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6552">    }</a>
-<a name="ln6553">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6554">    api_clear_error(&amp;err);</a>
-<a name="ln6555">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6556">    return lua_error(lstate);</a>
-<a name="ln6557">  }</a>
-<a name="ln6558"> </a>
-<a name="ln6559">  return 0;</a>
-<a name="ln6560">}</a>
-<a name="ln6561"> </a>
-<a name="ln6562">static int nlua_api_nvim_win_get_config(lua_State *lstate)</a>
-<a name="ln6563">{</a>
-<a name="ln6564">  Error err = ERROR_INIT;</a>
-<a name="ln6565">  char *err_param = 0;</a>
-<a name="ln6566">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6567">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln6568">    goto exit_0;</a>
-<a name="ln6569">  }</a>
-<a name="ln6570">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6571">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_config&quot;);</a>
-<a name="ln6572">  }</a>
-<a name="ln6573">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6574">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln6575">  }</a>
-<a name="ln6576"> </a>
-<a name="ln6577">  const Dictionary ret = nvim_win_get_config(arg1, &amp;err);</a>
-<a name="ln6578">  nlua_push_Dictionary(lstate, ret, true);</a>
-<a name="ln6579">api_free_dictionary(ret);</a>
-<a name="ln6580"> </a>
-<a name="ln6581">  api_free_window(arg1);</a>
-<a name="ln6582"> </a>
-<a name="ln6583">exit_0:</a>
-<a name="ln6584">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6585">    luaL_where(lstate, 1);</a>
-<a name="ln6586">    if (err_param) {</a>
-<a name="ln6587">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6588">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6589">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6590">    }</a>
-<a name="ln6591">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6592">    api_clear_error(&amp;err);</a>
-<a name="ln6593">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6594">    return lua_error(lstate);</a>
-<a name="ln6595">  }</a>
-<a name="ln6596"> </a>
-<a name="ln6597">  return 1;</a>
-<a name="ln6598">}</a>
-<a name="ln6599"> </a>
-<a name="ln6600">static int nlua_api_nvim_win_get_buf(lua_State *lstate)</a>
-<a name="ln6601">{</a>
-<a name="ln6602">  Error err = ERROR_INIT;</a>
-<a name="ln6603">  char *err_param = 0;</a>
-<a name="ln6604">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6605">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln6606">    goto exit_0;</a>
-<a name="ln6607">  }</a>
-<a name="ln6608">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6609">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_buf&quot;);</a>
-<a name="ln6610">  }</a>
-<a name="ln6611">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6612">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln6613">  }</a>
-<a name="ln6614"> </a>
-<a name="ln6615">  const Buffer ret = nvim_win_get_buf(arg1, &amp;err);</a>
-<a name="ln6616">  nlua_push_Buffer(lstate, ret, true);</a>
-<a name="ln6617">api_free_buffer(ret);</a>
-<a name="ln6618"> </a>
-<a name="ln6619">  api_free_window(arg1);</a>
-<a name="ln6620"> </a>
-<a name="ln6621">exit_0:</a>
-<a name="ln6622">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6623">    luaL_where(lstate, 1);</a>
-<a name="ln6624">    if (err_param) {</a>
-<a name="ln6625">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6626">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6627">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6628">    }</a>
-<a name="ln6629">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6630">    api_clear_error(&amp;err);</a>
-<a name="ln6631">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6632">    return lua_error(lstate);</a>
-<a name="ln6633">  }</a>
-<a name="ln6634"> </a>
-<a name="ln6635">  return 1;</a>
-<a name="ln6636">}</a>
-<a name="ln6637"> </a>
-<a name="ln6638">static int nlua_api_nvim_win_set_buf(lua_State *lstate)</a>
-<a name="ln6639">{</a>
-<a name="ln6640">  Error err = ERROR_INIT;</a>
-<a name="ln6641">  char *err_param = 0;</a>
-<a name="ln6642">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6643">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6644">    goto exit_0;</a>
-<a name="ln6645">  }</a>
-<a name="ln6646">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6647">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_buf&quot;);</a>
-<a name="ln6648">  }</a>
-<a name="ln6649">  if (textlock != 0 || expr_map_locked()) {</a>
-<a name="ln6650">    api_set_error(&amp;err, kErrorTypeException, &quot;%s&quot;, e_textlock);</a>
-<a name="ln6651">    goto exit_0;</a>
-<a name="ln6652">  }</a>
-<a name="ln6653">    const Buffer arg2 = nlua_pop_Buffer(lstate, &amp;err);</a>
-<a name="ln6654">  if (ERROR_SET(&amp;err)) {      err_param = &quot;buffer&quot;;      goto exit_0;</a>
-<a name="ln6655">  }</a>
-<a name="ln6656"> </a>
-<a name="ln6657">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6658">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln6659">  }</a>
-<a name="ln6660"> </a>
-<a name="ln6661">  nvim_win_set_buf(arg1, arg2, &amp;err);</a>
-<a name="ln6662"> </a>
-<a name="ln6663">  api_free_window(arg1);</a>
-<a name="ln6664">exit_1:</a>
-<a name="ln6665">  api_free_buffer(arg2);</a>
-<a name="ln6666"> </a>
-<a name="ln6667">exit_0:</a>
-<a name="ln6668">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6669">    luaL_where(lstate, 1);</a>
-<a name="ln6670">    if (err_param) {</a>
-<a name="ln6671">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6672">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6673">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6674">    }</a>
-<a name="ln6675">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6676">    api_clear_error(&amp;err);</a>
-<a name="ln6677">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6678">    return lua_error(lstate);</a>
+<a name="ln6520">    const Buffer arg1 = nlua_pop_Buffer(lstate, &amp;err);</a>
+<a name="ln6521">  if (ERROR_SET(&amp;err)) {      err_param = &quot;buffer&quot;;      goto exit_2;</a>
+<a name="ln6522">  }</a>
+<a name="ln6523"> </a>
+<a name="ln6524">  const Window ret = nvim_open_win(arg1, arg2, &amp;arg3, &amp;err);</a>
+<a name="ln6525">  nlua_push_Window(lstate, ret, true);</a>
+<a name="ln6526">api_free_window(ret);</a>
+<a name="ln6527"> </a>
+<a name="ln6528">  api_free_buffer(arg1);</a>
+<a name="ln6529">exit_2:</a>
+<a name="ln6530">  api_free_boolean(arg2);</a>
+<a name="ln6531">exit_1:</a>
+<a name="ln6532">  api_free_keydict_float_config(&amp;arg3);</a>
+<a name="ln6533"> </a>
+<a name="ln6534">exit_0:</a>
+<a name="ln6535">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6536">    luaL_where(lstate, 1);</a>
+<a name="ln6537">    if (err_param) {</a>
+<a name="ln6538">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6539">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6540">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6541">    }</a>
+<a name="ln6542">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6543">    api_clear_error(&amp;err);</a>
+<a name="ln6544">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6545">    return lua_error(lstate);</a>
+<a name="ln6546">  }</a>
+<a name="ln6547"> </a>
+<a name="ln6548">  return 1;</a>
+<a name="ln6549">}</a>
+<a name="ln6550"> </a>
+<a name="ln6551">static int nlua_api_nvim_win_set_config(lua_State *lstate)</a>
+<a name="ln6552">{</a>
+<a name="ln6553">  Error err = ERROR_INIT;</a>
+<a name="ln6554">  char *err_param = 0;</a>
+<a name="ln6555">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6556">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6557">    goto exit_0;</a>
+<a name="ln6558">  }</a>
+<a name="ln6559">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6560">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_config&quot;);</a>
+<a name="ln6561">  }</a>
+<a name="ln6562">    KeyDict_float_config arg2 = { 0 }; nlua_pop_keydict(lstate, &amp;arg2, KeyDict_float_config_get_field, &amp;err_param, &amp;err);</a>
+<a name="ln6563">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
+<a name="ln6564">  }</a>
+<a name="ln6565"> </a>
+<a name="ln6566">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6567">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln6568">  }</a>
+<a name="ln6569"> </a>
+<a name="ln6570">  nvim_win_set_config(arg1, &amp;arg2, &amp;err);</a>
+<a name="ln6571"> </a>
+<a name="ln6572">  api_free_window(arg1);</a>
+<a name="ln6573">exit_1:</a>
+<a name="ln6574">  api_free_keydict_float_config(&amp;arg2);</a>
+<a name="ln6575"> </a>
+<a name="ln6576">exit_0:</a>
+<a name="ln6577">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6578">    luaL_where(lstate, 1);</a>
+<a name="ln6579">    if (err_param) {</a>
+<a name="ln6580">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6581">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6582">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6583">    }</a>
+<a name="ln6584">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6585">    api_clear_error(&amp;err);</a>
+<a name="ln6586">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6587">    return lua_error(lstate);</a>
+<a name="ln6588">  }</a>
+<a name="ln6589"> </a>
+<a name="ln6590">  return 0;</a>
+<a name="ln6591">}</a>
+<a name="ln6592"> </a>
+<a name="ln6593">static int nlua_api_nvim_win_get_config(lua_State *lstate)</a>
+<a name="ln6594">{</a>
+<a name="ln6595">  Error err = ERROR_INIT;</a>
+<a name="ln6596">  char *err_param = 0;</a>
+<a name="ln6597">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6598">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6599">    goto exit_0;</a>
+<a name="ln6600">  }</a>
+<a name="ln6601">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6602">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_config&quot;);</a>
+<a name="ln6603">  }</a>
+<a name="ln6604">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6605">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln6606">  }</a>
+<a name="ln6607"> </a>
+<a name="ln6608">  const Dictionary ret = nvim_win_get_config(arg1, &amp;err);</a>
+<a name="ln6609">  nlua_push_Dictionary(lstate, ret, true);</a>
+<a name="ln6610">api_free_dictionary(ret);</a>
+<a name="ln6611"> </a>
+<a name="ln6612">  api_free_window(arg1);</a>
+<a name="ln6613"> </a>
+<a name="ln6614">exit_0:</a>
+<a name="ln6615">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6616">    luaL_where(lstate, 1);</a>
+<a name="ln6617">    if (err_param) {</a>
+<a name="ln6618">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6619">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6620">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6621">    }</a>
+<a name="ln6622">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6623">    api_clear_error(&amp;err);</a>
+<a name="ln6624">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6625">    return lua_error(lstate);</a>
+<a name="ln6626">  }</a>
+<a name="ln6627"> </a>
+<a name="ln6628">  return 1;</a>
+<a name="ln6629">}</a>
+<a name="ln6630"> </a>
+<a name="ln6631">static int nlua_api_nvim_win_get_buf(lua_State *lstate)</a>
+<a name="ln6632">{</a>
+<a name="ln6633">  Error err = ERROR_INIT;</a>
+<a name="ln6634">  char *err_param = 0;</a>
+<a name="ln6635">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6636">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6637">    goto exit_0;</a>
+<a name="ln6638">  }</a>
+<a name="ln6639">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6640">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_buf&quot;);</a>
+<a name="ln6641">  }</a>
+<a name="ln6642">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6643">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln6644">  }</a>
+<a name="ln6645"> </a>
+<a name="ln6646">  const Buffer ret = nvim_win_get_buf(arg1, &amp;err);</a>
+<a name="ln6647">  nlua_push_Buffer(lstate, ret, true);</a>
+<a name="ln6648">api_free_buffer(ret);</a>
+<a name="ln6649"> </a>
+<a name="ln6650">  api_free_window(arg1);</a>
+<a name="ln6651"> </a>
+<a name="ln6652">exit_0:</a>
+<a name="ln6653">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6654">    luaL_where(lstate, 1);</a>
+<a name="ln6655">    if (err_param) {</a>
+<a name="ln6656">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6657">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6658">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6659">    }</a>
+<a name="ln6660">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6661">    api_clear_error(&amp;err);</a>
+<a name="ln6662">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6663">    return lua_error(lstate);</a>
+<a name="ln6664">  }</a>
+<a name="ln6665"> </a>
+<a name="ln6666">  return 1;</a>
+<a name="ln6667">}</a>
+<a name="ln6668"> </a>
+<a name="ln6669">static int nlua_api_nvim_win_set_buf(lua_State *lstate)</a>
+<a name="ln6670">{</a>
+<a name="ln6671">  Error err = ERROR_INIT;</a>
+<a name="ln6672">  char *err_param = 0;</a>
+<a name="ln6673">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6674">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6675">    goto exit_0;</a>
+<a name="ln6676">  }</a>
+<a name="ln6677">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6678">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_buf&quot;);</a>
 <a name="ln6679">  }</a>
-<a name="ln6680"> </a>
-<a name="ln6681">  return 0;</a>
-<a name="ln6682">}</a>
-<a name="ln6683"> </a>
-<a name="ln6684">static int nlua_api_nvim_win_get_cursor(lua_State *lstate)</a>
-<a name="ln6685">{</a>
-<a name="ln6686">  Error err = ERROR_INIT;</a>
-<a name="ln6687">  char *err_param = 0;</a>
-<a name="ln6688">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6689">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln6690">    goto exit_0;</a>
-<a name="ln6691">  }</a>
-<a name="ln6692">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6693">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_cursor&quot;);</a>
-<a name="ln6694">  }</a>
-<a name="ln6695">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6696">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln6697">  }</a>
-<a name="ln6698"> </a>
-<a name="ln6699">  const ArrayOf(Integer, 2) ret = nvim_win_get_cursor(arg1, &amp;err);</a>
-<a name="ln6700">  nlua_push_Array(lstate, ret, true);</a>
-<a name="ln6701">api_free_array(ret);</a>
-<a name="ln6702"> </a>
-<a name="ln6703">  api_free_window(arg1);</a>
-<a name="ln6704"> </a>
-<a name="ln6705">exit_0:</a>
-<a name="ln6706">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6707">    luaL_where(lstate, 1);</a>
-<a name="ln6708">    if (err_param) {</a>
-<a name="ln6709">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6710">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6711">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6712">    }</a>
-<a name="ln6713">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6714">    api_clear_error(&amp;err);</a>
-<a name="ln6715">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6716">    return lua_error(lstate);</a>
-<a name="ln6717">  }</a>
-<a name="ln6718"> </a>
-<a name="ln6719">  return 1;</a>
-<a name="ln6720">}</a>
-<a name="ln6721"> </a>
-<a name="ln6722">static int nlua_api_nvim_win_set_cursor(lua_State *lstate)</a>
-<a name="ln6723">{</a>
-<a name="ln6724">  Error err = ERROR_INIT;</a>
-<a name="ln6725">  char *err_param = 0;</a>
-<a name="ln6726">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6727">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6728">    goto exit_0;</a>
-<a name="ln6729">  }</a>
-<a name="ln6730">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6731">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_cursor&quot;);</a>
-<a name="ln6732">  }</a>
-<a name="ln6733">    const ArrayOf(Integer, 2) arg2 = nlua_pop_Array(lstate, &amp;err);</a>
-<a name="ln6734">  if (ERROR_SET(&amp;err)) {      err_param = &quot;pos&quot;;      goto exit_0;</a>
-<a name="ln6735">  }</a>
-<a name="ln6736"> </a>
-<a name="ln6737">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6738">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln6739">  }</a>
-<a name="ln6740"> </a>
-<a name="ln6741">  nvim_win_set_cursor(arg1, arg2, &amp;err);</a>
-<a name="ln6742"> </a>
-<a name="ln6743">  api_free_window(arg1);</a>
-<a name="ln6744">exit_1:</a>
-<a name="ln6745">  api_free_array(arg2);</a>
-<a name="ln6746"> </a>
-<a name="ln6747">exit_0:</a>
-<a name="ln6748">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6749">    luaL_where(lstate, 1);</a>
-<a name="ln6750">    if (err_param) {</a>
-<a name="ln6751">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6752">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6753">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6754">    }</a>
-<a name="ln6755">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6756">    api_clear_error(&amp;err);</a>
-<a name="ln6757">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6758">    return lua_error(lstate);</a>
-<a name="ln6759">  }</a>
-<a name="ln6760"> </a>
-<a name="ln6761">  return 0;</a>
-<a name="ln6762">}</a>
-<a name="ln6763"> </a>
-<a name="ln6764">static int nlua_api_nvim_win_get_height(lua_State *lstate)</a>
-<a name="ln6765">{</a>
-<a name="ln6766">  Error err = ERROR_INIT;</a>
-<a name="ln6767">  char *err_param = 0;</a>
-<a name="ln6768">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6769">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln6770">    goto exit_0;</a>
-<a name="ln6771">  }</a>
-<a name="ln6772">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6773">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_height&quot;);</a>
-<a name="ln6774">  }</a>
-<a name="ln6775">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6776">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln6777">  }</a>
-<a name="ln6778"> </a>
-<a name="ln6779">  const Integer ret = nvim_win_get_height(arg1, &amp;err);</a>
-<a name="ln6780">  nlua_push_Integer(lstate, ret, true);</a>
-<a name="ln6781">api_free_integer(ret);</a>
-<a name="ln6782"> </a>
-<a name="ln6783">  api_free_window(arg1);</a>
-<a name="ln6784"> </a>
-<a name="ln6785">exit_0:</a>
-<a name="ln6786">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6787">    luaL_where(lstate, 1);</a>
-<a name="ln6788">    if (err_param) {</a>
-<a name="ln6789">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6790">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6791">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6792">    }</a>
-<a name="ln6793">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6794">    api_clear_error(&amp;err);</a>
-<a name="ln6795">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6796">    return lua_error(lstate);</a>
-<a name="ln6797">  }</a>
-<a name="ln6798"> </a>
-<a name="ln6799">  return 1;</a>
-<a name="ln6800">}</a>
-<a name="ln6801"> </a>
-<a name="ln6802">static int nlua_api_nvim_win_set_height(lua_State *lstate)</a>
-<a name="ln6803">{</a>
-<a name="ln6804">  Error err = ERROR_INIT;</a>
-<a name="ln6805">  char *err_param = 0;</a>
-<a name="ln6806">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6807">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6808">    goto exit_0;</a>
-<a name="ln6809">  }</a>
-<a name="ln6810">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6811">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_height&quot;);</a>
-<a name="ln6812">  }</a>
-<a name="ln6813">    const Integer arg2 = nlua_pop_Integer(lstate, &amp;err);</a>
-<a name="ln6814">  if (ERROR_SET(&amp;err)) {      err_param = &quot;height&quot;;      goto exit_0;</a>
-<a name="ln6815">  }</a>
-<a name="ln6816"> </a>
-<a name="ln6817">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6818">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln6819">  }</a>
-<a name="ln6820"> </a>
-<a name="ln6821">  nvim_win_set_height(arg1, arg2, &amp;err);</a>
-<a name="ln6822"> </a>
-<a name="ln6823">  api_free_window(arg1);</a>
-<a name="ln6824">exit_1:</a>
-<a name="ln6825">  api_free_integer(arg2);</a>
-<a name="ln6826"> </a>
-<a name="ln6827">exit_0:</a>
-<a name="ln6828">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6829">    luaL_where(lstate, 1);</a>
-<a name="ln6830">    if (err_param) {</a>
-<a name="ln6831">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6832">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6833">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6834">    }</a>
-<a name="ln6835">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6836">    api_clear_error(&amp;err);</a>
-<a name="ln6837">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6838">    return lua_error(lstate);</a>
-<a name="ln6839">  }</a>
-<a name="ln6840"> </a>
-<a name="ln6841">  return 0;</a>
-<a name="ln6842">}</a>
-<a name="ln6843"> </a>
-<a name="ln6844">static int nlua_api_nvim_win_get_width(lua_State *lstate)</a>
-<a name="ln6845">{</a>
-<a name="ln6846">  Error err = ERROR_INIT;</a>
-<a name="ln6847">  char *err_param = 0;</a>
-<a name="ln6848">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln6849">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln6850">    goto exit_0;</a>
-<a name="ln6851">  }</a>
-<a name="ln6852">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6853">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_width&quot;);</a>
-<a name="ln6854">  }</a>
-<a name="ln6855">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6856">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln6857">  }</a>
-<a name="ln6858"> </a>
-<a name="ln6859">  const Integer ret = nvim_win_get_width(arg1, &amp;err);</a>
-<a name="ln6860">  nlua_push_Integer(lstate, ret, true);</a>
-<a name="ln6861">api_free_integer(ret);</a>
-<a name="ln6862"> </a>
-<a name="ln6863">  api_free_window(arg1);</a>
-<a name="ln6864"> </a>
-<a name="ln6865">exit_0:</a>
-<a name="ln6866">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6867">    luaL_where(lstate, 1);</a>
-<a name="ln6868">    if (err_param) {</a>
-<a name="ln6869">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6870">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6871">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6872">    }</a>
-<a name="ln6873">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6874">    api_clear_error(&amp;err);</a>
-<a name="ln6875">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6876">    return lua_error(lstate);</a>
-<a name="ln6877">  }</a>
-<a name="ln6878"> </a>
-<a name="ln6879">  return 1;</a>
-<a name="ln6880">}</a>
-<a name="ln6881"> </a>
-<a name="ln6882">static int nlua_api_nvim_win_set_width(lua_State *lstate)</a>
-<a name="ln6883">{</a>
-<a name="ln6884">  Error err = ERROR_INIT;</a>
-<a name="ln6885">  char *err_param = 0;</a>
-<a name="ln6886">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6887">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6888">    goto exit_0;</a>
-<a name="ln6889">  }</a>
-<a name="ln6890">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6891">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_width&quot;);</a>
-<a name="ln6892">  }</a>
-<a name="ln6893">    const Integer arg2 = nlua_pop_Integer(lstate, &amp;err);</a>
-<a name="ln6894">  if (ERROR_SET(&amp;err)) {      err_param = &quot;width&quot;;      goto exit_0;</a>
-<a name="ln6895">  }</a>
-<a name="ln6896"> </a>
-<a name="ln6897">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6898">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln6899">  }</a>
-<a name="ln6900"> </a>
-<a name="ln6901">  nvim_win_set_width(arg1, arg2, &amp;err);</a>
-<a name="ln6902"> </a>
-<a name="ln6903">  api_free_window(arg1);</a>
-<a name="ln6904">exit_1:</a>
-<a name="ln6905">  api_free_integer(arg2);</a>
-<a name="ln6906"> </a>
-<a name="ln6907">exit_0:</a>
-<a name="ln6908">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6909">    luaL_where(lstate, 1);</a>
-<a name="ln6910">    if (err_param) {</a>
-<a name="ln6911">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6912">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6913">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6914">    }</a>
-<a name="ln6915">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6916">    api_clear_error(&amp;err);</a>
-<a name="ln6917">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6918">    return lua_error(lstate);</a>
-<a name="ln6919">  }</a>
-<a name="ln6920"> </a>
-<a name="ln6921">  return 0;</a>
-<a name="ln6922">}</a>
-<a name="ln6923"> </a>
-<a name="ln6924">static int nlua_api_nvim_win_get_var(lua_State *lstate)</a>
-<a name="ln6925">{</a>
-<a name="ln6926">  Error err = ERROR_INIT;</a>
-<a name="ln6927">  char *err_param = 0;</a>
-<a name="ln6928">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln6929">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln6930">    goto exit_0;</a>
-<a name="ln6931">  }</a>
-<a name="ln6932">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6933">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_var&quot;);</a>
-<a name="ln6934">  }</a>
-<a name="ln6935">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6936">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_0;</a>
-<a name="ln6937">  }</a>
-<a name="ln6938"> </a>
-<a name="ln6939">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6940">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln6941">  }</a>
-<a name="ln6942"> </a>
-<a name="ln6943">  const Object ret = nvim_win_get_var(arg1, arg2, &amp;err);</a>
-<a name="ln6944">  nlua_push_Object(lstate, ret, true);</a>
-<a name="ln6945">api_free_object(ret);</a>
-<a name="ln6946"> </a>
-<a name="ln6947">  api_free_window(arg1);</a>
-<a name="ln6948">exit_1:</a>
-<a name="ln6949">  api_free_string(arg2);</a>
-<a name="ln6950"> </a>
-<a name="ln6951">exit_0:</a>
-<a name="ln6952">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln6953">    luaL_where(lstate, 1);</a>
-<a name="ln6954">    if (err_param) {</a>
-<a name="ln6955">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln6956">      lua_pushstring(lstate, err_param);</a>
-<a name="ln6957">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln6958">    }</a>
-<a name="ln6959">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln6960">    api_clear_error(&amp;err);</a>
-<a name="ln6961">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln6962">    return lua_error(lstate);</a>
-<a name="ln6963">  }</a>
-<a name="ln6964"> </a>
-<a name="ln6965">  return 1;</a>
-<a name="ln6966">}</a>
-<a name="ln6967"> </a>
-<a name="ln6968">static int nlua_api_nvim_win_set_var(lua_State *lstate)</a>
-<a name="ln6969">{</a>
-<a name="ln6970">  Error err = ERROR_INIT;</a>
-<a name="ln6971">  char *err_param = 0;</a>
-<a name="ln6972">  if (lua_gettop(lstate) != 3) {</a>
-<a name="ln6973">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 3 arguments&quot;);</a>
-<a name="ln6974">    goto exit_0;</a>
-<a name="ln6975">  }</a>
-<a name="ln6976">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln6977">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_var&quot;);</a>
-<a name="ln6978">  }</a>
-<a name="ln6979">    const Object arg3 = nlua_pop_Object(lstate, true, &amp;err);</a>
-<a name="ln6980">  if (ERROR_SET(&amp;err)) {      err_param = &quot;value&quot;;      goto exit_0;</a>
-<a name="ln6981">  }</a>
-<a name="ln6982"> </a>
-<a name="ln6983">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln6984">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_1;</a>
-<a name="ln6985">  }</a>
-<a name="ln6986"> </a>
-<a name="ln6987">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln6988">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_2;</a>
-<a name="ln6989">  }</a>
-<a name="ln6990"> </a>
-<a name="ln6991">  nvim_win_set_var(arg1, arg2, arg3, &amp;err);</a>
-<a name="ln6992"> </a>
-<a name="ln6993">  api_free_window(arg1);</a>
-<a name="ln6994">exit_2:</a>
-<a name="ln6995">  api_free_string(arg2);</a>
-<a name="ln6996">exit_1:</a>
-<a name="ln6997">  api_free_object(arg3);</a>
+<a name="ln6680">  if (textlock != 0 || expr_map_locked()) {</a>
+<a name="ln6681">    api_set_error(&amp;err, kErrorTypeException, &quot;%s&quot;, e_textlock);</a>
+<a name="ln6682">    goto exit_0;</a>
+<a name="ln6683">  }</a>
+<a name="ln6684">    const Buffer arg2 = nlua_pop_Buffer(lstate, &amp;err);</a>
+<a name="ln6685">  if (ERROR_SET(&amp;err)) {      err_param = &quot;buffer&quot;;      goto exit_0;</a>
+<a name="ln6686">  }</a>
+<a name="ln6687"> </a>
+<a name="ln6688">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6689">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln6690">  }</a>
+<a name="ln6691"> </a>
+<a name="ln6692">  nvim_win_set_buf(arg1, arg2, &amp;err);</a>
+<a name="ln6693"> </a>
+<a name="ln6694">  api_free_window(arg1);</a>
+<a name="ln6695">exit_1:</a>
+<a name="ln6696">  api_free_buffer(arg2);</a>
+<a name="ln6697"> </a>
+<a name="ln6698">exit_0:</a>
+<a name="ln6699">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6700">    luaL_where(lstate, 1);</a>
+<a name="ln6701">    if (err_param) {</a>
+<a name="ln6702">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6703">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6704">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6705">    }</a>
+<a name="ln6706">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6707">    api_clear_error(&amp;err);</a>
+<a name="ln6708">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6709">    return lua_error(lstate);</a>
+<a name="ln6710">  }</a>
+<a name="ln6711"> </a>
+<a name="ln6712">  return 0;</a>
+<a name="ln6713">}</a>
+<a name="ln6714"> </a>
+<a name="ln6715">static int nlua_api_nvim_win_get_cursor(lua_State *lstate)</a>
+<a name="ln6716">{</a>
+<a name="ln6717">  Error err = ERROR_INIT;</a>
+<a name="ln6718">  char *err_param = 0;</a>
+<a name="ln6719">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6720">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6721">    goto exit_0;</a>
+<a name="ln6722">  }</a>
+<a name="ln6723">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6724">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_cursor&quot;);</a>
+<a name="ln6725">  }</a>
+<a name="ln6726">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6727">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln6728">  }</a>
+<a name="ln6729"> </a>
+<a name="ln6730">  const ArrayOf(Integer, 2) ret = nvim_win_get_cursor(arg1, &amp;err);</a>
+<a name="ln6731">  nlua_push_Array(lstate, ret, true);</a>
+<a name="ln6732">api_free_array(ret);</a>
+<a name="ln6733"> </a>
+<a name="ln6734">  api_free_window(arg1);</a>
+<a name="ln6735"> </a>
+<a name="ln6736">exit_0:</a>
+<a name="ln6737">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6738">    luaL_where(lstate, 1);</a>
+<a name="ln6739">    if (err_param) {</a>
+<a name="ln6740">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6741">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6742">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6743">    }</a>
+<a name="ln6744">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6745">    api_clear_error(&amp;err);</a>
+<a name="ln6746">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6747">    return lua_error(lstate);</a>
+<a name="ln6748">  }</a>
+<a name="ln6749"> </a>
+<a name="ln6750">  return 1;</a>
+<a name="ln6751">}</a>
+<a name="ln6752"> </a>
+<a name="ln6753">static int nlua_api_nvim_win_set_cursor(lua_State *lstate)</a>
+<a name="ln6754">{</a>
+<a name="ln6755">  Error err = ERROR_INIT;</a>
+<a name="ln6756">  char *err_param = 0;</a>
+<a name="ln6757">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6758">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6759">    goto exit_0;</a>
+<a name="ln6760">  }</a>
+<a name="ln6761">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6762">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_cursor&quot;);</a>
+<a name="ln6763">  }</a>
+<a name="ln6764">    const ArrayOf(Integer, 2) arg2 = nlua_pop_Array(lstate, &amp;err);</a>
+<a name="ln6765">  if (ERROR_SET(&amp;err)) {      err_param = &quot;pos&quot;;      goto exit_0;</a>
+<a name="ln6766">  }</a>
+<a name="ln6767"> </a>
+<a name="ln6768">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6769">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln6770">  }</a>
+<a name="ln6771"> </a>
+<a name="ln6772">  nvim_win_set_cursor(arg1, arg2, &amp;err);</a>
+<a name="ln6773"> </a>
+<a name="ln6774">  api_free_window(arg1);</a>
+<a name="ln6775">exit_1:</a>
+<a name="ln6776">  api_free_array(arg2);</a>
+<a name="ln6777"> </a>
+<a name="ln6778">exit_0:</a>
+<a name="ln6779">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6780">    luaL_where(lstate, 1);</a>
+<a name="ln6781">    if (err_param) {</a>
+<a name="ln6782">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6783">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6784">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6785">    }</a>
+<a name="ln6786">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6787">    api_clear_error(&amp;err);</a>
+<a name="ln6788">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6789">    return lua_error(lstate);</a>
+<a name="ln6790">  }</a>
+<a name="ln6791"> </a>
+<a name="ln6792">  return 0;</a>
+<a name="ln6793">}</a>
+<a name="ln6794"> </a>
+<a name="ln6795">static int nlua_api_nvim_win_get_height(lua_State *lstate)</a>
+<a name="ln6796">{</a>
+<a name="ln6797">  Error err = ERROR_INIT;</a>
+<a name="ln6798">  char *err_param = 0;</a>
+<a name="ln6799">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6800">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6801">    goto exit_0;</a>
+<a name="ln6802">  }</a>
+<a name="ln6803">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6804">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_height&quot;);</a>
+<a name="ln6805">  }</a>
+<a name="ln6806">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6807">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln6808">  }</a>
+<a name="ln6809"> </a>
+<a name="ln6810">  const Integer ret = nvim_win_get_height(arg1, &amp;err);</a>
+<a name="ln6811">  nlua_push_Integer(lstate, ret, true);</a>
+<a name="ln6812">api_free_integer(ret);</a>
+<a name="ln6813"> </a>
+<a name="ln6814">  api_free_window(arg1);</a>
+<a name="ln6815"> </a>
+<a name="ln6816">exit_0:</a>
+<a name="ln6817">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6818">    luaL_where(lstate, 1);</a>
+<a name="ln6819">    if (err_param) {</a>
+<a name="ln6820">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6821">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6822">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6823">    }</a>
+<a name="ln6824">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6825">    api_clear_error(&amp;err);</a>
+<a name="ln6826">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6827">    return lua_error(lstate);</a>
+<a name="ln6828">  }</a>
+<a name="ln6829"> </a>
+<a name="ln6830">  return 1;</a>
+<a name="ln6831">}</a>
+<a name="ln6832"> </a>
+<a name="ln6833">static int nlua_api_nvim_win_set_height(lua_State *lstate)</a>
+<a name="ln6834">{</a>
+<a name="ln6835">  Error err = ERROR_INIT;</a>
+<a name="ln6836">  char *err_param = 0;</a>
+<a name="ln6837">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6838">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6839">    goto exit_0;</a>
+<a name="ln6840">  }</a>
+<a name="ln6841">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6842">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_height&quot;);</a>
+<a name="ln6843">  }</a>
+<a name="ln6844">    const Integer arg2 = nlua_pop_Integer(lstate, &amp;err);</a>
+<a name="ln6845">  if (ERROR_SET(&amp;err)) {      err_param = &quot;height&quot;;      goto exit_0;</a>
+<a name="ln6846">  }</a>
+<a name="ln6847"> </a>
+<a name="ln6848">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6849">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln6850">  }</a>
+<a name="ln6851"> </a>
+<a name="ln6852">  nvim_win_set_height(arg1, arg2, &amp;err);</a>
+<a name="ln6853"> </a>
+<a name="ln6854">  api_free_window(arg1);</a>
+<a name="ln6855">exit_1:</a>
+<a name="ln6856">  api_free_integer(arg2);</a>
+<a name="ln6857"> </a>
+<a name="ln6858">exit_0:</a>
+<a name="ln6859">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6860">    luaL_where(lstate, 1);</a>
+<a name="ln6861">    if (err_param) {</a>
+<a name="ln6862">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6863">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6864">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6865">    }</a>
+<a name="ln6866">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6867">    api_clear_error(&amp;err);</a>
+<a name="ln6868">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6869">    return lua_error(lstate);</a>
+<a name="ln6870">  }</a>
+<a name="ln6871"> </a>
+<a name="ln6872">  return 0;</a>
+<a name="ln6873">}</a>
+<a name="ln6874"> </a>
+<a name="ln6875">static int nlua_api_nvim_win_get_width(lua_State *lstate)</a>
+<a name="ln6876">{</a>
+<a name="ln6877">  Error err = ERROR_INIT;</a>
+<a name="ln6878">  char *err_param = 0;</a>
+<a name="ln6879">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln6880">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln6881">    goto exit_0;</a>
+<a name="ln6882">  }</a>
+<a name="ln6883">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6884">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_width&quot;);</a>
+<a name="ln6885">  }</a>
+<a name="ln6886">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6887">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln6888">  }</a>
+<a name="ln6889"> </a>
+<a name="ln6890">  const Integer ret = nvim_win_get_width(arg1, &amp;err);</a>
+<a name="ln6891">  nlua_push_Integer(lstate, ret, true);</a>
+<a name="ln6892">api_free_integer(ret);</a>
+<a name="ln6893"> </a>
+<a name="ln6894">  api_free_window(arg1);</a>
+<a name="ln6895"> </a>
+<a name="ln6896">exit_0:</a>
+<a name="ln6897">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6898">    luaL_where(lstate, 1);</a>
+<a name="ln6899">    if (err_param) {</a>
+<a name="ln6900">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6901">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6902">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6903">    }</a>
+<a name="ln6904">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6905">    api_clear_error(&amp;err);</a>
+<a name="ln6906">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6907">    return lua_error(lstate);</a>
+<a name="ln6908">  }</a>
+<a name="ln6909"> </a>
+<a name="ln6910">  return 1;</a>
+<a name="ln6911">}</a>
+<a name="ln6912"> </a>
+<a name="ln6913">static int nlua_api_nvim_win_set_width(lua_State *lstate)</a>
+<a name="ln6914">{</a>
+<a name="ln6915">  Error err = ERROR_INIT;</a>
+<a name="ln6916">  char *err_param = 0;</a>
+<a name="ln6917">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6918">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6919">    goto exit_0;</a>
+<a name="ln6920">  }</a>
+<a name="ln6921">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6922">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_width&quot;);</a>
+<a name="ln6923">  }</a>
+<a name="ln6924">    const Integer arg2 = nlua_pop_Integer(lstate, &amp;err);</a>
+<a name="ln6925">  if (ERROR_SET(&amp;err)) {      err_param = &quot;width&quot;;      goto exit_0;</a>
+<a name="ln6926">  }</a>
+<a name="ln6927"> </a>
+<a name="ln6928">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6929">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln6930">  }</a>
+<a name="ln6931"> </a>
+<a name="ln6932">  nvim_win_set_width(arg1, arg2, &amp;err);</a>
+<a name="ln6933"> </a>
+<a name="ln6934">  api_free_window(arg1);</a>
+<a name="ln6935">exit_1:</a>
+<a name="ln6936">  api_free_integer(arg2);</a>
+<a name="ln6937"> </a>
+<a name="ln6938">exit_0:</a>
+<a name="ln6939">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6940">    luaL_where(lstate, 1);</a>
+<a name="ln6941">    if (err_param) {</a>
+<a name="ln6942">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6943">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6944">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6945">    }</a>
+<a name="ln6946">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6947">    api_clear_error(&amp;err);</a>
+<a name="ln6948">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6949">    return lua_error(lstate);</a>
+<a name="ln6950">  }</a>
+<a name="ln6951"> </a>
+<a name="ln6952">  return 0;</a>
+<a name="ln6953">}</a>
+<a name="ln6954"> </a>
+<a name="ln6955">static int nlua_api_nvim_win_get_var(lua_State *lstate)</a>
+<a name="ln6956">{</a>
+<a name="ln6957">  Error err = ERROR_INIT;</a>
+<a name="ln6958">  char *err_param = 0;</a>
+<a name="ln6959">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln6960">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln6961">    goto exit_0;</a>
+<a name="ln6962">  }</a>
+<a name="ln6963">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln6964">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_var&quot;);</a>
+<a name="ln6965">  }</a>
+<a name="ln6966">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln6967">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_0;</a>
+<a name="ln6968">  }</a>
+<a name="ln6969"> </a>
+<a name="ln6970">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln6971">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln6972">  }</a>
+<a name="ln6973"> </a>
+<a name="ln6974">  const Object ret = nvim_win_get_var(arg1, arg2, &amp;err);</a>
+<a name="ln6975">  nlua_push_Object(lstate, ret, true);</a>
+<a name="ln6976">api_free_object(ret);</a>
+<a name="ln6977"> </a>
+<a name="ln6978">  api_free_window(arg1);</a>
+<a name="ln6979">exit_1:</a>
+<a name="ln6980">  api_free_string(arg2);</a>
+<a name="ln6981"> </a>
+<a name="ln6982">exit_0:</a>
+<a name="ln6983">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln6984">    luaL_where(lstate, 1);</a>
+<a name="ln6985">    if (err_param) {</a>
+<a name="ln6986">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln6987">      lua_pushstring(lstate, err_param);</a>
+<a name="ln6988">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln6989">    }</a>
+<a name="ln6990">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln6991">    api_clear_error(&amp;err);</a>
+<a name="ln6992">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln6993">    return lua_error(lstate);</a>
+<a name="ln6994">  }</a>
+<a name="ln6995"> </a>
+<a name="ln6996">  return 1;</a>
+<a name="ln6997">}</a>
 <a name="ln6998"> </a>
-<a name="ln6999">exit_0:</a>
-<a name="ln7000">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7001">    luaL_where(lstate, 1);</a>
-<a name="ln7002">    if (err_param) {</a>
-<a name="ln7003">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7004">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7005">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7006">    }</a>
-<a name="ln7007">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7008">    api_clear_error(&amp;err);</a>
-<a name="ln7009">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7010">    return lua_error(lstate);</a>
-<a name="ln7011">  }</a>
-<a name="ln7012"> </a>
-<a name="ln7013">  return 0;</a>
-<a name="ln7014">}</a>
-<a name="ln7015"> </a>
-<a name="ln7016">static int nlua_api_nvim_win_del_var(lua_State *lstate)</a>
-<a name="ln7017">{</a>
-<a name="ln7018">  Error err = ERROR_INIT;</a>
-<a name="ln7019">  char *err_param = 0;</a>
-<a name="ln7020">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln7021">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln7022">    goto exit_0;</a>
-<a name="ln7023">  }</a>
-<a name="ln7024">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7025">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_del_var&quot;);</a>
-<a name="ln7026">  }</a>
-<a name="ln7027">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
-<a name="ln7028">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_0;</a>
-<a name="ln7029">  }</a>
-<a name="ln7030"> </a>
-<a name="ln7031">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7032">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln7033">  }</a>
-<a name="ln7034"> </a>
-<a name="ln7035">  nvim_win_del_var(arg1, arg2, &amp;err);</a>
-<a name="ln7036"> </a>
-<a name="ln7037">  api_free_window(arg1);</a>
-<a name="ln7038">exit_1:</a>
-<a name="ln7039">  api_free_string(arg2);</a>
-<a name="ln7040"> </a>
-<a name="ln7041">exit_0:</a>
-<a name="ln7042">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7043">    luaL_where(lstate, 1);</a>
-<a name="ln7044">    if (err_param) {</a>
-<a name="ln7045">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7046">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7047">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7048">    }</a>
-<a name="ln7049">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7050">    api_clear_error(&amp;err);</a>
-<a name="ln7051">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7052">    return lua_error(lstate);</a>
-<a name="ln7053">  }</a>
-<a name="ln7054"> </a>
-<a name="ln7055">  return 0;</a>
-<a name="ln7056">}</a>
-<a name="ln7057"> </a>
-<a name="ln7058">static int nlua_api_nvim_win_get_position(lua_State *lstate)</a>
-<a name="ln7059">{</a>
-<a name="ln7060">  Error err = ERROR_INIT;</a>
-<a name="ln7061">  char *err_param = 0;</a>
-<a name="ln7062">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln7063">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln7064">    goto exit_0;</a>
-<a name="ln7065">  }</a>
-<a name="ln7066">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7067">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_position&quot;);</a>
-<a name="ln7068">  }</a>
-<a name="ln7069">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7070">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln7071">  }</a>
-<a name="ln7072"> </a>
-<a name="ln7073">  const ArrayOf(Integer, 2) ret = nvim_win_get_position(arg1, &amp;err);</a>
-<a name="ln7074">  nlua_push_Array(lstate, ret, true);</a>
-<a name="ln7075">api_free_array(ret);</a>
-<a name="ln7076"> </a>
-<a name="ln7077">  api_free_window(arg1);</a>
-<a name="ln7078"> </a>
-<a name="ln7079">exit_0:</a>
-<a name="ln7080">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7081">    luaL_where(lstate, 1);</a>
-<a name="ln7082">    if (err_param) {</a>
-<a name="ln7083">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7084">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7085">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7086">    }</a>
-<a name="ln7087">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7088">    api_clear_error(&amp;err);</a>
-<a name="ln7089">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7090">    return lua_error(lstate);</a>
-<a name="ln7091">  }</a>
-<a name="ln7092"> </a>
-<a name="ln7093">  return 1;</a>
-<a name="ln7094">}</a>
-<a name="ln7095"> </a>
-<a name="ln7096">static int nlua_api_nvim_win_get_tabpage(lua_State *lstate)</a>
-<a name="ln7097">{</a>
-<a name="ln7098">  Error err = ERROR_INIT;</a>
-<a name="ln7099">  char *err_param = 0;</a>
-<a name="ln7100">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln7101">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln7102">    goto exit_0;</a>
-<a name="ln7103">  }</a>
-<a name="ln7104">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7105">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_tabpage&quot;);</a>
-<a name="ln7106">  }</a>
-<a name="ln7107">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7108">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln7109">  }</a>
-<a name="ln7110"> </a>
-<a name="ln7111">  const Tabpage ret = nvim_win_get_tabpage(arg1, &amp;err);</a>
-<a name="ln7112">  nlua_push_Tabpage(lstate, ret, true);</a>
-<a name="ln7113">api_free_tabpage(ret);</a>
-<a name="ln7114"> </a>
-<a name="ln7115">  api_free_window(arg1);</a>
-<a name="ln7116"> </a>
-<a name="ln7117">exit_0:</a>
-<a name="ln7118">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7119">    luaL_where(lstate, 1);</a>
-<a name="ln7120">    if (err_param) {</a>
-<a name="ln7121">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7122">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7123">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7124">    }</a>
-<a name="ln7125">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7126">    api_clear_error(&amp;err);</a>
-<a name="ln7127">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7128">    return lua_error(lstate);</a>
-<a name="ln7129">  }</a>
-<a name="ln7130"> </a>
-<a name="ln7131">  return 1;</a>
-<a name="ln7132">}</a>
-<a name="ln7133"> </a>
-<a name="ln7134">static int nlua_api_nvim_win_get_number(lua_State *lstate)</a>
-<a name="ln7135">{</a>
-<a name="ln7136">  Error err = ERROR_INIT;</a>
-<a name="ln7137">  char *err_param = 0;</a>
-<a name="ln7138">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln7139">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln7140">    goto exit_0;</a>
-<a name="ln7141">  }</a>
-<a name="ln7142">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7143">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_number&quot;);</a>
-<a name="ln7144">  }</a>
-<a name="ln7145">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7146">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln7147">  }</a>
-<a name="ln7148"> </a>
-<a name="ln7149">  const Integer ret = nvim_win_get_number(arg1, &amp;err);</a>
-<a name="ln7150">  nlua_push_Integer(lstate, ret, true);</a>
-<a name="ln7151">api_free_integer(ret);</a>
-<a name="ln7152"> </a>
-<a name="ln7153">  api_free_window(arg1);</a>
-<a name="ln7154"> </a>
-<a name="ln7155">exit_0:</a>
-<a name="ln7156">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7157">    luaL_where(lstate, 1);</a>
-<a name="ln7158">    if (err_param) {</a>
-<a name="ln7159">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7160">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7161">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7162">    }</a>
-<a name="ln7163">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7164">    api_clear_error(&amp;err);</a>
-<a name="ln7165">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7166">    return lua_error(lstate);</a>
-<a name="ln7167">  }</a>
-<a name="ln7168"> </a>
-<a name="ln7169">  return 1;</a>
-<a name="ln7170">}</a>
-<a name="ln7171"> </a>
-<a name="ln7172">static int nlua_api_nvim_win_is_valid(lua_State *lstate)</a>
-<a name="ln7173">{</a>
-<a name="ln7174">  Error err = ERROR_INIT;</a>
-<a name="ln7175">  char *err_param = 0;</a>
-<a name="ln7176">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln7177">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln7178">    goto exit_0;</a>
-<a name="ln7179">  }</a>
-<a name="ln7180">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7181">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_is_valid&quot;);</a>
-<a name="ln7182">  }</a>
-<a name="ln7183">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7184">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln7185">  }</a>
-<a name="ln7186"> </a>
-<a name="ln7187">  const Boolean ret = nvim_win_is_valid(arg1);</a>
-<a name="ln7188">  nlua_push_Boolean(lstate, ret, true);</a>
-<a name="ln7189">api_free_boolean(ret);</a>
-<a name="ln7190"> </a>
-<a name="ln7191">  api_free_window(arg1);</a>
-<a name="ln7192"> </a>
-<a name="ln7193">exit_0:</a>
-<a name="ln7194">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7195">    luaL_where(lstate, 1);</a>
-<a name="ln7196">    if (err_param) {</a>
-<a name="ln7197">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7198">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7199">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7200">    }</a>
-<a name="ln7201">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7202">    api_clear_error(&amp;err);</a>
-<a name="ln7203">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7204">    return lua_error(lstate);</a>
-<a name="ln7205">  }</a>
-<a name="ln7206"> </a>
-<a name="ln7207">  return 1;</a>
-<a name="ln7208">}</a>
-<a name="ln7209"> </a>
-<a name="ln7210">static int nlua_api_nvim_win_hide(lua_State *lstate)</a>
-<a name="ln7211">{</a>
-<a name="ln7212">  Error err = ERROR_INIT;</a>
-<a name="ln7213">  char *err_param = 0;</a>
-<a name="ln7214">  if (lua_gettop(lstate) != 1) {</a>
-<a name="ln7215">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
-<a name="ln7216">    goto exit_0;</a>
-<a name="ln7217">  }</a>
-<a name="ln7218">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7219">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_hide&quot;);</a>
-<a name="ln7220">  }</a>
-<a name="ln7221">  if (textlock != 0 || expr_map_locked()) {</a>
-<a name="ln7222">    api_set_error(&amp;err, kErrorTypeException, &quot;%s&quot;, e_textlock);</a>
-<a name="ln7223">    goto exit_0;</a>
-<a name="ln7224">  }</a>
-<a name="ln7225">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7226">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
-<a name="ln7227">  }</a>
-<a name="ln7228"> </a>
-<a name="ln7229">  nvim_win_hide(arg1, &amp;err);</a>
-<a name="ln7230"> </a>
-<a name="ln7231">  api_free_window(arg1);</a>
-<a name="ln7232"> </a>
-<a name="ln7233">exit_0:</a>
-<a name="ln7234">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7235">    luaL_where(lstate, 1);</a>
-<a name="ln7236">    if (err_param) {</a>
-<a name="ln7237">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7238">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7239">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7240">    }</a>
-<a name="ln7241">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7242">    api_clear_error(&amp;err);</a>
-<a name="ln7243">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7244">    return lua_error(lstate);</a>
-<a name="ln7245">  }</a>
-<a name="ln7246"> </a>
-<a name="ln7247">  return 0;</a>
-<a name="ln7248">}</a>
-<a name="ln7249"> </a>
-<a name="ln7250">static int nlua_api_nvim_win_close(lua_State *lstate)</a>
-<a name="ln7251">{</a>
-<a name="ln7252">  Error err = ERROR_INIT;</a>
-<a name="ln7253">  char *err_param = 0;</a>
-<a name="ln7254">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln7255">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln7256">    goto exit_0;</a>
-<a name="ln7257">  }</a>
-<a name="ln7258">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7259">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_close&quot;);</a>
-<a name="ln7260">  }</a>
-<a name="ln7261">  if (textlock != 0 || expr_map_locked()) {</a>
-<a name="ln7262">    api_set_error(&amp;err, kErrorTypeException, &quot;%s&quot;, e_textlock);</a>
-<a name="ln7263">    goto exit_0;</a>
-<a name="ln7264">  }</a>
-<a name="ln7265">    const Boolean arg2 = nlua_pop_Boolean(lstate, &amp;err);</a>
-<a name="ln7266">  if (ERROR_SET(&amp;err)) {      err_param = &quot;force&quot;;      goto exit_0;</a>
-<a name="ln7267">  }</a>
-<a name="ln7268"> </a>
-<a name="ln7269">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7270">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln7271">  }</a>
-<a name="ln7272"> </a>
-<a name="ln7273">  nvim_win_close(arg1, arg2, &amp;err);</a>
-<a name="ln7274"> </a>
-<a name="ln7275">  api_free_window(arg1);</a>
-<a name="ln7276">exit_1:</a>
-<a name="ln7277">  api_free_boolean(arg2);</a>
-<a name="ln7278"> </a>
-<a name="ln7279">exit_0:</a>
-<a name="ln7280">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7281">    luaL_where(lstate, 1);</a>
-<a name="ln7282">    if (err_param) {</a>
-<a name="ln7283">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7284">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7285">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7286">    }</a>
-<a name="ln7287">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7288">    api_clear_error(&amp;err);</a>
-<a name="ln7289">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7290">    return lua_error(lstate);</a>
+<a name="ln6999">static int nlua_api_nvim_win_set_var(lua_State *lstate)</a>
+<a name="ln7000">{</a>
+<a name="ln7001">  Error err = ERROR_INIT;</a>
+<a name="ln7002">  char *err_param = 0;</a>
+<a name="ln7003">  if (lua_gettop(lstate) != 3) {</a>
+<a name="ln7004">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 3 arguments&quot;);</a>
+<a name="ln7005">    goto exit_0;</a>
+<a name="ln7006">  }</a>
+<a name="ln7007">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7008">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_var&quot;);</a>
+<a name="ln7009">  }</a>
+<a name="ln7010">    const Object arg3 = nlua_pop_Object(lstate, true, &amp;err);</a>
+<a name="ln7011">  if (ERROR_SET(&amp;err)) {      err_param = &quot;value&quot;;      goto exit_0;</a>
+<a name="ln7012">  }</a>
+<a name="ln7013"> </a>
+<a name="ln7014">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln7015">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_1;</a>
+<a name="ln7016">  }</a>
+<a name="ln7017"> </a>
+<a name="ln7018">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7019">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_2;</a>
+<a name="ln7020">  }</a>
+<a name="ln7021"> </a>
+<a name="ln7022">  nvim_win_set_var(arg1, arg2, arg3, &amp;err);</a>
+<a name="ln7023"> </a>
+<a name="ln7024">  api_free_window(arg1);</a>
+<a name="ln7025">exit_2:</a>
+<a name="ln7026">  api_free_string(arg2);</a>
+<a name="ln7027">exit_1:</a>
+<a name="ln7028">  api_free_object(arg3);</a>
+<a name="ln7029"> </a>
+<a name="ln7030">exit_0:</a>
+<a name="ln7031">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7032">    luaL_where(lstate, 1);</a>
+<a name="ln7033">    if (err_param) {</a>
+<a name="ln7034">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7035">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7036">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7037">    }</a>
+<a name="ln7038">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7039">    api_clear_error(&amp;err);</a>
+<a name="ln7040">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7041">    return lua_error(lstate);</a>
+<a name="ln7042">  }</a>
+<a name="ln7043"> </a>
+<a name="ln7044">  return 0;</a>
+<a name="ln7045">}</a>
+<a name="ln7046"> </a>
+<a name="ln7047">static int nlua_api_nvim_win_del_var(lua_State *lstate)</a>
+<a name="ln7048">{</a>
+<a name="ln7049">  Error err = ERROR_INIT;</a>
+<a name="ln7050">  char *err_param = 0;</a>
+<a name="ln7051">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln7052">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln7053">    goto exit_0;</a>
+<a name="ln7054">  }</a>
+<a name="ln7055">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7056">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_del_var&quot;);</a>
+<a name="ln7057">  }</a>
+<a name="ln7058">    const String arg2 = nlua_pop_String(lstate, &amp;err);</a>
+<a name="ln7059">  if (ERROR_SET(&amp;err)) {      err_param = &quot;name&quot;;      goto exit_0;</a>
+<a name="ln7060">  }</a>
+<a name="ln7061"> </a>
+<a name="ln7062">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7063">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln7064">  }</a>
+<a name="ln7065"> </a>
+<a name="ln7066">  nvim_win_del_var(arg1, arg2, &amp;err);</a>
+<a name="ln7067"> </a>
+<a name="ln7068">  api_free_window(arg1);</a>
+<a name="ln7069">exit_1:</a>
+<a name="ln7070">  api_free_string(arg2);</a>
+<a name="ln7071"> </a>
+<a name="ln7072">exit_0:</a>
+<a name="ln7073">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7074">    luaL_where(lstate, 1);</a>
+<a name="ln7075">    if (err_param) {</a>
+<a name="ln7076">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7077">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7078">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7079">    }</a>
+<a name="ln7080">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7081">    api_clear_error(&amp;err);</a>
+<a name="ln7082">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7083">    return lua_error(lstate);</a>
+<a name="ln7084">  }</a>
+<a name="ln7085"> </a>
+<a name="ln7086">  return 0;</a>
+<a name="ln7087">}</a>
+<a name="ln7088"> </a>
+<a name="ln7089">static int nlua_api_nvim_win_get_position(lua_State *lstate)</a>
+<a name="ln7090">{</a>
+<a name="ln7091">  Error err = ERROR_INIT;</a>
+<a name="ln7092">  char *err_param = 0;</a>
+<a name="ln7093">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln7094">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln7095">    goto exit_0;</a>
+<a name="ln7096">  }</a>
+<a name="ln7097">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7098">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_position&quot;);</a>
+<a name="ln7099">  }</a>
+<a name="ln7100">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7101">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln7102">  }</a>
+<a name="ln7103"> </a>
+<a name="ln7104">  const ArrayOf(Integer, 2) ret = nvim_win_get_position(arg1, &amp;err);</a>
+<a name="ln7105">  nlua_push_Array(lstate, ret, true);</a>
+<a name="ln7106">api_free_array(ret);</a>
+<a name="ln7107"> </a>
+<a name="ln7108">  api_free_window(arg1);</a>
+<a name="ln7109"> </a>
+<a name="ln7110">exit_0:</a>
+<a name="ln7111">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7112">    luaL_where(lstate, 1);</a>
+<a name="ln7113">    if (err_param) {</a>
+<a name="ln7114">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7115">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7116">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7117">    }</a>
+<a name="ln7118">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7119">    api_clear_error(&amp;err);</a>
+<a name="ln7120">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7121">    return lua_error(lstate);</a>
+<a name="ln7122">  }</a>
+<a name="ln7123"> </a>
+<a name="ln7124">  return 1;</a>
+<a name="ln7125">}</a>
+<a name="ln7126"> </a>
+<a name="ln7127">static int nlua_api_nvim_win_get_tabpage(lua_State *lstate)</a>
+<a name="ln7128">{</a>
+<a name="ln7129">  Error err = ERROR_INIT;</a>
+<a name="ln7130">  char *err_param = 0;</a>
+<a name="ln7131">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln7132">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln7133">    goto exit_0;</a>
+<a name="ln7134">  }</a>
+<a name="ln7135">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7136">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_tabpage&quot;);</a>
+<a name="ln7137">  }</a>
+<a name="ln7138">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7139">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln7140">  }</a>
+<a name="ln7141"> </a>
+<a name="ln7142">  const Tabpage ret = nvim_win_get_tabpage(arg1, &amp;err);</a>
+<a name="ln7143">  nlua_push_Tabpage(lstate, ret, true);</a>
+<a name="ln7144">api_free_tabpage(ret);</a>
+<a name="ln7145"> </a>
+<a name="ln7146">  api_free_window(arg1);</a>
+<a name="ln7147"> </a>
+<a name="ln7148">exit_0:</a>
+<a name="ln7149">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7150">    luaL_where(lstate, 1);</a>
+<a name="ln7151">    if (err_param) {</a>
+<a name="ln7152">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7153">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7154">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7155">    }</a>
+<a name="ln7156">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7157">    api_clear_error(&amp;err);</a>
+<a name="ln7158">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7159">    return lua_error(lstate);</a>
+<a name="ln7160">  }</a>
+<a name="ln7161"> </a>
+<a name="ln7162">  return 1;</a>
+<a name="ln7163">}</a>
+<a name="ln7164"> </a>
+<a name="ln7165">static int nlua_api_nvim_win_get_number(lua_State *lstate)</a>
+<a name="ln7166">{</a>
+<a name="ln7167">  Error err = ERROR_INIT;</a>
+<a name="ln7168">  char *err_param = 0;</a>
+<a name="ln7169">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln7170">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln7171">    goto exit_0;</a>
+<a name="ln7172">  }</a>
+<a name="ln7173">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7174">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_get_number&quot;);</a>
+<a name="ln7175">  }</a>
+<a name="ln7176">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7177">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln7178">  }</a>
+<a name="ln7179"> </a>
+<a name="ln7180">  const Integer ret = nvim_win_get_number(arg1, &amp;err);</a>
+<a name="ln7181">  nlua_push_Integer(lstate, ret, true);</a>
+<a name="ln7182">api_free_integer(ret);</a>
+<a name="ln7183"> </a>
+<a name="ln7184">  api_free_window(arg1);</a>
+<a name="ln7185"> </a>
+<a name="ln7186">exit_0:</a>
+<a name="ln7187">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7188">    luaL_where(lstate, 1);</a>
+<a name="ln7189">    if (err_param) {</a>
+<a name="ln7190">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7191">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7192">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7193">    }</a>
+<a name="ln7194">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7195">    api_clear_error(&amp;err);</a>
+<a name="ln7196">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7197">    return lua_error(lstate);</a>
+<a name="ln7198">  }</a>
+<a name="ln7199"> </a>
+<a name="ln7200">  return 1;</a>
+<a name="ln7201">}</a>
+<a name="ln7202"> </a>
+<a name="ln7203">static int nlua_api_nvim_win_is_valid(lua_State *lstate)</a>
+<a name="ln7204">{</a>
+<a name="ln7205">  Error err = ERROR_INIT;</a>
+<a name="ln7206">  char *err_param = 0;</a>
+<a name="ln7207">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln7208">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln7209">    goto exit_0;</a>
+<a name="ln7210">  }</a>
+<a name="ln7211">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7212">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_is_valid&quot;);</a>
+<a name="ln7213">  }</a>
+<a name="ln7214">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7215">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln7216">  }</a>
+<a name="ln7217"> </a>
+<a name="ln7218">  const Boolean ret = nvim_win_is_valid(arg1);</a>
+<a name="ln7219">  nlua_push_Boolean(lstate, ret, true);</a>
+<a name="ln7220">api_free_boolean(ret);</a>
+<a name="ln7221"> </a>
+<a name="ln7222">  api_free_window(arg1);</a>
+<a name="ln7223"> </a>
+<a name="ln7224">exit_0:</a>
+<a name="ln7225">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7226">    luaL_where(lstate, 1);</a>
+<a name="ln7227">    if (err_param) {</a>
+<a name="ln7228">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7229">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7230">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7231">    }</a>
+<a name="ln7232">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7233">    api_clear_error(&amp;err);</a>
+<a name="ln7234">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7235">    return lua_error(lstate);</a>
+<a name="ln7236">  }</a>
+<a name="ln7237"> </a>
+<a name="ln7238">  return 1;</a>
+<a name="ln7239">}</a>
+<a name="ln7240"> </a>
+<a name="ln7241">static int nlua_api_nvim_win_hide(lua_State *lstate)</a>
+<a name="ln7242">{</a>
+<a name="ln7243">  Error err = ERROR_INIT;</a>
+<a name="ln7244">  char *err_param = 0;</a>
+<a name="ln7245">  if (lua_gettop(lstate) != 1) {</a>
+<a name="ln7246">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 1 argument&quot;);</a>
+<a name="ln7247">    goto exit_0;</a>
+<a name="ln7248">  }</a>
+<a name="ln7249">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7250">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_hide&quot;);</a>
+<a name="ln7251">  }</a>
+<a name="ln7252">  if (textlock != 0 || expr_map_locked()) {</a>
+<a name="ln7253">    api_set_error(&amp;err, kErrorTypeException, &quot;%s&quot;, e_textlock);</a>
+<a name="ln7254">    goto exit_0;</a>
+<a name="ln7255">  }</a>
+<a name="ln7256">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7257">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_0;</a>
+<a name="ln7258">  }</a>
+<a name="ln7259"> </a>
+<a name="ln7260">  nvim_win_hide(arg1, &amp;err);</a>
+<a name="ln7261"> </a>
+<a name="ln7262">  api_free_window(arg1);</a>
+<a name="ln7263"> </a>
+<a name="ln7264">exit_0:</a>
+<a name="ln7265">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7266">    luaL_where(lstate, 1);</a>
+<a name="ln7267">    if (err_param) {</a>
+<a name="ln7268">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7269">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7270">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7271">    }</a>
+<a name="ln7272">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7273">    api_clear_error(&amp;err);</a>
+<a name="ln7274">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7275">    return lua_error(lstate);</a>
+<a name="ln7276">  }</a>
+<a name="ln7277"> </a>
+<a name="ln7278">  return 0;</a>
+<a name="ln7279">}</a>
+<a name="ln7280"> </a>
+<a name="ln7281">static int nlua_api_nvim_win_close(lua_State *lstate)</a>
+<a name="ln7282">{</a>
+<a name="ln7283">  Error err = ERROR_INIT;</a>
+<a name="ln7284">  char *err_param = 0;</a>
+<a name="ln7285">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln7286">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln7287">    goto exit_0;</a>
+<a name="ln7288">  }</a>
+<a name="ln7289">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7290">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_close&quot;);</a>
 <a name="ln7291">  }</a>
-<a name="ln7292"> </a>
-<a name="ln7293">  return 0;</a>
-<a name="ln7294">}</a>
-<a name="ln7295"> </a>
-<a name="ln7296">static int nlua_api_nvim_win_call(lua_State *lstate)</a>
-<a name="ln7297">{</a>
-<a name="ln7298">  Error err = ERROR_INIT;</a>
-<a name="ln7299">  char *err_param = 0;</a>
-<a name="ln7300">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln7301">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln7302">    goto exit_0;</a>
-<a name="ln7303">  }</a>
-<a name="ln7304">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7305">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_call&quot;);</a>
-<a name="ln7306">  }</a>
-<a name="ln7307">    const LuaRef arg2 = nlua_pop_LuaRef(lstate, &amp;err);</a>
-<a name="ln7308">  if (ERROR_SET(&amp;err)) {      err_param = &quot;fun&quot;;      goto exit_0;</a>
-<a name="ln7309">  }</a>
-<a name="ln7310"> </a>
-<a name="ln7311">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7312">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln7313">  }</a>
-<a name="ln7314"> </a>
-<a name="ln7315">  const Object ret = nvim_win_call(arg1, arg2, &amp;err);</a>
-<a name="ln7316">  nlua_push_Object(lstate, ret, true);</a>
-<a name="ln7317">api_free_object(ret);</a>
-<a name="ln7318"> </a>
-<a name="ln7319">  api_free_window(arg1);</a>
-<a name="ln7320">exit_1:</a>
-<a name="ln7321">  api_free_luaref(arg2);</a>
-<a name="ln7322"> </a>
-<a name="ln7323">exit_0:</a>
-<a name="ln7324">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7325">    luaL_where(lstate, 1);</a>
-<a name="ln7326">    if (err_param) {</a>
-<a name="ln7327">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7328">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7329">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7330">    }</a>
-<a name="ln7331">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7332">    api_clear_error(&amp;err);</a>
-<a name="ln7333">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7334">    return lua_error(lstate);</a>
-<a name="ln7335">  }</a>
-<a name="ln7336"> </a>
-<a name="ln7337">  return 1;</a>
-<a name="ln7338">}</a>
-<a name="ln7339"> </a>
-<a name="ln7340">static int nlua_api_nvim_win_set_hl_ns(lua_State *lstate)</a>
-<a name="ln7341">{</a>
-<a name="ln7342">  Error err = ERROR_INIT;</a>
-<a name="ln7343">  char *err_param = 0;</a>
-<a name="ln7344">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln7345">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln7346">    goto exit_0;</a>
-<a name="ln7347">  }</a>
-<a name="ln7348">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7349">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_hl_ns&quot;);</a>
-<a name="ln7350">  }</a>
-<a name="ln7351">    const Integer arg2 = nlua_pop_Integer(lstate, &amp;err);</a>
-<a name="ln7352">  if (ERROR_SET(&amp;err)) {      err_param = &quot;ns_id&quot;;      goto exit_0;</a>
-<a name="ln7353">  }</a>
-<a name="ln7354"> </a>
-<a name="ln7355">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7356">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln7357">  }</a>
-<a name="ln7358"> </a>
-<a name="ln7359">  nvim_win_set_hl_ns(arg1, arg2, &amp;err);</a>
-<a name="ln7360"> </a>
-<a name="ln7361">  api_free_window(arg1);</a>
-<a name="ln7362">exit_1:</a>
-<a name="ln7363">  api_free_integer(arg2);</a>
-<a name="ln7364"> </a>
-<a name="ln7365">exit_0:</a>
-<a name="ln7366">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7367">    luaL_where(lstate, 1);</a>
-<a name="ln7368">    if (err_param) {</a>
-<a name="ln7369">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7370">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7371">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7372">    }</a>
-<a name="ln7373">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7374">    api_clear_error(&amp;err);</a>
-<a name="ln7375">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7376">    return lua_error(lstate);</a>
-<a name="ln7377">  }</a>
-<a name="ln7378"> </a>
-<a name="ln7379">  return 0;</a>
-<a name="ln7380">}</a>
-<a name="ln7381"> </a>
-<a name="ln7382">static int nlua_api_nvim_win_text_height(lua_State *lstate)</a>
-<a name="ln7383">{</a>
-<a name="ln7384">  Error err = ERROR_INIT;</a>
-<a name="ln7385">  char *err_param = 0;</a>
-<a name="ln7386">  if (lua_gettop(lstate) != 2) {</a>
-<a name="ln7387">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
-<a name="ln7388">    goto exit_0;</a>
-<a name="ln7389">  }</a>
-<a name="ln7390">  if (!nlua_is_deferred_safe()) {</a>
-<a name="ln7391">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_text_height&quot;);</a>
-<a name="ln7392">  }</a>
-<a name="ln7393">    KeyDict_win_text_height arg2 = { 0 }; nlua_pop_keydict(lstate, &amp;arg2, KeyDict_win_text_height_get_field, &amp;err_param, &amp;err);</a>
-<a name="ln7394">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
-<a name="ln7395">  }</a>
-<a name="ln7396"> </a>
-<a name="ln7397">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
-<a name="ln7398">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
-<a name="ln7399">  }</a>
-<a name="ln7400"> </a>
-<a name="ln7401">  Arena arena = ARENA_EMPTY;</a>
-<a name="ln7402">  const Dictionary ret = nvim_win_text_height(arg1, &amp;arg2, &amp;arena, &amp;err);</a>
-<a name="ln7403">  nlua_push_Dictionary(lstate, ret, false);</a>
-<a name="ln7404">arena_mem_free(arena_finish(&amp;arena));</a>
-<a name="ln7405"> </a>
-<a name="ln7406">  api_free_window(arg1);</a>
-<a name="ln7407">exit_1:</a>
-<a name="ln7408">  api_free_keydict_win_text_height(&amp;arg2);</a>
+<a name="ln7292">  if (textlock != 0 || expr_map_locked()) {</a>
+<a name="ln7293">    api_set_error(&amp;err, kErrorTypeException, &quot;%s&quot;, e_textlock);</a>
+<a name="ln7294">    goto exit_0;</a>
+<a name="ln7295">  }</a>
+<a name="ln7296">    const Boolean arg2 = nlua_pop_Boolean(lstate, &amp;err);</a>
+<a name="ln7297">  if (ERROR_SET(&amp;err)) {      err_param = &quot;force&quot;;      goto exit_0;</a>
+<a name="ln7298">  }</a>
+<a name="ln7299"> </a>
+<a name="ln7300">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7301">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln7302">  }</a>
+<a name="ln7303"> </a>
+<a name="ln7304">  nvim_win_close(arg1, arg2, &amp;err);</a>
+<a name="ln7305"> </a>
+<a name="ln7306">  api_free_window(arg1);</a>
+<a name="ln7307">exit_1:</a>
+<a name="ln7308">  api_free_boolean(arg2);</a>
+<a name="ln7309"> </a>
+<a name="ln7310">exit_0:</a>
+<a name="ln7311">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7312">    luaL_where(lstate, 1);</a>
+<a name="ln7313">    if (err_param) {</a>
+<a name="ln7314">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7315">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7316">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7317">    }</a>
+<a name="ln7318">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7319">    api_clear_error(&amp;err);</a>
+<a name="ln7320">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7321">    return lua_error(lstate);</a>
+<a name="ln7322">  }</a>
+<a name="ln7323"> </a>
+<a name="ln7324">  return 0;</a>
+<a name="ln7325">}</a>
+<a name="ln7326"> </a>
+<a name="ln7327">static int nlua_api_nvim_win_call(lua_State *lstate)</a>
+<a name="ln7328">{</a>
+<a name="ln7329">  Error err = ERROR_INIT;</a>
+<a name="ln7330">  char *err_param = 0;</a>
+<a name="ln7331">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln7332">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln7333">    goto exit_0;</a>
+<a name="ln7334">  }</a>
+<a name="ln7335">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7336">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_call&quot;);</a>
+<a name="ln7337">  }</a>
+<a name="ln7338">    const LuaRef arg2 = nlua_pop_LuaRef(lstate, &amp;err);</a>
+<a name="ln7339">  if (ERROR_SET(&amp;err)) {      err_param = &quot;fun&quot;;      goto exit_0;</a>
+<a name="ln7340">  }</a>
+<a name="ln7341"> </a>
+<a name="ln7342">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7343">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln7344">  }</a>
+<a name="ln7345"> </a>
+<a name="ln7346">  const Object ret = nvim_win_call(arg1, arg2, &amp;err);</a>
+<a name="ln7347">  nlua_push_Object(lstate, ret, true);</a>
+<a name="ln7348">api_free_object(ret);</a>
+<a name="ln7349"> </a>
+<a name="ln7350">  api_free_window(arg1);</a>
+<a name="ln7351">exit_1:</a>
+<a name="ln7352">  api_free_luaref(arg2);</a>
+<a name="ln7353"> </a>
+<a name="ln7354">exit_0:</a>
+<a name="ln7355">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7356">    luaL_where(lstate, 1);</a>
+<a name="ln7357">    if (err_param) {</a>
+<a name="ln7358">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7359">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7360">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7361">    }</a>
+<a name="ln7362">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7363">    api_clear_error(&amp;err);</a>
+<a name="ln7364">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7365">    return lua_error(lstate);</a>
+<a name="ln7366">  }</a>
+<a name="ln7367"> </a>
+<a name="ln7368">  return 1;</a>
+<a name="ln7369">}</a>
+<a name="ln7370"> </a>
+<a name="ln7371">static int nlua_api_nvim_win_set_hl_ns(lua_State *lstate)</a>
+<a name="ln7372">{</a>
+<a name="ln7373">  Error err = ERROR_INIT;</a>
+<a name="ln7374">  char *err_param = 0;</a>
+<a name="ln7375">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln7376">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln7377">    goto exit_0;</a>
+<a name="ln7378">  }</a>
+<a name="ln7379">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7380">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_set_hl_ns&quot;);</a>
+<a name="ln7381">  }</a>
+<a name="ln7382">    const Integer arg2 = nlua_pop_Integer(lstate, &amp;err);</a>
+<a name="ln7383">  if (ERROR_SET(&amp;err)) {      err_param = &quot;ns_id&quot;;      goto exit_0;</a>
+<a name="ln7384">  }</a>
+<a name="ln7385"> </a>
+<a name="ln7386">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7387">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln7388">  }</a>
+<a name="ln7389"> </a>
+<a name="ln7390">  nvim_win_set_hl_ns(arg1, arg2, &amp;err);</a>
+<a name="ln7391"> </a>
+<a name="ln7392">  api_free_window(arg1);</a>
+<a name="ln7393">exit_1:</a>
+<a name="ln7394">  api_free_integer(arg2);</a>
+<a name="ln7395"> </a>
+<a name="ln7396">exit_0:</a>
+<a name="ln7397">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7398">    luaL_where(lstate, 1);</a>
+<a name="ln7399">    if (err_param) {</a>
+<a name="ln7400">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7401">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7402">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7403">    }</a>
+<a name="ln7404">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7405">    api_clear_error(&amp;err);</a>
+<a name="ln7406">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7407">    return lua_error(lstate);</a>
+<a name="ln7408">  }</a>
 <a name="ln7409"> </a>
-<a name="ln7410">exit_0:</a>
-<a name="ln7411">  if (ERROR_SET(&amp;err)) {</a>
-<a name="ln7412">    luaL_where(lstate, 1);</a>
-<a name="ln7413">    if (err_param) {</a>
-<a name="ln7414">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
-<a name="ln7415">      lua_pushstring(lstate, err_param);</a>
-<a name="ln7416">      lua_pushstring(lstate, &quot;': &quot;);</a>
-<a name="ln7417">    }</a>
-<a name="ln7418">    lua_pushstring(lstate, err.msg);</a>
-<a name="ln7419">    api_clear_error(&amp;err);</a>
-<a name="ln7420">    lua_concat(lstate, err_param ? 5 : 2);</a>
-<a name="ln7421">    return lua_error(lstate);</a>
-<a name="ln7422">  }</a>
-<a name="ln7423"> </a>
-<a name="ln7424">  return 1;</a>
-<a name="ln7425">}</a>
-<a name="ln7426">void nlua_add_api_functions(lua_State *lstate);  // silence -Wmissing-prototypes</a>
-<a name="ln7427">void nlua_add_api_functions(lua_State *lstate)</a>
-<a name="ln7428">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln7429">{</a>
-<a name="ln7430">  lua_createtable(lstate, 0, 173);</a>
+<a name="ln7410">  return 0;</a>
+<a name="ln7411">}</a>
+<a name="ln7412"> </a>
+<a name="ln7413">static int nlua_api_nvim_win_text_height(lua_State *lstate)</a>
+<a name="ln7414">{</a>
+<a name="ln7415">  Error err = ERROR_INIT;</a>
+<a name="ln7416">  char *err_param = 0;</a>
+<a name="ln7417">  if (lua_gettop(lstate) != 2) {</a>
+<a name="ln7418">    api_set_error(&amp;err, kErrorTypeValidation, &quot;Expected 2 arguments&quot;);</a>
+<a name="ln7419">    goto exit_0;</a>
+<a name="ln7420">  }</a>
+<a name="ln7421">  if (!nlua_is_deferred_safe()) {</a>
+<a name="ln7422">    return luaL_error(lstate, e_luv_api_disabled, &quot;nvim_win_text_height&quot;);</a>
+<a name="ln7423">  }</a>
+<a name="ln7424">    KeyDict_win_text_height arg2 = { 0 }; nlua_pop_keydict(lstate, &amp;arg2, KeyDict_win_text_height_get_field, &amp;err_param, &amp;err);</a>
+<a name="ln7425">  if (ERROR_SET(&amp;err)) {      goto exit_1;</a>
+<a name="ln7426">  }</a>
+<a name="ln7427"> </a>
+<a name="ln7428">    const Window arg1 = nlua_pop_Window(lstate, &amp;err);</a>
+<a name="ln7429">  if (ERROR_SET(&amp;err)) {      err_param = &quot;window&quot;;      goto exit_1;</a>
+<a name="ln7430">  }</a>
 <a name="ln7431"> </a>
-<a name="ln7432">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_autocmds);</a>
-<a name="ln7433">  lua_setfield(lstate, -2, &quot;nvim_get_autocmds&quot;);</a>
-<a name="ln7434">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_autocmd);</a>
-<a name="ln7435">  lua_setfield(lstate, -2, &quot;nvim_create_autocmd&quot;);</a>
-<a name="ln7436">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_autocmd);</a>
-<a name="ln7437">  lua_setfield(lstate, -2, &quot;nvim_del_autocmd&quot;);</a>
-<a name="ln7438">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_clear_autocmds);</a>
-<a name="ln7439">  lua_setfield(lstate, -2, &quot;nvim_clear_autocmds&quot;);</a>
-<a name="ln7440">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_augroup);</a>
-<a name="ln7441">  lua_setfield(lstate, -2, &quot;nvim_create_augroup&quot;);</a>
-<a name="ln7442">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_augroup_by_id);</a>
-<a name="ln7443">  lua_setfield(lstate, -2, &quot;nvim_del_augroup_by_id&quot;);</a>
-<a name="ln7444">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_augroup_by_name);</a>
-<a name="ln7445">  lua_setfield(lstate, -2, &quot;nvim_del_augroup_by_name&quot;);</a>
-<a name="ln7446">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_exec_autocmds);</a>
-<a name="ln7447">  lua_setfield(lstate, -2, &quot;nvim_exec_autocmds&quot;);</a>
-<a name="ln7448">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_line_count);</a>
-<a name="ln7449">  lua_setfield(lstate, -2, &quot;nvim_buf_line_count&quot;);</a>
-<a name="ln7450">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_attach);</a>
-<a name="ln7451">  lua_setfield(lstate, -2, &quot;nvim_buf_attach&quot;);</a>
-<a name="ln7452">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__buf_redraw_range);</a>
-<a name="ln7453">  lua_setfield(lstate, -2, &quot;nvim__buf_redraw_range&quot;);</a>
-<a name="ln7454">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_lines);</a>
-<a name="ln7455">  lua_setfield(lstate, -2, &quot;nvim_buf_get_lines&quot;);</a>
-<a name="ln7456">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_lines);</a>
-<a name="ln7457">  lua_setfield(lstate, -2, &quot;nvim_buf_set_lines&quot;);</a>
-<a name="ln7458">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_text);</a>
-<a name="ln7459">  lua_setfield(lstate, -2, &quot;nvim_buf_set_text&quot;);</a>
-<a name="ln7460">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_text);</a>
-<a name="ln7461">  lua_setfield(lstate, -2, &quot;nvim_buf_get_text&quot;);</a>
-<a name="ln7462">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_offset);</a>
-<a name="ln7463">  lua_setfield(lstate, -2, &quot;nvim_buf_get_offset&quot;);</a>
-<a name="ln7464">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_var);</a>
-<a name="ln7465">  lua_setfield(lstate, -2, &quot;nvim_buf_get_var&quot;);</a>
-<a name="ln7466">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_changedtick);</a>
-<a name="ln7467">  lua_setfield(lstate, -2, &quot;nvim_buf_get_changedtick&quot;);</a>
-<a name="ln7468">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_keymap);</a>
-<a name="ln7469">  lua_setfield(lstate, -2, &quot;nvim_buf_get_keymap&quot;);</a>
-<a name="ln7470">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_keymap);</a>
-<a name="ln7471">  lua_setfield(lstate, -2, &quot;nvim_buf_set_keymap&quot;);</a>
-<a name="ln7472">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_keymap);</a>
-<a name="ln7473">  lua_setfield(lstate, -2, &quot;nvim_buf_del_keymap&quot;);</a>
-<a name="ln7474">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_var);</a>
-<a name="ln7475">  lua_setfield(lstate, -2, &quot;nvim_buf_set_var&quot;);</a>
-<a name="ln7476">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_var);</a>
-<a name="ln7477">  lua_setfield(lstate, -2, &quot;nvim_buf_del_var&quot;);</a>
-<a name="ln7478">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_name);</a>
-<a name="ln7479">  lua_setfield(lstate, -2, &quot;nvim_buf_get_name&quot;);</a>
-<a name="ln7480">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_name);</a>
-<a name="ln7481">  lua_setfield(lstate, -2, &quot;nvim_buf_set_name&quot;);</a>
-<a name="ln7482">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_is_loaded);</a>
-<a name="ln7483">  lua_setfield(lstate, -2, &quot;nvim_buf_is_loaded&quot;);</a>
-<a name="ln7484">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_delete);</a>
-<a name="ln7485">  lua_setfield(lstate, -2, &quot;nvim_buf_delete&quot;);</a>
-<a name="ln7486">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_is_valid);</a>
-<a name="ln7487">  lua_setfield(lstate, -2, &quot;nvim_buf_is_valid&quot;);</a>
-<a name="ln7488">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_mark);</a>
-<a name="ln7489">  lua_setfield(lstate, -2, &quot;nvim_buf_del_mark&quot;);</a>
-<a name="ln7490">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_mark);</a>
-<a name="ln7491">  lua_setfield(lstate, -2, &quot;nvim_buf_set_mark&quot;);</a>
-<a name="ln7492">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_mark);</a>
-<a name="ln7493">  lua_setfield(lstate, -2, &quot;nvim_buf_get_mark&quot;);</a>
-<a name="ln7494">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_call);</a>
-<a name="ln7495">  lua_setfield(lstate, -2, &quot;nvim_buf_call&quot;);</a>
-<a name="ln7496">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__buf_stats);</a>
-<a name="ln7497">  lua_setfield(lstate, -2, &quot;nvim__buf_stats&quot;);</a>
-<a name="ln7498">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_parse_cmd);</a>
-<a name="ln7499">  lua_setfield(lstate, -2, &quot;nvim_parse_cmd&quot;);</a>
-<a name="ln7500">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_cmd);</a>
-<a name="ln7501">  lua_setfield(lstate, -2, &quot;nvim_cmd&quot;);</a>
-<a name="ln7502">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_user_command);</a>
-<a name="ln7503">  lua_setfield(lstate, -2, &quot;nvim_create_user_command&quot;);</a>
-<a name="ln7504">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_user_command);</a>
-<a name="ln7505">  lua_setfield(lstate, -2, &quot;nvim_del_user_command&quot;);</a>
-<a name="ln7506">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_create_user_command);</a>
-<a name="ln7507">  lua_setfield(lstate, -2, &quot;nvim_buf_create_user_command&quot;);</a>
-<a name="ln7508">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_user_command);</a>
-<a name="ln7509">  lua_setfield(lstate, -2, &quot;nvim_buf_del_user_command&quot;);</a>
-<a name="ln7510">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_commands);</a>
-<a name="ln7511">  lua_setfield(lstate, -2, &quot;nvim_get_commands&quot;);</a>
-<a name="ln7512">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_commands);</a>
-<a name="ln7513">  lua_setfield(lstate, -2, &quot;nvim_buf_get_commands&quot;);</a>
-<a name="ln7514">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_exec);</a>
-<a name="ln7515">  lua_setfield(lstate, -2, &quot;nvim_exec&quot;);</a>
-<a name="ln7516">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_command_output);</a>
-<a name="ln7517">  lua_setfield(lstate, -2, &quot;nvim_command_output&quot;);</a>
-<a name="ln7518">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_number);</a>
-<a name="ln7519">  lua_setfield(lstate, -2, &quot;nvim_buf_get_number&quot;);</a>
-<a name="ln7520">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_clear_highlight);</a>
-<a name="ln7521">  lua_setfield(lstate, -2, &quot;nvim_buf_clear_highlight&quot;);</a>
-<a name="ln7522">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_virtual_text);</a>
-<a name="ln7523">  lua_setfield(lstate, -2, &quot;nvim_buf_set_virtual_text&quot;);</a>
-<a name="ln7524">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_hl_by_id);</a>
-<a name="ln7525">  lua_setfield(lstate, -2, &quot;nvim_get_hl_by_id&quot;);</a>
-<a name="ln7526">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_hl_by_name);</a>
-<a name="ln7527">  lua_setfield(lstate, -2, &quot;nvim_get_hl_by_name&quot;);</a>
-<a name="ln7528">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_option_info);</a>
-<a name="ln7529">  lua_setfield(lstate, -2, &quot;nvim_get_option_info&quot;);</a>
-<a name="ln7530">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_option);</a>
-<a name="ln7531">  lua_setfield(lstate, -2, &quot;nvim_set_option&quot;);</a>
-<a name="ln7532">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_option);</a>
-<a name="ln7533">  lua_setfield(lstate, -2, &quot;nvim_get_option&quot;);</a>
-<a name="ln7534">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_option);</a>
-<a name="ln7535">  lua_setfield(lstate, -2, &quot;nvim_buf_get_option&quot;);</a>
-<a name="ln7536">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_option);</a>
-<a name="ln7537">  lua_setfield(lstate, -2, &quot;nvim_buf_set_option&quot;);</a>
-<a name="ln7538">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_option);</a>
-<a name="ln7539">  lua_setfield(lstate, -2, &quot;nvim_win_get_option&quot;);</a>
-<a name="ln7540">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_option);</a>
-<a name="ln7541">  lua_setfield(lstate, -2, &quot;nvim_win_set_option&quot;);</a>
-<a name="ln7542">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_namespace);</a>
-<a name="ln7543">  lua_setfield(lstate, -2, &quot;nvim_create_namespace&quot;);</a>
-<a name="ln7544">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_namespaces);</a>
-<a name="ln7545">  lua_setfield(lstate, -2, &quot;nvim_get_namespaces&quot;);</a>
-<a name="ln7546">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_extmark_by_id);</a>
-<a name="ln7547">  lua_setfield(lstate, -2, &quot;nvim_buf_get_extmark_by_id&quot;);</a>
-<a name="ln7548">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_extmarks);</a>
-<a name="ln7549">  lua_setfield(lstate, -2, &quot;nvim_buf_get_extmarks&quot;);</a>
-<a name="ln7550">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_extmark);</a>
-<a name="ln7551">  lua_setfield(lstate, -2, &quot;nvim_buf_set_extmark&quot;);</a>
-<a name="ln7552">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_extmark);</a>
-<a name="ln7553">  lua_setfield(lstate, -2, &quot;nvim_buf_del_extmark&quot;);</a>
-<a name="ln7554">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_add_highlight);</a>
-<a name="ln7555">  lua_setfield(lstate, -2, &quot;nvim_buf_add_highlight&quot;);</a>
-<a name="ln7556">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_clear_namespace);</a>
-<a name="ln7557">  lua_setfield(lstate, -2, &quot;nvim_buf_clear_namespace&quot;);</a>
-<a name="ln7558">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_decoration_provider);</a>
-<a name="ln7559">  lua_setfield(lstate, -2, &quot;nvim_set_decoration_provider&quot;);</a>
-<a name="ln7560">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__buf_debug_extmarks);</a>
-<a name="ln7561">  lua_setfield(lstate, -2, &quot;nvim__buf_debug_extmarks&quot;);</a>
-<a name="ln7562">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_option_value);</a>
-<a name="ln7563">  lua_setfield(lstate, -2, &quot;nvim_get_option_value&quot;);</a>
-<a name="ln7564">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_option_value);</a>
-<a name="ln7565">  lua_setfield(lstate, -2, &quot;nvim_set_option_value&quot;);</a>
-<a name="ln7566">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_all_options_info);</a>
-<a name="ln7567">  lua_setfield(lstate, -2, &quot;nvim_get_all_options_info&quot;);</a>
-<a name="ln7568">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_option_info2);</a>
-<a name="ln7569">  lua_setfield(lstate, -2, &quot;nvim_get_option_info2&quot;);</a>
-<a name="ln7570">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_list_wins);</a>
-<a name="ln7571">  lua_setfield(lstate, -2, &quot;nvim_tabpage_list_wins&quot;);</a>
-<a name="ln7572">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_get_var);</a>
-<a name="ln7573">  lua_setfield(lstate, -2, &quot;nvim_tabpage_get_var&quot;);</a>
-<a name="ln7574">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_set_var);</a>
-<a name="ln7575">  lua_setfield(lstate, -2, &quot;nvim_tabpage_set_var&quot;);</a>
-<a name="ln7576">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_del_var);</a>
-<a name="ln7577">  lua_setfield(lstate, -2, &quot;nvim_tabpage_del_var&quot;);</a>
-<a name="ln7578">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_get_win);</a>
-<a name="ln7579">  lua_setfield(lstate, -2, &quot;nvim_tabpage_get_win&quot;);</a>
-<a name="ln7580">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_get_number);</a>
-<a name="ln7581">  lua_setfield(lstate, -2, &quot;nvim_tabpage_get_number&quot;);</a>
-<a name="ln7582">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_is_valid);</a>
-<a name="ln7583">  lua_setfield(lstate, -2, &quot;nvim_tabpage_is_valid&quot;);</a>
-<a name="ln7584">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_hl_id_by_name);</a>
-<a name="ln7585">  lua_setfield(lstate, -2, &quot;nvim_get_hl_id_by_name&quot;);</a>
-<a name="ln7586">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_hl);</a>
-<a name="ln7587">  lua_setfield(lstate, -2, &quot;nvim_get_hl&quot;);</a>
-<a name="ln7588">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_hl);</a>
-<a name="ln7589">  lua_setfield(lstate, -2, &quot;nvim_set_hl&quot;);</a>
-<a name="ln7590">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_hl_ns);</a>
-<a name="ln7591">  lua_setfield(lstate, -2, &quot;nvim_set_hl_ns&quot;);</a>
-<a name="ln7592">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_hl_ns_fast);</a>
-<a name="ln7593">  lua_setfield(lstate, -2, &quot;nvim_set_hl_ns_fast&quot;);</a>
-<a name="ln7594">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_feedkeys);</a>
-<a name="ln7595">  lua_setfield(lstate, -2, &quot;nvim_feedkeys&quot;);</a>
-<a name="ln7596">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_input);</a>
-<a name="ln7597">  lua_setfield(lstate, -2, &quot;nvim_input&quot;);</a>
-<a name="ln7598">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_input_mouse);</a>
-<a name="ln7599">  lua_setfield(lstate, -2, &quot;nvim_input_mouse&quot;);</a>
-<a name="ln7600">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_replace_termcodes);</a>
-<a name="ln7601">  lua_setfield(lstate, -2, &quot;nvim_replace_termcodes&quot;);</a>
-<a name="ln7602">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_notify);</a>
-<a name="ln7603">  lua_setfield(lstate, -2, &quot;nvim_notify&quot;);</a>
-<a name="ln7604">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_strwidth);</a>
-<a name="ln7605">  lua_setfield(lstate, -2, &quot;nvim_strwidth&quot;);</a>
-<a name="ln7606">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_runtime_paths);</a>
-<a name="ln7607">  lua_setfield(lstate, -2, &quot;nvim_list_runtime_paths&quot;);</a>
-<a name="ln7608">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__runtime_inspect);</a>
-<a name="ln7609">  lua_setfield(lstate, -2, &quot;nvim__runtime_inspect&quot;);</a>
-<a name="ln7610">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_runtime_file);</a>
-<a name="ln7611">  lua_setfield(lstate, -2, &quot;nvim_get_runtime_file&quot;);</a>
-<a name="ln7612">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__get_lib_dir);</a>
-<a name="ln7613">  lua_setfield(lstate, -2, &quot;nvim__get_lib_dir&quot;);</a>
-<a name="ln7614">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__get_runtime);</a>
-<a name="ln7615">  lua_setfield(lstate, -2, &quot;nvim__get_runtime&quot;);</a>
-<a name="ln7616">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_dir);</a>
-<a name="ln7617">  lua_setfield(lstate, -2, &quot;nvim_set_current_dir&quot;);</a>
-<a name="ln7618">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_current_line);</a>
-<a name="ln7619">  lua_setfield(lstate, -2, &quot;nvim_get_current_line&quot;);</a>
-<a name="ln7620">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_line);</a>
-<a name="ln7621">  lua_setfield(lstate, -2, &quot;nvim_set_current_line&quot;);</a>
-<a name="ln7622">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_current_line);</a>
-<a name="ln7623">  lua_setfield(lstate, -2, &quot;nvim_del_current_line&quot;);</a>
-<a name="ln7624">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_var);</a>
-<a name="ln7625">  lua_setfield(lstate, -2, &quot;nvim_get_var&quot;);</a>
-<a name="ln7626">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_var);</a>
-<a name="ln7627">  lua_setfield(lstate, -2, &quot;nvim_set_var&quot;);</a>
-<a name="ln7628">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_var);</a>
-<a name="ln7629">  lua_setfield(lstate, -2, &quot;nvim_del_var&quot;);</a>
-<a name="ln7630">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_vvar);</a>
-<a name="ln7631">  lua_setfield(lstate, -2, &quot;nvim_get_vvar&quot;);</a>
-<a name="ln7632">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_vvar);</a>
-<a name="ln7633">  lua_setfield(lstate, -2, &quot;nvim_set_vvar&quot;);</a>
-<a name="ln7634">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_echo);</a>
-<a name="ln7635">  lua_setfield(lstate, -2, &quot;nvim_echo&quot;);</a>
-<a name="ln7636">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_out_write);</a>
-<a name="ln7637">  lua_setfield(lstate, -2, &quot;nvim_out_write&quot;);</a>
-<a name="ln7638">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_err_write);</a>
-<a name="ln7639">  lua_setfield(lstate, -2, &quot;nvim_err_write&quot;);</a>
-<a name="ln7640">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_err_writeln);</a>
-<a name="ln7641">  lua_setfield(lstate, -2, &quot;nvim_err_writeln&quot;);</a>
-<a name="ln7642">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_bufs);</a>
-<a name="ln7643">  lua_setfield(lstate, -2, &quot;nvim_list_bufs&quot;);</a>
-<a name="ln7644">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_current_buf);</a>
-<a name="ln7645">  lua_setfield(lstate, -2, &quot;nvim_get_current_buf&quot;);</a>
-<a name="ln7646">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_buf);</a>
-<a name="ln7647">  lua_setfield(lstate, -2, &quot;nvim_set_current_buf&quot;);</a>
-<a name="ln7648">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_wins);</a>
-<a name="ln7649">  lua_setfield(lstate, -2, &quot;nvim_list_wins&quot;);</a>
-<a name="ln7650">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_current_win);</a>
-<a name="ln7651">  lua_setfield(lstate, -2, &quot;nvim_get_current_win&quot;);</a>
-<a name="ln7652">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_win);</a>
-<a name="ln7653">  lua_setfield(lstate, -2, &quot;nvim_set_current_win&quot;);</a>
-<a name="ln7654">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_buf);</a>
-<a name="ln7655">  lua_setfield(lstate, -2, &quot;nvim_create_buf&quot;);</a>
-<a name="ln7656">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_open_term);</a>
-<a name="ln7657">  lua_setfield(lstate, -2, &quot;nvim_open_term&quot;);</a>
-<a name="ln7658">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_chan_send);</a>
-<a name="ln7659">  lua_setfield(lstate, -2, &quot;nvim_chan_send&quot;);</a>
-<a name="ln7660">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_tabpages);</a>
-<a name="ln7661">  lua_setfield(lstate, -2, &quot;nvim_list_tabpages&quot;);</a>
-<a name="ln7662">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_current_tabpage);</a>
-<a name="ln7663">  lua_setfield(lstate, -2, &quot;nvim_get_current_tabpage&quot;);</a>
-<a name="ln7664">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_tabpage);</a>
-<a name="ln7665">  lua_setfield(lstate, -2, &quot;nvim_set_current_tabpage&quot;);</a>
-<a name="ln7666">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_paste);</a>
-<a name="ln7667">  lua_setfield(lstate, -2, &quot;nvim_paste&quot;);</a>
-<a name="ln7668">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_put);</a>
-<a name="ln7669">  lua_setfield(lstate, -2, &quot;nvim_put&quot;);</a>
-<a name="ln7670">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_color_by_name);</a>
-<a name="ln7671">  lua_setfield(lstate, -2, &quot;nvim_get_color_by_name&quot;);</a>
-<a name="ln7672">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_color_map);</a>
-<a name="ln7673">  lua_setfield(lstate, -2, &quot;nvim_get_color_map&quot;);</a>
-<a name="ln7674">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_context);</a>
-<a name="ln7675">  lua_setfield(lstate, -2, &quot;nvim_get_context&quot;);</a>
-<a name="ln7676">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_load_context);</a>
-<a name="ln7677">  lua_setfield(lstate, -2, &quot;nvim_load_context&quot;);</a>
-<a name="ln7678">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_mode);</a>
-<a name="ln7679">  lua_setfield(lstate, -2, &quot;nvim_get_mode&quot;);</a>
-<a name="ln7680">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_keymap);</a>
-<a name="ln7681">  lua_setfield(lstate, -2, &quot;nvim_get_keymap&quot;);</a>
-<a name="ln7682">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_keymap);</a>
-<a name="ln7683">  lua_setfield(lstate, -2, &quot;nvim_set_keymap&quot;);</a>
-<a name="ln7684">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_keymap);</a>
-<a name="ln7685">  lua_setfield(lstate, -2, &quot;nvim_del_keymap&quot;);</a>
-<a name="ln7686">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_chan_info);</a>
-<a name="ln7687">  lua_setfield(lstate, -2, &quot;nvim_get_chan_info&quot;);</a>
-<a name="ln7688">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_chans);</a>
-<a name="ln7689">  lua_setfield(lstate, -2, &quot;nvim_list_chans&quot;);</a>
-<a name="ln7690">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__id);</a>
-<a name="ln7691">  lua_setfield(lstate, -2, &quot;nvim__id&quot;);</a>
-<a name="ln7692">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__id_array);</a>
-<a name="ln7693">  lua_setfield(lstate, -2, &quot;nvim__id_array&quot;);</a>
-<a name="ln7694">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__id_dictionary);</a>
-<a name="ln7695">  lua_setfield(lstate, -2, &quot;nvim__id_dictionary&quot;);</a>
-<a name="ln7696">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__id_float);</a>
-<a name="ln7697">  lua_setfield(lstate, -2, &quot;nvim__id_float&quot;);</a>
-<a name="ln7698">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__stats);</a>
-<a name="ln7699">  lua_setfield(lstate, -2, &quot;nvim__stats&quot;);</a>
-<a name="ln7700">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_uis);</a>
-<a name="ln7701">  lua_setfield(lstate, -2, &quot;nvim_list_uis&quot;);</a>
-<a name="ln7702">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_proc_children);</a>
-<a name="ln7703">  lua_setfield(lstate, -2, &quot;nvim_get_proc_children&quot;);</a>
-<a name="ln7704">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_proc);</a>
-<a name="ln7705">  lua_setfield(lstate, -2, &quot;nvim_get_proc&quot;);</a>
-<a name="ln7706">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_select_popupmenu_item);</a>
-<a name="ln7707">  lua_setfield(lstate, -2, &quot;nvim_select_popupmenu_item&quot;);</a>
-<a name="ln7708">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__inspect_cell);</a>
-<a name="ln7709">  lua_setfield(lstate, -2, &quot;nvim__inspect_cell&quot;);</a>
-<a name="ln7710">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__screenshot);</a>
-<a name="ln7711">  lua_setfield(lstate, -2, &quot;nvim__screenshot&quot;);</a>
-<a name="ln7712">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__unpack);</a>
-<a name="ln7713">  lua_setfield(lstate, -2, &quot;nvim__unpack&quot;);</a>
-<a name="ln7714">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_mark);</a>
-<a name="ln7715">  lua_setfield(lstate, -2, &quot;nvim_del_mark&quot;);</a>
-<a name="ln7716">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_mark);</a>
-<a name="ln7717">  lua_setfield(lstate, -2, &quot;nvim_get_mark&quot;);</a>
-<a name="ln7718">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_eval_statusline);</a>
-<a name="ln7719">  lua_setfield(lstate, -2, &quot;nvim_eval_statusline&quot;);</a>
-<a name="ln7720">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_exec2);</a>
-<a name="ln7721">  lua_setfield(lstate, -2, &quot;nvim_exec2&quot;);</a>
-<a name="ln7722">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_command);</a>
-<a name="ln7723">  lua_setfield(lstate, -2, &quot;nvim_command&quot;);</a>
-<a name="ln7724">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_eval);</a>
-<a name="ln7725">  lua_setfield(lstate, -2, &quot;nvim_eval&quot;);</a>
-<a name="ln7726">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_call_function);</a>
-<a name="ln7727">  lua_setfield(lstate, -2, &quot;nvim_call_function&quot;);</a>
-<a name="ln7728">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_call_dict_function);</a>
-<a name="ln7729">  lua_setfield(lstate, -2, &quot;nvim_call_dict_function&quot;);</a>
-<a name="ln7730">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_parse_expression);</a>
-<a name="ln7731">  lua_setfield(lstate, -2, &quot;nvim_parse_expression&quot;);</a>
-<a name="ln7732">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_open_win);</a>
-<a name="ln7733">  lua_setfield(lstate, -2, &quot;nvim_open_win&quot;);</a>
-<a name="ln7734">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_config);</a>
-<a name="ln7735">  lua_setfield(lstate, -2, &quot;nvim_win_set_config&quot;);</a>
-<a name="ln7736">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_config);</a>
-<a name="ln7737">  lua_setfield(lstate, -2, &quot;nvim_win_get_config&quot;);</a>
-<a name="ln7738">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_buf);</a>
-<a name="ln7739">  lua_setfield(lstate, -2, &quot;nvim_win_get_buf&quot;);</a>
-<a name="ln7740">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_buf);</a>
-<a name="ln7741">  lua_setfield(lstate, -2, &quot;nvim_win_set_buf&quot;);</a>
-<a name="ln7742">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_cursor);</a>
-<a name="ln7743">  lua_setfield(lstate, -2, &quot;nvim_win_get_cursor&quot;);</a>
-<a name="ln7744">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_cursor);</a>
-<a name="ln7745">  lua_setfield(lstate, -2, &quot;nvim_win_set_cursor&quot;);</a>
-<a name="ln7746">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_height);</a>
-<a name="ln7747">  lua_setfield(lstate, -2, &quot;nvim_win_get_height&quot;);</a>
-<a name="ln7748">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_height);</a>
-<a name="ln7749">  lua_setfield(lstate, -2, &quot;nvim_win_set_height&quot;);</a>
-<a name="ln7750">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_width);</a>
-<a name="ln7751">  lua_setfield(lstate, -2, &quot;nvim_win_get_width&quot;);</a>
-<a name="ln7752">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_width);</a>
-<a name="ln7753">  lua_setfield(lstate, -2, &quot;nvim_win_set_width&quot;);</a>
-<a name="ln7754">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_var);</a>
-<a name="ln7755">  lua_setfield(lstate, -2, &quot;nvim_win_get_var&quot;);</a>
-<a name="ln7756">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_var);</a>
-<a name="ln7757">  lua_setfield(lstate, -2, &quot;nvim_win_set_var&quot;);</a>
-<a name="ln7758">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_del_var);</a>
-<a name="ln7759">  lua_setfield(lstate, -2, &quot;nvim_win_del_var&quot;);</a>
-<a name="ln7760">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_position);</a>
-<a name="ln7761">  lua_setfield(lstate, -2, &quot;nvim_win_get_position&quot;);</a>
-<a name="ln7762">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_tabpage);</a>
-<a name="ln7763">  lua_setfield(lstate, -2, &quot;nvim_win_get_tabpage&quot;);</a>
-<a name="ln7764">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_number);</a>
-<a name="ln7765">  lua_setfield(lstate, -2, &quot;nvim_win_get_number&quot;);</a>
-<a name="ln7766">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_is_valid);</a>
-<a name="ln7767">  lua_setfield(lstate, -2, &quot;nvim_win_is_valid&quot;);</a>
-<a name="ln7768">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_hide);</a>
-<a name="ln7769">  lua_setfield(lstate, -2, &quot;nvim_win_hide&quot;);</a>
-<a name="ln7770">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_close);</a>
-<a name="ln7771">  lua_setfield(lstate, -2, &quot;nvim_win_close&quot;);</a>
-<a name="ln7772">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_call);</a>
-<a name="ln7773">  lua_setfield(lstate, -2, &quot;nvim_win_call&quot;);</a>
-<a name="ln7774">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_hl_ns);</a>
-<a name="ln7775">  lua_setfield(lstate, -2, &quot;nvim_win_set_hl_ns&quot;);</a>
-<a name="ln7776">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_text_height);</a>
-<a name="ln7777">  lua_setfield(lstate, -2, &quot;nvim_win_text_height&quot;);</a>
-<a name="ln7778">  lua_setfield(lstate, -2, &quot;api&quot;);</a>
-<a name="ln7779">}</a>
+<a name="ln7432">  Arena arena = ARENA_EMPTY;</a>
+<a name="ln7433">  const Dictionary ret = nvim_win_text_height(arg1, &amp;arg2, &amp;arena, &amp;err);</a>
+<a name="ln7434">  nlua_push_Dictionary(lstate, ret, false);</a>
+<a name="ln7435">arena_mem_free(arena_finish(&amp;arena));</a>
+<a name="ln7436"> </a>
+<a name="ln7437">  api_free_window(arg1);</a>
+<a name="ln7438">exit_1:</a>
+<a name="ln7439">  api_free_keydict_win_text_height(&amp;arg2);</a>
+<a name="ln7440"> </a>
+<a name="ln7441">exit_0:</a>
+<a name="ln7442">  if (ERROR_SET(&amp;err)) {</a>
+<a name="ln7443">    luaL_where(lstate, 1);</a>
+<a name="ln7444">    if (err_param) {</a>
+<a name="ln7445">      lua_pushstring(lstate, &quot;Invalid '&quot;);</a>
+<a name="ln7446">      lua_pushstring(lstate, err_param);</a>
+<a name="ln7447">      lua_pushstring(lstate, &quot;': &quot;);</a>
+<a name="ln7448">    }</a>
+<a name="ln7449">    lua_pushstring(lstate, err.msg);</a>
+<a name="ln7450">    api_clear_error(&amp;err);</a>
+<a name="ln7451">    lua_concat(lstate, err_param ? 5 : 2);</a>
+<a name="ln7452">    return lua_error(lstate);</a>
+<a name="ln7453">  }</a>
+<a name="ln7454"> </a>
+<a name="ln7455">  return 1;</a>
+<a name="ln7456">}</a>
+<a name="ln7457">void nlua_add_api_functions(lua_State *lstate);  // silence -Wmissing-prototypes</a>
+<a name="ln7458">void nlua_add_api_functions(lua_State *lstate)</a>
+<a name="ln7459">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln7460">{</a>
+<a name="ln7461">  lua_createtable(lstate, 0, 174);</a>
+<a name="ln7462"> </a>
+<a name="ln7463">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_autocmds);</a>
+<a name="ln7464">  lua_setfield(lstate, -2, &quot;nvim_get_autocmds&quot;);</a>
+<a name="ln7465">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_autocmd);</a>
+<a name="ln7466">  lua_setfield(lstate, -2, &quot;nvim_create_autocmd&quot;);</a>
+<a name="ln7467">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_autocmd);</a>
+<a name="ln7468">  lua_setfield(lstate, -2, &quot;nvim_del_autocmd&quot;);</a>
+<a name="ln7469">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_clear_autocmds);</a>
+<a name="ln7470">  lua_setfield(lstate, -2, &quot;nvim_clear_autocmds&quot;);</a>
+<a name="ln7471">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_augroup);</a>
+<a name="ln7472">  lua_setfield(lstate, -2, &quot;nvim_create_augroup&quot;);</a>
+<a name="ln7473">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_augroup_by_id);</a>
+<a name="ln7474">  lua_setfield(lstate, -2, &quot;nvim_del_augroup_by_id&quot;);</a>
+<a name="ln7475">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_augroup_by_name);</a>
+<a name="ln7476">  lua_setfield(lstate, -2, &quot;nvim_del_augroup_by_name&quot;);</a>
+<a name="ln7477">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_exec_autocmds);</a>
+<a name="ln7478">  lua_setfield(lstate, -2, &quot;nvim_exec_autocmds&quot;);</a>
+<a name="ln7479">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_line_count);</a>
+<a name="ln7480">  lua_setfield(lstate, -2, &quot;nvim_buf_line_count&quot;);</a>
+<a name="ln7481">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_attach);</a>
+<a name="ln7482">  lua_setfield(lstate, -2, &quot;nvim_buf_attach&quot;);</a>
+<a name="ln7483">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__buf_redraw_range);</a>
+<a name="ln7484">  lua_setfield(lstate, -2, &quot;nvim__buf_redraw_range&quot;);</a>
+<a name="ln7485">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_lines);</a>
+<a name="ln7486">  lua_setfield(lstate, -2, &quot;nvim_buf_get_lines&quot;);</a>
+<a name="ln7487">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_lines);</a>
+<a name="ln7488">  lua_setfield(lstate, -2, &quot;nvim_buf_set_lines&quot;);</a>
+<a name="ln7489">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_text);</a>
+<a name="ln7490">  lua_setfield(lstate, -2, &quot;nvim_buf_set_text&quot;);</a>
+<a name="ln7491">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_text);</a>
+<a name="ln7492">  lua_setfield(lstate, -2, &quot;nvim_buf_get_text&quot;);</a>
+<a name="ln7493">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_offset);</a>
+<a name="ln7494">  lua_setfield(lstate, -2, &quot;nvim_buf_get_offset&quot;);</a>
+<a name="ln7495">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_var);</a>
+<a name="ln7496">  lua_setfield(lstate, -2, &quot;nvim_buf_get_var&quot;);</a>
+<a name="ln7497">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_changedtick);</a>
+<a name="ln7498">  lua_setfield(lstate, -2, &quot;nvim_buf_get_changedtick&quot;);</a>
+<a name="ln7499">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_keymap);</a>
+<a name="ln7500">  lua_setfield(lstate, -2, &quot;nvim_buf_get_keymap&quot;);</a>
+<a name="ln7501">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_keymap);</a>
+<a name="ln7502">  lua_setfield(lstate, -2, &quot;nvim_buf_set_keymap&quot;);</a>
+<a name="ln7503">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_keymap);</a>
+<a name="ln7504">  lua_setfield(lstate, -2, &quot;nvim_buf_del_keymap&quot;);</a>
+<a name="ln7505">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_var);</a>
+<a name="ln7506">  lua_setfield(lstate, -2, &quot;nvim_buf_set_var&quot;);</a>
+<a name="ln7507">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_var);</a>
+<a name="ln7508">  lua_setfield(lstate, -2, &quot;nvim_buf_del_var&quot;);</a>
+<a name="ln7509">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_name);</a>
+<a name="ln7510">  lua_setfield(lstate, -2, &quot;nvim_buf_get_name&quot;);</a>
+<a name="ln7511">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_name);</a>
+<a name="ln7512">  lua_setfield(lstate, -2, &quot;nvim_buf_set_name&quot;);</a>
+<a name="ln7513">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_is_loaded);</a>
+<a name="ln7514">  lua_setfield(lstate, -2, &quot;nvim_buf_is_loaded&quot;);</a>
+<a name="ln7515">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_delete);</a>
+<a name="ln7516">  lua_setfield(lstate, -2, &quot;nvim_buf_delete&quot;);</a>
+<a name="ln7517">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_is_valid);</a>
+<a name="ln7518">  lua_setfield(lstate, -2, &quot;nvim_buf_is_valid&quot;);</a>
+<a name="ln7519">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_mark);</a>
+<a name="ln7520">  lua_setfield(lstate, -2, &quot;nvim_buf_del_mark&quot;);</a>
+<a name="ln7521">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_mark);</a>
+<a name="ln7522">  lua_setfield(lstate, -2, &quot;nvim_buf_set_mark&quot;);</a>
+<a name="ln7523">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_mark);</a>
+<a name="ln7524">  lua_setfield(lstate, -2, &quot;nvim_buf_get_mark&quot;);</a>
+<a name="ln7525">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_call);</a>
+<a name="ln7526">  lua_setfield(lstate, -2, &quot;nvim_buf_call&quot;);</a>
+<a name="ln7527">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__buf_stats);</a>
+<a name="ln7528">  lua_setfield(lstate, -2, &quot;nvim__buf_stats&quot;);</a>
+<a name="ln7529">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_parse_cmd);</a>
+<a name="ln7530">  lua_setfield(lstate, -2, &quot;nvim_parse_cmd&quot;);</a>
+<a name="ln7531">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_cmd);</a>
+<a name="ln7532">  lua_setfield(lstate, -2, &quot;nvim_cmd&quot;);</a>
+<a name="ln7533">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_user_command);</a>
+<a name="ln7534">  lua_setfield(lstate, -2, &quot;nvim_create_user_command&quot;);</a>
+<a name="ln7535">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_user_command);</a>
+<a name="ln7536">  lua_setfield(lstate, -2, &quot;nvim_del_user_command&quot;);</a>
+<a name="ln7537">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_create_user_command);</a>
+<a name="ln7538">  lua_setfield(lstate, -2, &quot;nvim_buf_create_user_command&quot;);</a>
+<a name="ln7539">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_user_command);</a>
+<a name="ln7540">  lua_setfield(lstate, -2, &quot;nvim_buf_del_user_command&quot;);</a>
+<a name="ln7541">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_commands);</a>
+<a name="ln7542">  lua_setfield(lstate, -2, &quot;nvim_get_commands&quot;);</a>
+<a name="ln7543">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_commands);</a>
+<a name="ln7544">  lua_setfield(lstate, -2, &quot;nvim_buf_get_commands&quot;);</a>
+<a name="ln7545">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_exec);</a>
+<a name="ln7546">  lua_setfield(lstate, -2, &quot;nvim_exec&quot;);</a>
+<a name="ln7547">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_command_output);</a>
+<a name="ln7548">  lua_setfield(lstate, -2, &quot;nvim_command_output&quot;);</a>
+<a name="ln7549">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_number);</a>
+<a name="ln7550">  lua_setfield(lstate, -2, &quot;nvim_buf_get_number&quot;);</a>
+<a name="ln7551">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_clear_highlight);</a>
+<a name="ln7552">  lua_setfield(lstate, -2, &quot;nvim_buf_clear_highlight&quot;);</a>
+<a name="ln7553">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_virtual_text);</a>
+<a name="ln7554">  lua_setfield(lstate, -2, &quot;nvim_buf_set_virtual_text&quot;);</a>
+<a name="ln7555">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_hl_by_id);</a>
+<a name="ln7556">  lua_setfield(lstate, -2, &quot;nvim_get_hl_by_id&quot;);</a>
+<a name="ln7557">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_hl_by_name);</a>
+<a name="ln7558">  lua_setfield(lstate, -2, &quot;nvim_get_hl_by_name&quot;);</a>
+<a name="ln7559">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_option_info);</a>
+<a name="ln7560">  lua_setfield(lstate, -2, &quot;nvim_get_option_info&quot;);</a>
+<a name="ln7561">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_option);</a>
+<a name="ln7562">  lua_setfield(lstate, -2, &quot;nvim_set_option&quot;);</a>
+<a name="ln7563">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_option);</a>
+<a name="ln7564">  lua_setfield(lstate, -2, &quot;nvim_get_option&quot;);</a>
+<a name="ln7565">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_option);</a>
+<a name="ln7566">  lua_setfield(lstate, -2, &quot;nvim_buf_get_option&quot;);</a>
+<a name="ln7567">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_option);</a>
+<a name="ln7568">  lua_setfield(lstate, -2, &quot;nvim_buf_set_option&quot;);</a>
+<a name="ln7569">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_option);</a>
+<a name="ln7570">  lua_setfield(lstate, -2, &quot;nvim_win_get_option&quot;);</a>
+<a name="ln7571">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_option);</a>
+<a name="ln7572">  lua_setfield(lstate, -2, &quot;nvim_win_set_option&quot;);</a>
+<a name="ln7573">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_namespace);</a>
+<a name="ln7574">  lua_setfield(lstate, -2, &quot;nvim_create_namespace&quot;);</a>
+<a name="ln7575">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_namespaces);</a>
+<a name="ln7576">  lua_setfield(lstate, -2, &quot;nvim_get_namespaces&quot;);</a>
+<a name="ln7577">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_extmark_by_id);</a>
+<a name="ln7578">  lua_setfield(lstate, -2, &quot;nvim_buf_get_extmark_by_id&quot;);</a>
+<a name="ln7579">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_get_extmarks);</a>
+<a name="ln7580">  lua_setfield(lstate, -2, &quot;nvim_buf_get_extmarks&quot;);</a>
+<a name="ln7581">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_set_extmark);</a>
+<a name="ln7582">  lua_setfield(lstate, -2, &quot;nvim_buf_set_extmark&quot;);</a>
+<a name="ln7583">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_del_extmark);</a>
+<a name="ln7584">  lua_setfield(lstate, -2, &quot;nvim_buf_del_extmark&quot;);</a>
+<a name="ln7585">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_add_highlight);</a>
+<a name="ln7586">  lua_setfield(lstate, -2, &quot;nvim_buf_add_highlight&quot;);</a>
+<a name="ln7587">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_buf_clear_namespace);</a>
+<a name="ln7588">  lua_setfield(lstate, -2, &quot;nvim_buf_clear_namespace&quot;);</a>
+<a name="ln7589">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_decoration_provider);</a>
+<a name="ln7590">  lua_setfield(lstate, -2, &quot;nvim_set_decoration_provider&quot;);</a>
+<a name="ln7591">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__buf_debug_extmarks);</a>
+<a name="ln7592">  lua_setfield(lstate, -2, &quot;nvim__buf_debug_extmarks&quot;);</a>
+<a name="ln7593">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_option_value);</a>
+<a name="ln7594">  lua_setfield(lstate, -2, &quot;nvim_get_option_value&quot;);</a>
+<a name="ln7595">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_option_value);</a>
+<a name="ln7596">  lua_setfield(lstate, -2, &quot;nvim_set_option_value&quot;);</a>
+<a name="ln7597">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_all_options_info);</a>
+<a name="ln7598">  lua_setfield(lstate, -2, &quot;nvim_get_all_options_info&quot;);</a>
+<a name="ln7599">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_option_info2);</a>
+<a name="ln7600">  lua_setfield(lstate, -2, &quot;nvim_get_option_info2&quot;);</a>
+<a name="ln7601">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_list_wins);</a>
+<a name="ln7602">  lua_setfield(lstate, -2, &quot;nvim_tabpage_list_wins&quot;);</a>
+<a name="ln7603">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_get_var);</a>
+<a name="ln7604">  lua_setfield(lstate, -2, &quot;nvim_tabpage_get_var&quot;);</a>
+<a name="ln7605">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_set_var);</a>
+<a name="ln7606">  lua_setfield(lstate, -2, &quot;nvim_tabpage_set_var&quot;);</a>
+<a name="ln7607">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_del_var);</a>
+<a name="ln7608">  lua_setfield(lstate, -2, &quot;nvim_tabpage_del_var&quot;);</a>
+<a name="ln7609">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_get_win);</a>
+<a name="ln7610">  lua_setfield(lstate, -2, &quot;nvim_tabpage_get_win&quot;);</a>
+<a name="ln7611">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_get_number);</a>
+<a name="ln7612">  lua_setfield(lstate, -2, &quot;nvim_tabpage_get_number&quot;);</a>
+<a name="ln7613">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_tabpage_is_valid);</a>
+<a name="ln7614">  lua_setfield(lstate, -2, &quot;nvim_tabpage_is_valid&quot;);</a>
+<a name="ln7615">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_hl_id_by_name);</a>
+<a name="ln7616">  lua_setfield(lstate, -2, &quot;nvim_get_hl_id_by_name&quot;);</a>
+<a name="ln7617">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_hl);</a>
+<a name="ln7618">  lua_setfield(lstate, -2, &quot;nvim_get_hl&quot;);</a>
+<a name="ln7619">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_hl);</a>
+<a name="ln7620">  lua_setfield(lstate, -2, &quot;nvim_set_hl&quot;);</a>
+<a name="ln7621">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_hl_ns);</a>
+<a name="ln7622">  lua_setfield(lstate, -2, &quot;nvim_set_hl_ns&quot;);</a>
+<a name="ln7623">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_hl_ns_fast);</a>
+<a name="ln7624">  lua_setfield(lstate, -2, &quot;nvim_set_hl_ns_fast&quot;);</a>
+<a name="ln7625">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_feedkeys);</a>
+<a name="ln7626">  lua_setfield(lstate, -2, &quot;nvim_feedkeys&quot;);</a>
+<a name="ln7627">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_input);</a>
+<a name="ln7628">  lua_setfield(lstate, -2, &quot;nvim_input&quot;);</a>
+<a name="ln7629">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_input_mouse);</a>
+<a name="ln7630">  lua_setfield(lstate, -2, &quot;nvim_input_mouse&quot;);</a>
+<a name="ln7631">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_replace_termcodes);</a>
+<a name="ln7632">  lua_setfield(lstate, -2, &quot;nvim_replace_termcodes&quot;);</a>
+<a name="ln7633">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_notify);</a>
+<a name="ln7634">  lua_setfield(lstate, -2, &quot;nvim_notify&quot;);</a>
+<a name="ln7635">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_strwidth);</a>
+<a name="ln7636">  lua_setfield(lstate, -2, &quot;nvim_strwidth&quot;);</a>
+<a name="ln7637">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_runtime_paths);</a>
+<a name="ln7638">  lua_setfield(lstate, -2, &quot;nvim_list_runtime_paths&quot;);</a>
+<a name="ln7639">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__runtime_inspect);</a>
+<a name="ln7640">  lua_setfield(lstate, -2, &quot;nvim__runtime_inspect&quot;);</a>
+<a name="ln7641">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_runtime_file);</a>
+<a name="ln7642">  lua_setfield(lstate, -2, &quot;nvim_get_runtime_file&quot;);</a>
+<a name="ln7643">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__get_lib_dir);</a>
+<a name="ln7644">  lua_setfield(lstate, -2, &quot;nvim__get_lib_dir&quot;);</a>
+<a name="ln7645">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__get_runtime);</a>
+<a name="ln7646">  lua_setfield(lstate, -2, &quot;nvim__get_runtime&quot;);</a>
+<a name="ln7647">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_dir);</a>
+<a name="ln7648">  lua_setfield(lstate, -2, &quot;nvim_set_current_dir&quot;);</a>
+<a name="ln7649">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_current_line);</a>
+<a name="ln7650">  lua_setfield(lstate, -2, &quot;nvim_get_current_line&quot;);</a>
+<a name="ln7651">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_line);</a>
+<a name="ln7652">  lua_setfield(lstate, -2, &quot;nvim_set_current_line&quot;);</a>
+<a name="ln7653">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_current_line);</a>
+<a name="ln7654">  lua_setfield(lstate, -2, &quot;nvim_del_current_line&quot;);</a>
+<a name="ln7655">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_var);</a>
+<a name="ln7656">  lua_setfield(lstate, -2, &quot;nvim_get_var&quot;);</a>
+<a name="ln7657">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_var);</a>
+<a name="ln7658">  lua_setfield(lstate, -2, &quot;nvim_set_var&quot;);</a>
+<a name="ln7659">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_var);</a>
+<a name="ln7660">  lua_setfield(lstate, -2, &quot;nvim_del_var&quot;);</a>
+<a name="ln7661">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_vvar);</a>
+<a name="ln7662">  lua_setfield(lstate, -2, &quot;nvim_get_vvar&quot;);</a>
+<a name="ln7663">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_vvar);</a>
+<a name="ln7664">  lua_setfield(lstate, -2, &quot;nvim_set_vvar&quot;);</a>
+<a name="ln7665">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_echo);</a>
+<a name="ln7666">  lua_setfield(lstate, -2, &quot;nvim_echo&quot;);</a>
+<a name="ln7667">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_out_write);</a>
+<a name="ln7668">  lua_setfield(lstate, -2, &quot;nvim_out_write&quot;);</a>
+<a name="ln7669">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_err_write);</a>
+<a name="ln7670">  lua_setfield(lstate, -2, &quot;nvim_err_write&quot;);</a>
+<a name="ln7671">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_err_writeln);</a>
+<a name="ln7672">  lua_setfield(lstate, -2, &quot;nvim_err_writeln&quot;);</a>
+<a name="ln7673">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_bufs);</a>
+<a name="ln7674">  lua_setfield(lstate, -2, &quot;nvim_list_bufs&quot;);</a>
+<a name="ln7675">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_current_buf);</a>
+<a name="ln7676">  lua_setfield(lstate, -2, &quot;nvim_get_current_buf&quot;);</a>
+<a name="ln7677">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_buf);</a>
+<a name="ln7678">  lua_setfield(lstate, -2, &quot;nvim_set_current_buf&quot;);</a>
+<a name="ln7679">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_wins);</a>
+<a name="ln7680">  lua_setfield(lstate, -2, &quot;nvim_list_wins&quot;);</a>
+<a name="ln7681">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_current_win);</a>
+<a name="ln7682">  lua_setfield(lstate, -2, &quot;nvim_get_current_win&quot;);</a>
+<a name="ln7683">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_win);</a>
+<a name="ln7684">  lua_setfield(lstate, -2, &quot;nvim_set_current_win&quot;);</a>
+<a name="ln7685">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_create_buf);</a>
+<a name="ln7686">  lua_setfield(lstate, -2, &quot;nvim_create_buf&quot;);</a>
+<a name="ln7687">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_open_term);</a>
+<a name="ln7688">  lua_setfield(lstate, -2, &quot;nvim_open_term&quot;);</a>
+<a name="ln7689">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_chan_send);</a>
+<a name="ln7690">  lua_setfield(lstate, -2, &quot;nvim_chan_send&quot;);</a>
+<a name="ln7691">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_tabpages);</a>
+<a name="ln7692">  lua_setfield(lstate, -2, &quot;nvim_list_tabpages&quot;);</a>
+<a name="ln7693">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_current_tabpage);</a>
+<a name="ln7694">  lua_setfield(lstate, -2, &quot;nvim_get_current_tabpage&quot;);</a>
+<a name="ln7695">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_current_tabpage);</a>
+<a name="ln7696">  lua_setfield(lstate, -2, &quot;nvim_set_current_tabpage&quot;);</a>
+<a name="ln7697">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_paste);</a>
+<a name="ln7698">  lua_setfield(lstate, -2, &quot;nvim_paste&quot;);</a>
+<a name="ln7699">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_put);</a>
+<a name="ln7700">  lua_setfield(lstate, -2, &quot;nvim_put&quot;);</a>
+<a name="ln7701">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_color_by_name);</a>
+<a name="ln7702">  lua_setfield(lstate, -2, &quot;nvim_get_color_by_name&quot;);</a>
+<a name="ln7703">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_color_map);</a>
+<a name="ln7704">  lua_setfield(lstate, -2, &quot;nvim_get_color_map&quot;);</a>
+<a name="ln7705">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_context);</a>
+<a name="ln7706">  lua_setfield(lstate, -2, &quot;nvim_get_context&quot;);</a>
+<a name="ln7707">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_load_context);</a>
+<a name="ln7708">  lua_setfield(lstate, -2, &quot;nvim_load_context&quot;);</a>
+<a name="ln7709">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_mode);</a>
+<a name="ln7710">  lua_setfield(lstate, -2, &quot;nvim_get_mode&quot;);</a>
+<a name="ln7711">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_keymap);</a>
+<a name="ln7712">  lua_setfield(lstate, -2, &quot;nvim_get_keymap&quot;);</a>
+<a name="ln7713">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_set_keymap);</a>
+<a name="ln7714">  lua_setfield(lstate, -2, &quot;nvim_set_keymap&quot;);</a>
+<a name="ln7715">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_keymap);</a>
+<a name="ln7716">  lua_setfield(lstate, -2, &quot;nvim_del_keymap&quot;);</a>
+<a name="ln7717">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_chan_info);</a>
+<a name="ln7718">  lua_setfield(lstate, -2, &quot;nvim_get_chan_info&quot;);</a>
+<a name="ln7719">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_chans);</a>
+<a name="ln7720">  lua_setfield(lstate, -2, &quot;nvim_list_chans&quot;);</a>
+<a name="ln7721">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__id);</a>
+<a name="ln7722">  lua_setfield(lstate, -2, &quot;nvim__id&quot;);</a>
+<a name="ln7723">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__id_array);</a>
+<a name="ln7724">  lua_setfield(lstate, -2, &quot;nvim__id_array&quot;);</a>
+<a name="ln7725">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__id_dictionary);</a>
+<a name="ln7726">  lua_setfield(lstate, -2, &quot;nvim__id_dictionary&quot;);</a>
+<a name="ln7727">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__id_float);</a>
+<a name="ln7728">  lua_setfield(lstate, -2, &quot;nvim__id_float&quot;);</a>
+<a name="ln7729">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__stats);</a>
+<a name="ln7730">  lua_setfield(lstate, -2, &quot;nvim__stats&quot;);</a>
+<a name="ln7731">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_list_uis);</a>
+<a name="ln7732">  lua_setfield(lstate, -2, &quot;nvim_list_uis&quot;);</a>
+<a name="ln7733">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_proc_children);</a>
+<a name="ln7734">  lua_setfield(lstate, -2, &quot;nvim_get_proc_children&quot;);</a>
+<a name="ln7735">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_proc);</a>
+<a name="ln7736">  lua_setfield(lstate, -2, &quot;nvim_get_proc&quot;);</a>
+<a name="ln7737">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_select_popupmenu_item);</a>
+<a name="ln7738">  lua_setfield(lstate, -2, &quot;nvim_select_popupmenu_item&quot;);</a>
+<a name="ln7739">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__inspect_cell);</a>
+<a name="ln7740">  lua_setfield(lstate, -2, &quot;nvim__inspect_cell&quot;);</a>
+<a name="ln7741">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__screenshot);</a>
+<a name="ln7742">  lua_setfield(lstate, -2, &quot;nvim__screenshot&quot;);</a>
+<a name="ln7743">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__invalidate_glyph_cache);</a>
+<a name="ln7744">  lua_setfield(lstate, -2, &quot;nvim__invalidate_glyph_cache&quot;);</a>
+<a name="ln7745">  lua_pushcfunction(lstate, &amp;nlua_api_nvim__unpack);</a>
+<a name="ln7746">  lua_setfield(lstate, -2, &quot;nvim__unpack&quot;);</a>
+<a name="ln7747">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_del_mark);</a>
+<a name="ln7748">  lua_setfield(lstate, -2, &quot;nvim_del_mark&quot;);</a>
+<a name="ln7749">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_get_mark);</a>
+<a name="ln7750">  lua_setfield(lstate, -2, &quot;nvim_get_mark&quot;);</a>
+<a name="ln7751">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_eval_statusline);</a>
+<a name="ln7752">  lua_setfield(lstate, -2, &quot;nvim_eval_statusline&quot;);</a>
+<a name="ln7753">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_exec2);</a>
+<a name="ln7754">  lua_setfield(lstate, -2, &quot;nvim_exec2&quot;);</a>
+<a name="ln7755">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_command);</a>
+<a name="ln7756">  lua_setfield(lstate, -2, &quot;nvim_command&quot;);</a>
+<a name="ln7757">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_eval);</a>
+<a name="ln7758">  lua_setfield(lstate, -2, &quot;nvim_eval&quot;);</a>
+<a name="ln7759">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_call_function);</a>
+<a name="ln7760">  lua_setfield(lstate, -2, &quot;nvim_call_function&quot;);</a>
+<a name="ln7761">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_call_dict_function);</a>
+<a name="ln7762">  lua_setfield(lstate, -2, &quot;nvim_call_dict_function&quot;);</a>
+<a name="ln7763">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_parse_expression);</a>
+<a name="ln7764">  lua_setfield(lstate, -2, &quot;nvim_parse_expression&quot;);</a>
+<a name="ln7765">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_open_win);</a>
+<a name="ln7766">  lua_setfield(lstate, -2, &quot;nvim_open_win&quot;);</a>
+<a name="ln7767">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_config);</a>
+<a name="ln7768">  lua_setfield(lstate, -2, &quot;nvim_win_set_config&quot;);</a>
+<a name="ln7769">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_config);</a>
+<a name="ln7770">  lua_setfield(lstate, -2, &quot;nvim_win_get_config&quot;);</a>
+<a name="ln7771">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_buf);</a>
+<a name="ln7772">  lua_setfield(lstate, -2, &quot;nvim_win_get_buf&quot;);</a>
+<a name="ln7773">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_buf);</a>
+<a name="ln7774">  lua_setfield(lstate, -2, &quot;nvim_win_set_buf&quot;);</a>
+<a name="ln7775">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_cursor);</a>
+<a name="ln7776">  lua_setfield(lstate, -2, &quot;nvim_win_get_cursor&quot;);</a>
+<a name="ln7777">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_cursor);</a>
+<a name="ln7778">  lua_setfield(lstate, -2, &quot;nvim_win_set_cursor&quot;);</a>
+<a name="ln7779">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_height);</a>
+<a name="ln7780">  lua_setfield(lstate, -2, &quot;nvim_win_get_height&quot;);</a>
+<a name="ln7781">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_height);</a>
+<a name="ln7782">  lua_setfield(lstate, -2, &quot;nvim_win_set_height&quot;);</a>
+<a name="ln7783">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_width);</a>
+<a name="ln7784">  lua_setfield(lstate, -2, &quot;nvim_win_get_width&quot;);</a>
+<a name="ln7785">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_width);</a>
+<a name="ln7786">  lua_setfield(lstate, -2, &quot;nvim_win_set_width&quot;);</a>
+<a name="ln7787">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_var);</a>
+<a name="ln7788">  lua_setfield(lstate, -2, &quot;nvim_win_get_var&quot;);</a>
+<a name="ln7789">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_var);</a>
+<a name="ln7790">  lua_setfield(lstate, -2, &quot;nvim_win_set_var&quot;);</a>
+<a name="ln7791">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_del_var);</a>
+<a name="ln7792">  lua_setfield(lstate, -2, &quot;nvim_win_del_var&quot;);</a>
+<a name="ln7793">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_position);</a>
+<a name="ln7794">  lua_setfield(lstate, -2, &quot;nvim_win_get_position&quot;);</a>
+<a name="ln7795">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_tabpage);</a>
+<a name="ln7796">  lua_setfield(lstate, -2, &quot;nvim_win_get_tabpage&quot;);</a>
+<a name="ln7797">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_get_number);</a>
+<a name="ln7798">  lua_setfield(lstate, -2, &quot;nvim_win_get_number&quot;);</a>
+<a name="ln7799">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_is_valid);</a>
+<a name="ln7800">  lua_setfield(lstate, -2, &quot;nvim_win_is_valid&quot;);</a>
+<a name="ln7801">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_hide);</a>
+<a name="ln7802">  lua_setfield(lstate, -2, &quot;nvim_win_hide&quot;);</a>
+<a name="ln7803">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_close);</a>
+<a name="ln7804">  lua_setfield(lstate, -2, &quot;nvim_win_close&quot;);</a>
+<a name="ln7805">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_call);</a>
+<a name="ln7806">  lua_setfield(lstate, -2, &quot;nvim_win_call&quot;);</a>
+<a name="ln7807">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_set_hl_ns);</a>
+<a name="ln7808">  lua_setfield(lstate, -2, &quot;nvim_win_set_hl_ns&quot;);</a>
+<a name="ln7809">  lua_pushcfunction(lstate, &amp;nlua_api_nvim_win_text_height);</a>
+<a name="ln7810">  lua_setfield(lstate, -2, &quot;nvim_win_text_height&quot;);</a>
+<a name="ln7811">  lua_setfield(lstate, -2, &quot;api&quot;);</a>
+<a name="ln7812">}</a>
 </code></pre>
 <div class="balloon" rel="2584"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v547/" target="_blank">V547</a> Expression 'err_param' is always false.</p></div>
 <div class="balloon" rel="2591"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v547/" target="_blank">V547</a> Expression 'err_param' is always false.</p></div>
@@ -7823,6 +7856,8 @@
 <div class="balloon" rel="5795"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v547/" target="_blank">V547</a> Expression 'err_param' is always false.</p></div>
 <div class="balloon" rel="5821"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v547/" target="_blank">V547</a> Expression 'err_param' is always false.</p></div>
 <div class="balloon" rel="5828"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v547/" target="_blank">V547</a> Expression 'err_param' is always false.</p></div>
+<div class="balloon" rel="6066"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v547/" target="_blank">V547</a> Expression 'err_param' is always false.</p></div>
+<div class="balloon" rel="6073"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v547/" target="_blank">V547</a> Expression 'err_param' is always false.</p></div>
 <link rel="stylesheet" href="highlight.css">
 <script src="highlight.pack.js"></script>
 <script src="highlightjs-line-numbers.js"></script>

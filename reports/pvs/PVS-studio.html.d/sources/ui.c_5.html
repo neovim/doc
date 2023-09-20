@@ -842,238 +842,241 @@
 <a name="ln833">    bool was_space = false;</a>
 <a name="ln834">    for (size_t i = 0; i &lt; ncells; i++) {</a>
 <a name="ln835">      repeat++;</a>
-<a name="ln836">      if (i == ncells - 1 || attrs[i] != attrs[i + 1]</a>
-<a name="ln837">          || strcmp(chunk[i], chunk[i + 1]) != 0) {</a>
-<a name="ln838">        if (UI_BUF_SIZE - BUF_POS(data) &lt; 2 * (1 + 2 + sizeof(schar_T) + 5 + 5) + 1) {</a>
-<a name="ln839">          // close to overflowing the redraw buffer. finish this event,</a>
-<a name="ln840">          // flush, and start a new &quot;grid_line&quot; event at the current position.</a>
-<a name="ln841">          // For simplicity leave place for the final &quot;clear&quot; element</a>
-<a name="ln842">          // as well, hence the factor of 2 in the check.</a>
-<a name="ln843">          mpack_w2(&amp;lenpos, nelem);</a>
-<a name="ln844"> </a>
-<a name="ln845">          // We only ever set the wrap field on the final &quot;grid_line&quot; event for the line.</a>
-<a name="ln846">          mpack_bool(buf, false);</a>
-<a name="ln847">          remote_ui_flush_buf(ui);</a>
-<a name="ln848"> </a>
-<a name="ln849">          prepare_call(ui, &quot;grid_line&quot;);</a>
-<a name="ln850">          data-&gt;ncalls++;</a>
-<a name="ln851">          mpack_array(buf, 5);</a>
-<a name="ln852">          mpack_uint(buf, (uint32_t)grid);</a>
-<a name="ln853">          mpack_uint(buf, (uint32_t)row);</a>
-<a name="ln854">          mpack_uint(buf, (uint32_t)startcol + (uint32_t)i - repeat + 1);</a>
-<a name="ln855">          lenpos = mpack_array_dyn16(buf);</a>
-<a name="ln856">          nelem = 0;</a>
-<a name="ln857">          last_hl = -1;</a>
-<a name="ln858">        }</a>
-<a name="ln859">        uint32_t csize = (repeat &gt; 1) ? 3 : ((attrs[i] != last_hl) ? 2 : 1);</a>
-<a name="ln860">        nelem++;</a>
-<a name="ln861">        mpack_array(buf, csize);</a>
-<a name="ln862">        mpack_str(buf, chunk[i]);</a>
-<a name="ln863">        if (csize &gt;= 2) {</a>
-<a name="ln864">          mpack_uint(buf, (uint32_t)attrs[i]);</a>
-<a name="ln865">          if (csize &gt;= 3) {</a>
-<a name="ln866">            mpack_uint(buf, repeat);</a>
-<a name="ln867">          }</a>
-<a name="ln868">        }</a>
-<a name="ln869">        data-&gt;ncells_pending += MIN(repeat, 2);</a>
-<a name="ln870">        last_hl = attrs[i];</a>
-<a name="ln871">        repeat = 0;</a>
-<a name="ln872">        was_space = strequal(chunk[i], &quot; &quot;);</a>
-<a name="ln873">      }</a>
-<a name="ln874">    }</a>
-<a name="ln875">    // If the last chunk was all spaces, add a clearing chunk even if there are</a>
-<a name="ln876">    // no more cells to clear, so there is no ambiguity about what to clear.</a>
-<a name="ln877">    if (endcol &lt; clearcol || was_space) {</a>
-<a name="ln878">      nelem++;</a>
-<a name="ln879">      data-&gt;ncells_pending += 1;</a>
-<a name="ln880">      mpack_array(buf, 3);</a>
-<a name="ln881">      mpack_str(buf, &quot; &quot;);</a>
-<a name="ln882">      mpack_uint(buf, (uint32_t)clearattr);</a>
-<a name="ln883">      mpack_uint(buf, (uint32_t)(clearcol - endcol));</a>
-<a name="ln884">    }</a>
-<a name="ln885">    mpack_w2(&amp;lenpos, nelem);</a>
-<a name="ln886">    mpack_bool(buf, flags &amp; kLineFlagWrap);</a>
-<a name="ln887"> </a>
-<a name="ln888">    if (data-&gt;ncells_pending &gt; 500) {</a>
-<a name="ln889">      // pass off cells to UI to let it start processing them</a>
-<a name="ln890">      remote_ui_flush_buf(ui);</a>
-<a name="ln891">    }</a>
-<a name="ln892">  } else {</a>
-<a name="ln893">    for (int i = 0; i &lt; endcol - startcol; i++) {</a>
-<a name="ln894">      remote_ui_cursor_goto(ui, row, startcol + i);</a>
-<a name="ln895">      remote_ui_highlight_set(ui, attrs[i]);</a>
-<a name="ln896">      remote_ui_put(ui, chunk[i]);</a>
-<a name="ln897">      if (utf_ambiguous_width(utf_ptr2char((char *)chunk[i]))) {</a>
-<a name="ln898">        data-&gt;client_col = -1;  // force cursor update</a>
-<a name="ln899">      }</a>
-<a name="ln900">    }</a>
-<a name="ln901">    if (endcol &lt; clearcol) {</a>
-<a name="ln902">      remote_ui_cursor_goto(ui, row, endcol);</a>
-<a name="ln903">      remote_ui_highlight_set(ui, (int)clearattr);</a>
-<a name="ln904">      // legacy eol_clear was only ever used with cleared attributes</a>
-<a name="ln905">      // so be on the safe side</a>
-<a name="ln906">      if (clearattr == 0 &amp;&amp; clearcol == Columns) {</a>
-<a name="ln907">        Array args = ARRAY_DICT_INIT;</a>
-<a name="ln908">        push_call(ui, &quot;eol_clear&quot;, args);</a>
-<a name="ln909">      } else {</a>
-<a name="ln910">        for (Integer c = endcol; c &lt; clearcol; c++) {</a>
-<a name="ln911">          remote_ui_put(ui, &quot; &quot;);</a>
-<a name="ln912">        }</a>
-<a name="ln913">      }</a>
-<a name="ln914">    }</a>
-<a name="ln915">  }</a>
-<a name="ln916">}</a>
-<a name="ln917"> </a>
-<a name="ln918">/// Flush the internal packing buffer to the client.</a>
-<a name="ln919">///</a>
-<a name="ln920">/// This might happen multiple times before the actual ui_flush, if the</a>
-<a name="ln921">/// total redraw size is large!</a>
-<a name="ln922">void remote_ui_flush_buf(UI *ui)</a>
-<a name="ln923">{</a>
-<a name="ln924">  UIData *data = ui-&gt;data;</a>
-<a name="ln925">  if (!data-&gt;nevents_pos) {</a>
-<a name="ln926">    return;</a>
-<a name="ln927">  }</a>
-<a name="ln928">  if (data-&gt;cur_event) {</a>
-<a name="ln929">    flush_event(data);</a>
+<a name="ln836">      if (i == ncells - 1 || attrs[i] != attrs[i + 1] || chunk[i] != chunk[i + 1]) {</a>
+<a name="ln837">        if (UI_BUF_SIZE - BUF_POS(data) &lt; 2 * (1 + 2 + sizeof(schar_T) + 5 + 5) + 1) {</a>
+<a name="ln838">          // close to overflowing the redraw buffer. finish this event,</a>
+<a name="ln839">          // flush, and start a new &quot;grid_line&quot; event at the current position.</a>
+<a name="ln840">          // For simplicity leave place for the final &quot;clear&quot; element</a>
+<a name="ln841">          // as well, hence the factor of 2 in the check.</a>
+<a name="ln842">          mpack_w2(&amp;lenpos, nelem);</a>
+<a name="ln843"> </a>
+<a name="ln844">          // We only ever set the wrap field on the final &quot;grid_line&quot; event for the line.</a>
+<a name="ln845">          mpack_bool(buf, false);</a>
+<a name="ln846">          remote_ui_flush_buf(ui);</a>
+<a name="ln847"> </a>
+<a name="ln848">          prepare_call(ui, &quot;grid_line&quot;);</a>
+<a name="ln849">          data-&gt;ncalls++;</a>
+<a name="ln850">          mpack_array(buf, 5);</a>
+<a name="ln851">          mpack_uint(buf, (uint32_t)grid);</a>
+<a name="ln852">          mpack_uint(buf, (uint32_t)row);</a>
+<a name="ln853">          mpack_uint(buf, (uint32_t)startcol + (uint32_t)i - repeat + 1);</a>
+<a name="ln854">          lenpos = mpack_array_dyn16(buf);</a>
+<a name="ln855">          nelem = 0;</a>
+<a name="ln856">          last_hl = -1;</a>
+<a name="ln857">        }</a>
+<a name="ln858">        uint32_t csize = (repeat &gt; 1) ? 3 : ((attrs[i] != last_hl) ? 2 : 1);</a>
+<a name="ln859">        nelem++;</a>
+<a name="ln860">        mpack_array(buf, csize);</a>
+<a name="ln861">        char sc_buf[MAX_SCHAR_SIZE];</a>
+<a name="ln862">        schar_get(sc_buf, chunk[i]);</a>
+<a name="ln863">        mpack_str(buf, sc_buf);</a>
+<a name="ln864">        if (csize &gt;= 2) {</a>
+<a name="ln865">          mpack_uint(buf, (uint32_t)attrs[i]);</a>
+<a name="ln866">          if (csize &gt;= 3) {</a>
+<a name="ln867">            mpack_uint(buf, repeat);</a>
+<a name="ln868">          }</a>
+<a name="ln869">        }</a>
+<a name="ln870">        data-&gt;ncells_pending += MIN(repeat, 2);</a>
+<a name="ln871">        last_hl = attrs[i];</a>
+<a name="ln872">        repeat = 0;</a>
+<a name="ln873">        was_space = chunk[i] == schar_from_ascii(' ');</a>
+<a name="ln874">      }</a>
+<a name="ln875">    }</a>
+<a name="ln876">    // If the last chunk was all spaces, add a clearing chunk even if there are</a>
+<a name="ln877">    // no more cells to clear, so there is no ambiguity about what to clear.</a>
+<a name="ln878">    if (endcol &lt; clearcol || was_space) {</a>
+<a name="ln879">      nelem++;</a>
+<a name="ln880">      data-&gt;ncells_pending += 1;</a>
+<a name="ln881">      mpack_array(buf, 3);</a>
+<a name="ln882">      mpack_str(buf, &quot; &quot;);</a>
+<a name="ln883">      mpack_uint(buf, (uint32_t)clearattr);</a>
+<a name="ln884">      mpack_uint(buf, (uint32_t)(clearcol - endcol));</a>
+<a name="ln885">    }</a>
+<a name="ln886">    mpack_w2(&amp;lenpos, nelem);</a>
+<a name="ln887">    mpack_bool(buf, flags &amp; kLineFlagWrap);</a>
+<a name="ln888"> </a>
+<a name="ln889">    if (data-&gt;ncells_pending &gt; 500) {</a>
+<a name="ln890">      // pass off cells to UI to let it start processing them</a>
+<a name="ln891">      remote_ui_flush_buf(ui);</a>
+<a name="ln892">    }</a>
+<a name="ln893">  } else {</a>
+<a name="ln894">    for (int i = 0; i &lt; endcol - startcol; i++) {</a>
+<a name="ln895">      remote_ui_cursor_goto(ui, row, startcol + i);</a>
+<a name="ln896">      remote_ui_highlight_set(ui, attrs[i]);</a>
+<a name="ln897">      char sc_buf[MAX_SCHAR_SIZE];</a>
+<a name="ln898">      schar_get(sc_buf, chunk[i]);</a>
+<a name="ln899">      remote_ui_put(ui, sc_buf);</a>
+<a name="ln900">      if (utf_ambiguous_width(utf_ptr2char(sc_buf))) {</a>
+<a name="ln901">        data-&gt;client_col = -1;  // force cursor update</a>
+<a name="ln902">      }</a>
+<a name="ln903">    }</a>
+<a name="ln904">    if (endcol &lt; clearcol) {</a>
+<a name="ln905">      remote_ui_cursor_goto(ui, row, endcol);</a>
+<a name="ln906">      remote_ui_highlight_set(ui, (int)clearattr);</a>
+<a name="ln907">      // legacy eol_clear was only ever used with cleared attributes</a>
+<a name="ln908">      // so be on the safe side</a>
+<a name="ln909">      if (clearattr == 0 &amp;&amp; clearcol == Columns) {</a>
+<a name="ln910">        Array args = ARRAY_DICT_INIT;</a>
+<a name="ln911">        push_call(ui, &quot;eol_clear&quot;, args);</a>
+<a name="ln912">      } else {</a>
+<a name="ln913">        for (Integer c = endcol; c &lt; clearcol; c++) {</a>
+<a name="ln914">          remote_ui_put(ui, &quot; &quot;);</a>
+<a name="ln915">        }</a>
+<a name="ln916">      }</a>
+<a name="ln917">    }</a>
+<a name="ln918">  }</a>
+<a name="ln919">}</a>
+<a name="ln920"> </a>
+<a name="ln921">/// Flush the internal packing buffer to the client.</a>
+<a name="ln922">///</a>
+<a name="ln923">/// This might happen multiple times before the actual ui_flush, if the</a>
+<a name="ln924">/// total redraw size is large!</a>
+<a name="ln925">void remote_ui_flush_buf(UI *ui)</a>
+<a name="ln926">{</a>
+<a name="ln927">  UIData *data = ui-&gt;data;</a>
+<a name="ln928">  if (!data-&gt;nevents_pos) {</a>
+<a name="ln929">    return;</a>
 <a name="ln930">  }</a>
-<a name="ln931">  mpack_w2(&amp;data-&gt;nevents_pos, data-&gt;nevents);</a>
-<a name="ln932">  data-&gt;nevents = 0;</a>
-<a name="ln933">  data-&gt;nevents_pos = NULL;</a>
-<a name="ln934"> </a>
-<a name="ln935">  // TODO(bfredl): elide copy by a length one free-list like the arena</a>
-<a name="ln936">  size_t size = BUF_POS(data);</a>
-<a name="ln937">  WBuffer *buf = wstream_new_buffer(xmemdup(data-&gt;buf, size), size, 1, xfree);</a>
-<a name="ln938">  rpc_write_raw(data-&gt;channel_id, buf);</a>
-<a name="ln939">  data-&gt;buf_wptr = data-&gt;buf;</a>
-<a name="ln940">  // we have sent events to the client, but possibly not yet the final &quot;flush&quot;</a>
-<a name="ln941">  // event.</a>
-<a name="ln942">  data-&gt;flushed_events = true;</a>
-<a name="ln943"> </a>
-<a name="ln944">  data-&gt;ncells_pending = 0;</a>
-<a name="ln945">}</a>
+<a name="ln931">  if (data-&gt;cur_event) {</a>
+<a name="ln932">    flush_event(data);</a>
+<a name="ln933">  }</a>
+<a name="ln934">  mpack_w2(&amp;data-&gt;nevents_pos, data-&gt;nevents);</a>
+<a name="ln935">  data-&gt;nevents = 0;</a>
+<a name="ln936">  data-&gt;nevents_pos = NULL;</a>
+<a name="ln937"> </a>
+<a name="ln938">  // TODO(bfredl): elide copy by a length one free-list like the arena</a>
+<a name="ln939">  size_t size = BUF_POS(data);</a>
+<a name="ln940">  WBuffer *buf = wstream_new_buffer(xmemdup(data-&gt;buf, size), size, 1, xfree);</a>
+<a name="ln941">  rpc_write_raw(data-&gt;channel_id, buf);</a>
+<a name="ln942">  data-&gt;buf_wptr = data-&gt;buf;</a>
+<a name="ln943">  // we have sent events to the client, but possibly not yet the final &quot;flush&quot;</a>
+<a name="ln944">  // event.</a>
+<a name="ln945">  data-&gt;flushed_events = true;</a>
 <a name="ln946"> </a>
-<a name="ln947">/// An intentional flush (vsync) when Nvim is finished redrawing the screen</a>
-<a name="ln948">///</a>
-<a name="ln949">/// Clients can know this happened by a final &quot;flush&quot; event at the end of the</a>
-<a name="ln950">/// &quot;redraw&quot; batch.</a>
-<a name="ln951">void remote_ui_flush(UI *ui)</a>
-<a name="ln952">{</a>
-<a name="ln953">  UIData *data = ui-&gt;data;</a>
-<a name="ln954">  if (data-&gt;nevents &gt; 0 || data-&gt;flushed_events) {</a>
-<a name="ln955">    if (!ui-&gt;ui_ext[kUILinegrid]) {</a>
-<a name="ln956">      remote_ui_cursor_goto(ui, data-&gt;cursor_row, data-&gt;cursor_col);</a>
-<a name="ln957">    }</a>
-<a name="ln958">    push_call(ui, &quot;flush&quot;, (Array)ARRAY_DICT_INIT);</a>
-<a name="ln959">    remote_ui_flush_buf(ui);</a>
-<a name="ln960">    data-&gt;flushed_events = false;</a>
-<a name="ln961">  }</a>
-<a name="ln962">}</a>
-<a name="ln963"> </a>
-<a name="ln964">static Array translate_contents(UI *ui, Array contents, Arena *arena)</a>
-<a name="ln965">{</a>
-<a name="ln966">  Array new_contents = arena_array(arena, contents.size);</a>
-<a name="ln967">  for (size_t i = 0; i &lt; contents.size; i++) {</a>
-<a name="ln968">    Array item = contents.items[i].data.array;</a>
-<a name="ln969">    Array new_item = arena_array(arena, 2);</a>
-<a name="ln970">    int attr = (int)item.items[0].data.integer;</a>
-<a name="ln971">    if (attr) {</a>
-<a name="ln972">      Dictionary rgb_attrs = arena_dict(arena, HLATTRS_DICT_SIZE);</a>
-<a name="ln973">      hlattrs2dict(&amp;rgb_attrs, NULL, syn_attr2entry(attr), ui-&gt;rgb, false);</a>
-<a name="ln974">      ADD(new_item, DICTIONARY_OBJ(rgb_attrs));</a>
-<a name="ln975">    } else {</a>
-<a name="ln976">      ADD(new_item, DICTIONARY_OBJ((Dictionary)ARRAY_DICT_INIT));</a>
-<a name="ln977">    }</a>
-<a name="ln978">    ADD(new_item, item.items[1]);</a>
-<a name="ln979">    ADD(new_contents, ARRAY_OBJ(new_item));</a>
-<a name="ln980">  }</a>
-<a name="ln981">  return new_contents;</a>
-<a name="ln982">}</a>
-<a name="ln983"> </a>
-<a name="ln984">static Array translate_firstarg(UI *ui, Array args, Arena *arena)</a>
-<a name="ln985">{</a>
-<a name="ln986">  Array new_args = arena_array(arena, args.size);</a>
-<a name="ln987">  Array contents = args.items[0].data.array;</a>
-<a name="ln988"> </a>
-<a name="ln989">  ADD_C(new_args, ARRAY_OBJ(translate_contents(ui, contents, arena)));</a>
-<a name="ln990">  for (size_t i = 1; i &lt; args.size; i++) {</a>
-<a name="ln991">    ADD(new_args, args.items[i]);</a>
-<a name="ln992">  }</a>
-<a name="ln993">  return new_args;</a>
-<a name="ln994">}</a>
-<a name="ln995"> </a>
-<a name="ln996">void remote_ui_event(UI *ui, char *name, Array args)</a>
-<a name="ln997">{</a>
-<a name="ln998">  Arena arena = ARENA_EMPTY;</a>
-<a name="ln999">  UIData *data = ui-&gt;data;</a>
-<a name="ln1000">  if (!ui-&gt;ui_ext[kUILinegrid]) {</a>
-<a name="ln1001">    // the representation of highlights in cmdline changed, translate back</a>
-<a name="ln1002">    // never consumes args</a>
-<a name="ln1003">    if (strequal(name, &quot;cmdline_show&quot;)) {</a>
-<a name="ln1004">      Array new_args = translate_firstarg(ui, args, &amp;arena);</a>
-<a name="ln1005">      push_call(ui, name, new_args);</a>
-<a name="ln1006">      goto free_ret;</a>
-<a name="ln1007">    } else if (strequal(name, &quot;cmdline_block_show&quot;)) {</a>
-<a name="ln1008">      Array new_args = data-&gt;call_buf;</a>
-<a name="ln1009">      Array block = args.items[0].data.array;</a>
-<a name="ln1010">      Array new_block = arena_array(&amp;arena, block.size);</a>
-<a name="ln1011">      for (size_t i = 0; i &lt; block.size; i++) {</a>
-<a name="ln1012">        ADD_C(new_block, ARRAY_OBJ(translate_contents(ui, block.items[i].data.array, &amp;arena)));</a>
-<a name="ln1013">      }</a>
-<a name="ln1014">      ADD_C(new_args, ARRAY_OBJ(new_block));</a>
-<a name="ln1015">      push_call(ui, name, new_args);</a>
-<a name="ln1016">      goto free_ret;</a>
-<a name="ln1017">    } else if (strequal(name, &quot;cmdline_block_append&quot;)) {</a>
-<a name="ln1018">      Array new_args = translate_firstarg(ui, args, &amp;arena);</a>
-<a name="ln1019">      push_call(ui, name, new_args);</a>
-<a name="ln1020">      goto free_ret;</a>
-<a name="ln1021">    }</a>
-<a name="ln1022">  }</a>
-<a name="ln1023"> </a>
-<a name="ln1024">  // Back-compat: translate popupmenu_xx to legacy wildmenu_xx.</a>
-<a name="ln1025">  if (ui-&gt;ui_ext[kUIWildmenu]) {</a>
-<a name="ln1026">    if (strequal(name, &quot;popupmenu_show&quot;)) {</a>
-<a name="ln1027">      data-&gt;wildmenu_active = (args.items[4].data.integer == -1)</a>
-<a name="ln1028">                              || !ui-&gt;ui_ext[kUIPopupmenu];</a>
-<a name="ln1029">      if (data-&gt;wildmenu_active) {</a>
-<a name="ln1030">        Array new_args = data-&gt;call_buf;</a>
-<a name="ln1031">        Array items = args.items[0].data.array;</a>
-<a name="ln1032">        Array new_items = arena_array(&amp;arena, items.size);</a>
-<a name="ln1033">        for (size_t i = 0; i &lt; items.size; i++) {</a>
-<a name="ln1034">          ADD_C(new_items, items.items[i].data.array.items[0]);</a>
-<a name="ln1035">        }</a>
-<a name="ln1036">        ADD_C(new_args, ARRAY_OBJ(new_items));</a>
-<a name="ln1037">        push_call(ui, &quot;wildmenu_show&quot;, new_args);</a>
-<a name="ln1038">        if (args.items[1].data.integer != -1) {</a>
-<a name="ln1039">          Array new_args2 = data-&gt;call_buf;</a>
-<a name="ln1040">          ADD_C(new_args2, args.items[1]);</a>
-<a name="ln1041">          push_call(ui, &quot;wildmenu_select&quot;, new_args2);</a>
-<a name="ln1042">        }</a>
-<a name="ln1043">        goto free_ret;</a>
-<a name="ln1044">      }</a>
-<a name="ln1045">    } else if (strequal(name, &quot;popupmenu_select&quot;)) {</a>
-<a name="ln1046">      if (data-&gt;wildmenu_active) {</a>
-<a name="ln1047">        name = &quot;wildmenu_select&quot;;</a>
-<a name="ln1048">      }</a>
-<a name="ln1049">    } else if (strequal(name, &quot;popupmenu_hide&quot;)) {</a>
-<a name="ln1050">      if (data-&gt;wildmenu_active) {</a>
-<a name="ln1051">        name = &quot;wildmenu_hide&quot;;</a>
-<a name="ln1052">      }</a>
-<a name="ln1053">    }</a>
-<a name="ln1054">  }</a>
-<a name="ln1055"> </a>
-<a name="ln1056">  push_call(ui, name, args);</a>
-<a name="ln1057">  return;</a>
+<a name="ln947">  data-&gt;ncells_pending = 0;</a>
+<a name="ln948">}</a>
+<a name="ln949"> </a>
+<a name="ln950">/// An intentional flush (vsync) when Nvim is finished redrawing the screen</a>
+<a name="ln951">///</a>
+<a name="ln952">/// Clients can know this happened by a final &quot;flush&quot; event at the end of the</a>
+<a name="ln953">/// &quot;redraw&quot; batch.</a>
+<a name="ln954">void remote_ui_flush(UI *ui)</a>
+<a name="ln955">{</a>
+<a name="ln956">  UIData *data = ui-&gt;data;</a>
+<a name="ln957">  if (data-&gt;nevents &gt; 0 || data-&gt;flushed_events) {</a>
+<a name="ln958">    if (!ui-&gt;ui_ext[kUILinegrid]) {</a>
+<a name="ln959">      remote_ui_cursor_goto(ui, data-&gt;cursor_row, data-&gt;cursor_col);</a>
+<a name="ln960">    }</a>
+<a name="ln961">    push_call(ui, &quot;flush&quot;, (Array)ARRAY_DICT_INIT);</a>
+<a name="ln962">    remote_ui_flush_buf(ui);</a>
+<a name="ln963">    data-&gt;flushed_events = false;</a>
+<a name="ln964">  }</a>
+<a name="ln965">}</a>
+<a name="ln966"> </a>
+<a name="ln967">static Array translate_contents(UI *ui, Array contents, Arena *arena)</a>
+<a name="ln968">{</a>
+<a name="ln969">  Array new_contents = arena_array(arena, contents.size);</a>
+<a name="ln970">  for (size_t i = 0; i &lt; contents.size; i++) {</a>
+<a name="ln971">    Array item = contents.items[i].data.array;</a>
+<a name="ln972">    Array new_item = arena_array(arena, 2);</a>
+<a name="ln973">    int attr = (int)item.items[0].data.integer;</a>
+<a name="ln974">    if (attr) {</a>
+<a name="ln975">      Dictionary rgb_attrs = arena_dict(arena, HLATTRS_DICT_SIZE);</a>
+<a name="ln976">      hlattrs2dict(&amp;rgb_attrs, NULL, syn_attr2entry(attr), ui-&gt;rgb, false);</a>
+<a name="ln977">      ADD(new_item, DICTIONARY_OBJ(rgb_attrs));</a>
+<a name="ln978">    } else {</a>
+<a name="ln979">      ADD(new_item, DICTIONARY_OBJ((Dictionary)ARRAY_DICT_INIT));</a>
+<a name="ln980">    }</a>
+<a name="ln981">    ADD(new_item, item.items[1]);</a>
+<a name="ln982">    ADD(new_contents, ARRAY_OBJ(new_item));</a>
+<a name="ln983">  }</a>
+<a name="ln984">  return new_contents;</a>
+<a name="ln985">}</a>
+<a name="ln986"> </a>
+<a name="ln987">static Array translate_firstarg(UI *ui, Array args, Arena *arena)</a>
+<a name="ln988">{</a>
+<a name="ln989">  Array new_args = arena_array(arena, args.size);</a>
+<a name="ln990">  Array contents = args.items[0].data.array;</a>
+<a name="ln991"> </a>
+<a name="ln992">  ADD_C(new_args, ARRAY_OBJ(translate_contents(ui, contents, arena)));</a>
+<a name="ln993">  for (size_t i = 1; i &lt; args.size; i++) {</a>
+<a name="ln994">    ADD(new_args, args.items[i]);</a>
+<a name="ln995">  }</a>
+<a name="ln996">  return new_args;</a>
+<a name="ln997">}</a>
+<a name="ln998"> </a>
+<a name="ln999">void remote_ui_event(UI *ui, char *name, Array args)</a>
+<a name="ln1000">{</a>
+<a name="ln1001">  Arena arena = ARENA_EMPTY;</a>
+<a name="ln1002">  UIData *data = ui-&gt;data;</a>
+<a name="ln1003">  if (!ui-&gt;ui_ext[kUILinegrid]) {</a>
+<a name="ln1004">    // the representation of highlights in cmdline changed, translate back</a>
+<a name="ln1005">    // never consumes args</a>
+<a name="ln1006">    if (strequal(name, &quot;cmdline_show&quot;)) {</a>
+<a name="ln1007">      Array new_args = translate_firstarg(ui, args, &amp;arena);</a>
+<a name="ln1008">      push_call(ui, name, new_args);</a>
+<a name="ln1009">      goto free_ret;</a>
+<a name="ln1010">    } else if (strequal(name, &quot;cmdline_block_show&quot;)) {</a>
+<a name="ln1011">      Array new_args = data-&gt;call_buf;</a>
+<a name="ln1012">      Array block = args.items[0].data.array;</a>
+<a name="ln1013">      Array new_block = arena_array(&amp;arena, block.size);</a>
+<a name="ln1014">      for (size_t i = 0; i &lt; block.size; i++) {</a>
+<a name="ln1015">        ADD_C(new_block, ARRAY_OBJ(translate_contents(ui, block.items[i].data.array, &amp;arena)));</a>
+<a name="ln1016">      }</a>
+<a name="ln1017">      ADD_C(new_args, ARRAY_OBJ(new_block));</a>
+<a name="ln1018">      push_call(ui, name, new_args);</a>
+<a name="ln1019">      goto free_ret;</a>
+<a name="ln1020">    } else if (strequal(name, &quot;cmdline_block_append&quot;)) {</a>
+<a name="ln1021">      Array new_args = translate_firstarg(ui, args, &amp;arena);</a>
+<a name="ln1022">      push_call(ui, name, new_args);</a>
+<a name="ln1023">      goto free_ret;</a>
+<a name="ln1024">    }</a>
+<a name="ln1025">  }</a>
+<a name="ln1026"> </a>
+<a name="ln1027">  // Back-compat: translate popupmenu_xx to legacy wildmenu_xx.</a>
+<a name="ln1028">  if (ui-&gt;ui_ext[kUIWildmenu]) {</a>
+<a name="ln1029">    if (strequal(name, &quot;popupmenu_show&quot;)) {</a>
+<a name="ln1030">      data-&gt;wildmenu_active = (args.items[4].data.integer == -1)</a>
+<a name="ln1031">                              || !ui-&gt;ui_ext[kUIPopupmenu];</a>
+<a name="ln1032">      if (data-&gt;wildmenu_active) {</a>
+<a name="ln1033">        Array new_args = data-&gt;call_buf;</a>
+<a name="ln1034">        Array items = args.items[0].data.array;</a>
+<a name="ln1035">        Array new_items = arena_array(&amp;arena, items.size);</a>
+<a name="ln1036">        for (size_t i = 0; i &lt; items.size; i++) {</a>
+<a name="ln1037">          ADD_C(new_items, items.items[i].data.array.items[0]);</a>
+<a name="ln1038">        }</a>
+<a name="ln1039">        ADD_C(new_args, ARRAY_OBJ(new_items));</a>
+<a name="ln1040">        push_call(ui, &quot;wildmenu_show&quot;, new_args);</a>
+<a name="ln1041">        if (args.items[1].data.integer != -1) {</a>
+<a name="ln1042">          Array new_args2 = data-&gt;call_buf;</a>
+<a name="ln1043">          ADD_C(new_args2, args.items[1]);</a>
+<a name="ln1044">          push_call(ui, &quot;wildmenu_select&quot;, new_args2);</a>
+<a name="ln1045">        }</a>
+<a name="ln1046">        goto free_ret;</a>
+<a name="ln1047">      }</a>
+<a name="ln1048">    } else if (strequal(name, &quot;popupmenu_select&quot;)) {</a>
+<a name="ln1049">      if (data-&gt;wildmenu_active) {</a>
+<a name="ln1050">        name = &quot;wildmenu_select&quot;;</a>
+<a name="ln1051">      }</a>
+<a name="ln1052">    } else if (strequal(name, &quot;popupmenu_hide&quot;)) {</a>
+<a name="ln1053">      if (data-&gt;wildmenu_active) {</a>
+<a name="ln1054">        name = &quot;wildmenu_hide&quot;;</a>
+<a name="ln1055">      }</a>
+<a name="ln1056">    }</a>
+<a name="ln1057">  }</a>
 <a name="ln1058"> </a>
-<a name="ln1059">free_ret:</a>
-<a name="ln1060">  arena_mem_free(arena_finish(&amp;arena));</a>
-<a name="ln1061">}</a>
-<a name="ln1062"> </a>
-<a name="ln1063">void remote_ui_inspect(UI *ui, Dictionary *info)</a>
-<a name="ln1064">{</a>
-<a name="ln1065">  UIData *data = ui-&gt;data;</a>
-<a name="ln1066">  PUT(*info, &quot;chan&quot;, INTEGER_OBJ((Integer)data-&gt;channel_id));</a>
-<a name="ln1067">}</a>
+<a name="ln1059">  push_call(ui, name, args);</a>
+<a name="ln1060">  return;</a>
+<a name="ln1061"> </a>
+<a name="ln1062">free_ret:</a>
+<a name="ln1063">  arena_mem_free(arena_finish(&amp;arena));</a>
+<a name="ln1064">}</a>
+<a name="ln1065"> </a>
+<a name="ln1066">void remote_ui_inspect(UI *ui, Dictionary *info)</a>
+<a name="ln1067">{</a>
+<a name="ln1068">  UIData *data = ui-&gt;data;</a>
+<a name="ln1069">  PUT(*info, &quot;chan&quot;, INTEGER_OBJ((Integer)data-&gt;channel_id));</a>
+<a name="ln1070">}</a>
 </code></pre>
 <div class="balloon" rel="78"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v564/" target="_blank">V564</a> The '|' operator is applied to bool type value. You've probably forgotten to include parentheses or intended to use the '||' operator.</p></div>
 <link rel="stylesheet" href="highlight.css">
