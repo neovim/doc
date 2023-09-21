@@ -2427,31 +2427,26 @@ vim.deepcopy(<code>{orig}</code>)                                          <code
 
 </div>
 <div class="help-para">
-vim.defaulttable(<code>{create}</code>)                                <code id="vim.defaulttable()" class="help-tag-right"><a href="#vim.defaulttable()">vim.defaulttable()</a></code>
-    Creates a table whose members are automatically created when accessed, if
-    they don't already exist.
+vim.defaulttable(<code>{createfn}</code>)                              <code id="vim.defaulttable()" class="help-tag-right"><a href="#vim.defaulttable()">vim.defaulttable()</a></code>
+    Creates a table whose missing keys are provided by <code>{createfn}</code> (like
+    Python's "defaultdict").
 
 </div>
 <div class="help-para">
-    They mimic defaultdict in python.
-
-</div>
-<div class="help-para">
-    If <code>{create}</code> is <code>nil</code>, this will create a defaulttable whose constructor
-    function is this function, effectively allowing to create nested tables on
-    the fly:<pre><code class="language-lua">local a = vim.defaulttable()
+    If <code>{createfn}</code> is <code>nil</code> it defaults to defaulttable() itself, so accessing
+    nested keys creates nested tables:<pre><code class="language-lua">local a = vim.defaulttable()
 a.b.c = 1</code></pre>
 
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{create}</code>  function?(key:any):any The function called to create a
-                  missing value.
+<div class="help-li" style=""> <code>{createfn}</code>  function?(key:any):any Provides the value for a missing
+                    <code>key</code>.
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return:</div>
-        (table) Empty table with metamethod
+        (table) Empty table with <code>__index</code> metamethod.
 
 </div>
 <div class="help-para">
@@ -2689,7 +2684,7 @@ vim.Ringbuf:push(<code>{item}</code>)                                      <code
 </div>
 <div class="help-para">
 vim.spairs(<code>{t}</code>)                                                 <code id="vim.spairs()" class="help-tag-right"><a href="#vim.spairs()">vim.spairs()</a></code>
-    Enumerate a table sorted by its keys.
+    Enumerates key-value pairs of a table, ordered by key.
 
 </div>
 <div class="help-para">
@@ -2699,7 +2694,7 @@ vim.spairs(<code>{t}</code>)                                                 <co
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return:</div>
-        (function) iterator over sorted keys and their values
+        (function) <a href="luaref.html#for-in">for-in</a> iterator over sorted keys and their values
 
 </div>
 <div class="help-para">
@@ -2940,14 +2935,18 @@ vim.tbl_get({ key = {}}, 'key', 'nested_key') == nil</code></pre>
 </div>
 <div class="help-para">
 vim.tbl_isarray(<code>{t}</code>)                                       <code id="vim.tbl_isarray()" class="help-tag-right"><a href="#vim.tbl_isarray()">vim.tbl_isarray()</a></code>
-    Tests if a Lua table can be treated as an array (a table indexed by
-    integers).
+    Tests if <code>t</code> is an "array": a table indexed only by integers (potentially non-contiguous).
 
 </div>
 <div class="help-para">
-    Empty table <code>{}</code> is assumed to be an array, unless it was created by
-    <a href="lua.html#vim.empty_dict()">vim.empty_dict()</a> or returned as a dict-like <a href="api.html#API">API</a> or Vimscript result,
-    for example from <a href="builtin.html#rpcrequest()">rpcrequest()</a> or <a href="lua.html#vim.fn">vim.fn</a>.
+    If the indexes start from 1 and are contiguous then the array is also a
+    list. <a href="lua.html#vim.tbl_islist()">vim.tbl_islist()</a>
+
+</div>
+<div class="help-para">
+    Empty table <code>{}</code> is an array, unless it was created by <a href="lua.html#vim.empty_dict()">vim.empty_dict()</a>
+    or returned as a dict-like <a href="api.html#API">API</a> or Vimscript result, for example from
+    <a href="builtin.html#rpcrequest()">rpcrequest()</a> or <a href="lua.html#vim.fn">vim.fn</a>.
 
 </div>
 <div class="help-para">
@@ -2959,6 +2958,11 @@ vim.tbl_isarray(<code>{t}</code>)                                       <code id
 <div class="help-column_heading">    Return:</div>
         (boolean) <code>true</code> if array-like table, else <code>false</code>.
 
+</div>
+<div class="help-para">
+<div class="help-column_heading">    See also:</div>
+<div class="help-li" style=""> <a href="https://github.com/openresty/luajit2#tableisarray">https://github.com/openresty/luajit2#tableisarray</a>
+</div>
 </div>
 <div class="help-para">
 vim.tbl_isempty(<code>{t}</code>)                                       <code id="vim.tbl_isempty()" class="help-tag-right"><a href="#vim.tbl_isempty()">vim.tbl_isempty()</a></code>
@@ -2982,14 +2986,14 @@ vim.tbl_isempty(<code>{t}</code>)                                       <code id
 </div>
 <div class="help-para">
 vim.tbl_islist(<code>{t}</code>)                                         <code id="vim.tbl_islist()" class="help-tag-right"><a href="#vim.tbl_islist()">vim.tbl_islist()</a></code>
-    Tests if a Lua table can be treated as a list (a table indexed by
-    consecutive integers starting from 1).
+    Tests if <code>t</code> is a "list": a table indexed only by contiguous integers starting from 1 (what <a href="luaref.html#lua-length">lua-length</a> calls a "regular
+    array").
 
 </div>
 <div class="help-para">
-    Empty table <code>{}</code> is assumed to be an list, unless it was created by
-    <a href="lua.html#vim.empty_dict()">vim.empty_dict()</a> or returned as a dict-like <a href="api.html#API">API</a> or Vimscript result,
-    for example from <a href="builtin.html#rpcrequest()">rpcrequest()</a> or <a href="lua.html#vim.fn">vim.fn</a>.
+    Empty table <code>{}</code> is a list, unless it was created by <a href="lua.html#vim.empty_dict()">vim.empty_dict()</a> or
+    returned as a dict-like <a href="api.html#API">API</a> or Vimscript result, for example from
+    <a href="builtin.html#rpcrequest()">rpcrequest()</a> or <a href="lua.html#vim.fn">vim.fn</a>.
 
 </div>
 <div class="help-para">
@@ -3001,6 +3005,11 @@ vim.tbl_islist(<code>{t}</code>)                                         <code i
 <div class="help-column_heading">    Return:</div>
         (boolean) <code>true</code> if list-like table, else <code>false</code>.
 
+</div>
+<div class="help-para">
+<div class="help-column_heading">    See also:</div>
+<div class="help-li" style=""> <a href="lua.html#vim.tbl_isarray()">vim.tbl_isarray()</a>
+</div>
 </div>
 <div class="help-para">
 vim.tbl_keys(<code>{t}</code>)                                             <code id="vim.tbl_keys()" class="help-tag-right"><a href="#vim.tbl_keys()">vim.tbl_keys()</a></code>
@@ -4864,7 +4873,7 @@ Lua module: vim.iter                                                </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-09-20 05:24 from <code><a href="https://github.com/neovim/neovim/commit/c4f4c7a356013c6f1e10b7bf239d9e3c4c0c336e">c4f4c7a</a></code>
+        Generated at 2023-09-21 05:26 from <code><a href="https://github.com/neovim/neovim/commit/0aea8fad48ccd891022a5595fc7cdedbe4c04ad3">0aea8fa</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim

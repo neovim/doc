@@ -981,52 +981,35 @@ if you stop editing a file without writing, like with ":n!".</div>
 <div class="old-help-para">If you have included the ' item in the <a href="options.html#'shada'">'shada'</a> option the jumplist will be
 stored in the ShaDa file and restored when starting Vim.</div>
 <div class="old-help-para">							<code id="jumplist-stack" class="help-tag-right"><a href="#jumplist-stack">jumplist-stack</a></code>
-When jumpoptions includes "stack", the jumplist behaves like the history in a
-web browser and like the tag stack.  When jumping to a new location from the
-middle of the jumplist, the locations after the current position will be
-discarded.</div>
-<div class="old-help-para">This behavior corresponds to the following situation in a web browser.
-Navigate to first.com, second.com, third.com, fourth.com and then fifth.com.
-Then navigate backwards twice so that third.com is displayed.  At that point,
-the history is:
-<div class="help-li" style=""> first.com
-</div><div class="help-li" style=""> second.com
-</div><div class="help-li" style=""> third.com &lt;--
-</div><div class="help-li" style=""> fourth.com
-</div><div class="help-li" style=""> fifth.com
-</div></div>
-<div class="old-help-para">Finally, navigate to a different webpage, new.com.  The history is
-<div class="help-li" style=""> first.com
-</div><div class="help-li" style=""> second.com
-</div><div class="help-li" style=""> third.com
-</div><div class="help-li" style=""> new.com &lt;--
-</div></div>
-<div class="old-help-para">When the jumpoptions includes "stack", this is the behavior of Nvim as well.
-That is, given a jumplist like the following in which <code>CTRL-O</code> has been used to
-move back three times to location X</div>
-<div class="old-help-para"> jump line  col file/text
-   2  1260    8 src/nvim/mark.c         &lt;-- location X-2
-   1   685    0 src/nvim/option_defs.h  &lt;-- location X-1
-&gt;  0   462   36 src/nvim/option_defs.h  &lt;-- location X
-   1   479   39 src/nvim/option_defs.h
-   2   213    2 src/nvim/mark.c
-   3   181    0 src/nvim/mark.c</div>
+When <a href="options.html#'jumpoptions'">'jumpoptions'</a> option includes "stack", the jumplist behaves like the tag
+stack.  When jumping to a new location from the middle of the jumplist, the
+locations after the current position will be discarded. With this option set
+you can move through a tree of jump locations. When going back up a branch and
+then down another branch, <code>CTRL-O</code> still takes you further up the tree.</div>
+<div class="old-help-para">Given a jumplist like the following in which <code>CTRL-O</code> has been used to move back
+three times to location X:<pre> jump line  col file/text
+   2  1260    8 mark.c                &lt;-- location X-2
+   1   685    0 eval.c                &lt;-- location X-1
+&gt;  0   462   36 eval.c                &lt;-- location X
+   1   479   39 eval.c
+   2   213    2 mark.c
+   3   181    0 mark.c</pre></div>
 <div class="old-help-para">jumping to (new) location Y results in the locations after the current
-locations being removed:</div>
-<div class="old-help-para"> jump line  col file/text
-   3  1260    8 src/nvim/mark.c
-   2   685    0 src/nvim/option_defs.h
-   1   462   36 src/nvim/option_defs.h  &lt;-- location X
-Then, when yet another location Z is jumped to, the new location Y appears
+locations being removed:<pre> jump line  col file/text
+   3  1260    8 mark.c                &lt;-- location X-2
+   2   685    0 eval.c                &lt;-- location X-1
+   1   462   36 eval.c                &lt;-- location X
+&gt;</pre></div>
+<div class="old-help-para">Then, when yet another location Z is jumped to, the new location Y appears
 directly after location X in the jumplist and location X remains in the same
-position relative to the locations (X-1, X-2, etc., ...) that had been before it
-prior to the original jump from X to Y:</div>
-<div class="old-help-para"> jump line  col file/text
-   4  1260    8 src/nvim/mark.c         &lt;-- location X-2
-   3   685    0 src/nvim/option_defs.h  &lt;-- location X-1
-   2   462   36 src/nvim/option_defs.h  &lt;-- location X
-   1   100    0 src/nvim/option_defs.h  &lt;-- location Y
-<h3 id="changelist" class="help-heading">CHANGE LIST JUMPS<span class="help-heading-tags">			<span class="help-tag"><a href="#changelist">changelist</a></span> <span id="change-list-jumps" class="help-tag"><a href="#change-list-jumps">change-list-jumps</a></span> <span id="E664" class="help-tag"><a href="#E664">E664</a></span></span></h3></div>
+position relative to the locations (X-1, X-2, etc., ...) that had been before
+it prior to the original jump from X to Y:<pre> jump line  col file/text
+   4  1260    8 mark.c                &lt;-- location X-2
+   3   685    0 eval.c                &lt;-- location X-1
+   2   462   36 eval.c                &lt;-- location X
+   1   100    0 buffer.c        &lt;-- location Y
+&gt;</pre></div>
+<div class="old-help-para"><h3 id="changelist" class="help-heading">CHANGE LIST JUMPS<span class="help-heading-tags">			<span class="help-tag"><a href="#changelist">changelist</a></span> <span id="change-list-jumps" class="help-tag"><a href="#change-list-jumps">change-list-jumps</a></span> <span id="E664" class="help-tag"><a href="#E664">E664</a></span></span></h3></div>
 <div class="old-help-para">When making a change the cursor position is remembered.  One position is
 remembered for every change that can be undone, unless it is close to a
 previous change.  Two commands can be used to jump to positions of changes,
@@ -1237,7 +1220,7 @@ L			To line [count] from bottom of window (default: Last
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2023-09-20 05:25 from <code><a href="https://github.com/neovim/neovim/commit/c4f4c7a356013c6f1e10b7bf239d9e3c4c0c336e">c4f4c7a</a></code>
+        Generated at 2023-09-21 05:26 from <code><a href="https://github.com/neovim/neovim/commit/0aea8fad48ccd891022a5595fc7cdedbe4c04ad3">0aea8fa</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+motion.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/motion.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
