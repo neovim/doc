@@ -3033,244 +3033,249 @@
 <a name="ln3024">        linebuf_attr[wlv.off] = wlv.char_attr;</a>
 <a name="ln3025">      }</a>
 <a name="ln3026"> </a>
-<a name="ln3027">      linebuf_vcol[wlv.off] = wlv.vcol;</a>
-<a name="ln3028"> </a>
-<a name="ln3029">      if (wlv.draw_state == WL_FOLD) {</a>
-<a name="ln3030">        linebuf_vcol[wlv.off] = -2;</a>
-<a name="ln3031">        if (wlv.n_closing &gt; 0) {</a>
-<a name="ln3032">          linebuf_vcol[wlv.off] = -3;</a>
-<a name="ln3033">          wlv.n_closing--;</a>
-<a name="ln3034">        }</a>
-<a name="ln3035">      }</a>
-<a name="ln3036"> </a>
-<a name="ln3037">      if (utf_char2cells(mb_c) &gt; 1) {</a>
-<a name="ln3038">        // Need to fill two screen columns.</a>
-<a name="ln3039">        wlv.off++;</a>
-<a name="ln3040">        wlv.col++;</a>
-<a name="ln3041">        // UTF-8: Put a 0 in the second screen char.</a>
-<a name="ln3042">        linebuf_char[wlv.off] = 0;</a>
-<a name="ln3043">        linebuf_attr[wlv.off] = linebuf_attr[wlv.off - 1];</a>
-<a name="ln3044">        if (wlv.draw_state &gt; WL_STC &amp;&amp; wlv.filler_todo &lt;= 0) {</a>
-<a name="ln3045">          wlv.vcol++;</a>
-<a name="ln3046">        }</a>
-<a name="ln3047">        // When &quot;wlv.tocol&quot; is halfway through a character, set it to the end</a>
-<a name="ln3048">        // of the character, otherwise highlighting won't stop.</a>
-<a name="ln3049">        if (wlv.tocol == wlv.vcol) {</a>
-<a name="ln3050">          wlv.tocol++;</a>
-<a name="ln3051">        }</a>
-<a name="ln3052"> </a>
-<a name="ln3053">        linebuf_vcol[wlv.off] = wlv.vcol;</a>
-<a name="ln3054"> </a>
-<a name="ln3055">        if (wp-&gt;w_p_rl) {</a>
-<a name="ln3056">          // now it's time to backup one cell</a>
-<a name="ln3057">          wlv.off--;</a>
-<a name="ln3058">          wlv.col--;</a>
-<a name="ln3059">        }</a>
-<a name="ln3060">      }</a>
-<a name="ln3061">      if (wp-&gt;w_p_rl) {</a>
-<a name="ln3062">        wlv.off--;</a>
-<a name="ln3063">        wlv.col--;</a>
-<a name="ln3064">      } else {</a>
-<a name="ln3065">        wlv.off++;</a>
-<a name="ln3066">        wlv.col++;</a>
-<a name="ln3067">      }</a>
-<a name="ln3068">    } else if (wp-&gt;w_p_cole &gt; 0 &amp;&amp; is_concealing) {</a>
-<a name="ln3069">      wlv.skip_cells--;</a>
-<a name="ln3070">      wlv.vcol_off++;</a>
-<a name="ln3071">      if (wlv.n_extra &gt; 0) {</a>
-<a name="ln3072">        wlv.vcol_off += wlv.n_extra;</a>
-<a name="ln3073">      }</a>
-<a name="ln3074">      if (wp-&gt;w_p_wrap) {</a>
-<a name="ln3075">        // Special voodoo required if 'wrap' is on.</a>
-<a name="ln3076">        //</a>
-<a name="ln3077">        // Advance the column indicator to force the line</a>
-<a name="ln3078">        // drawing to wrap early. This will make the line</a>
-<a name="ln3079">        // take up the same screen space when parts are concealed,</a>
-<a name="ln3080">        // so that cursor line computations aren't messed up.</a>
+<a name="ln3027">      if (wlv.draw_state &gt; WL_STC &amp;&amp; wlv.filler_todo &lt;= 0) {</a>
+<a name="ln3028">        linebuf_vcol[wlv.off] = wlv.vcol;</a>
+<a name="ln3029">      } else if (wlv.draw_state == WL_FOLD) {</a>
+<a name="ln3030">        if (wlv.n_closing &gt; 0) {</a>
+<a name="ln3031">          linebuf_vcol[wlv.off] = -3;</a>
+<a name="ln3032">          wlv.n_closing--;</a>
+<a name="ln3033">        } else {</a>
+<a name="ln3034">          linebuf_vcol[wlv.off] = -2;</a>
+<a name="ln3035">        }</a>
+<a name="ln3036">      } else {</a>
+<a name="ln3037">        linebuf_vcol[wlv.off] = -1;</a>
+<a name="ln3038">      }</a>
+<a name="ln3039"> </a>
+<a name="ln3040">      if (utf_char2cells(mb_c) &gt; 1) {</a>
+<a name="ln3041">        // Need to fill two screen columns.</a>
+<a name="ln3042">        wlv.off++;</a>
+<a name="ln3043">        wlv.col++;</a>
+<a name="ln3044">        // UTF-8: Put a 0 in the second screen char.</a>
+<a name="ln3045">        linebuf_char[wlv.off] = 0;</a>
+<a name="ln3046">        linebuf_attr[wlv.off] = linebuf_attr[wlv.off - 1];</a>
+<a name="ln3047"> </a>
+<a name="ln3048">        if (wlv.draw_state &gt; WL_STC &amp;&amp; wlv.filler_todo &lt;= 0) {</a>
+<a name="ln3049">          linebuf_vcol[wlv.off] = ++wlv.vcol;</a>
+<a name="ln3050">        } else {</a>
+<a name="ln3051">          linebuf_vcol[wlv.off] = -1;</a>
+<a name="ln3052">        }</a>
+<a name="ln3053"> </a>
+<a name="ln3054">        // When &quot;wlv.tocol&quot; is halfway through a character, set it to the end</a>
+<a name="ln3055">        // of the character, otherwise highlighting won't stop.</a>
+<a name="ln3056">        if (wlv.tocol == wlv.vcol) {</a>
+<a name="ln3057">          wlv.tocol++;</a>
+<a name="ln3058">        }</a>
+<a name="ln3059"> </a>
+<a name="ln3060">        if (wp-&gt;w_p_rl) {</a>
+<a name="ln3061">          // now it's time to backup one cell</a>
+<a name="ln3062">          wlv.off--;</a>
+<a name="ln3063">          wlv.col--;</a>
+<a name="ln3064">        }</a>
+<a name="ln3065">      }</a>
+<a name="ln3066">      if (wp-&gt;w_p_rl) {</a>
+<a name="ln3067">        wlv.off--;</a>
+<a name="ln3068">        wlv.col--;</a>
+<a name="ln3069">      } else {</a>
+<a name="ln3070">        wlv.off++;</a>
+<a name="ln3071">        wlv.col++;</a>
+<a name="ln3072">      }</a>
+<a name="ln3073">    } else if (wp-&gt;w_p_cole &gt; 0 &amp;&amp; is_concealing) {</a>
+<a name="ln3074">      wlv.skip_cells--;</a>
+<a name="ln3075">      wlv.vcol_off++;</a>
+<a name="ln3076">      if (wlv.n_extra &gt; 0) {</a>
+<a name="ln3077">        wlv.vcol_off += wlv.n_extra;</a>
+<a name="ln3078">      }</a>
+<a name="ln3079">      if (wp-&gt;w_p_wrap) {</a>
+<a name="ln3080">        // Special voodoo required if 'wrap' is on.</a>
 <a name="ln3081">        //</a>
-<a name="ln3082">        // To avoid the fictitious advance of 'wlv.col' causing</a>
-<a name="ln3083">        // trailing junk to be written out of the screen line</a>
-<a name="ln3084">        // we are building, 'boguscols' keeps track of the number</a>
-<a name="ln3085">        // of bad columns we have advanced.</a>
-<a name="ln3086">        if (wlv.n_extra &gt; 0) {</a>
-<a name="ln3087">          wlv.vcol += wlv.n_extra;</a>
-<a name="ln3088">          if (wp-&gt;w_p_rl) {</a>
-<a name="ln3089">            wlv.col -= wlv.n_extra;</a>
-<a name="ln3090">            wlv.boguscols -= wlv.n_extra;</a>
-<a name="ln3091">          } else {</a>
-<a name="ln3092">            wlv.col += wlv.n_extra;</a>
-<a name="ln3093">            wlv.boguscols += wlv.n_extra;</a>
-<a name="ln3094">          }</a>
-<a name="ln3095">          wlv.n_extra = 0;</a>
-<a name="ln3096">          wlv.n_attr = 0;</a>
-<a name="ln3097">        }</a>
-<a name="ln3098"> </a>
-<a name="ln3099">        if (utf_char2cells(mb_c) &gt; 1) {</a>
-<a name="ln3100">          // Need to fill two screen columns.</a>
-<a name="ln3101">          if (wp-&gt;w_p_rl) {</a>
-<a name="ln3102">            wlv.boguscols--;</a>
-<a name="ln3103">            wlv.col--;</a>
-<a name="ln3104">          } else {</a>
-<a name="ln3105">            wlv.boguscols++;</a>
-<a name="ln3106">            wlv.col++;</a>
-<a name="ln3107">          }</a>
-<a name="ln3108">        }</a>
-<a name="ln3109"> </a>
-<a name="ln3110">        if (wp-&gt;w_p_rl) {</a>
-<a name="ln3111">          wlv.boguscols--;</a>
-<a name="ln3112">          wlv.col--;</a>
-<a name="ln3113">        } else {</a>
-<a name="ln3114">          wlv.boguscols++;</a>
-<a name="ln3115">          wlv.col++;</a>
-<a name="ln3116">        }</a>
-<a name="ln3117">      } else {</a>
-<a name="ln3118">        if (wlv.n_extra &gt; 0) {</a>
-<a name="ln3119">          wlv.vcol += wlv.n_extra;</a>
-<a name="ln3120">          wlv.n_extra = 0;</a>
-<a name="ln3121">          wlv.n_attr = 0;</a>
-<a name="ln3122">        }</a>
-<a name="ln3123">      }</a>
-<a name="ln3124">    } else {</a>
-<a name="ln3125">      wlv.skip_cells--;</a>
-<a name="ln3126">    }</a>
-<a name="ln3127"> </a>
-<a name="ln3128">    // The skipped cells need to be accounted for in vcol.</a>
-<a name="ln3129">    if (wlv.draw_state &gt; WL_STC &amp;&amp; wlv.skipped_cells &gt; 0) {</a>
-<a name="ln3130">      wlv.vcol += wlv.skipped_cells;</a>
-<a name="ln3131">      wlv.skipped_cells = 0;</a>
-<a name="ln3132">    }</a>
-<a name="ln3133"> </a>
-<a name="ln3134">    // Only advance the &quot;wlv.vcol&quot; when after the 'number' or</a>
-<a name="ln3135">    // 'relativenumber' column.</a>
-<a name="ln3136">    if (wlv.draw_state &gt; WL_STC</a>
-<a name="ln3137">        &amp;&amp; wlv.filler_todo &lt;= 0) {</a>
-<a name="ln3138">      wlv.vcol++;</a>
-<a name="ln3139">    }</a>
-<a name="ln3140"> </a>
-<a name="ln3141">    if (vcol_save_attr &gt;= 0) {</a>
-<a name="ln3142">      wlv.char_attr = vcol_save_attr;</a>
-<a name="ln3143">    }</a>
-<a name="ln3144"> </a>
-<a name="ln3145">    // restore attributes after &quot;predeces&quot; in 'listchars'</a>
-<a name="ln3146">    if (wlv.draw_state &gt; WL_STC &amp;&amp; n_attr3 &gt; 0 &amp;&amp; --n_attr3 == 0) {</a>
-<a name="ln3147">      wlv.char_attr = saved_attr3;</a>
+<a name="ln3082">        // Advance the column indicator to force the line</a>
+<a name="ln3083">        // drawing to wrap early. This will make the line</a>
+<a name="ln3084">        // take up the same screen space when parts are concealed,</a>
+<a name="ln3085">        // so that cursor line computations aren't messed up.</a>
+<a name="ln3086">        //</a>
+<a name="ln3087">        // To avoid the fictitious advance of 'wlv.col' causing</a>
+<a name="ln3088">        // trailing junk to be written out of the screen line</a>
+<a name="ln3089">        // we are building, 'boguscols' keeps track of the number</a>
+<a name="ln3090">        // of bad columns we have advanced.</a>
+<a name="ln3091">        if (wlv.n_extra &gt; 0) {</a>
+<a name="ln3092">          wlv.vcol += wlv.n_extra;</a>
+<a name="ln3093">          if (wp-&gt;w_p_rl) {</a>
+<a name="ln3094">            wlv.col -= wlv.n_extra;</a>
+<a name="ln3095">            wlv.boguscols -= wlv.n_extra;</a>
+<a name="ln3096">          } else {</a>
+<a name="ln3097">            wlv.col += wlv.n_extra;</a>
+<a name="ln3098">            wlv.boguscols += wlv.n_extra;</a>
+<a name="ln3099">          }</a>
+<a name="ln3100">          wlv.n_extra = 0;</a>
+<a name="ln3101">          wlv.n_attr = 0;</a>
+<a name="ln3102">        }</a>
+<a name="ln3103"> </a>
+<a name="ln3104">        if (utf_char2cells(mb_c) &gt; 1) {</a>
+<a name="ln3105">          // Need to fill two screen columns.</a>
+<a name="ln3106">          if (wp-&gt;w_p_rl) {</a>
+<a name="ln3107">            wlv.boguscols--;</a>
+<a name="ln3108">            wlv.col--;</a>
+<a name="ln3109">          } else {</a>
+<a name="ln3110">            wlv.boguscols++;</a>
+<a name="ln3111">            wlv.col++;</a>
+<a name="ln3112">          }</a>
+<a name="ln3113">        }</a>
+<a name="ln3114"> </a>
+<a name="ln3115">        if (wp-&gt;w_p_rl) {</a>
+<a name="ln3116">          wlv.boguscols--;</a>
+<a name="ln3117">          wlv.col--;</a>
+<a name="ln3118">        } else {</a>
+<a name="ln3119">          wlv.boguscols++;</a>
+<a name="ln3120">          wlv.col++;</a>
+<a name="ln3121">        }</a>
+<a name="ln3122">      } else {</a>
+<a name="ln3123">        if (wlv.n_extra &gt; 0) {</a>
+<a name="ln3124">          wlv.vcol += wlv.n_extra;</a>
+<a name="ln3125">          wlv.n_extra = 0;</a>
+<a name="ln3126">          wlv.n_attr = 0;</a>
+<a name="ln3127">        }</a>
+<a name="ln3128">      }</a>
+<a name="ln3129">    } else {</a>
+<a name="ln3130">      wlv.skip_cells--;</a>
+<a name="ln3131">    }</a>
+<a name="ln3132"> </a>
+<a name="ln3133">    // The skipped cells need to be accounted for in vcol.</a>
+<a name="ln3134">    if (wlv.draw_state &gt; WL_STC &amp;&amp; wlv.skipped_cells &gt; 0) {</a>
+<a name="ln3135">      wlv.vcol += wlv.skipped_cells;</a>
+<a name="ln3136">      wlv.skipped_cells = 0;</a>
+<a name="ln3137">    }</a>
+<a name="ln3138"> </a>
+<a name="ln3139">    // Only advance the &quot;wlv.vcol&quot; when after the 'number' or</a>
+<a name="ln3140">    // 'relativenumber' column.</a>
+<a name="ln3141">    if (wlv.draw_state &gt; WL_STC</a>
+<a name="ln3142">        &amp;&amp; wlv.filler_todo &lt;= 0) {</a>
+<a name="ln3143">      wlv.vcol++;</a>
+<a name="ln3144">    }</a>
+<a name="ln3145"> </a>
+<a name="ln3146">    if (vcol_save_attr &gt;= 0) {</a>
+<a name="ln3147">      wlv.char_attr = vcol_save_attr;</a>
 <a name="ln3148">    }</a>
 <a name="ln3149"> </a>
-<a name="ln3150">    // restore attributes after last 'listchars' or 'number' char</a>
-<a name="ln3151">    if (wlv.n_attr &gt; 0 &amp;&amp; wlv.draw_state == WL_LINE &amp;&amp; --wlv.n_attr == 0) {</a>
-<a name="ln3152">      wlv.char_attr = saved_attr2;</a>
+<a name="ln3150">    // restore attributes after &quot;predeces&quot; in 'listchars'</a>
+<a name="ln3151">    if (wlv.draw_state &gt; WL_STC &amp;&amp; n_attr3 &gt; 0 &amp;&amp; --n_attr3 == 0) {</a>
+<a name="ln3152">      wlv.char_attr = saved_attr3;</a>
 <a name="ln3153">    }</a>
 <a name="ln3154"> </a>
-<a name="ln3155">    if (has_decor &amp;&amp; wlv.filler_todo &lt;= 0</a>
-<a name="ln3156">        &amp;&amp; (wp-&gt;w_p_rl ? (wlv.col &lt; 0) : (wlv.col &gt;= grid-&gt;cols))) {</a>
-<a name="ln3157">      // At the end of screen line: might need to peek for decorations just after</a>
-<a name="ln3158">      // this position.</a>
-<a name="ln3159">      if (!has_fold &amp;&amp; wp-&gt;w_p_wrap &amp;&amp; wlv.n_extra == 0) {</a>
-<a name="ln3160">        decor_redraw_col(wp, (int)(ptr - line), -3, false, &amp;decor_state);</a>
-<a name="ln3161">        // Check position/hiding of virtual text again on next screen line.</a>
-<a name="ln3162">        decor_need_recheck = true;</a>
-<a name="ln3163">      } else if (has_fold || !wp-&gt;w_p_wrap) {</a>
-<a name="ln3164">        // Without wrapping, we might need to display right_align and win_col</a>
-<a name="ln3165">        // virt_text for the entire text line.</a>
-<a name="ln3166">        decor_redraw_col(wp, MAXCOL, -1, true, &amp;decor_state);</a>
-<a name="ln3167">      }</a>
-<a name="ln3168">    }</a>
-<a name="ln3169"> </a>
-<a name="ln3170">    // At end of screen line and there is more to come: Display the line</a>
-<a name="ln3171">    // so far.  If there is no more to display it is caught above.</a>
-<a name="ln3172">    if ((wp-&gt;w_p_rl ? (wlv.col &lt; 0) : (wlv.col &gt;= grid-&gt;cols))</a>
-<a name="ln3173">        &amp;&amp; (!has_fold || virt_line_offset &gt;= 0)</a>
-<a name="ln3174">        &amp;&amp; (wlv.draw_state != WL_LINE</a>
-<a name="ln3175">            || *ptr != NUL</a>
-<a name="ln3176">            || wlv.filler_todo &gt; 0</a>
-<a name="ln3177">            || (wp-&gt;w_p_list &amp;&amp; wp-&gt;w_p_lcs_chars.eol != NUL</a>
-<a name="ln3178">                &amp;&amp; wlv.p_extra != at_end_str)</a>
-<a name="ln3179">            || (wlv.n_extra != 0 &amp;&amp; (wlv.c_extra != NUL || *wlv.p_extra != NUL))</a>
-<a name="ln3180">            || has_more_inline_virt(&amp;wlv, v))) {</a>
-<a name="ln3181">      bool wrap = wp-&gt;w_p_wrap       // Wrapping enabled.</a>
-<a name="ln3182">                  &amp;&amp; wlv.filler_todo &lt;= 0          // Not drawing diff filler lines.</a>
-<a name="ln3183">                  &amp;&amp; lcs_eol_one != -1         // Haven't printed the lcs_eol character.</a>
-<a name="ln3184">                  &amp;&amp; wlv.row != endrow - 1     // Not the last line being displayed.</a>
-<a name="ln3185">                  &amp;&amp; (grid-&gt;cols == Columns  // Window spans the width of the screen,</a>
-<a name="ln3186">                      || ui_has(kUIMultigrid))  // or has dedicated grid.</a>
-<a name="ln3187">                  &amp;&amp; !wp-&gt;w_p_rl;              // Not right-to-left.</a>
-<a name="ln3188"> </a>
-<a name="ln3189">      int draw_col = wlv.col - wlv.boguscols;</a>
-<a name="ln3190">      if (virt_line_offset &gt;= 0) {</a>
-<a name="ln3191">        draw_virt_text_item(buf, virt_line_offset, kv_A(virt_lines, virt_line_index).line,</a>
-<a name="ln3192">                            kHlModeReplace, wp-&gt;w_p_rl ? -1 : grid-&gt;cols, 0, wp-&gt;w_p_rl);</a>
-<a name="ln3193">      } else if (wlv.filler_todo &lt;= 0) {</a>
-<a name="ln3194">        draw_virt_text(wp, buf, win_col_offset, &amp;draw_col, wp-&gt;w_p_rl ? -1 : grid-&gt;cols, wlv.row);</a>
-<a name="ln3195">      }</a>
-<a name="ln3196"> </a>
-<a name="ln3197">      grid_put_linebuf(grid, wlv.row, 0, draw_col, grid-&gt;cols, wp-&gt;w_p_rl, wp, bg_attr, wrap);</a>
-<a name="ln3198">      if (wrap) {</a>
-<a name="ln3199">        ScreenGrid *current_grid = grid;</a>
-<a name="ln3200">        int current_row = wlv.row, dummy_col = 0;  // dummy_col unused</a>
-<a name="ln3201">        grid_adjust(&amp;current_grid, &amp;current_row, &amp;dummy_col);</a>
-<a name="ln3202"> </a>
-<a name="ln3203">        // Force a redraw of the first column of the next line.</a>
-<a name="ln3204">        current_grid-&gt;attrs[current_grid-&gt;line_offset[current_row + 1]] = -1;</a>
-<a name="ln3205">      }</a>
-<a name="ln3206"> </a>
-<a name="ln3207">      wlv.boguscols = 0;</a>
-<a name="ln3208">      wlv.vcol_off = 0;</a>
-<a name="ln3209">      wlv.row++;</a>
-<a name="ln3210"> </a>
-<a name="ln3211">      // When not wrapping and finished diff lines, or when displayed</a>
-<a name="ln3212">      // '$' and highlighting until last column, break here.</a>
-<a name="ln3213">      if ((!wp-&gt;w_p_wrap &amp;&amp; wlv.filler_todo &lt;= 0) || lcs_eol_one == -1) {</a>
-<a name="ln3214">        break;</a>
-<a name="ln3215">      }</a>
-<a name="ln3216"> </a>
-<a name="ln3217">      // When the window is too narrow draw all &quot;@&quot; lines.</a>
-<a name="ln3218">      if (wlv.draw_state != WL_LINE &amp;&amp; wlv.filler_todo &lt;= 0) {</a>
-<a name="ln3219">        win_draw_end(wp, '@', ' ', true, wlv.row, wp-&gt;w_grid.rows, HLF_AT);</a>
-<a name="ln3220">        set_empty_rows(wp, wlv.row);</a>
-<a name="ln3221">        wlv.row = endrow;</a>
-<a name="ln3222">      }</a>
-<a name="ln3223"> </a>
-<a name="ln3224">      // When line got too long for screen break here.</a>
-<a name="ln3225">      if (wlv.row == endrow) {</a>
-<a name="ln3226">        wlv.row++;</a>
-<a name="ln3227">        break;</a>
-<a name="ln3228">      }</a>
-<a name="ln3229"> </a>
-<a name="ln3230">      win_line_start(wp, &amp;wlv, true);</a>
-<a name="ln3231"> </a>
-<a name="ln3232">      lcs_prec_todo = wp-&gt;w_p_lcs_chars.prec;</a>
-<a name="ln3233">      if (wlv.filler_todo &lt;= 0) {</a>
-<a name="ln3234">        wlv.need_showbreak = true;</a>
-<a name="ln3235">      }</a>
-<a name="ln3236">      if (statuscol.draw) {</a>
-<a name="ln3237">        if (wlv.row == startrow + wlv.filler_lines) {</a>
-<a name="ln3238">          statuscol.textp = NULL;  // re-evaluate for first non-filler line</a>
-<a name="ln3239">        } else if (vim_strchr(p_cpo, CPO_NUMCOL) &amp;&amp; wlv.row &gt; startrow + wlv.filler_lines) {</a>
-<a name="ln3240">          statuscol.draw = false;  // don't draw status column if &quot;n&quot; is in 'cpo'</a>
-<a name="ln3241">        } else if (wlv.row == startrow + wlv.filler_lines + 1) {</a>
-<a name="ln3242">          statuscol.textp = NULL;  // re-evaluate for first wrapped line</a>
-<a name="ln3243">        } else {</a>
-<a name="ln3244">          // Draw the already built 'statuscolumn' on the next wrapped or filler line</a>
-<a name="ln3245">          statuscol.textp = statuscol.text;</a>
-<a name="ln3246">          statuscol.hlrecp = statuscol.hlrec;</a>
-<a name="ln3247">        }</a>
-<a name="ln3248">      }</a>
-<a name="ln3249">      wlv.filler_todo--;</a>
-<a name="ln3250">      virt_line_offset = -1;</a>
-<a name="ln3251">      // When the filler lines are actually below the last line of the</a>
-<a name="ln3252">      // file, don't draw the line itself, break here.</a>
-<a name="ln3253">      if (wlv.filler_todo == 0 &amp;&amp; (wp-&gt;w_botfill || end_fill)) {</a>
-<a name="ln3254">        break;</a>
-<a name="ln3255">      }</a>
-<a name="ln3256">    }</a>
-<a name="ln3257">  }     // for every character in the line</a>
-<a name="ln3258"> </a>
-<a name="ln3259">  clear_virttext(&amp;fold_vt);</a>
-<a name="ln3260">  kv_destroy(virt_lines);</a>
-<a name="ln3261">  xfree(wlv.p_extra_free);</a>
-<a name="ln3262">  xfree(wlv.saved_p_extra_free);</a>
-<a name="ln3263">  return wlv.row;</a>
-<a name="ln3264">}</a>
+<a name="ln3155">    // restore attributes after last 'listchars' or 'number' char</a>
+<a name="ln3156">    if (wlv.n_attr &gt; 0 &amp;&amp; wlv.draw_state == WL_LINE &amp;&amp; --wlv.n_attr == 0) {</a>
+<a name="ln3157">      wlv.char_attr = saved_attr2;</a>
+<a name="ln3158">    }</a>
+<a name="ln3159"> </a>
+<a name="ln3160">    if (has_decor &amp;&amp; wlv.filler_todo &lt;= 0</a>
+<a name="ln3161">        &amp;&amp; (wp-&gt;w_p_rl ? (wlv.col &lt; 0) : (wlv.col &gt;= grid-&gt;cols))) {</a>
+<a name="ln3162">      // At the end of screen line: might need to peek for decorations just after</a>
+<a name="ln3163">      // this position.</a>
+<a name="ln3164">      if (!has_fold &amp;&amp; wp-&gt;w_p_wrap &amp;&amp; wlv.n_extra == 0) {</a>
+<a name="ln3165">        decor_redraw_col(wp, (int)(ptr - line), -3, false, &amp;decor_state);</a>
+<a name="ln3166">        // Check position/hiding of virtual text again on next screen line.</a>
+<a name="ln3167">        decor_need_recheck = true;</a>
+<a name="ln3168">      } else if (has_fold || !wp-&gt;w_p_wrap) {</a>
+<a name="ln3169">        // Without wrapping, we might need to display right_align and win_col</a>
+<a name="ln3170">        // virt_text for the entire text line.</a>
+<a name="ln3171">        decor_redraw_col(wp, MAXCOL, -1, true, &amp;decor_state);</a>
+<a name="ln3172">      }</a>
+<a name="ln3173">    }</a>
+<a name="ln3174"> </a>
+<a name="ln3175">    // At end of screen line and there is more to come: Display the line</a>
+<a name="ln3176">    // so far.  If there is no more to display it is caught above.</a>
+<a name="ln3177">    if ((wp-&gt;w_p_rl ? (wlv.col &lt; 0) : (wlv.col &gt;= grid-&gt;cols))</a>
+<a name="ln3178">        &amp;&amp; (!has_fold || virt_line_offset &gt;= 0)</a>
+<a name="ln3179">        &amp;&amp; (wlv.draw_state != WL_LINE</a>
+<a name="ln3180">            || *ptr != NUL</a>
+<a name="ln3181">            || wlv.filler_todo &gt; 0</a>
+<a name="ln3182">            || (wp-&gt;w_p_list &amp;&amp; wp-&gt;w_p_lcs_chars.eol != NUL</a>
+<a name="ln3183">                &amp;&amp; wlv.p_extra != at_end_str)</a>
+<a name="ln3184">            || (wlv.n_extra != 0 &amp;&amp; (wlv.c_extra != NUL || *wlv.p_extra != NUL))</a>
+<a name="ln3185">            || has_more_inline_virt(&amp;wlv, v))) {</a>
+<a name="ln3186">      bool wrap = wp-&gt;w_p_wrap       // Wrapping enabled.</a>
+<a name="ln3187">                  &amp;&amp; wlv.filler_todo &lt;= 0          // Not drawing diff filler lines.</a>
+<a name="ln3188">                  &amp;&amp; lcs_eol_one != -1         // Haven't printed the lcs_eol character.</a>
+<a name="ln3189">                  &amp;&amp; wlv.row != endrow - 1     // Not the last line being displayed.</a>
+<a name="ln3190">                  &amp;&amp; (grid-&gt;cols == Columns  // Window spans the width of the screen,</a>
+<a name="ln3191">                      || ui_has(kUIMultigrid))  // or has dedicated grid.</a>
+<a name="ln3192">                  &amp;&amp; !wp-&gt;w_p_rl;              // Not right-to-left.</a>
+<a name="ln3193"> </a>
+<a name="ln3194">      int draw_col = wlv.col - wlv.boguscols;</a>
+<a name="ln3195">      if (virt_line_offset &gt;= 0) {</a>
+<a name="ln3196">        draw_virt_text_item(buf, virt_line_offset, kv_A(virt_lines, virt_line_index).line,</a>
+<a name="ln3197">                            kHlModeReplace, wp-&gt;w_p_rl ? -1 : grid-&gt;cols, 0, wp-&gt;w_p_rl);</a>
+<a name="ln3198">      } else if (wlv.filler_todo &lt;= 0) {</a>
+<a name="ln3199">        draw_virt_text(wp, buf, win_col_offset, &amp;draw_col, wp-&gt;w_p_rl ? -1 : grid-&gt;cols, wlv.row);</a>
+<a name="ln3200">      }</a>
+<a name="ln3201"> </a>
+<a name="ln3202">      grid_put_linebuf(grid, wlv.row, 0, draw_col, grid-&gt;cols, wp-&gt;w_p_rl, wp, bg_attr, wrap);</a>
+<a name="ln3203">      if (wrap) {</a>
+<a name="ln3204">        ScreenGrid *current_grid = grid;</a>
+<a name="ln3205">        int current_row = wlv.row, dummy_col = 0;  // dummy_col unused</a>
+<a name="ln3206">        grid_adjust(&amp;current_grid, &amp;current_row, &amp;dummy_col);</a>
+<a name="ln3207"> </a>
+<a name="ln3208">        // Force a redraw of the first column of the next line.</a>
+<a name="ln3209">        current_grid-&gt;attrs[current_grid-&gt;line_offset[current_row + 1]] = -1;</a>
+<a name="ln3210">      }</a>
+<a name="ln3211"> </a>
+<a name="ln3212">      wlv.boguscols = 0;</a>
+<a name="ln3213">      wlv.vcol_off = 0;</a>
+<a name="ln3214">      wlv.row++;</a>
+<a name="ln3215"> </a>
+<a name="ln3216">      // When not wrapping and finished diff lines, or when displayed</a>
+<a name="ln3217">      // '$' and highlighting until last column, break here.</a>
+<a name="ln3218">      if ((!wp-&gt;w_p_wrap &amp;&amp; wlv.filler_todo &lt;= 0) || lcs_eol_one == -1) {</a>
+<a name="ln3219">        break;</a>
+<a name="ln3220">      }</a>
+<a name="ln3221"> </a>
+<a name="ln3222">      // When the window is too narrow draw all &quot;@&quot; lines.</a>
+<a name="ln3223">      if (wlv.draw_state != WL_LINE &amp;&amp; wlv.filler_todo &lt;= 0) {</a>
+<a name="ln3224">        win_draw_end(wp, '@', ' ', true, wlv.row, wp-&gt;w_grid.rows, HLF_AT);</a>
+<a name="ln3225">        set_empty_rows(wp, wlv.row);</a>
+<a name="ln3226">        wlv.row = endrow;</a>
+<a name="ln3227">      }</a>
+<a name="ln3228"> </a>
+<a name="ln3229">      // When line got too long for screen break here.</a>
+<a name="ln3230">      if (wlv.row == endrow) {</a>
+<a name="ln3231">        wlv.row++;</a>
+<a name="ln3232">        break;</a>
+<a name="ln3233">      }</a>
+<a name="ln3234"> </a>
+<a name="ln3235">      win_line_start(wp, &amp;wlv, true);</a>
+<a name="ln3236"> </a>
+<a name="ln3237">      lcs_prec_todo = wp-&gt;w_p_lcs_chars.prec;</a>
+<a name="ln3238">      if (wlv.filler_todo &lt;= 0) {</a>
+<a name="ln3239">        wlv.need_showbreak = true;</a>
+<a name="ln3240">      }</a>
+<a name="ln3241">      if (statuscol.draw) {</a>
+<a name="ln3242">        if (wlv.row == startrow + wlv.filler_lines) {</a>
+<a name="ln3243">          statuscol.textp = NULL;  // re-evaluate for first non-filler line</a>
+<a name="ln3244">        } else if (vim_strchr(p_cpo, CPO_NUMCOL) &amp;&amp; wlv.row &gt; startrow + wlv.filler_lines) {</a>
+<a name="ln3245">          statuscol.draw = false;  // don't draw status column if &quot;n&quot; is in 'cpo'</a>
+<a name="ln3246">        } else if (wlv.row == startrow + wlv.filler_lines + 1) {</a>
+<a name="ln3247">          statuscol.textp = NULL;  // re-evaluate for first wrapped line</a>
+<a name="ln3248">        } else {</a>
+<a name="ln3249">          // Draw the already built 'statuscolumn' on the next wrapped or filler line</a>
+<a name="ln3250">          statuscol.textp = statuscol.text;</a>
+<a name="ln3251">          statuscol.hlrecp = statuscol.hlrec;</a>
+<a name="ln3252">        }</a>
+<a name="ln3253">      }</a>
+<a name="ln3254">      wlv.filler_todo--;</a>
+<a name="ln3255">      virt_line_offset = -1;</a>
+<a name="ln3256">      // When the filler lines are actually below the last line of the</a>
+<a name="ln3257">      // file, don't draw the line itself, break here.</a>
+<a name="ln3258">      if (wlv.filler_todo == 0 &amp;&amp; (wp-&gt;w_botfill || end_fill)) {</a>
+<a name="ln3259">        break;</a>
+<a name="ln3260">      }</a>
+<a name="ln3261">    }</a>
+<a name="ln3262">  }     // for every character in the line</a>
+<a name="ln3263"> </a>
+<a name="ln3264">  clear_virttext(&amp;fold_vt);</a>
+<a name="ln3265">  kv_destroy(virt_lines);</a>
+<a name="ln3266">  xfree(wlv.p_extra_free);</a>
+<a name="ln3267">  xfree(wlv.saved_p_extra_free);</a>
+<a name="ln3268">  return wlv.row;</a>
+<a name="ln3269">}</a>
 </code></pre>
 <div class="balloon" rel="1830"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v560/" target="_blank">V560</a> A part of conditional expression is always true: wlv.n_extra == 0.</p></div>
 <link rel="stylesheet" href="highlight.css">
