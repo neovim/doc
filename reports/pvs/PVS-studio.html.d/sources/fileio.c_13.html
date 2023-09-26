@@ -114,7 +114,7 @@
 <a name="ln105">  // For further ones overwrite the previous one, reset msg_scroll before</a>
 <a name="ln106">  // calling filemess().</a>
 <a name="ln107">  msg_scroll_save = msg_scroll;</a>
-<a name="ln108">  if (shortmess(SHM_OVERALL) &amp;&amp; !exiting &amp;&amp; p_verbose == 0) {</a>
+<a name="ln108">  if (shortmess(SHM_OVERALL) &amp;&amp; !msg_listdo_overwrite &amp;&amp; !exiting &amp;&amp; p_verbose == 0) {</a>
 <a name="ln109">    msg_scroll = false;</a>
 <a name="ln110">  }</a>
 <a name="ln111">  if (!msg_scroll) {    // wait a bit when overwriting an error msg</a>
@@ -325,7 +325,7 @@
 <a name="ln316">    }</a>
 <a name="ln317">  }</a>
 <a name="ln318"> </a>
-<a name="ln319">  if ((shortmess(SHM_OVER) || curbuf-&gt;b_help) &amp;&amp; p_verbose == 0) {</a>
+<a name="ln319">  if (((shortmess(SHM_OVER) &amp;&amp; !msg_listdo_overwrite) || curbuf-&gt;b_help) &amp;&amp; p_verbose == 0) {</a>
 <a name="ln320">    msg_scroll = false;         // overwrite previous file message</a>
 <a name="ln321">  } else {</a>
 <a name="ln322">    msg_scroll = true;          // don't overwrite previous file message</a>
@@ -468,7 +468,7 @@
 <a name="ln459">      }</a>
 <a name="ln460">      if (!silent) {</a>
 <a name="ln461">        if (dir_of_file_exists(fname)) {</a>
-<a name="ln462">          filemess(curbuf, sfname, new_file_message(), 0);</a>
+<a name="ln462">          filemess(curbuf, sfname, _(&quot;[New]&quot;), 0);</a>
 <a name="ln463">        } else {</a>
 <a name="ln464">          filemess(curbuf, sfname, _(&quot;[New DIRECTORY]&quot;), 0);</a>
 <a name="ln465">        }</a>
@@ -1727,7 +1727,7 @@
 <a name="ln1718">        c = true;</a>
 <a name="ln1719">      }</a>
 <a name="ln1720">      if (read_no_eol_lnum) {</a>
-<a name="ln1721">        msg_add_eol();</a>
+<a name="ln1721">        xstrlcat(IObuff, _(&quot;[noeol]&quot;), IOSIZE);</a>
 <a name="ln1722">        c = true;</a>
 <a name="ln1723">      }</a>
 <a name="ln1724">      if (ff_error == EOL_DOS) {</a>
@@ -2073,1806 +2073,1795 @@
 <a name="ln2064">  curbuf-&gt;b_marks_read = true;</a>
 <a name="ln2065">}</a>
 <a name="ln2066"> </a>
-<a name="ln2067">char *new_file_message(void)</a>
-<a name="ln2068">{</a>
-<a name="ln2069">  return shortmess(SHM_NEW) ? _(&quot;[New]&quot;) : _(&quot;[New File]&quot;);</a>
-<a name="ln2070">}</a>
-<a name="ln2071"> </a>
-<a name="ln2072">/// Set the name of the current buffer.  Use when the buffer doesn't have a</a>
-<a name="ln2073">/// name and a &quot;:r&quot; or &quot;:w&quot; command with a file name is used.</a>
-<a name="ln2074">int set_rw_fname(char *fname, char *sfname)</a>
-<a name="ln2075">{</a>
-<a name="ln2076">  buf_T *buf = curbuf;</a>
-<a name="ln2077"> </a>
-<a name="ln2078">  // It's like the unnamed buffer is deleted....</a>
-<a name="ln2079">  if (curbuf-&gt;b_p_bl) {</a>
-<a name="ln2080">    apply_autocmds(EVENT_BUFDELETE, NULL, NULL, false, curbuf);</a>
-<a name="ln2081">  }</a>
-<a name="ln2082">  apply_autocmds(EVENT_BUFWIPEOUT, NULL, NULL, false, curbuf);</a>
-<a name="ln2083">  if (aborting()) {         // autocmds may abort script processing</a>
+<a name="ln2067">/// Set the name of the current buffer.  Use when the buffer doesn't have a</a>
+<a name="ln2068">/// name and a &quot;:r&quot; or &quot;:w&quot; command with a file name is used.</a>
+<a name="ln2069">int set_rw_fname(char *fname, char *sfname)</a>
+<a name="ln2070">{</a>
+<a name="ln2071">  buf_T *buf = curbuf;</a>
+<a name="ln2072"> </a>
+<a name="ln2073">  // It's like the unnamed buffer is deleted....</a>
+<a name="ln2074">  if (curbuf-&gt;b_p_bl) {</a>
+<a name="ln2075">    apply_autocmds(EVENT_BUFDELETE, NULL, NULL, false, curbuf);</a>
+<a name="ln2076">  }</a>
+<a name="ln2077">  apply_autocmds(EVENT_BUFWIPEOUT, NULL, NULL, false, curbuf);</a>
+<a name="ln2078">  if (aborting()) {         // autocmds may abort script processing</a>
+<a name="ln2079">    return FAIL;</a>
+<a name="ln2080">  }</a>
+<a name="ln2081">  if (curbuf != buf) {</a>
+<a name="ln2082">    // We are in another buffer now, don't do the renaming.</a>
+<a name="ln2083">    emsg(_(e_auchangedbuf));</a>
 <a name="ln2084">    return FAIL;</a>
 <a name="ln2085">  }</a>
-<a name="ln2086">  if (curbuf != buf) {</a>
-<a name="ln2087">    // We are in another buffer now, don't do the renaming.</a>
-<a name="ln2088">    emsg(_(e_auchangedbuf));</a>
-<a name="ln2089">    return FAIL;</a>
-<a name="ln2090">  }</a>
-<a name="ln2091"> </a>
-<a name="ln2092">  if (setfname(curbuf, fname, sfname, false) == OK) {</a>
-<a name="ln2093">    curbuf-&gt;b_flags |= BF_NOTEDITED;</a>
-<a name="ln2094">  }</a>
-<a name="ln2095"> </a>
-<a name="ln2096">  // ....and a new named one is created</a>
-<a name="ln2097">  apply_autocmds(EVENT_BUFNEW, NULL, NULL, false, curbuf);</a>
-<a name="ln2098">  if (curbuf-&gt;b_p_bl) {</a>
-<a name="ln2099">    apply_autocmds(EVENT_BUFADD, NULL, NULL, false, curbuf);</a>
-<a name="ln2100">  }</a>
-<a name="ln2101">  if (aborting()) {         // autocmds may abort script processing</a>
-<a name="ln2102">    return FAIL;</a>
-<a name="ln2103">  }</a>
-<a name="ln2104"> </a>
-<a name="ln2105">  // Do filetype detection now if 'filetype' is empty.</a>
-<a name="ln2106">  if (*curbuf-&gt;b_p_ft == NUL) {</a>
-<a name="ln2107">    if (augroup_exists(&quot;filetypedetect&quot;)) {</a>
-<a name="ln2108">      (void)do_doautocmd(&quot;filetypedetect BufRead&quot;, false, NULL);</a>
-<a name="ln2109">    }</a>
-<a name="ln2110">    do_modelines(0);</a>
-<a name="ln2111">  }</a>
-<a name="ln2112"> </a>
-<a name="ln2113">  return OK;</a>
-<a name="ln2114">}</a>
-<a name="ln2115"> </a>
-<a name="ln2116">/// Put file name into the specified buffer with quotes</a>
-<a name="ln2117">///</a>
-<a name="ln2118">/// Replaces home directory at the start with `~`.</a>
-<a name="ln2119">///</a>
-<a name="ln2120">/// @param[out]  ret_buf  Buffer to save results to.</a>
-<a name="ln2121">/// @param[in]  buf_len  ret_buf length.</a>
-<a name="ln2122">/// @param[in]  buf  buf_T file name is coming from.</a>
-<a name="ln2123">/// @param[in]  fname  File name to write.</a>
-<a name="ln2124">void add_quoted_fname(char *const ret_buf, const size_t buf_len, const buf_T *const buf,</a>
-<a name="ln2125">                      const char *fname)</a>
-<a name="ln2126">  FUNC_ATTR_NONNULL_ARG(1)</a>
-<a name="ln2127">{</a>
-<a name="ln2128">  if (fname == NULL) {</a>
-<a name="ln2129">    fname = &quot;-stdin-&quot;;</a>
-<a name="ln2130">  }</a>
-<a name="ln2131">  ret_buf[0] = '&quot;';</a>
-<a name="ln2132">  home_replace(buf, fname, ret_buf + 1, buf_len - 4, true);</a>
-<a name="ln2133">  xstrlcat(ret_buf, &quot;\&quot; &quot;, buf_len);</a>
-<a name="ln2134">}</a>
-<a name="ln2135"> </a>
-<a name="ln2136">/// Append message for text mode to IObuff.</a>
-<a name="ln2137">///</a>
-<a name="ln2138">/// @param eol_type line ending type</a>
-<a name="ln2139">///</a>
-<a name="ln2140">/// @return true if something was appended.</a>
-<a name="ln2141">bool msg_add_fileformat(int eol_type)</a>
-<a name="ln2142">{</a>
-<a name="ln2143">#ifndef USE_CRNL</a>
-<a name="ln2144">  if (eol_type == EOL_DOS) {</a>
-<a name="ln2145">    xstrlcat(IObuff, shortmess(SHM_TEXT) ? _(&quot;[dos]&quot;) : _(&quot;[dos format]&quot;), IOSIZE);</a>
+<a name="ln2086"> </a>
+<a name="ln2087">  if (setfname(curbuf, fname, sfname, false) == OK) {</a>
+<a name="ln2088">    curbuf-&gt;b_flags |= BF_NOTEDITED;</a>
+<a name="ln2089">  }</a>
+<a name="ln2090"> </a>
+<a name="ln2091">  // ....and a new named one is created</a>
+<a name="ln2092">  apply_autocmds(EVENT_BUFNEW, NULL, NULL, false, curbuf);</a>
+<a name="ln2093">  if (curbuf-&gt;b_p_bl) {</a>
+<a name="ln2094">    apply_autocmds(EVENT_BUFADD, NULL, NULL, false, curbuf);</a>
+<a name="ln2095">  }</a>
+<a name="ln2096">  if (aborting()) {         // autocmds may abort script processing</a>
+<a name="ln2097">    return FAIL;</a>
+<a name="ln2098">  }</a>
+<a name="ln2099"> </a>
+<a name="ln2100">  // Do filetype detection now if 'filetype' is empty.</a>
+<a name="ln2101">  if (*curbuf-&gt;b_p_ft == NUL) {</a>
+<a name="ln2102">    if (augroup_exists(&quot;filetypedetect&quot;)) {</a>
+<a name="ln2103">      (void)do_doautocmd(&quot;filetypedetect BufRead&quot;, false, NULL);</a>
+<a name="ln2104">    }</a>
+<a name="ln2105">    do_modelines(0);</a>
+<a name="ln2106">  }</a>
+<a name="ln2107"> </a>
+<a name="ln2108">  return OK;</a>
+<a name="ln2109">}</a>
+<a name="ln2110"> </a>
+<a name="ln2111">/// Put file name into the specified buffer with quotes</a>
+<a name="ln2112">///</a>
+<a name="ln2113">/// Replaces home directory at the start with `~`.</a>
+<a name="ln2114">///</a>
+<a name="ln2115">/// @param[out]  ret_buf  Buffer to save results to.</a>
+<a name="ln2116">/// @param[in]  buf_len  ret_buf length.</a>
+<a name="ln2117">/// @param[in]  buf  buf_T file name is coming from.</a>
+<a name="ln2118">/// @param[in]  fname  File name to write.</a>
+<a name="ln2119">void add_quoted_fname(char *const ret_buf, const size_t buf_len, const buf_T *const buf,</a>
+<a name="ln2120">                      const char *fname)</a>
+<a name="ln2121">  FUNC_ATTR_NONNULL_ARG(1)</a>
+<a name="ln2122">{</a>
+<a name="ln2123">  if (fname == NULL) {</a>
+<a name="ln2124">    fname = &quot;-stdin-&quot;;</a>
+<a name="ln2125">  }</a>
+<a name="ln2126">  ret_buf[0] = '&quot;';</a>
+<a name="ln2127">  home_replace(buf, fname, ret_buf + 1, buf_len - 4, true);</a>
+<a name="ln2128">  xstrlcat(ret_buf, &quot;\&quot; &quot;, buf_len);</a>
+<a name="ln2129">}</a>
+<a name="ln2130"> </a>
+<a name="ln2131">/// Append message for text mode to IObuff.</a>
+<a name="ln2132">///</a>
+<a name="ln2133">/// @param eol_type line ending type</a>
+<a name="ln2134">///</a>
+<a name="ln2135">/// @return true if something was appended.</a>
+<a name="ln2136">bool msg_add_fileformat(int eol_type)</a>
+<a name="ln2137">{</a>
+<a name="ln2138">#ifndef USE_CRNL</a>
+<a name="ln2139">  if (eol_type == EOL_DOS) {</a>
+<a name="ln2140">    xstrlcat(IObuff, _(&quot;[dos]&quot;), IOSIZE);</a>
+<a name="ln2141">    return true;</a>
+<a name="ln2142">  }</a>
+<a name="ln2143">#endif</a>
+<a name="ln2144">  if (eol_type == EOL_MAC) {</a>
+<a name="ln2145">    xstrlcat(IObuff, _(&quot;[mac]&quot;), IOSIZE);</a>
 <a name="ln2146">    return true;</a>
 <a name="ln2147">  }</a>
-<a name="ln2148">#endif</a>
-<a name="ln2149">  if (eol_type == EOL_MAC) {</a>
-<a name="ln2150">    xstrlcat(IObuff, shortmess(SHM_TEXT) ? _(&quot;[mac]&quot;) : _(&quot;[mac format]&quot;), IOSIZE);</a>
+<a name="ln2148">#ifdef USE_CRNL</a>
+<a name="ln2149">  if (eol_type == EOL_UNIX) {</a>
+<a name="ln2150">    xstrlcat(IObuff, _(&quot;[unix]&quot;), IOSIZE);</a>
 <a name="ln2151">    return true;</a>
 <a name="ln2152">  }</a>
-<a name="ln2153">#ifdef USE_CRNL</a>
-<a name="ln2154">  if (eol_type == EOL_UNIX) {</a>
-<a name="ln2155">    xstrlcat(IObuff, shortmess(SHM_TEXT) ? _(&quot;[unix]&quot;) : _(&quot;[unix format]&quot;), IOSIZE);</a>
-<a name="ln2156">    return true;</a>
-<a name="ln2157">  }</a>
-<a name="ln2158">#endif</a>
-<a name="ln2159">  return false;</a>
-<a name="ln2160">}</a>
+<a name="ln2153">#endif</a>
+<a name="ln2154">  return false;</a>
+<a name="ln2155">}</a>
+<a name="ln2156"> </a>
+<a name="ln2157">/// Append line and character count to IObuff.</a>
+<a name="ln2158">void msg_add_lines(int insert_space, long lnum, off_T nchars)</a>
+<a name="ln2159">{</a>
+<a name="ln2160">  char *p = IObuff + strlen(IObuff);</a>
 <a name="ln2161"> </a>
-<a name="ln2162">/// Append line and character count to IObuff.</a>
-<a name="ln2163">void msg_add_lines(int insert_space, long lnum, off_T nchars)</a>
-<a name="ln2164">{</a>
-<a name="ln2165">  char *p = IObuff + strlen(IObuff);</a>
-<a name="ln2166"> </a>
-<a name="ln2167">  if (insert_space) {</a>
-<a name="ln2168">    *p++ = ' ';</a>
-<a name="ln2169">  }</a>
-<a name="ln2170">  if (shortmess(SHM_LINES)) {</a>
-<a name="ln2171">    vim_snprintf(p, (size_t)(IOSIZE - (p - IObuff)), &quot;%&quot; PRId64 &quot;L, %&quot; PRId64 &quot;B&quot;,</a>
-<a name="ln2172">                 (int64_t)lnum, (int64_t)nchars);</a>
-<a name="ln2173">  } else {</a>
-<a name="ln2174">    vim_snprintf(p, (size_t)(IOSIZE - (p - IObuff)),</a>
-<a name="ln2175">                 NGETTEXT(&quot;%&quot; PRId64 &quot; line, &quot;, &quot;%&quot; PRId64 &quot; lines, &quot;, lnum),</a>
-<a name="ln2176">                 (int64_t)lnum);</a>
-<a name="ln2177">    p += strlen(p);</a>
-<a name="ln2178">    vim_snprintf(p, (size_t)(IOSIZE - (p - IObuff)),</a>
-<a name="ln2179">                 NGETTEXT(&quot;%&quot; PRId64 &quot; byte&quot;, &quot;%&quot; PRId64 &quot; bytes&quot;, nchars),</a>
-<a name="ln2180">                 (int64_t)nchars);</a>
-<a name="ln2181">  }</a>
-<a name="ln2182">}</a>
-<a name="ln2183"> </a>
-<a name="ln2184">/// Append message for missing line separator to IObuff.</a>
-<a name="ln2185">void msg_add_eol(void)</a>
-<a name="ln2186">{</a>
-<a name="ln2187">  xstrlcat(IObuff, shortmess(SHM_LAST) ? _(&quot;[noeol]&quot;) : _(&quot;[Incomplete last line]&quot;), IOSIZE);</a>
-<a name="ln2188">}</a>
-<a name="ln2189"> </a>
-<a name="ln2190">bool time_differs(const FileInfo *file_info, long mtime, long mtime_ns) FUNC_ATTR_CONST</a>
-<a name="ln2191">{</a>
-<a name="ln2192">#if defined(__linux__) || defined(MSWIN)</a>
-<a name="ln2193">  return file_info-&gt;stat.st_mtim.tv_nsec != mtime_ns</a>
-<a name="ln2194">         // On a FAT filesystem, esp. under Linux, there are only 5 bits to store</a>
-<a name="ln2195">         // the seconds.  Since the roundoff is done when flushing the inode, the</a>
-<a name="ln2196">         // time may change unexpectedly by one second!!!</a>
-<a name="ln2197">         || file_info-&gt;stat.st_mtim.tv_sec - mtime &gt; 1</a>
-<a name="ln2198">         || mtime - file_info-&gt;stat.st_mtim.tv_sec &gt; 1;</a>
-<a name="ln2199">#else</a>
-<a name="ln2200">  return file_info-&gt;stat.st_mtim.tv_nsec != mtime_ns</a>
-<a name="ln2201">         || file_info-&gt;stat.st_mtim.tv_sec != mtime;</a>
-<a name="ln2202">#endif</a>
-<a name="ln2203">}</a>
-<a name="ln2204"> </a>
-<a name="ln2205">/// Return true if file encoding &quot;fenc&quot; requires conversion from or to</a>
-<a name="ln2206">/// 'encoding'.</a>
-<a name="ln2207">///</a>
-<a name="ln2208">/// @param fenc file encoding to check</a>
-<a name="ln2209">///</a>
-<a name="ln2210">/// @return true if conversion is required</a>
-<a name="ln2211">bool need_conversion(const char *fenc)</a>
-<a name="ln2212">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
-<a name="ln2213">{</a>
-<a name="ln2214">  int same_encoding;</a>
-<a name="ln2215">  int fenc_flags;</a>
-<a name="ln2216"> </a>
-<a name="ln2217">  if (*fenc == NUL || strcmp(p_enc, fenc) == 0) {</a>
-<a name="ln2218">    same_encoding = true;</a>
-<a name="ln2219">    fenc_flags = 0;</a>
-<a name="ln2220">  } else {</a>
-<a name="ln2221">    // Ignore difference between &quot;ansi&quot; and &quot;latin1&quot;, &quot;ucs-4&quot; and</a>
-<a name="ln2222">    // &quot;ucs-4be&quot;, etc.</a>
-<a name="ln2223">    int enc_flags = get_fio_flags(p_enc);</a>
-<a name="ln2224">    fenc_flags = get_fio_flags(fenc);</a>
-<a name="ln2225">    same_encoding = (enc_flags != 0 &amp;&amp; fenc_flags == enc_flags);</a>
-<a name="ln2226">  }</a>
-<a name="ln2227">  if (same_encoding) {</a>
-<a name="ln2228">    // Specified file encoding matches UTF-8.</a>
-<a name="ln2229">    return false;</a>
-<a name="ln2230">  }</a>
-<a name="ln2231"> </a>
-<a name="ln2232">  // Encodings differ.  However, conversion is not needed when 'enc' is any</a>
-<a name="ln2233">  // Unicode encoding and the file is UTF-8.</a>
-<a name="ln2234">  return !(fenc_flags == FIO_UTF8);</a>
-<a name="ln2235">}</a>
-<a name="ln2236"> </a>
-<a name="ln2237">/// Return the FIO_ flags needed for the internal conversion if 'name' was</a>
-<a name="ln2238">/// unicode or latin1, otherwise 0. If &quot;name&quot; is an empty string,</a>
-<a name="ln2239">/// use 'encoding'.</a>
-<a name="ln2240">///</a>
-<a name="ln2241">/// @param name string to check for encoding</a>
-<a name="ln2242">int get_fio_flags(const char *name)</a>
-<a name="ln2243">{</a>
-<a name="ln2244">  if (*name == NUL) {</a>
-<a name="ln2245">    name = p_enc;</a>
-<a name="ln2246">  }</a>
-<a name="ln2247">  int prop = enc_canon_props(name);</a>
-<a name="ln2248">  if (prop &amp; ENC_UNICODE) {</a>
-<a name="ln2249">    if (prop &amp; ENC_2BYTE) {</a>
-<a name="ln2250">      if (prop &amp; ENC_ENDIAN_L) {</a>
-<a name="ln2251">        return FIO_UCS2 | FIO_ENDIAN_L;</a>
-<a name="ln2252">      }</a>
-<a name="ln2253">      return FIO_UCS2;</a>
-<a name="ln2254">    }</a>
-<a name="ln2255">    if (prop &amp; ENC_4BYTE) {</a>
-<a name="ln2256">      if (prop &amp; ENC_ENDIAN_L) {</a>
-<a name="ln2257">        return FIO_UCS4 | FIO_ENDIAN_L;</a>
-<a name="ln2258">      }</a>
-<a name="ln2259">      return FIO_UCS4;</a>
-<a name="ln2260">    }</a>
-<a name="ln2261">    if (prop &amp; ENC_2WORD) {</a>
-<a name="ln2262">      if (prop &amp; ENC_ENDIAN_L) {</a>
-<a name="ln2263">        return FIO_UTF16 | FIO_ENDIAN_L;</a>
-<a name="ln2264">      }</a>
-<a name="ln2265">      return FIO_UTF16;</a>
-<a name="ln2266">    }</a>
-<a name="ln2267">    return FIO_UTF8;</a>
-<a name="ln2268">  }</a>
-<a name="ln2269">  if (prop &amp; ENC_LATIN1) {</a>
-<a name="ln2270">    return FIO_LATIN1;</a>
-<a name="ln2271">  }</a>
-<a name="ln2272">  // must be ENC_DBCS, requires iconv()</a>
-<a name="ln2273">  return 0;</a>
-<a name="ln2274">}</a>
+<a name="ln2162">  if (insert_space) {</a>
+<a name="ln2163">    *p++ = ' ';</a>
+<a name="ln2164">  }</a>
+<a name="ln2165">  if (shortmess(SHM_LINES)) {</a>
+<a name="ln2166">    vim_snprintf(p, (size_t)(IOSIZE - (p - IObuff)), &quot;%&quot; PRId64 &quot;L, %&quot; PRId64 &quot;B&quot;,</a>
+<a name="ln2167">                 (int64_t)lnum, (int64_t)nchars);</a>
+<a name="ln2168">  } else {</a>
+<a name="ln2169">    vim_snprintf(p, (size_t)(IOSIZE - (p - IObuff)),</a>
+<a name="ln2170">                 NGETTEXT(&quot;%&quot; PRId64 &quot; line, &quot;, &quot;%&quot; PRId64 &quot; lines, &quot;, lnum),</a>
+<a name="ln2171">                 (int64_t)lnum);</a>
+<a name="ln2172">    p += strlen(p);</a>
+<a name="ln2173">    vim_snprintf(p, (size_t)(IOSIZE - (p - IObuff)),</a>
+<a name="ln2174">                 NGETTEXT(&quot;%&quot; PRId64 &quot; byte&quot;, &quot;%&quot; PRId64 &quot; bytes&quot;, nchars),</a>
+<a name="ln2175">                 (int64_t)nchars);</a>
+<a name="ln2176">  }</a>
+<a name="ln2177">}</a>
+<a name="ln2178"> </a>
+<a name="ln2179">bool time_differs(const FileInfo *file_info, long mtime, long mtime_ns) FUNC_ATTR_CONST</a>
+<a name="ln2180">{</a>
+<a name="ln2181">#if defined(__linux__) || defined(MSWIN)</a>
+<a name="ln2182">  return file_info-&gt;stat.st_mtim.tv_nsec != mtime_ns</a>
+<a name="ln2183">         // On a FAT filesystem, esp. under Linux, there are only 5 bits to store</a>
+<a name="ln2184">         // the seconds.  Since the roundoff is done when flushing the inode, the</a>
+<a name="ln2185">         // time may change unexpectedly by one second!!!</a>
+<a name="ln2186">         || file_info-&gt;stat.st_mtim.tv_sec - mtime &gt; 1</a>
+<a name="ln2187">         || mtime - file_info-&gt;stat.st_mtim.tv_sec &gt; 1;</a>
+<a name="ln2188">#else</a>
+<a name="ln2189">  return file_info-&gt;stat.st_mtim.tv_nsec != mtime_ns</a>
+<a name="ln2190">         || file_info-&gt;stat.st_mtim.tv_sec != mtime;</a>
+<a name="ln2191">#endif</a>
+<a name="ln2192">}</a>
+<a name="ln2193"> </a>
+<a name="ln2194">/// Return true if file encoding &quot;fenc&quot; requires conversion from or to</a>
+<a name="ln2195">/// 'encoding'.</a>
+<a name="ln2196">///</a>
+<a name="ln2197">/// @param fenc file encoding to check</a>
+<a name="ln2198">///</a>
+<a name="ln2199">/// @return true if conversion is required</a>
+<a name="ln2200">bool need_conversion(const char *fenc)</a>
+<a name="ln2201">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln2202">{</a>
+<a name="ln2203">  int same_encoding;</a>
+<a name="ln2204">  int fenc_flags;</a>
+<a name="ln2205"> </a>
+<a name="ln2206">  if (*fenc == NUL || strcmp(p_enc, fenc) == 0) {</a>
+<a name="ln2207">    same_encoding = true;</a>
+<a name="ln2208">    fenc_flags = 0;</a>
+<a name="ln2209">  } else {</a>
+<a name="ln2210">    // Ignore difference between &quot;ansi&quot; and &quot;latin1&quot;, &quot;ucs-4&quot; and</a>
+<a name="ln2211">    // &quot;ucs-4be&quot;, etc.</a>
+<a name="ln2212">    int enc_flags = get_fio_flags(p_enc);</a>
+<a name="ln2213">    fenc_flags = get_fio_flags(fenc);</a>
+<a name="ln2214">    same_encoding = (enc_flags != 0 &amp;&amp; fenc_flags == enc_flags);</a>
+<a name="ln2215">  }</a>
+<a name="ln2216">  if (same_encoding) {</a>
+<a name="ln2217">    // Specified file encoding matches UTF-8.</a>
+<a name="ln2218">    return false;</a>
+<a name="ln2219">  }</a>
+<a name="ln2220"> </a>
+<a name="ln2221">  // Encodings differ.  However, conversion is not needed when 'enc' is any</a>
+<a name="ln2222">  // Unicode encoding and the file is UTF-8.</a>
+<a name="ln2223">  return !(fenc_flags == FIO_UTF8);</a>
+<a name="ln2224">}</a>
+<a name="ln2225"> </a>
+<a name="ln2226">/// Return the FIO_ flags needed for the internal conversion if 'name' was</a>
+<a name="ln2227">/// unicode or latin1, otherwise 0. If &quot;name&quot; is an empty string,</a>
+<a name="ln2228">/// use 'encoding'.</a>
+<a name="ln2229">///</a>
+<a name="ln2230">/// @param name string to check for encoding</a>
+<a name="ln2231">int get_fio_flags(const char *name)</a>
+<a name="ln2232">{</a>
+<a name="ln2233">  if (*name == NUL) {</a>
+<a name="ln2234">    name = p_enc;</a>
+<a name="ln2235">  }</a>
+<a name="ln2236">  int prop = enc_canon_props(name);</a>
+<a name="ln2237">  if (prop &amp; ENC_UNICODE) {</a>
+<a name="ln2238">    if (prop &amp; ENC_2BYTE) {</a>
+<a name="ln2239">      if (prop &amp; ENC_ENDIAN_L) {</a>
+<a name="ln2240">        return FIO_UCS2 | FIO_ENDIAN_L;</a>
+<a name="ln2241">      }</a>
+<a name="ln2242">      return FIO_UCS2;</a>
+<a name="ln2243">    }</a>
+<a name="ln2244">    if (prop &amp; ENC_4BYTE) {</a>
+<a name="ln2245">      if (prop &amp; ENC_ENDIAN_L) {</a>
+<a name="ln2246">        return FIO_UCS4 | FIO_ENDIAN_L;</a>
+<a name="ln2247">      }</a>
+<a name="ln2248">      return FIO_UCS4;</a>
+<a name="ln2249">    }</a>
+<a name="ln2250">    if (prop &amp; ENC_2WORD) {</a>
+<a name="ln2251">      if (prop &amp; ENC_ENDIAN_L) {</a>
+<a name="ln2252">        return FIO_UTF16 | FIO_ENDIAN_L;</a>
+<a name="ln2253">      }</a>
+<a name="ln2254">      return FIO_UTF16;</a>
+<a name="ln2255">    }</a>
+<a name="ln2256">    return FIO_UTF8;</a>
+<a name="ln2257">  }</a>
+<a name="ln2258">  if (prop &amp; ENC_LATIN1) {</a>
+<a name="ln2259">    return FIO_LATIN1;</a>
+<a name="ln2260">  }</a>
+<a name="ln2261">  // must be ENC_DBCS, requires iconv()</a>
+<a name="ln2262">  return 0;</a>
+<a name="ln2263">}</a>
+<a name="ln2264"> </a>
+<a name="ln2265">/// Check for a Unicode BOM (Byte Order Mark) at the start of p[size].</a>
+<a name="ln2266">/// &quot;size&quot; must be at least 2.</a>
+<a name="ln2267">///</a>
+<a name="ln2268">/// @return  the name of the encoding and set &quot;*lenp&quot; to the length or,</a>
+<a name="ln2269">///          NULL when no BOM found.</a>
+<a name="ln2270">static char *check_for_bom(const char *p_in, int size, int *lenp, int flags)</a>
+<a name="ln2271">{</a>
+<a name="ln2272">  const uint8_t *p = (const uint8_t *)p_in;</a>
+<a name="ln2273">  char *name = NULL;</a>
+<a name="ln2274">  int len = 2;</a>
 <a name="ln2275"> </a>
-<a name="ln2276">/// Check for a Unicode BOM (Byte Order Mark) at the start of p[size].</a>
-<a name="ln2277">/// &quot;size&quot; must be at least 2.</a>
-<a name="ln2278">///</a>
-<a name="ln2279">/// @return  the name of the encoding and set &quot;*lenp&quot; to the length or,</a>
-<a name="ln2280">///          NULL when no BOM found.</a>
-<a name="ln2281">static char *check_for_bom(const char *p_in, int size, int *lenp, int flags)</a>
-<a name="ln2282">{</a>
-<a name="ln2283">  const uint8_t *p = (const uint8_t *)p_in;</a>
-<a name="ln2284">  char *name = NULL;</a>
-<a name="ln2285">  int len = 2;</a>
-<a name="ln2286"> </a>
-<a name="ln2287">  if (p[0] == 0xef &amp;&amp; p[1] == 0xbb &amp;&amp; size &gt;= 3 &amp;&amp; p[2] == 0xbf</a>
-<a name="ln2288">      &amp;&amp; (flags == FIO_ALL || flags == FIO_UTF8 || flags == 0)) {</a>
-<a name="ln2289">    name = &quot;utf-8&quot;;             // EF BB BF</a>
-<a name="ln2290">    len = 3;</a>
-<a name="ln2291">  } else if (p[0] == 0xff &amp;&amp; p[1] == 0xfe) {</a>
-<a name="ln2292">    if (size &gt;= 4 &amp;&amp; p[2] == 0 &amp;&amp; p[3] == 0</a>
-<a name="ln2293">        &amp;&amp; (flags == FIO_ALL || flags == (FIO_UCS4 | FIO_ENDIAN_L))) {</a>
-<a name="ln2294">      name = &quot;ucs-4le&quot;;         // FF FE 00 00</a>
-<a name="ln2295">      len = 4;</a>
-<a name="ln2296">    } else if (flags == (FIO_UCS2 | FIO_ENDIAN_L)) {</a>
-<a name="ln2297">      name = &quot;ucs-2le&quot;;         // FF FE</a>
-<a name="ln2298">    } else if (flags == FIO_ALL</a>
-<a name="ln2299">               || flags == (FIO_UTF16 | FIO_ENDIAN_L)) {</a>
-<a name="ln2300">      // utf-16le is preferred, it also works for ucs-2le text</a>
-<a name="ln2301">      name = &quot;utf-16le&quot;;        // FF FE</a>
-<a name="ln2302">    }</a>
-<a name="ln2303">  } else if (p[0] == 0xfe &amp;&amp; p[1] == 0xff</a>
-<a name="ln2304">             &amp;&amp; (flags == FIO_ALL || flags == FIO_UCS2 || flags ==</a>
-<a name="ln2305">                 FIO_UTF16)) {</a>
-<a name="ln2306">    // Default to utf-16, it works also for ucs-2 text.</a>
-<a name="ln2307">    if (flags == FIO_UCS2) {</a>
-<a name="ln2308">      name = &quot;ucs-2&quot;;           // FE FF</a>
-<a name="ln2309">    } else {</a>
-<a name="ln2310">      name = &quot;utf-16&quot;;          // FE FF</a>
-<a name="ln2311">    }</a>
-<a name="ln2312">  } else if (size &gt;= 4 &amp;&amp; p[0] == 0 &amp;&amp; p[1] == 0 &amp;&amp; p[2] == 0xfe</a>
-<a name="ln2313">             &amp;&amp; p[3] == 0xff &amp;&amp; (flags == FIO_ALL || flags == FIO_UCS4)) {</a>
-<a name="ln2314">    name = &quot;ucs-4&quot;;             // 00 00 FE FF</a>
-<a name="ln2315">    len = 4;</a>
-<a name="ln2316">  }</a>
-<a name="ln2317"> </a>
-<a name="ln2318">  *lenp = len;</a>
-<a name="ln2319">  return name;</a>
-<a name="ln2320">}</a>
-<a name="ln2321"> </a>
-<a name="ln2322">/// Shorten filename of a buffer.</a>
-<a name="ln2323">///</a>
-<a name="ln2324">/// @param force  when true: Use full path from now on for files currently being</a>
-<a name="ln2325">///               edited, both for file name and swap file name.  Try to shorten the file</a>
-<a name="ln2326">///               names a bit, if safe to do so.</a>
-<a name="ln2327">///               when false: Only try to shorten absolute file names.</a>
-<a name="ln2328">///</a>
-<a name="ln2329">/// For buffers that have buftype &quot;nofile&quot; or &quot;scratch&quot;: never change the file</a>
-<a name="ln2330">/// name.</a>
-<a name="ln2331">void shorten_buf_fname(buf_T *buf, char *dirname, int force)</a>
-<a name="ln2332">{</a>
-<a name="ln2333">  if (buf-&gt;b_fname != NULL</a>
-<a name="ln2334">      &amp;&amp; !bt_nofilename(buf)</a>
-<a name="ln2335">      &amp;&amp; !path_with_url(buf-&gt;b_fname)</a>
-<a name="ln2336">      &amp;&amp; (force</a>
-<a name="ln2337">          || buf-&gt;b_sfname == NULL</a>
-<a name="ln2338">          || path_is_absolute(buf-&gt;b_sfname))) {</a>
-<a name="ln2339">    if (buf-&gt;b_sfname != buf-&gt;b_ffname) {</a>
-<a name="ln2340">      XFREE_CLEAR(buf-&gt;b_sfname);</a>
-<a name="ln2341">    }</a>
-<a name="ln2342">    char *p = path_shorten_fname(buf-&gt;b_ffname, dirname);</a>
-<a name="ln2343">    if (p != NULL) {</a>
-<a name="ln2344">      buf-&gt;b_sfname = xstrdup(p);</a>
-<a name="ln2345">      buf-&gt;b_fname = buf-&gt;b_sfname;</a>
-<a name="ln2346">    }</a>
-<a name="ln2347">    if (p == NULL) {</a>
-<a name="ln2348">      buf-&gt;b_fname = buf-&gt;b_ffname;</a>
-<a name="ln2349">    }</a>
-<a name="ln2350">  }</a>
-<a name="ln2351">}</a>
-<a name="ln2352"> </a>
-<a name="ln2353">/// Shorten filenames for all buffers.</a>
-<a name="ln2354">void shorten_fnames(int force)</a>
-<a name="ln2355">{</a>
-<a name="ln2356">  char dirname[MAXPATHL];</a>
-<a name="ln2357"> </a>
-<a name="ln2358">  os_dirname(dirname, MAXPATHL);</a>
-<a name="ln2359">  FOR_ALL_BUFFERS(buf) {</a>
-<a name="ln2360">    shorten_buf_fname(buf, dirname, force);</a>
-<a name="ln2361"> </a>
-<a name="ln2362">    // Always make the swap file name a full path, a &quot;nofile&quot; buffer may</a>
-<a name="ln2363">    // also have a swap file.</a>
-<a name="ln2364">    mf_fullname(buf-&gt;b_ml.ml_mfp);</a>
-<a name="ln2365">  }</a>
-<a name="ln2366">  status_redraw_all();</a>
-<a name="ln2367">  redraw_tabline = true;</a>
-<a name="ln2368">}</a>
-<a name="ln2369"> </a>
-<a name="ln2370">/// Get new filename ended by given extension.</a>
-<a name="ln2371">///</a>
-<a name="ln2372">/// @param fname        The original filename.</a>
-<a name="ln2373">///                     If NULL, use current directory name and ext to</a>
-<a name="ln2374">///                     compute new filename.</a>
-<a name="ln2375">/// @param ext          The extension to add to the filename.</a>
-<a name="ln2376">///                     4 chars max if prefixed with a dot, 3 otherwise.</a>
-<a name="ln2377">/// @param prepend_dot  If true, prefix ext with a dot.</a>
-<a name="ln2378">///                     Does nothing if ext already starts with a dot, or</a>
-<a name="ln2379">///                     if fname is NULL.</a>
-<a name="ln2380">///</a>
-<a name="ln2381">/// @return [allocated] - A new filename, made up from:</a>
-<a name="ln2382">///                       * fname + ext, if fname not NULL.</a>
-<a name="ln2383">///                       * current dir + ext, if fname is NULL.</a>
-<a name="ln2384">///                       Result is guaranteed to:</a>
-<a name="ln2385">///                       * be ended by &lt;ext&gt;.</a>
-<a name="ln2386">///                       * have a basename with at most BASENAMELEN chars:</a>
-<a name="ln2387">///                         original basename is truncated if necessary.</a>
-<a name="ln2388">///                       * be different than original: basename chars are</a>
-<a name="ln2389">///                         replaced by &quot;_&quot; if necessary. If that can't be done</a>
-<a name="ln2390">///                         because truncated value of original filename was</a>
-<a name="ln2391">///                         made of all underscores, replace first &quot;_&quot; by &quot;v&quot;.</a>
-<a name="ln2392">///                     - NULL, if fname is NULL and there was a problem trying</a>
-<a name="ln2393">///                       to get current directory.</a>
-<a name="ln2394">char *modname(const char *fname, const char *ext, bool prepend_dot)</a>
-<a name="ln2395">  FUNC_ATTR_NONNULL_ARG(2)</a>
-<a name="ln2396">{</a>
-<a name="ln2397">  char *retval;</a>
-<a name="ln2398">  size_t fnamelen;</a>
-<a name="ln2399">  size_t extlen = strlen(ext);</a>
-<a name="ln2400"> </a>
-<a name="ln2401">  // If there is no file name we must get the name of the current directory</a>
-<a name="ln2402">  // (we need the full path in case :cd is used).</a>
-<a name="ln2403">  if (fname == NULL || *fname == NUL) {</a>
-<a name="ln2404">    retval = xmalloc(MAXPATHL + extlen + 3);  // +3 for PATHSEP, &quot;_&quot; (Win), NUL</a>
-<a name="ln2405">    if (os_dirname(retval, MAXPATHL) == FAIL</a>
-<a name="ln2406">        || strlen(retval) == 0) {</a>
-<a name="ln2407">      xfree(retval);</a>
-<a name="ln2408">      return NULL;</a>
-<a name="ln2409">    }</a>
-<a name="ln2410">    add_pathsep(retval);</a>
-<a name="ln2411">    fnamelen = strlen(retval);</a>
-<a name="ln2412">    prepend_dot = false;  // nothing to prepend a dot to</a>
-<a name="ln2413">  } else {</a>
-<a name="ln2414">    fnamelen = strlen(fname);</a>
-<a name="ln2415">    retval = xmalloc(fnamelen + extlen + 3);</a>
-<a name="ln2416">    strcpy(retval, fname);  // NOLINT(runtime/printf)</a>
-<a name="ln2417">  }</a>
-<a name="ln2418"> </a>
-<a name="ln2419">  // Search backwards until we hit a '/', '\' or ':'.</a>
-<a name="ln2420">  // Then truncate what is after the '/', '\' or ':' to BASENAMELEN characters.</a>
-<a name="ln2421">  char *ptr = NULL;</a>
-<a name="ln2422">  for (ptr = retval + fnamelen; ptr &gt; retval; MB_PTR_BACK(retval, ptr)) {</a>
-<a name="ln2423">    if (vim_ispathsep(*ptr)) {</a>
-<a name="ln2424">      ptr++;</a>
-<a name="ln2425">      break;</a>
-<a name="ln2426">    }</a>
-<a name="ln2427">  }</a>
+<a name="ln2276">  if (p[0] == 0xef &amp;&amp; p[1] == 0xbb &amp;&amp; size &gt;= 3 &amp;&amp; p[2] == 0xbf</a>
+<a name="ln2277">      &amp;&amp; (flags == FIO_ALL || flags == FIO_UTF8 || flags == 0)) {</a>
+<a name="ln2278">    name = &quot;utf-8&quot;;             // EF BB BF</a>
+<a name="ln2279">    len = 3;</a>
+<a name="ln2280">  } else if (p[0] == 0xff &amp;&amp; p[1] == 0xfe) {</a>
+<a name="ln2281">    if (size &gt;= 4 &amp;&amp; p[2] == 0 &amp;&amp; p[3] == 0</a>
+<a name="ln2282">        &amp;&amp; (flags == FIO_ALL || flags == (FIO_UCS4 | FIO_ENDIAN_L))) {</a>
+<a name="ln2283">      name = &quot;ucs-4le&quot;;         // FF FE 00 00</a>
+<a name="ln2284">      len = 4;</a>
+<a name="ln2285">    } else if (flags == (FIO_UCS2 | FIO_ENDIAN_L)) {</a>
+<a name="ln2286">      name = &quot;ucs-2le&quot;;         // FF FE</a>
+<a name="ln2287">    } else if (flags == FIO_ALL</a>
+<a name="ln2288">               || flags == (FIO_UTF16 | FIO_ENDIAN_L)) {</a>
+<a name="ln2289">      // utf-16le is preferred, it also works for ucs-2le text</a>
+<a name="ln2290">      name = &quot;utf-16le&quot;;        // FF FE</a>
+<a name="ln2291">    }</a>
+<a name="ln2292">  } else if (p[0] == 0xfe &amp;&amp; p[1] == 0xff</a>
+<a name="ln2293">             &amp;&amp; (flags == FIO_ALL || flags == FIO_UCS2 || flags ==</a>
+<a name="ln2294">                 FIO_UTF16)) {</a>
+<a name="ln2295">    // Default to utf-16, it works also for ucs-2 text.</a>
+<a name="ln2296">    if (flags == FIO_UCS2) {</a>
+<a name="ln2297">      name = &quot;ucs-2&quot;;           // FE FF</a>
+<a name="ln2298">    } else {</a>
+<a name="ln2299">      name = &quot;utf-16&quot;;          // FE FF</a>
+<a name="ln2300">    }</a>
+<a name="ln2301">  } else if (size &gt;= 4 &amp;&amp; p[0] == 0 &amp;&amp; p[1] == 0 &amp;&amp; p[2] == 0xfe</a>
+<a name="ln2302">             &amp;&amp; p[3] == 0xff &amp;&amp; (flags == FIO_ALL || flags == FIO_UCS4)) {</a>
+<a name="ln2303">    name = &quot;ucs-4&quot;;             // 00 00 FE FF</a>
+<a name="ln2304">    len = 4;</a>
+<a name="ln2305">  }</a>
+<a name="ln2306"> </a>
+<a name="ln2307">  *lenp = len;</a>
+<a name="ln2308">  return name;</a>
+<a name="ln2309">}</a>
+<a name="ln2310"> </a>
+<a name="ln2311">/// Shorten filename of a buffer.</a>
+<a name="ln2312">///</a>
+<a name="ln2313">/// @param force  when true: Use full path from now on for files currently being</a>
+<a name="ln2314">///               edited, both for file name and swap file name.  Try to shorten the file</a>
+<a name="ln2315">///               names a bit, if safe to do so.</a>
+<a name="ln2316">///               when false: Only try to shorten absolute file names.</a>
+<a name="ln2317">///</a>
+<a name="ln2318">/// For buffers that have buftype &quot;nofile&quot; or &quot;scratch&quot;: never change the file</a>
+<a name="ln2319">/// name.</a>
+<a name="ln2320">void shorten_buf_fname(buf_T *buf, char *dirname, int force)</a>
+<a name="ln2321">{</a>
+<a name="ln2322">  if (buf-&gt;b_fname != NULL</a>
+<a name="ln2323">      &amp;&amp; !bt_nofilename(buf)</a>
+<a name="ln2324">      &amp;&amp; !path_with_url(buf-&gt;b_fname)</a>
+<a name="ln2325">      &amp;&amp; (force</a>
+<a name="ln2326">          || buf-&gt;b_sfname == NULL</a>
+<a name="ln2327">          || path_is_absolute(buf-&gt;b_sfname))) {</a>
+<a name="ln2328">    if (buf-&gt;b_sfname != buf-&gt;b_ffname) {</a>
+<a name="ln2329">      XFREE_CLEAR(buf-&gt;b_sfname);</a>
+<a name="ln2330">    }</a>
+<a name="ln2331">    char *p = path_shorten_fname(buf-&gt;b_ffname, dirname);</a>
+<a name="ln2332">    if (p != NULL) {</a>
+<a name="ln2333">      buf-&gt;b_sfname = xstrdup(p);</a>
+<a name="ln2334">      buf-&gt;b_fname = buf-&gt;b_sfname;</a>
+<a name="ln2335">    }</a>
+<a name="ln2336">    if (p == NULL) {</a>
+<a name="ln2337">      buf-&gt;b_fname = buf-&gt;b_ffname;</a>
+<a name="ln2338">    }</a>
+<a name="ln2339">  }</a>
+<a name="ln2340">}</a>
+<a name="ln2341"> </a>
+<a name="ln2342">/// Shorten filenames for all buffers.</a>
+<a name="ln2343">void shorten_fnames(int force)</a>
+<a name="ln2344">{</a>
+<a name="ln2345">  char dirname[MAXPATHL];</a>
+<a name="ln2346"> </a>
+<a name="ln2347">  os_dirname(dirname, MAXPATHL);</a>
+<a name="ln2348">  FOR_ALL_BUFFERS(buf) {</a>
+<a name="ln2349">    shorten_buf_fname(buf, dirname, force);</a>
+<a name="ln2350"> </a>
+<a name="ln2351">    // Always make the swap file name a full path, a &quot;nofile&quot; buffer may</a>
+<a name="ln2352">    // also have a swap file.</a>
+<a name="ln2353">    mf_fullname(buf-&gt;b_ml.ml_mfp);</a>
+<a name="ln2354">  }</a>
+<a name="ln2355">  status_redraw_all();</a>
+<a name="ln2356">  redraw_tabline = true;</a>
+<a name="ln2357">}</a>
+<a name="ln2358"> </a>
+<a name="ln2359">/// Get new filename ended by given extension.</a>
+<a name="ln2360">///</a>
+<a name="ln2361">/// @param fname        The original filename.</a>
+<a name="ln2362">///                     If NULL, use current directory name and ext to</a>
+<a name="ln2363">///                     compute new filename.</a>
+<a name="ln2364">/// @param ext          The extension to add to the filename.</a>
+<a name="ln2365">///                     4 chars max if prefixed with a dot, 3 otherwise.</a>
+<a name="ln2366">/// @param prepend_dot  If true, prefix ext with a dot.</a>
+<a name="ln2367">///                     Does nothing if ext already starts with a dot, or</a>
+<a name="ln2368">///                     if fname is NULL.</a>
+<a name="ln2369">///</a>
+<a name="ln2370">/// @return [allocated] - A new filename, made up from:</a>
+<a name="ln2371">///                       * fname + ext, if fname not NULL.</a>
+<a name="ln2372">///                       * current dir + ext, if fname is NULL.</a>
+<a name="ln2373">///                       Result is guaranteed to:</a>
+<a name="ln2374">///                       * be ended by &lt;ext&gt;.</a>
+<a name="ln2375">///                       * have a basename with at most BASENAMELEN chars:</a>
+<a name="ln2376">///                         original basename is truncated if necessary.</a>
+<a name="ln2377">///                       * be different than original: basename chars are</a>
+<a name="ln2378">///                         replaced by &quot;_&quot; if necessary. If that can't be done</a>
+<a name="ln2379">///                         because truncated value of original filename was</a>
+<a name="ln2380">///                         made of all underscores, replace first &quot;_&quot; by &quot;v&quot;.</a>
+<a name="ln2381">///                     - NULL, if fname is NULL and there was a problem trying</a>
+<a name="ln2382">///                       to get current directory.</a>
+<a name="ln2383">char *modname(const char *fname, const char *ext, bool prepend_dot)</a>
+<a name="ln2384">  FUNC_ATTR_NONNULL_ARG(2)</a>
+<a name="ln2385">{</a>
+<a name="ln2386">  char *retval;</a>
+<a name="ln2387">  size_t fnamelen;</a>
+<a name="ln2388">  size_t extlen = strlen(ext);</a>
+<a name="ln2389"> </a>
+<a name="ln2390">  // If there is no file name we must get the name of the current directory</a>
+<a name="ln2391">  // (we need the full path in case :cd is used).</a>
+<a name="ln2392">  if (fname == NULL || *fname == NUL) {</a>
+<a name="ln2393">    retval = xmalloc(MAXPATHL + extlen + 3);  // +3 for PATHSEP, &quot;_&quot; (Win), NUL</a>
+<a name="ln2394">    if (os_dirname(retval, MAXPATHL) == FAIL</a>
+<a name="ln2395">        || strlen(retval) == 0) {</a>
+<a name="ln2396">      xfree(retval);</a>
+<a name="ln2397">      return NULL;</a>
+<a name="ln2398">    }</a>
+<a name="ln2399">    add_pathsep(retval);</a>
+<a name="ln2400">    fnamelen = strlen(retval);</a>
+<a name="ln2401">    prepend_dot = false;  // nothing to prepend a dot to</a>
+<a name="ln2402">  } else {</a>
+<a name="ln2403">    fnamelen = strlen(fname);</a>
+<a name="ln2404">    retval = xmalloc(fnamelen + extlen + 3);</a>
+<a name="ln2405">    strcpy(retval, fname);  // NOLINT(runtime/printf)</a>
+<a name="ln2406">  }</a>
+<a name="ln2407"> </a>
+<a name="ln2408">  // Search backwards until we hit a '/', '\' or ':'.</a>
+<a name="ln2409">  // Then truncate what is after the '/', '\' or ':' to BASENAMELEN characters.</a>
+<a name="ln2410">  char *ptr = NULL;</a>
+<a name="ln2411">  for (ptr = retval + fnamelen; ptr &gt; retval; MB_PTR_BACK(retval, ptr)) {</a>
+<a name="ln2412">    if (vim_ispathsep(*ptr)) {</a>
+<a name="ln2413">      ptr++;</a>
+<a name="ln2414">      break;</a>
+<a name="ln2415">    }</a>
+<a name="ln2416">  }</a>
+<a name="ln2417"> </a>
+<a name="ln2418">  // the file name has at most BASENAMELEN characters.</a>
+<a name="ln2419">  if (strlen(ptr) &gt; BASENAMELEN) {</a>
+<a name="ln2420">    ptr[BASENAMELEN] = '\0';</a>
+<a name="ln2421">  }</a>
+<a name="ln2422"> </a>
+<a name="ln2423">  char *s = ptr + strlen(ptr);</a>
+<a name="ln2424"> </a>
+<a name="ln2425">  // Append the extension.</a>
+<a name="ln2426">  // ext can start with '.' and cannot exceed 3 more characters.</a>
+<a name="ln2427">  strcpy(s, ext);  // NOLINT(runtime/printf)</a>
 <a name="ln2428"> </a>
-<a name="ln2429">  // the file name has at most BASENAMELEN characters.</a>
-<a name="ln2430">  if (strlen(ptr) &gt; BASENAMELEN) {</a>
-<a name="ln2431">    ptr[BASENAMELEN] = '\0';</a>
-<a name="ln2432">  }</a>
-<a name="ln2433"> </a>
-<a name="ln2434">  char *s = ptr + strlen(ptr);</a>
+<a name="ln2429">  char *e;</a>
+<a name="ln2430">  // Prepend the dot if needed.</a>
+<a name="ln2431">  if (prepend_dot &amp;&amp; *(e = path_tail(retval)) != '.') {</a>
+<a name="ln2432">    STRMOVE(e + 1, e);</a>
+<a name="ln2433">    *e = '.';</a>
+<a name="ln2434">  }</a>
 <a name="ln2435"> </a>
-<a name="ln2436">  // Append the extension.</a>
-<a name="ln2437">  // ext can start with '.' and cannot exceed 3 more characters.</a>
-<a name="ln2438">  strcpy(s, ext);  // NOLINT(runtime/printf)</a>
-<a name="ln2439"> </a>
-<a name="ln2440">  char *e;</a>
-<a name="ln2441">  // Prepend the dot if needed.</a>
-<a name="ln2442">  if (prepend_dot &amp;&amp; *(e = path_tail(retval)) != '.') {</a>
-<a name="ln2443">    STRMOVE(e + 1, e);</a>
-<a name="ln2444">    *e = '.';</a>
-<a name="ln2445">  }</a>
-<a name="ln2446"> </a>
-<a name="ln2447">  // Check that, after appending the extension, the file name is really</a>
-<a name="ln2448">  // different.</a>
-<a name="ln2449">  if (fname != NULL &amp;&amp; strcmp(fname, retval) == 0) {</a>
-<a name="ln2450">    // we search for a character that can be replaced by '_'</a>
-<a name="ln2451">    while (--s &gt;= ptr) {</a>
-<a name="ln2452">      if (*s != '_') {</a>
-<a name="ln2453">        *s = '_';</a>
-<a name="ln2454">        break;</a>
-<a name="ln2455">      }</a>
-<a name="ln2456">    }</a>
-<a name="ln2457">    if (s &lt; ptr) {  // fname was &quot;________.&lt;ext&gt;&quot;, how tricky!</a>
-<a name="ln2458">      *ptr = 'v';</a>
-<a name="ln2459">    }</a>
-<a name="ln2460">  }</a>
-<a name="ln2461">  return retval;</a>
-<a name="ln2462">}</a>
-<a name="ln2463"> </a>
-<a name="ln2464">/// Like fgets(), but if the file line is too long, it is truncated and the</a>
-<a name="ln2465">/// rest of the line is thrown away.</a>
-<a name="ln2466">///</a>
-<a name="ln2467">/// @param[out] buf buffer to fill</a>
-<a name="ln2468">/// @param size size of the buffer</a>
-<a name="ln2469">/// @param fp file to read from</a>
-<a name="ln2470">///</a>
-<a name="ln2471">/// @return true for EOF or error</a>
-<a name="ln2472">bool vim_fgets(char *buf, int size, FILE *fp)</a>
-<a name="ln2473">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln2474">{</a>
-<a name="ln2475">  char *retval;</a>
+<a name="ln2436">  // Check that, after appending the extension, the file name is really</a>
+<a name="ln2437">  // different.</a>
+<a name="ln2438">  if (fname != NULL &amp;&amp; strcmp(fname, retval) == 0) {</a>
+<a name="ln2439">    // we search for a character that can be replaced by '_'</a>
+<a name="ln2440">    while (--s &gt;= ptr) {</a>
+<a name="ln2441">      if (*s != '_') {</a>
+<a name="ln2442">        *s = '_';</a>
+<a name="ln2443">        break;</a>
+<a name="ln2444">      }</a>
+<a name="ln2445">    }</a>
+<a name="ln2446">    if (s &lt; ptr) {  // fname was &quot;________.&lt;ext&gt;&quot;, how tricky!</a>
+<a name="ln2447">      *ptr = 'v';</a>
+<a name="ln2448">    }</a>
+<a name="ln2449">  }</a>
+<a name="ln2450">  return retval;</a>
+<a name="ln2451">}</a>
+<a name="ln2452"> </a>
+<a name="ln2453">/// Like fgets(), but if the file line is too long, it is truncated and the</a>
+<a name="ln2454">/// rest of the line is thrown away.</a>
+<a name="ln2455">///</a>
+<a name="ln2456">/// @param[out] buf buffer to fill</a>
+<a name="ln2457">/// @param size size of the buffer</a>
+<a name="ln2458">/// @param fp file to read from</a>
+<a name="ln2459">///</a>
+<a name="ln2460">/// @return true for EOF or error</a>
+<a name="ln2461">bool vim_fgets(char *buf, int size, FILE *fp)</a>
+<a name="ln2462">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln2463">{</a>
+<a name="ln2464">  char *retval;</a>
+<a name="ln2465"> </a>
+<a name="ln2466">  assert(size &gt; 0);</a>
+<a name="ln2467">  buf[size - 2] = NUL;</a>
+<a name="ln2468"> </a>
+<a name="ln2469">  do {</a>
+<a name="ln2470">    errno = 0;</a>
+<a name="ln2471">    retval = fgets(buf, size, fp);</a>
+<a name="ln2472">  } while (retval == NULL &amp;&amp; errno == EINTR &amp;&amp; ferror(fp));</a>
+<a name="ln2473"> </a>
+<a name="ln2474">  if (buf[size - 2] != NUL &amp;&amp; buf[size - 2] != '\n') {</a>
+<a name="ln2475">    char tbuf[200];</a>
 <a name="ln2476"> </a>
-<a name="ln2477">  assert(size &gt; 0);</a>
-<a name="ln2478">  buf[size - 2] = NUL;</a>
-<a name="ln2479"> </a>
-<a name="ln2480">  do {</a>
-<a name="ln2481">    errno = 0;</a>
-<a name="ln2482">    retval = fgets(buf, size, fp);</a>
-<a name="ln2483">  } while (retval == NULL &amp;&amp; errno == EINTR &amp;&amp; ferror(fp));</a>
-<a name="ln2484"> </a>
-<a name="ln2485">  if (buf[size - 2] != NUL &amp;&amp; buf[size - 2] != '\n') {</a>
-<a name="ln2486">    char tbuf[200];</a>
-<a name="ln2487"> </a>
-<a name="ln2488">    buf[size - 1] = NUL;  // Truncate the line.</a>
-<a name="ln2489"> </a>
-<a name="ln2490">    // Now throw away the rest of the line:</a>
-<a name="ln2491">    do {</a>
-<a name="ln2492">      tbuf[sizeof(tbuf) - 2] = NUL;</a>
-<a name="ln2493">      errno = 0;</a>
-<a name="ln2494">      retval = fgets(tbuf, sizeof(tbuf), fp);</a>
-<a name="ln2495">      if (retval == NULL &amp;&amp; (feof(fp) || errno != EINTR)) {</a>
-<a name="ln2496">        break;</a>
-<a name="ln2497">      }</a>
-<a name="ln2498">    } while (tbuf[sizeof(tbuf) - 2] != NUL &amp;&amp; tbuf[sizeof(tbuf) - 2] != '\n');</a>
-<a name="ln2499">  }</a>
-<a name="ln2500">  return retval == NULL;</a>
-<a name="ln2501">}</a>
-<a name="ln2502"> </a>
-<a name="ln2503">/// Read 2 bytes from &quot;fd&quot; and turn them into an int, MSB first.</a>
-<a name="ln2504">///</a>
-<a name="ln2505">/// @return  -1 when encountering EOF.</a>
-<a name="ln2506">int get2c(FILE *fd)</a>
-<a name="ln2507">{</a>
-<a name="ln2508">  const int n = getc(fd);</a>
-<a name="ln2509">  if (n == EOF) {</a>
-<a name="ln2510">    return -1;</a>
-<a name="ln2511">  }</a>
-<a name="ln2512">  const int c = getc(fd);</a>
-<a name="ln2513">  if (c == EOF) {</a>
-<a name="ln2514">    return -1;</a>
-<a name="ln2515">  }</a>
-<a name="ln2516">  return (n &lt;&lt; 8) + c;</a>
-<a name="ln2517">}</a>
-<a name="ln2518"> </a>
-<a name="ln2519">/// Read 3 bytes from &quot;fd&quot; and turn them into an int, MSB first.</a>
-<a name="ln2520">///</a>
-<a name="ln2521">/// @return  -1 when encountering EOF.</a>
-<a name="ln2522">int get3c(FILE *fd)</a>
-<a name="ln2523">{</a>
-<a name="ln2524">  int n = getc(fd);</a>
-<a name="ln2525">  if (n == EOF) {</a>
-<a name="ln2526">    return -1;</a>
-<a name="ln2527">  }</a>
-<a name="ln2528">  int c = getc(fd);</a>
-<a name="ln2529">  if (c == EOF) {</a>
-<a name="ln2530">    return -1;</a>
-<a name="ln2531">  }</a>
-<a name="ln2532">  n = (n &lt;&lt; 8) + c;</a>
-<a name="ln2533">  c = getc(fd);</a>
-<a name="ln2534">  if (c == EOF) {</a>
-<a name="ln2535">    return -1;</a>
-<a name="ln2536">  }</a>
-<a name="ln2537">  return (n &lt;&lt; 8) + c;</a>
-<a name="ln2538">}</a>
-<a name="ln2539"> </a>
-<a name="ln2540">/// Read 4 bytes from &quot;fd&quot; and turn them into an int, MSB first.</a>
-<a name="ln2541">///</a>
-<a name="ln2542">/// @return  -1 when encountering EOF.</a>
-<a name="ln2543">int get4c(FILE *fd)</a>
-<a name="ln2544">{</a>
-<a name="ln2545">  // Use unsigned rather than int otherwise result is undefined</a>
-<a name="ln2546">  // when left-shift sets the MSB.</a>
-<a name="ln2547">  unsigned n;</a>
-<a name="ln2548"> </a>
-<a name="ln2549">  int c = getc(fd);</a>
-<a name="ln2550">  if (c == EOF) {</a>
-<a name="ln2551">    return -1;</a>
-<a name="ln2552">  }</a>
-<a name="ln2553">  n = (unsigned)c;</a>
-<a name="ln2554">  c = getc(fd);</a>
-<a name="ln2555">  if (c == EOF) {</a>
-<a name="ln2556">    return -1;</a>
-<a name="ln2557">  }</a>
-<a name="ln2558">  n = (n &lt;&lt; 8) + (unsigned)c;</a>
-<a name="ln2559">  c = getc(fd);</a>
-<a name="ln2560">  if (c == EOF) {</a>
-<a name="ln2561">    return -1;</a>
-<a name="ln2562">  }</a>
-<a name="ln2563">  n = (n &lt;&lt; 8) + (unsigned)c;</a>
-<a name="ln2564">  c = getc(fd);</a>
-<a name="ln2565">  if (c == EOF) {</a>
-<a name="ln2566">    return -1;</a>
-<a name="ln2567">  }</a>
-<a name="ln2568">  n = (n &lt;&lt; 8) + (unsigned)c;</a>
-<a name="ln2569">  return (int)n;</a>
-<a name="ln2570">}</a>
-<a name="ln2571"> </a>
-<a name="ln2572">/// Read 8 bytes from `fd` and turn them into a time_t, MSB first.</a>
-<a name="ln2573">///</a>
-<a name="ln2574">/// @return  -1 when encountering EOF.</a>
-<a name="ln2575">time_t get8ctime(FILE *fd)</a>
-<a name="ln2576">{</a>
-<a name="ln2577">  time_t n = 0;</a>
-<a name="ln2578"> </a>
-<a name="ln2579">  for (int i = 0; i &lt; 8; i++) {</a>
-<a name="ln2580">    const int c = getc(fd);</a>
-<a name="ln2581">    if (c == EOF) {</a>
-<a name="ln2582">      return -1;</a>
-<a name="ln2583">    }</a>
-<a name="ln2584">    n = (n &lt;&lt; 8) + c;</a>
-<a name="ln2585">  }</a>
-<a name="ln2586">  return n;</a>
-<a name="ln2587">}</a>
-<a name="ln2588"> </a>
-<a name="ln2589">/// Reads a string of length &quot;cnt&quot; from &quot;fd&quot; into allocated memory.</a>
-<a name="ln2590">///</a>
-<a name="ln2591">/// @return  pointer to the string or NULL when unable to read that many bytes.</a>
-<a name="ln2592">char *read_string(FILE *fd, size_t cnt)</a>
-<a name="ln2593">{</a>
-<a name="ln2594">  char *str = xmallocz(cnt);</a>
-<a name="ln2595">  for (size_t i = 0; i &lt; cnt; i++) {</a>
-<a name="ln2596">    int c = getc(fd);</a>
-<a name="ln2597">    if (c == EOF) {</a>
-<a name="ln2598">      xfree(str);</a>
-<a name="ln2599">      return NULL;</a>
-<a name="ln2600">    }</a>
-<a name="ln2601">    str[i] = (char)c;</a>
-<a name="ln2602">  }</a>
-<a name="ln2603">  return str;</a>
-<a name="ln2604">}</a>
-<a name="ln2605"> </a>
-<a name="ln2606">/// Writes a number to file &quot;fd&quot;, most significant bit first, in &quot;len&quot; bytes.</a>
-<a name="ln2607">///</a>
-<a name="ln2608">/// @return  false in case of an error.</a>
-<a name="ln2609">bool put_bytes(FILE *fd, uintmax_t number, size_t len)</a>
-<a name="ln2610">{</a>
-<a name="ln2611">  assert(len &gt; 0);</a>
-<a name="ln2612">  for (size_t i = len - 1; i &lt; len; i--) {</a>
-<a name="ln2613">    if (putc((int)(number &gt;&gt; (i * 8)), fd) == EOF) {</a>
-<a name="ln2614">      return false;</a>
-<a name="ln2615">    }</a>
-<a name="ln2616">  }</a>
-<a name="ln2617">  return true;</a>
-<a name="ln2618">}</a>
-<a name="ln2619"> </a>
-<a name="ln2620">/// Writes time_t to file &quot;fd&quot; in 8 bytes.</a>
-<a name="ln2621">///</a>
-<a name="ln2622">/// @return  FAIL when the write failed.</a>
-<a name="ln2623">int put_time(FILE *fd, time_t time_)</a>
-<a name="ln2624">{</a>
-<a name="ln2625">  uint8_t buf[8];</a>
-<a name="ln2626">  time_to_bytes(time_, buf);</a>
-<a name="ln2627">  return fwrite(buf, sizeof(uint8_t), ARRAY_SIZE(buf), fd) == 1 ? OK : FAIL;</a>
-<a name="ln2628">}</a>
-<a name="ln2629"> </a>
-<a name="ln2630">static int rename_with_tmp(const char *const from, const char *const to)</a>
-<a name="ln2631">{</a>
-<a name="ln2632">  // Find a name that doesn't exist and is in the same directory.</a>
-<a name="ln2633">  // Rename &quot;from&quot; to &quot;tempname&quot; and then rename &quot;tempname&quot; to &quot;to&quot;.</a>
-<a name="ln2634">  if (strlen(from) &gt;= MAXPATHL - 5) {</a>
-<a name="ln2635">    return -1;</a>
-<a name="ln2636">  }</a>
-<a name="ln2637"> </a>
-<a name="ln2638">  char tempname[MAXPATHL + 1];</a>
-<a name="ln2639">  STRCPY(tempname, from);</a>
-<a name="ln2640">  for (int n = 123; n &lt; 99999; n++) {</a>
-<a name="ln2641">    char *tail = path_tail(tempname);</a>
-<a name="ln2642">    snprintf(tail, (size_t)((MAXPATHL + 1) - (tail - tempname - 1)), &quot;%d&quot;, n);</a>
-<a name="ln2643"> </a>
-<a name="ln2644">    if (!os_path_exists(tempname)) {</a>
-<a name="ln2645">      if (os_rename(from, tempname) == OK) {</a>
-<a name="ln2646">        if (os_rename(tempname, to) == OK) {</a>
-<a name="ln2647">          return 0;</a>
-<a name="ln2648">        }</a>
-<a name="ln2649">        // Strange, the second step failed.  Try moving the</a>
-<a name="ln2650">        // file back and return failure.</a>
-<a name="ln2651">        (void)os_rename(tempname, from);</a>
-<a name="ln2652">        return -1;</a>
-<a name="ln2653">      }</a>
-<a name="ln2654">      // If it fails for one temp name it will most likely fail</a>
-<a name="ln2655">      // for any temp name, give up.</a>
-<a name="ln2656">      return -1;</a>
-<a name="ln2657">    }</a>
-<a name="ln2658">  }</a>
-<a name="ln2659">  return -1;</a>
-<a name="ln2660">}</a>
-<a name="ln2661"> </a>
-<a name="ln2662">/// os_rename() only works if both files are on the same file system, this</a>
-<a name="ln2663">/// function will (attempts to?) copy the file across if rename fails -- webb</a>
-<a name="ln2664">///</a>
-<a name="ln2665">/// @return  -1 for failure, 0 for success</a>
-<a name="ln2666">int vim_rename(const char *from, const char *to)</a>
-<a name="ln2667">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln2668">{</a>
-<a name="ln2669">  char *errmsg = NULL;</a>
-<a name="ln2670">  bool use_tmp_file = false;</a>
+<a name="ln2477">    buf[size - 1] = NUL;  // Truncate the line.</a>
+<a name="ln2478"> </a>
+<a name="ln2479">    // Now throw away the rest of the line:</a>
+<a name="ln2480">    do {</a>
+<a name="ln2481">      tbuf[sizeof(tbuf) - 2] = NUL;</a>
+<a name="ln2482">      errno = 0;</a>
+<a name="ln2483">      retval = fgets(tbuf, sizeof(tbuf), fp);</a>
+<a name="ln2484">      if (retval == NULL &amp;&amp; (feof(fp) || errno != EINTR)) {</a>
+<a name="ln2485">        break;</a>
+<a name="ln2486">      }</a>
+<a name="ln2487">    } while (tbuf[sizeof(tbuf) - 2] != NUL &amp;&amp; tbuf[sizeof(tbuf) - 2] != '\n');</a>
+<a name="ln2488">  }</a>
+<a name="ln2489">  return retval == NULL;</a>
+<a name="ln2490">}</a>
+<a name="ln2491"> </a>
+<a name="ln2492">/// Read 2 bytes from &quot;fd&quot; and turn them into an int, MSB first.</a>
+<a name="ln2493">///</a>
+<a name="ln2494">/// @return  -1 when encountering EOF.</a>
+<a name="ln2495">int get2c(FILE *fd)</a>
+<a name="ln2496">{</a>
+<a name="ln2497">  const int n = getc(fd);</a>
+<a name="ln2498">  if (n == EOF) {</a>
+<a name="ln2499">    return -1;</a>
+<a name="ln2500">  }</a>
+<a name="ln2501">  const int c = getc(fd);</a>
+<a name="ln2502">  if (c == EOF) {</a>
+<a name="ln2503">    return -1;</a>
+<a name="ln2504">  }</a>
+<a name="ln2505">  return (n &lt;&lt; 8) + c;</a>
+<a name="ln2506">}</a>
+<a name="ln2507"> </a>
+<a name="ln2508">/// Read 3 bytes from &quot;fd&quot; and turn them into an int, MSB first.</a>
+<a name="ln2509">///</a>
+<a name="ln2510">/// @return  -1 when encountering EOF.</a>
+<a name="ln2511">int get3c(FILE *fd)</a>
+<a name="ln2512">{</a>
+<a name="ln2513">  int n = getc(fd);</a>
+<a name="ln2514">  if (n == EOF) {</a>
+<a name="ln2515">    return -1;</a>
+<a name="ln2516">  }</a>
+<a name="ln2517">  int c = getc(fd);</a>
+<a name="ln2518">  if (c == EOF) {</a>
+<a name="ln2519">    return -1;</a>
+<a name="ln2520">  }</a>
+<a name="ln2521">  n = (n &lt;&lt; 8) + c;</a>
+<a name="ln2522">  c = getc(fd);</a>
+<a name="ln2523">  if (c == EOF) {</a>
+<a name="ln2524">    return -1;</a>
+<a name="ln2525">  }</a>
+<a name="ln2526">  return (n &lt;&lt; 8) + c;</a>
+<a name="ln2527">}</a>
+<a name="ln2528"> </a>
+<a name="ln2529">/// Read 4 bytes from &quot;fd&quot; and turn them into an int, MSB first.</a>
+<a name="ln2530">///</a>
+<a name="ln2531">/// @return  -1 when encountering EOF.</a>
+<a name="ln2532">int get4c(FILE *fd)</a>
+<a name="ln2533">{</a>
+<a name="ln2534">  // Use unsigned rather than int otherwise result is undefined</a>
+<a name="ln2535">  // when left-shift sets the MSB.</a>
+<a name="ln2536">  unsigned n;</a>
+<a name="ln2537"> </a>
+<a name="ln2538">  int c = getc(fd);</a>
+<a name="ln2539">  if (c == EOF) {</a>
+<a name="ln2540">    return -1;</a>
+<a name="ln2541">  }</a>
+<a name="ln2542">  n = (unsigned)c;</a>
+<a name="ln2543">  c = getc(fd);</a>
+<a name="ln2544">  if (c == EOF) {</a>
+<a name="ln2545">    return -1;</a>
+<a name="ln2546">  }</a>
+<a name="ln2547">  n = (n &lt;&lt; 8) + (unsigned)c;</a>
+<a name="ln2548">  c = getc(fd);</a>
+<a name="ln2549">  if (c == EOF) {</a>
+<a name="ln2550">    return -1;</a>
+<a name="ln2551">  }</a>
+<a name="ln2552">  n = (n &lt;&lt; 8) + (unsigned)c;</a>
+<a name="ln2553">  c = getc(fd);</a>
+<a name="ln2554">  if (c == EOF) {</a>
+<a name="ln2555">    return -1;</a>
+<a name="ln2556">  }</a>
+<a name="ln2557">  n = (n &lt;&lt; 8) + (unsigned)c;</a>
+<a name="ln2558">  return (int)n;</a>
+<a name="ln2559">}</a>
+<a name="ln2560"> </a>
+<a name="ln2561">/// Read 8 bytes from `fd` and turn them into a time_t, MSB first.</a>
+<a name="ln2562">///</a>
+<a name="ln2563">/// @return  -1 when encountering EOF.</a>
+<a name="ln2564">time_t get8ctime(FILE *fd)</a>
+<a name="ln2565">{</a>
+<a name="ln2566">  time_t n = 0;</a>
+<a name="ln2567"> </a>
+<a name="ln2568">  for (int i = 0; i &lt; 8; i++) {</a>
+<a name="ln2569">    const int c = getc(fd);</a>
+<a name="ln2570">    if (c == EOF) {</a>
+<a name="ln2571">      return -1;</a>
+<a name="ln2572">    }</a>
+<a name="ln2573">    n = (n &lt;&lt; 8) + c;</a>
+<a name="ln2574">  }</a>
+<a name="ln2575">  return n;</a>
+<a name="ln2576">}</a>
+<a name="ln2577"> </a>
+<a name="ln2578">/// Reads a string of length &quot;cnt&quot; from &quot;fd&quot; into allocated memory.</a>
+<a name="ln2579">///</a>
+<a name="ln2580">/// @return  pointer to the string or NULL when unable to read that many bytes.</a>
+<a name="ln2581">char *read_string(FILE *fd, size_t cnt)</a>
+<a name="ln2582">{</a>
+<a name="ln2583">  char *str = xmallocz(cnt);</a>
+<a name="ln2584">  for (size_t i = 0; i &lt; cnt; i++) {</a>
+<a name="ln2585">    int c = getc(fd);</a>
+<a name="ln2586">    if (c == EOF) {</a>
+<a name="ln2587">      xfree(str);</a>
+<a name="ln2588">      return NULL;</a>
+<a name="ln2589">    }</a>
+<a name="ln2590">    str[i] = (char)c;</a>
+<a name="ln2591">  }</a>
+<a name="ln2592">  return str;</a>
+<a name="ln2593">}</a>
+<a name="ln2594"> </a>
+<a name="ln2595">/// Writes a number to file &quot;fd&quot;, most significant bit first, in &quot;len&quot; bytes.</a>
+<a name="ln2596">///</a>
+<a name="ln2597">/// @return  false in case of an error.</a>
+<a name="ln2598">bool put_bytes(FILE *fd, uintmax_t number, size_t len)</a>
+<a name="ln2599">{</a>
+<a name="ln2600">  assert(len &gt; 0);</a>
+<a name="ln2601">  for (size_t i = len - 1; i &lt; len; i--) {</a>
+<a name="ln2602">    if (putc((int)(number &gt;&gt; (i * 8)), fd) == EOF) {</a>
+<a name="ln2603">      return false;</a>
+<a name="ln2604">    }</a>
+<a name="ln2605">  }</a>
+<a name="ln2606">  return true;</a>
+<a name="ln2607">}</a>
+<a name="ln2608"> </a>
+<a name="ln2609">/// Writes time_t to file &quot;fd&quot; in 8 bytes.</a>
+<a name="ln2610">///</a>
+<a name="ln2611">/// @return  FAIL when the write failed.</a>
+<a name="ln2612">int put_time(FILE *fd, time_t time_)</a>
+<a name="ln2613">{</a>
+<a name="ln2614">  uint8_t buf[8];</a>
+<a name="ln2615">  time_to_bytes(time_, buf);</a>
+<a name="ln2616">  return fwrite(buf, sizeof(uint8_t), ARRAY_SIZE(buf), fd) == 1 ? OK : FAIL;</a>
+<a name="ln2617">}</a>
+<a name="ln2618"> </a>
+<a name="ln2619">static int rename_with_tmp(const char *const from, const char *const to)</a>
+<a name="ln2620">{</a>
+<a name="ln2621">  // Find a name that doesn't exist and is in the same directory.</a>
+<a name="ln2622">  // Rename &quot;from&quot; to &quot;tempname&quot; and then rename &quot;tempname&quot; to &quot;to&quot;.</a>
+<a name="ln2623">  if (strlen(from) &gt;= MAXPATHL - 5) {</a>
+<a name="ln2624">    return -1;</a>
+<a name="ln2625">  }</a>
+<a name="ln2626"> </a>
+<a name="ln2627">  char tempname[MAXPATHL + 1];</a>
+<a name="ln2628">  STRCPY(tempname, from);</a>
+<a name="ln2629">  for (int n = 123; n &lt; 99999; n++) {</a>
+<a name="ln2630">    char *tail = path_tail(tempname);</a>
+<a name="ln2631">    snprintf(tail, (size_t)((MAXPATHL + 1) - (tail - tempname - 1)), &quot;%d&quot;, n);</a>
+<a name="ln2632"> </a>
+<a name="ln2633">    if (!os_path_exists(tempname)) {</a>
+<a name="ln2634">      if (os_rename(from, tempname) == OK) {</a>
+<a name="ln2635">        if (os_rename(tempname, to) == OK) {</a>
+<a name="ln2636">          return 0;</a>
+<a name="ln2637">        }</a>
+<a name="ln2638">        // Strange, the second step failed.  Try moving the</a>
+<a name="ln2639">        // file back and return failure.</a>
+<a name="ln2640">        (void)os_rename(tempname, from);</a>
+<a name="ln2641">        return -1;</a>
+<a name="ln2642">      }</a>
+<a name="ln2643">      // If it fails for one temp name it will most likely fail</a>
+<a name="ln2644">      // for any temp name, give up.</a>
+<a name="ln2645">      return -1;</a>
+<a name="ln2646">    }</a>
+<a name="ln2647">  }</a>
+<a name="ln2648">  return -1;</a>
+<a name="ln2649">}</a>
+<a name="ln2650"> </a>
+<a name="ln2651">/// os_rename() only works if both files are on the same file system, this</a>
+<a name="ln2652">/// function will (attempts to?) copy the file across if rename fails -- webb</a>
+<a name="ln2653">///</a>
+<a name="ln2654">/// @return  -1 for failure, 0 for success</a>
+<a name="ln2655">int vim_rename(const char *from, const char *to)</a>
+<a name="ln2656">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln2657">{</a>
+<a name="ln2658">  char *errmsg = NULL;</a>
+<a name="ln2659">  bool use_tmp_file = false;</a>
+<a name="ln2660"> </a>
+<a name="ln2661">  // When the names are identical, there is nothing to do.  When they refer</a>
+<a name="ln2662">  // to the same file (ignoring case and slash/backslash differences) but</a>
+<a name="ln2663">  // the file name differs we need to go through a temp file.</a>
+<a name="ln2664">  if (path_fnamecmp(from, to) == 0) {</a>
+<a name="ln2665">    if (p_fic &amp;&amp; (strcmp(path_tail(from), path_tail(to)) != 0)) {</a>
+<a name="ln2666">      use_tmp_file = true;</a>
+<a name="ln2667">    } else {</a>
+<a name="ln2668">      return 0;</a>
+<a name="ln2669">    }</a>
+<a name="ln2670">  }</a>
 <a name="ln2671"> </a>
-<a name="ln2672">  // When the names are identical, there is nothing to do.  When they refer</a>
-<a name="ln2673">  // to the same file (ignoring case and slash/backslash differences) but</a>
-<a name="ln2674">  // the file name differs we need to go through a temp file.</a>
-<a name="ln2675">  if (path_fnamecmp(from, to) == 0) {</a>
-<a name="ln2676">    if (p_fic &amp;&amp; (strcmp(path_tail(from), path_tail(to)) != 0)) {</a>
-<a name="ln2677">      use_tmp_file = true;</a>
-<a name="ln2678">    } else {</a>
-<a name="ln2679">      return 0;</a>
-<a name="ln2680">    }</a>
-<a name="ln2681">  }</a>
-<a name="ln2682"> </a>
-<a name="ln2683">  // Fail if the &quot;from&quot; file doesn't exist. Avoids that &quot;to&quot; is deleted.</a>
-<a name="ln2684">  FileInfo from_info;</a>
-<a name="ln2685">  if (!os_fileinfo(from, &amp;from_info)) {</a>
-<a name="ln2686">    return -1;</a>
-<a name="ln2687">  }</a>
-<a name="ln2688"> </a>
-<a name="ln2689">  // It's possible for the source and destination to be the same file.</a>
-<a name="ln2690">  // This happens when &quot;from&quot; and &quot;to&quot; differ in case and are on a FAT32</a>
-<a name="ln2691">  // filesystem. In that case go through a temp file name.</a>
-<a name="ln2692">  FileInfo to_info;</a>
-<a name="ln2693">  if (os_fileinfo(to, &amp;to_info) &amp;&amp; os_fileinfo_id_equal(&amp;from_info,  &amp;to_info)) {</a>
-<a name="ln2694">    use_tmp_file = true;</a>
-<a name="ln2695">  }</a>
-<a name="ln2696"> </a>
-<a name="ln2697">  if (use_tmp_file) {</a>
-<a name="ln2698">    return rename_with_tmp(from, to);</a>
+<a name="ln2672">  // Fail if the &quot;from&quot; file doesn't exist. Avoids that &quot;to&quot; is deleted.</a>
+<a name="ln2673">  FileInfo from_info;</a>
+<a name="ln2674">  if (!os_fileinfo(from, &amp;from_info)) {</a>
+<a name="ln2675">    return -1;</a>
+<a name="ln2676">  }</a>
+<a name="ln2677"> </a>
+<a name="ln2678">  // It's possible for the source and destination to be the same file.</a>
+<a name="ln2679">  // This happens when &quot;from&quot; and &quot;to&quot; differ in case and are on a FAT32</a>
+<a name="ln2680">  // filesystem. In that case go through a temp file name.</a>
+<a name="ln2681">  FileInfo to_info;</a>
+<a name="ln2682">  if (os_fileinfo(to, &amp;to_info) &amp;&amp; os_fileinfo_id_equal(&amp;from_info,  &amp;to_info)) {</a>
+<a name="ln2683">    use_tmp_file = true;</a>
+<a name="ln2684">  }</a>
+<a name="ln2685"> </a>
+<a name="ln2686">  if (use_tmp_file) {</a>
+<a name="ln2687">    return rename_with_tmp(from, to);</a>
+<a name="ln2688">  }</a>
+<a name="ln2689"> </a>
+<a name="ln2690">  // Delete the &quot;to&quot; file, this is required on some systems to make the</a>
+<a name="ln2691">  // os_rename() work, on other systems it makes sure that we don't have</a>
+<a name="ln2692">  // two files when the os_rename() fails.</a>
+<a name="ln2693"> </a>
+<a name="ln2694">  os_remove(to);</a>
+<a name="ln2695"> </a>
+<a name="ln2696">  // First try a normal rename, return if it works.</a>
+<a name="ln2697">  if (os_rename(from, to) == OK) {</a>
+<a name="ln2698">    return 0;</a>
 <a name="ln2699">  }</a>
 <a name="ln2700"> </a>
-<a name="ln2701">  // Delete the &quot;to&quot; file, this is required on some systems to make the</a>
-<a name="ln2702">  // os_rename() work, on other systems it makes sure that we don't have</a>
-<a name="ln2703">  // two files when the os_rename() fails.</a>
-<a name="ln2704"> </a>
-<a name="ln2705">  os_remove(to);</a>
-<a name="ln2706"> </a>
-<a name="ln2707">  // First try a normal rename, return if it works.</a>
-<a name="ln2708">  if (os_rename(from, to) == OK) {</a>
-<a name="ln2709">    return 0;</a>
-<a name="ln2710">  }</a>
-<a name="ln2711"> </a>
-<a name="ln2712">  // Rename() failed, try copying the file.</a>
-<a name="ln2713">  long perm = os_getperm(from);</a>
-<a name="ln2714">  // For systems that support ACL: get the ACL from the original file.</a>
-<a name="ln2715">  vim_acl_T acl = os_get_acl(from);</a>
-<a name="ln2716">  int fd_in = os_open(from, O_RDONLY, 0);</a>
-<a name="ln2717">  if (fd_in &lt; 0) {</a>
-<a name="ln2718">    os_free_acl(acl);</a>
-<a name="ln2719">    return -1;</a>
-<a name="ln2720">  }</a>
-<a name="ln2721"> </a>
-<a name="ln2722">  // Create the new file with same permissions as the original.</a>
-<a name="ln2723">  int fd_out = os_open(to, O_CREAT|O_EXCL|O_WRONLY|O_NOFOLLOW, (int)perm);</a>
-<a name="ln2724">  if (fd_out &lt; 0) {</a>
-<a name="ln2725">    close(fd_in);</a>
-<a name="ln2726">    os_free_acl(acl);</a>
-<a name="ln2727">    return -1;</a>
-<a name="ln2728">  }</a>
-<a name="ln2729"> </a>
-<a name="ln2730">  // Avoid xmalloc() here as vim_rename() is called by buf_write() when nvim</a>
-<a name="ln2731">  // is `preserve_exit()`ing.</a>
-<a name="ln2732">  char *buffer = try_malloc(WRITEBUFSIZE);</a>
-<a name="ln2733">  if (buffer == NULL) {</a>
-<a name="ln2734">    close(fd_out);</a>
-<a name="ln2735">    close(fd_in);</a>
-<a name="ln2736">    os_free_acl(acl);</a>
-<a name="ln2737">    return -1;</a>
-<a name="ln2738">  }</a>
-<a name="ln2739"> </a>
-<a name="ln2740">  int n;</a>
-<a name="ln2741">  while ((n = (int)read_eintr(fd_in, buffer, WRITEBUFSIZE)) &gt; 0) {</a>
-<a name="ln2742">    if (write_eintr(fd_out, buffer, (size_t)n) != n) {</a>
-<a name="ln2743">      errmsg = _(&quot;E208: Error writing to \&quot;%s\&quot;&quot;);</a>
-<a name="ln2744">      break;</a>
-<a name="ln2745">    }</a>
-<a name="ln2746">  }</a>
-<a name="ln2747"> </a>
-<a name="ln2748">  xfree(buffer);</a>
-<a name="ln2749">  close(fd_in);</a>
-<a name="ln2750">  if (close(fd_out) &lt; 0) {</a>
-<a name="ln2751">    errmsg = _(&quot;E209: Error closing \&quot;%s\&quot;&quot;);</a>
-<a name="ln2752">  }</a>
-<a name="ln2753">  if (n &lt; 0) {</a>
-<a name="ln2754">    errmsg = _(&quot;E210: Error reading \&quot;%s\&quot;&quot;);</a>
-<a name="ln2755">    to = from;</a>
-<a name="ln2756">  }</a>
-<a name="ln2757">#ifndef UNIX  // For Unix os_open() already set the permission.</a>
-<a name="ln2758">  os_setperm(to, perm);</a>
-<a name="ln2759">#endif</a>
-<a name="ln2760">  os_set_acl(to, acl);</a>
-<a name="ln2761">  os_free_acl(acl);</a>
-<a name="ln2762">  if (errmsg != NULL) {</a>
-<a name="ln2763">    semsg(errmsg, to);</a>
-<a name="ln2764">    return -1;</a>
-<a name="ln2765">  }</a>
-<a name="ln2766">  os_remove(from);</a>
-<a name="ln2767">  return 0;</a>
-<a name="ln2768">}</a>
-<a name="ln2769"> </a>
-<a name="ln2770">static int already_warned = false;</a>
-<a name="ln2771"> </a>
-<a name="ln2772">/// Check if any not hidden buffer has been changed.</a>
-<a name="ln2773">/// Postpone the check if there are characters in the stuff buffer, a global</a>
-<a name="ln2774">/// command is being executed, a mapping is being executed or an autocommand is</a>
-<a name="ln2775">/// busy.</a>
-<a name="ln2776">///</a>
-<a name="ln2777">/// @param focus  called for GUI focus event</a>
-<a name="ln2778">///</a>
-<a name="ln2779">/// @return       true if some message was written (screen should be redrawn and cursor positioned).</a>
-<a name="ln2780">int check_timestamps(int focus)</a>
-<a name="ln2781">{</a>
-<a name="ln2782">  // Don't check timestamps while system() or another low-level function may</a>
-<a name="ln2783">  // cause us to lose and gain focus.</a>
-<a name="ln2784">  if (no_check_timestamps &gt; 0) {</a>
-<a name="ln2785">    return false;</a>
-<a name="ln2786">  }</a>
-<a name="ln2787"> </a>
-<a name="ln2788">  // Avoid doing a check twice.  The OK/Reload dialog can cause a focus</a>
-<a name="ln2789">  // event and we would keep on checking if the file is steadily growing.</a>
-<a name="ln2790">  // Do check again after typing something.</a>
-<a name="ln2791">  if (focus &amp;&amp; did_check_timestamps) {</a>
-<a name="ln2792">    need_check_timestamps = true;</a>
-<a name="ln2793">    return false;</a>
-<a name="ln2794">  }</a>
-<a name="ln2795"> </a>
-<a name="ln2796">  int didit = 0;</a>
-<a name="ln2797"> </a>
-<a name="ln2798">  if (!stuff_empty() || global_busy || !typebuf_typed()</a>
-<a name="ln2799">      || autocmd_busy || curbuf-&gt;b_ro_locked &gt; 0</a>
-<a name="ln2800">      || allbuf_lock &gt; 0) {</a>
-<a name="ln2801">    need_check_timestamps = true;               // check later</a>
-<a name="ln2802">  } else {</a>
-<a name="ln2803">    no_wait_return++;</a>
-<a name="ln2804">    did_check_timestamps = true;</a>
-<a name="ln2805">    already_warned = false;</a>
-<a name="ln2806">    FOR_ALL_BUFFERS(buf) {</a>
-<a name="ln2807">      // Only check buffers in a window.</a>
-<a name="ln2808">      if (buf-&gt;b_nwindows &gt; 0) {</a>
-<a name="ln2809">        bufref_T bufref;</a>
-<a name="ln2810">        set_bufref(&amp;bufref, buf);</a>
-<a name="ln2811">        const int n = buf_check_timestamp(buf);</a>
-<a name="ln2812">        if (didit &lt; n) {</a>
-<a name="ln2813">          didit = n;</a>
-<a name="ln2814">        }</a>
-<a name="ln2815">        if (n &gt; 0 &amp;&amp; !bufref_valid(&amp;bufref)) {</a>
-<a name="ln2816">          // Autocommands have removed the buffer, start at the first one again.</a>
-<a name="ln2817">          buf = firstbuf;</a>
-<a name="ln2818">          continue;</a>
-<a name="ln2819">        }</a>
-<a name="ln2820">      }</a>
-<a name="ln2821">    }</a>
-<a name="ln2822">    no_wait_return--;</a>
-<a name="ln2823">    need_check_timestamps = false;</a>
-<a name="ln2824">    if (need_wait_return &amp;&amp; didit == 2) {</a>
-<a name="ln2825">      // make sure msg isn't overwritten</a>
-<a name="ln2826">      msg_puts(&quot;\n&quot;);</a>
-<a name="ln2827">      ui_flush();</a>
-<a name="ln2828">    }</a>
-<a name="ln2829">  }</a>
-<a name="ln2830">  return didit;</a>
-<a name="ln2831">}</a>
-<a name="ln2832"> </a>
-<a name="ln2833">/// Move all the lines from buffer &quot;frombuf&quot; to buffer &quot;tobuf&quot;.</a>
-<a name="ln2834">///</a>
-<a name="ln2835">/// @return  OK or FAIL.</a>
-<a name="ln2836">///          When FAIL &quot;tobuf&quot; is incomplete and/or &quot;frombuf&quot; is not empty.</a>
-<a name="ln2837">static int move_lines(buf_T *frombuf, buf_T *tobuf)</a>
-<a name="ln2838">{</a>
-<a name="ln2839">  buf_T *tbuf = curbuf;</a>
-<a name="ln2840">  int retval = OK;</a>
-<a name="ln2841"> </a>
-<a name="ln2842">  // Copy the lines in &quot;frombuf&quot; to &quot;tobuf&quot;.</a>
-<a name="ln2843">  curbuf = tobuf;</a>
-<a name="ln2844">  for (linenr_T lnum = 1; lnum &lt;= frombuf-&gt;b_ml.ml_line_count; lnum++) {</a>
-<a name="ln2845">    char *p = xstrdup(ml_get_buf(frombuf, lnum));</a>
-<a name="ln2846">    if (ml_append(lnum - 1, p, 0, false) == FAIL) {</a>
-<a name="ln2847">      xfree(p);</a>
-<a name="ln2848">      retval = FAIL;</a>
-<a name="ln2849">      break;</a>
-<a name="ln2850">    }</a>
-<a name="ln2851">    xfree(p);</a>
-<a name="ln2852">  }</a>
-<a name="ln2853"> </a>
-<a name="ln2854">  // Delete all the lines in &quot;frombuf&quot;.</a>
-<a name="ln2855">  if (retval != FAIL) {</a>
-<a name="ln2856">    curbuf = frombuf;</a>
-<a name="ln2857">    for (linenr_T lnum = curbuf-&gt;b_ml.ml_line_count; lnum &gt; 0; lnum--) {</a>
-<a name="ln2858">      if (ml_delete(lnum, false) == FAIL) {</a>
-<a name="ln2859">        // Oops!  We could try putting back the saved lines, but that</a>
-<a name="ln2860">        // might fail again...</a>
-<a name="ln2861">        retval = FAIL;</a>
-<a name="ln2862">        break;</a>
-<a name="ln2863">      }</a>
-<a name="ln2864">    }</a>
-<a name="ln2865">  }</a>
-<a name="ln2866"> </a>
-<a name="ln2867">  curbuf = tbuf;</a>
-<a name="ln2868">  return retval;</a>
-<a name="ln2869">}</a>
-<a name="ln2870"> </a>
-<a name="ln2871">/// Check if buffer &quot;buf&quot; has been changed.</a>
-<a name="ln2872">/// Also check if the file for a new buffer unexpectedly appeared.</a>
-<a name="ln2873">///</a>
-<a name="ln2874">/// @return  1 if a changed buffer was found or,</a>
-<a name="ln2875">///          2 if a message has been displayed or,</a>
-<a name="ln2876">///          0 otherwise.</a>
-<a name="ln2877">int buf_check_timestamp(buf_T *buf)</a>
-<a name="ln2878">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln2879">{</a>
-<a name="ln2880">  int retval = 0;</a>
-<a name="ln2881">  char *mesg = NULL;</a>
-<a name="ln2882">  char *mesg2 = &quot;&quot;;</a>
-<a name="ln2883">  bool helpmesg = false;</a>
+<a name="ln2701">  // Rename() failed, try copying the file.</a>
+<a name="ln2702">  long perm = os_getperm(from);</a>
+<a name="ln2703">  // For systems that support ACL: get the ACL from the original file.</a>
+<a name="ln2704">  vim_acl_T acl = os_get_acl(from);</a>
+<a name="ln2705">  int fd_in = os_open(from, O_RDONLY, 0);</a>
+<a name="ln2706">  if (fd_in &lt; 0) {</a>
+<a name="ln2707">    os_free_acl(acl);</a>
+<a name="ln2708">    return -1;</a>
+<a name="ln2709">  }</a>
+<a name="ln2710"> </a>
+<a name="ln2711">  // Create the new file with same permissions as the original.</a>
+<a name="ln2712">  int fd_out = os_open(to, O_CREAT|O_EXCL|O_WRONLY|O_NOFOLLOW, (int)perm);</a>
+<a name="ln2713">  if (fd_out &lt; 0) {</a>
+<a name="ln2714">    close(fd_in);</a>
+<a name="ln2715">    os_free_acl(acl);</a>
+<a name="ln2716">    return -1;</a>
+<a name="ln2717">  }</a>
+<a name="ln2718"> </a>
+<a name="ln2719">  // Avoid xmalloc() here as vim_rename() is called by buf_write() when nvim</a>
+<a name="ln2720">  // is `preserve_exit()`ing.</a>
+<a name="ln2721">  char *buffer = try_malloc(WRITEBUFSIZE);</a>
+<a name="ln2722">  if (buffer == NULL) {</a>
+<a name="ln2723">    close(fd_out);</a>
+<a name="ln2724">    close(fd_in);</a>
+<a name="ln2725">    os_free_acl(acl);</a>
+<a name="ln2726">    return -1;</a>
+<a name="ln2727">  }</a>
+<a name="ln2728"> </a>
+<a name="ln2729">  int n;</a>
+<a name="ln2730">  while ((n = (int)read_eintr(fd_in, buffer, WRITEBUFSIZE)) &gt; 0) {</a>
+<a name="ln2731">    if (write_eintr(fd_out, buffer, (size_t)n) != n) {</a>
+<a name="ln2732">      errmsg = _(&quot;E208: Error writing to \&quot;%s\&quot;&quot;);</a>
+<a name="ln2733">      break;</a>
+<a name="ln2734">    }</a>
+<a name="ln2735">  }</a>
+<a name="ln2736"> </a>
+<a name="ln2737">  xfree(buffer);</a>
+<a name="ln2738">  close(fd_in);</a>
+<a name="ln2739">  if (close(fd_out) &lt; 0) {</a>
+<a name="ln2740">    errmsg = _(&quot;E209: Error closing \&quot;%s\&quot;&quot;);</a>
+<a name="ln2741">  }</a>
+<a name="ln2742">  if (n &lt; 0) {</a>
+<a name="ln2743">    errmsg = _(&quot;E210: Error reading \&quot;%s\&quot;&quot;);</a>
+<a name="ln2744">    to = from;</a>
+<a name="ln2745">  }</a>
+<a name="ln2746">#ifndef UNIX  // For Unix os_open() already set the permission.</a>
+<a name="ln2747">  os_setperm(to, perm);</a>
+<a name="ln2748">#endif</a>
+<a name="ln2749">  os_set_acl(to, acl);</a>
+<a name="ln2750">  os_free_acl(acl);</a>
+<a name="ln2751">  if (errmsg != NULL) {</a>
+<a name="ln2752">    semsg(errmsg, to);</a>
+<a name="ln2753">    return -1;</a>
+<a name="ln2754">  }</a>
+<a name="ln2755">  os_remove(from);</a>
+<a name="ln2756">  return 0;</a>
+<a name="ln2757">}</a>
+<a name="ln2758"> </a>
+<a name="ln2759">static int already_warned = false;</a>
+<a name="ln2760"> </a>
+<a name="ln2761">/// Check if any not hidden buffer has been changed.</a>
+<a name="ln2762">/// Postpone the check if there are characters in the stuff buffer, a global</a>
+<a name="ln2763">/// command is being executed, a mapping is being executed or an autocommand is</a>
+<a name="ln2764">/// busy.</a>
+<a name="ln2765">///</a>
+<a name="ln2766">/// @param focus  called for GUI focus event</a>
+<a name="ln2767">///</a>
+<a name="ln2768">/// @return       true if some message was written (screen should be redrawn and cursor positioned).</a>
+<a name="ln2769">int check_timestamps(int focus)</a>
+<a name="ln2770">{</a>
+<a name="ln2771">  // Don't check timestamps while system() or another low-level function may</a>
+<a name="ln2772">  // cause us to lose and gain focus.</a>
+<a name="ln2773">  if (no_check_timestamps &gt; 0) {</a>
+<a name="ln2774">    return false;</a>
+<a name="ln2775">  }</a>
+<a name="ln2776"> </a>
+<a name="ln2777">  // Avoid doing a check twice.  The OK/Reload dialog can cause a focus</a>
+<a name="ln2778">  // event and we would keep on checking if the file is steadily growing.</a>
+<a name="ln2779">  // Do check again after typing something.</a>
+<a name="ln2780">  if (focus &amp;&amp; did_check_timestamps) {</a>
+<a name="ln2781">    need_check_timestamps = true;</a>
+<a name="ln2782">    return false;</a>
+<a name="ln2783">  }</a>
+<a name="ln2784"> </a>
+<a name="ln2785">  int didit = 0;</a>
+<a name="ln2786"> </a>
+<a name="ln2787">  if (!stuff_empty() || global_busy || !typebuf_typed()</a>
+<a name="ln2788">      || autocmd_busy || curbuf-&gt;b_ro_locked &gt; 0</a>
+<a name="ln2789">      || allbuf_lock &gt; 0) {</a>
+<a name="ln2790">    need_check_timestamps = true;               // check later</a>
+<a name="ln2791">  } else {</a>
+<a name="ln2792">    no_wait_return++;</a>
+<a name="ln2793">    did_check_timestamps = true;</a>
+<a name="ln2794">    already_warned = false;</a>
+<a name="ln2795">    FOR_ALL_BUFFERS(buf) {</a>
+<a name="ln2796">      // Only check buffers in a window.</a>
+<a name="ln2797">      if (buf-&gt;b_nwindows &gt; 0) {</a>
+<a name="ln2798">        bufref_T bufref;</a>
+<a name="ln2799">        set_bufref(&amp;bufref, buf);</a>
+<a name="ln2800">        const int n = buf_check_timestamp(buf);</a>
+<a name="ln2801">        if (didit &lt; n) {</a>
+<a name="ln2802">          didit = n;</a>
+<a name="ln2803">        }</a>
+<a name="ln2804">        if (n &gt; 0 &amp;&amp; !bufref_valid(&amp;bufref)) {</a>
+<a name="ln2805">          // Autocommands have removed the buffer, start at the first one again.</a>
+<a name="ln2806">          buf = firstbuf;</a>
+<a name="ln2807">          continue;</a>
+<a name="ln2808">        }</a>
+<a name="ln2809">      }</a>
+<a name="ln2810">    }</a>
+<a name="ln2811">    no_wait_return--;</a>
+<a name="ln2812">    need_check_timestamps = false;</a>
+<a name="ln2813">    if (need_wait_return &amp;&amp; didit == 2) {</a>
+<a name="ln2814">      // make sure msg isn't overwritten</a>
+<a name="ln2815">      msg_puts(&quot;\n&quot;);</a>
+<a name="ln2816">      ui_flush();</a>
+<a name="ln2817">    }</a>
+<a name="ln2818">  }</a>
+<a name="ln2819">  return didit;</a>
+<a name="ln2820">}</a>
+<a name="ln2821"> </a>
+<a name="ln2822">/// Move all the lines from buffer &quot;frombuf&quot; to buffer &quot;tobuf&quot;.</a>
+<a name="ln2823">///</a>
+<a name="ln2824">/// @return  OK or FAIL.</a>
+<a name="ln2825">///          When FAIL &quot;tobuf&quot; is incomplete and/or &quot;frombuf&quot; is not empty.</a>
+<a name="ln2826">static int move_lines(buf_T *frombuf, buf_T *tobuf)</a>
+<a name="ln2827">{</a>
+<a name="ln2828">  buf_T *tbuf = curbuf;</a>
+<a name="ln2829">  int retval = OK;</a>
+<a name="ln2830"> </a>
+<a name="ln2831">  // Copy the lines in &quot;frombuf&quot; to &quot;tobuf&quot;.</a>
+<a name="ln2832">  curbuf = tobuf;</a>
+<a name="ln2833">  for (linenr_T lnum = 1; lnum &lt;= frombuf-&gt;b_ml.ml_line_count; lnum++) {</a>
+<a name="ln2834">    char *p = xstrdup(ml_get_buf(frombuf, lnum));</a>
+<a name="ln2835">    if (ml_append(lnum - 1, p, 0, false) == FAIL) {</a>
+<a name="ln2836">      xfree(p);</a>
+<a name="ln2837">      retval = FAIL;</a>
+<a name="ln2838">      break;</a>
+<a name="ln2839">    }</a>
+<a name="ln2840">    xfree(p);</a>
+<a name="ln2841">  }</a>
+<a name="ln2842"> </a>
+<a name="ln2843">  // Delete all the lines in &quot;frombuf&quot;.</a>
+<a name="ln2844">  if (retval != FAIL) {</a>
+<a name="ln2845">    curbuf = frombuf;</a>
+<a name="ln2846">    for (linenr_T lnum = curbuf-&gt;b_ml.ml_line_count; lnum &gt; 0; lnum--) {</a>
+<a name="ln2847">      if (ml_delete(lnum, false) == FAIL) {</a>
+<a name="ln2848">        // Oops!  We could try putting back the saved lines, but that</a>
+<a name="ln2849">        // might fail again...</a>
+<a name="ln2850">        retval = FAIL;</a>
+<a name="ln2851">        break;</a>
+<a name="ln2852">      }</a>
+<a name="ln2853">    }</a>
+<a name="ln2854">  }</a>
+<a name="ln2855"> </a>
+<a name="ln2856">  curbuf = tbuf;</a>
+<a name="ln2857">  return retval;</a>
+<a name="ln2858">}</a>
+<a name="ln2859"> </a>
+<a name="ln2860">/// Check if buffer &quot;buf&quot; has been changed.</a>
+<a name="ln2861">/// Also check if the file for a new buffer unexpectedly appeared.</a>
+<a name="ln2862">///</a>
+<a name="ln2863">/// @return  1 if a changed buffer was found or,</a>
+<a name="ln2864">///          2 if a message has been displayed or,</a>
+<a name="ln2865">///          0 otherwise.</a>
+<a name="ln2866">int buf_check_timestamp(buf_T *buf)</a>
+<a name="ln2867">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln2868">{</a>
+<a name="ln2869">  int retval = 0;</a>
+<a name="ln2870">  char *mesg = NULL;</a>
+<a name="ln2871">  char *mesg2 = &quot;&quot;;</a>
+<a name="ln2872">  bool helpmesg = false;</a>
+<a name="ln2873"> </a>
+<a name="ln2874">  enum {</a>
+<a name="ln2875">    RELOAD_NONE,</a>
+<a name="ln2876">    RELOAD_NORMAL,</a>
+<a name="ln2877">    RELOAD_DETECT,</a>
+<a name="ln2878">  } reload = RELOAD_NONE;</a>
+<a name="ln2879"> </a>
+<a name="ln2880">  bool can_reload = false;</a>
+<a name="ln2881">  uint64_t orig_size = buf-&gt;b_orig_size;</a>
+<a name="ln2882">  int orig_mode = buf-&gt;b_orig_mode;</a>
+<a name="ln2883">  static bool busy = false;</a>
 <a name="ln2884"> </a>
-<a name="ln2885">  enum {</a>
-<a name="ln2886">    RELOAD_NONE,</a>
-<a name="ln2887">    RELOAD_NORMAL,</a>
-<a name="ln2888">    RELOAD_DETECT,</a>
-<a name="ln2889">  } reload = RELOAD_NONE;</a>
-<a name="ln2890"> </a>
-<a name="ln2891">  bool can_reload = false;</a>
-<a name="ln2892">  uint64_t orig_size = buf-&gt;b_orig_size;</a>
-<a name="ln2893">  int orig_mode = buf-&gt;b_orig_mode;</a>
-<a name="ln2894">  static bool busy = false;</a>
-<a name="ln2895"> </a>
-<a name="ln2896">  bufref_T bufref;</a>
-<a name="ln2897">  set_bufref(&amp;bufref, buf);</a>
-<a name="ln2898"> </a>
-<a name="ln2899">  // If its a terminal, there is no file name, the buffer is not loaded,</a>
-<a name="ln2900">  // 'buftype' is set, we are in the middle of a save or being called</a>
-<a name="ln2901">  // recursively: ignore this buffer.</a>
-<a name="ln2902">  if (buf-&gt;terminal</a>
-<a name="ln2903">      || buf-&gt;b_ffname == NULL</a>
-<a name="ln2904">      || buf-&gt;b_ml.ml_mfp == NULL</a>
-<a name="ln2905">      || !bt_normal(buf)</a>
-<a name="ln2906">      || buf-&gt;b_saving</a>
-<a name="ln2907">      || busy) {</a>
-<a name="ln2908">    return 0;</a>
-<a name="ln2909">  }</a>
+<a name="ln2885">  bufref_T bufref;</a>
+<a name="ln2886">  set_bufref(&amp;bufref, buf);</a>
+<a name="ln2887"> </a>
+<a name="ln2888">  // If its a terminal, there is no file name, the buffer is not loaded,</a>
+<a name="ln2889">  // 'buftype' is set, we are in the middle of a save or being called</a>
+<a name="ln2890">  // recursively: ignore this buffer.</a>
+<a name="ln2891">  if (buf-&gt;terminal</a>
+<a name="ln2892">      || buf-&gt;b_ffname == NULL</a>
+<a name="ln2893">      || buf-&gt;b_ml.ml_mfp == NULL</a>
+<a name="ln2894">      || !bt_normal(buf)</a>
+<a name="ln2895">      || buf-&gt;b_saving</a>
+<a name="ln2896">      || busy) {</a>
+<a name="ln2897">    return 0;</a>
+<a name="ln2898">  }</a>
+<a name="ln2899"> </a>
+<a name="ln2900">  FileInfo file_info;</a>
+<a name="ln2901">  bool file_info_ok;</a>
+<a name="ln2902">  if (!(buf-&gt;b_flags &amp; BF_NOTEDITED)</a>
+<a name="ln2903">      &amp;&amp; buf-&gt;b_mtime != 0</a>
+<a name="ln2904">      &amp;&amp; (!(file_info_ok = os_fileinfo(buf-&gt;b_ffname, &amp;file_info))</a>
+<a name="ln2905">          || time_differs(&amp;file_info, buf-&gt;b_mtime, buf-&gt;b_mtime_ns)</a>
+<a name="ln2906">          || (int)file_info.stat.st_mode != buf-&gt;b_orig_mode)) {</a>
+<a name="ln2907">    const long prev_b_mtime = buf-&gt;b_mtime;</a>
+<a name="ln2908"> </a>
+<a name="ln2909">    retval = 1;</a>
 <a name="ln2910"> </a>
-<a name="ln2911">  FileInfo file_info;</a>
-<a name="ln2912">  bool file_info_ok;</a>
-<a name="ln2913">  if (!(buf-&gt;b_flags &amp; BF_NOTEDITED)</a>
-<a name="ln2914">      &amp;&amp; buf-&gt;b_mtime != 0</a>
-<a name="ln2915">      &amp;&amp; (!(file_info_ok = os_fileinfo(buf-&gt;b_ffname, &amp;file_info))</a>
-<a name="ln2916">          || time_differs(&amp;file_info, buf-&gt;b_mtime, buf-&gt;b_mtime_ns)</a>
-<a name="ln2917">          || (int)file_info.stat.st_mode != buf-&gt;b_orig_mode)) {</a>
-<a name="ln2918">    const long prev_b_mtime = buf-&gt;b_mtime;</a>
-<a name="ln2919"> </a>
-<a name="ln2920">    retval = 1;</a>
+<a name="ln2911">    // set b_mtime to stop further warnings (e.g., when executing</a>
+<a name="ln2912">    // FileChangedShell autocmd)</a>
+<a name="ln2913">    if (!file_info_ok) {</a>
+<a name="ln2914">      // Check the file again later to see if it re-appears.</a>
+<a name="ln2915">      buf-&gt;b_mtime = -1;</a>
+<a name="ln2916">      buf-&gt;b_orig_size = 0;</a>
+<a name="ln2917">      buf-&gt;b_orig_mode = 0;</a>
+<a name="ln2918">    } else {</a>
+<a name="ln2919">      buf_store_file_info(buf, &amp;file_info);</a>
+<a name="ln2920">    }</a>
 <a name="ln2921"> </a>
-<a name="ln2922">    // set b_mtime to stop further warnings (e.g., when executing</a>
-<a name="ln2923">    // FileChangedShell autocmd)</a>
-<a name="ln2924">    if (!file_info_ok) {</a>
-<a name="ln2925">      // Check the file again later to see if it re-appears.</a>
-<a name="ln2926">      buf-&gt;b_mtime = -1;</a>
-<a name="ln2927">      buf-&gt;b_orig_size = 0;</a>
-<a name="ln2928">      buf-&gt;b_orig_mode = 0;</a>
-<a name="ln2929">    } else {</a>
-<a name="ln2930">      buf_store_file_info(buf, &amp;file_info);</a>
-<a name="ln2931">    }</a>
-<a name="ln2932"> </a>
-<a name="ln2933">    if (os_isdir(buf-&gt;b_fname)) {</a>
-<a name="ln2934">      // Don't do anything for a directory.  Might contain the file explorer.</a>
-<a name="ln2935">    } else if ((buf-&gt;b_p_ar &gt;= 0 ? buf-&gt;b_p_ar : p_ar)</a>
-<a name="ln2936">               &amp;&amp; !bufIsChanged(buf) &amp;&amp; file_info_ok) {</a>
-<a name="ln2937">      // If 'autoread' is set, the buffer has no changes and the file still</a>
-<a name="ln2938">      // exists, reload the buffer.  Use the buffer-local option value if it</a>
-<a name="ln2939">      // was set, the global option value otherwise.</a>
-<a name="ln2940">      reload = RELOAD_NORMAL;</a>
-<a name="ln2941">    } else {</a>
-<a name="ln2942">      char *reason;</a>
-<a name="ln2943">      if (!file_info_ok) {</a>
-<a name="ln2944">        reason = &quot;deleted&quot;;</a>
-<a name="ln2945">      } else if (bufIsChanged(buf)) {</a>
-<a name="ln2946">        reason = &quot;conflict&quot;;</a>
-<a name="ln2947">      } else if (orig_size != buf-&gt;b_orig_size || buf_contents_changed(buf)) {</a>
-<a name="ln2948">        reason = &quot;changed&quot;;</a>
-<a name="ln2949">      } else if (orig_mode != buf-&gt;b_orig_mode) {</a>
-<a name="ln2950">        reason = &quot;mode&quot;;</a>
-<a name="ln2951">      } else {</a>
-<a name="ln2952">        reason = &quot;time&quot;;</a>
-<a name="ln2953">      }</a>
-<a name="ln2954"> </a>
-<a name="ln2955">      // Only give the warning if there are no FileChangedShell</a>
-<a name="ln2956">      // autocommands.</a>
-<a name="ln2957">      // Avoid being called recursively by setting &quot;busy&quot;.</a>
-<a name="ln2958">      busy = true;</a>
-<a name="ln2959">      set_vim_var_string(VV_FCS_REASON, reason, -1);</a>
-<a name="ln2960">      set_vim_var_string(VV_FCS_CHOICE, &quot;&quot;, -1);</a>
-<a name="ln2961">      allbuf_lock++;</a>
-<a name="ln2962">      bool n = apply_autocmds(EVENT_FILECHANGEDSHELL, buf-&gt;b_fname, buf-&gt;b_fname, false, buf);</a>
-<a name="ln2963">      allbuf_lock--;</a>
-<a name="ln2964">      busy = false;</a>
-<a name="ln2965">      if (n) {</a>
-<a name="ln2966">        if (!bufref_valid(&amp;bufref)) {</a>
-<a name="ln2967">          emsg(_(&quot;E246: FileChangedShell autocommand deleted buffer&quot;));</a>
-<a name="ln2968">        }</a>
-<a name="ln2969">        char *s = get_vim_var_str(VV_FCS_CHOICE);</a>
-<a name="ln2970">        if (strcmp(s, &quot;reload&quot;) == 0 &amp;&amp; *reason != 'd') {</a>
-<a name="ln2971">          reload = RELOAD_NORMAL;</a>
-<a name="ln2972">        } else if (strcmp(s, &quot;edit&quot;) == 0) {</a>
-<a name="ln2973">          reload = RELOAD_DETECT;</a>
-<a name="ln2974">        } else if (strcmp(s, &quot;ask&quot;) == 0) {</a>
-<a name="ln2975">          n = false;</a>
-<a name="ln2976">        } else {</a>
-<a name="ln2977">          return 2;</a>
-<a name="ln2978">        }</a>
-<a name="ln2979">      }</a>
-<a name="ln2980">      if (!n) {</a>
-<a name="ln2981">        if (*reason == 'd') {</a>
-<a name="ln2982">          // Only give the message once.</a>
-<a name="ln2983">          if (prev_b_mtime != -1) {</a>
-<a name="ln2984">            mesg = _(&quot;E211: File \&quot;%s\&quot; no longer available&quot;);</a>
-<a name="ln2985">          }</a>
-<a name="ln2986">        } else {</a>
-<a name="ln2987">          helpmesg = true;</a>
-<a name="ln2988">          can_reload = true;</a>
-<a name="ln2989"> </a>
-<a name="ln2990">          // Check if the file contents really changed to avoid</a>
-<a name="ln2991">          // giving a warning when only the timestamp was set (e.g.,</a>
-<a name="ln2992">          // checked out of CVS).  Always warn when the buffer was</a>
-<a name="ln2993">          // changed.</a>
-<a name="ln2994">          if (reason[2] == 'n') {</a>
-<a name="ln2995">            mesg = _(</a>
-<a name="ln2996">                    &quot;W12: Warning: File \&quot;%s\&quot; has changed and the buffer was changed in Vim as well&quot;);</a>
-<a name="ln2997">            mesg2 = _(&quot;See \&quot;:help W12\&quot; for more info.&quot;);</a>
-<a name="ln2998">          } else if (reason[1] == 'h') {</a>
-<a name="ln2999">            mesg = _(&quot;W11: Warning: File \&quot;%s\&quot; has changed since editing started&quot;);</a>
-<a name="ln3000">            mesg2 = _(&quot;See \&quot;:help W11\&quot; for more info.&quot;);</a>
-<a name="ln3001">          } else if (*reason == 'm') {</a>
-<a name="ln3002">            mesg = _(&quot;W16: Warning: Mode of file \&quot;%s\&quot; has changed since editing started&quot;);</a>
-<a name="ln3003">            mesg2 = _(&quot;See \&quot;:help W16\&quot; for more info.&quot;);</a>
-<a name="ln3004">          } else {</a>
-<a name="ln3005">            // Only timestamp changed, store it to avoid a warning</a>
-<a name="ln3006">            // in check_mtime() later.</a>
-<a name="ln3007">            buf-&gt;b_mtime_read = buf-&gt;b_mtime;</a>
-<a name="ln3008">            buf-&gt;b_mtime_read_ns = buf-&gt;b_mtime_ns;</a>
-<a name="ln3009">          }</a>
-<a name="ln3010">        }</a>
-<a name="ln3011">      }</a>
-<a name="ln3012">    }</a>
-<a name="ln3013">  } else if ((buf-&gt;b_flags &amp; BF_NEW) &amp;&amp; !(buf-&gt;b_flags &amp; BF_NEW_W)</a>
-<a name="ln3014">             &amp;&amp; os_path_exists(buf-&gt;b_ffname)) {</a>
-<a name="ln3015">    retval = 1;</a>
-<a name="ln3016">    mesg = _(&quot;W13: Warning: File \&quot;%s\&quot; has been created after editing started&quot;);</a>
-<a name="ln3017">    buf-&gt;b_flags |= BF_NEW_W;</a>
-<a name="ln3018">    can_reload = true;</a>
-<a name="ln3019">  }</a>
-<a name="ln3020"> </a>
-<a name="ln3021">  if (mesg != NULL) {</a>
-<a name="ln3022">    char *path = home_replace_save(buf, buf-&gt;b_fname);</a>
-<a name="ln3023">    if (!helpmesg) {</a>
-<a name="ln3024">      mesg2 = &quot;&quot;;</a>
-<a name="ln3025">    }</a>
-<a name="ln3026">    const size_t tbuf_len = strlen(path) + strlen(mesg) + strlen(mesg2) + 2;</a>
-<a name="ln3027">    char *const tbuf = xmalloc(tbuf_len);</a>
-<a name="ln3028">    snprintf(tbuf, tbuf_len, mesg, path);</a>
-<a name="ln3029">    // Set warningmsg here, before the unimportant and output-specific</a>
-<a name="ln3030">    // mesg2 has been appended.</a>
-<a name="ln3031">    set_vim_var_string(VV_WARNINGMSG, tbuf, -1);</a>
-<a name="ln3032">    if (can_reload) {</a>
-<a name="ln3033">      if (*mesg2 != NUL) {</a>
-<a name="ln3034">        xstrlcat(tbuf, &quot;\n&quot;, tbuf_len - 1);</a>
-<a name="ln3035">        xstrlcat(tbuf, mesg2, tbuf_len - 1);</a>
-<a name="ln3036">      }</a>
-<a name="ln3037">      switch (do_dialog(VIM_WARNING, _(&quot;Warning&quot;), tbuf,</a>
-<a name="ln3038">                        _(&quot;&amp;OK\n&amp;Load File\nLoad File &amp;and Options&quot;),</a>
-<a name="ln3039">                        1, NULL, true)) {</a>
-<a name="ln3040">      case 2:</a>
-<a name="ln3041">        reload = RELOAD_NORMAL;</a>
-<a name="ln3042">        break;</a>
-<a name="ln3043">      case 3:</a>
-<a name="ln3044">        reload = RELOAD_DETECT;</a>
-<a name="ln3045">        break;</a>
-<a name="ln3046">      }</a>
-<a name="ln3047">    } else if (State &gt; MODE_NORMAL_BUSY || (State &amp; MODE_CMDLINE) || already_warned) {</a>
-<a name="ln3048">      if (*mesg2 != NUL) {</a>
-<a name="ln3049">        xstrlcat(tbuf, &quot;; &quot;, tbuf_len - 1);</a>
-<a name="ln3050">        xstrlcat(tbuf, mesg2, tbuf_len - 1);</a>
-<a name="ln3051">      }</a>
-<a name="ln3052">      emsg(tbuf);</a>
-<a name="ln3053">      retval = 2;</a>
-<a name="ln3054">    } else {</a>
-<a name="ln3055">      if (!autocmd_busy) {</a>
-<a name="ln3056">        msg_start();</a>
-<a name="ln3057">        msg_puts_attr(tbuf, HL_ATTR(HLF_E) + MSG_HIST);</a>
-<a name="ln3058">        if (*mesg2 != NUL) {</a>
-<a name="ln3059">          msg_puts_attr(mesg2, HL_ATTR(HLF_W) + MSG_HIST);</a>
-<a name="ln3060">        }</a>
-<a name="ln3061">        msg_clr_eos();</a>
-<a name="ln3062">        (void)msg_end();</a>
-<a name="ln3063">        if (emsg_silent == 0 &amp;&amp; !in_assert_fails) {</a>
-<a name="ln3064">          ui_flush();</a>
-<a name="ln3065">          // give the user some time to think about it</a>
-<a name="ln3066">          os_delay(1004L, true);</a>
+<a name="ln2922">    if (os_isdir(buf-&gt;b_fname)) {</a>
+<a name="ln2923">      // Don't do anything for a directory.  Might contain the file explorer.</a>
+<a name="ln2924">    } else if ((buf-&gt;b_p_ar &gt;= 0 ? buf-&gt;b_p_ar : p_ar)</a>
+<a name="ln2925">               &amp;&amp; !bufIsChanged(buf) &amp;&amp; file_info_ok) {</a>
+<a name="ln2926">      // If 'autoread' is set, the buffer has no changes and the file still</a>
+<a name="ln2927">      // exists, reload the buffer.  Use the buffer-local option value if it</a>
+<a name="ln2928">      // was set, the global option value otherwise.</a>
+<a name="ln2929">      reload = RELOAD_NORMAL;</a>
+<a name="ln2930">    } else {</a>
+<a name="ln2931">      char *reason;</a>
+<a name="ln2932">      if (!file_info_ok) {</a>
+<a name="ln2933">        reason = &quot;deleted&quot;;</a>
+<a name="ln2934">      } else if (bufIsChanged(buf)) {</a>
+<a name="ln2935">        reason = &quot;conflict&quot;;</a>
+<a name="ln2936">      } else if (orig_size != buf-&gt;b_orig_size || buf_contents_changed(buf)) {</a>
+<a name="ln2937">        reason = &quot;changed&quot;;</a>
+<a name="ln2938">      } else if (orig_mode != buf-&gt;b_orig_mode) {</a>
+<a name="ln2939">        reason = &quot;mode&quot;;</a>
+<a name="ln2940">      } else {</a>
+<a name="ln2941">        reason = &quot;time&quot;;</a>
+<a name="ln2942">      }</a>
+<a name="ln2943"> </a>
+<a name="ln2944">      // Only give the warning if there are no FileChangedShell</a>
+<a name="ln2945">      // autocommands.</a>
+<a name="ln2946">      // Avoid being called recursively by setting &quot;busy&quot;.</a>
+<a name="ln2947">      busy = true;</a>
+<a name="ln2948">      set_vim_var_string(VV_FCS_REASON, reason, -1);</a>
+<a name="ln2949">      set_vim_var_string(VV_FCS_CHOICE, &quot;&quot;, -1);</a>
+<a name="ln2950">      allbuf_lock++;</a>
+<a name="ln2951">      bool n = apply_autocmds(EVENT_FILECHANGEDSHELL, buf-&gt;b_fname, buf-&gt;b_fname, false, buf);</a>
+<a name="ln2952">      allbuf_lock--;</a>
+<a name="ln2953">      busy = false;</a>
+<a name="ln2954">      if (n) {</a>
+<a name="ln2955">        if (!bufref_valid(&amp;bufref)) {</a>
+<a name="ln2956">          emsg(_(&quot;E246: FileChangedShell autocommand deleted buffer&quot;));</a>
+<a name="ln2957">        }</a>
+<a name="ln2958">        char *s = get_vim_var_str(VV_FCS_CHOICE);</a>
+<a name="ln2959">        if (strcmp(s, &quot;reload&quot;) == 0 &amp;&amp; *reason != 'd') {</a>
+<a name="ln2960">          reload = RELOAD_NORMAL;</a>
+<a name="ln2961">        } else if (strcmp(s, &quot;edit&quot;) == 0) {</a>
+<a name="ln2962">          reload = RELOAD_DETECT;</a>
+<a name="ln2963">        } else if (strcmp(s, &quot;ask&quot;) == 0) {</a>
+<a name="ln2964">          n = false;</a>
+<a name="ln2965">        } else {</a>
+<a name="ln2966">          return 2;</a>
+<a name="ln2967">        }</a>
+<a name="ln2968">      }</a>
+<a name="ln2969">      if (!n) {</a>
+<a name="ln2970">        if (*reason == 'd') {</a>
+<a name="ln2971">          // Only give the message once.</a>
+<a name="ln2972">          if (prev_b_mtime != -1) {</a>
+<a name="ln2973">            mesg = _(&quot;E211: File \&quot;%s\&quot; no longer available&quot;);</a>
+<a name="ln2974">          }</a>
+<a name="ln2975">        } else {</a>
+<a name="ln2976">          helpmesg = true;</a>
+<a name="ln2977">          can_reload = true;</a>
+<a name="ln2978"> </a>
+<a name="ln2979">          // Check if the file contents really changed to avoid</a>
+<a name="ln2980">          // giving a warning when only the timestamp was set (e.g.,</a>
+<a name="ln2981">          // checked out of CVS).  Always warn when the buffer was</a>
+<a name="ln2982">          // changed.</a>
+<a name="ln2983">          if (reason[2] == 'n') {</a>
+<a name="ln2984">            mesg = _(</a>
+<a name="ln2985">                    &quot;W12: Warning: File \&quot;%s\&quot; has changed and the buffer was changed in Vim as well&quot;);</a>
+<a name="ln2986">            mesg2 = _(&quot;See \&quot;:help W12\&quot; for more info.&quot;);</a>
+<a name="ln2987">          } else if (reason[1] == 'h') {</a>
+<a name="ln2988">            mesg = _(&quot;W11: Warning: File \&quot;%s\&quot; has changed since editing started&quot;);</a>
+<a name="ln2989">            mesg2 = _(&quot;See \&quot;:help W11\&quot; for more info.&quot;);</a>
+<a name="ln2990">          } else if (*reason == 'm') {</a>
+<a name="ln2991">            mesg = _(&quot;W16: Warning: Mode of file \&quot;%s\&quot; has changed since editing started&quot;);</a>
+<a name="ln2992">            mesg2 = _(&quot;See \&quot;:help W16\&quot; for more info.&quot;);</a>
+<a name="ln2993">          } else {</a>
+<a name="ln2994">            // Only timestamp changed, store it to avoid a warning</a>
+<a name="ln2995">            // in check_mtime() later.</a>
+<a name="ln2996">            buf-&gt;b_mtime_read = buf-&gt;b_mtime;</a>
+<a name="ln2997">            buf-&gt;b_mtime_read_ns = buf-&gt;b_mtime_ns;</a>
+<a name="ln2998">          }</a>
+<a name="ln2999">        }</a>
+<a name="ln3000">      }</a>
+<a name="ln3001">    }</a>
+<a name="ln3002">  } else if ((buf-&gt;b_flags &amp; BF_NEW) &amp;&amp; !(buf-&gt;b_flags &amp; BF_NEW_W)</a>
+<a name="ln3003">             &amp;&amp; os_path_exists(buf-&gt;b_ffname)) {</a>
+<a name="ln3004">    retval = 1;</a>
+<a name="ln3005">    mesg = _(&quot;W13: Warning: File \&quot;%s\&quot; has been created after editing started&quot;);</a>
+<a name="ln3006">    buf-&gt;b_flags |= BF_NEW_W;</a>
+<a name="ln3007">    can_reload = true;</a>
+<a name="ln3008">  }</a>
+<a name="ln3009"> </a>
+<a name="ln3010">  if (mesg != NULL) {</a>
+<a name="ln3011">    char *path = home_replace_save(buf, buf-&gt;b_fname);</a>
+<a name="ln3012">    if (!helpmesg) {</a>
+<a name="ln3013">      mesg2 = &quot;&quot;;</a>
+<a name="ln3014">    }</a>
+<a name="ln3015">    const size_t tbuf_len = strlen(path) + strlen(mesg) + strlen(mesg2) + 2;</a>
+<a name="ln3016">    char *const tbuf = xmalloc(tbuf_len);</a>
+<a name="ln3017">    snprintf(tbuf, tbuf_len, mesg, path);</a>
+<a name="ln3018">    // Set warningmsg here, before the unimportant and output-specific</a>
+<a name="ln3019">    // mesg2 has been appended.</a>
+<a name="ln3020">    set_vim_var_string(VV_WARNINGMSG, tbuf, -1);</a>
+<a name="ln3021">    if (can_reload) {</a>
+<a name="ln3022">      if (*mesg2 != NUL) {</a>
+<a name="ln3023">        xstrlcat(tbuf, &quot;\n&quot;, tbuf_len - 1);</a>
+<a name="ln3024">        xstrlcat(tbuf, mesg2, tbuf_len - 1);</a>
+<a name="ln3025">      }</a>
+<a name="ln3026">      switch (do_dialog(VIM_WARNING, _(&quot;Warning&quot;), tbuf,</a>
+<a name="ln3027">                        _(&quot;&amp;OK\n&amp;Load File\nLoad File &amp;and Options&quot;),</a>
+<a name="ln3028">                        1, NULL, true)) {</a>
+<a name="ln3029">      case 2:</a>
+<a name="ln3030">        reload = RELOAD_NORMAL;</a>
+<a name="ln3031">        break;</a>
+<a name="ln3032">      case 3:</a>
+<a name="ln3033">        reload = RELOAD_DETECT;</a>
+<a name="ln3034">        break;</a>
+<a name="ln3035">      }</a>
+<a name="ln3036">    } else if (State &gt; MODE_NORMAL_BUSY || (State &amp; MODE_CMDLINE) || already_warned) {</a>
+<a name="ln3037">      if (*mesg2 != NUL) {</a>
+<a name="ln3038">        xstrlcat(tbuf, &quot;; &quot;, tbuf_len - 1);</a>
+<a name="ln3039">        xstrlcat(tbuf, mesg2, tbuf_len - 1);</a>
+<a name="ln3040">      }</a>
+<a name="ln3041">      emsg(tbuf);</a>
+<a name="ln3042">      retval = 2;</a>
+<a name="ln3043">    } else {</a>
+<a name="ln3044">      if (!autocmd_busy) {</a>
+<a name="ln3045">        msg_start();</a>
+<a name="ln3046">        msg_puts_attr(tbuf, HL_ATTR(HLF_E) + MSG_HIST);</a>
+<a name="ln3047">        if (*mesg2 != NUL) {</a>
+<a name="ln3048">          msg_puts_attr(mesg2, HL_ATTR(HLF_W) + MSG_HIST);</a>
+<a name="ln3049">        }</a>
+<a name="ln3050">        msg_clr_eos();</a>
+<a name="ln3051">        (void)msg_end();</a>
+<a name="ln3052">        if (emsg_silent == 0 &amp;&amp; !in_assert_fails) {</a>
+<a name="ln3053">          ui_flush();</a>
+<a name="ln3054">          // give the user some time to think about it</a>
+<a name="ln3055">          os_delay(1004L, true);</a>
+<a name="ln3056"> </a>
+<a name="ln3057">          // don't redraw and erase the message</a>
+<a name="ln3058">          redraw_cmdline = false;</a>
+<a name="ln3059">        }</a>
+<a name="ln3060">      }</a>
+<a name="ln3061">      already_warned = true;</a>
+<a name="ln3062">    }</a>
+<a name="ln3063"> </a>
+<a name="ln3064">    xfree(path);</a>
+<a name="ln3065">    xfree(tbuf);</a>
+<a name="ln3066">  }</a>
 <a name="ln3067"> </a>
-<a name="ln3068">          // don't redraw and erase the message</a>
-<a name="ln3069">          redraw_cmdline = false;</a>
-<a name="ln3070">        }</a>
-<a name="ln3071">      }</a>
-<a name="ln3072">      already_warned = true;</a>
-<a name="ln3073">    }</a>
-<a name="ln3074"> </a>
-<a name="ln3075">    xfree(path);</a>
-<a name="ln3076">    xfree(tbuf);</a>
-<a name="ln3077">  }</a>
-<a name="ln3078"> </a>
-<a name="ln3079">  if (reload != RELOAD_NONE) {</a>
-<a name="ln3080">    // Reload the buffer.</a>
-<a name="ln3081">    buf_reload(buf, orig_mode, reload == RELOAD_DETECT);</a>
-<a name="ln3082">    if (buf-&gt;b_p_udf &amp;&amp; buf-&gt;b_ffname != NULL) {</a>
-<a name="ln3083">      uint8_t hash[UNDO_HASH_SIZE];</a>
-<a name="ln3084"> </a>
-<a name="ln3085">      // Any existing undo file is unusable, write it now.</a>
-<a name="ln3086">      u_compute_hash(buf, hash);</a>
-<a name="ln3087">      u_write_undo(NULL, false, buf, hash);</a>
-<a name="ln3088">    }</a>
-<a name="ln3089">  }</a>
-<a name="ln3090"> </a>
-<a name="ln3091">  // Trigger FileChangedShell when the file was changed in any way.</a>
-<a name="ln3092">  if (bufref_valid(&amp;bufref) &amp;&amp; retval != 0) {</a>
-<a name="ln3093">    (void)apply_autocmds(EVENT_FILECHANGEDSHELLPOST, buf-&gt;b_fname, buf-&gt;b_fname, false, buf);</a>
-<a name="ln3094">  }</a>
-<a name="ln3095">  return retval;</a>
-<a name="ln3096">}</a>
-<a name="ln3097"> </a>
-<a name="ln3098">/// Reload a buffer that is already loaded.</a>
-<a name="ln3099">/// Used when the file was changed outside of Vim.</a>
-<a name="ln3100">/// &quot;orig_mode&quot; is buf-&gt;b_orig_mode before the need for reloading was detected.</a>
-<a name="ln3101">/// buf-&gt;b_orig_mode may have been reset already.</a>
-<a name="ln3102">void buf_reload(buf_T *buf, int orig_mode, bool reload_options)</a>
-<a name="ln3103">{</a>
-<a name="ln3104">  exarg_T ea;</a>
-<a name="ln3105">  int old_ro = buf-&gt;b_p_ro;</a>
-<a name="ln3106">  buf_T *savebuf;</a>
-<a name="ln3107">  bufref_T bufref;</a>
-<a name="ln3108">  int saved = OK;</a>
-<a name="ln3109">  aco_save_T aco;</a>
-<a name="ln3110">  int flags = READ_NEW;</a>
-<a name="ln3111"> </a>
-<a name="ln3112">  // Set curwin/curbuf for &quot;buf&quot; and save some things.</a>
-<a name="ln3113">  aucmd_prepbuf(&amp;aco, buf);</a>
-<a name="ln3114"> </a>
-<a name="ln3115">  // Unless reload_options is set, we only want to read the text from the</a>
-<a name="ln3116">  // file, not reset the syntax highlighting, clear marks, diff status, etc.</a>
-<a name="ln3117">  // Force the fileformat and encoding to be the same.</a>
-<a name="ln3118">  if (reload_options) {</a>
-<a name="ln3119">    CLEAR_FIELD(ea);</a>
-<a name="ln3120">  } else {</a>
-<a name="ln3121">    prep_exarg(&amp;ea, buf);</a>
+<a name="ln3068">  if (reload != RELOAD_NONE) {</a>
+<a name="ln3069">    // Reload the buffer.</a>
+<a name="ln3070">    buf_reload(buf, orig_mode, reload == RELOAD_DETECT);</a>
+<a name="ln3071">    if (buf-&gt;b_p_udf &amp;&amp; buf-&gt;b_ffname != NULL) {</a>
+<a name="ln3072">      uint8_t hash[UNDO_HASH_SIZE];</a>
+<a name="ln3073"> </a>
+<a name="ln3074">      // Any existing undo file is unusable, write it now.</a>
+<a name="ln3075">      u_compute_hash(buf, hash);</a>
+<a name="ln3076">      u_write_undo(NULL, false, buf, hash);</a>
+<a name="ln3077">    }</a>
+<a name="ln3078">  }</a>
+<a name="ln3079"> </a>
+<a name="ln3080">  // Trigger FileChangedShell when the file was changed in any way.</a>
+<a name="ln3081">  if (bufref_valid(&amp;bufref) &amp;&amp; retval != 0) {</a>
+<a name="ln3082">    (void)apply_autocmds(EVENT_FILECHANGEDSHELLPOST, buf-&gt;b_fname, buf-&gt;b_fname, false, buf);</a>
+<a name="ln3083">  }</a>
+<a name="ln3084">  return retval;</a>
+<a name="ln3085">}</a>
+<a name="ln3086"> </a>
+<a name="ln3087">/// Reload a buffer that is already loaded.</a>
+<a name="ln3088">/// Used when the file was changed outside of Vim.</a>
+<a name="ln3089">/// &quot;orig_mode&quot; is buf-&gt;b_orig_mode before the need for reloading was detected.</a>
+<a name="ln3090">/// buf-&gt;b_orig_mode may have been reset already.</a>
+<a name="ln3091">void buf_reload(buf_T *buf, int orig_mode, bool reload_options)</a>
+<a name="ln3092">{</a>
+<a name="ln3093">  exarg_T ea;</a>
+<a name="ln3094">  int old_ro = buf-&gt;b_p_ro;</a>
+<a name="ln3095">  buf_T *savebuf;</a>
+<a name="ln3096">  bufref_T bufref;</a>
+<a name="ln3097">  int saved = OK;</a>
+<a name="ln3098">  aco_save_T aco;</a>
+<a name="ln3099">  int flags = READ_NEW;</a>
+<a name="ln3100"> </a>
+<a name="ln3101">  // Set curwin/curbuf for &quot;buf&quot; and save some things.</a>
+<a name="ln3102">  aucmd_prepbuf(&amp;aco, buf);</a>
+<a name="ln3103"> </a>
+<a name="ln3104">  // Unless reload_options is set, we only want to read the text from the</a>
+<a name="ln3105">  // file, not reset the syntax highlighting, clear marks, diff status, etc.</a>
+<a name="ln3106">  // Force the fileformat and encoding to be the same.</a>
+<a name="ln3107">  if (reload_options) {</a>
+<a name="ln3108">    CLEAR_FIELD(ea);</a>
+<a name="ln3109">  } else {</a>
+<a name="ln3110">    prep_exarg(&amp;ea, buf);</a>
+<a name="ln3111">  }</a>
+<a name="ln3112"> </a>
+<a name="ln3113">  pos_T old_cursor = curwin-&gt;w_cursor;</a>
+<a name="ln3114">  linenr_T old_topline = curwin-&gt;w_topline;</a>
+<a name="ln3115"> </a>
+<a name="ln3116">  if (p_ur &lt; 0 || curbuf-&gt;b_ml.ml_line_count &lt;= p_ur) {</a>
+<a name="ln3117">    // Save all the text, so that the reload can be undone.</a>
+<a name="ln3118">    // Sync first so that this is a separate undo-able action.</a>
+<a name="ln3119">    u_sync(false);</a>
+<a name="ln3120">    saved = u_savecommon(curbuf, 0, curbuf-&gt;b_ml.ml_line_count + 1, 0, true);</a>
+<a name="ln3121">    flags |= READ_KEEP_UNDO;</a>
 <a name="ln3122">  }</a>
 <a name="ln3123"> </a>
-<a name="ln3124">  pos_T old_cursor = curwin-&gt;w_cursor;</a>
-<a name="ln3125">  linenr_T old_topline = curwin-&gt;w_topline;</a>
-<a name="ln3126"> </a>
-<a name="ln3127">  if (p_ur &lt; 0 || curbuf-&gt;b_ml.ml_line_count &lt;= p_ur) {</a>
-<a name="ln3128">    // Save all the text, so that the reload can be undone.</a>
-<a name="ln3129">    // Sync first so that this is a separate undo-able action.</a>
-<a name="ln3130">    u_sync(false);</a>
-<a name="ln3131">    saved = u_savecommon(curbuf, 0, curbuf-&gt;b_ml.ml_line_count + 1, 0, true);</a>
-<a name="ln3132">    flags |= READ_KEEP_UNDO;</a>
-<a name="ln3133">  }</a>
-<a name="ln3134"> </a>
-<a name="ln3135">  // To behave like when a new file is edited (matters for</a>
-<a name="ln3136">  // BufReadPost autocommands) we first need to delete the current</a>
-<a name="ln3137">  // buffer contents.  But if reading the file fails we should keep</a>
-<a name="ln3138">  // the old contents.  Can't use memory only, the file might be</a>
-<a name="ln3139">  // too big.  Use a hidden buffer to move the buffer contents to.</a>
-<a name="ln3140">  if (buf_is_empty(curbuf) || saved == FAIL) {</a>
-<a name="ln3141">    savebuf = NULL;</a>
-<a name="ln3142">  } else {</a>
-<a name="ln3143">    // Allocate a buffer without putting it in the buffer list.</a>
-<a name="ln3144">    savebuf = buflist_new(NULL, NULL, (linenr_T)1, BLN_DUMMY);</a>
-<a name="ln3145">    set_bufref(&amp;bufref, savebuf);</a>
-<a name="ln3146">    if (savebuf != NULL &amp;&amp; buf == curbuf) {</a>
-<a name="ln3147">      // Open the memline.</a>
-<a name="ln3148">      curbuf = savebuf;</a>
-<a name="ln3149">      curwin-&gt;w_buffer = savebuf;</a>
-<a name="ln3150">      saved = ml_open(curbuf);</a>
-<a name="ln3151">      curbuf = buf;</a>
-<a name="ln3152">      curwin-&gt;w_buffer = buf;</a>
-<a name="ln3153">    }</a>
-<a name="ln3154">    if (savebuf == NULL || saved == FAIL || buf != curbuf</a>
-<a name="ln3155">        || move_lines(buf, savebuf) == FAIL) {</a>
-<a name="ln3156">      semsg(_(&quot;E462: Could not prepare for reloading \&quot;%s\&quot;&quot;),</a>
-<a name="ln3157">            buf-&gt;b_fname);</a>
-<a name="ln3158">      saved = FAIL;</a>
-<a name="ln3159">    }</a>
-<a name="ln3160">  }</a>
-<a name="ln3161"> </a>
-<a name="ln3162">  if (saved == OK) {</a>
-<a name="ln3163">    curbuf-&gt;b_flags |= BF_CHECK_RO;           // check for RO again</a>
-<a name="ln3164">    keep_filetype = true;                     // don't detect 'filetype'</a>
-<a name="ln3165">    if (readfile(buf-&gt;b_ffname, buf-&gt;b_fname, (linenr_T)0, (linenr_T)0,</a>
-<a name="ln3166">                 (linenr_T)MAXLNUM, &amp;ea, flags, false) != OK) {</a>
-<a name="ln3167">      if (!aborting()) {</a>
-<a name="ln3168">        semsg(_(&quot;E321: Could not reload \&quot;%s\&quot;&quot;), buf-&gt;b_fname);</a>
-<a name="ln3169">      }</a>
-<a name="ln3170">      if (savebuf != NULL &amp;&amp; bufref_valid(&amp;bufref) &amp;&amp; buf == curbuf) {</a>
-<a name="ln3171">        // Put the text back from the save buffer.  First</a>
-<a name="ln3172">        // delete any lines that readfile() added.</a>
-<a name="ln3173">        while (!buf_is_empty(curbuf)) {</a>
-<a name="ln3174">          if (ml_delete(buf-&gt;b_ml.ml_line_count, false) == FAIL) {</a>
-<a name="ln3175">            break;</a>
-<a name="ln3176">          }</a>
-<a name="ln3177">        }</a>
-<a name="ln3178">        (void)move_lines(savebuf, buf);</a>
-<a name="ln3179">      }</a>
-<a name="ln3180">    } else if (buf == curbuf) {  // &quot;buf&quot; still valid.</a>
-<a name="ln3181">      // Mark the buffer as unmodified and free undo info.</a>
-<a name="ln3182">      unchanged(buf, true, true);</a>
-<a name="ln3183">      if ((flags &amp; READ_KEEP_UNDO) == 0) {</a>
-<a name="ln3184">        u_blockfree(buf);</a>
-<a name="ln3185">        u_clearall(buf);</a>
-<a name="ln3186">      } else {</a>
-<a name="ln3187">        // Mark all undo states as changed.</a>
-<a name="ln3188">        u_unchanged(curbuf);</a>
-<a name="ln3189">      }</a>
-<a name="ln3190">      buf_updates_unload(curbuf, true);</a>
-<a name="ln3191">      curbuf-&gt;b_mod_set = true;</a>
-<a name="ln3192">    }</a>
-<a name="ln3193">  }</a>
-<a name="ln3194">  xfree(ea.cmd);</a>
-<a name="ln3195"> </a>
-<a name="ln3196">  if (savebuf != NULL &amp;&amp; bufref_valid(&amp;bufref)) {</a>
-<a name="ln3197">    wipe_buffer(savebuf, false);</a>
+<a name="ln3124">  // To behave like when a new file is edited (matters for</a>
+<a name="ln3125">  // BufReadPost autocommands) we first need to delete the current</a>
+<a name="ln3126">  // buffer contents.  But if reading the file fails we should keep</a>
+<a name="ln3127">  // the old contents.  Can't use memory only, the file might be</a>
+<a name="ln3128">  // too big.  Use a hidden buffer to move the buffer contents to.</a>
+<a name="ln3129">  if (buf_is_empty(curbuf) || saved == FAIL) {</a>
+<a name="ln3130">    savebuf = NULL;</a>
+<a name="ln3131">  } else {</a>
+<a name="ln3132">    // Allocate a buffer without putting it in the buffer list.</a>
+<a name="ln3133">    savebuf = buflist_new(NULL, NULL, (linenr_T)1, BLN_DUMMY);</a>
+<a name="ln3134">    set_bufref(&amp;bufref, savebuf);</a>
+<a name="ln3135">    if (savebuf != NULL &amp;&amp; buf == curbuf) {</a>
+<a name="ln3136">      // Open the memline.</a>
+<a name="ln3137">      curbuf = savebuf;</a>
+<a name="ln3138">      curwin-&gt;w_buffer = savebuf;</a>
+<a name="ln3139">      saved = ml_open(curbuf);</a>
+<a name="ln3140">      curbuf = buf;</a>
+<a name="ln3141">      curwin-&gt;w_buffer = buf;</a>
+<a name="ln3142">    }</a>
+<a name="ln3143">    if (savebuf == NULL || saved == FAIL || buf != curbuf</a>
+<a name="ln3144">        || move_lines(buf, savebuf) == FAIL) {</a>
+<a name="ln3145">      semsg(_(&quot;E462: Could not prepare for reloading \&quot;%s\&quot;&quot;),</a>
+<a name="ln3146">            buf-&gt;b_fname);</a>
+<a name="ln3147">      saved = FAIL;</a>
+<a name="ln3148">    }</a>
+<a name="ln3149">  }</a>
+<a name="ln3150"> </a>
+<a name="ln3151">  if (saved == OK) {</a>
+<a name="ln3152">    curbuf-&gt;b_flags |= BF_CHECK_RO;           // check for RO again</a>
+<a name="ln3153">    keep_filetype = true;                     // don't detect 'filetype'</a>
+<a name="ln3154">    if (readfile(buf-&gt;b_ffname, buf-&gt;b_fname, (linenr_T)0, (linenr_T)0,</a>
+<a name="ln3155">                 (linenr_T)MAXLNUM, &amp;ea, flags, false) != OK) {</a>
+<a name="ln3156">      if (!aborting()) {</a>
+<a name="ln3157">        semsg(_(&quot;E321: Could not reload \&quot;%s\&quot;&quot;), buf-&gt;b_fname);</a>
+<a name="ln3158">      }</a>
+<a name="ln3159">      if (savebuf != NULL &amp;&amp; bufref_valid(&amp;bufref) &amp;&amp; buf == curbuf) {</a>
+<a name="ln3160">        // Put the text back from the save buffer.  First</a>
+<a name="ln3161">        // delete any lines that readfile() added.</a>
+<a name="ln3162">        while (!buf_is_empty(curbuf)) {</a>
+<a name="ln3163">          if (ml_delete(buf-&gt;b_ml.ml_line_count, false) == FAIL) {</a>
+<a name="ln3164">            break;</a>
+<a name="ln3165">          }</a>
+<a name="ln3166">        }</a>
+<a name="ln3167">        (void)move_lines(savebuf, buf);</a>
+<a name="ln3168">      }</a>
+<a name="ln3169">    } else if (buf == curbuf) {  // &quot;buf&quot; still valid.</a>
+<a name="ln3170">      // Mark the buffer as unmodified and free undo info.</a>
+<a name="ln3171">      unchanged(buf, true, true);</a>
+<a name="ln3172">      if ((flags &amp; READ_KEEP_UNDO) == 0) {</a>
+<a name="ln3173">        u_blockfree(buf);</a>
+<a name="ln3174">        u_clearall(buf);</a>
+<a name="ln3175">      } else {</a>
+<a name="ln3176">        // Mark all undo states as changed.</a>
+<a name="ln3177">        u_unchanged(curbuf);</a>
+<a name="ln3178">      }</a>
+<a name="ln3179">      buf_updates_unload(curbuf, true);</a>
+<a name="ln3180">      curbuf-&gt;b_mod_set = true;</a>
+<a name="ln3181">    }</a>
+<a name="ln3182">  }</a>
+<a name="ln3183">  xfree(ea.cmd);</a>
+<a name="ln3184"> </a>
+<a name="ln3185">  if (savebuf != NULL &amp;&amp; bufref_valid(&amp;bufref)) {</a>
+<a name="ln3186">    wipe_buffer(savebuf, false);</a>
+<a name="ln3187">  }</a>
+<a name="ln3188"> </a>
+<a name="ln3189">  // Invalidate diff info if necessary.</a>
+<a name="ln3190">  diff_invalidate(curbuf);</a>
+<a name="ln3191"> </a>
+<a name="ln3192">  // Restore the topline and cursor position and check it (lines may</a>
+<a name="ln3193">  // have been removed).</a>
+<a name="ln3194">  if (old_topline &gt; curbuf-&gt;b_ml.ml_line_count) {</a>
+<a name="ln3195">    curwin-&gt;w_topline = curbuf-&gt;b_ml.ml_line_count;</a>
+<a name="ln3196">  } else {</a>
+<a name="ln3197">    curwin-&gt;w_topline = old_topline;</a>
 <a name="ln3198">  }</a>
-<a name="ln3199"> </a>
-<a name="ln3200">  // Invalidate diff info if necessary.</a>
-<a name="ln3201">  diff_invalidate(curbuf);</a>
-<a name="ln3202"> </a>
-<a name="ln3203">  // Restore the topline and cursor position and check it (lines may</a>
-<a name="ln3204">  // have been removed).</a>
-<a name="ln3205">  if (old_topline &gt; curbuf-&gt;b_ml.ml_line_count) {</a>
-<a name="ln3206">    curwin-&gt;w_topline = curbuf-&gt;b_ml.ml_line_count;</a>
-<a name="ln3207">  } else {</a>
-<a name="ln3208">    curwin-&gt;w_topline = old_topline;</a>
-<a name="ln3209">  }</a>
-<a name="ln3210">  curwin-&gt;w_cursor = old_cursor;</a>
-<a name="ln3211">  check_cursor();</a>
-<a name="ln3212">  update_topline(curwin);</a>
-<a name="ln3213">  keep_filetype = false;</a>
-<a name="ln3214"> </a>
-<a name="ln3215">  // Update folds unless they are defined manually.</a>
-<a name="ln3216">  FOR_ALL_TAB_WINDOWS(tp, wp) {</a>
-<a name="ln3217">    if (wp-&gt;w_buffer == curwin-&gt;w_buffer</a>
-<a name="ln3218">        &amp;&amp; !foldmethodIsManual(wp)) {</a>
-<a name="ln3219">      foldUpdateAll(wp);</a>
-<a name="ln3220">    }</a>
-<a name="ln3221">  }</a>
-<a name="ln3222"> </a>
-<a name="ln3223">  // If the mode didn't change and 'readonly' was set, keep the old</a>
-<a name="ln3224">  // value; the user probably used the &quot;:view&quot; command.  But don't</a>
-<a name="ln3225">  // reset it, might have had a read error.</a>
-<a name="ln3226">  if (orig_mode == curbuf-&gt;b_orig_mode) {</a>
-<a name="ln3227">    curbuf-&gt;b_p_ro |= old_ro;</a>
-<a name="ln3228">  }</a>
-<a name="ln3229"> </a>
-<a name="ln3230">  // Modelines must override settings done by autocommands.</a>
-<a name="ln3231">  do_modelines(0);</a>
-<a name="ln3232"> </a>
-<a name="ln3233">  // restore curwin/curbuf and a few other things</a>
-<a name="ln3234">  aucmd_restbuf(&amp;aco);</a>
-<a name="ln3235">  // Careful: autocommands may have made &quot;buf&quot; invalid!</a>
-<a name="ln3236">}</a>
-<a name="ln3237"> </a>
-<a name="ln3238">void buf_store_file_info(buf_T *buf, FileInfo *file_info)</a>
-<a name="ln3239">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln3240">{</a>
-<a name="ln3241">  buf-&gt;b_mtime = file_info-&gt;stat.st_mtim.tv_sec;</a>
-<a name="ln3242">  buf-&gt;b_mtime_ns = file_info-&gt;stat.st_mtim.tv_nsec;</a>
-<a name="ln3243">  buf-&gt;b_orig_size = os_fileinfo_size(file_info);</a>
-<a name="ln3244">  buf-&gt;b_orig_mode = (int)file_info-&gt;stat.st_mode;</a>
-<a name="ln3245">}</a>
-<a name="ln3246"> </a>
-<a name="ln3247">/// Adjust the line with missing eol, used for the next write.</a>
-<a name="ln3248">/// Used for do_filter(), when the input lines for the filter are deleted.</a>
-<a name="ln3249">void write_lnum_adjust(linenr_T offset)</a>
-<a name="ln3250">{</a>
-<a name="ln3251">  if (curbuf-&gt;b_no_eol_lnum != 0) {     // only if there is a missing eol</a>
-<a name="ln3252">    curbuf-&gt;b_no_eol_lnum += offset;</a>
-<a name="ln3253">  }</a>
-<a name="ln3254">}</a>
-<a name="ln3255"> </a>
-<a name="ln3256">#if defined(BACKSLASH_IN_FILENAME)</a>
-<a name="ln3257">/// Convert all backslashes in fname to forward slashes in-place,</a>
-<a name="ln3258">/// unless when it looks like a URL.</a>
-<a name="ln3259">void forward_slash(char *fname)</a>
-<a name="ln3260">{</a>
-<a name="ln3261">  char *p;</a>
+<a name="ln3199">  curwin-&gt;w_cursor = old_cursor;</a>
+<a name="ln3200">  check_cursor();</a>
+<a name="ln3201">  update_topline(curwin);</a>
+<a name="ln3202">  keep_filetype = false;</a>
+<a name="ln3203"> </a>
+<a name="ln3204">  // Update folds unless they are defined manually.</a>
+<a name="ln3205">  FOR_ALL_TAB_WINDOWS(tp, wp) {</a>
+<a name="ln3206">    if (wp-&gt;w_buffer == curwin-&gt;w_buffer</a>
+<a name="ln3207">        &amp;&amp; !foldmethodIsManual(wp)) {</a>
+<a name="ln3208">      foldUpdateAll(wp);</a>
+<a name="ln3209">    }</a>
+<a name="ln3210">  }</a>
+<a name="ln3211"> </a>
+<a name="ln3212">  // If the mode didn't change and 'readonly' was set, keep the old</a>
+<a name="ln3213">  // value; the user probably used the &quot;:view&quot; command.  But don't</a>
+<a name="ln3214">  // reset it, might have had a read error.</a>
+<a name="ln3215">  if (orig_mode == curbuf-&gt;b_orig_mode) {</a>
+<a name="ln3216">    curbuf-&gt;b_p_ro |= old_ro;</a>
+<a name="ln3217">  }</a>
+<a name="ln3218"> </a>
+<a name="ln3219">  // Modelines must override settings done by autocommands.</a>
+<a name="ln3220">  do_modelines(0);</a>
+<a name="ln3221"> </a>
+<a name="ln3222">  // restore curwin/curbuf and a few other things</a>
+<a name="ln3223">  aucmd_restbuf(&amp;aco);</a>
+<a name="ln3224">  // Careful: autocommands may have made &quot;buf&quot; invalid!</a>
+<a name="ln3225">}</a>
+<a name="ln3226"> </a>
+<a name="ln3227">void buf_store_file_info(buf_T *buf, FileInfo *file_info)</a>
+<a name="ln3228">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln3229">{</a>
+<a name="ln3230">  buf-&gt;b_mtime = file_info-&gt;stat.st_mtim.tv_sec;</a>
+<a name="ln3231">  buf-&gt;b_mtime_ns = file_info-&gt;stat.st_mtim.tv_nsec;</a>
+<a name="ln3232">  buf-&gt;b_orig_size = os_fileinfo_size(file_info);</a>
+<a name="ln3233">  buf-&gt;b_orig_mode = (int)file_info-&gt;stat.st_mode;</a>
+<a name="ln3234">}</a>
+<a name="ln3235"> </a>
+<a name="ln3236">/// Adjust the line with missing eol, used for the next write.</a>
+<a name="ln3237">/// Used for do_filter(), when the input lines for the filter are deleted.</a>
+<a name="ln3238">void write_lnum_adjust(linenr_T offset)</a>
+<a name="ln3239">{</a>
+<a name="ln3240">  if (curbuf-&gt;b_no_eol_lnum != 0) {     // only if there is a missing eol</a>
+<a name="ln3241">    curbuf-&gt;b_no_eol_lnum += offset;</a>
+<a name="ln3242">  }</a>
+<a name="ln3243">}</a>
+<a name="ln3244"> </a>
+<a name="ln3245">#if defined(BACKSLASH_IN_FILENAME)</a>
+<a name="ln3246">/// Convert all backslashes in fname to forward slashes in-place,</a>
+<a name="ln3247">/// unless when it looks like a URL.</a>
+<a name="ln3248">void forward_slash(char *fname)</a>
+<a name="ln3249">{</a>
+<a name="ln3250">  char *p;</a>
+<a name="ln3251"> </a>
+<a name="ln3252">  if (path_with_url(fname)) {</a>
+<a name="ln3253">    return;</a>
+<a name="ln3254">  }</a>
+<a name="ln3255">  for (p = fname; *p != NUL; p++) {</a>
+<a name="ln3256">    if (*p == '\\') {</a>
+<a name="ln3257">      *p = '/';</a>
+<a name="ln3258">    }</a>
+<a name="ln3259">  }</a>
+<a name="ln3260">}</a>
+<a name="ln3261">#endif</a>
 <a name="ln3262"> </a>
-<a name="ln3263">  if (path_with_url(fname)) {</a>
-<a name="ln3264">    return;</a>
-<a name="ln3265">  }</a>
-<a name="ln3266">  for (p = fname; *p != NUL; p++) {</a>
-<a name="ln3267">    if (*p == '\\') {</a>
-<a name="ln3268">      *p = '/';</a>
-<a name="ln3269">    }</a>
-<a name="ln3270">  }</a>
-<a name="ln3271">}</a>
-<a name="ln3272">#endif</a>
-<a name="ln3273"> </a>
-<a name="ln3274">/// Path to Nvim's own temp dir. Ends in a slash.</a>
-<a name="ln3275">static char *vim_tempdir = NULL;</a>
-<a name="ln3276">#ifdef HAVE_DIRFD_AND_FLOCK</a>
-<a name="ln3277">DIR *vim_tempdir_dp = NULL;  ///&lt; File descriptor of temp dir</a>
-<a name="ln3278">#endif</a>
-<a name="ln3279"> </a>
-<a name="ln3280">/// Creates a directory for private use by this instance of Nvim, trying each of</a>
-<a name="ln3281">/// `TEMP_DIR_NAMES` until one succeeds.</a>
-<a name="ln3282">///</a>
-<a name="ln3283">/// Only done once, the same directory is used for all temp files.</a>
-<a name="ln3284">/// This method avoids security problems because of symlink attacks et al.</a>
-<a name="ln3285">/// It's also a bit faster, because we only need to check for an existing</a>
-<a name="ln3286">/// file when creating the directory and not for each temp file.</a>
-<a name="ln3287">static void vim_mktempdir(void)</a>
-<a name="ln3288">{</a>
-<a name="ln3289">  static const char *temp_dirs[] = TEMP_DIR_NAMES;  // Try each of these until one succeeds.</a>
-<a name="ln3290">  char tmp[TEMP_FILE_PATH_MAXLEN];</a>
-<a name="ln3291">  char path[TEMP_FILE_PATH_MAXLEN];</a>
-<a name="ln3292">  char user[40] = { 0 };</a>
-<a name="ln3293"> </a>
-<a name="ln3294">  (void)os_get_username(user, sizeof(user));</a>
-<a name="ln3295">  // Usernames may contain slashes! #19240</a>
-<a name="ln3296">  memchrsub(user, '/', '_', sizeof(user));</a>
-<a name="ln3297">  memchrsub(user, '\\', '_', sizeof(user));</a>
-<a name="ln3298"> </a>
-<a name="ln3299">  // Make sure the umask doesn't remove the executable bit.</a>
-<a name="ln3300">  // &quot;repl&quot; has been reported to use &quot;0177&quot;.</a>
-<a name="ln3301">  mode_t umask_save = umask(0077);</a>
-<a name="ln3302">  for (size_t i = 0; i &lt; ARRAY_SIZE(temp_dirs); i++) {</a>
-<a name="ln3303">    // Expand environment variables, leave room for &quot;/tmp/nvim.&lt;user&gt;/XXXXXX/999999999&quot;.</a>
-<a name="ln3304">    expand_env((char *)temp_dirs[i], tmp, TEMP_FILE_PATH_MAXLEN - 64);</a>
-<a name="ln3305">    if (!os_isdir(tmp)) {</a>
-<a name="ln3306">      continue;</a>
-<a name="ln3307">    }</a>
-<a name="ln3308"> </a>
-<a name="ln3309">    // &quot;/tmp/&quot; exists, now try to create &quot;/tmp/nvim.&lt;user&gt;/&quot;.</a>
-<a name="ln3310">    add_pathsep(tmp);</a>
-<a name="ln3311"> </a>
-<a name="ln3312">    const char *appname = get_appname();</a>
-<a name="ln3313">    xstrlcat(tmp, appname, sizeof(tmp));</a>
-<a name="ln3314">    xstrlcat(tmp, &quot;.&quot;, sizeof(tmp));</a>
-<a name="ln3315">    xstrlcat(tmp, user, sizeof(tmp));</a>
-<a name="ln3316">    (void)os_mkdir(tmp, 0700);  // Always create, to avoid a race.</a>
-<a name="ln3317">    bool owned = os_file_owned(tmp);</a>
-<a name="ln3318">    bool isdir = os_isdir(tmp);</a>
-<a name="ln3319">#ifdef UNIX</a>
-<a name="ln3320">    int perm = os_getperm(tmp);  // XDG_RUNTIME_DIR must be owned by the user, mode 0700.</a>
-<a name="ln3321">    bool valid = isdir &amp;&amp; owned &amp;&amp; 0700 == (perm &amp; 0777);</a>
-<a name="ln3322">#else</a>
-<a name="ln3323">    bool valid = isdir &amp;&amp; owned;  // TODO(justinmk): Windows ACL?</a>
-<a name="ln3324">#endif</a>
-<a name="ln3325">    if (valid) {</a>
-<a name="ln3326">      add_pathsep(tmp);</a>
-<a name="ln3327">    } else {</a>
-<a name="ln3328">      if (!owned) {</a>
-<a name="ln3329">        ELOG(&quot;tempdir root not owned by current user (%s): %s&quot;, user, tmp);</a>
-<a name="ln3330">      } else if (!isdir) {</a>
-<a name="ln3331">        ELOG(&quot;tempdir root not a directory: %s&quot;, tmp);</a>
-<a name="ln3332">      }</a>
-<a name="ln3333">#ifdef UNIX</a>
-<a name="ln3334">      if (0700 != (perm &amp; 0777)) {</a>
-<a name="ln3335">        ELOG(&quot;tempdir root has invalid permissions (%o): %s&quot;, perm, tmp);</a>
-<a name="ln3336">      }</a>
-<a name="ln3337">#endif</a>
-<a name="ln3338">      // If our &quot;root&quot; tempdir is invalid or fails, proceed without &quot;&lt;user&gt;/&quot;.</a>
-<a name="ln3339">      // Else user1 could break user2 by creating &quot;/tmp/nvim.user2/&quot;.</a>
-<a name="ln3340">      tmp[strlen(tmp) - strlen(user)] = '\0';</a>
-<a name="ln3341">    }</a>
-<a name="ln3342"> </a>
-<a name="ln3343">    // Now try to create &quot;/tmp/nvim.&lt;user&gt;/XXXXXX&quot;.</a>
-<a name="ln3344">    xstrlcat(tmp, &quot;XXXXXX&quot;, sizeof(tmp));  // mkdtemp &quot;template&quot;, will be replaced with random alphanumeric chars.</a>
-<a name="ln3345">    int r = os_mkdtemp(tmp, path);</a>
-<a name="ln3346">    if (r != 0) {</a>
-<a name="ln3347">      WLOG(&quot;tempdir create failed: %s: %s&quot;, os_strerror(r), tmp);</a>
-<a name="ln3348">      continue;</a>
-<a name="ln3349">    }</a>
-<a name="ln3350"> </a>
-<a name="ln3351">    if (vim_settempdir(path)) {</a>
-<a name="ln3352">      // Successfully created and set temporary directory so stop trying.</a>
-<a name="ln3353">      break;</a>
-<a name="ln3354">    }</a>
-<a name="ln3355">    // Couldn't set `vim_tempdir` to `path` so remove created directory.</a>
-<a name="ln3356">    os_rmdir(path);</a>
-<a name="ln3357">  }</a>
-<a name="ln3358">  (void)umask(umask_save);</a>
-<a name="ln3359">}</a>
-<a name="ln3360"> </a>
-<a name="ln3361">/// Core part of &quot;readdir()&quot; function.</a>
-<a name="ln3362">/// Retrieve the list of files/directories of &quot;path&quot; into &quot;gap&quot;.</a>
-<a name="ln3363">///</a>
-<a name="ln3364">/// @return  OK for success, FAIL for failure.</a>
-<a name="ln3365">int readdir_core(garray_T *gap, const char *path, void *context, CheckItem checkitem)</a>
-<a name="ln3366">  FUNC_ATTR_NONNULL_ARG(1, 2)</a>
-<a name="ln3367">{</a>
-<a name="ln3368">  ga_init(gap, (int)sizeof(char *), 20);</a>
-<a name="ln3369"> </a>
-<a name="ln3370">  Directory dir;</a>
-<a name="ln3371">  if (!os_scandir(&amp;dir, path)) {</a>
-<a name="ln3372">    smsg(_(e_notopen), path);</a>
-<a name="ln3373">    return FAIL;</a>
-<a name="ln3374">  }</a>
-<a name="ln3375"> </a>
-<a name="ln3376">  while (true) {</a>
-<a name="ln3377">    const char *p = os_scandir_next(&amp;dir);</a>
-<a name="ln3378">    if (p == NULL) {</a>
-<a name="ln3379">      break;</a>
+<a name="ln3263">/// Path to Nvim's own temp dir. Ends in a slash.</a>
+<a name="ln3264">static char *vim_tempdir = NULL;</a>
+<a name="ln3265">#ifdef HAVE_DIRFD_AND_FLOCK</a>
+<a name="ln3266">DIR *vim_tempdir_dp = NULL;  ///&lt; File descriptor of temp dir</a>
+<a name="ln3267">#endif</a>
+<a name="ln3268"> </a>
+<a name="ln3269">/// Creates a directory for private use by this instance of Nvim, trying each of</a>
+<a name="ln3270">/// `TEMP_DIR_NAMES` until one succeeds.</a>
+<a name="ln3271">///</a>
+<a name="ln3272">/// Only done once, the same directory is used for all temp files.</a>
+<a name="ln3273">/// This method avoids security problems because of symlink attacks et al.</a>
+<a name="ln3274">/// It's also a bit faster, because we only need to check for an existing</a>
+<a name="ln3275">/// file when creating the directory and not for each temp file.</a>
+<a name="ln3276">static void vim_mktempdir(void)</a>
+<a name="ln3277">{</a>
+<a name="ln3278">  static const char *temp_dirs[] = TEMP_DIR_NAMES;  // Try each of these until one succeeds.</a>
+<a name="ln3279">  char tmp[TEMP_FILE_PATH_MAXLEN];</a>
+<a name="ln3280">  char path[TEMP_FILE_PATH_MAXLEN];</a>
+<a name="ln3281">  char user[40] = { 0 };</a>
+<a name="ln3282"> </a>
+<a name="ln3283">  (void)os_get_username(user, sizeof(user));</a>
+<a name="ln3284">  // Usernames may contain slashes! #19240</a>
+<a name="ln3285">  memchrsub(user, '/', '_', sizeof(user));</a>
+<a name="ln3286">  memchrsub(user, '\\', '_', sizeof(user));</a>
+<a name="ln3287"> </a>
+<a name="ln3288">  // Make sure the umask doesn't remove the executable bit.</a>
+<a name="ln3289">  // &quot;repl&quot; has been reported to use &quot;0177&quot;.</a>
+<a name="ln3290">  mode_t umask_save = umask(0077);</a>
+<a name="ln3291">  for (size_t i = 0; i &lt; ARRAY_SIZE(temp_dirs); i++) {</a>
+<a name="ln3292">    // Expand environment variables, leave room for &quot;/tmp/nvim.&lt;user&gt;/XXXXXX/999999999&quot;.</a>
+<a name="ln3293">    expand_env((char *)temp_dirs[i], tmp, TEMP_FILE_PATH_MAXLEN - 64);</a>
+<a name="ln3294">    if (!os_isdir(tmp)) {</a>
+<a name="ln3295">      continue;</a>
+<a name="ln3296">    }</a>
+<a name="ln3297"> </a>
+<a name="ln3298">    // &quot;/tmp/&quot; exists, now try to create &quot;/tmp/nvim.&lt;user&gt;/&quot;.</a>
+<a name="ln3299">    add_pathsep(tmp);</a>
+<a name="ln3300"> </a>
+<a name="ln3301">    const char *appname = get_appname();</a>
+<a name="ln3302">    xstrlcat(tmp, appname, sizeof(tmp));</a>
+<a name="ln3303">    xstrlcat(tmp, &quot;.&quot;, sizeof(tmp));</a>
+<a name="ln3304">    xstrlcat(tmp, user, sizeof(tmp));</a>
+<a name="ln3305">    (void)os_mkdir(tmp, 0700);  // Always create, to avoid a race.</a>
+<a name="ln3306">    bool owned = os_file_owned(tmp);</a>
+<a name="ln3307">    bool isdir = os_isdir(tmp);</a>
+<a name="ln3308">#ifdef UNIX</a>
+<a name="ln3309">    int perm = os_getperm(tmp);  // XDG_RUNTIME_DIR must be owned by the user, mode 0700.</a>
+<a name="ln3310">    bool valid = isdir &amp;&amp; owned &amp;&amp; 0700 == (perm &amp; 0777);</a>
+<a name="ln3311">#else</a>
+<a name="ln3312">    bool valid = isdir &amp;&amp; owned;  // TODO(justinmk): Windows ACL?</a>
+<a name="ln3313">#endif</a>
+<a name="ln3314">    if (valid) {</a>
+<a name="ln3315">      add_pathsep(tmp);</a>
+<a name="ln3316">    } else {</a>
+<a name="ln3317">      if (!owned) {</a>
+<a name="ln3318">        ELOG(&quot;tempdir root not owned by current user (%s): %s&quot;, user, tmp);</a>
+<a name="ln3319">      } else if (!isdir) {</a>
+<a name="ln3320">        ELOG(&quot;tempdir root not a directory: %s&quot;, tmp);</a>
+<a name="ln3321">      }</a>
+<a name="ln3322">#ifdef UNIX</a>
+<a name="ln3323">      if (0700 != (perm &amp; 0777)) {</a>
+<a name="ln3324">        ELOG(&quot;tempdir root has invalid permissions (%o): %s&quot;, perm, tmp);</a>
+<a name="ln3325">      }</a>
+<a name="ln3326">#endif</a>
+<a name="ln3327">      // If our &quot;root&quot; tempdir is invalid or fails, proceed without &quot;&lt;user&gt;/&quot;.</a>
+<a name="ln3328">      // Else user1 could break user2 by creating &quot;/tmp/nvim.user2/&quot;.</a>
+<a name="ln3329">      tmp[strlen(tmp) - strlen(user)] = '\0';</a>
+<a name="ln3330">    }</a>
+<a name="ln3331"> </a>
+<a name="ln3332">    // Now try to create &quot;/tmp/nvim.&lt;user&gt;/XXXXXX&quot;.</a>
+<a name="ln3333">    xstrlcat(tmp, &quot;XXXXXX&quot;, sizeof(tmp));  // mkdtemp &quot;template&quot;, will be replaced with random alphanumeric chars.</a>
+<a name="ln3334">    int r = os_mkdtemp(tmp, path);</a>
+<a name="ln3335">    if (r != 0) {</a>
+<a name="ln3336">      WLOG(&quot;tempdir create failed: %s: %s&quot;, os_strerror(r), tmp);</a>
+<a name="ln3337">      continue;</a>
+<a name="ln3338">    }</a>
+<a name="ln3339"> </a>
+<a name="ln3340">    if (vim_settempdir(path)) {</a>
+<a name="ln3341">      // Successfully created and set temporary directory so stop trying.</a>
+<a name="ln3342">      break;</a>
+<a name="ln3343">    }</a>
+<a name="ln3344">    // Couldn't set `vim_tempdir` to `path` so remove created directory.</a>
+<a name="ln3345">    os_rmdir(path);</a>
+<a name="ln3346">  }</a>
+<a name="ln3347">  (void)umask(umask_save);</a>
+<a name="ln3348">}</a>
+<a name="ln3349"> </a>
+<a name="ln3350">/// Core part of &quot;readdir()&quot; function.</a>
+<a name="ln3351">/// Retrieve the list of files/directories of &quot;path&quot; into &quot;gap&quot;.</a>
+<a name="ln3352">///</a>
+<a name="ln3353">/// @return  OK for success, FAIL for failure.</a>
+<a name="ln3354">int readdir_core(garray_T *gap, const char *path, void *context, CheckItem checkitem)</a>
+<a name="ln3355">  FUNC_ATTR_NONNULL_ARG(1, 2)</a>
+<a name="ln3356">{</a>
+<a name="ln3357">  ga_init(gap, (int)sizeof(char *), 20);</a>
+<a name="ln3358"> </a>
+<a name="ln3359">  Directory dir;</a>
+<a name="ln3360">  if (!os_scandir(&amp;dir, path)) {</a>
+<a name="ln3361">    smsg(_(e_notopen), path);</a>
+<a name="ln3362">    return FAIL;</a>
+<a name="ln3363">  }</a>
+<a name="ln3364"> </a>
+<a name="ln3365">  while (true) {</a>
+<a name="ln3366">    const char *p = os_scandir_next(&amp;dir);</a>
+<a name="ln3367">    if (p == NULL) {</a>
+<a name="ln3368">      break;</a>
+<a name="ln3369">    }</a>
+<a name="ln3370"> </a>
+<a name="ln3371">    bool ignore = (p[0] == '.' &amp;&amp; (p[1] == NUL || (p[1] == '.' &amp;&amp; p[2] == NUL)));</a>
+<a name="ln3372">    if (!ignore &amp;&amp; checkitem != NULL) {</a>
+<a name="ln3373">      varnumber_T r = checkitem(context, p);</a>
+<a name="ln3374">      if (r &lt; 0) {</a>
+<a name="ln3375">        break;</a>
+<a name="ln3376">      }</a>
+<a name="ln3377">      if (r == 0) {</a>
+<a name="ln3378">        ignore = true;</a>
+<a name="ln3379">      }</a>
 <a name="ln3380">    }</a>
 <a name="ln3381"> </a>
-<a name="ln3382">    bool ignore = (p[0] == '.' &amp;&amp; (p[1] == NUL || (p[1] == '.' &amp;&amp; p[2] == NUL)));</a>
-<a name="ln3383">    if (!ignore &amp;&amp; checkitem != NULL) {</a>
-<a name="ln3384">      varnumber_T r = checkitem(context, p);</a>
-<a name="ln3385">      if (r &lt; 0) {</a>
-<a name="ln3386">        break;</a>
-<a name="ln3387">      }</a>
-<a name="ln3388">      if (r == 0) {</a>
-<a name="ln3389">        ignore = true;</a>
-<a name="ln3390">      }</a>
-<a name="ln3391">    }</a>
-<a name="ln3392"> </a>
-<a name="ln3393">    if (!ignore) {</a>
-<a name="ln3394">      ga_grow(gap, 1);</a>
-<a name="ln3395">      ((char **)gap-&gt;ga_data)[gap-&gt;ga_len++] = xstrdup(p);</a>
-<a name="ln3396">    }</a>
-<a name="ln3397">  }</a>
-<a name="ln3398"> </a>
-<a name="ln3399">  os_closedir(&amp;dir);</a>
-<a name="ln3400"> </a>
-<a name="ln3401">  if (gap-&gt;ga_len &gt; 0) {</a>
-<a name="ln3402">    sort_strings(gap-&gt;ga_data, gap-&gt;ga_len);</a>
-<a name="ln3403">  }</a>
-<a name="ln3404"> </a>
-<a name="ln3405">  return OK;</a>
-<a name="ln3406">}</a>
-<a name="ln3407"> </a>
-<a name="ln3408">/// Delete &quot;name&quot; and everything in it, recursively.</a>
-<a name="ln3409">///</a>
-<a name="ln3410">/// @param name  The path which should be deleted.</a>
-<a name="ln3411">///</a>
-<a name="ln3412">/// @return  0 for success, -1 if some file was not deleted.</a>
-<a name="ln3413">int delete_recursive(const char *name)</a>
-<a name="ln3414">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln3415">{</a>
-<a name="ln3416">  int result = 0;</a>
-<a name="ln3417"> </a>
-<a name="ln3418">  if (os_isrealdir(name)) {</a>
-<a name="ln3419">    char *exp = xstrdup(name);</a>
-<a name="ln3420">    garray_T ga;</a>
-<a name="ln3421">    if (readdir_core(&amp;ga, exp, NULL, NULL) == OK) {</a>
-<a name="ln3422">      for (int i = 0; i &lt; ga.ga_len; i++) {</a>
-<a name="ln3423">        vim_snprintf(NameBuff, MAXPATHL, &quot;%s/%s&quot;, exp, ((char **)ga.ga_data)[i]);</a>
-<a name="ln3424">        if (delete_recursive(NameBuff) != 0) {</a>
-<a name="ln3425">          // Remember the failure but continue deleting any further</a>
-<a name="ln3426">          // entries.</a>
-<a name="ln3427">          result = -1;</a>
-<a name="ln3428">        }</a>
-<a name="ln3429">      }</a>
-<a name="ln3430">      ga_clear_strings(&amp;ga);</a>
-<a name="ln3431">      if (os_rmdir(exp) != 0) {</a>
-<a name="ln3432">        result = -1;</a>
-<a name="ln3433">      }</a>
-<a name="ln3434">    } else {</a>
-<a name="ln3435">      result = -1;</a>
-<a name="ln3436">    }</a>
-<a name="ln3437">    xfree(exp);</a>
-<a name="ln3438">  } else {</a>
-<a name="ln3439">    // Delete symlink only.</a>
-<a name="ln3440">    result = os_remove(name) == 0 ? 0 : -1;</a>
-<a name="ln3441">  }</a>
-<a name="ln3442"> </a>
-<a name="ln3443">  return result;</a>
-<a name="ln3444">}</a>
-<a name="ln3445"> </a>
-<a name="ln3446">#ifdef HAVE_DIRFD_AND_FLOCK</a>
-<a name="ln3447">/// Open temporary directory and take file lock to prevent</a>
-<a name="ln3448">/// to be auto-cleaned.</a>
-<a name="ln3449">static void vim_opentempdir(void)</a>
-<a name="ln3450">{</a>
-<a name="ln3451">  if (vim_tempdir_dp != NULL) {</a>
-<a name="ln3452">    return;</a>
-<a name="ln3453">  }</a>
-<a name="ln3454"> </a>
-<a name="ln3455">  DIR *dp = opendir(vim_tempdir);</a>
-<a name="ln3456">  if (dp == NULL) {</a>
+<a name="ln3382">    if (!ignore) {</a>
+<a name="ln3383">      ga_grow(gap, 1);</a>
+<a name="ln3384">      ((char **)gap-&gt;ga_data)[gap-&gt;ga_len++] = xstrdup(p);</a>
+<a name="ln3385">    }</a>
+<a name="ln3386">  }</a>
+<a name="ln3387"> </a>
+<a name="ln3388">  os_closedir(&amp;dir);</a>
+<a name="ln3389"> </a>
+<a name="ln3390">  if (gap-&gt;ga_len &gt; 0) {</a>
+<a name="ln3391">    sort_strings(gap-&gt;ga_data, gap-&gt;ga_len);</a>
+<a name="ln3392">  }</a>
+<a name="ln3393"> </a>
+<a name="ln3394">  return OK;</a>
+<a name="ln3395">}</a>
+<a name="ln3396"> </a>
+<a name="ln3397">/// Delete &quot;name&quot; and everything in it, recursively.</a>
+<a name="ln3398">///</a>
+<a name="ln3399">/// @param name  The path which should be deleted.</a>
+<a name="ln3400">///</a>
+<a name="ln3401">/// @return  0 for success, -1 if some file was not deleted.</a>
+<a name="ln3402">int delete_recursive(const char *name)</a>
+<a name="ln3403">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln3404">{</a>
+<a name="ln3405">  int result = 0;</a>
+<a name="ln3406"> </a>
+<a name="ln3407">  if (os_isrealdir(name)) {</a>
+<a name="ln3408">    char *exp = xstrdup(name);</a>
+<a name="ln3409">    garray_T ga;</a>
+<a name="ln3410">    if (readdir_core(&amp;ga, exp, NULL, NULL) == OK) {</a>
+<a name="ln3411">      for (int i = 0; i &lt; ga.ga_len; i++) {</a>
+<a name="ln3412">        vim_snprintf(NameBuff, MAXPATHL, &quot;%s/%s&quot;, exp, ((char **)ga.ga_data)[i]);</a>
+<a name="ln3413">        if (delete_recursive(NameBuff) != 0) {</a>
+<a name="ln3414">          // Remember the failure but continue deleting any further</a>
+<a name="ln3415">          // entries.</a>
+<a name="ln3416">          result = -1;</a>
+<a name="ln3417">        }</a>
+<a name="ln3418">      }</a>
+<a name="ln3419">      ga_clear_strings(&amp;ga);</a>
+<a name="ln3420">      if (os_rmdir(exp) != 0) {</a>
+<a name="ln3421">        result = -1;</a>
+<a name="ln3422">      }</a>
+<a name="ln3423">    } else {</a>
+<a name="ln3424">      result = -1;</a>
+<a name="ln3425">    }</a>
+<a name="ln3426">    xfree(exp);</a>
+<a name="ln3427">  } else {</a>
+<a name="ln3428">    // Delete symlink only.</a>
+<a name="ln3429">    result = os_remove(name) == 0 ? 0 : -1;</a>
+<a name="ln3430">  }</a>
+<a name="ln3431"> </a>
+<a name="ln3432">  return result;</a>
+<a name="ln3433">}</a>
+<a name="ln3434"> </a>
+<a name="ln3435">#ifdef HAVE_DIRFD_AND_FLOCK</a>
+<a name="ln3436">/// Open temporary directory and take file lock to prevent</a>
+<a name="ln3437">/// to be auto-cleaned.</a>
+<a name="ln3438">static void vim_opentempdir(void)</a>
+<a name="ln3439">{</a>
+<a name="ln3440">  if (vim_tempdir_dp != NULL) {</a>
+<a name="ln3441">    return;</a>
+<a name="ln3442">  }</a>
+<a name="ln3443"> </a>
+<a name="ln3444">  DIR *dp = opendir(vim_tempdir);</a>
+<a name="ln3445">  if (dp == NULL) {</a>
+<a name="ln3446">    return;</a>
+<a name="ln3447">  }</a>
+<a name="ln3448"> </a>
+<a name="ln3449">  vim_tempdir_dp = dp;</a>
+<a name="ln3450">  flock(dirfd(vim_tempdir_dp), LOCK_SH);</a>
+<a name="ln3451">}</a>
+<a name="ln3452"> </a>
+<a name="ln3453">/// Close temporary directory - it automatically release file lock.</a>
+<a name="ln3454">static void vim_closetempdir(void)</a>
+<a name="ln3455">{</a>
+<a name="ln3456">  if (vim_tempdir_dp == NULL) {</a>
 <a name="ln3457">    return;</a>
 <a name="ln3458">  }</a>
 <a name="ln3459"> </a>
-<a name="ln3460">  vim_tempdir_dp = dp;</a>
-<a name="ln3461">  flock(dirfd(vim_tempdir_dp), LOCK_SH);</a>
+<a name="ln3460">  closedir(vim_tempdir_dp);</a>
+<a name="ln3461">  vim_tempdir_dp = NULL;</a>
 <a name="ln3462">}</a>
-<a name="ln3463"> </a>
-<a name="ln3464">/// Close temporary directory - it automatically release file lock.</a>
-<a name="ln3465">static void vim_closetempdir(void)</a>
-<a name="ln3466">{</a>
-<a name="ln3467">  if (vim_tempdir_dp == NULL) {</a>
-<a name="ln3468">    return;</a>
-<a name="ln3469">  }</a>
-<a name="ln3470"> </a>
-<a name="ln3471">  closedir(vim_tempdir_dp);</a>
-<a name="ln3472">  vim_tempdir_dp = NULL;</a>
-<a name="ln3473">}</a>
+<a name="ln3463">#endif</a>
+<a name="ln3464"> </a>
+<a name="ln3465">/// Delete the temp directory and all files it contains.</a>
+<a name="ln3466">void vim_deltempdir(void)</a>
+<a name="ln3467">{</a>
+<a name="ln3468">  if (vim_tempdir == NULL) {</a>
+<a name="ln3469">    return;</a>
+<a name="ln3470">  }</a>
+<a name="ln3471"> </a>
+<a name="ln3472">#ifdef HAVE_DIRFD_AND_FLOCK</a>
+<a name="ln3473">  vim_closetempdir();</a>
 <a name="ln3474">#endif</a>
-<a name="ln3475"> </a>
-<a name="ln3476">/// Delete the temp directory and all files it contains.</a>
-<a name="ln3477">void vim_deltempdir(void)</a>
-<a name="ln3478">{</a>
-<a name="ln3479">  if (vim_tempdir == NULL) {</a>
-<a name="ln3480">    return;</a>
-<a name="ln3481">  }</a>
-<a name="ln3482"> </a>
-<a name="ln3483">#ifdef HAVE_DIRFD_AND_FLOCK</a>
-<a name="ln3484">  vim_closetempdir();</a>
-<a name="ln3485">#endif</a>
-<a name="ln3486">  // remove the trailing path separator</a>
-<a name="ln3487">  path_tail(vim_tempdir)[-1] = NUL;</a>
-<a name="ln3488">  delete_recursive(vim_tempdir);</a>
-<a name="ln3489">  XFREE_CLEAR(vim_tempdir);</a>
-<a name="ln3490">}</a>
-<a name="ln3491"> </a>
-<a name="ln3492">/// Gets path to Nvim's own temp dir (ending with slash).</a>
-<a name="ln3493">///</a>
-<a name="ln3494">/// Creates the directory on the first call.</a>
-<a name="ln3495">char *vim_gettempdir(void)</a>
-<a name="ln3496">{</a>
-<a name="ln3497">  static int notfound = 0;</a>
-<a name="ln3498">  if (vim_tempdir == NULL || !os_isdir(vim_tempdir)) {</a>
-<a name="ln3499">    if (vim_tempdir != NULL) {</a>
-<a name="ln3500">      notfound++;</a>
-<a name="ln3501">      if (notfound == 1) {</a>
-<a name="ln3502">        ELOG(&quot;tempdir disappeared (antivirus or broken cleanup job?): %s&quot;, vim_tempdir);</a>
-<a name="ln3503">      }</a>
-<a name="ln3504">      if (notfound &gt; 1) {</a>
-<a name="ln3505">        msg_schedule_semsg(&quot;E5431: tempdir disappeared (%d times)&quot;, notfound);</a>
-<a name="ln3506">      }</a>
-<a name="ln3507">      XFREE_CLEAR(vim_tempdir);</a>
-<a name="ln3508">    }</a>
-<a name="ln3509">    vim_mktempdir();</a>
-<a name="ln3510">  }</a>
-<a name="ln3511">  return vim_tempdir;</a>
-<a name="ln3512">}</a>
-<a name="ln3513"> </a>
-<a name="ln3514">/// Sets Nvim's own temporary directory name to `tempdir`. This directory must</a>
-<a name="ln3515">/// already exist. Expands the name to a full path and put it in `vim_tempdir`.</a>
-<a name="ln3516">/// This avoids that using `:cd` would confuse us.</a>
-<a name="ln3517">///</a>
-<a name="ln3518">/// @param tempdir must be no longer than MAXPATHL.</a>
-<a name="ln3519">///</a>
-<a name="ln3520">/// @return false if we run out of memory.</a>
-<a name="ln3521">static bool vim_settempdir(char *tempdir)</a>
-<a name="ln3522">{</a>
-<a name="ln3523">  char *buf = verbose_try_malloc(MAXPATHL + 2);</a>
-<a name="ln3524">  if (buf == NULL) {</a>
-<a name="ln3525">    return false;</a>
-<a name="ln3526">  }</a>
-<a name="ln3527"> </a>
-<a name="ln3528">  vim_FullName(tempdir, buf, MAXPATHL, false);</a>
-<a name="ln3529">  add_pathsep(buf);</a>
-<a name="ln3530">  vim_tempdir = xstrdup(buf);</a>
-<a name="ln3531">#ifdef HAVE_DIRFD_AND_FLOCK</a>
-<a name="ln3532">  vim_opentempdir();</a>
-<a name="ln3533">#endif</a>
-<a name="ln3534">  xfree(buf);</a>
-<a name="ln3535">  return true;</a>
-<a name="ln3536">}</a>
+<a name="ln3475">  // remove the trailing path separator</a>
+<a name="ln3476">  path_tail(vim_tempdir)[-1] = NUL;</a>
+<a name="ln3477">  delete_recursive(vim_tempdir);</a>
+<a name="ln3478">  XFREE_CLEAR(vim_tempdir);</a>
+<a name="ln3479">}</a>
+<a name="ln3480"> </a>
+<a name="ln3481">/// Gets path to Nvim's own temp dir (ending with slash).</a>
+<a name="ln3482">///</a>
+<a name="ln3483">/// Creates the directory on the first call.</a>
+<a name="ln3484">char *vim_gettempdir(void)</a>
+<a name="ln3485">{</a>
+<a name="ln3486">  static int notfound = 0;</a>
+<a name="ln3487">  if (vim_tempdir == NULL || !os_isdir(vim_tempdir)) {</a>
+<a name="ln3488">    if (vim_tempdir != NULL) {</a>
+<a name="ln3489">      notfound++;</a>
+<a name="ln3490">      if (notfound == 1) {</a>
+<a name="ln3491">        ELOG(&quot;tempdir disappeared (antivirus or broken cleanup job?): %s&quot;, vim_tempdir);</a>
+<a name="ln3492">      }</a>
+<a name="ln3493">      if (notfound &gt; 1) {</a>
+<a name="ln3494">        msg_schedule_semsg(&quot;E5431: tempdir disappeared (%d times)&quot;, notfound);</a>
+<a name="ln3495">      }</a>
+<a name="ln3496">      XFREE_CLEAR(vim_tempdir);</a>
+<a name="ln3497">    }</a>
+<a name="ln3498">    vim_mktempdir();</a>
+<a name="ln3499">  }</a>
+<a name="ln3500">  return vim_tempdir;</a>
+<a name="ln3501">}</a>
+<a name="ln3502"> </a>
+<a name="ln3503">/// Sets Nvim's own temporary directory name to `tempdir`. This directory must</a>
+<a name="ln3504">/// already exist. Expands the name to a full path and put it in `vim_tempdir`.</a>
+<a name="ln3505">/// This avoids that using `:cd` would confuse us.</a>
+<a name="ln3506">///</a>
+<a name="ln3507">/// @param tempdir must be no longer than MAXPATHL.</a>
+<a name="ln3508">///</a>
+<a name="ln3509">/// @return false if we run out of memory.</a>
+<a name="ln3510">static bool vim_settempdir(char *tempdir)</a>
+<a name="ln3511">{</a>
+<a name="ln3512">  char *buf = verbose_try_malloc(MAXPATHL + 2);</a>
+<a name="ln3513">  if (buf == NULL) {</a>
+<a name="ln3514">    return false;</a>
+<a name="ln3515">  }</a>
+<a name="ln3516"> </a>
+<a name="ln3517">  vim_FullName(tempdir, buf, MAXPATHL, false);</a>
+<a name="ln3518">  add_pathsep(buf);</a>
+<a name="ln3519">  vim_tempdir = xstrdup(buf);</a>
+<a name="ln3520">#ifdef HAVE_DIRFD_AND_FLOCK</a>
+<a name="ln3521">  vim_opentempdir();</a>
+<a name="ln3522">#endif</a>
+<a name="ln3523">  xfree(buf);</a>
+<a name="ln3524">  return true;</a>
+<a name="ln3525">}</a>
+<a name="ln3526"> </a>
+<a name="ln3527">/// Return a unique name that can be used for a temp file.</a>
+<a name="ln3528">///</a>
+<a name="ln3529">/// @note The temp file is NOT created.</a>
+<a name="ln3530">///</a>
+<a name="ln3531">/// @return  pointer to the temp file name or NULL if Nvim can't create</a>
+<a name="ln3532">///          temporary directory for its own temporary files.</a>
+<a name="ln3533">char *vim_tempname(void)</a>
+<a name="ln3534">{</a>
+<a name="ln3535">  // Temp filename counter.</a>
+<a name="ln3536">  static uint64_t temp_count;</a>
 <a name="ln3537"> </a>
-<a name="ln3538">/// Return a unique name that can be used for a temp file.</a>
-<a name="ln3539">///</a>
-<a name="ln3540">/// @note The temp file is NOT created.</a>
-<a name="ln3541">///</a>
-<a name="ln3542">/// @return  pointer to the temp file name or NULL if Nvim can't create</a>
-<a name="ln3543">///          temporary directory for its own temporary files.</a>
-<a name="ln3544">char *vim_tempname(void)</a>
-<a name="ln3545">{</a>
-<a name="ln3546">  // Temp filename counter.</a>
-<a name="ln3547">  static uint64_t temp_count;</a>
-<a name="ln3548"> </a>
-<a name="ln3549">  char *tempdir = vim_gettempdir();</a>
-<a name="ln3550">  if (!tempdir) {</a>
-<a name="ln3551">    return NULL;</a>
-<a name="ln3552">  }</a>
-<a name="ln3553"> </a>
-<a name="ln3554">  // There is no need to check if the file exists, because we own the directory</a>
-<a name="ln3555">  // and nobody else creates a file in it.</a>
-<a name="ln3556">  char templ[TEMP_FILE_PATH_MAXLEN];</a>
-<a name="ln3557">  snprintf(templ, TEMP_FILE_PATH_MAXLEN, &quot;%s%&quot; PRIu64, tempdir, temp_count++);</a>
-<a name="ln3558">  return xstrdup(templ);</a>
-<a name="ln3559">}</a>
-<a name="ln3560"> </a>
-<a name="ln3561">/// Tries matching a filename with a &quot;pattern&quot; (&quot;prog&quot; is NULL), or use the</a>
-<a name="ln3562">/// precompiled regprog &quot;prog&quot; (&quot;pattern&quot; is NULL).  That avoids calling</a>
-<a name="ln3563">/// vim_regcomp() often.</a>
-<a name="ln3564">///</a>
-<a name="ln3565">/// Used for autocommands and 'wildignore'.</a>
-<a name="ln3566">///</a>
-<a name="ln3567">/// @param pattern pattern to match with</a>
-<a name="ln3568">/// @param prog pre-compiled regprog or NULL</a>
-<a name="ln3569">/// @param fname full path of the file name</a>
-<a name="ln3570">/// @param sfname short file name or NULL</a>
-<a name="ln3571">/// @param tail tail of the path</a>
-<a name="ln3572">/// @param allow_dirs Allow matching with dir</a>
-<a name="ln3573">///</a>
-<a name="ln3574">/// @return true if there is a match, false otherwise</a>
-<a name="ln3575">bool match_file_pat(char *pattern, regprog_T **prog, char *fname, char *sfname, char *tail,</a>
-<a name="ln3576">                    int allow_dirs)</a>
-<a name="ln3577">{</a>
-<a name="ln3578">  regmatch_T regmatch;</a>
-<a name="ln3579">  bool result = false;</a>
-<a name="ln3580"> </a>
-<a name="ln3581">  regmatch.rm_ic = p_fic;   // ignore case if 'fileignorecase' is set</a>
-<a name="ln3582">  regmatch.regprog = prog != NULL ? *prog : vim_regcomp(pattern, RE_MAGIC);</a>
-<a name="ln3583"> </a>
-<a name="ln3584">  // Try for a match with the pattern with:</a>
-<a name="ln3585">  // 1. the full file name, when the pattern has a '/'.</a>
-<a name="ln3586">  // 2. the short file name, when the pattern has a '/'.</a>
-<a name="ln3587">  // 3. the tail of the file name, when the pattern has no '/'.</a>
-<a name="ln3588">  if (regmatch.regprog != NULL</a>
-<a name="ln3589">      &amp;&amp; ((allow_dirs</a>
-<a name="ln3590">           &amp;&amp; (vim_regexec(&amp;regmatch, fname, (colnr_T)0)</a>
-<a name="ln3591">               || (sfname != NULL</a>
-<a name="ln3592">                   &amp;&amp; vim_regexec(&amp;regmatch, sfname, (colnr_T)0))))</a>
-<a name="ln3593">          || (!allow_dirs &amp;&amp; vim_regexec(&amp;regmatch, tail, (colnr_T)0)))) {</a>
-<a name="ln3594">    result = true;</a>
-<a name="ln3595">  }</a>
-<a name="ln3596"> </a>
-<a name="ln3597">  if (prog != NULL) {</a>
-<a name="ln3598">    *prog = regmatch.regprog;</a>
-<a name="ln3599">  } else {</a>
-<a name="ln3600">    vim_regfree(regmatch.regprog);</a>
-<a name="ln3601">  }</a>
-<a name="ln3602">  return result;</a>
-<a name="ln3603">}</a>
-<a name="ln3604"> </a>
-<a name="ln3605">/// Check if a file matches with a pattern in &quot;list&quot;.</a>
-<a name="ln3606">/// &quot;list&quot; is a comma-separated list of patterns, like 'wildignore'.</a>
-<a name="ln3607">/// &quot;sfname&quot; is the short file name or NULL, &quot;ffname&quot; the long file name.</a>
-<a name="ln3608">///</a>
-<a name="ln3609">/// @param list list of patterns to match</a>
-<a name="ln3610">/// @param sfname short file name</a>
-<a name="ln3611">/// @param ffname full file name</a>
-<a name="ln3612">///</a>
-<a name="ln3613">/// @return true if there was a match</a>
-<a name="ln3614">bool match_file_list(char *list, char *sfname, char *ffname)</a>
-<a name="ln3615">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ARG(1, 3)</a>
-<a name="ln3616">{</a>
-<a name="ln3617">  char *tail = path_tail(sfname);</a>
-<a name="ln3618"> </a>
-<a name="ln3619">  // try all patterns in 'wildignore'</a>
-<a name="ln3620">  char *p = list;</a>
-<a name="ln3621">  while (*p) {</a>
-<a name="ln3622">    char buf[MAXPATHL];</a>
-<a name="ln3623">    copy_option_part(&amp;p, buf, ARRAY_SIZE(buf), &quot;,&quot;);</a>
-<a name="ln3624">    char allow_dirs;</a>
-<a name="ln3625">    char *regpat = file_pat_to_reg_pat(buf, NULL, &amp;allow_dirs, false);</a>
-<a name="ln3626">    if (regpat == NULL) {</a>
-<a name="ln3627">      break;</a>
-<a name="ln3628">    }</a>
-<a name="ln3629">    bool match = match_file_pat(regpat, NULL, ffname, sfname, tail, (int)allow_dirs);</a>
-<a name="ln3630">    xfree(regpat);</a>
-<a name="ln3631">    if (match) {</a>
-<a name="ln3632">      return true;</a>
-<a name="ln3633">    }</a>
-<a name="ln3634">  }</a>
-<a name="ln3635">  return false;</a>
-<a name="ln3636">}</a>
-<a name="ln3637"> </a>
-<a name="ln3638">/// Convert the given pattern &quot;pat&quot; which has shell style wildcards in it, into</a>
-<a name="ln3639">/// a regular expression, and return the result in allocated memory.  If there</a>
-<a name="ln3640">/// is a directory path separator to be matched, then true is put in</a>
-<a name="ln3641">/// allow_dirs, otherwise false is put there -- webb.</a>
-<a name="ln3642">/// Handle backslashes before special characters, like &quot;\*&quot; and &quot;\ &quot;.</a>
-<a name="ln3643">///</a>
-<a name="ln3644">/// @param pat_end     first char after pattern or NULL</a>
-<a name="ln3645">/// @param allow_dirs  Result passed back out in here</a>
-<a name="ln3646">/// @param no_bslash   Don't use a backward slash as pathsep</a>
-<a name="ln3647">///</a>
-<a name="ln3648">/// @return            NULL on failure.</a>
-<a name="ln3649">char *file_pat_to_reg_pat(const char *pat, const char *pat_end, char *allow_dirs, int no_bslash)</a>
-<a name="ln3650">  FUNC_ATTR_NONNULL_ARG(1)</a>
-<a name="ln3651">{</a>
-<a name="ln3652">  if (allow_dirs != NULL) {</a>
-<a name="ln3653">    *allow_dirs = false;</a>
-<a name="ln3654">  }</a>
-<a name="ln3655"> </a>
-<a name="ln3656">  if (pat_end == NULL) {</a>
-<a name="ln3657">    pat_end = pat + strlen(pat);</a>
-<a name="ln3658">  }</a>
-<a name="ln3659"> </a>
-<a name="ln3660">  if (pat_end == pat) {</a>
-<a name="ln3661">    return xstrdup(&quot;^$&quot;);</a>
-<a name="ln3662">  }</a>
-<a name="ln3663"> </a>
-<a name="ln3664">  size_t size = 2;  // '^' at start, '$' at end.</a>
-<a name="ln3665"> </a>
-<a name="ln3666">  for (const char *p = pat; p &lt; pat_end; p++) {</a>
-<a name="ln3667">    switch (*p) {</a>
-<a name="ln3668">    case '*':</a>
-<a name="ln3669">    case '.':</a>
-<a name="ln3670">    case ',':</a>
-<a name="ln3671">    case '{':</a>
-<a name="ln3672">    case '}':</a>
-<a name="ln3673">    case '~':</a>
-<a name="ln3674">      size += 2;                // extra backslash</a>
-<a name="ln3675">      break;</a>
-<a name="ln3676">#ifdef BACKSLASH_IN_FILENAME</a>
-<a name="ln3677">    case '\\':</a>
-<a name="ln3678">    case '/':</a>
-<a name="ln3679">      size += 4;                // could become &quot;[\/]&quot;</a>
-<a name="ln3680">      break;</a>
-<a name="ln3681">#endif</a>
-<a name="ln3682">    default:</a>
-<a name="ln3683">      size++;</a>
-<a name="ln3684">      break;</a>
-<a name="ln3685">    }</a>
+<a name="ln3538">  char *tempdir = vim_gettempdir();</a>
+<a name="ln3539">  if (!tempdir) {</a>
+<a name="ln3540">    return NULL;</a>
+<a name="ln3541">  }</a>
+<a name="ln3542"> </a>
+<a name="ln3543">  // There is no need to check if the file exists, because we own the directory</a>
+<a name="ln3544">  // and nobody else creates a file in it.</a>
+<a name="ln3545">  char templ[TEMP_FILE_PATH_MAXLEN];</a>
+<a name="ln3546">  snprintf(templ, TEMP_FILE_PATH_MAXLEN, &quot;%s%&quot; PRIu64, tempdir, temp_count++);</a>
+<a name="ln3547">  return xstrdup(templ);</a>
+<a name="ln3548">}</a>
+<a name="ln3549"> </a>
+<a name="ln3550">/// Tries matching a filename with a &quot;pattern&quot; (&quot;prog&quot; is NULL), or use the</a>
+<a name="ln3551">/// precompiled regprog &quot;prog&quot; (&quot;pattern&quot; is NULL).  That avoids calling</a>
+<a name="ln3552">/// vim_regcomp() often.</a>
+<a name="ln3553">///</a>
+<a name="ln3554">/// Used for autocommands and 'wildignore'.</a>
+<a name="ln3555">///</a>
+<a name="ln3556">/// @param pattern pattern to match with</a>
+<a name="ln3557">/// @param prog pre-compiled regprog or NULL</a>
+<a name="ln3558">/// @param fname full path of the file name</a>
+<a name="ln3559">/// @param sfname short file name or NULL</a>
+<a name="ln3560">/// @param tail tail of the path</a>
+<a name="ln3561">/// @param allow_dirs Allow matching with dir</a>
+<a name="ln3562">///</a>
+<a name="ln3563">/// @return true if there is a match, false otherwise</a>
+<a name="ln3564">bool match_file_pat(char *pattern, regprog_T **prog, char *fname, char *sfname, char *tail,</a>
+<a name="ln3565">                    int allow_dirs)</a>
+<a name="ln3566">{</a>
+<a name="ln3567">  regmatch_T regmatch;</a>
+<a name="ln3568">  bool result = false;</a>
+<a name="ln3569"> </a>
+<a name="ln3570">  regmatch.rm_ic = p_fic;   // ignore case if 'fileignorecase' is set</a>
+<a name="ln3571">  regmatch.regprog = prog != NULL ? *prog : vim_regcomp(pattern, RE_MAGIC);</a>
+<a name="ln3572"> </a>
+<a name="ln3573">  // Try for a match with the pattern with:</a>
+<a name="ln3574">  // 1. the full file name, when the pattern has a '/'.</a>
+<a name="ln3575">  // 2. the short file name, when the pattern has a '/'.</a>
+<a name="ln3576">  // 3. the tail of the file name, when the pattern has no '/'.</a>
+<a name="ln3577">  if (regmatch.regprog != NULL</a>
+<a name="ln3578">      &amp;&amp; ((allow_dirs</a>
+<a name="ln3579">           &amp;&amp; (vim_regexec(&amp;regmatch, fname, (colnr_T)0)</a>
+<a name="ln3580">               || (sfname != NULL</a>
+<a name="ln3581">                   &amp;&amp; vim_regexec(&amp;regmatch, sfname, (colnr_T)0))))</a>
+<a name="ln3582">          || (!allow_dirs &amp;&amp; vim_regexec(&amp;regmatch, tail, (colnr_T)0)))) {</a>
+<a name="ln3583">    result = true;</a>
+<a name="ln3584">  }</a>
+<a name="ln3585"> </a>
+<a name="ln3586">  if (prog != NULL) {</a>
+<a name="ln3587">    *prog = regmatch.regprog;</a>
+<a name="ln3588">  } else {</a>
+<a name="ln3589">    vim_regfree(regmatch.regprog);</a>
+<a name="ln3590">  }</a>
+<a name="ln3591">  return result;</a>
+<a name="ln3592">}</a>
+<a name="ln3593"> </a>
+<a name="ln3594">/// Check if a file matches with a pattern in &quot;list&quot;.</a>
+<a name="ln3595">/// &quot;list&quot; is a comma-separated list of patterns, like 'wildignore'.</a>
+<a name="ln3596">/// &quot;sfname&quot; is the short file name or NULL, &quot;ffname&quot; the long file name.</a>
+<a name="ln3597">///</a>
+<a name="ln3598">/// @param list list of patterns to match</a>
+<a name="ln3599">/// @param sfname short file name</a>
+<a name="ln3600">/// @param ffname full file name</a>
+<a name="ln3601">///</a>
+<a name="ln3602">/// @return true if there was a match</a>
+<a name="ln3603">bool match_file_list(char *list, char *sfname, char *ffname)</a>
+<a name="ln3604">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ARG(1, 3)</a>
+<a name="ln3605">{</a>
+<a name="ln3606">  char *tail = path_tail(sfname);</a>
+<a name="ln3607"> </a>
+<a name="ln3608">  // try all patterns in 'wildignore'</a>
+<a name="ln3609">  char *p = list;</a>
+<a name="ln3610">  while (*p) {</a>
+<a name="ln3611">    char buf[MAXPATHL];</a>
+<a name="ln3612">    copy_option_part(&amp;p, buf, ARRAY_SIZE(buf), &quot;,&quot;);</a>
+<a name="ln3613">    char allow_dirs;</a>
+<a name="ln3614">    char *regpat = file_pat_to_reg_pat(buf, NULL, &amp;allow_dirs, false);</a>
+<a name="ln3615">    if (regpat == NULL) {</a>
+<a name="ln3616">      break;</a>
+<a name="ln3617">    }</a>
+<a name="ln3618">    bool match = match_file_pat(regpat, NULL, ffname, sfname, tail, (int)allow_dirs);</a>
+<a name="ln3619">    xfree(regpat);</a>
+<a name="ln3620">    if (match) {</a>
+<a name="ln3621">      return true;</a>
+<a name="ln3622">    }</a>
+<a name="ln3623">  }</a>
+<a name="ln3624">  return false;</a>
+<a name="ln3625">}</a>
+<a name="ln3626"> </a>
+<a name="ln3627">/// Convert the given pattern &quot;pat&quot; which has shell style wildcards in it, into</a>
+<a name="ln3628">/// a regular expression, and return the result in allocated memory.  If there</a>
+<a name="ln3629">/// is a directory path separator to be matched, then true is put in</a>
+<a name="ln3630">/// allow_dirs, otherwise false is put there -- webb.</a>
+<a name="ln3631">/// Handle backslashes before special characters, like &quot;\*&quot; and &quot;\ &quot;.</a>
+<a name="ln3632">///</a>
+<a name="ln3633">/// @param pat_end     first char after pattern or NULL</a>
+<a name="ln3634">/// @param allow_dirs  Result passed back out in here</a>
+<a name="ln3635">/// @param no_bslash   Don't use a backward slash as pathsep</a>
+<a name="ln3636">///</a>
+<a name="ln3637">/// @return            NULL on failure.</a>
+<a name="ln3638">char *file_pat_to_reg_pat(const char *pat, const char *pat_end, char *allow_dirs, int no_bslash)</a>
+<a name="ln3639">  FUNC_ATTR_NONNULL_ARG(1)</a>
+<a name="ln3640">{</a>
+<a name="ln3641">  if (allow_dirs != NULL) {</a>
+<a name="ln3642">    *allow_dirs = false;</a>
+<a name="ln3643">  }</a>
+<a name="ln3644"> </a>
+<a name="ln3645">  if (pat_end == NULL) {</a>
+<a name="ln3646">    pat_end = pat + strlen(pat);</a>
+<a name="ln3647">  }</a>
+<a name="ln3648"> </a>
+<a name="ln3649">  if (pat_end == pat) {</a>
+<a name="ln3650">    return xstrdup(&quot;^$&quot;);</a>
+<a name="ln3651">  }</a>
+<a name="ln3652"> </a>
+<a name="ln3653">  size_t size = 2;  // '^' at start, '$' at end.</a>
+<a name="ln3654"> </a>
+<a name="ln3655">  for (const char *p = pat; p &lt; pat_end; p++) {</a>
+<a name="ln3656">    switch (*p) {</a>
+<a name="ln3657">    case '*':</a>
+<a name="ln3658">    case '.':</a>
+<a name="ln3659">    case ',':</a>
+<a name="ln3660">    case '{':</a>
+<a name="ln3661">    case '}':</a>
+<a name="ln3662">    case '~':</a>
+<a name="ln3663">      size += 2;                // extra backslash</a>
+<a name="ln3664">      break;</a>
+<a name="ln3665">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln3666">    case '\\':</a>
+<a name="ln3667">    case '/':</a>
+<a name="ln3668">      size += 4;                // could become &quot;[\/]&quot;</a>
+<a name="ln3669">      break;</a>
+<a name="ln3670">#endif</a>
+<a name="ln3671">    default:</a>
+<a name="ln3672">      size++;</a>
+<a name="ln3673">      break;</a>
+<a name="ln3674">    }</a>
+<a name="ln3675">  }</a>
+<a name="ln3676">  char *reg_pat = xmalloc(size + 1);</a>
+<a name="ln3677"> </a>
+<a name="ln3678">  size_t i = 0;</a>
+<a name="ln3679"> </a>
+<a name="ln3680">  if (pat[0] == '*') {</a>
+<a name="ln3681">    while (pat[0] == '*' &amp;&amp; pat &lt; pat_end - 1) {</a>
+<a name="ln3682">      pat++;</a>
+<a name="ln3683">    }</a>
+<a name="ln3684">  } else {</a>
+<a name="ln3685">    reg_pat[i++] = '^';</a>
 <a name="ln3686">  }</a>
-<a name="ln3687">  char *reg_pat = xmalloc(size + 1);</a>
-<a name="ln3688"> </a>
-<a name="ln3689">  size_t i = 0;</a>
-<a name="ln3690"> </a>
-<a name="ln3691">  if (pat[0] == '*') {</a>
-<a name="ln3692">    while (pat[0] == '*' &amp;&amp; pat &lt; pat_end - 1) {</a>
-<a name="ln3693">      pat++;</a>
-<a name="ln3694">    }</a>
-<a name="ln3695">  } else {</a>
-<a name="ln3696">    reg_pat[i++] = '^';</a>
-<a name="ln3697">  }</a>
-<a name="ln3698">  const char *endp = pat_end - 1;</a>
-<a name="ln3699">  bool add_dollar = true;</a>
-<a name="ln3700">  if (endp &gt;= pat &amp;&amp; *endp == '*') {</a>
-<a name="ln3701">    while (endp - pat &gt; 0 &amp;&amp; *endp == '*') {</a>
-<a name="ln3702">      endp--;</a>
-<a name="ln3703">    }</a>
-<a name="ln3704">    add_dollar = false;</a>
-<a name="ln3705">  }</a>
-<a name="ln3706">  int nested = 0;</a>
-<a name="ln3707">  for (const char *p = pat; *p &amp;&amp; nested &gt;= 0 &amp;&amp; p &lt;= endp; p++) {</a>
-<a name="ln3708">    switch (*p) {</a>
-<a name="ln3709">    case '*':</a>
-<a name="ln3710">      reg_pat[i++] = '.';</a>
-<a name="ln3711">      reg_pat[i++] = '*';</a>
-<a name="ln3712">      while (p[1] == '*') {  // &quot;**&quot; matches like &quot;*&quot;</a>
-<a name="ln3713">        p++;</a>
-<a name="ln3714">      }</a>
-<a name="ln3715">      break;</a>
-<a name="ln3716">    case '.':</a>
-<a name="ln3717">    case '~':</a>
-<a name="ln3718">      reg_pat[i++] = '\\';</a>
-<a name="ln3719">      reg_pat[i++] = *p;</a>
-<a name="ln3720">      break;</a>
-<a name="ln3721">    case '?':</a>
-<a name="ln3722">      reg_pat[i++] = '.';</a>
-<a name="ln3723">      break;</a>
-<a name="ln3724">    case '\\':</a>
-<a name="ln3725">      if (p[1] == NUL) {</a>
-<a name="ln3726">        break;</a>
-<a name="ln3727">      }</a>
-<a name="ln3728">#ifdef BACKSLASH_IN_FILENAME</a>
-<a name="ln3729">      if (!no_bslash) {</a>
-<a name="ln3730">        // translate:</a>
-<a name="ln3731">        // &quot;\x&quot; to &quot;\\x&quot;  e.g., &quot;dir\file&quot;</a>
-<a name="ln3732">        // &quot;\*&quot; to &quot;\\.*&quot; e.g., &quot;dir\*.c&quot;</a>
-<a name="ln3733">        // &quot;\?&quot; to &quot;\\.&quot;  e.g., &quot;dir\??.c&quot;</a>
-<a name="ln3734">        // &quot;\+&quot; to &quot;\+&quot;   e.g., &quot;fileX\+.c&quot;</a>
-<a name="ln3735">        if ((vim_isfilec((uint8_t)p[1]) || p[1] == '*' || p[1] == '?')</a>
-<a name="ln3736">            &amp;&amp; p[1] != '+') {</a>
-<a name="ln3737">          reg_pat[i++] = '[';</a>
-<a name="ln3738">          reg_pat[i++] = '\\';</a>
-<a name="ln3739">          reg_pat[i++] = '/';</a>
-<a name="ln3740">          reg_pat[i++] = ']';</a>
-<a name="ln3741">          if (allow_dirs != NULL) {</a>
-<a name="ln3742">            *allow_dirs = true;</a>
-<a name="ln3743">          }</a>
-<a name="ln3744">          break;</a>
-<a name="ln3745">        }</a>
-<a name="ln3746">      }</a>
-<a name="ln3747">#endif</a>
-<a name="ln3748">      // Undo escaping from ExpandEscape():</a>
-<a name="ln3749">      // foo\?bar -&gt; foo?bar</a>
-<a name="ln3750">      // foo\%bar -&gt; foo%bar</a>
-<a name="ln3751">      // foo\,bar -&gt; foo,bar</a>
-<a name="ln3752">      // foo\ bar -&gt; foo bar</a>
-<a name="ln3753">      // Don't unescape \, * and others that are also special in a</a>
-<a name="ln3754">      // regexp.</a>
-<a name="ln3755">      // An escaped { must be unescaped since we use magic not</a>
-<a name="ln3756">      // verymagic.  Use &quot;\\\{n,m\}&quot;&quot; to get &quot;\{n,m}&quot;.</a>
-<a name="ln3757">      if (*++p == '?' &amp;&amp; (!BACKSLASH_IN_FILENAME_BOOL || no_bslash)) {</a>
-<a name="ln3758">        reg_pat[i++] = '?';</a>
-<a name="ln3759">      } else if (*p == ',' || *p == '%' || *p == '#'</a>
-<a name="ln3760">                 || ascii_isspace(*p) || *p == '{' || *p == '}') {</a>
+<a name="ln3687">  const char *endp = pat_end - 1;</a>
+<a name="ln3688">  bool add_dollar = true;</a>
+<a name="ln3689">  if (endp &gt;= pat &amp;&amp; *endp == '*') {</a>
+<a name="ln3690">    while (endp - pat &gt; 0 &amp;&amp; *endp == '*') {</a>
+<a name="ln3691">      endp--;</a>
+<a name="ln3692">    }</a>
+<a name="ln3693">    add_dollar = false;</a>
+<a name="ln3694">  }</a>
+<a name="ln3695">  int nested = 0;</a>
+<a name="ln3696">  for (const char *p = pat; *p &amp;&amp; nested &gt;= 0 &amp;&amp; p &lt;= endp; p++) {</a>
+<a name="ln3697">    switch (*p) {</a>
+<a name="ln3698">    case '*':</a>
+<a name="ln3699">      reg_pat[i++] = '.';</a>
+<a name="ln3700">      reg_pat[i++] = '*';</a>
+<a name="ln3701">      while (p[1] == '*') {  // &quot;**&quot; matches like &quot;*&quot;</a>
+<a name="ln3702">        p++;</a>
+<a name="ln3703">      }</a>
+<a name="ln3704">      break;</a>
+<a name="ln3705">    case '.':</a>
+<a name="ln3706">    case '~':</a>
+<a name="ln3707">      reg_pat[i++] = '\\';</a>
+<a name="ln3708">      reg_pat[i++] = *p;</a>
+<a name="ln3709">      break;</a>
+<a name="ln3710">    case '?':</a>
+<a name="ln3711">      reg_pat[i++] = '.';</a>
+<a name="ln3712">      break;</a>
+<a name="ln3713">    case '\\':</a>
+<a name="ln3714">      if (p[1] == NUL) {</a>
+<a name="ln3715">        break;</a>
+<a name="ln3716">      }</a>
+<a name="ln3717">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln3718">      if (!no_bslash) {</a>
+<a name="ln3719">        // translate:</a>
+<a name="ln3720">        // &quot;\x&quot; to &quot;\\x&quot;  e.g., &quot;dir\file&quot;</a>
+<a name="ln3721">        // &quot;\*&quot; to &quot;\\.*&quot; e.g., &quot;dir\*.c&quot;</a>
+<a name="ln3722">        // &quot;\?&quot; to &quot;\\.&quot;  e.g., &quot;dir\??.c&quot;</a>
+<a name="ln3723">        // &quot;\+&quot; to &quot;\+&quot;   e.g., &quot;fileX\+.c&quot;</a>
+<a name="ln3724">        if ((vim_isfilec((uint8_t)p[1]) || p[1] == '*' || p[1] == '?')</a>
+<a name="ln3725">            &amp;&amp; p[1] != '+') {</a>
+<a name="ln3726">          reg_pat[i++] = '[';</a>
+<a name="ln3727">          reg_pat[i++] = '\\';</a>
+<a name="ln3728">          reg_pat[i++] = '/';</a>
+<a name="ln3729">          reg_pat[i++] = ']';</a>
+<a name="ln3730">          if (allow_dirs != NULL) {</a>
+<a name="ln3731">            *allow_dirs = true;</a>
+<a name="ln3732">          }</a>
+<a name="ln3733">          break;</a>
+<a name="ln3734">        }</a>
+<a name="ln3735">      }</a>
+<a name="ln3736">#endif</a>
+<a name="ln3737">      // Undo escaping from ExpandEscape():</a>
+<a name="ln3738">      // foo\?bar -&gt; foo?bar</a>
+<a name="ln3739">      // foo\%bar -&gt; foo%bar</a>
+<a name="ln3740">      // foo\,bar -&gt; foo,bar</a>
+<a name="ln3741">      // foo\ bar -&gt; foo bar</a>
+<a name="ln3742">      // Don't unescape \, * and others that are also special in a</a>
+<a name="ln3743">      // regexp.</a>
+<a name="ln3744">      // An escaped { must be unescaped since we use magic not</a>
+<a name="ln3745">      // verymagic.  Use &quot;\\\{n,m\}&quot;&quot; to get &quot;\{n,m}&quot;.</a>
+<a name="ln3746">      if (*++p == '?' &amp;&amp; (!BACKSLASH_IN_FILENAME_BOOL || no_bslash)) {</a>
+<a name="ln3747">        reg_pat[i++] = '?';</a>
+<a name="ln3748">      } else if (*p == ',' || *p == '%' || *p == '#'</a>
+<a name="ln3749">                 || ascii_isspace(*p) || *p == '{' || *p == '}') {</a>
+<a name="ln3750">        reg_pat[i++] = *p;</a>
+<a name="ln3751">      } else if (*p == '\\' &amp;&amp; p[1] == '\\' &amp;&amp; p[2] == '{') {</a>
+<a name="ln3752">        reg_pat[i++] = '\\';</a>
+<a name="ln3753">        reg_pat[i++] = '{';</a>
+<a name="ln3754">        p += 2;</a>
+<a name="ln3755">      } else {</a>
+<a name="ln3756">        if (allow_dirs != NULL &amp;&amp; vim_ispathsep(*p)</a>
+<a name="ln3757">            &amp;&amp; (!BACKSLASH_IN_FILENAME_BOOL || (!no_bslash || *p != '\\'))) {</a>
+<a name="ln3758">          *allow_dirs = true;</a>
+<a name="ln3759">        }</a>
+<a name="ln3760">        reg_pat[i++] = '\\';</a>
 <a name="ln3761">        reg_pat[i++] = *p;</a>
-<a name="ln3762">      } else if (*p == '\\' &amp;&amp; p[1] == '\\' &amp;&amp; p[2] == '{') {</a>
-<a name="ln3763">        reg_pat[i++] = '\\';</a>
-<a name="ln3764">        reg_pat[i++] = '{';</a>
-<a name="ln3765">        p += 2;</a>
-<a name="ln3766">      } else {</a>
-<a name="ln3767">        if (allow_dirs != NULL &amp;&amp; vim_ispathsep(*p)</a>
-<a name="ln3768">            &amp;&amp; (!BACKSLASH_IN_FILENAME_BOOL || (!no_bslash || *p != '\\'))) {</a>
-<a name="ln3769">          *allow_dirs = true;</a>
-<a name="ln3770">        }</a>
-<a name="ln3771">        reg_pat[i++] = '\\';</a>
-<a name="ln3772">        reg_pat[i++] = *p;</a>
-<a name="ln3773">      }</a>
-<a name="ln3774">      break;</a>
-<a name="ln3775">#ifdef BACKSLASH_IN_FILENAME</a>
-<a name="ln3776">    case '/':</a>
-<a name="ln3777">      reg_pat[i++] = '[';</a>
-<a name="ln3778">      reg_pat[i++] = '\\';</a>
-<a name="ln3779">      reg_pat[i++] = '/';</a>
-<a name="ln3780">      reg_pat[i++] = ']';</a>
-<a name="ln3781">      if (allow_dirs != NULL) {</a>
-<a name="ln3782">        *allow_dirs = true;</a>
-<a name="ln3783">      }</a>
+<a name="ln3762">      }</a>
+<a name="ln3763">      break;</a>
+<a name="ln3764">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln3765">    case '/':</a>
+<a name="ln3766">      reg_pat[i++] = '[';</a>
+<a name="ln3767">      reg_pat[i++] = '\\';</a>
+<a name="ln3768">      reg_pat[i++] = '/';</a>
+<a name="ln3769">      reg_pat[i++] = ']';</a>
+<a name="ln3770">      if (allow_dirs != NULL) {</a>
+<a name="ln3771">        *allow_dirs = true;</a>
+<a name="ln3772">      }</a>
+<a name="ln3773">      break;</a>
+<a name="ln3774">#endif</a>
+<a name="ln3775">    case '{':</a>
+<a name="ln3776">      reg_pat[i++] = '\\';</a>
+<a name="ln3777">      reg_pat[i++] = '(';</a>
+<a name="ln3778">      nested++;</a>
+<a name="ln3779">      break;</a>
+<a name="ln3780">    case '}':</a>
+<a name="ln3781">      reg_pat[i++] = '\\';</a>
+<a name="ln3782">      reg_pat[i++] = ')';</a>
+<a name="ln3783">      nested--;</a>
 <a name="ln3784">      break;</a>
-<a name="ln3785">#endif</a>
-<a name="ln3786">    case '{':</a>
-<a name="ln3787">      reg_pat[i++] = '\\';</a>
-<a name="ln3788">      reg_pat[i++] = '(';</a>
-<a name="ln3789">      nested++;</a>
-<a name="ln3790">      break;</a>
-<a name="ln3791">    case '}':</a>
-<a name="ln3792">      reg_pat[i++] = '\\';</a>
-<a name="ln3793">      reg_pat[i++] = ')';</a>
-<a name="ln3794">      nested--;</a>
-<a name="ln3795">      break;</a>
-<a name="ln3796">    case ',':</a>
-<a name="ln3797">      if (nested) {</a>
-<a name="ln3798">        reg_pat[i++] = '\\';</a>
-<a name="ln3799">        reg_pat[i++] = '|';</a>
-<a name="ln3800">      } else {</a>
-<a name="ln3801">        reg_pat[i++] = ',';</a>
-<a name="ln3802">      }</a>
-<a name="ln3803">      break;</a>
-<a name="ln3804">    default:</a>
-<a name="ln3805">      if (allow_dirs != NULL &amp;&amp; vim_ispathsep(*p)) {</a>
-<a name="ln3806">        *allow_dirs = true;</a>
-<a name="ln3807">      }</a>
-<a name="ln3808">      reg_pat[i++] = *p;</a>
-<a name="ln3809">      break;</a>
+<a name="ln3785">    case ',':</a>
+<a name="ln3786">      if (nested) {</a>
+<a name="ln3787">        reg_pat[i++] = '\\';</a>
+<a name="ln3788">        reg_pat[i++] = '|';</a>
+<a name="ln3789">      } else {</a>
+<a name="ln3790">        reg_pat[i++] = ',';</a>
+<a name="ln3791">      }</a>
+<a name="ln3792">      break;</a>
+<a name="ln3793">    default:</a>
+<a name="ln3794">      if (allow_dirs != NULL &amp;&amp; vim_ispathsep(*p)) {</a>
+<a name="ln3795">        *allow_dirs = true;</a>
+<a name="ln3796">      }</a>
+<a name="ln3797">      reg_pat[i++] = *p;</a>
+<a name="ln3798">      break;</a>
+<a name="ln3799">    }</a>
+<a name="ln3800">  }</a>
+<a name="ln3801">  if (add_dollar) {</a>
+<a name="ln3802">    reg_pat[i++] = '$';</a>
+<a name="ln3803">  }</a>
+<a name="ln3804">  reg_pat[i] = NUL;</a>
+<a name="ln3805">  if (nested != 0) {</a>
+<a name="ln3806">    if (nested &lt; 0) {</a>
+<a name="ln3807">      emsg(_(&quot;E219: Missing {.&quot;));</a>
+<a name="ln3808">    } else {</a>
+<a name="ln3809">      emsg(_(&quot;E220: Missing }.&quot;));</a>
 <a name="ln3810">    }</a>
-<a name="ln3811">  }</a>
-<a name="ln3812">  if (add_dollar) {</a>
-<a name="ln3813">    reg_pat[i++] = '$';</a>
-<a name="ln3814">  }</a>
-<a name="ln3815">  reg_pat[i] = NUL;</a>
-<a name="ln3816">  if (nested != 0) {</a>
-<a name="ln3817">    if (nested &lt; 0) {</a>
-<a name="ln3818">      emsg(_(&quot;E219: Missing {.&quot;));</a>
-<a name="ln3819">    } else {</a>
-<a name="ln3820">      emsg(_(&quot;E220: Missing }.&quot;));</a>
-<a name="ln3821">    }</a>
-<a name="ln3822">    XFREE_CLEAR(reg_pat);</a>
-<a name="ln3823">  }</a>
-<a name="ln3824">  return reg_pat;</a>
-<a name="ln3825">}</a>
-<a name="ln3826"> </a>
-<a name="ln3827">#if defined(EINTR)</a>
-<a name="ln3828"> </a>
-<a name="ln3829">/// Version of read() that retries when interrupted by EINTR (possibly</a>
-<a name="ln3830">/// by a SIGWINCH).</a>
-<a name="ln3831">long read_eintr(int fd, void *buf, size_t bufsize)</a>
-<a name="ln3832">{</a>
-<a name="ln3833">  long ret;</a>
-<a name="ln3834"> </a>
-<a name="ln3835">  while (true) {</a>
-<a name="ln3836">    ret = read(fd, buf, (unsigned)bufsize);</a>
-<a name="ln3837">    if (ret &gt;= 0 || errno != EINTR) {</a>
-<a name="ln3838">      break;</a>
-<a name="ln3839">    }</a>
-<a name="ln3840">  }</a>
-<a name="ln3841">  return ret;</a>
-<a name="ln3842">}</a>
-<a name="ln3843"> </a>
-<a name="ln3844">/// Version of write() that retries when interrupted by EINTR (possibly</a>
-<a name="ln3845">/// by a SIGWINCH).</a>
-<a name="ln3846">long write_eintr(int fd, void *buf, size_t bufsize)</a>
-<a name="ln3847">{</a>
-<a name="ln3848">  long ret = 0;</a>
-<a name="ln3849"> </a>
-<a name="ln3850">  // Repeat the write() so long it didn't fail, other than being interrupted</a>
-<a name="ln3851">  // by a signal.</a>
-<a name="ln3852">  while (ret &lt; (long)bufsize) {</a>
-<a name="ln3853">    long wlen = write(fd, (char *)buf + ret, (unsigned)(bufsize - (size_t)ret));</a>
-<a name="ln3854">    if (wlen &lt; 0) {</a>
-<a name="ln3855">      if (errno != EINTR) {</a>
-<a name="ln3856">        break;</a>
-<a name="ln3857">      }</a>
-<a name="ln3858">    } else {</a>
-<a name="ln3859">      ret += wlen;</a>
-<a name="ln3860">    }</a>
-<a name="ln3861">  }</a>
-<a name="ln3862">  return ret;</a>
-<a name="ln3863">}</a>
-<a name="ln3864">#endif</a>
+<a name="ln3811">    XFREE_CLEAR(reg_pat);</a>
+<a name="ln3812">  }</a>
+<a name="ln3813">  return reg_pat;</a>
+<a name="ln3814">}</a>
+<a name="ln3815"> </a>
+<a name="ln3816">#if defined(EINTR)</a>
+<a name="ln3817"> </a>
+<a name="ln3818">/// Version of read() that retries when interrupted by EINTR (possibly</a>
+<a name="ln3819">/// by a SIGWINCH).</a>
+<a name="ln3820">long read_eintr(int fd, void *buf, size_t bufsize)</a>
+<a name="ln3821">{</a>
+<a name="ln3822">  long ret;</a>
+<a name="ln3823"> </a>
+<a name="ln3824">  while (true) {</a>
+<a name="ln3825">    ret = read(fd, buf, (unsigned)bufsize);</a>
+<a name="ln3826">    if (ret &gt;= 0 || errno != EINTR) {</a>
+<a name="ln3827">      break;</a>
+<a name="ln3828">    }</a>
+<a name="ln3829">  }</a>
+<a name="ln3830">  return ret;</a>
+<a name="ln3831">}</a>
+<a name="ln3832"> </a>
+<a name="ln3833">/// Version of write() that retries when interrupted by EINTR (possibly</a>
+<a name="ln3834">/// by a SIGWINCH).</a>
+<a name="ln3835">long write_eintr(int fd, void *buf, size_t bufsize)</a>
+<a name="ln3836">{</a>
+<a name="ln3837">  long ret = 0;</a>
+<a name="ln3838"> </a>
+<a name="ln3839">  // Repeat the write() so long it didn't fail, other than being interrupted</a>
+<a name="ln3840">  // by a signal.</a>
+<a name="ln3841">  while (ret &lt; (long)bufsize) {</a>
+<a name="ln3842">    long wlen = write(fd, (char *)buf + ret, (unsigned)(bufsize - (size_t)ret));</a>
+<a name="ln3843">    if (wlen &lt; 0) {</a>
+<a name="ln3844">      if (errno != EINTR) {</a>
+<a name="ln3845">        break;</a>
+<a name="ln3846">      }</a>
+<a name="ln3847">    } else {</a>
+<a name="ln3848">      ret += wlen;</a>
+<a name="ln3849">    }</a>
+<a name="ln3850">  }</a>
+<a name="ln3851">  return ret;</a>
+<a name="ln3852">}</a>
+<a name="ln3853">#endif</a>
 </code></pre>
-<div class="balloon" rel="3340"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v557/" target="_blank">V557</a> Array overrun is possible. The value of 'strlen(tmp) - strlen(user)' index could reach 18446744073709551615.</p></div>
+<div class="balloon" rel="3329"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v557/" target="_blank">V557</a> Array overrun is possible. The value of 'strlen(tmp) - strlen(user)' index could reach 18446744073709551615.</p></div>
 <link rel="stylesheet" href="highlight.css">
 <script src="highlight.pack.js"></script>
 <script src="highlightjs-line-numbers.js"></script>
