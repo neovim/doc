@@ -127,7 +127,7 @@
 <a name="ln118">  msg_scroll = msg_scroll_save;</a>
 <a name="ln119">  msg_scrolled_ign = true;</a>
 <a name="ln120">  // may truncate the message to avoid a hit-return prompt</a>
-<a name="ln121">  msg_outtrans_attr(msg_may_trunc(false, IObuff), attr);</a>
+<a name="ln121">  msg_outtrans(msg_may_trunc(false, IObuff), attr);</a>
 <a name="ln122">  msg_clr_eos();</a>
 <a name="ln123">  ui_flush();</a>
 <a name="ln124">  msg_scrolled_ign = false;</a>
@@ -1771,7 +1771,7 @@
 <a name="ln1762">        if (msg_col &gt; 0) {</a>
 <a name="ln1763">          msg_putchar('\r');  // overwrite previous message</a>
 <a name="ln1764">        }</a>
-<a name="ln1765">        p = (uint8_t *)msg_trunc_attr(IObuff, false, 0);</a>
+<a name="ln1765">        p = (uint8_t *)msg_trunc(IObuff, false, 0);</a>
 <a name="ln1766">      }</a>
 <a name="ln1767"> </a>
 <a name="ln1768">      if (read_stdin || read_buffer || restart_edit != 0</a>
@@ -2044,7 +2044,7 @@
 <a name="ln2035">  if (errmsg != NULL) {</a>
 <a name="ln2036">    // Don't use emsg(), it breaks mappings, the retry with</a>
 <a name="ln2037">    // another type of conversion might still work.</a>
-<a name="ln2038">    msg(errmsg);</a>
+<a name="ln2038">    msg(errmsg, 0);</a>
 <a name="ln2039">    if (tmpname != NULL) {</a>
 <a name="ln2040">      os_remove(tmpname);  // delete converted file</a>
 <a name="ln2041">      XFREE_CLEAR(tmpname);</a>
@@ -3288,580 +3288,585 @@
 <a name="ln3279">  char tmp[TEMP_FILE_PATH_MAXLEN];</a>
 <a name="ln3280">  char path[TEMP_FILE_PATH_MAXLEN];</a>
 <a name="ln3281">  char user[40] = { 0 };</a>
-<a name="ln3282"> </a>
-<a name="ln3283">  (void)os_get_username(user, sizeof(user));</a>
-<a name="ln3284">  // Usernames may contain slashes! #19240</a>
-<a name="ln3285">  memchrsub(user, '/', '_', sizeof(user));</a>
-<a name="ln3286">  memchrsub(user, '\\', '_', sizeof(user));</a>
-<a name="ln3287"> </a>
-<a name="ln3288">  // Make sure the umask doesn't remove the executable bit.</a>
-<a name="ln3289">  // &quot;repl&quot; has been reported to use &quot;0177&quot;.</a>
-<a name="ln3290">  mode_t umask_save = umask(0077);</a>
-<a name="ln3291">  for (size_t i = 0; i &lt; ARRAY_SIZE(temp_dirs); i++) {</a>
-<a name="ln3292">    // Expand environment variables, leave room for &quot;/tmp/nvim.&lt;user&gt;/XXXXXX/999999999&quot;.</a>
-<a name="ln3293">    expand_env((char *)temp_dirs[i], tmp, TEMP_FILE_PATH_MAXLEN - 64);</a>
-<a name="ln3294">    if (!os_isdir(tmp)) {</a>
-<a name="ln3295">      continue;</a>
-<a name="ln3296">    }</a>
-<a name="ln3297"> </a>
-<a name="ln3298">    // &quot;/tmp/&quot; exists, now try to create &quot;/tmp/nvim.&lt;user&gt;/&quot;.</a>
-<a name="ln3299">    add_pathsep(tmp);</a>
-<a name="ln3300"> </a>
-<a name="ln3301">    const char *appname = get_appname();</a>
-<a name="ln3302">    xstrlcat(tmp, appname, sizeof(tmp));</a>
-<a name="ln3303">    xstrlcat(tmp, &quot;.&quot;, sizeof(tmp));</a>
-<a name="ln3304">    xstrlcat(tmp, user, sizeof(tmp));</a>
-<a name="ln3305">    (void)os_mkdir(tmp, 0700);  // Always create, to avoid a race.</a>
-<a name="ln3306">    bool owned = os_file_owned(tmp);</a>
-<a name="ln3307">    bool isdir = os_isdir(tmp);</a>
-<a name="ln3308">#ifdef UNIX</a>
-<a name="ln3309">    int perm = os_getperm(tmp);  // XDG_RUNTIME_DIR must be owned by the user, mode 0700.</a>
-<a name="ln3310">    bool valid = isdir &amp;&amp; owned &amp;&amp; 0700 == (perm &amp; 0777);</a>
-<a name="ln3311">#else</a>
-<a name="ln3312">    bool valid = isdir &amp;&amp; owned;  // TODO(justinmk): Windows ACL?</a>
-<a name="ln3313">#endif</a>
-<a name="ln3314">    if (valid) {</a>
-<a name="ln3315">      add_pathsep(tmp);</a>
-<a name="ln3316">    } else {</a>
-<a name="ln3317">      if (!owned) {</a>
-<a name="ln3318">        ELOG(&quot;tempdir root not owned by current user (%s): %s&quot;, user, tmp);</a>
-<a name="ln3319">      } else if (!isdir) {</a>
-<a name="ln3320">        ELOG(&quot;tempdir root not a directory: %s&quot;, tmp);</a>
-<a name="ln3321">      }</a>
-<a name="ln3322">#ifdef UNIX</a>
-<a name="ln3323">      if (0700 != (perm &amp; 0777)) {</a>
-<a name="ln3324">        ELOG(&quot;tempdir root has invalid permissions (%o): %s&quot;, perm, tmp);</a>
-<a name="ln3325">      }</a>
-<a name="ln3326">#endif</a>
-<a name="ln3327">      // If our &quot;root&quot; tempdir is invalid or fails, proceed without &quot;&lt;user&gt;/&quot;.</a>
-<a name="ln3328">      // Else user1 could break user2 by creating &quot;/tmp/nvim.user2/&quot;.</a>
-<a name="ln3329">      tmp[strlen(tmp) - strlen(user)] = '\0';</a>
-<a name="ln3330">    }</a>
-<a name="ln3331"> </a>
-<a name="ln3332">    // Now try to create &quot;/tmp/nvim.&lt;user&gt;/XXXXXX&quot;.</a>
-<a name="ln3333">    xstrlcat(tmp, &quot;XXXXXX&quot;, sizeof(tmp));  // mkdtemp &quot;template&quot;, will be replaced with random alphanumeric chars.</a>
-<a name="ln3334">    int r = os_mkdtemp(tmp, path);</a>
-<a name="ln3335">    if (r != 0) {</a>
-<a name="ln3336">      WLOG(&quot;tempdir create failed: %s: %s&quot;, os_strerror(r), tmp);</a>
-<a name="ln3337">      continue;</a>
-<a name="ln3338">    }</a>
-<a name="ln3339"> </a>
-<a name="ln3340">    if (vim_settempdir(path)) {</a>
-<a name="ln3341">      // Successfully created and set temporary directory so stop trying.</a>
-<a name="ln3342">      break;</a>
+<a name="ln3282">  char appname[40] = { 0 };</a>
+<a name="ln3283"> </a>
+<a name="ln3284">  (void)os_get_username(user, sizeof(user));</a>
+<a name="ln3285">  // Usernames may contain slashes! #19240</a>
+<a name="ln3286">  memchrsub(user, '/', '_', sizeof(user));</a>
+<a name="ln3287">  memchrsub(user, '\\', '_', sizeof(user));</a>
+<a name="ln3288"> </a>
+<a name="ln3289">  // Appname may be a relative path, replace slashes to make it name-like.</a>
+<a name="ln3290">  xstrlcpy(appname, get_appname(), sizeof(appname));</a>
+<a name="ln3291">  memchrsub(appname, '/', '%', sizeof(appname));</a>
+<a name="ln3292">  memchrsub(appname, '\\', '%', sizeof(appname));</a>
+<a name="ln3293"> </a>
+<a name="ln3294">  // Make sure the umask doesn't remove the executable bit.</a>
+<a name="ln3295">  // &quot;repl&quot; has been reported to use &quot;0177&quot;.</a>
+<a name="ln3296">  mode_t umask_save = umask(0077);</a>
+<a name="ln3297">  for (size_t i = 0; i &lt; ARRAY_SIZE(temp_dirs); i++) {</a>
+<a name="ln3298">    // Expand environment variables, leave room for &quot;/tmp/nvim.&lt;user&gt;/XXXXXX/999999999&quot;.</a>
+<a name="ln3299">    expand_env((char *)temp_dirs[i], tmp, TEMP_FILE_PATH_MAXLEN - 64);</a>
+<a name="ln3300">    if (!os_isdir(tmp)) {</a>
+<a name="ln3301">      continue;</a>
+<a name="ln3302">    }</a>
+<a name="ln3303"> </a>
+<a name="ln3304">    // &quot;/tmp/&quot; exists, now try to create &quot;/tmp/nvim.&lt;user&gt;/&quot;.</a>
+<a name="ln3305">    add_pathsep(tmp);</a>
+<a name="ln3306"> </a>
+<a name="ln3307">    xstrlcat(tmp, appname, sizeof(tmp));</a>
+<a name="ln3308">    xstrlcat(tmp, &quot;.&quot;, sizeof(tmp));</a>
+<a name="ln3309">    xstrlcat(tmp, user, sizeof(tmp));</a>
+<a name="ln3310">    (void)os_mkdir(tmp, 0700);  // Always create, to avoid a race.</a>
+<a name="ln3311">    bool owned = os_file_owned(tmp);</a>
+<a name="ln3312">    bool isdir = os_isdir(tmp);</a>
+<a name="ln3313">#ifdef UNIX</a>
+<a name="ln3314">    int perm = os_getperm(tmp);  // XDG_RUNTIME_DIR must be owned by the user, mode 0700.</a>
+<a name="ln3315">    bool valid = isdir &amp;&amp; owned &amp;&amp; 0700 == (perm &amp; 0777);</a>
+<a name="ln3316">#else</a>
+<a name="ln3317">    bool valid = isdir &amp;&amp; owned;  // TODO(justinmk): Windows ACL?</a>
+<a name="ln3318">#endif</a>
+<a name="ln3319">    if (valid) {</a>
+<a name="ln3320">      add_pathsep(tmp);</a>
+<a name="ln3321">    } else {</a>
+<a name="ln3322">      if (!owned) {</a>
+<a name="ln3323">        ELOG(&quot;tempdir root not owned by current user (%s): %s&quot;, user, tmp);</a>
+<a name="ln3324">      } else if (!isdir) {</a>
+<a name="ln3325">        ELOG(&quot;tempdir root not a directory: %s&quot;, tmp);</a>
+<a name="ln3326">      }</a>
+<a name="ln3327">#ifdef UNIX</a>
+<a name="ln3328">      if (0700 != (perm &amp; 0777)) {</a>
+<a name="ln3329">        ELOG(&quot;tempdir root has invalid permissions (%o): %s&quot;, perm, tmp);</a>
+<a name="ln3330">      }</a>
+<a name="ln3331">#endif</a>
+<a name="ln3332">      // If our &quot;root&quot; tempdir is invalid or fails, proceed without &quot;&lt;user&gt;/&quot;.</a>
+<a name="ln3333">      // Else user1 could break user2 by creating &quot;/tmp/nvim.user2/&quot;.</a>
+<a name="ln3334">      tmp[strlen(tmp) - strlen(user)] = '\0';</a>
+<a name="ln3335">    }</a>
+<a name="ln3336"> </a>
+<a name="ln3337">    // Now try to create &quot;/tmp/nvim.&lt;user&gt;/XXXXXX&quot;.</a>
+<a name="ln3338">    xstrlcat(tmp, &quot;XXXXXX&quot;, sizeof(tmp));  // mkdtemp &quot;template&quot;, will be replaced with random alphanumeric chars.</a>
+<a name="ln3339">    int r = os_mkdtemp(tmp, path);</a>
+<a name="ln3340">    if (r != 0) {</a>
+<a name="ln3341">      WLOG(&quot;tempdir create failed: %s: %s&quot;, os_strerror(r), tmp);</a>
+<a name="ln3342">      continue;</a>
 <a name="ln3343">    }</a>
-<a name="ln3344">    // Couldn't set `vim_tempdir` to `path` so remove created directory.</a>
-<a name="ln3345">    os_rmdir(path);</a>
-<a name="ln3346">  }</a>
-<a name="ln3347">  (void)umask(umask_save);</a>
-<a name="ln3348">}</a>
-<a name="ln3349"> </a>
-<a name="ln3350">/// Core part of &quot;readdir()&quot; function.</a>
-<a name="ln3351">/// Retrieve the list of files/directories of &quot;path&quot; into &quot;gap&quot;.</a>
-<a name="ln3352">///</a>
-<a name="ln3353">/// @return  OK for success, FAIL for failure.</a>
-<a name="ln3354">int readdir_core(garray_T *gap, const char *path, void *context, CheckItem checkitem)</a>
-<a name="ln3355">  FUNC_ATTR_NONNULL_ARG(1, 2)</a>
-<a name="ln3356">{</a>
-<a name="ln3357">  ga_init(gap, (int)sizeof(char *), 20);</a>
-<a name="ln3358"> </a>
-<a name="ln3359">  Directory dir;</a>
-<a name="ln3360">  if (!os_scandir(&amp;dir, path)) {</a>
-<a name="ln3361">    smsg(_(e_notopen), path);</a>
-<a name="ln3362">    return FAIL;</a>
-<a name="ln3363">  }</a>
-<a name="ln3364"> </a>
-<a name="ln3365">  while (true) {</a>
-<a name="ln3366">    const char *p = os_scandir_next(&amp;dir);</a>
-<a name="ln3367">    if (p == NULL) {</a>
-<a name="ln3368">      break;</a>
-<a name="ln3369">    }</a>
-<a name="ln3370"> </a>
-<a name="ln3371">    bool ignore = (p[0] == '.' &amp;&amp; (p[1] == NUL || (p[1] == '.' &amp;&amp; p[2] == NUL)));</a>
-<a name="ln3372">    if (!ignore &amp;&amp; checkitem != NULL) {</a>
-<a name="ln3373">      varnumber_T r = checkitem(context, p);</a>
-<a name="ln3374">      if (r &lt; 0) {</a>
-<a name="ln3375">        break;</a>
-<a name="ln3376">      }</a>
-<a name="ln3377">      if (r == 0) {</a>
-<a name="ln3378">        ignore = true;</a>
-<a name="ln3379">      }</a>
-<a name="ln3380">    }</a>
-<a name="ln3381"> </a>
-<a name="ln3382">    if (!ignore) {</a>
-<a name="ln3383">      ga_grow(gap, 1);</a>
-<a name="ln3384">      ((char **)gap-&gt;ga_data)[gap-&gt;ga_len++] = xstrdup(p);</a>
+<a name="ln3344"> </a>
+<a name="ln3345">    if (vim_settempdir(path)) {</a>
+<a name="ln3346">      // Successfully created and set temporary directory so stop trying.</a>
+<a name="ln3347">      break;</a>
+<a name="ln3348">    }</a>
+<a name="ln3349">    // Couldn't set `vim_tempdir` to `path` so remove created directory.</a>
+<a name="ln3350">    os_rmdir(path);</a>
+<a name="ln3351">  }</a>
+<a name="ln3352">  (void)umask(umask_save);</a>
+<a name="ln3353">}</a>
+<a name="ln3354"> </a>
+<a name="ln3355">/// Core part of &quot;readdir()&quot; function.</a>
+<a name="ln3356">/// Retrieve the list of files/directories of &quot;path&quot; into &quot;gap&quot;.</a>
+<a name="ln3357">///</a>
+<a name="ln3358">/// @return  OK for success, FAIL for failure.</a>
+<a name="ln3359">int readdir_core(garray_T *gap, const char *path, void *context, CheckItem checkitem)</a>
+<a name="ln3360">  FUNC_ATTR_NONNULL_ARG(1, 2)</a>
+<a name="ln3361">{</a>
+<a name="ln3362">  ga_init(gap, (int)sizeof(char *), 20);</a>
+<a name="ln3363"> </a>
+<a name="ln3364">  Directory dir;</a>
+<a name="ln3365">  if (!os_scandir(&amp;dir, path)) {</a>
+<a name="ln3366">    smsg(_(e_notopen), path);</a>
+<a name="ln3367">    return FAIL;</a>
+<a name="ln3368">  }</a>
+<a name="ln3369"> </a>
+<a name="ln3370">  while (true) {</a>
+<a name="ln3371">    const char *p = os_scandir_next(&amp;dir);</a>
+<a name="ln3372">    if (p == NULL) {</a>
+<a name="ln3373">      break;</a>
+<a name="ln3374">    }</a>
+<a name="ln3375"> </a>
+<a name="ln3376">    bool ignore = (p[0] == '.' &amp;&amp; (p[1] == NUL || (p[1] == '.' &amp;&amp; p[2] == NUL)));</a>
+<a name="ln3377">    if (!ignore &amp;&amp; checkitem != NULL) {</a>
+<a name="ln3378">      varnumber_T r = checkitem(context, p);</a>
+<a name="ln3379">      if (r &lt; 0) {</a>
+<a name="ln3380">        break;</a>
+<a name="ln3381">      }</a>
+<a name="ln3382">      if (r == 0) {</a>
+<a name="ln3383">        ignore = true;</a>
+<a name="ln3384">      }</a>
 <a name="ln3385">    }</a>
-<a name="ln3386">  }</a>
-<a name="ln3387"> </a>
-<a name="ln3388">  os_closedir(&amp;dir);</a>
-<a name="ln3389"> </a>
-<a name="ln3390">  if (gap-&gt;ga_len &gt; 0) {</a>
-<a name="ln3391">    sort_strings(gap-&gt;ga_data, gap-&gt;ga_len);</a>
-<a name="ln3392">  }</a>
-<a name="ln3393"> </a>
-<a name="ln3394">  return OK;</a>
-<a name="ln3395">}</a>
-<a name="ln3396"> </a>
-<a name="ln3397">/// Delete &quot;name&quot; and everything in it, recursively.</a>
-<a name="ln3398">///</a>
-<a name="ln3399">/// @param name  The path which should be deleted.</a>
-<a name="ln3400">///</a>
-<a name="ln3401">/// @return  0 for success, -1 if some file was not deleted.</a>
-<a name="ln3402">int delete_recursive(const char *name)</a>
-<a name="ln3403">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln3404">{</a>
-<a name="ln3405">  int result = 0;</a>
-<a name="ln3406"> </a>
-<a name="ln3407">  if (os_isrealdir(name)) {</a>
-<a name="ln3408">    char *exp = xstrdup(name);</a>
-<a name="ln3409">    garray_T ga;</a>
-<a name="ln3410">    if (readdir_core(&amp;ga, exp, NULL, NULL) == OK) {</a>
-<a name="ln3411">      for (int i = 0; i &lt; ga.ga_len; i++) {</a>
-<a name="ln3412">        vim_snprintf(NameBuff, MAXPATHL, &quot;%s/%s&quot;, exp, ((char **)ga.ga_data)[i]);</a>
-<a name="ln3413">        if (delete_recursive(NameBuff) != 0) {</a>
-<a name="ln3414">          // Remember the failure but continue deleting any further</a>
-<a name="ln3415">          // entries.</a>
-<a name="ln3416">          result = -1;</a>
-<a name="ln3417">        }</a>
-<a name="ln3418">      }</a>
-<a name="ln3419">      ga_clear_strings(&amp;ga);</a>
-<a name="ln3420">      if (os_rmdir(exp) != 0) {</a>
-<a name="ln3421">        result = -1;</a>
-<a name="ln3422">      }</a>
-<a name="ln3423">    } else {</a>
-<a name="ln3424">      result = -1;</a>
-<a name="ln3425">    }</a>
-<a name="ln3426">    xfree(exp);</a>
-<a name="ln3427">  } else {</a>
-<a name="ln3428">    // Delete symlink only.</a>
-<a name="ln3429">    result = os_remove(name) == 0 ? 0 : -1;</a>
-<a name="ln3430">  }</a>
-<a name="ln3431"> </a>
-<a name="ln3432">  return result;</a>
-<a name="ln3433">}</a>
-<a name="ln3434"> </a>
-<a name="ln3435">#ifdef HAVE_DIRFD_AND_FLOCK</a>
-<a name="ln3436">/// Open temporary directory and take file lock to prevent</a>
-<a name="ln3437">/// to be auto-cleaned.</a>
-<a name="ln3438">static void vim_opentempdir(void)</a>
-<a name="ln3439">{</a>
-<a name="ln3440">  if (vim_tempdir_dp != NULL) {</a>
-<a name="ln3441">    return;</a>
-<a name="ln3442">  }</a>
-<a name="ln3443"> </a>
-<a name="ln3444">  DIR *dp = opendir(vim_tempdir);</a>
-<a name="ln3445">  if (dp == NULL) {</a>
+<a name="ln3386"> </a>
+<a name="ln3387">    if (!ignore) {</a>
+<a name="ln3388">      ga_grow(gap, 1);</a>
+<a name="ln3389">      ((char **)gap-&gt;ga_data)[gap-&gt;ga_len++] = xstrdup(p);</a>
+<a name="ln3390">    }</a>
+<a name="ln3391">  }</a>
+<a name="ln3392"> </a>
+<a name="ln3393">  os_closedir(&amp;dir);</a>
+<a name="ln3394"> </a>
+<a name="ln3395">  if (gap-&gt;ga_len &gt; 0) {</a>
+<a name="ln3396">    sort_strings(gap-&gt;ga_data, gap-&gt;ga_len);</a>
+<a name="ln3397">  }</a>
+<a name="ln3398"> </a>
+<a name="ln3399">  return OK;</a>
+<a name="ln3400">}</a>
+<a name="ln3401"> </a>
+<a name="ln3402">/// Delete &quot;name&quot; and everything in it, recursively.</a>
+<a name="ln3403">///</a>
+<a name="ln3404">/// @param name  The path which should be deleted.</a>
+<a name="ln3405">///</a>
+<a name="ln3406">/// @return  0 for success, -1 if some file was not deleted.</a>
+<a name="ln3407">int delete_recursive(const char *name)</a>
+<a name="ln3408">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln3409">{</a>
+<a name="ln3410">  int result = 0;</a>
+<a name="ln3411"> </a>
+<a name="ln3412">  if (os_isrealdir(name)) {</a>
+<a name="ln3413">    char *exp = xstrdup(name);</a>
+<a name="ln3414">    garray_T ga;</a>
+<a name="ln3415">    if (readdir_core(&amp;ga, exp, NULL, NULL) == OK) {</a>
+<a name="ln3416">      for (int i = 0; i &lt; ga.ga_len; i++) {</a>
+<a name="ln3417">        vim_snprintf(NameBuff, MAXPATHL, &quot;%s/%s&quot;, exp, ((char **)ga.ga_data)[i]);</a>
+<a name="ln3418">        if (delete_recursive(NameBuff) != 0) {</a>
+<a name="ln3419">          // Remember the failure but continue deleting any further</a>
+<a name="ln3420">          // entries.</a>
+<a name="ln3421">          result = -1;</a>
+<a name="ln3422">        }</a>
+<a name="ln3423">      }</a>
+<a name="ln3424">      ga_clear_strings(&amp;ga);</a>
+<a name="ln3425">      if (os_rmdir(exp) != 0) {</a>
+<a name="ln3426">        result = -1;</a>
+<a name="ln3427">      }</a>
+<a name="ln3428">    } else {</a>
+<a name="ln3429">      result = -1;</a>
+<a name="ln3430">    }</a>
+<a name="ln3431">    xfree(exp);</a>
+<a name="ln3432">  } else {</a>
+<a name="ln3433">    // Delete symlink only.</a>
+<a name="ln3434">    result = os_remove(name) == 0 ? 0 : -1;</a>
+<a name="ln3435">  }</a>
+<a name="ln3436"> </a>
+<a name="ln3437">  return result;</a>
+<a name="ln3438">}</a>
+<a name="ln3439"> </a>
+<a name="ln3440">#ifdef HAVE_DIRFD_AND_FLOCK</a>
+<a name="ln3441">/// Open temporary directory and take file lock to prevent</a>
+<a name="ln3442">/// to be auto-cleaned.</a>
+<a name="ln3443">static void vim_opentempdir(void)</a>
+<a name="ln3444">{</a>
+<a name="ln3445">  if (vim_tempdir_dp != NULL) {</a>
 <a name="ln3446">    return;</a>
 <a name="ln3447">  }</a>
 <a name="ln3448"> </a>
-<a name="ln3449">  vim_tempdir_dp = dp;</a>
-<a name="ln3450">  flock(dirfd(vim_tempdir_dp), LOCK_SH);</a>
-<a name="ln3451">}</a>
-<a name="ln3452"> </a>
-<a name="ln3453">/// Close temporary directory - it automatically release file lock.</a>
-<a name="ln3454">static void vim_closetempdir(void)</a>
-<a name="ln3455">{</a>
-<a name="ln3456">  if (vim_tempdir_dp == NULL) {</a>
-<a name="ln3457">    return;</a>
-<a name="ln3458">  }</a>
-<a name="ln3459"> </a>
-<a name="ln3460">  closedir(vim_tempdir_dp);</a>
-<a name="ln3461">  vim_tempdir_dp = NULL;</a>
-<a name="ln3462">}</a>
-<a name="ln3463">#endif</a>
+<a name="ln3449">  DIR *dp = opendir(vim_tempdir);</a>
+<a name="ln3450">  if (dp == NULL) {</a>
+<a name="ln3451">    return;</a>
+<a name="ln3452">  }</a>
+<a name="ln3453"> </a>
+<a name="ln3454">  vim_tempdir_dp = dp;</a>
+<a name="ln3455">  flock(dirfd(vim_tempdir_dp), LOCK_SH);</a>
+<a name="ln3456">}</a>
+<a name="ln3457"> </a>
+<a name="ln3458">/// Close temporary directory - it automatically release file lock.</a>
+<a name="ln3459">static void vim_closetempdir(void)</a>
+<a name="ln3460">{</a>
+<a name="ln3461">  if (vim_tempdir_dp == NULL) {</a>
+<a name="ln3462">    return;</a>
+<a name="ln3463">  }</a>
 <a name="ln3464"> </a>
-<a name="ln3465">/// Delete the temp directory and all files it contains.</a>
-<a name="ln3466">void vim_deltempdir(void)</a>
-<a name="ln3467">{</a>
-<a name="ln3468">  if (vim_tempdir == NULL) {</a>
-<a name="ln3469">    return;</a>
-<a name="ln3470">  }</a>
-<a name="ln3471"> </a>
-<a name="ln3472">#ifdef HAVE_DIRFD_AND_FLOCK</a>
-<a name="ln3473">  vim_closetempdir();</a>
-<a name="ln3474">#endif</a>
-<a name="ln3475">  // remove the trailing path separator</a>
-<a name="ln3476">  path_tail(vim_tempdir)[-1] = NUL;</a>
-<a name="ln3477">  delete_recursive(vim_tempdir);</a>
-<a name="ln3478">  XFREE_CLEAR(vim_tempdir);</a>
-<a name="ln3479">}</a>
-<a name="ln3480"> </a>
-<a name="ln3481">/// Gets path to Nvim's own temp dir (ending with slash).</a>
-<a name="ln3482">///</a>
-<a name="ln3483">/// Creates the directory on the first call.</a>
-<a name="ln3484">char *vim_gettempdir(void)</a>
-<a name="ln3485">{</a>
-<a name="ln3486">  static int notfound = 0;</a>
-<a name="ln3487">  if (vim_tempdir == NULL || !os_isdir(vim_tempdir)) {</a>
-<a name="ln3488">    if (vim_tempdir != NULL) {</a>
-<a name="ln3489">      notfound++;</a>
-<a name="ln3490">      if (notfound == 1) {</a>
-<a name="ln3491">        ELOG(&quot;tempdir disappeared (antivirus or broken cleanup job?): %s&quot;, vim_tempdir);</a>
-<a name="ln3492">      }</a>
-<a name="ln3493">      if (notfound &gt; 1) {</a>
-<a name="ln3494">        msg_schedule_semsg(&quot;E5431: tempdir disappeared (%d times)&quot;, notfound);</a>
-<a name="ln3495">      }</a>
-<a name="ln3496">      XFREE_CLEAR(vim_tempdir);</a>
-<a name="ln3497">    }</a>
-<a name="ln3498">    vim_mktempdir();</a>
-<a name="ln3499">  }</a>
-<a name="ln3500">  return vim_tempdir;</a>
-<a name="ln3501">}</a>
-<a name="ln3502"> </a>
-<a name="ln3503">/// Sets Nvim's own temporary directory name to `tempdir`. This directory must</a>
-<a name="ln3504">/// already exist. Expands the name to a full path and put it in `vim_tempdir`.</a>
-<a name="ln3505">/// This avoids that using `:cd` would confuse us.</a>
-<a name="ln3506">///</a>
-<a name="ln3507">/// @param tempdir must be no longer than MAXPATHL.</a>
-<a name="ln3508">///</a>
-<a name="ln3509">/// @return false if we run out of memory.</a>
-<a name="ln3510">static bool vim_settempdir(char *tempdir)</a>
-<a name="ln3511">{</a>
-<a name="ln3512">  char *buf = verbose_try_malloc(MAXPATHL + 2);</a>
-<a name="ln3513">  if (buf == NULL) {</a>
-<a name="ln3514">    return false;</a>
-<a name="ln3515">  }</a>
-<a name="ln3516"> </a>
-<a name="ln3517">  vim_FullName(tempdir, buf, MAXPATHL, false);</a>
-<a name="ln3518">  add_pathsep(buf);</a>
-<a name="ln3519">  vim_tempdir = xstrdup(buf);</a>
-<a name="ln3520">#ifdef HAVE_DIRFD_AND_FLOCK</a>
-<a name="ln3521">  vim_opentempdir();</a>
-<a name="ln3522">#endif</a>
-<a name="ln3523">  xfree(buf);</a>
-<a name="ln3524">  return true;</a>
-<a name="ln3525">}</a>
-<a name="ln3526"> </a>
-<a name="ln3527">/// Return a unique name that can be used for a temp file.</a>
-<a name="ln3528">///</a>
-<a name="ln3529">/// @note The temp file is NOT created.</a>
-<a name="ln3530">///</a>
-<a name="ln3531">/// @return  pointer to the temp file name or NULL if Nvim can't create</a>
-<a name="ln3532">///          temporary directory for its own temporary files.</a>
-<a name="ln3533">char *vim_tempname(void)</a>
-<a name="ln3534">{</a>
-<a name="ln3535">  // Temp filename counter.</a>
-<a name="ln3536">  static uint64_t temp_count;</a>
-<a name="ln3537"> </a>
-<a name="ln3538">  char *tempdir = vim_gettempdir();</a>
-<a name="ln3539">  if (!tempdir) {</a>
-<a name="ln3540">    return NULL;</a>
-<a name="ln3541">  }</a>
+<a name="ln3465">  closedir(vim_tempdir_dp);</a>
+<a name="ln3466">  vim_tempdir_dp = NULL;</a>
+<a name="ln3467">}</a>
+<a name="ln3468">#endif</a>
+<a name="ln3469"> </a>
+<a name="ln3470">/// Delete the temp directory and all files it contains.</a>
+<a name="ln3471">void vim_deltempdir(void)</a>
+<a name="ln3472">{</a>
+<a name="ln3473">  if (vim_tempdir == NULL) {</a>
+<a name="ln3474">    return;</a>
+<a name="ln3475">  }</a>
+<a name="ln3476"> </a>
+<a name="ln3477">#ifdef HAVE_DIRFD_AND_FLOCK</a>
+<a name="ln3478">  vim_closetempdir();</a>
+<a name="ln3479">#endif</a>
+<a name="ln3480">  // remove the trailing path separator</a>
+<a name="ln3481">  path_tail(vim_tempdir)[-1] = NUL;</a>
+<a name="ln3482">  delete_recursive(vim_tempdir);</a>
+<a name="ln3483">  XFREE_CLEAR(vim_tempdir);</a>
+<a name="ln3484">}</a>
+<a name="ln3485"> </a>
+<a name="ln3486">/// Gets path to Nvim's own temp dir (ending with slash).</a>
+<a name="ln3487">///</a>
+<a name="ln3488">/// Creates the directory on the first call.</a>
+<a name="ln3489">char *vim_gettempdir(void)</a>
+<a name="ln3490">{</a>
+<a name="ln3491">  static int notfound = 0;</a>
+<a name="ln3492">  if (vim_tempdir == NULL || !os_isdir(vim_tempdir)) {</a>
+<a name="ln3493">    if (vim_tempdir != NULL) {</a>
+<a name="ln3494">      notfound++;</a>
+<a name="ln3495">      if (notfound == 1) {</a>
+<a name="ln3496">        ELOG(&quot;tempdir disappeared (antivirus or broken cleanup job?): %s&quot;, vim_tempdir);</a>
+<a name="ln3497">      }</a>
+<a name="ln3498">      if (notfound &gt; 1) {</a>
+<a name="ln3499">        msg_schedule_semsg(&quot;E5431: tempdir disappeared (%d times)&quot;, notfound);</a>
+<a name="ln3500">      }</a>
+<a name="ln3501">      XFREE_CLEAR(vim_tempdir);</a>
+<a name="ln3502">    }</a>
+<a name="ln3503">    vim_mktempdir();</a>
+<a name="ln3504">  }</a>
+<a name="ln3505">  return vim_tempdir;</a>
+<a name="ln3506">}</a>
+<a name="ln3507"> </a>
+<a name="ln3508">/// Sets Nvim's own temporary directory name to `tempdir`. This directory must</a>
+<a name="ln3509">/// already exist. Expands the name to a full path and put it in `vim_tempdir`.</a>
+<a name="ln3510">/// This avoids that using `:cd` would confuse us.</a>
+<a name="ln3511">///</a>
+<a name="ln3512">/// @param tempdir must be no longer than MAXPATHL.</a>
+<a name="ln3513">///</a>
+<a name="ln3514">/// @return false if we run out of memory.</a>
+<a name="ln3515">static bool vim_settempdir(char *tempdir)</a>
+<a name="ln3516">{</a>
+<a name="ln3517">  char *buf = verbose_try_malloc(MAXPATHL + 2);</a>
+<a name="ln3518">  if (buf == NULL) {</a>
+<a name="ln3519">    return false;</a>
+<a name="ln3520">  }</a>
+<a name="ln3521"> </a>
+<a name="ln3522">  vim_FullName(tempdir, buf, MAXPATHL, false);</a>
+<a name="ln3523">  add_pathsep(buf);</a>
+<a name="ln3524">  vim_tempdir = xstrdup(buf);</a>
+<a name="ln3525">#ifdef HAVE_DIRFD_AND_FLOCK</a>
+<a name="ln3526">  vim_opentempdir();</a>
+<a name="ln3527">#endif</a>
+<a name="ln3528">  xfree(buf);</a>
+<a name="ln3529">  return true;</a>
+<a name="ln3530">}</a>
+<a name="ln3531"> </a>
+<a name="ln3532">/// Return a unique name that can be used for a temp file.</a>
+<a name="ln3533">///</a>
+<a name="ln3534">/// @note The temp file is NOT created.</a>
+<a name="ln3535">///</a>
+<a name="ln3536">/// @return  pointer to the temp file name or NULL if Nvim can't create</a>
+<a name="ln3537">///          temporary directory for its own temporary files.</a>
+<a name="ln3538">char *vim_tempname(void)</a>
+<a name="ln3539">{</a>
+<a name="ln3540">  // Temp filename counter.</a>
+<a name="ln3541">  static uint64_t temp_count;</a>
 <a name="ln3542"> </a>
-<a name="ln3543">  // There is no need to check if the file exists, because we own the directory</a>
-<a name="ln3544">  // and nobody else creates a file in it.</a>
-<a name="ln3545">  char templ[TEMP_FILE_PATH_MAXLEN];</a>
-<a name="ln3546">  snprintf(templ, TEMP_FILE_PATH_MAXLEN, &quot;%s%&quot; PRIu64, tempdir, temp_count++);</a>
-<a name="ln3547">  return xstrdup(templ);</a>
-<a name="ln3548">}</a>
-<a name="ln3549"> </a>
-<a name="ln3550">/// Tries matching a filename with a &quot;pattern&quot; (&quot;prog&quot; is NULL), or use the</a>
-<a name="ln3551">/// precompiled regprog &quot;prog&quot; (&quot;pattern&quot; is NULL).  That avoids calling</a>
-<a name="ln3552">/// vim_regcomp() often.</a>
-<a name="ln3553">///</a>
-<a name="ln3554">/// Used for autocommands and 'wildignore'.</a>
-<a name="ln3555">///</a>
-<a name="ln3556">/// @param pattern pattern to match with</a>
-<a name="ln3557">/// @param prog pre-compiled regprog or NULL</a>
-<a name="ln3558">/// @param fname full path of the file name</a>
-<a name="ln3559">/// @param sfname short file name or NULL</a>
-<a name="ln3560">/// @param tail tail of the path</a>
-<a name="ln3561">/// @param allow_dirs Allow matching with dir</a>
-<a name="ln3562">///</a>
-<a name="ln3563">/// @return true if there is a match, false otherwise</a>
-<a name="ln3564">bool match_file_pat(char *pattern, regprog_T **prog, char *fname, char *sfname, char *tail,</a>
-<a name="ln3565">                    int allow_dirs)</a>
-<a name="ln3566">{</a>
-<a name="ln3567">  regmatch_T regmatch;</a>
-<a name="ln3568">  bool result = false;</a>
-<a name="ln3569"> </a>
-<a name="ln3570">  regmatch.rm_ic = p_fic;   // ignore case if 'fileignorecase' is set</a>
-<a name="ln3571">  regmatch.regprog = prog != NULL ? *prog : vim_regcomp(pattern, RE_MAGIC);</a>
-<a name="ln3572"> </a>
-<a name="ln3573">  // Try for a match with the pattern with:</a>
-<a name="ln3574">  // 1. the full file name, when the pattern has a '/'.</a>
-<a name="ln3575">  // 2. the short file name, when the pattern has a '/'.</a>
-<a name="ln3576">  // 3. the tail of the file name, when the pattern has no '/'.</a>
-<a name="ln3577">  if (regmatch.regprog != NULL</a>
-<a name="ln3578">      &amp;&amp; ((allow_dirs</a>
-<a name="ln3579">           &amp;&amp; (vim_regexec(&amp;regmatch, fname, (colnr_T)0)</a>
-<a name="ln3580">               || (sfname != NULL</a>
-<a name="ln3581">                   &amp;&amp; vim_regexec(&amp;regmatch, sfname, (colnr_T)0))))</a>
-<a name="ln3582">          || (!allow_dirs &amp;&amp; vim_regexec(&amp;regmatch, tail, (colnr_T)0)))) {</a>
-<a name="ln3583">    result = true;</a>
-<a name="ln3584">  }</a>
-<a name="ln3585"> </a>
-<a name="ln3586">  if (prog != NULL) {</a>
-<a name="ln3587">    *prog = regmatch.regprog;</a>
-<a name="ln3588">  } else {</a>
-<a name="ln3589">    vim_regfree(regmatch.regprog);</a>
-<a name="ln3590">  }</a>
-<a name="ln3591">  return result;</a>
-<a name="ln3592">}</a>
-<a name="ln3593"> </a>
-<a name="ln3594">/// Check if a file matches with a pattern in &quot;list&quot;.</a>
-<a name="ln3595">/// &quot;list&quot; is a comma-separated list of patterns, like 'wildignore'.</a>
-<a name="ln3596">/// &quot;sfname&quot; is the short file name or NULL, &quot;ffname&quot; the long file name.</a>
-<a name="ln3597">///</a>
-<a name="ln3598">/// @param list list of patterns to match</a>
-<a name="ln3599">/// @param sfname short file name</a>
-<a name="ln3600">/// @param ffname full file name</a>
-<a name="ln3601">///</a>
-<a name="ln3602">/// @return true if there was a match</a>
-<a name="ln3603">bool match_file_list(char *list, char *sfname, char *ffname)</a>
-<a name="ln3604">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ARG(1, 3)</a>
-<a name="ln3605">{</a>
-<a name="ln3606">  char *tail = path_tail(sfname);</a>
-<a name="ln3607"> </a>
-<a name="ln3608">  // try all patterns in 'wildignore'</a>
-<a name="ln3609">  char *p = list;</a>
-<a name="ln3610">  while (*p) {</a>
-<a name="ln3611">    char buf[MAXPATHL];</a>
-<a name="ln3612">    copy_option_part(&amp;p, buf, ARRAY_SIZE(buf), &quot;,&quot;);</a>
-<a name="ln3613">    char allow_dirs;</a>
-<a name="ln3614">    char *regpat = file_pat_to_reg_pat(buf, NULL, &amp;allow_dirs, false);</a>
-<a name="ln3615">    if (regpat == NULL) {</a>
-<a name="ln3616">      break;</a>
-<a name="ln3617">    }</a>
-<a name="ln3618">    bool match = match_file_pat(regpat, NULL, ffname, sfname, tail, (int)allow_dirs);</a>
-<a name="ln3619">    xfree(regpat);</a>
-<a name="ln3620">    if (match) {</a>
-<a name="ln3621">      return true;</a>
+<a name="ln3543">  char *tempdir = vim_gettempdir();</a>
+<a name="ln3544">  if (!tempdir) {</a>
+<a name="ln3545">    return NULL;</a>
+<a name="ln3546">  }</a>
+<a name="ln3547"> </a>
+<a name="ln3548">  // There is no need to check if the file exists, because we own the directory</a>
+<a name="ln3549">  // and nobody else creates a file in it.</a>
+<a name="ln3550">  char templ[TEMP_FILE_PATH_MAXLEN];</a>
+<a name="ln3551">  snprintf(templ, TEMP_FILE_PATH_MAXLEN, &quot;%s%&quot; PRIu64, tempdir, temp_count++);</a>
+<a name="ln3552">  return xstrdup(templ);</a>
+<a name="ln3553">}</a>
+<a name="ln3554"> </a>
+<a name="ln3555">/// Tries matching a filename with a &quot;pattern&quot; (&quot;prog&quot; is NULL), or use the</a>
+<a name="ln3556">/// precompiled regprog &quot;prog&quot; (&quot;pattern&quot; is NULL).  That avoids calling</a>
+<a name="ln3557">/// vim_regcomp() often.</a>
+<a name="ln3558">///</a>
+<a name="ln3559">/// Used for autocommands and 'wildignore'.</a>
+<a name="ln3560">///</a>
+<a name="ln3561">/// @param pattern pattern to match with</a>
+<a name="ln3562">/// @param prog pre-compiled regprog or NULL</a>
+<a name="ln3563">/// @param fname full path of the file name</a>
+<a name="ln3564">/// @param sfname short file name or NULL</a>
+<a name="ln3565">/// @param tail tail of the path</a>
+<a name="ln3566">/// @param allow_dirs Allow matching with dir</a>
+<a name="ln3567">///</a>
+<a name="ln3568">/// @return true if there is a match, false otherwise</a>
+<a name="ln3569">bool match_file_pat(char *pattern, regprog_T **prog, char *fname, char *sfname, char *tail,</a>
+<a name="ln3570">                    int allow_dirs)</a>
+<a name="ln3571">{</a>
+<a name="ln3572">  regmatch_T regmatch;</a>
+<a name="ln3573">  bool result = false;</a>
+<a name="ln3574"> </a>
+<a name="ln3575">  regmatch.rm_ic = p_fic;   // ignore case if 'fileignorecase' is set</a>
+<a name="ln3576">  regmatch.regprog = prog != NULL ? *prog : vim_regcomp(pattern, RE_MAGIC);</a>
+<a name="ln3577"> </a>
+<a name="ln3578">  // Try for a match with the pattern with:</a>
+<a name="ln3579">  // 1. the full file name, when the pattern has a '/'.</a>
+<a name="ln3580">  // 2. the short file name, when the pattern has a '/'.</a>
+<a name="ln3581">  // 3. the tail of the file name, when the pattern has no '/'.</a>
+<a name="ln3582">  if (regmatch.regprog != NULL</a>
+<a name="ln3583">      &amp;&amp; ((allow_dirs</a>
+<a name="ln3584">           &amp;&amp; (vim_regexec(&amp;regmatch, fname, (colnr_T)0)</a>
+<a name="ln3585">               || (sfname != NULL</a>
+<a name="ln3586">                   &amp;&amp; vim_regexec(&amp;regmatch, sfname, (colnr_T)0))))</a>
+<a name="ln3587">          || (!allow_dirs &amp;&amp; vim_regexec(&amp;regmatch, tail, (colnr_T)0)))) {</a>
+<a name="ln3588">    result = true;</a>
+<a name="ln3589">  }</a>
+<a name="ln3590"> </a>
+<a name="ln3591">  if (prog != NULL) {</a>
+<a name="ln3592">    *prog = regmatch.regprog;</a>
+<a name="ln3593">  } else {</a>
+<a name="ln3594">    vim_regfree(regmatch.regprog);</a>
+<a name="ln3595">  }</a>
+<a name="ln3596">  return result;</a>
+<a name="ln3597">}</a>
+<a name="ln3598"> </a>
+<a name="ln3599">/// Check if a file matches with a pattern in &quot;list&quot;.</a>
+<a name="ln3600">/// &quot;list&quot; is a comma-separated list of patterns, like 'wildignore'.</a>
+<a name="ln3601">/// &quot;sfname&quot; is the short file name or NULL, &quot;ffname&quot; the long file name.</a>
+<a name="ln3602">///</a>
+<a name="ln3603">/// @param list list of patterns to match</a>
+<a name="ln3604">/// @param sfname short file name</a>
+<a name="ln3605">/// @param ffname full file name</a>
+<a name="ln3606">///</a>
+<a name="ln3607">/// @return true if there was a match</a>
+<a name="ln3608">bool match_file_list(char *list, char *sfname, char *ffname)</a>
+<a name="ln3609">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ARG(1, 3)</a>
+<a name="ln3610">{</a>
+<a name="ln3611">  char *tail = path_tail(sfname);</a>
+<a name="ln3612"> </a>
+<a name="ln3613">  // try all patterns in 'wildignore'</a>
+<a name="ln3614">  char *p = list;</a>
+<a name="ln3615">  while (*p) {</a>
+<a name="ln3616">    char buf[MAXPATHL];</a>
+<a name="ln3617">    copy_option_part(&amp;p, buf, ARRAY_SIZE(buf), &quot;,&quot;);</a>
+<a name="ln3618">    char allow_dirs;</a>
+<a name="ln3619">    char *regpat = file_pat_to_reg_pat(buf, NULL, &amp;allow_dirs, false);</a>
+<a name="ln3620">    if (regpat == NULL) {</a>
+<a name="ln3621">      break;</a>
 <a name="ln3622">    }</a>
-<a name="ln3623">  }</a>
-<a name="ln3624">  return false;</a>
-<a name="ln3625">}</a>
-<a name="ln3626"> </a>
-<a name="ln3627">/// Convert the given pattern &quot;pat&quot; which has shell style wildcards in it, into</a>
-<a name="ln3628">/// a regular expression, and return the result in allocated memory.  If there</a>
-<a name="ln3629">/// is a directory path separator to be matched, then true is put in</a>
-<a name="ln3630">/// allow_dirs, otherwise false is put there -- webb.</a>
-<a name="ln3631">/// Handle backslashes before special characters, like &quot;\*&quot; and &quot;\ &quot;.</a>
-<a name="ln3632">///</a>
-<a name="ln3633">/// @param pat_end     first char after pattern or NULL</a>
-<a name="ln3634">/// @param allow_dirs  Result passed back out in here</a>
-<a name="ln3635">/// @param no_bslash   Don't use a backward slash as pathsep</a>
-<a name="ln3636">///</a>
-<a name="ln3637">/// @return            NULL on failure.</a>
-<a name="ln3638">char *file_pat_to_reg_pat(const char *pat, const char *pat_end, char *allow_dirs, int no_bslash)</a>
-<a name="ln3639">  FUNC_ATTR_NONNULL_ARG(1)</a>
-<a name="ln3640">{</a>
-<a name="ln3641">  if (allow_dirs != NULL) {</a>
-<a name="ln3642">    *allow_dirs = false;</a>
-<a name="ln3643">  }</a>
-<a name="ln3644"> </a>
-<a name="ln3645">  if (pat_end == NULL) {</a>
-<a name="ln3646">    pat_end = pat + strlen(pat);</a>
-<a name="ln3647">  }</a>
-<a name="ln3648"> </a>
-<a name="ln3649">  if (pat_end == pat) {</a>
-<a name="ln3650">    return xstrdup(&quot;^$&quot;);</a>
-<a name="ln3651">  }</a>
-<a name="ln3652"> </a>
-<a name="ln3653">  size_t size = 2;  // '^' at start, '$' at end.</a>
-<a name="ln3654"> </a>
-<a name="ln3655">  for (const char *p = pat; p &lt; pat_end; p++) {</a>
-<a name="ln3656">    switch (*p) {</a>
-<a name="ln3657">    case '*':</a>
-<a name="ln3658">    case '.':</a>
-<a name="ln3659">    case ',':</a>
-<a name="ln3660">    case '{':</a>
-<a name="ln3661">    case '}':</a>
-<a name="ln3662">    case '~':</a>
-<a name="ln3663">      size += 2;                // extra backslash</a>
-<a name="ln3664">      break;</a>
-<a name="ln3665">#ifdef BACKSLASH_IN_FILENAME</a>
-<a name="ln3666">    case '\\':</a>
-<a name="ln3667">    case '/':</a>
-<a name="ln3668">      size += 4;                // could become &quot;[\/]&quot;</a>
+<a name="ln3623">    bool match = match_file_pat(regpat, NULL, ffname, sfname, tail, (int)allow_dirs);</a>
+<a name="ln3624">    xfree(regpat);</a>
+<a name="ln3625">    if (match) {</a>
+<a name="ln3626">      return true;</a>
+<a name="ln3627">    }</a>
+<a name="ln3628">  }</a>
+<a name="ln3629">  return false;</a>
+<a name="ln3630">}</a>
+<a name="ln3631"> </a>
+<a name="ln3632">/// Convert the given pattern &quot;pat&quot; which has shell style wildcards in it, into</a>
+<a name="ln3633">/// a regular expression, and return the result in allocated memory.  If there</a>
+<a name="ln3634">/// is a directory path separator to be matched, then true is put in</a>
+<a name="ln3635">/// allow_dirs, otherwise false is put there -- webb.</a>
+<a name="ln3636">/// Handle backslashes before special characters, like &quot;\*&quot; and &quot;\ &quot;.</a>
+<a name="ln3637">///</a>
+<a name="ln3638">/// @param pat_end     first char after pattern or NULL</a>
+<a name="ln3639">/// @param allow_dirs  Result passed back out in here</a>
+<a name="ln3640">/// @param no_bslash   Don't use a backward slash as pathsep</a>
+<a name="ln3641">///</a>
+<a name="ln3642">/// @return            NULL on failure.</a>
+<a name="ln3643">char *file_pat_to_reg_pat(const char *pat, const char *pat_end, char *allow_dirs, int no_bslash)</a>
+<a name="ln3644">  FUNC_ATTR_NONNULL_ARG(1)</a>
+<a name="ln3645">{</a>
+<a name="ln3646">  if (allow_dirs != NULL) {</a>
+<a name="ln3647">    *allow_dirs = false;</a>
+<a name="ln3648">  }</a>
+<a name="ln3649"> </a>
+<a name="ln3650">  if (pat_end == NULL) {</a>
+<a name="ln3651">    pat_end = pat + strlen(pat);</a>
+<a name="ln3652">  }</a>
+<a name="ln3653"> </a>
+<a name="ln3654">  if (pat_end == pat) {</a>
+<a name="ln3655">    return xstrdup(&quot;^$&quot;);</a>
+<a name="ln3656">  }</a>
+<a name="ln3657"> </a>
+<a name="ln3658">  size_t size = 2;  // '^' at start, '$' at end.</a>
+<a name="ln3659"> </a>
+<a name="ln3660">  for (const char *p = pat; p &lt; pat_end; p++) {</a>
+<a name="ln3661">    switch (*p) {</a>
+<a name="ln3662">    case '*':</a>
+<a name="ln3663">    case '.':</a>
+<a name="ln3664">    case ',':</a>
+<a name="ln3665">    case '{':</a>
+<a name="ln3666">    case '}':</a>
+<a name="ln3667">    case '~':</a>
+<a name="ln3668">      size += 2;                // extra backslash</a>
 <a name="ln3669">      break;</a>
-<a name="ln3670">#endif</a>
-<a name="ln3671">    default:</a>
-<a name="ln3672">      size++;</a>
-<a name="ln3673">      break;</a>
-<a name="ln3674">    }</a>
-<a name="ln3675">  }</a>
-<a name="ln3676">  char *reg_pat = xmalloc(size + 1);</a>
-<a name="ln3677"> </a>
-<a name="ln3678">  size_t i = 0;</a>
-<a name="ln3679"> </a>
-<a name="ln3680">  if (pat[0] == '*') {</a>
-<a name="ln3681">    while (pat[0] == '*' &amp;&amp; pat &lt; pat_end - 1) {</a>
-<a name="ln3682">      pat++;</a>
-<a name="ln3683">    }</a>
-<a name="ln3684">  } else {</a>
-<a name="ln3685">    reg_pat[i++] = '^';</a>
-<a name="ln3686">  }</a>
-<a name="ln3687">  const char *endp = pat_end - 1;</a>
-<a name="ln3688">  bool add_dollar = true;</a>
-<a name="ln3689">  if (endp &gt;= pat &amp;&amp; *endp == '*') {</a>
-<a name="ln3690">    while (endp - pat &gt; 0 &amp;&amp; *endp == '*') {</a>
-<a name="ln3691">      endp--;</a>
-<a name="ln3692">    }</a>
-<a name="ln3693">    add_dollar = false;</a>
-<a name="ln3694">  }</a>
-<a name="ln3695">  int nested = 0;</a>
-<a name="ln3696">  for (const char *p = pat; *p &amp;&amp; nested &gt;= 0 &amp;&amp; p &lt;= endp; p++) {</a>
-<a name="ln3697">    switch (*p) {</a>
-<a name="ln3698">    case '*':</a>
-<a name="ln3699">      reg_pat[i++] = '.';</a>
-<a name="ln3700">      reg_pat[i++] = '*';</a>
-<a name="ln3701">      while (p[1] == '*') {  // &quot;**&quot; matches like &quot;*&quot;</a>
-<a name="ln3702">        p++;</a>
-<a name="ln3703">      }</a>
-<a name="ln3704">      break;</a>
-<a name="ln3705">    case '.':</a>
-<a name="ln3706">    case '~':</a>
-<a name="ln3707">      reg_pat[i++] = '\\';</a>
-<a name="ln3708">      reg_pat[i++] = *p;</a>
+<a name="ln3670">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln3671">    case '\\':</a>
+<a name="ln3672">    case '/':</a>
+<a name="ln3673">      size += 4;                // could become &quot;[\/]&quot;</a>
+<a name="ln3674">      break;</a>
+<a name="ln3675">#endif</a>
+<a name="ln3676">    default:</a>
+<a name="ln3677">      size++;</a>
+<a name="ln3678">      break;</a>
+<a name="ln3679">    }</a>
+<a name="ln3680">  }</a>
+<a name="ln3681">  char *reg_pat = xmalloc(size + 1);</a>
+<a name="ln3682"> </a>
+<a name="ln3683">  size_t i = 0;</a>
+<a name="ln3684"> </a>
+<a name="ln3685">  if (pat[0] == '*') {</a>
+<a name="ln3686">    while (pat[0] == '*' &amp;&amp; pat &lt; pat_end - 1) {</a>
+<a name="ln3687">      pat++;</a>
+<a name="ln3688">    }</a>
+<a name="ln3689">  } else {</a>
+<a name="ln3690">    reg_pat[i++] = '^';</a>
+<a name="ln3691">  }</a>
+<a name="ln3692">  const char *endp = pat_end - 1;</a>
+<a name="ln3693">  bool add_dollar = true;</a>
+<a name="ln3694">  if (endp &gt;= pat &amp;&amp; *endp == '*') {</a>
+<a name="ln3695">    while (endp - pat &gt; 0 &amp;&amp; *endp == '*') {</a>
+<a name="ln3696">      endp--;</a>
+<a name="ln3697">    }</a>
+<a name="ln3698">    add_dollar = false;</a>
+<a name="ln3699">  }</a>
+<a name="ln3700">  int nested = 0;</a>
+<a name="ln3701">  for (const char *p = pat; *p &amp;&amp; nested &gt;= 0 &amp;&amp; p &lt;= endp; p++) {</a>
+<a name="ln3702">    switch (*p) {</a>
+<a name="ln3703">    case '*':</a>
+<a name="ln3704">      reg_pat[i++] = '.';</a>
+<a name="ln3705">      reg_pat[i++] = '*';</a>
+<a name="ln3706">      while (p[1] == '*') {  // &quot;**&quot; matches like &quot;*&quot;</a>
+<a name="ln3707">        p++;</a>
+<a name="ln3708">      }</a>
 <a name="ln3709">      break;</a>
-<a name="ln3710">    case '?':</a>
-<a name="ln3711">      reg_pat[i++] = '.';</a>
-<a name="ln3712">      break;</a>
-<a name="ln3713">    case '\\':</a>
-<a name="ln3714">      if (p[1] == NUL) {</a>
-<a name="ln3715">        break;</a>
-<a name="ln3716">      }</a>
-<a name="ln3717">#ifdef BACKSLASH_IN_FILENAME</a>
-<a name="ln3718">      if (!no_bslash) {</a>
-<a name="ln3719">        // translate:</a>
-<a name="ln3720">        // &quot;\x&quot; to &quot;\\x&quot;  e.g., &quot;dir\file&quot;</a>
-<a name="ln3721">        // &quot;\*&quot; to &quot;\\.*&quot; e.g., &quot;dir\*.c&quot;</a>
-<a name="ln3722">        // &quot;\?&quot; to &quot;\\.&quot;  e.g., &quot;dir\??.c&quot;</a>
-<a name="ln3723">        // &quot;\+&quot; to &quot;\+&quot;   e.g., &quot;fileX\+.c&quot;</a>
-<a name="ln3724">        if ((vim_isfilec((uint8_t)p[1]) || p[1] == '*' || p[1] == '?')</a>
-<a name="ln3725">            &amp;&amp; p[1] != '+') {</a>
-<a name="ln3726">          reg_pat[i++] = '[';</a>
-<a name="ln3727">          reg_pat[i++] = '\\';</a>
-<a name="ln3728">          reg_pat[i++] = '/';</a>
-<a name="ln3729">          reg_pat[i++] = ']';</a>
-<a name="ln3730">          if (allow_dirs != NULL) {</a>
-<a name="ln3731">            *allow_dirs = true;</a>
-<a name="ln3732">          }</a>
-<a name="ln3733">          break;</a>
-<a name="ln3734">        }</a>
-<a name="ln3735">      }</a>
-<a name="ln3736">#endif</a>
-<a name="ln3737">      // Undo escaping from ExpandEscape():</a>
-<a name="ln3738">      // foo\?bar -&gt; foo?bar</a>
-<a name="ln3739">      // foo\%bar -&gt; foo%bar</a>
-<a name="ln3740">      // foo\,bar -&gt; foo,bar</a>
-<a name="ln3741">      // foo\ bar -&gt; foo bar</a>
-<a name="ln3742">      // Don't unescape \, * and others that are also special in a</a>
-<a name="ln3743">      // regexp.</a>
-<a name="ln3744">      // An escaped { must be unescaped since we use magic not</a>
-<a name="ln3745">      // verymagic.  Use &quot;\\\{n,m\}&quot;&quot; to get &quot;\{n,m}&quot;.</a>
-<a name="ln3746">      if (*++p == '?' &amp;&amp; (!BACKSLASH_IN_FILENAME_BOOL || no_bslash)) {</a>
-<a name="ln3747">        reg_pat[i++] = '?';</a>
-<a name="ln3748">      } else if (*p == ',' || *p == '%' || *p == '#'</a>
-<a name="ln3749">                 || ascii_isspace(*p) || *p == '{' || *p == '}') {</a>
-<a name="ln3750">        reg_pat[i++] = *p;</a>
-<a name="ln3751">      } else if (*p == '\\' &amp;&amp; p[1] == '\\' &amp;&amp; p[2] == '{') {</a>
-<a name="ln3752">        reg_pat[i++] = '\\';</a>
-<a name="ln3753">        reg_pat[i++] = '{';</a>
-<a name="ln3754">        p += 2;</a>
-<a name="ln3755">      } else {</a>
-<a name="ln3756">        if (allow_dirs != NULL &amp;&amp; vim_ispathsep(*p)</a>
-<a name="ln3757">            &amp;&amp; (!BACKSLASH_IN_FILENAME_BOOL || (!no_bslash || *p != '\\'))) {</a>
-<a name="ln3758">          *allow_dirs = true;</a>
-<a name="ln3759">        }</a>
-<a name="ln3760">        reg_pat[i++] = '\\';</a>
-<a name="ln3761">        reg_pat[i++] = *p;</a>
-<a name="ln3762">      }</a>
-<a name="ln3763">      break;</a>
-<a name="ln3764">#ifdef BACKSLASH_IN_FILENAME</a>
-<a name="ln3765">    case '/':</a>
-<a name="ln3766">      reg_pat[i++] = '[';</a>
-<a name="ln3767">      reg_pat[i++] = '\\';</a>
-<a name="ln3768">      reg_pat[i++] = '/';</a>
-<a name="ln3769">      reg_pat[i++] = ']';</a>
-<a name="ln3770">      if (allow_dirs != NULL) {</a>
-<a name="ln3771">        *allow_dirs = true;</a>
-<a name="ln3772">      }</a>
-<a name="ln3773">      break;</a>
-<a name="ln3774">#endif</a>
-<a name="ln3775">    case '{':</a>
-<a name="ln3776">      reg_pat[i++] = '\\';</a>
-<a name="ln3777">      reg_pat[i++] = '(';</a>
-<a name="ln3778">      nested++;</a>
-<a name="ln3779">      break;</a>
-<a name="ln3780">    case '}':</a>
+<a name="ln3710">    case '.':</a>
+<a name="ln3711">    case '~':</a>
+<a name="ln3712">      reg_pat[i++] = '\\';</a>
+<a name="ln3713">      reg_pat[i++] = *p;</a>
+<a name="ln3714">      break;</a>
+<a name="ln3715">    case '?':</a>
+<a name="ln3716">      reg_pat[i++] = '.';</a>
+<a name="ln3717">      break;</a>
+<a name="ln3718">    case '\\':</a>
+<a name="ln3719">      if (p[1] == NUL) {</a>
+<a name="ln3720">        break;</a>
+<a name="ln3721">      }</a>
+<a name="ln3722">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln3723">      if (!no_bslash) {</a>
+<a name="ln3724">        // translate:</a>
+<a name="ln3725">        // &quot;\x&quot; to &quot;\\x&quot;  e.g., &quot;dir\file&quot;</a>
+<a name="ln3726">        // &quot;\*&quot; to &quot;\\.*&quot; e.g., &quot;dir\*.c&quot;</a>
+<a name="ln3727">        // &quot;\?&quot; to &quot;\\.&quot;  e.g., &quot;dir\??.c&quot;</a>
+<a name="ln3728">        // &quot;\+&quot; to &quot;\+&quot;   e.g., &quot;fileX\+.c&quot;</a>
+<a name="ln3729">        if ((vim_isfilec((uint8_t)p[1]) || p[1] == '*' || p[1] == '?')</a>
+<a name="ln3730">            &amp;&amp; p[1] != '+') {</a>
+<a name="ln3731">          reg_pat[i++] = '[';</a>
+<a name="ln3732">          reg_pat[i++] = '\\';</a>
+<a name="ln3733">          reg_pat[i++] = '/';</a>
+<a name="ln3734">          reg_pat[i++] = ']';</a>
+<a name="ln3735">          if (allow_dirs != NULL) {</a>
+<a name="ln3736">            *allow_dirs = true;</a>
+<a name="ln3737">          }</a>
+<a name="ln3738">          break;</a>
+<a name="ln3739">        }</a>
+<a name="ln3740">      }</a>
+<a name="ln3741">#endif</a>
+<a name="ln3742">      // Undo escaping from ExpandEscape():</a>
+<a name="ln3743">      // foo\?bar -&gt; foo?bar</a>
+<a name="ln3744">      // foo\%bar -&gt; foo%bar</a>
+<a name="ln3745">      // foo\,bar -&gt; foo,bar</a>
+<a name="ln3746">      // foo\ bar -&gt; foo bar</a>
+<a name="ln3747">      // Don't unescape \, * and others that are also special in a</a>
+<a name="ln3748">      // regexp.</a>
+<a name="ln3749">      // An escaped { must be unescaped since we use magic not</a>
+<a name="ln3750">      // verymagic.  Use &quot;\\\{n,m\}&quot;&quot; to get &quot;\{n,m}&quot;.</a>
+<a name="ln3751">      if (*++p == '?' &amp;&amp; (!BACKSLASH_IN_FILENAME_BOOL || no_bslash)) {</a>
+<a name="ln3752">        reg_pat[i++] = '?';</a>
+<a name="ln3753">      } else if (*p == ',' || *p == '%' || *p == '#'</a>
+<a name="ln3754">                 || ascii_isspace(*p) || *p == '{' || *p == '}') {</a>
+<a name="ln3755">        reg_pat[i++] = *p;</a>
+<a name="ln3756">      } else if (*p == '\\' &amp;&amp; p[1] == '\\' &amp;&amp; p[2] == '{') {</a>
+<a name="ln3757">        reg_pat[i++] = '\\';</a>
+<a name="ln3758">        reg_pat[i++] = '{';</a>
+<a name="ln3759">        p += 2;</a>
+<a name="ln3760">      } else {</a>
+<a name="ln3761">        if (allow_dirs != NULL &amp;&amp; vim_ispathsep(*p)</a>
+<a name="ln3762">            &amp;&amp; (!BACKSLASH_IN_FILENAME_BOOL || (!no_bslash || *p != '\\'))) {</a>
+<a name="ln3763">          *allow_dirs = true;</a>
+<a name="ln3764">        }</a>
+<a name="ln3765">        reg_pat[i++] = '\\';</a>
+<a name="ln3766">        reg_pat[i++] = *p;</a>
+<a name="ln3767">      }</a>
+<a name="ln3768">      break;</a>
+<a name="ln3769">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln3770">    case '/':</a>
+<a name="ln3771">      reg_pat[i++] = '[';</a>
+<a name="ln3772">      reg_pat[i++] = '\\';</a>
+<a name="ln3773">      reg_pat[i++] = '/';</a>
+<a name="ln3774">      reg_pat[i++] = ']';</a>
+<a name="ln3775">      if (allow_dirs != NULL) {</a>
+<a name="ln3776">        *allow_dirs = true;</a>
+<a name="ln3777">      }</a>
+<a name="ln3778">      break;</a>
+<a name="ln3779">#endif</a>
+<a name="ln3780">    case '{':</a>
 <a name="ln3781">      reg_pat[i++] = '\\';</a>
-<a name="ln3782">      reg_pat[i++] = ')';</a>
-<a name="ln3783">      nested--;</a>
+<a name="ln3782">      reg_pat[i++] = '(';</a>
+<a name="ln3783">      nested++;</a>
 <a name="ln3784">      break;</a>
-<a name="ln3785">    case ',':</a>
-<a name="ln3786">      if (nested) {</a>
-<a name="ln3787">        reg_pat[i++] = '\\';</a>
-<a name="ln3788">        reg_pat[i++] = '|';</a>
-<a name="ln3789">      } else {</a>
-<a name="ln3790">        reg_pat[i++] = ',';</a>
-<a name="ln3791">      }</a>
-<a name="ln3792">      break;</a>
-<a name="ln3793">    default:</a>
-<a name="ln3794">      if (allow_dirs != NULL &amp;&amp; vim_ispathsep(*p)) {</a>
-<a name="ln3795">        *allow_dirs = true;</a>
+<a name="ln3785">    case '}':</a>
+<a name="ln3786">      reg_pat[i++] = '\\';</a>
+<a name="ln3787">      reg_pat[i++] = ')';</a>
+<a name="ln3788">      nested--;</a>
+<a name="ln3789">      break;</a>
+<a name="ln3790">    case ',':</a>
+<a name="ln3791">      if (nested) {</a>
+<a name="ln3792">        reg_pat[i++] = '\\';</a>
+<a name="ln3793">        reg_pat[i++] = '|';</a>
+<a name="ln3794">      } else {</a>
+<a name="ln3795">        reg_pat[i++] = ',';</a>
 <a name="ln3796">      }</a>
-<a name="ln3797">      reg_pat[i++] = *p;</a>
-<a name="ln3798">      break;</a>
-<a name="ln3799">    }</a>
-<a name="ln3800">  }</a>
-<a name="ln3801">  if (add_dollar) {</a>
-<a name="ln3802">    reg_pat[i++] = '$';</a>
-<a name="ln3803">  }</a>
-<a name="ln3804">  reg_pat[i] = NUL;</a>
-<a name="ln3805">  if (nested != 0) {</a>
-<a name="ln3806">    if (nested &lt; 0) {</a>
-<a name="ln3807">      emsg(_(&quot;E219: Missing {.&quot;));</a>
-<a name="ln3808">    } else {</a>
-<a name="ln3809">      emsg(_(&quot;E220: Missing }.&quot;));</a>
-<a name="ln3810">    }</a>
-<a name="ln3811">    XFREE_CLEAR(reg_pat);</a>
-<a name="ln3812">  }</a>
-<a name="ln3813">  return reg_pat;</a>
-<a name="ln3814">}</a>
-<a name="ln3815"> </a>
-<a name="ln3816">#if defined(EINTR)</a>
-<a name="ln3817"> </a>
-<a name="ln3818">/// Version of read() that retries when interrupted by EINTR (possibly</a>
-<a name="ln3819">/// by a SIGWINCH).</a>
-<a name="ln3820">long read_eintr(int fd, void *buf, size_t bufsize)</a>
-<a name="ln3821">{</a>
-<a name="ln3822">  long ret;</a>
-<a name="ln3823"> </a>
-<a name="ln3824">  while (true) {</a>
-<a name="ln3825">    ret = read(fd, buf, (unsigned)bufsize);</a>
-<a name="ln3826">    if (ret &gt;= 0 || errno != EINTR) {</a>
-<a name="ln3827">      break;</a>
-<a name="ln3828">    }</a>
-<a name="ln3829">  }</a>
-<a name="ln3830">  return ret;</a>
-<a name="ln3831">}</a>
-<a name="ln3832"> </a>
-<a name="ln3833">/// Version of write() that retries when interrupted by EINTR (possibly</a>
-<a name="ln3834">/// by a SIGWINCH).</a>
-<a name="ln3835">long write_eintr(int fd, void *buf, size_t bufsize)</a>
-<a name="ln3836">{</a>
-<a name="ln3837">  long ret = 0;</a>
-<a name="ln3838"> </a>
-<a name="ln3839">  // Repeat the write() so long it didn't fail, other than being interrupted</a>
-<a name="ln3840">  // by a signal.</a>
-<a name="ln3841">  while (ret &lt; (long)bufsize) {</a>
-<a name="ln3842">    long wlen = write(fd, (char *)buf + ret, (unsigned)(bufsize - (size_t)ret));</a>
-<a name="ln3843">    if (wlen &lt; 0) {</a>
-<a name="ln3844">      if (errno != EINTR) {</a>
-<a name="ln3845">        break;</a>
-<a name="ln3846">      }</a>
-<a name="ln3847">    } else {</a>
-<a name="ln3848">      ret += wlen;</a>
-<a name="ln3849">    }</a>
-<a name="ln3850">  }</a>
-<a name="ln3851">  return ret;</a>
-<a name="ln3852">}</a>
-<a name="ln3853">#endif</a>
+<a name="ln3797">      break;</a>
+<a name="ln3798">    default:</a>
+<a name="ln3799">      if (allow_dirs != NULL &amp;&amp; vim_ispathsep(*p)) {</a>
+<a name="ln3800">        *allow_dirs = true;</a>
+<a name="ln3801">      }</a>
+<a name="ln3802">      reg_pat[i++] = *p;</a>
+<a name="ln3803">      break;</a>
+<a name="ln3804">    }</a>
+<a name="ln3805">  }</a>
+<a name="ln3806">  if (add_dollar) {</a>
+<a name="ln3807">    reg_pat[i++] = '$';</a>
+<a name="ln3808">  }</a>
+<a name="ln3809">  reg_pat[i] = NUL;</a>
+<a name="ln3810">  if (nested != 0) {</a>
+<a name="ln3811">    if (nested &lt; 0) {</a>
+<a name="ln3812">      emsg(_(&quot;E219: Missing {.&quot;));</a>
+<a name="ln3813">    } else {</a>
+<a name="ln3814">      emsg(_(&quot;E220: Missing }.&quot;));</a>
+<a name="ln3815">    }</a>
+<a name="ln3816">    XFREE_CLEAR(reg_pat);</a>
+<a name="ln3817">  }</a>
+<a name="ln3818">  return reg_pat;</a>
+<a name="ln3819">}</a>
+<a name="ln3820"> </a>
+<a name="ln3821">#if defined(EINTR)</a>
+<a name="ln3822"> </a>
+<a name="ln3823">/// Version of read() that retries when interrupted by EINTR (possibly</a>
+<a name="ln3824">/// by a SIGWINCH).</a>
+<a name="ln3825">long read_eintr(int fd, void *buf, size_t bufsize)</a>
+<a name="ln3826">{</a>
+<a name="ln3827">  long ret;</a>
+<a name="ln3828"> </a>
+<a name="ln3829">  while (true) {</a>
+<a name="ln3830">    ret = read(fd, buf, (unsigned)bufsize);</a>
+<a name="ln3831">    if (ret &gt;= 0 || errno != EINTR) {</a>
+<a name="ln3832">      break;</a>
+<a name="ln3833">    }</a>
+<a name="ln3834">  }</a>
+<a name="ln3835">  return ret;</a>
+<a name="ln3836">}</a>
+<a name="ln3837"> </a>
+<a name="ln3838">/// Version of write() that retries when interrupted by EINTR (possibly</a>
+<a name="ln3839">/// by a SIGWINCH).</a>
+<a name="ln3840">long write_eintr(int fd, void *buf, size_t bufsize)</a>
+<a name="ln3841">{</a>
+<a name="ln3842">  long ret = 0;</a>
+<a name="ln3843"> </a>
+<a name="ln3844">  // Repeat the write() so long it didn't fail, other than being interrupted</a>
+<a name="ln3845">  // by a signal.</a>
+<a name="ln3846">  while (ret &lt; (long)bufsize) {</a>
+<a name="ln3847">    long wlen = write(fd, (char *)buf + ret, (unsigned)(bufsize - (size_t)ret));</a>
+<a name="ln3848">    if (wlen &lt; 0) {</a>
+<a name="ln3849">      if (errno != EINTR) {</a>
+<a name="ln3850">        break;</a>
+<a name="ln3851">      }</a>
+<a name="ln3852">    } else {</a>
+<a name="ln3853">      ret += wlen;</a>
+<a name="ln3854">    }</a>
+<a name="ln3855">  }</a>
+<a name="ln3856">  return ret;</a>
+<a name="ln3857">}</a>
+<a name="ln3858">#endif</a>
 </code></pre>
-<div class="balloon" rel="3329"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v557/" target="_blank">V557</a> Array overrun is possible. The value of 'strlen(tmp) - strlen(user)' index could reach 18446744073709551615.</p></div>
+<div class="balloon" rel="3334"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v557/" target="_blank">V557</a> Array overrun is possible. The value of 'strlen(tmp) - strlen(user)' index could reach 18446744073709551615.</p></div>
 <link rel="stylesheet" href="highlight.css">
 <script src="highlight.pack.js"></script>
 <script src="highlightjs-line-numbers.js"></script>
