@@ -13,1206 +13,1208 @@
 <a name="ln4">// help.c: functions for Vim help</a>
 <a name="ln5"> </a>
 <a name="ln6">#include &lt;stdbool.h&gt;</a>
-<a name="ln7">#include &lt;stdio.h&gt;</a>
-<a name="ln8">#include &lt;stdlib.h&gt;</a>
-<a name="ln9">#include &lt;string.h&gt;</a>
-<a name="ln10"> </a>
-<a name="ln11">#include &quot;nvim/ascii.h&quot;</a>
-<a name="ln12">#include &quot;nvim/buffer.h&quot;</a>
-<a name="ln13">#include &quot;nvim/change.h&quot;</a>
-<a name="ln14">#include &quot;nvim/charset.h&quot;</a>
-<a name="ln15">#include &quot;nvim/cmdexpand.h&quot;</a>
-<a name="ln16">#include &quot;nvim/ex_cmds.h&quot;</a>
-<a name="ln17">#include &quot;nvim/ex_cmds_defs.h&quot;</a>
-<a name="ln18">#include &quot;nvim/ex_docmd.h&quot;</a>
-<a name="ln19">#include &quot;nvim/fileio.h&quot;</a>
-<a name="ln20">#include &quot;nvim/garray.h&quot;</a>
-<a name="ln21">#include &quot;nvim/gettext.h&quot;</a>
-<a name="ln22">#include &quot;nvim/globals.h&quot;</a>
-<a name="ln23">#include &quot;nvim/help.h&quot;</a>
-<a name="ln24">#include &quot;nvim/macros.h&quot;</a>
-<a name="ln25">#include &quot;nvim/mark.h&quot;</a>
-<a name="ln26">#include &quot;nvim/mbyte.h&quot;</a>
-<a name="ln27">#include &quot;nvim/memline.h&quot;</a>
-<a name="ln28">#include &quot;nvim/memory.h&quot;</a>
-<a name="ln29">#include &quot;nvim/message.h&quot;</a>
-<a name="ln30">#include &quot;nvim/option.h&quot;</a>
-<a name="ln31">#include &quot;nvim/optionstr.h&quot;</a>
-<a name="ln32">#include &quot;nvim/os/input.h&quot;</a>
-<a name="ln33">#include &quot;nvim/os/os.h&quot;</a>
-<a name="ln34">#include &quot;nvim/path.h&quot;</a>
-<a name="ln35">#include &quot;nvim/pos.h&quot;</a>
-<a name="ln36">#include &quot;nvim/runtime.h&quot;</a>
-<a name="ln37">#include &quot;nvim/strings.h&quot;</a>
-<a name="ln38">#include &quot;nvim/syntax.h&quot;</a>
-<a name="ln39">#include &quot;nvim/tag.h&quot;</a>
-<a name="ln40">#include &quot;nvim/types.h&quot;</a>
-<a name="ln41">#include &quot;nvim/vim.h&quot;</a>
-<a name="ln42">#include &quot;nvim/window.h&quot;</a>
-<a name="ln43"> </a>
-<a name="ln44">#ifdef INCLUDE_GENERATED_DECLARATIONS</a>
-<a name="ln45"># include &quot;help.c.generated.h&quot;</a>
-<a name="ln46">#endif</a>
-<a name="ln47"> </a>
-<a name="ln48">/// &quot;:help&quot;: open a read-only window on a help file</a>
-<a name="ln49">void ex_help(exarg_T *eap)</a>
-<a name="ln50">{</a>
-<a name="ln51">  char *arg;</a>
-<a name="ln52">  FILE *helpfd;          // file descriptor of help file</a>
-<a name="ln53">  win_T *wp;</a>
-<a name="ln54">  int num_matches;</a>
-<a name="ln55">  char **matches;</a>
-<a name="ln56">  int empty_fnum = 0;</a>
-<a name="ln57">  int alt_fnum = 0;</a>
-<a name="ln58">  buf_T *buf;</a>
-<a name="ln59">  int len;</a>
-<a name="ln60">  const bool old_KeyTyped = KeyTyped;</a>
-<a name="ln61"> </a>
-<a name="ln62">  if (eap != NULL) {</a>
-<a name="ln63">    // A &quot;:help&quot; command ends at the first LF, or at a '|' that is</a>
-<a name="ln64">    // followed by some text.  Set nextcmd to the following command.</a>
-<a name="ln65">    for (arg = eap-&gt;arg; *arg; arg++) {</a>
-<a name="ln66">      if (*arg == '\n' || *arg == '\r'</a>
-<a name="ln67">          || (*arg == '|' &amp;&amp; arg[1] != NUL &amp;&amp; arg[1] != '|')) {</a>
-<a name="ln68">        *arg++ = NUL;</a>
-<a name="ln69">        eap-&gt;nextcmd = arg;</a>
-<a name="ln70">        break;</a>
-<a name="ln71">      }</a>
-<a name="ln72">    }</a>
-<a name="ln73">    arg = eap-&gt;arg;</a>
-<a name="ln74"> </a>
-<a name="ln75">    if (eap-&gt;forceit &amp;&amp; *arg == NUL &amp;&amp; !curbuf-&gt;b_help) {</a>
-<a name="ln76">      emsg(_(&quot;E478: Don't panic!&quot;));</a>
-<a name="ln77">      return;</a>
-<a name="ln78">    }</a>
-<a name="ln79"> </a>
-<a name="ln80">    if (eap-&gt;skip) {        // not executing commands</a>
-<a name="ln81">      return;</a>
-<a name="ln82">    }</a>
-<a name="ln83">  } else {</a>
-<a name="ln84">    arg = &quot;&quot;;</a>
-<a name="ln85">  }</a>
-<a name="ln86"> </a>
-<a name="ln87">  // remove trailing blanks</a>
-<a name="ln88">  char *p = arg + strlen(arg) - 1;</a>
-<a name="ln89">  while (p &gt; arg &amp;&amp; ascii_iswhite(*p) &amp;&amp; p[-1] != '\\') {</a>
-<a name="ln90">    *p-- = NUL;</a>
-<a name="ln91">  }</a>
-<a name="ln92"> </a>
-<a name="ln93">  // Check for a specified language</a>
-<a name="ln94">  char *lang = check_help_lang(arg);</a>
-<a name="ln95"> </a>
-<a name="ln96">  // When no argument given go to the index.</a>
-<a name="ln97">  if (*arg == NUL) {</a>
-<a name="ln98">    arg = &quot;help.txt&quot;;</a>
-<a name="ln99">  }</a>
-<a name="ln100"> </a>
-<a name="ln101">  // Check if there is a match for the argument.</a>
-<a name="ln102">  int n = find_help_tags(arg, &amp;num_matches, &amp;matches, eap != NULL &amp;&amp; eap-&gt;forceit);</a>
-<a name="ln103"> </a>
-<a name="ln104">  int i = 0;</a>
-<a name="ln105">  if (n != FAIL &amp;&amp; lang != NULL) {</a>
-<a name="ln106">    // Find first item with the requested language.</a>
-<a name="ln107">    for (i = 0; i &lt; num_matches; i++) {</a>
-<a name="ln108">      len = (int)strlen(matches[i]);</a>
-<a name="ln109">      if (len &gt; 3 &amp;&amp; matches[i][len - 3] == '@'</a>
-<a name="ln110">          &amp;&amp; STRICMP(matches[i] + len - 2, lang) == 0) {</a>
-<a name="ln111">        break;</a>
-<a name="ln112">      }</a>
-<a name="ln113">    }</a>
-<a name="ln114">  }</a>
-<a name="ln115">  if (i &gt;= num_matches || n == FAIL) {</a>
-<a name="ln116">    if (lang != NULL) {</a>
-<a name="ln117">      semsg(_(&quot;E661: Sorry, no '%s' help for %s&quot;), lang, arg);</a>
-<a name="ln118">    } else {</a>
-<a name="ln119">      semsg(_(&quot;E149: Sorry, no help for %s&quot;), arg);</a>
-<a name="ln120">    }</a>
-<a name="ln121">    if (n != FAIL) {</a>
-<a name="ln122">      FreeWild(num_matches, matches);</a>
-<a name="ln123">    }</a>
-<a name="ln124">    return;</a>
-<a name="ln125">  }</a>
-<a name="ln126"> </a>
-<a name="ln127">  // The first match (in the requested language) is the best match.</a>
-<a name="ln128">  char *tag = xstrdup(matches[i]);</a>
-<a name="ln129">  FreeWild(num_matches, matches);</a>
-<a name="ln130"> </a>
-<a name="ln131">  // Re-use an existing help window or open a new one.</a>
-<a name="ln132">  // Always open a new one for &quot;:tab help&quot;.</a>
-<a name="ln133">  if (!bt_help(curwin-&gt;w_buffer) || cmdmod.cmod_tab != 0) {</a>
-<a name="ln134">    if (cmdmod.cmod_tab != 0) {</a>
-<a name="ln135">      wp = NULL;</a>
-<a name="ln136">    } else {</a>
+<a name="ln7">#include &lt;stdint.h&gt;</a>
+<a name="ln8">#include &lt;stdio.h&gt;</a>
+<a name="ln9">#include &lt;stdlib.h&gt;</a>
+<a name="ln10">#include &lt;string.h&gt;</a>
+<a name="ln11"> </a>
+<a name="ln12">#include &quot;nvim/ascii.h&quot;</a>
+<a name="ln13">#include &quot;nvim/buffer.h&quot;</a>
+<a name="ln14">#include &quot;nvim/change.h&quot;</a>
+<a name="ln15">#include &quot;nvim/charset.h&quot;</a>
+<a name="ln16">#include &quot;nvim/cmdexpand.h&quot;</a>
+<a name="ln17">#include &quot;nvim/ex_cmds.h&quot;</a>
+<a name="ln18">#include &quot;nvim/ex_cmds_defs.h&quot;</a>
+<a name="ln19">#include &quot;nvim/ex_docmd.h&quot;</a>
+<a name="ln20">#include &quot;nvim/extmark_defs.h&quot;</a>
+<a name="ln21">#include &quot;nvim/fileio.h&quot;</a>
+<a name="ln22">#include &quot;nvim/garray.h&quot;</a>
+<a name="ln23">#include &quot;nvim/gettext.h&quot;</a>
+<a name="ln24">#include &quot;nvim/globals.h&quot;</a>
+<a name="ln25">#include &quot;nvim/help.h&quot;</a>
+<a name="ln26">#include &quot;nvim/macros.h&quot;</a>
+<a name="ln27">#include &quot;nvim/mark.h&quot;</a>
+<a name="ln28">#include &quot;nvim/mbyte.h&quot;</a>
+<a name="ln29">#include &quot;nvim/memline.h&quot;</a>
+<a name="ln30">#include &quot;nvim/memory.h&quot;</a>
+<a name="ln31">#include &quot;nvim/message.h&quot;</a>
+<a name="ln32">#include &quot;nvim/option.h&quot;</a>
+<a name="ln33">#include &quot;nvim/optionstr.h&quot;</a>
+<a name="ln34">#include &quot;nvim/os/input.h&quot;</a>
+<a name="ln35">#include &quot;nvim/os/os.h&quot;</a>
+<a name="ln36">#include &quot;nvim/path.h&quot;</a>
+<a name="ln37">#include &quot;nvim/pos.h&quot;</a>
+<a name="ln38">#include &quot;nvim/runtime.h&quot;</a>
+<a name="ln39">#include &quot;nvim/strings.h&quot;</a>
+<a name="ln40">#include &quot;nvim/syntax.h&quot;</a>
+<a name="ln41">#include &quot;nvim/tag.h&quot;</a>
+<a name="ln42">#include &quot;nvim/types.h&quot;</a>
+<a name="ln43">#include &quot;nvim/vim.h&quot;</a>
+<a name="ln44">#include &quot;nvim/window.h&quot;</a>
+<a name="ln45"> </a>
+<a name="ln46">#ifdef INCLUDE_GENERATED_DECLARATIONS</a>
+<a name="ln47"># include &quot;help.c.generated.h&quot;</a>
+<a name="ln48">#endif</a>
+<a name="ln49"> </a>
+<a name="ln50">/// &quot;:help&quot;: open a read-only window on a help file</a>
+<a name="ln51">void ex_help(exarg_T *eap)</a>
+<a name="ln52">{</a>
+<a name="ln53">  char *arg;</a>
+<a name="ln54">  FILE *helpfd;          // file descriptor of help file</a>
+<a name="ln55">  win_T *wp;</a>
+<a name="ln56">  int num_matches;</a>
+<a name="ln57">  char **matches;</a>
+<a name="ln58">  int empty_fnum = 0;</a>
+<a name="ln59">  int alt_fnum = 0;</a>
+<a name="ln60">  buf_T *buf;</a>
+<a name="ln61">  int len;</a>
+<a name="ln62">  const bool old_KeyTyped = KeyTyped;</a>
+<a name="ln63"> </a>
+<a name="ln64">  if (eap != NULL) {</a>
+<a name="ln65">    // A &quot;:help&quot; command ends at the first LF, or at a '|' that is</a>
+<a name="ln66">    // followed by some text.  Set nextcmd to the following command.</a>
+<a name="ln67">    for (arg = eap-&gt;arg; *arg; arg++) {</a>
+<a name="ln68">      if (*arg == '\n' || *arg == '\r'</a>
+<a name="ln69">          || (*arg == '|' &amp;&amp; arg[1] != NUL &amp;&amp; arg[1] != '|')) {</a>
+<a name="ln70">        *arg++ = NUL;</a>
+<a name="ln71">        eap-&gt;nextcmd = arg;</a>
+<a name="ln72">        break;</a>
+<a name="ln73">      }</a>
+<a name="ln74">    }</a>
+<a name="ln75">    arg = eap-&gt;arg;</a>
+<a name="ln76"> </a>
+<a name="ln77">    if (eap-&gt;forceit &amp;&amp; *arg == NUL &amp;&amp; !curbuf-&gt;b_help) {</a>
+<a name="ln78">      emsg(_(&quot;E478: Don't panic!&quot;));</a>
+<a name="ln79">      return;</a>
+<a name="ln80">    }</a>
+<a name="ln81"> </a>
+<a name="ln82">    if (eap-&gt;skip) {        // not executing commands</a>
+<a name="ln83">      return;</a>
+<a name="ln84">    }</a>
+<a name="ln85">  } else {</a>
+<a name="ln86">    arg = &quot;&quot;;</a>
+<a name="ln87">  }</a>
+<a name="ln88"> </a>
+<a name="ln89">  // remove trailing blanks</a>
+<a name="ln90">  char *p = arg + strlen(arg) - 1;</a>
+<a name="ln91">  while (p &gt; arg &amp;&amp; ascii_iswhite(*p) &amp;&amp; p[-1] != '\\') {</a>
+<a name="ln92">    *p-- = NUL;</a>
+<a name="ln93">  }</a>
+<a name="ln94"> </a>
+<a name="ln95">  // Check for a specified language</a>
+<a name="ln96">  char *lang = check_help_lang(arg);</a>
+<a name="ln97"> </a>
+<a name="ln98">  // When no argument given go to the index.</a>
+<a name="ln99">  if (*arg == NUL) {</a>
+<a name="ln100">    arg = &quot;help.txt&quot;;</a>
+<a name="ln101">  }</a>
+<a name="ln102"> </a>
+<a name="ln103">  // Check if there is a match for the argument.</a>
+<a name="ln104">  int n = find_help_tags(arg, &amp;num_matches, &amp;matches, eap != NULL &amp;&amp; eap-&gt;forceit);</a>
+<a name="ln105"> </a>
+<a name="ln106">  int i = 0;</a>
+<a name="ln107">  if (n != FAIL &amp;&amp; lang != NULL) {</a>
+<a name="ln108">    // Find first item with the requested language.</a>
+<a name="ln109">    for (i = 0; i &lt; num_matches; i++) {</a>
+<a name="ln110">      len = (int)strlen(matches[i]);</a>
+<a name="ln111">      if (len &gt; 3 &amp;&amp; matches[i][len - 3] == '@'</a>
+<a name="ln112">          &amp;&amp; STRICMP(matches[i] + len - 2, lang) == 0) {</a>
+<a name="ln113">        break;</a>
+<a name="ln114">      }</a>
+<a name="ln115">    }</a>
+<a name="ln116">  }</a>
+<a name="ln117">  if (i &gt;= num_matches || n == FAIL) {</a>
+<a name="ln118">    if (lang != NULL) {</a>
+<a name="ln119">      semsg(_(&quot;E661: Sorry, no '%s' help for %s&quot;), lang, arg);</a>
+<a name="ln120">    } else {</a>
+<a name="ln121">      semsg(_(&quot;E149: Sorry, no help for %s&quot;), arg);</a>
+<a name="ln122">    }</a>
+<a name="ln123">    if (n != FAIL) {</a>
+<a name="ln124">      FreeWild(num_matches, matches);</a>
+<a name="ln125">    }</a>
+<a name="ln126">    return;</a>
+<a name="ln127">  }</a>
+<a name="ln128"> </a>
+<a name="ln129">  // The first match (in the requested language) is the best match.</a>
+<a name="ln130">  char *tag = xstrdup(matches[i]);</a>
+<a name="ln131">  FreeWild(num_matches, matches);</a>
+<a name="ln132"> </a>
+<a name="ln133">  // Re-use an existing help window or open a new one.</a>
+<a name="ln134">  // Always open a new one for &quot;:tab help&quot;.</a>
+<a name="ln135">  if (!bt_help(curwin-&gt;w_buffer) || cmdmod.cmod_tab != 0) {</a>
+<a name="ln136">    if (cmdmod.cmod_tab != 0) {</a>
 <a name="ln137">      wp = NULL;</a>
-<a name="ln138">      FOR_ALL_WINDOWS_IN_TAB(wp2, curtab) {</a>
-<a name="ln139">        if (bt_help(wp2-&gt;w_buffer)) {</a>
-<a name="ln140">          wp = wp2;</a>
-<a name="ln141">          break;</a>
-<a name="ln142">        }</a>
-<a name="ln143">      }</a>
-<a name="ln144">    }</a>
-<a name="ln145">    if (wp != NULL &amp;&amp; wp-&gt;w_buffer-&gt;b_nwindows &gt; 0) {</a>
-<a name="ln146">      win_enter(wp, true);</a>
-<a name="ln147">    } else {</a>
-<a name="ln148">      // There is no help window yet.</a>
-<a name="ln149">      // Try to open the file specified by the &quot;helpfile&quot; option.</a>
-<a name="ln150">      if ((helpfd = os_fopen(p_hf, READBIN)) == NULL) {</a>
-<a name="ln151">        smsg(_(&quot;Sorry, help file \&quot;%s\&quot; not found&quot;), p_hf);</a>
-<a name="ln152">        goto erret;</a>
-<a name="ln153">      }</a>
-<a name="ln154">      fclose(helpfd);</a>
-<a name="ln155"> </a>
-<a name="ln156">      // Split off help window; put it at far top if no position</a>
-<a name="ln157">      // specified, the current window is vertically split and</a>
-<a name="ln158">      // narrow.</a>
-<a name="ln159">      n = WSP_HELP;</a>
-<a name="ln160">      if (cmdmod.cmod_split == 0 &amp;&amp; curwin-&gt;w_width != Columns</a>
-<a name="ln161">          &amp;&amp; curwin-&gt;w_width &lt; 80) {</a>
-<a name="ln162">        n |= p_sb ? WSP_BOT : WSP_TOP;</a>
-<a name="ln163">      }</a>
-<a name="ln164">      if (win_split(0, n) == FAIL) {</a>
-<a name="ln165">        goto erret;</a>
-<a name="ln166">      }</a>
-<a name="ln167"> </a>
-<a name="ln168">      if (curwin-&gt;w_height &lt; p_hh) {</a>
-<a name="ln169">        win_setheight((int)p_hh);</a>
-<a name="ln170">      }</a>
-<a name="ln171"> </a>
-<a name="ln172">      // Open help file (do_ecmd() will set b_help flag, readfile() will</a>
-<a name="ln173">      // set b_p_ro flag).</a>
-<a name="ln174">      // Set the alternate file to the previously edited file.</a>
-<a name="ln175">      alt_fnum = curbuf-&gt;b_fnum;</a>
-<a name="ln176">      (void)do_ecmd(0, NULL, NULL, NULL, ECMD_LASTL,</a>
-<a name="ln177">                    ECMD_HIDE + ECMD_SET_HELP,</a>
-<a name="ln178">                    NULL);  // buffer is still open, don't store info</a>
-<a name="ln179"> </a>
-<a name="ln180">      if ((cmdmod.cmod_flags &amp; CMOD_KEEPALT) == 0) {</a>
-<a name="ln181">        curwin-&gt;w_alt_fnum = alt_fnum;</a>
-<a name="ln182">      }</a>
-<a name="ln183">      empty_fnum = curbuf-&gt;b_fnum;</a>
-<a name="ln184">    }</a>
-<a name="ln185">  }</a>
-<a name="ln186"> </a>
-<a name="ln187">  restart_edit = 0;               // don't want insert mode in help file</a>
+<a name="ln138">    } else {</a>
+<a name="ln139">      wp = NULL;</a>
+<a name="ln140">      FOR_ALL_WINDOWS_IN_TAB(wp2, curtab) {</a>
+<a name="ln141">        if (bt_help(wp2-&gt;w_buffer)) {</a>
+<a name="ln142">          wp = wp2;</a>
+<a name="ln143">          break;</a>
+<a name="ln144">        }</a>
+<a name="ln145">      }</a>
+<a name="ln146">    }</a>
+<a name="ln147">    if (wp != NULL &amp;&amp; wp-&gt;w_buffer-&gt;b_nwindows &gt; 0) {</a>
+<a name="ln148">      win_enter(wp, true);</a>
+<a name="ln149">    } else {</a>
+<a name="ln150">      // There is no help window yet.</a>
+<a name="ln151">      // Try to open the file specified by the &quot;helpfile&quot; option.</a>
+<a name="ln152">      if ((helpfd = os_fopen(p_hf, READBIN)) == NULL) {</a>
+<a name="ln153">        smsg(0, _(&quot;Sorry, help file \&quot;%s\&quot; not found&quot;), p_hf);</a>
+<a name="ln154">        goto erret;</a>
+<a name="ln155">      }</a>
+<a name="ln156">      fclose(helpfd);</a>
+<a name="ln157"> </a>
+<a name="ln158">      // Split off help window; put it at far top if no position</a>
+<a name="ln159">      // specified, the current window is vertically split and</a>
+<a name="ln160">      // narrow.</a>
+<a name="ln161">      n = WSP_HELP;</a>
+<a name="ln162">      if (cmdmod.cmod_split == 0 &amp;&amp; curwin-&gt;w_width != Columns</a>
+<a name="ln163">          &amp;&amp; curwin-&gt;w_width &lt; 80) {</a>
+<a name="ln164">        n |= p_sb ? WSP_BOT : WSP_TOP;</a>
+<a name="ln165">      }</a>
+<a name="ln166">      if (win_split(0, n) == FAIL) {</a>
+<a name="ln167">        goto erret;</a>
+<a name="ln168">      }</a>
+<a name="ln169"> </a>
+<a name="ln170">      if (curwin-&gt;w_height &lt; p_hh) {</a>
+<a name="ln171">        win_setheight((int)p_hh);</a>
+<a name="ln172">      }</a>
+<a name="ln173"> </a>
+<a name="ln174">      // Open help file (do_ecmd() will set b_help flag, readfile() will</a>
+<a name="ln175">      // set b_p_ro flag).</a>
+<a name="ln176">      // Set the alternate file to the previously edited file.</a>
+<a name="ln177">      alt_fnum = curbuf-&gt;b_fnum;</a>
+<a name="ln178">      (void)do_ecmd(0, NULL, NULL, NULL, ECMD_LASTL,</a>
+<a name="ln179">                    ECMD_HIDE + ECMD_SET_HELP,</a>
+<a name="ln180">                    NULL);  // buffer is still open, don't store info</a>
+<a name="ln181"> </a>
+<a name="ln182">      if ((cmdmod.cmod_flags &amp; CMOD_KEEPALT) == 0) {</a>
+<a name="ln183">        curwin-&gt;w_alt_fnum = alt_fnum;</a>
+<a name="ln184">      }</a>
+<a name="ln185">      empty_fnum = curbuf-&gt;b_fnum;</a>
+<a name="ln186">    }</a>
+<a name="ln187">  }</a>
 <a name="ln188"> </a>
-<a name="ln189">  // Restore KeyTyped, setting 'filetype=help' may reset it.</a>
-<a name="ln190">  // It is needed for do_tag top open folds under the cursor.</a>
-<a name="ln191">  KeyTyped = old_KeyTyped;</a>
-<a name="ln192"> </a>
-<a name="ln193">  do_tag(tag, DT_HELP, 1, false, true);</a>
+<a name="ln189">  restart_edit = 0;               // don't want insert mode in help file</a>
+<a name="ln190"> </a>
+<a name="ln191">  // Restore KeyTyped, setting 'filetype=help' may reset it.</a>
+<a name="ln192">  // It is needed for do_tag top open folds under the cursor.</a>
+<a name="ln193">  KeyTyped = old_KeyTyped;</a>
 <a name="ln194"> </a>
-<a name="ln195">  // Delete the empty buffer if we're not using it.  Careful: autocommands</a>
-<a name="ln196">  // may have jumped to another window, check that the buffer is not in a</a>
-<a name="ln197">  // window.</a>
-<a name="ln198">  if (empty_fnum != 0 &amp;&amp; curbuf-&gt;b_fnum != empty_fnum) {</a>
-<a name="ln199">    buf = buflist_findnr(empty_fnum);</a>
-<a name="ln200">    if (buf != NULL &amp;&amp; buf-&gt;b_nwindows == 0) {</a>
-<a name="ln201">      wipe_buffer(buf, true);</a>
-<a name="ln202">    }</a>
-<a name="ln203">  }</a>
-<a name="ln204"> </a>
-<a name="ln205">  // keep the previous alternate file</a>
-<a name="ln206">  if (alt_fnum != 0 &amp;&amp; curwin-&gt;w_alt_fnum == empty_fnum</a>
-<a name="ln207">      &amp;&amp; (cmdmod.cmod_flags &amp; CMOD_KEEPALT) == 0) {</a>
-<a name="ln208">    curwin-&gt;w_alt_fnum = alt_fnum;</a>
-<a name="ln209">  }</a>
-<a name="ln210"> </a>
-<a name="ln211">erret:</a>
-<a name="ln212">  xfree(tag);</a>
-<a name="ln213">}</a>
-<a name="ln214"> </a>
-<a name="ln215">/// &quot;:helpclose&quot;: Close one help window</a>
-<a name="ln216">void ex_helpclose(exarg_T *eap)</a>
-<a name="ln217">{</a>
-<a name="ln218">  FOR_ALL_WINDOWS_IN_TAB(win, curtab) {</a>
-<a name="ln219">    if (bt_help(win-&gt;w_buffer)) {</a>
-<a name="ln220">      win_close(win, false, eap-&gt;forceit);</a>
-<a name="ln221">      return;</a>
-<a name="ln222">    }</a>
-<a name="ln223">  }</a>
-<a name="ln224">}</a>
-<a name="ln225"> </a>
-<a name="ln226">/// In an argument search for a language specifiers in the form &quot;@xx&quot;.</a>
-<a name="ln227">/// Changes the &quot;@&quot; to NUL if found, and returns a pointer to &quot;xx&quot;.</a>
-<a name="ln228">///</a>
-<a name="ln229">/// @return  NULL if not found.</a>
-<a name="ln230">char *check_help_lang(char *arg)</a>
-<a name="ln231">{</a>
-<a name="ln232">  int len = (int)strlen(arg);</a>
-<a name="ln233"> </a>
-<a name="ln234">  if (len &gt;= 3 &amp;&amp; arg[len - 3] == '@' &amp;&amp; ASCII_ISALPHA(arg[len - 2])</a>
-<a name="ln235">      &amp;&amp; ASCII_ISALPHA(arg[len - 1])) {</a>
-<a name="ln236">    arg[len - 3] = NUL;                 // remove the '@'</a>
-<a name="ln237">    return arg + len - 2;</a>
-<a name="ln238">  }</a>
-<a name="ln239">  return NULL;</a>
-<a name="ln240">}</a>
-<a name="ln241"> </a>
-<a name="ln242">/// Return a heuristic indicating how well the given string matches.  The</a>
-<a name="ln243">/// smaller the number, the better the match.  This is the order of priorities,</a>
-<a name="ln244">/// from best match to worst match:</a>
-<a name="ln245">///      - Match with least alphanumeric characters is better.</a>
-<a name="ln246">///      - Match with least total characters is better.</a>
-<a name="ln247">///      - Match towards the start is better.</a>
-<a name="ln248">///      - Match starting with &quot;+&quot; is worse (feature instead of command)</a>
-<a name="ln249">/// Assumption is made that the matched_string passed has already been found to</a>
-<a name="ln250">/// match some string for which help is requested.  webb.</a>
-<a name="ln251">///</a>
-<a name="ln252">/// @param offset      offset for match</a>
-<a name="ln253">/// @param wrong_case  no matching case</a>
-<a name="ln254">///</a>
-<a name="ln255">/// @return  a heuristic indicating how well the given string matches.</a>
-<a name="ln256">int help_heuristic(char *matched_string, int offset, int wrong_case)</a>
-<a name="ln257">  FUNC_ATTR_PURE</a>
-<a name="ln258">{</a>
-<a name="ln259">  int num_letters = 0;</a>
-<a name="ln260">  for (char *p = matched_string; *p; p++) {</a>
-<a name="ln261">    if (ASCII_ISALNUM(*p)) {</a>
-<a name="ln262">      num_letters++;</a>
-<a name="ln263">    }</a>
-<a name="ln264">  }</a>
-<a name="ln265"> </a>
-<a name="ln266">  // Multiply the number of letters by 100 to give it a much bigger</a>
-<a name="ln267">  // weighting than the number of characters.</a>
-<a name="ln268">  // If there only is a match while ignoring case, add 5000.</a>
-<a name="ln269">  // If the match starts in the middle of a word, add 10000 to put it</a>
-<a name="ln270">  // somewhere in the last half.</a>
-<a name="ln271">  // If the match is more than 2 chars from the start, multiply by 200 to</a>
-<a name="ln272">  // put it after matches at the start.</a>
-<a name="ln273">  if (offset &gt; 0</a>
-<a name="ln274">      &amp;&amp; ASCII_ISALNUM(matched_string[offset])</a>
-<a name="ln275">      &amp;&amp; ASCII_ISALNUM(matched_string[offset - 1])) {</a>
-<a name="ln276">    offset += 10000;</a>
-<a name="ln277">  } else if (offset &gt; 2) {</a>
-<a name="ln278">    offset *= 200;</a>
-<a name="ln279">  }</a>
-<a name="ln280">  if (wrong_case) {</a>
-<a name="ln281">    offset += 5000;</a>
-<a name="ln282">  }</a>
-<a name="ln283">  // Features are less interesting than the subjects themselves, but &quot;+&quot;</a>
-<a name="ln284">  // alone is not a feature.</a>
-<a name="ln285">  if (matched_string[0] == '+' &amp;&amp; matched_string[1] != NUL) {</a>
-<a name="ln286">    offset += 100;</a>
-<a name="ln287">  }</a>
-<a name="ln288">  return 100 * num_letters + (int)strlen(matched_string) + offset;</a>
-<a name="ln289">}</a>
-<a name="ln290"> </a>
-<a name="ln291">/// Compare functions for qsort() below, that checks the help heuristics number</a>
-<a name="ln292">/// that has been put after the tagname by find_tags().</a>
-<a name="ln293">static int help_compare(const void *s1, const void *s2)</a>
-<a name="ln294">{</a>
-<a name="ln295">  char *p1 = *(char **)s1 + strlen(*(char **)s1) + 1;</a>
-<a name="ln296">  char *p2 = *(char **)s2 + strlen(*(char **)s2) + 1;</a>
-<a name="ln297"> </a>
-<a name="ln298">  // Compare by help heuristic number first.</a>
-<a name="ln299">  int cmp = strcmp(p1, p2);</a>
-<a name="ln300">  if (cmp != 0) {</a>
-<a name="ln301">    return cmp;</a>
-<a name="ln302">  }</a>
-<a name="ln303"> </a>
-<a name="ln304">  // Compare by strings as tie-breaker when same heuristic number.</a>
-<a name="ln305">  return strcmp(*(char **)s1, *(char **)s2);</a>
-<a name="ln306">}</a>
-<a name="ln307"> </a>
-<a name="ln308">/// Find all help tags matching &quot;arg&quot;, sort them and return in matches[], with</a>
-<a name="ln309">/// the number of matches in num_matches.</a>
-<a name="ln310">/// The matches will be sorted with a &quot;best&quot; match algorithm.</a>
-<a name="ln311">/// When &quot;keep_lang&quot; is true try keeping the language of the current buffer.</a>
-<a name="ln312">int find_help_tags(const char *arg, int *num_matches, char ***matches, bool keep_lang)</a>
-<a name="ln313">{</a>
-<a name="ln314">  // Specific tags that either have a specific replacement or won't go</a>
-<a name="ln315">  // through the generic rules.</a>
-<a name="ln316">  static char *(except_tbl[][2]) = {</a>
-<a name="ln317">    { &quot;*&quot;,           &quot;star&quot; },</a>
-<a name="ln318">    { &quot;g*&quot;,          &quot;gstar&quot; },</a>
-<a name="ln319">    { &quot;[*&quot;,          &quot;[star&quot; },</a>
-<a name="ln320">    { &quot;]*&quot;,          &quot;]star&quot; },</a>
-<a name="ln321">    { &quot;:*&quot;,          &quot;:star&quot; },</a>
-<a name="ln322">    { &quot;/*&quot;,          &quot;/star&quot; },  // NOLINT</a>
-<a name="ln323">    { &quot;/\\*&quot;,        &quot;/\\\\star&quot; },</a>
-<a name="ln324">    { &quot;\&quot;*&quot;,         &quot;quotestar&quot; },</a>
-<a name="ln325">    { &quot;**&quot;,          &quot;starstar&quot; },</a>
-<a name="ln326">    { &quot;cpo-*&quot;,       &quot;cpo-star&quot; },</a>
-<a name="ln327">    { &quot;/\\(\\)&quot;,     &quot;/\\\\(\\\\)&quot; },</a>
-<a name="ln328">    { &quot;/\\%(\\)&quot;,    &quot;/\\\\%(\\\\)&quot; },</a>
-<a name="ln329">    { &quot;?&quot;,           &quot;?&quot; },</a>
-<a name="ln330">    { &quot;??&quot;,          &quot;??&quot; },</a>
-<a name="ln331">    { &quot;:?&quot;,          &quot;:?&quot; },</a>
-<a name="ln332">    { &quot;?&lt;CR&gt;&quot;,       &quot;?&lt;CR&gt;&quot; },</a>
-<a name="ln333">    { &quot;g?&quot;,          &quot;g?&quot; },</a>
-<a name="ln334">    { &quot;g?g?&quot;,        &quot;g?g?&quot; },</a>
-<a name="ln335">    { &quot;g??&quot;,         &quot;g??&quot; },</a>
-<a name="ln336">    { &quot;-?&quot;,          &quot;-?&quot; },</a>
-<a name="ln337">    { &quot;q?&quot;,          &quot;q?&quot; },</a>
-<a name="ln338">    { &quot;v_g?&quot;,        &quot;v_g?&quot; },</a>
-<a name="ln339">    { &quot;/\\?&quot;,        &quot;/\\\\?&quot; },</a>
-<a name="ln340">    { &quot;/\\z(\\)&quot;,    &quot;/\\\\z(\\\\)&quot; },</a>
-<a name="ln341">    { &quot;\\=&quot;,         &quot;\\\\=&quot; },</a>
-<a name="ln342">    { &quot;:s\\=&quot;,       &quot;:s\\\\=&quot; },</a>
-<a name="ln343">    { &quot;[count]&quot;,     &quot;\\[count]&quot; },</a>
-<a name="ln344">    { &quot;[quotex]&quot;,    &quot;\\[quotex]&quot; },</a>
-<a name="ln345">    { &quot;[range]&quot;,     &quot;\\[range]&quot; },</a>
-<a name="ln346">    { &quot;:[range]&quot;,    &quot;:\\[range]&quot; },</a>
-<a name="ln347">    { &quot;[pattern]&quot;,   &quot;\\[pattern]&quot; },</a>
-<a name="ln348">    { &quot;\\|&quot;,         &quot;\\\\bar&quot; },</a>
-<a name="ln349">    { &quot;\\%$&quot;,        &quot;/\\\\%\\$&quot; },</a>
-<a name="ln350">    { &quot;s/\\~&quot;,       &quot;s/\\\\\\~&quot; },</a>
-<a name="ln351">    { &quot;s/\\U&quot;,       &quot;s/\\\\U&quot; },</a>
-<a name="ln352">    { &quot;s/\\L&quot;,       &quot;s/\\\\L&quot; },</a>
-<a name="ln353">    { &quot;s/\\1&quot;,       &quot;s/\\\\1&quot; },</a>
-<a name="ln354">    { &quot;s/\\2&quot;,       &quot;s/\\\\2&quot; },</a>
-<a name="ln355">    { &quot;s/\\3&quot;,       &quot;s/\\\\3&quot; },</a>
-<a name="ln356">    { &quot;s/\\9&quot;,       &quot;s/\\\\9&quot; },</a>
-<a name="ln357">    { NULL, NULL }</a>
-<a name="ln358">  };</a>
-<a name="ln359"> </a>
-<a name="ln360">  static const char *(expr_table[]) = {</a>
-<a name="ln361">    &quot;!=?&quot;, &quot;!~?&quot;, &quot;&lt;=?&quot;, &quot;&lt;?&quot;, &quot;==?&quot;, &quot;=~?&quot;,</a>
-<a name="ln362">    &quot;&gt;=?&quot;, &quot;&gt;?&quot;, &quot;is?&quot;, &quot;isnot?&quot;</a>
-<a name="ln363">  };</a>
-<a name="ln364">  char *d = IObuff;       // assume IObuff is long enough!</a>
-<a name="ln365">  d[0] = NUL;</a>
-<a name="ln366"> </a>
-<a name="ln367">  if (STRNICMP(arg, &quot;expr-&quot;, 5) == 0) {</a>
-<a name="ln368">    // When the string starting with &quot;expr-&quot; and containing '?' and matches</a>
-<a name="ln369">    // the table, it is taken literally (but ~ is escaped).  Otherwise '?'</a>
-<a name="ln370">    // is recognized as a wildcard.</a>
-<a name="ln371">    for (int i = (int)ARRAY_SIZE(expr_table); --i &gt;= 0;) {</a>
-<a name="ln372">      if (strcmp(arg + 5, expr_table[i]) == 0) {</a>
-<a name="ln373">        for (int si = 0, di = 0;; si++) {</a>
-<a name="ln374">          if (arg[si] == '~') {</a>
-<a name="ln375">            d[di++] = '\\';</a>
-<a name="ln376">          }</a>
-<a name="ln377">          d[di++] = arg[si];</a>
-<a name="ln378">          if (arg[si] == NUL) {</a>
-<a name="ln379">            break;</a>
-<a name="ln380">          }</a>
-<a name="ln381">        }</a>
-<a name="ln382">        break;</a>
-<a name="ln383">      }</a>
-<a name="ln384">    }</a>
-<a name="ln385">  } else {</a>
-<a name="ln386">    // Recognize a few exceptions to the rule.  Some strings that contain</a>
-<a name="ln387">    // '*'are changed to &quot;star&quot;, otherwise '*' is recognized as a wildcard.</a>
-<a name="ln388">    for (int i = 0; except_tbl[i][0] != NULL; i++) {</a>
-<a name="ln389">      if (strcmp(arg, except_tbl[i][0]) == 0) {</a>
-<a name="ln390">        STRCPY(d, except_tbl[i][1]);</a>
-<a name="ln391">        break;</a>
-<a name="ln392">      }</a>
-<a name="ln393">    }</a>
-<a name="ln394">  }</a>
-<a name="ln395"> </a>
-<a name="ln396">  if (d[0] == NUL) {  // no match in table</a>
-<a name="ln397">    // Replace &quot;\S&quot; with &quot;/\\S&quot;, etc.  Otherwise every tag is matched.</a>
-<a name="ln398">    // Also replace &quot;\%^&quot; and &quot;\%(&quot;, they match every tag too.</a>
-<a name="ln399">    // Also &quot;\zs&quot;, &quot;\z1&quot;, etc.</a>
-<a name="ln400">    // Also &quot;\@&lt;&quot;, &quot;\@=&quot;, &quot;\@&lt;=&quot;, etc.</a>
-<a name="ln401">    // And also &quot;\_$&quot; and &quot;\_^&quot;.</a>
-<a name="ln402">    if (arg[0] == '\\'</a>
-<a name="ln403">        &amp;&amp; ((arg[1] != NUL &amp;&amp; arg[2] == NUL)</a>
-<a name="ln404">            || (vim_strchr(&quot;%_z@&quot;, (uint8_t)arg[1]) != NULL</a>
-<a name="ln405">                &amp;&amp; arg[2] != NUL))) {</a>
-<a name="ln406">      vim_snprintf(d, IOSIZE, &quot;/\\\\%s&quot;, arg + 1);</a>
-<a name="ln407">      // Check for &quot;/\\_$&quot;, should be &quot;/\\_\$&quot;</a>
-<a name="ln408">      if (d[3] == '_' &amp;&amp; d[4] == '$') {</a>
-<a name="ln409">        STRCPY(d + 4, &quot;\\$&quot;);</a>
-<a name="ln410">      }</a>
-<a name="ln411">    } else {</a>
-<a name="ln412">      // Replace:</a>
-<a name="ln413">      // &quot;[:...:]&quot; with &quot;\[:...:]&quot;</a>
-<a name="ln414">      // &quot;[++...]&quot; with &quot;\[++...]&quot;</a>
-<a name="ln415">      // &quot;\{&quot; with &quot;\\{&quot;               -- matching &quot;} \}&quot;</a>
-<a name="ln416">      if ((arg[0] == '[' &amp;&amp; (arg[1] == ':'</a>
-<a name="ln417">                             || (arg[1] == '+' &amp;&amp; arg[2] == '+')))</a>
-<a name="ln418">          || (arg[0] == '\\' &amp;&amp; arg[1] == '{')) {</a>
-<a name="ln419">        *d++ = '\\';</a>
-<a name="ln420">      }</a>
-<a name="ln421"> </a>
-<a name="ln422">      // If tag starts with &quot;('&quot;, skip the &quot;(&quot;. Fixes CTRL-] on ('option'.</a>
-<a name="ln423">      if (*arg == '(' &amp;&amp; arg[1] == '\'') {</a>
-<a name="ln424">        arg++;</a>
-<a name="ln425">      }</a>
-<a name="ln426">      for (const char *s = arg; *s; s++) {</a>
-<a name="ln427">        // Replace &quot;|&quot; with &quot;bar&quot; and '&quot;' with &quot;quote&quot; to match the name of</a>
-<a name="ln428">        // the tags for these commands.</a>
-<a name="ln429">        // Replace &quot;*&quot; with &quot;.*&quot; and &quot;?&quot; with &quot;.&quot; to match command line</a>
-<a name="ln430">        // completion.</a>
-<a name="ln431">        // Insert a backslash before '~', '$' and '.' to avoid their</a>
-<a name="ln432">        // special meaning.</a>
-<a name="ln433">        if (d - IObuff &gt; IOSIZE - 10) {           // getting too long!?</a>
-<a name="ln434">          break;</a>
-<a name="ln435">        }</a>
-<a name="ln436">        switch (*s) {</a>
-<a name="ln437">        case '|':</a>
-<a name="ln438">          STRCPY(d, &quot;bar&quot;);</a>
-<a name="ln439">          d += 3;</a>
-<a name="ln440">          continue;</a>
-<a name="ln441">        case '&quot;':</a>
-<a name="ln442">          STRCPY(d, &quot;quote&quot;);</a>
-<a name="ln443">          d += 5;</a>
-<a name="ln444">          continue;</a>
-<a name="ln445">        case '*':</a>
-<a name="ln446">          *d++ = '.';</a>
-<a name="ln447">          break;</a>
-<a name="ln448">        case '?':</a>
-<a name="ln449">          *d++ = '.';</a>
-<a name="ln450">          continue;</a>
-<a name="ln451">        case '$':</a>
-<a name="ln452">        case '.':</a>
-<a name="ln453">        case '~':</a>
-<a name="ln454">          *d++ = '\\';</a>
-<a name="ln455">          break;</a>
-<a name="ln456">        }</a>
-<a name="ln457"> </a>
-<a name="ln458">        // Replace &quot;^x&quot; by &quot;CTRL-X&quot;. Don't do this for &quot;^_&quot; to make</a>
-<a name="ln459">        // &quot;:help i_^_CTRL-D&quot; work.</a>
-<a name="ln460">        // Insert '-' before and after &quot;CTRL-X&quot; when applicable.</a>
-<a name="ln461">        if ((uint8_t)(*s) &lt; ' '</a>
-<a name="ln462">            || (*s == '^' &amp;&amp; s[1]</a>
-<a name="ln463">                &amp;&amp; (ASCII_ISALPHA(s[1]) || vim_strchr(&quot;?@[\\]^&quot;, (uint8_t)s[1]) != NULL))) {</a>
-<a name="ln464">          if (d &gt; IObuff &amp;&amp; d[-1] != '_' &amp;&amp; d[-1] != '\\') {</a>
-<a name="ln465">            *d++ = '_';                 // prepend a '_' to make x_CTRL-x</a>
-<a name="ln466">          }</a>
-<a name="ln467">          STRCPY(d, &quot;CTRL-&quot;);</a>
-<a name="ln468">          d += 5;</a>
-<a name="ln469">          if (*s &lt; ' ') {</a>
-<a name="ln470">            *d++ = (char)(*s + '@');</a>
-<a name="ln471">            if (d[-1] == '\\') {</a>
-<a name="ln472">              *d++ = '\\';              // double a backslash</a>
-<a name="ln473">            }</a>
-<a name="ln474">          } else {</a>
-<a name="ln475">            *d++ = *++s;</a>
-<a name="ln476">          }</a>
-<a name="ln477">          if (s[1] != NUL &amp;&amp; s[1] != '_') {</a>
-<a name="ln478">            *d++ = '_';                 // append a '_'</a>
-<a name="ln479">          }</a>
-<a name="ln480">          continue;</a>
-<a name="ln481">        } else if (*s == '^') {         // &quot;^&quot; or &quot;CTRL-^&quot; or &quot;^_&quot;</a>
-<a name="ln482">          *d++ = '\\';</a>
-<a name="ln483">        } else if (s[0] == '\\' &amp;&amp; s[1] != '\\' &amp;&amp; *arg == '/' &amp;&amp; s == arg + 1) {</a>
-<a name="ln484">          // Insert a backslash before a backslash after a slash, for search</a>
-<a name="ln485">          // pattern tags: &quot;/\|&quot; --&gt; &quot;/\\|&quot;.</a>
-<a name="ln486">          *d++ = '\\';</a>
-<a name="ln487">        }</a>
-<a name="ln488"> </a>
-<a name="ln489">        // &quot;CTRL-\_&quot; -&gt; &quot;CTRL-\\_&quot; to avoid the special meaning of &quot;\_&quot; in</a>
-<a name="ln490">        // &quot;CTRL-\_CTRL-N&quot;</a>
-<a name="ln491">        if (STRNICMP(s, &quot;CTRL-\\_&quot;, 7) == 0) {</a>
-<a name="ln492">          STRCPY(d, &quot;CTRL-\\\\&quot;);</a>
-<a name="ln493">          d += 7;</a>
-<a name="ln494">          s += 6;</a>
-<a name="ln495">        }</a>
-<a name="ln496"> </a>
-<a name="ln497">        *d++ = *s;</a>
+<a name="ln195">  do_tag(tag, DT_HELP, 1, false, true);</a>
+<a name="ln196"> </a>
+<a name="ln197">  // Delete the empty buffer if we're not using it.  Careful: autocommands</a>
+<a name="ln198">  // may have jumped to another window, check that the buffer is not in a</a>
+<a name="ln199">  // window.</a>
+<a name="ln200">  if (empty_fnum != 0 &amp;&amp; curbuf-&gt;b_fnum != empty_fnum) {</a>
+<a name="ln201">    buf = buflist_findnr(empty_fnum);</a>
+<a name="ln202">    if (buf != NULL &amp;&amp; buf-&gt;b_nwindows == 0) {</a>
+<a name="ln203">      wipe_buffer(buf, true);</a>
+<a name="ln204">    }</a>
+<a name="ln205">  }</a>
+<a name="ln206"> </a>
+<a name="ln207">  // keep the previous alternate file</a>
+<a name="ln208">  if (alt_fnum != 0 &amp;&amp; curwin-&gt;w_alt_fnum == empty_fnum</a>
+<a name="ln209">      &amp;&amp; (cmdmod.cmod_flags &amp; CMOD_KEEPALT) == 0) {</a>
+<a name="ln210">    curwin-&gt;w_alt_fnum = alt_fnum;</a>
+<a name="ln211">  }</a>
+<a name="ln212"> </a>
+<a name="ln213">erret:</a>
+<a name="ln214">  xfree(tag);</a>
+<a name="ln215">}</a>
+<a name="ln216"> </a>
+<a name="ln217">/// &quot;:helpclose&quot;: Close one help window</a>
+<a name="ln218">void ex_helpclose(exarg_T *eap)</a>
+<a name="ln219">{</a>
+<a name="ln220">  FOR_ALL_WINDOWS_IN_TAB(win, curtab) {</a>
+<a name="ln221">    if (bt_help(win-&gt;w_buffer)) {</a>
+<a name="ln222">      win_close(win, false, eap-&gt;forceit);</a>
+<a name="ln223">      return;</a>
+<a name="ln224">    }</a>
+<a name="ln225">  }</a>
+<a name="ln226">}</a>
+<a name="ln227"> </a>
+<a name="ln228">/// In an argument search for a language specifiers in the form &quot;@xx&quot;.</a>
+<a name="ln229">/// Changes the &quot;@&quot; to NUL if found, and returns a pointer to &quot;xx&quot;.</a>
+<a name="ln230">///</a>
+<a name="ln231">/// @return  NULL if not found.</a>
+<a name="ln232">char *check_help_lang(char *arg)</a>
+<a name="ln233">{</a>
+<a name="ln234">  int len = (int)strlen(arg);</a>
+<a name="ln235"> </a>
+<a name="ln236">  if (len &gt;= 3 &amp;&amp; arg[len - 3] == '@' &amp;&amp; ASCII_ISALPHA(arg[len - 2])</a>
+<a name="ln237">      &amp;&amp; ASCII_ISALPHA(arg[len - 1])) {</a>
+<a name="ln238">    arg[len - 3] = NUL;                 // remove the '@'</a>
+<a name="ln239">    return arg + len - 2;</a>
+<a name="ln240">  }</a>
+<a name="ln241">  return NULL;</a>
+<a name="ln242">}</a>
+<a name="ln243"> </a>
+<a name="ln244">/// Return a heuristic indicating how well the given string matches.  The</a>
+<a name="ln245">/// smaller the number, the better the match.  This is the order of priorities,</a>
+<a name="ln246">/// from best match to worst match:</a>
+<a name="ln247">///      - Match with least alphanumeric characters is better.</a>
+<a name="ln248">///      - Match with least total characters is better.</a>
+<a name="ln249">///      - Match towards the start is better.</a>
+<a name="ln250">///      - Match starting with &quot;+&quot; is worse (feature instead of command)</a>
+<a name="ln251">/// Assumption is made that the matched_string passed has already been found to</a>
+<a name="ln252">/// match some string for which help is requested.  webb.</a>
+<a name="ln253">///</a>
+<a name="ln254">/// @param offset      offset for match</a>
+<a name="ln255">/// @param wrong_case  no matching case</a>
+<a name="ln256">///</a>
+<a name="ln257">/// @return  a heuristic indicating how well the given string matches.</a>
+<a name="ln258">int help_heuristic(char *matched_string, int offset, int wrong_case)</a>
+<a name="ln259">  FUNC_ATTR_PURE</a>
+<a name="ln260">{</a>
+<a name="ln261">  int num_letters = 0;</a>
+<a name="ln262">  for (char *p = matched_string; *p; p++) {</a>
+<a name="ln263">    if (ASCII_ISALNUM(*p)) {</a>
+<a name="ln264">      num_letters++;</a>
+<a name="ln265">    }</a>
+<a name="ln266">  }</a>
+<a name="ln267"> </a>
+<a name="ln268">  // Multiply the number of letters by 100 to give it a much bigger</a>
+<a name="ln269">  // weighting than the number of characters.</a>
+<a name="ln270">  // If there only is a match while ignoring case, add 5000.</a>
+<a name="ln271">  // If the match starts in the middle of a word, add 10000 to put it</a>
+<a name="ln272">  // somewhere in the last half.</a>
+<a name="ln273">  // If the match is more than 2 chars from the start, multiply by 200 to</a>
+<a name="ln274">  // put it after matches at the start.</a>
+<a name="ln275">  if (offset &gt; 0</a>
+<a name="ln276">      &amp;&amp; ASCII_ISALNUM(matched_string[offset])</a>
+<a name="ln277">      &amp;&amp; ASCII_ISALNUM(matched_string[offset - 1])) {</a>
+<a name="ln278">    offset += 10000;</a>
+<a name="ln279">  } else if (offset &gt; 2) {</a>
+<a name="ln280">    offset *= 200;</a>
+<a name="ln281">  }</a>
+<a name="ln282">  if (wrong_case) {</a>
+<a name="ln283">    offset += 5000;</a>
+<a name="ln284">  }</a>
+<a name="ln285">  // Features are less interesting than the subjects themselves, but &quot;+&quot;</a>
+<a name="ln286">  // alone is not a feature.</a>
+<a name="ln287">  if (matched_string[0] == '+' &amp;&amp; matched_string[1] != NUL) {</a>
+<a name="ln288">    offset += 100;</a>
+<a name="ln289">  }</a>
+<a name="ln290">  return 100 * num_letters + (int)strlen(matched_string) + offset;</a>
+<a name="ln291">}</a>
+<a name="ln292"> </a>
+<a name="ln293">/// Compare functions for qsort() below, that checks the help heuristics number</a>
+<a name="ln294">/// that has been put after the tagname by find_tags().</a>
+<a name="ln295">static int help_compare(const void *s1, const void *s2)</a>
+<a name="ln296">{</a>
+<a name="ln297">  char *p1 = *(char **)s1 + strlen(*(char **)s1) + 1;</a>
+<a name="ln298">  char *p2 = *(char **)s2 + strlen(*(char **)s2) + 1;</a>
+<a name="ln299"> </a>
+<a name="ln300">  // Compare by help heuristic number first.</a>
+<a name="ln301">  int cmp = strcmp(p1, p2);</a>
+<a name="ln302">  if (cmp != 0) {</a>
+<a name="ln303">    return cmp;</a>
+<a name="ln304">  }</a>
+<a name="ln305"> </a>
+<a name="ln306">  // Compare by strings as tie-breaker when same heuristic number.</a>
+<a name="ln307">  return strcmp(*(char **)s1, *(char **)s2);</a>
+<a name="ln308">}</a>
+<a name="ln309"> </a>
+<a name="ln310">/// Find all help tags matching &quot;arg&quot;, sort them and return in matches[], with</a>
+<a name="ln311">/// the number of matches in num_matches.</a>
+<a name="ln312">/// The matches will be sorted with a &quot;best&quot; match algorithm.</a>
+<a name="ln313">/// When &quot;keep_lang&quot; is true try keeping the language of the current buffer.</a>
+<a name="ln314">int find_help_tags(const char *arg, int *num_matches, char ***matches, bool keep_lang)</a>
+<a name="ln315">{</a>
+<a name="ln316">  // Specific tags that either have a specific replacement or won't go</a>
+<a name="ln317">  // through the generic rules.</a>
+<a name="ln318">  static char *(except_tbl[][2]) = {</a>
+<a name="ln319">    { &quot;*&quot;,           &quot;star&quot; },</a>
+<a name="ln320">    { &quot;g*&quot;,          &quot;gstar&quot; },</a>
+<a name="ln321">    { &quot;[*&quot;,          &quot;[star&quot; },</a>
+<a name="ln322">    { &quot;]*&quot;,          &quot;]star&quot; },</a>
+<a name="ln323">    { &quot;:*&quot;,          &quot;:star&quot; },</a>
+<a name="ln324">    { &quot;/*&quot;,          &quot;/star&quot; },  // NOLINT</a>
+<a name="ln325">    { &quot;/\\*&quot;,        &quot;/\\\\star&quot; },</a>
+<a name="ln326">    { &quot;\&quot;*&quot;,         &quot;quotestar&quot; },</a>
+<a name="ln327">    { &quot;**&quot;,          &quot;starstar&quot; },</a>
+<a name="ln328">    { &quot;cpo-*&quot;,       &quot;cpo-star&quot; },</a>
+<a name="ln329">    { &quot;/\\(\\)&quot;,     &quot;/\\\\(\\\\)&quot; },</a>
+<a name="ln330">    { &quot;/\\%(\\)&quot;,    &quot;/\\\\%(\\\\)&quot; },</a>
+<a name="ln331">    { &quot;?&quot;,           &quot;?&quot; },</a>
+<a name="ln332">    { &quot;??&quot;,          &quot;??&quot; },</a>
+<a name="ln333">    { &quot;:?&quot;,          &quot;:?&quot; },</a>
+<a name="ln334">    { &quot;?&lt;CR&gt;&quot;,       &quot;?&lt;CR&gt;&quot; },</a>
+<a name="ln335">    { &quot;g?&quot;,          &quot;g?&quot; },</a>
+<a name="ln336">    { &quot;g?g?&quot;,        &quot;g?g?&quot; },</a>
+<a name="ln337">    { &quot;g??&quot;,         &quot;g??&quot; },</a>
+<a name="ln338">    { &quot;-?&quot;,          &quot;-?&quot; },</a>
+<a name="ln339">    { &quot;q?&quot;,          &quot;q?&quot; },</a>
+<a name="ln340">    { &quot;v_g?&quot;,        &quot;v_g?&quot; },</a>
+<a name="ln341">    { &quot;/\\?&quot;,        &quot;/\\\\?&quot; },</a>
+<a name="ln342">    { &quot;/\\z(\\)&quot;,    &quot;/\\\\z(\\\\)&quot; },</a>
+<a name="ln343">    { &quot;\\=&quot;,         &quot;\\\\=&quot; },</a>
+<a name="ln344">    { &quot;:s\\=&quot;,       &quot;:s\\\\=&quot; },</a>
+<a name="ln345">    { &quot;[count]&quot;,     &quot;\\[count]&quot; },</a>
+<a name="ln346">    { &quot;[quotex]&quot;,    &quot;\\[quotex]&quot; },</a>
+<a name="ln347">    { &quot;[range]&quot;,     &quot;\\[range]&quot; },</a>
+<a name="ln348">    { &quot;:[range]&quot;,    &quot;:\\[range]&quot; },</a>
+<a name="ln349">    { &quot;[pattern]&quot;,   &quot;\\[pattern]&quot; },</a>
+<a name="ln350">    { &quot;\\|&quot;,         &quot;\\\\bar&quot; },</a>
+<a name="ln351">    { &quot;\\%$&quot;,        &quot;/\\\\%\\$&quot; },</a>
+<a name="ln352">    { &quot;s/\\~&quot;,       &quot;s/\\\\\\~&quot; },</a>
+<a name="ln353">    { &quot;s/\\U&quot;,       &quot;s/\\\\U&quot; },</a>
+<a name="ln354">    { &quot;s/\\L&quot;,       &quot;s/\\\\L&quot; },</a>
+<a name="ln355">    { &quot;s/\\1&quot;,       &quot;s/\\\\1&quot; },</a>
+<a name="ln356">    { &quot;s/\\2&quot;,       &quot;s/\\\\2&quot; },</a>
+<a name="ln357">    { &quot;s/\\3&quot;,       &quot;s/\\\\3&quot; },</a>
+<a name="ln358">    { &quot;s/\\9&quot;,       &quot;s/\\\\9&quot; },</a>
+<a name="ln359">    { NULL, NULL }</a>
+<a name="ln360">  };</a>
+<a name="ln361"> </a>
+<a name="ln362">  static const char *(expr_table[]) = {</a>
+<a name="ln363">    &quot;!=?&quot;, &quot;!~?&quot;, &quot;&lt;=?&quot;, &quot;&lt;?&quot;, &quot;==?&quot;, &quot;=~?&quot;,</a>
+<a name="ln364">    &quot;&gt;=?&quot;, &quot;&gt;?&quot;, &quot;is?&quot;, &quot;isnot?&quot;</a>
+<a name="ln365">  };</a>
+<a name="ln366">  char *d = IObuff;       // assume IObuff is long enough!</a>
+<a name="ln367">  d[0] = NUL;</a>
+<a name="ln368"> </a>
+<a name="ln369">  if (STRNICMP(arg, &quot;expr-&quot;, 5) == 0) {</a>
+<a name="ln370">    // When the string starting with &quot;expr-&quot; and containing '?' and matches</a>
+<a name="ln371">    // the table, it is taken literally (but ~ is escaped).  Otherwise '?'</a>
+<a name="ln372">    // is recognized as a wildcard.</a>
+<a name="ln373">    for (int i = (int)ARRAY_SIZE(expr_table); --i &gt;= 0;) {</a>
+<a name="ln374">      if (strcmp(arg + 5, expr_table[i]) == 0) {</a>
+<a name="ln375">        for (int si = 0, di = 0;; si++) {</a>
+<a name="ln376">          if (arg[si] == '~') {</a>
+<a name="ln377">            d[di++] = '\\';</a>
+<a name="ln378">          }</a>
+<a name="ln379">          d[di++] = arg[si];</a>
+<a name="ln380">          if (arg[si] == NUL) {</a>
+<a name="ln381">            break;</a>
+<a name="ln382">          }</a>
+<a name="ln383">        }</a>
+<a name="ln384">        break;</a>
+<a name="ln385">      }</a>
+<a name="ln386">    }</a>
+<a name="ln387">  } else {</a>
+<a name="ln388">    // Recognize a few exceptions to the rule.  Some strings that contain</a>
+<a name="ln389">    // '*'are changed to &quot;star&quot;, otherwise '*' is recognized as a wildcard.</a>
+<a name="ln390">    for (int i = 0; except_tbl[i][0] != NULL; i++) {</a>
+<a name="ln391">      if (strcmp(arg, except_tbl[i][0]) == 0) {</a>
+<a name="ln392">        STRCPY(d, except_tbl[i][1]);</a>
+<a name="ln393">        break;</a>
+<a name="ln394">      }</a>
+<a name="ln395">    }</a>
+<a name="ln396">  }</a>
+<a name="ln397"> </a>
+<a name="ln398">  if (d[0] == NUL) {  // no match in table</a>
+<a name="ln399">    // Replace &quot;\S&quot; with &quot;/\\S&quot;, etc.  Otherwise every tag is matched.</a>
+<a name="ln400">    // Also replace &quot;\%^&quot; and &quot;\%(&quot;, they match every tag too.</a>
+<a name="ln401">    // Also &quot;\zs&quot;, &quot;\z1&quot;, etc.</a>
+<a name="ln402">    // Also &quot;\@&lt;&quot;, &quot;\@=&quot;, &quot;\@&lt;=&quot;, etc.</a>
+<a name="ln403">    // And also &quot;\_$&quot; and &quot;\_^&quot;.</a>
+<a name="ln404">    if (arg[0] == '\\'</a>
+<a name="ln405">        &amp;&amp; ((arg[1] != NUL &amp;&amp; arg[2] == NUL)</a>
+<a name="ln406">            || (vim_strchr(&quot;%_z@&quot;, (uint8_t)arg[1]) != NULL</a>
+<a name="ln407">                &amp;&amp; arg[2] != NUL))) {</a>
+<a name="ln408">      vim_snprintf(d, IOSIZE, &quot;/\\\\%s&quot;, arg + 1);</a>
+<a name="ln409">      // Check for &quot;/\\_$&quot;, should be &quot;/\\_\$&quot;</a>
+<a name="ln410">      if (d[3] == '_' &amp;&amp; d[4] == '$') {</a>
+<a name="ln411">        STRCPY(d + 4, &quot;\\$&quot;);</a>
+<a name="ln412">      }</a>
+<a name="ln413">    } else {</a>
+<a name="ln414">      // Replace:</a>
+<a name="ln415">      // &quot;[:...:]&quot; with &quot;\[:...:]&quot;</a>
+<a name="ln416">      // &quot;[++...]&quot; with &quot;\[++...]&quot;</a>
+<a name="ln417">      // &quot;\{&quot; with &quot;\\{&quot;               -- matching &quot;} \}&quot;</a>
+<a name="ln418">      if ((arg[0] == '[' &amp;&amp; (arg[1] == ':'</a>
+<a name="ln419">                             || (arg[1] == '+' &amp;&amp; arg[2] == '+')))</a>
+<a name="ln420">          || (arg[0] == '\\' &amp;&amp; arg[1] == '{')) {</a>
+<a name="ln421">        *d++ = '\\';</a>
+<a name="ln422">      }</a>
+<a name="ln423"> </a>
+<a name="ln424">      // If tag starts with &quot;('&quot;, skip the &quot;(&quot;. Fixes CTRL-] on ('option'.</a>
+<a name="ln425">      if (*arg == '(' &amp;&amp; arg[1] == '\'') {</a>
+<a name="ln426">        arg++;</a>
+<a name="ln427">      }</a>
+<a name="ln428">      for (const char *s = arg; *s; s++) {</a>
+<a name="ln429">        // Replace &quot;|&quot; with &quot;bar&quot; and '&quot;' with &quot;quote&quot; to match the name of</a>
+<a name="ln430">        // the tags for these commands.</a>
+<a name="ln431">        // Replace &quot;*&quot; with &quot;.*&quot; and &quot;?&quot; with &quot;.&quot; to match command line</a>
+<a name="ln432">        // completion.</a>
+<a name="ln433">        // Insert a backslash before '~', '$' and '.' to avoid their</a>
+<a name="ln434">        // special meaning.</a>
+<a name="ln435">        if (d - IObuff &gt; IOSIZE - 10) {           // getting too long!?</a>
+<a name="ln436">          break;</a>
+<a name="ln437">        }</a>
+<a name="ln438">        switch (*s) {</a>
+<a name="ln439">        case '|':</a>
+<a name="ln440">          STRCPY(d, &quot;bar&quot;);</a>
+<a name="ln441">          d += 3;</a>
+<a name="ln442">          continue;</a>
+<a name="ln443">        case '&quot;':</a>
+<a name="ln444">          STRCPY(d, &quot;quote&quot;);</a>
+<a name="ln445">          d += 5;</a>
+<a name="ln446">          continue;</a>
+<a name="ln447">        case '*':</a>
+<a name="ln448">          *d++ = '.';</a>
+<a name="ln449">          break;</a>
+<a name="ln450">        case '?':</a>
+<a name="ln451">          *d++ = '.';</a>
+<a name="ln452">          continue;</a>
+<a name="ln453">        case '$':</a>
+<a name="ln454">        case '.':</a>
+<a name="ln455">        case '~':</a>
+<a name="ln456">          *d++ = '\\';</a>
+<a name="ln457">          break;</a>
+<a name="ln458">        }</a>
+<a name="ln459"> </a>
+<a name="ln460">        // Replace &quot;^x&quot; by &quot;CTRL-X&quot;. Don't do this for &quot;^_&quot; to make</a>
+<a name="ln461">        // &quot;:help i_^_CTRL-D&quot; work.</a>
+<a name="ln462">        // Insert '-' before and after &quot;CTRL-X&quot; when applicable.</a>
+<a name="ln463">        if ((uint8_t)(*s) &lt; ' '</a>
+<a name="ln464">            || (*s == '^' &amp;&amp; s[1]</a>
+<a name="ln465">                &amp;&amp; (ASCII_ISALPHA(s[1]) || vim_strchr(&quot;?@[\\]^&quot;, (uint8_t)s[1]) != NULL))) {</a>
+<a name="ln466">          if (d &gt; IObuff &amp;&amp; d[-1] != '_' &amp;&amp; d[-1] != '\\') {</a>
+<a name="ln467">            *d++ = '_';                 // prepend a '_' to make x_CTRL-x</a>
+<a name="ln468">          }</a>
+<a name="ln469">          STRCPY(d, &quot;CTRL-&quot;);</a>
+<a name="ln470">          d += 5;</a>
+<a name="ln471">          if (*s &lt; ' ') {</a>
+<a name="ln472">            *d++ = (char)(*s + '@');</a>
+<a name="ln473">            if (d[-1] == '\\') {</a>
+<a name="ln474">              *d++ = '\\';              // double a backslash</a>
+<a name="ln475">            }</a>
+<a name="ln476">          } else {</a>
+<a name="ln477">            *d++ = *++s;</a>
+<a name="ln478">          }</a>
+<a name="ln479">          if (s[1] != NUL &amp;&amp; s[1] != '_') {</a>
+<a name="ln480">            *d++ = '_';                 // append a '_'</a>
+<a name="ln481">          }</a>
+<a name="ln482">          continue;</a>
+<a name="ln483">        } else if (*s == '^') {         // &quot;^&quot; or &quot;CTRL-^&quot; or &quot;^_&quot;</a>
+<a name="ln484">          *d++ = '\\';</a>
+<a name="ln485">        } else if (s[0] == '\\' &amp;&amp; s[1] != '\\' &amp;&amp; *arg == '/' &amp;&amp; s == arg + 1) {</a>
+<a name="ln486">          // Insert a backslash before a backslash after a slash, for search</a>
+<a name="ln487">          // pattern tags: &quot;/\|&quot; --&gt; &quot;/\\|&quot;.</a>
+<a name="ln488">          *d++ = '\\';</a>
+<a name="ln489">        }</a>
+<a name="ln490"> </a>
+<a name="ln491">        // &quot;CTRL-\_&quot; -&gt; &quot;CTRL-\\_&quot; to avoid the special meaning of &quot;\_&quot; in</a>
+<a name="ln492">        // &quot;CTRL-\_CTRL-N&quot;</a>
+<a name="ln493">        if (STRNICMP(s, &quot;CTRL-\\_&quot;, 7) == 0) {</a>
+<a name="ln494">          STRCPY(d, &quot;CTRL-\\\\&quot;);</a>
+<a name="ln495">          d += 7;</a>
+<a name="ln496">          s += 6;</a>
+<a name="ln497">        }</a>
 <a name="ln498"> </a>
-<a name="ln499">        // If tag contains &quot;({&quot; or &quot;([&quot;, tag terminates at the &quot;(&quot;.</a>
-<a name="ln500">        // This is for help on functions, e.g.: abs({expr}).</a>
-<a name="ln501">        if (*s == '(' &amp;&amp; (s[1] == '{' || s[1] == '[')) {</a>
-<a name="ln502">          break;</a>
-<a name="ln503">        }</a>
-<a name="ln504"> </a>
-<a name="ln505">        // If tag starts with ', toss everything after a second '. Fixes</a>
-<a name="ln506">        // CTRL-] on 'option'. (would include the trailing '.').</a>
-<a name="ln507">        if (*s == '\'' &amp;&amp; s &gt; arg &amp;&amp; *arg == '\'') {</a>
-<a name="ln508">          break;</a>
-<a name="ln509">        }</a>
-<a name="ln510">        // Also '{' and '}'. Fixes CTRL-] on '{address}'.</a>
-<a name="ln511">        if (*s == '}' &amp;&amp; s &gt; arg &amp;&amp; *arg == '{') {</a>
-<a name="ln512">          break;</a>
-<a name="ln513">        }</a>
-<a name="ln514">      }</a>
-<a name="ln515">      *d = NUL;</a>
-<a name="ln516"> </a>
-<a name="ln517">      if (*IObuff == '`') {</a>
-<a name="ln518">        if (d &gt; IObuff + 2 &amp;&amp; d[-1] == '`') {</a>
-<a name="ln519">          // remove the backticks from `command`</a>
-<a name="ln520">          memmove(IObuff, IObuff + 1, strlen(IObuff));</a>
-<a name="ln521">          d[-2] = NUL;</a>
-<a name="ln522">        } else if (d &gt; IObuff + 3 &amp;&amp; d[-2] == '`' &amp;&amp; d[-1] == ',') {</a>
-<a name="ln523">          // remove the backticks and comma from `command`,</a>
-<a name="ln524">          memmove(IObuff, IObuff + 1, strlen(IObuff));</a>
-<a name="ln525">          d[-3] = NUL;</a>
-<a name="ln526">        } else if (d &gt; IObuff + 4 &amp;&amp; d[-3] == '`'</a>
-<a name="ln527">                   &amp;&amp; d[-2] == '\\' &amp;&amp; d[-1] == '.') {</a>
-<a name="ln528">          // remove the backticks and dot from `command`\.</a>
-<a name="ln529">          memmove(IObuff, IObuff + 1, strlen(IObuff));</a>
-<a name="ln530">          d[-4] = NUL;</a>
-<a name="ln531">        }</a>
-<a name="ln532">      }</a>
-<a name="ln533">    }</a>
-<a name="ln534">  }</a>
-<a name="ln535"> </a>
-<a name="ln536">  *matches = NULL;</a>
-<a name="ln537">  *num_matches = 0;</a>
-<a name="ln538">  int flags = TAG_HELP | TAG_REGEXP | TAG_NAMES | TAG_VERBOSE | TAG_NO_TAGFUNC;</a>
-<a name="ln539">  if (keep_lang) {</a>
-<a name="ln540">    flags |= TAG_KEEP_LANG;</a>
-<a name="ln541">  }</a>
-<a name="ln542">  if (find_tags(IObuff, num_matches, matches, flags, MAXCOL, NULL) == OK</a>
-<a name="ln543">      &amp;&amp; *num_matches &gt; 0) {</a>
-<a name="ln544">    // Sort the matches found on the heuristic number that is after the</a>
-<a name="ln545">    // tag name.</a>
-<a name="ln546">    qsort((void *)(*matches), (size_t)(*num_matches),</a>
-<a name="ln547">          sizeof(char *), help_compare);</a>
-<a name="ln548">    // Delete more than TAG_MANY to reduce the size of the listing.</a>
-<a name="ln549">    while (*num_matches &gt; TAG_MANY) {</a>
-<a name="ln550">      xfree((*matches)[--*num_matches]);</a>
-<a name="ln551">    }</a>
-<a name="ln552">  }</a>
-<a name="ln553">  return OK;</a>
-<a name="ln554">}</a>
-<a name="ln555"> </a>
-<a name="ln556">/// Cleanup matches for help tags:</a>
-<a name="ln557">/// Remove &quot;@ab&quot; if the top of 'helplang' is &quot;ab&quot; and the language of the first</a>
-<a name="ln558">/// tag matches it.  Otherwise remove &quot;@en&quot; if &quot;en&quot; is the only language.</a>
-<a name="ln559">void cleanup_help_tags(int num_file, char **file)</a>
-<a name="ln560">{</a>
-<a name="ln561">  char buf[4];</a>
-<a name="ln562">  char *p = buf;</a>
-<a name="ln563"> </a>
-<a name="ln564">  if (p_hlg[0] != NUL &amp;&amp; (p_hlg[0] != 'e' || p_hlg[1] != 'n')) {</a>
-<a name="ln565">    *p++ = '@';</a>
-<a name="ln566">    *p++ = p_hlg[0];</a>
-<a name="ln567">    *p++ = p_hlg[1];</a>
-<a name="ln568">  }</a>
-<a name="ln569">  *p = NUL;</a>
-<a name="ln570"> </a>
-<a name="ln571">  for (int i = 0; i &lt; num_file; i++) {</a>
-<a name="ln572">    int len = (int)strlen(file[i]) - 3;</a>
-<a name="ln573">    if (len &lt;= 0) {</a>
-<a name="ln574">      continue;</a>
-<a name="ln575">    }</a>
-<a name="ln576">    if (strcmp(file[i] + len, &quot;@en&quot;) == 0) {</a>
-<a name="ln577">      // Sorting on priority means the same item in another language may</a>
-<a name="ln578">      // be anywhere.  Search all items for a match up to the &quot;@en&quot;.</a>
-<a name="ln579">      int j;</a>
-<a name="ln580">      for (j = 0; j &lt; num_file; j++) {</a>
-<a name="ln581">        if (j != i</a>
-<a name="ln582">            &amp;&amp; (int)strlen(file[j]) == len + 3</a>
-<a name="ln583">            &amp;&amp; strncmp(file[i], file[j], (size_t)len + 1) == 0) {</a>
-<a name="ln584">          break;</a>
-<a name="ln585">        }</a>
-<a name="ln586">      }</a>
-<a name="ln587">      if (j == num_file) {</a>
-<a name="ln588">        // item only exists with @en, remove it</a>
-<a name="ln589">        file[i][len] = NUL;</a>
-<a name="ln590">      }</a>
-<a name="ln591">    }</a>
-<a name="ln592">  }</a>
-<a name="ln593"> </a>
-<a name="ln594">  if (*buf != NUL) {</a>
-<a name="ln595">    for (int i = 0; i &lt; num_file; i++) {</a>
-<a name="ln596">      int len = (int)strlen(file[i]) - 3;</a>
-<a name="ln597">      if (len &lt;= 0) {</a>
-<a name="ln598">        continue;</a>
-<a name="ln599">      }</a>
-<a name="ln600">      if (strcmp(file[i] + len, buf) == 0) {</a>
-<a name="ln601">        // remove the default language</a>
-<a name="ln602">        file[i][len] = NUL;</a>
-<a name="ln603">      }</a>
-<a name="ln604">    }</a>
-<a name="ln605">  }</a>
-<a name="ln606">}</a>
-<a name="ln607"> </a>
-<a name="ln608">/// Called when starting to edit a buffer for a help file.</a>
-<a name="ln609">void prepare_help_buffer(void)</a>
-<a name="ln610">{</a>
-<a name="ln611">  curbuf-&gt;b_help = true;</a>
-<a name="ln612">  set_string_option_direct(&quot;buftype&quot;, -1, &quot;help&quot;, OPT_FREE|OPT_LOCAL, 0);</a>
-<a name="ln613"> </a>
-<a name="ln614">  // Always set these options after jumping to a help tag, because the</a>
-<a name="ln615">  // user may have an autocommand that gets in the way.</a>
-<a name="ln616">  // Accept all ASCII chars for keywords, except ' ', '*', '&quot;', '|', and</a>
-<a name="ln617">  // latin1 word characters (for translated help files).</a>
-<a name="ln618">  // Only set it when needed, buf_init_chartab() is some work.</a>
-<a name="ln619">  char *p = &quot;!-~,^*,^|,^\&quot;,192-255&quot;;</a>
-<a name="ln620">  if (strcmp(curbuf-&gt;b_p_isk, p) != 0) {</a>
-<a name="ln621">    set_string_option_direct(&quot;isk&quot;, -1, p, OPT_FREE|OPT_LOCAL, 0);</a>
-<a name="ln622">    check_buf_options(curbuf);</a>
-<a name="ln623">    (void)buf_init_chartab(curbuf, false);</a>
-<a name="ln624">  }</a>
-<a name="ln625"> </a>
-<a name="ln626">  // Don't use the global foldmethod.</a>
-<a name="ln627">  set_string_option_direct(&quot;fdm&quot;, -1, &quot;manual&quot;, OPT_FREE|OPT_LOCAL, 0);</a>
-<a name="ln628"> </a>
-<a name="ln629">  curbuf-&gt;b_p_ts = 8;         // 'tabstop' is 8.</a>
-<a name="ln630">  curwin-&gt;w_p_list = false;   // No list mode.</a>
-<a name="ln631"> </a>
-<a name="ln632">  curbuf-&gt;b_p_ma = false;     // Not modifiable.</a>
-<a name="ln633">  curbuf-&gt;b_p_bin = false;    // Reset 'bin' before reading file.</a>
-<a name="ln634">  curwin-&gt;w_p_nu = 0;         // No line numbers.</a>
-<a name="ln635">  curwin-&gt;w_p_rnu = 0;        // No relative line numbers.</a>
-<a name="ln636">  RESET_BINDING(curwin);      // No scroll or cursor binding.</a>
-<a name="ln637">  curwin-&gt;w_p_arab = false;   // No arabic mode.</a>
-<a name="ln638">  curwin-&gt;w_p_rl = false;     // Help window is left-to-right.</a>
-<a name="ln639">  curwin-&gt;w_p_fen = false;    // No folding in the help window.</a>
-<a name="ln640">  curwin-&gt;w_p_diff = false;   // No 'diff'.</a>
-<a name="ln641">  curwin-&gt;w_p_spell = false;  // No spell checking.</a>
-<a name="ln642"> </a>
-<a name="ln643">  set_buflisted(false);</a>
-<a name="ln644">}</a>
-<a name="ln645"> </a>
-<a name="ln646">/// After reading a help file: May cleanup a help buffer when syntax</a>
-<a name="ln647">/// highlighting is not used.</a>
-<a name="ln648">void fix_help_buffer(void)</a>
-<a name="ln649">{</a>
-<a name="ln650">  linenr_T lnum;</a>
-<a name="ln651">  char *line;</a>
-<a name="ln652"> </a>
-<a name="ln653">  // Set filetype to &quot;help&quot;.</a>
-<a name="ln654">  if (strcmp(curbuf-&gt;b_p_ft, &quot;help&quot;) != 0) {</a>
-<a name="ln655">    curbuf-&gt;b_ro_locked++;</a>
-<a name="ln656">    set_option_value_give_err(&quot;ft&quot;, STATIC_CSTR_AS_OPTVAL(&quot;help&quot;), OPT_LOCAL);</a>
-<a name="ln657">    curbuf-&gt;b_ro_locked--;</a>
-<a name="ln658">  }</a>
-<a name="ln659"> </a>
-<a name="ln660">  if (!syntax_present(curwin)) {</a>
-<a name="ln661">    bool in_example = false;</a>
-<a name="ln662">    for (lnum = 1; lnum &lt;= curbuf-&gt;b_ml.ml_line_count; lnum++) {</a>
-<a name="ln663">      line = ml_get_buf(curbuf, lnum);</a>
-<a name="ln664">      const size_t len = strlen(line);</a>
-<a name="ln665">      if (in_example &amp;&amp; len &gt; 0 &amp;&amp; !ascii_iswhite(line[0])) {</a>
-<a name="ln666">        // End of example: non-white or '&lt;' in first column.</a>
-<a name="ln667">        if (line[0] == '&lt;') {</a>
-<a name="ln668">          // blank-out a '&lt;' in the first column</a>
-<a name="ln669">          line = ml_get_buf_mut(curbuf, lnum);</a>
-<a name="ln670">          line[0] = ' ';</a>
-<a name="ln671">        }</a>
-<a name="ln672">        in_example = false;</a>
-<a name="ln673">      }</a>
-<a name="ln674">      if (!in_example &amp;&amp; len &gt; 0) {</a>
-<a name="ln675">        if (line[len - 1] == '&gt;' &amp;&amp; (len == 1 || line[len - 2] == ' ')) {</a>
-<a name="ln676">          // blank-out a '&gt;' in the last column (start of example)</a>
-<a name="ln677">          line = ml_get_buf_mut(curbuf, lnum);</a>
-<a name="ln678">          line[len - 1] = ' ';</a>
-<a name="ln679">          in_example = true;</a>
-<a name="ln680">        } else if (line[len - 1] == '~') {</a>
-<a name="ln681">          // blank-out a '~' at the end of line (header marker)</a>
-<a name="ln682">          line = ml_get_buf_mut(curbuf, lnum);</a>
-<a name="ln683">          line[len - 1] = ' ';</a>
-<a name="ln684">        }</a>
-<a name="ln685">      }</a>
-<a name="ln686">    }</a>
-<a name="ln687">  }</a>
-<a name="ln688"> </a>
-<a name="ln689">  // In the &quot;help.txt&quot; and &quot;help.abx&quot; file, add the locally added help</a>
-<a name="ln690">  // files.  This uses the very first line in the help file.</a>
-<a name="ln691">  char *const fname = path_tail(curbuf-&gt;b_fname);</a>
-<a name="ln692">  if (path_fnamecmp(fname, &quot;help.txt&quot;) == 0</a>
-<a name="ln693">      || (path_fnamencmp(fname, &quot;help.&quot;, 5) == 0</a>
-<a name="ln694">          &amp;&amp; ASCII_ISALPHA(fname[5])</a>
-<a name="ln695">          &amp;&amp; ASCII_ISALPHA(fname[6])</a>
-<a name="ln696">          &amp;&amp; TOLOWER_ASC(fname[7]) == 'x'</a>
-<a name="ln697">          &amp;&amp; fname[8] == NUL)) {</a>
-<a name="ln698">    for (lnum = 1; lnum &lt; curbuf-&gt;b_ml.ml_line_count; lnum++) {</a>
-<a name="ln699">      line = ml_get_buf(curbuf, lnum);</a>
-<a name="ln700">      if (strstr(line, &quot;*local-additions*&quot;) == NULL) {</a>
-<a name="ln701">        continue;</a>
-<a name="ln702">      }</a>
-<a name="ln703"> </a>
-<a name="ln704">      int lnum_start = lnum;</a>
+<a name="ln499">        *d++ = *s;</a>
+<a name="ln500"> </a>
+<a name="ln501">        // If tag contains &quot;({&quot; or &quot;([&quot;, tag terminates at the &quot;(&quot;.</a>
+<a name="ln502">        // This is for help on functions, e.g.: abs({expr}).</a>
+<a name="ln503">        if (*s == '(' &amp;&amp; (s[1] == '{' || s[1] == '[')) {</a>
+<a name="ln504">          break;</a>
+<a name="ln505">        }</a>
+<a name="ln506"> </a>
+<a name="ln507">        // If tag starts with ', toss everything after a second '. Fixes</a>
+<a name="ln508">        // CTRL-] on 'option'. (would include the trailing '.').</a>
+<a name="ln509">        if (*s == '\'' &amp;&amp; s &gt; arg &amp;&amp; *arg == '\'') {</a>
+<a name="ln510">          break;</a>
+<a name="ln511">        }</a>
+<a name="ln512">        // Also '{' and '}'. Fixes CTRL-] on '{address}'.</a>
+<a name="ln513">        if (*s == '}' &amp;&amp; s &gt; arg &amp;&amp; *arg == '{') {</a>
+<a name="ln514">          break;</a>
+<a name="ln515">        }</a>
+<a name="ln516">      }</a>
+<a name="ln517">      *d = NUL;</a>
+<a name="ln518"> </a>
+<a name="ln519">      if (*IObuff == '`') {</a>
+<a name="ln520">        if (d &gt; IObuff + 2 &amp;&amp; d[-1] == '`') {</a>
+<a name="ln521">          // remove the backticks from `command`</a>
+<a name="ln522">          memmove(IObuff, IObuff + 1, strlen(IObuff));</a>
+<a name="ln523">          d[-2] = NUL;</a>
+<a name="ln524">        } else if (d &gt; IObuff + 3 &amp;&amp; d[-2] == '`' &amp;&amp; d[-1] == ',') {</a>
+<a name="ln525">          // remove the backticks and comma from `command`,</a>
+<a name="ln526">          memmove(IObuff, IObuff + 1, strlen(IObuff));</a>
+<a name="ln527">          d[-3] = NUL;</a>
+<a name="ln528">        } else if (d &gt; IObuff + 4 &amp;&amp; d[-3] == '`'</a>
+<a name="ln529">                   &amp;&amp; d[-2] == '\\' &amp;&amp; d[-1] == '.') {</a>
+<a name="ln530">          // remove the backticks and dot from `command`\.</a>
+<a name="ln531">          memmove(IObuff, IObuff + 1, strlen(IObuff));</a>
+<a name="ln532">          d[-4] = NUL;</a>
+<a name="ln533">        }</a>
+<a name="ln534">      }</a>
+<a name="ln535">    }</a>
+<a name="ln536">  }</a>
+<a name="ln537"> </a>
+<a name="ln538">  *matches = NULL;</a>
+<a name="ln539">  *num_matches = 0;</a>
+<a name="ln540">  int flags = TAG_HELP | TAG_REGEXP | TAG_NAMES | TAG_VERBOSE | TAG_NO_TAGFUNC;</a>
+<a name="ln541">  if (keep_lang) {</a>
+<a name="ln542">    flags |= TAG_KEEP_LANG;</a>
+<a name="ln543">  }</a>
+<a name="ln544">  if (find_tags(IObuff, num_matches, matches, flags, MAXCOL, NULL) == OK</a>
+<a name="ln545">      &amp;&amp; *num_matches &gt; 0) {</a>
+<a name="ln546">    // Sort the matches found on the heuristic number that is after the</a>
+<a name="ln547">    // tag name.</a>
+<a name="ln548">    qsort((void *)(*matches), (size_t)(*num_matches),</a>
+<a name="ln549">          sizeof(char *), help_compare);</a>
+<a name="ln550">    // Delete more than TAG_MANY to reduce the size of the listing.</a>
+<a name="ln551">    while (*num_matches &gt; TAG_MANY) {</a>
+<a name="ln552">      xfree((*matches)[--*num_matches]);</a>
+<a name="ln553">    }</a>
+<a name="ln554">  }</a>
+<a name="ln555">  return OK;</a>
+<a name="ln556">}</a>
+<a name="ln557"> </a>
+<a name="ln558">/// Cleanup matches for help tags:</a>
+<a name="ln559">/// Remove &quot;@ab&quot; if the top of 'helplang' is &quot;ab&quot; and the language of the first</a>
+<a name="ln560">/// tag matches it.  Otherwise remove &quot;@en&quot; if &quot;en&quot; is the only language.</a>
+<a name="ln561">void cleanup_help_tags(int num_file, char **file)</a>
+<a name="ln562">{</a>
+<a name="ln563">  char buf[4];</a>
+<a name="ln564">  char *p = buf;</a>
+<a name="ln565"> </a>
+<a name="ln566">  if (p_hlg[0] != NUL &amp;&amp; (p_hlg[0] != 'e' || p_hlg[1] != 'n')) {</a>
+<a name="ln567">    *p++ = '@';</a>
+<a name="ln568">    *p++ = p_hlg[0];</a>
+<a name="ln569">    *p++ = p_hlg[1];</a>
+<a name="ln570">  }</a>
+<a name="ln571">  *p = NUL;</a>
+<a name="ln572"> </a>
+<a name="ln573">  for (int i = 0; i &lt; num_file; i++) {</a>
+<a name="ln574">    int len = (int)strlen(file[i]) - 3;</a>
+<a name="ln575">    if (len &lt;= 0) {</a>
+<a name="ln576">      continue;</a>
+<a name="ln577">    }</a>
+<a name="ln578">    if (strcmp(file[i] + len, &quot;@en&quot;) == 0) {</a>
+<a name="ln579">      // Sorting on priority means the same item in another language may</a>
+<a name="ln580">      // be anywhere.  Search all items for a match up to the &quot;@en&quot;.</a>
+<a name="ln581">      int j;</a>
+<a name="ln582">      for (j = 0; j &lt; num_file; j++) {</a>
+<a name="ln583">        if (j != i</a>
+<a name="ln584">            &amp;&amp; (int)strlen(file[j]) == len + 3</a>
+<a name="ln585">            &amp;&amp; strncmp(file[i], file[j], (size_t)len + 1) == 0) {</a>
+<a name="ln586">          break;</a>
+<a name="ln587">        }</a>
+<a name="ln588">      }</a>
+<a name="ln589">      if (j == num_file) {</a>
+<a name="ln590">        // item only exists with @en, remove it</a>
+<a name="ln591">        file[i][len] = NUL;</a>
+<a name="ln592">      }</a>
+<a name="ln593">    }</a>
+<a name="ln594">  }</a>
+<a name="ln595"> </a>
+<a name="ln596">  if (*buf != NUL) {</a>
+<a name="ln597">    for (int i = 0; i &lt; num_file; i++) {</a>
+<a name="ln598">      int len = (int)strlen(file[i]) - 3;</a>
+<a name="ln599">      if (len &lt;= 0) {</a>
+<a name="ln600">        continue;</a>
+<a name="ln601">      }</a>
+<a name="ln602">      if (strcmp(file[i] + len, buf) == 0) {</a>
+<a name="ln603">        // remove the default language</a>
+<a name="ln604">        file[i][len] = NUL;</a>
+<a name="ln605">      }</a>
+<a name="ln606">    }</a>
+<a name="ln607">  }</a>
+<a name="ln608">}</a>
+<a name="ln609"> </a>
+<a name="ln610">/// Called when starting to edit a buffer for a help file.</a>
+<a name="ln611">void prepare_help_buffer(void)</a>
+<a name="ln612">{</a>
+<a name="ln613">  curbuf-&gt;b_help = true;</a>
+<a name="ln614">  set_string_option_direct(&quot;buftype&quot;, -1, &quot;help&quot;, OPT_FREE|OPT_LOCAL, 0);</a>
+<a name="ln615"> </a>
+<a name="ln616">  // Always set these options after jumping to a help tag, because the</a>
+<a name="ln617">  // user may have an autocommand that gets in the way.</a>
+<a name="ln618">  // Accept all ASCII chars for keywords, except ' ', '*', '&quot;', '|', and</a>
+<a name="ln619">  // latin1 word characters (for translated help files).</a>
+<a name="ln620">  // Only set it when needed, buf_init_chartab() is some work.</a>
+<a name="ln621">  char *p = &quot;!-~,^*,^|,^\&quot;,192-255&quot;;</a>
+<a name="ln622">  if (strcmp(curbuf-&gt;b_p_isk, p) != 0) {</a>
+<a name="ln623">    set_string_option_direct(&quot;isk&quot;, -1, p, OPT_FREE|OPT_LOCAL, 0);</a>
+<a name="ln624">    check_buf_options(curbuf);</a>
+<a name="ln625">    (void)buf_init_chartab(curbuf, false);</a>
+<a name="ln626">  }</a>
+<a name="ln627"> </a>
+<a name="ln628">  // Don't use the global foldmethod.</a>
+<a name="ln629">  set_string_option_direct(&quot;fdm&quot;, -1, &quot;manual&quot;, OPT_FREE|OPT_LOCAL, 0);</a>
+<a name="ln630"> </a>
+<a name="ln631">  curbuf-&gt;b_p_ts = 8;         // 'tabstop' is 8.</a>
+<a name="ln632">  curwin-&gt;w_p_list = false;   // No list mode.</a>
+<a name="ln633"> </a>
+<a name="ln634">  curbuf-&gt;b_p_ma = false;     // Not modifiable.</a>
+<a name="ln635">  curbuf-&gt;b_p_bin = false;    // Reset 'bin' before reading file.</a>
+<a name="ln636">  curwin-&gt;w_p_nu = 0;         // No line numbers.</a>
+<a name="ln637">  curwin-&gt;w_p_rnu = 0;        // No relative line numbers.</a>
+<a name="ln638">  RESET_BINDING(curwin);      // No scroll or cursor binding.</a>
+<a name="ln639">  curwin-&gt;w_p_arab = false;   // No arabic mode.</a>
+<a name="ln640">  curwin-&gt;w_p_rl = false;     // Help window is left-to-right.</a>
+<a name="ln641">  curwin-&gt;w_p_fen = false;    // No folding in the help window.</a>
+<a name="ln642">  curwin-&gt;w_p_diff = false;   // No 'diff'.</a>
+<a name="ln643">  curwin-&gt;w_p_spell = false;  // No spell checking.</a>
+<a name="ln644"> </a>
+<a name="ln645">  set_buflisted(false);</a>
+<a name="ln646">}</a>
+<a name="ln647"> </a>
+<a name="ln648">/// After reading a help file: May cleanup a help buffer when syntax</a>
+<a name="ln649">/// highlighting is not used.</a>
+<a name="ln650">void fix_help_buffer(void)</a>
+<a name="ln651">{</a>
+<a name="ln652">  linenr_T lnum;</a>
+<a name="ln653">  char *line;</a>
+<a name="ln654"> </a>
+<a name="ln655">  // Set filetype to &quot;help&quot;.</a>
+<a name="ln656">  if (strcmp(curbuf-&gt;b_p_ft, &quot;help&quot;) != 0) {</a>
+<a name="ln657">    curbuf-&gt;b_ro_locked++;</a>
+<a name="ln658">    set_option_value_give_err(&quot;ft&quot;, STATIC_CSTR_AS_OPTVAL(&quot;help&quot;), OPT_LOCAL);</a>
+<a name="ln659">    curbuf-&gt;b_ro_locked--;</a>
+<a name="ln660">  }</a>
+<a name="ln661"> </a>
+<a name="ln662">  if (!syntax_present(curwin)) {</a>
+<a name="ln663">    bool in_example = false;</a>
+<a name="ln664">    for (lnum = 1; lnum &lt;= curbuf-&gt;b_ml.ml_line_count; lnum++) {</a>
+<a name="ln665">      line = ml_get_buf(curbuf, lnum);</a>
+<a name="ln666">      const size_t len = strlen(line);</a>
+<a name="ln667">      if (in_example &amp;&amp; len &gt; 0 &amp;&amp; !ascii_iswhite(line[0])) {</a>
+<a name="ln668">        // End of example: non-white or '&lt;' in first column.</a>
+<a name="ln669">        if (line[0] == '&lt;') {</a>
+<a name="ln670">          // blank-out a '&lt;' in the first column</a>
+<a name="ln671">          line = ml_get_buf_mut(curbuf, lnum);</a>
+<a name="ln672">          line[0] = ' ';</a>
+<a name="ln673">        }</a>
+<a name="ln674">        in_example = false;</a>
+<a name="ln675">      }</a>
+<a name="ln676">      if (!in_example &amp;&amp; len &gt; 0) {</a>
+<a name="ln677">        if (line[len - 1] == '&gt;' &amp;&amp; (len == 1 || line[len - 2] == ' ')) {</a>
+<a name="ln678">          // blank-out a '&gt;' in the last column (start of example)</a>
+<a name="ln679">          line = ml_get_buf_mut(curbuf, lnum);</a>
+<a name="ln680">          line[len - 1] = ' ';</a>
+<a name="ln681">          in_example = true;</a>
+<a name="ln682">        } else if (line[len - 1] == '~') {</a>
+<a name="ln683">          // blank-out a '~' at the end of line (header marker)</a>
+<a name="ln684">          line = ml_get_buf_mut(curbuf, lnum);</a>
+<a name="ln685">          line[len - 1] = ' ';</a>
+<a name="ln686">        }</a>
+<a name="ln687">      }</a>
+<a name="ln688">    }</a>
+<a name="ln689">  }</a>
+<a name="ln690"> </a>
+<a name="ln691">  // In the &quot;help.txt&quot; and &quot;help.abx&quot; file, add the locally added help</a>
+<a name="ln692">  // files.  This uses the very first line in the help file.</a>
+<a name="ln693">  char *const fname = path_tail(curbuf-&gt;b_fname);</a>
+<a name="ln694">  if (path_fnamecmp(fname, &quot;help.txt&quot;) == 0</a>
+<a name="ln695">      || (path_fnamencmp(fname, &quot;help.&quot;, 5) == 0</a>
+<a name="ln696">          &amp;&amp; ASCII_ISALPHA(fname[5])</a>
+<a name="ln697">          &amp;&amp; ASCII_ISALPHA(fname[6])</a>
+<a name="ln698">          &amp;&amp; TOLOWER_ASC(fname[7]) == 'x'</a>
+<a name="ln699">          &amp;&amp; fname[8] == NUL)) {</a>
+<a name="ln700">    for (lnum = 1; lnum &lt; curbuf-&gt;b_ml.ml_line_count; lnum++) {</a>
+<a name="ln701">      line = ml_get_buf(curbuf, lnum);</a>
+<a name="ln702">      if (strstr(line, &quot;*local-additions*&quot;) == NULL) {</a>
+<a name="ln703">        continue;</a>
+<a name="ln704">      }</a>
 <a name="ln705"> </a>
-<a name="ln706">      // Go through all directories in 'runtimepath', skipping</a>
-<a name="ln707">      // $VIMRUNTIME.</a>
-<a name="ln708">      char *p = p_rtp;</a>
-<a name="ln709">      while (*p != NUL) {</a>
-<a name="ln710">        copy_option_part(&amp;p, NameBuff, MAXPATHL, &quot;,&quot;);</a>
-<a name="ln711">        char *const rt = vim_getenv(&quot;VIMRUNTIME&quot;);</a>
-<a name="ln712">        if (rt != NULL</a>
-<a name="ln713">            &amp;&amp; path_full_compare(rt, NameBuff, false, true) != kEqualFiles) {</a>
-<a name="ln714">          int fcount;</a>
-<a name="ln715">          char **fnames;</a>
-<a name="ln716">          vimconv_T vc;</a>
-<a name="ln717"> </a>
-<a name="ln718">          // Find all &quot;doc/ *.txt&quot; files in this directory.</a>
-<a name="ln719">          if (!add_pathsep(NameBuff)</a>
-<a name="ln720">              || xstrlcat(NameBuff, &quot;doc/*.??[tx]&quot;,  // NOLINT</a>
-<a name="ln721">                          sizeof(NameBuff)) &gt;= MAXPATHL) {</a>
-<a name="ln722">            emsg(_(e_fnametoolong));</a>
-<a name="ln723">            continue;</a>
-<a name="ln724">          }</a>
-<a name="ln725"> </a>
-<a name="ln726">          // Note: We cannot just do `&amp;NameBuff` because it is a statically sized array</a>
-<a name="ln727">          //       so `NameBuff == &amp;NameBuff` according to C semantics.</a>
-<a name="ln728">          char *buff_list[1] = { NameBuff };</a>
-<a name="ln729">          if (gen_expand_wildcards(1, buff_list, &amp;fcount,</a>
-<a name="ln730">                                   &amp;fnames, EW_FILE|EW_SILENT) == OK</a>
-<a name="ln731">              &amp;&amp; fcount &gt; 0) {</a>
-<a name="ln732">            char *s;</a>
-<a name="ln733">            char *cp;</a>
-<a name="ln734">            // If foo.abx is found use it instead of foo.txt in</a>
-<a name="ln735">            // the same directory.</a>
-<a name="ln736">            for (int i1 = 0; i1 &lt; fcount; i1++) {</a>
-<a name="ln737">              const char *const f1 = fnames[i1];</a>
-<a name="ln738">              const char *const t1 = path_tail(f1);</a>
-<a name="ln739">              const char *const e1 = strrchr(t1, '.');</a>
-<a name="ln740">              if (path_fnamecmp(e1, &quot;.txt&quot;) != 0</a>
-<a name="ln741">                  &amp;&amp; path_fnamecmp(e1, fname + 4) != 0) {</a>
-<a name="ln742">                // Not .txt and not .abx, remove it.</a>
-<a name="ln743">                XFREE_CLEAR(fnames[i1]);</a>
-<a name="ln744">                continue;</a>
-<a name="ln745">              }</a>
-<a name="ln746"> </a>
-<a name="ln747">              for (int i2 = i1 + 1; i2 &lt; fcount; i2++) {</a>
-<a name="ln748">                const char *const f2 = fnames[i2];</a>
-<a name="ln749">                if (f2 == NULL) {</a>
-<a name="ln750">                  continue;</a>
-<a name="ln751">                }</a>
-<a name="ln752">                const char *const t2 = path_tail(f2);</a>
-<a name="ln753">                const char *const e2 = strrchr(t2, '.');</a>
-<a name="ln754">                if (e1 == NULL || e2 == NULL) {</a>
-<a name="ln755">                  continue;</a>
-<a name="ln756">                }</a>
-<a name="ln757">                if (e1 - f1 != e2 - f2</a>
-<a name="ln758">                    || path_fnamencmp(f1, f2, (size_t)(e1 - f1)) != 0) {</a>
-<a name="ln759">                  continue;</a>
-<a name="ln760">                }</a>
-<a name="ln761">                if (path_fnamecmp(e1, &quot;.txt&quot;) == 0</a>
-<a name="ln762">                    &amp;&amp; path_fnamecmp(e2, fname + 4) == 0) {</a>
-<a name="ln763">                  // use .abx instead of .txt</a>
-<a name="ln764">                  XFREE_CLEAR(fnames[i1]);</a>
-<a name="ln765">                }</a>
-<a name="ln766">              }</a>
-<a name="ln767">            }</a>
-<a name="ln768">            for (int fi = 0; fi &lt; fcount; fi++) {</a>
-<a name="ln769">              if (fnames[fi] == NULL) {</a>
-<a name="ln770">                continue;</a>
-<a name="ln771">              }</a>
-<a name="ln772"> </a>
-<a name="ln773">              FILE *const fd = os_fopen(fnames[fi], &quot;r&quot;);</a>
-<a name="ln774">              if (fd == NULL) {</a>
-<a name="ln775">                continue;</a>
-<a name="ln776">              }</a>
-<a name="ln777">              vim_fgets(IObuff, IOSIZE, fd);</a>
-<a name="ln778">              if (IObuff[0] == '*'</a>
-<a name="ln779">                  &amp;&amp; (s = vim_strchr(IObuff + 1, '*'))</a>
-<a name="ln780">                  != NULL) {</a>
-<a name="ln781">                TriState this_utf = kNone;</a>
-<a name="ln782">                // Change tag definition to a</a>
-<a name="ln783">                // reference and remove &lt;CR&gt;/&lt;NL&gt;.</a>
-<a name="ln784">                IObuff[0] = '|';</a>
-<a name="ln785">                *s = '|';</a>
-<a name="ln786">                while (*s != NUL) {</a>
-<a name="ln787">                  if (*s == '\r' || *s == '\n') {</a>
-<a name="ln788">                    *s = NUL;</a>
-<a name="ln789">                  }</a>
-<a name="ln790">                  // The text is utf-8 when a byte</a>
-<a name="ln791">                  // above 127 is found and no</a>
-<a name="ln792">                  // illegal byte sequence is found.</a>
-<a name="ln793">                  if ((uint8_t)(*s) &gt;= 0x80 &amp;&amp; this_utf != kFalse) {</a>
-<a name="ln794">                    this_utf = kTrue;</a>
-<a name="ln795">                    const int l = utf_ptr2len(s);</a>
-<a name="ln796">                    if (l == 1) {</a>
-<a name="ln797">                      this_utf = kFalse;</a>
-<a name="ln798">                    }</a>
-<a name="ln799">                    s += l - 1;</a>
-<a name="ln800">                  }</a>
-<a name="ln801">                  s++;</a>
-<a name="ln802">                }</a>
-<a name="ln803">                // The help file is latin1 or utf-8;</a>
-<a name="ln804">                // conversion to the current</a>
-<a name="ln805">                // 'encoding' may be required.</a>
-<a name="ln806">                vc.vc_type = CONV_NONE;</a>
-<a name="ln807">                convert_setup(&amp;vc,</a>
-<a name="ln808">                              (this_utf == kTrue ? &quot;utf-8&quot; : &quot;latin1&quot;),</a>
-<a name="ln809">                              p_enc);</a>
-<a name="ln810">                if (vc.vc_type == CONV_NONE) {</a>
-<a name="ln811">                  // No conversion needed.</a>
-<a name="ln812">                  cp = IObuff;</a>
-<a name="ln813">                } else {</a>
-<a name="ln814">                  // Do the conversion.  If it fails</a>
-<a name="ln815">                  // use the unconverted text.</a>
-<a name="ln816">                  cp = string_convert(&amp;vc, IObuff, NULL);</a>
-<a name="ln817">                  if (cp == NULL) {</a>
-<a name="ln818">                    cp = IObuff;</a>
-<a name="ln819">                  }</a>
-<a name="ln820">                }</a>
-<a name="ln821">                convert_setup(&amp;vc, NULL, NULL);</a>
-<a name="ln822"> </a>
-<a name="ln823">                ml_append(lnum, cp, (colnr_T)0, false);</a>
-<a name="ln824">                if (cp != IObuff) {</a>
-<a name="ln825">                  xfree(cp);</a>
-<a name="ln826">                }</a>
-<a name="ln827">                lnum++;</a>
-<a name="ln828">              }</a>
-<a name="ln829">              fclose(fd);</a>
-<a name="ln830">            }</a>
-<a name="ln831">            FreeWild(fcount, fnames);</a>
-<a name="ln832">          }</a>
-<a name="ln833">        }</a>
-<a name="ln834">        xfree(rt);</a>
-<a name="ln835">      }</a>
-<a name="ln836">      linenr_T appended = lnum - lnum_start;</a>
-<a name="ln837">      if (appended) {</a>
-<a name="ln838">        mark_adjust(lnum_start + 1, (linenr_T)MAXLNUM, appended, 0L, kExtmarkUndo);</a>
-<a name="ln839">        buf_redraw_changed_lines_later(curbuf, lnum_start + 1, lnum_start + 1, appended);</a>
-<a name="ln840">      }</a>
-<a name="ln841">      break;</a>
-<a name="ln842">    }</a>
-<a name="ln843">  }</a>
-<a name="ln844">}</a>
-<a name="ln845"> </a>
-<a name="ln846">/// &quot;:exusage&quot;</a>
-<a name="ln847">void ex_exusage(exarg_T *eap)</a>
-<a name="ln848">{</a>
-<a name="ln849">  do_cmdline_cmd(&quot;help ex-cmd-index&quot;);</a>
-<a name="ln850">}</a>
-<a name="ln851"> </a>
-<a name="ln852">/// &quot;:viusage&quot;</a>
-<a name="ln853">void ex_viusage(exarg_T *eap)</a>
-<a name="ln854">{</a>
-<a name="ln855">  do_cmdline_cmd(&quot;help normal-index&quot;);</a>
-<a name="ln856">}</a>
-<a name="ln857"> </a>
-<a name="ln858">/// Generate tags in one help directory</a>
-<a name="ln859">///</a>
-<a name="ln860">/// @param dir  Path to the doc directory</a>
-<a name="ln861">/// @param ext  Suffix of the help files (&quot;.txt&quot;, &quot;.itx&quot;, &quot;.frx&quot;, etc.)</a>
-<a name="ln862">/// @param tagname  Name of the tags file (&quot;tags&quot; for English, &quot;tags-fr&quot; for</a>
-<a name="ln863">///                 French)</a>
-<a name="ln864">/// @param add_help_tags  Whether to add the &quot;help-tags&quot; tag</a>
-<a name="ln865">/// @param ignore_writeerr  ignore write error</a>
-<a name="ln866">static void helptags_one(char *dir, const char *ext, const char *tagfname, bool add_help_tags,</a>
-<a name="ln867">                         bool ignore_writeerr)</a>
-<a name="ln868">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln869">{</a>
-<a name="ln870">  garray_T ga;</a>
-<a name="ln871">  int filecount;</a>
-<a name="ln872">  char **files;</a>
-<a name="ln873">  char *p1, *p2;</a>
-<a name="ln874">  char *s;</a>
-<a name="ln875">  TriState utf8 = kNone;</a>
-<a name="ln876">  bool mix = false;             // detected mixed encodings</a>
-<a name="ln877"> </a>
-<a name="ln878">  // Find all *.txt files.</a>
-<a name="ln879">  size_t dirlen = xstrlcpy(NameBuff, dir, sizeof(NameBuff));</a>
-<a name="ln880">  if (dirlen &gt;= MAXPATHL</a>
-<a name="ln881">      || xstrlcat(NameBuff, &quot;/**/*&quot;, sizeof(NameBuff)) &gt;= MAXPATHL  // NOLINT</a>
-<a name="ln882">      || xstrlcat(NameBuff, ext, sizeof(NameBuff)) &gt;= MAXPATHL) {</a>
-<a name="ln883">    emsg(_(e_fnametoolong));</a>
-<a name="ln884">    return;</a>
-<a name="ln885">  }</a>
-<a name="ln886"> </a>
-<a name="ln887">  // Note: We cannot just do `&amp;NameBuff` because it is a statically sized array</a>
-<a name="ln888">  //       so `NameBuff == &amp;NameBuff` according to C semantics.</a>
-<a name="ln889">  char *buff_list[1] = { NameBuff };</a>
-<a name="ln890">  const int res = gen_expand_wildcards(1, buff_list, &amp;filecount, &amp;files,</a>
-<a name="ln891">                                       EW_FILE|EW_SILENT);</a>
-<a name="ln892">  if (res == FAIL || filecount == 0) {</a>
-<a name="ln893">    if (!got_int) {</a>
-<a name="ln894">      semsg(_(&quot;E151: No match: %s&quot;), NameBuff);</a>
-<a name="ln895">    }</a>
-<a name="ln896">    if (res != FAIL) {</a>
-<a name="ln897">      FreeWild(filecount, files);</a>
-<a name="ln898">    }</a>
-<a name="ln899">    return;</a>
-<a name="ln900">  }</a>
-<a name="ln901"> </a>
-<a name="ln902">  // Open the tags file for writing.</a>
-<a name="ln903">  // Do this before scanning through all the files.</a>
-<a name="ln904">  memcpy(NameBuff, dir, dirlen + 1);</a>
-<a name="ln905">  if (!add_pathsep(NameBuff)</a>
-<a name="ln906">      || xstrlcat(NameBuff, tagfname, sizeof(NameBuff)) &gt;= MAXPATHL) {</a>
-<a name="ln907">    emsg(_(e_fnametoolong));</a>
-<a name="ln908">    return;</a>
-<a name="ln909">  }</a>
-<a name="ln910"> </a>
-<a name="ln911">  FILE *const fd_tags = os_fopen(NameBuff, &quot;w&quot;);</a>
-<a name="ln912">  if (fd_tags == NULL) {</a>
-<a name="ln913">    if (!ignore_writeerr) {</a>
-<a name="ln914">      semsg(_(&quot;E152: Cannot open %s for writing&quot;), NameBuff);</a>
-<a name="ln915">    }</a>
-<a name="ln916">    FreeWild(filecount, files);</a>
-<a name="ln917">    return;</a>
-<a name="ln918">  }</a>
-<a name="ln919"> </a>
-<a name="ln920">  // If using the &quot;++t&quot; argument or generating tags for &quot;$VIMRUNTIME/doc&quot;</a>
-<a name="ln921">  // add the &quot;help-tags&quot; tag.</a>
-<a name="ln922">  ga_init(&amp;ga, (int)sizeof(char *), 100);</a>
-<a name="ln923">  if (add_help_tags</a>
-<a name="ln924">      || path_full_compare(&quot;$VIMRUNTIME/doc&quot;, dir, false, true) == kEqualFiles) {</a>
-<a name="ln925">    size_t s_len = 18 + strlen(tagfname);</a>
-<a name="ln926">    s = xmalloc(s_len);</a>
-<a name="ln927">    snprintf(s, s_len, &quot;help-tags\t%s\t1\n&quot;, tagfname);</a>
-<a name="ln928">    GA_APPEND(char *, &amp;ga, s);</a>
-<a name="ln929">  }</a>
-<a name="ln930"> </a>
-<a name="ln931">  // Go over all the files and extract the tags.</a>
-<a name="ln932">  for (int fi = 0; fi &lt; filecount &amp;&amp; !got_int; fi++) {</a>
-<a name="ln933">    FILE *const fd = os_fopen(files[fi], &quot;r&quot;);</a>
-<a name="ln934">    if (fd == NULL) {</a>
-<a name="ln935">      semsg(_(&quot;E153: Unable to open %s for reading&quot;), files[fi]);</a>
-<a name="ln936">      continue;</a>
-<a name="ln937">    }</a>
-<a name="ln938">    const char *const fname = files[fi] + dirlen + 1;</a>
-<a name="ln939"> </a>
-<a name="ln940">    bool in_example = false;</a>
-<a name="ln941">    bool firstline = true;</a>
-<a name="ln942">    while (!vim_fgets(IObuff, IOSIZE, fd) &amp;&amp; !got_int) {</a>
-<a name="ln943">      if (firstline) {</a>
-<a name="ln944">        // Detect utf-8 file by a non-ASCII char in the first line.</a>
-<a name="ln945">        TriState this_utf8 = kNone;</a>
-<a name="ln946">        for (s = IObuff; *s != NUL; s++) {</a>
-<a name="ln947">          if ((uint8_t)(*s) &gt;= 0x80) {</a>
-<a name="ln948">            this_utf8 = kTrue;</a>
-<a name="ln949">            const int l = utf_ptr2len(s);</a>
-<a name="ln950">            if (l == 1) {</a>
-<a name="ln951">              // Illegal UTF-8 byte sequence.</a>
-<a name="ln952">              this_utf8 = kFalse;</a>
-<a name="ln953">              break;</a>
-<a name="ln954">            }</a>
-<a name="ln955">            s += l - 1;</a>
-<a name="ln956">          }</a>
-<a name="ln957">        }</a>
-<a name="ln958">        if (this_utf8 == kNone) {           // only ASCII characters found</a>
-<a name="ln959">          this_utf8 = kFalse;</a>
-<a name="ln960">        }</a>
-<a name="ln961">        if (utf8 == kNone) {                // first file</a>
-<a name="ln962">          utf8 = this_utf8;</a>
-<a name="ln963">        } else if (utf8 != this_utf8) {</a>
-<a name="ln964">          semsg(_(&quot;E670: Mix of help file encodings within a language: %s&quot;),</a>
-<a name="ln965">                files[fi]);</a>
-<a name="ln966">          mix = !got_int;</a>
-<a name="ln967">          got_int = true;</a>
-<a name="ln968">        }</a>
-<a name="ln969">        firstline = false;</a>
-<a name="ln970">      }</a>
-<a name="ln971">      if (in_example) {</a>
-<a name="ln972">        // skip over example; a non-white in the first column ends it</a>
-<a name="ln973">        if (vim_strchr(&quot; \t\n\r&quot;, (uint8_t)IObuff[0])) {</a>
-<a name="ln974">          continue;</a>
-<a name="ln975">        }</a>
-<a name="ln976">        in_example = false;</a>
-<a name="ln977">      }</a>
-<a name="ln978">      p1 = vim_strchr(IObuff, '*');       // find first '*'</a>
-<a name="ln979">      while (p1 != NULL) {</a>
-<a name="ln980">        p2 = strchr(p1 + 1, '*');  // Find second '*'.</a>
-<a name="ln981">        if (p2 != NULL &amp;&amp; p2 &gt; p1 + 1) {         // Skip &quot;*&quot; and &quot;**&quot;.</a>
-<a name="ln982">          for (s = p1 + 1; s &lt; p2; s++) {</a>
-<a name="ln983">            if (*s == ' ' || *s == '\t' || *s == '|') {</a>
-<a name="ln984">              break;</a>
-<a name="ln985">            }</a>
-<a name="ln986">          }</a>
-<a name="ln987"> </a>
-<a name="ln988">          // Only accept a *tag* when it consists of valid</a>
-<a name="ln989">          // characters, there is white space before it and is</a>
-<a name="ln990">          // followed by a white character or end-of-line.</a>
-<a name="ln991">          if (s == p2</a>
-<a name="ln992">              &amp;&amp; (p1 == IObuff || p1[-1] == ' ' || p1[-1] == '\t')</a>
-<a name="ln993">              &amp;&amp; (vim_strchr(&quot; \t\n\r&quot;, (uint8_t)s[1]) != NULL</a>
-<a name="ln994">                  || s[1] == '\0')) {</a>
-<a name="ln995">            *p2 = '\0';</a>
-<a name="ln996">            p1++;</a>
-<a name="ln997">            size_t s_len = (size_t)(p2 - p1) + strlen(fname) + 2;</a>
-<a name="ln998">            s = xmalloc(s_len);</a>
-<a name="ln999">            GA_APPEND(char *, &amp;ga, s);</a>
-<a name="ln1000">            snprintf(s, s_len, &quot;%s\t%s&quot;, p1, fname);</a>
-<a name="ln1001"> </a>
-<a name="ln1002">            // find next '*'</a>
-<a name="ln1003">            p2 = vim_strchr(p2 + 1, '*');</a>
-<a name="ln1004">          }</a>
-<a name="ln1005">        }</a>
-<a name="ln1006">        p1 = p2;</a>
-<a name="ln1007">      }</a>
-<a name="ln1008">      size_t len = strlen(IObuff);</a>
-<a name="ln1009">      if ((len == 2 &amp;&amp; strcmp(&amp;IObuff[len - 2], &quot;&gt;\n&quot;) == 0)</a>
-<a name="ln1010">          || (len &gt;= 3 &amp;&amp; strcmp(&amp;IObuff[len - 3], &quot; &gt;\n&quot;) == 0)) {</a>
-<a name="ln1011">        in_example = true;</a>
-<a name="ln1012">      }</a>
-<a name="ln1013">      line_breakcheck();</a>
-<a name="ln1014">    }</a>
-<a name="ln1015"> </a>
-<a name="ln1016">    fclose(fd);</a>
-<a name="ln1017">  }</a>
-<a name="ln1018"> </a>
-<a name="ln1019">  FreeWild(filecount, files);</a>
+<a name="ln706">      int lnum_start = lnum;</a>
+<a name="ln707"> </a>
+<a name="ln708">      // Go through all directories in 'runtimepath', skipping</a>
+<a name="ln709">      // $VIMRUNTIME.</a>
+<a name="ln710">      char *p = p_rtp;</a>
+<a name="ln711">      while (*p != NUL) {</a>
+<a name="ln712">        copy_option_part(&amp;p, NameBuff, MAXPATHL, &quot;,&quot;);</a>
+<a name="ln713">        char *const rt = vim_getenv(&quot;VIMRUNTIME&quot;);</a>
+<a name="ln714">        if (rt != NULL</a>
+<a name="ln715">            &amp;&amp; path_full_compare(rt, NameBuff, false, true) != kEqualFiles) {</a>
+<a name="ln716">          int fcount;</a>
+<a name="ln717">          char **fnames;</a>
+<a name="ln718">          vimconv_T vc;</a>
+<a name="ln719"> </a>
+<a name="ln720">          // Find all &quot;doc/ *.txt&quot; files in this directory.</a>
+<a name="ln721">          if (!add_pathsep(NameBuff)</a>
+<a name="ln722">              || xstrlcat(NameBuff, &quot;doc/*.??[tx]&quot;,  // NOLINT</a>
+<a name="ln723">                          sizeof(NameBuff)) &gt;= MAXPATHL) {</a>
+<a name="ln724">            emsg(_(e_fnametoolong));</a>
+<a name="ln725">            continue;</a>
+<a name="ln726">          }</a>
+<a name="ln727"> </a>
+<a name="ln728">          // Note: We cannot just do `&amp;NameBuff` because it is a statically sized array</a>
+<a name="ln729">          //       so `NameBuff == &amp;NameBuff` according to C semantics.</a>
+<a name="ln730">          char *buff_list[1] = { NameBuff };</a>
+<a name="ln731">          if (gen_expand_wildcards(1, buff_list, &amp;fcount,</a>
+<a name="ln732">                                   &amp;fnames, EW_FILE|EW_SILENT) == OK</a>
+<a name="ln733">              &amp;&amp; fcount &gt; 0) {</a>
+<a name="ln734">            char *s;</a>
+<a name="ln735">            char *cp;</a>
+<a name="ln736">            // If foo.abx is found use it instead of foo.txt in</a>
+<a name="ln737">            // the same directory.</a>
+<a name="ln738">            for (int i1 = 0; i1 &lt; fcount; i1++) {</a>
+<a name="ln739">              const char *const f1 = fnames[i1];</a>
+<a name="ln740">              const char *const t1 = path_tail(f1);</a>
+<a name="ln741">              const char *const e1 = strrchr(t1, '.');</a>
+<a name="ln742">              if (path_fnamecmp(e1, &quot;.txt&quot;) != 0</a>
+<a name="ln743">                  &amp;&amp; path_fnamecmp(e1, fname + 4) != 0) {</a>
+<a name="ln744">                // Not .txt and not .abx, remove it.</a>
+<a name="ln745">                XFREE_CLEAR(fnames[i1]);</a>
+<a name="ln746">                continue;</a>
+<a name="ln747">              }</a>
+<a name="ln748"> </a>
+<a name="ln749">              for (int i2 = i1 + 1; i2 &lt; fcount; i2++) {</a>
+<a name="ln750">                const char *const f2 = fnames[i2];</a>
+<a name="ln751">                if (f2 == NULL) {</a>
+<a name="ln752">                  continue;</a>
+<a name="ln753">                }</a>
+<a name="ln754">                const char *const t2 = path_tail(f2);</a>
+<a name="ln755">                const char *const e2 = strrchr(t2, '.');</a>
+<a name="ln756">                if (e1 == NULL || e2 == NULL) {</a>
+<a name="ln757">                  continue;</a>
+<a name="ln758">                }</a>
+<a name="ln759">                if (e1 - f1 != e2 - f2</a>
+<a name="ln760">                    || path_fnamencmp(f1, f2, (size_t)(e1 - f1)) != 0) {</a>
+<a name="ln761">                  continue;</a>
+<a name="ln762">                }</a>
+<a name="ln763">                if (path_fnamecmp(e1, &quot;.txt&quot;) == 0</a>
+<a name="ln764">                    &amp;&amp; path_fnamecmp(e2, fname + 4) == 0) {</a>
+<a name="ln765">                  // use .abx instead of .txt</a>
+<a name="ln766">                  XFREE_CLEAR(fnames[i1]);</a>
+<a name="ln767">                }</a>
+<a name="ln768">              }</a>
+<a name="ln769">            }</a>
+<a name="ln770">            for (int fi = 0; fi &lt; fcount; fi++) {</a>
+<a name="ln771">              if (fnames[fi] == NULL) {</a>
+<a name="ln772">                continue;</a>
+<a name="ln773">              }</a>
+<a name="ln774"> </a>
+<a name="ln775">              FILE *const fd = os_fopen(fnames[fi], &quot;r&quot;);</a>
+<a name="ln776">              if (fd == NULL) {</a>
+<a name="ln777">                continue;</a>
+<a name="ln778">              }</a>
+<a name="ln779">              vim_fgets(IObuff, IOSIZE, fd);</a>
+<a name="ln780">              if (IObuff[0] == '*'</a>
+<a name="ln781">                  &amp;&amp; (s = vim_strchr(IObuff + 1, '*'))</a>
+<a name="ln782">                  != NULL) {</a>
+<a name="ln783">                TriState this_utf = kNone;</a>
+<a name="ln784">                // Change tag definition to a</a>
+<a name="ln785">                // reference and remove &lt;CR&gt;/&lt;NL&gt;.</a>
+<a name="ln786">                IObuff[0] = '|';</a>
+<a name="ln787">                *s = '|';</a>
+<a name="ln788">                while (*s != NUL) {</a>
+<a name="ln789">                  if (*s == '\r' || *s == '\n') {</a>
+<a name="ln790">                    *s = NUL;</a>
+<a name="ln791">                  }</a>
+<a name="ln792">                  // The text is utf-8 when a byte</a>
+<a name="ln793">                  // above 127 is found and no</a>
+<a name="ln794">                  // illegal byte sequence is found.</a>
+<a name="ln795">                  if ((uint8_t)(*s) &gt;= 0x80 &amp;&amp; this_utf != kFalse) {</a>
+<a name="ln796">                    this_utf = kTrue;</a>
+<a name="ln797">                    const int l = utf_ptr2len(s);</a>
+<a name="ln798">                    if (l == 1) {</a>
+<a name="ln799">                      this_utf = kFalse;</a>
+<a name="ln800">                    }</a>
+<a name="ln801">                    s += l - 1;</a>
+<a name="ln802">                  }</a>
+<a name="ln803">                  s++;</a>
+<a name="ln804">                }</a>
+<a name="ln805">                // The help file is latin1 or utf-8;</a>
+<a name="ln806">                // conversion to the current</a>
+<a name="ln807">                // 'encoding' may be required.</a>
+<a name="ln808">                vc.vc_type = CONV_NONE;</a>
+<a name="ln809">                convert_setup(&amp;vc,</a>
+<a name="ln810">                              (this_utf == kTrue ? &quot;utf-8&quot; : &quot;latin1&quot;),</a>
+<a name="ln811">                              p_enc);</a>
+<a name="ln812">                if (vc.vc_type == CONV_NONE) {</a>
+<a name="ln813">                  // No conversion needed.</a>
+<a name="ln814">                  cp = IObuff;</a>
+<a name="ln815">                } else {</a>
+<a name="ln816">                  // Do the conversion.  If it fails</a>
+<a name="ln817">                  // use the unconverted text.</a>
+<a name="ln818">                  cp = string_convert(&amp;vc, IObuff, NULL);</a>
+<a name="ln819">                  if (cp == NULL) {</a>
+<a name="ln820">                    cp = IObuff;</a>
+<a name="ln821">                  }</a>
+<a name="ln822">                }</a>
+<a name="ln823">                convert_setup(&amp;vc, NULL, NULL);</a>
+<a name="ln824"> </a>
+<a name="ln825">                ml_append(lnum, cp, (colnr_T)0, false);</a>
+<a name="ln826">                if (cp != IObuff) {</a>
+<a name="ln827">                  xfree(cp);</a>
+<a name="ln828">                }</a>
+<a name="ln829">                lnum++;</a>
+<a name="ln830">              }</a>
+<a name="ln831">              fclose(fd);</a>
+<a name="ln832">            }</a>
+<a name="ln833">            FreeWild(fcount, fnames);</a>
+<a name="ln834">          }</a>
+<a name="ln835">        }</a>
+<a name="ln836">        xfree(rt);</a>
+<a name="ln837">      }</a>
+<a name="ln838">      linenr_T appended = lnum - lnum_start;</a>
+<a name="ln839">      if (appended) {</a>
+<a name="ln840">        mark_adjust(lnum_start + 1, (linenr_T)MAXLNUM, appended, 0L, kExtmarkUndo);</a>
+<a name="ln841">        buf_redraw_changed_lines_later(curbuf, lnum_start + 1, lnum_start + 1, appended);</a>
+<a name="ln842">      }</a>
+<a name="ln843">      break;</a>
+<a name="ln844">    }</a>
+<a name="ln845">  }</a>
+<a name="ln846">}</a>
+<a name="ln847"> </a>
+<a name="ln848">/// &quot;:exusage&quot;</a>
+<a name="ln849">void ex_exusage(exarg_T *eap)</a>
+<a name="ln850">{</a>
+<a name="ln851">  do_cmdline_cmd(&quot;help ex-cmd-index&quot;);</a>
+<a name="ln852">}</a>
+<a name="ln853"> </a>
+<a name="ln854">/// &quot;:viusage&quot;</a>
+<a name="ln855">void ex_viusage(exarg_T *eap)</a>
+<a name="ln856">{</a>
+<a name="ln857">  do_cmdline_cmd(&quot;help normal-index&quot;);</a>
+<a name="ln858">}</a>
+<a name="ln859"> </a>
+<a name="ln860">/// Generate tags in one help directory</a>
+<a name="ln861">///</a>
+<a name="ln862">/// @param dir  Path to the doc directory</a>
+<a name="ln863">/// @param ext  Suffix of the help files (&quot;.txt&quot;, &quot;.itx&quot;, &quot;.frx&quot;, etc.)</a>
+<a name="ln864">/// @param tagname  Name of the tags file (&quot;tags&quot; for English, &quot;tags-fr&quot; for</a>
+<a name="ln865">///                 French)</a>
+<a name="ln866">/// @param add_help_tags  Whether to add the &quot;help-tags&quot; tag</a>
+<a name="ln867">/// @param ignore_writeerr  ignore write error</a>
+<a name="ln868">static void helptags_one(char *dir, const char *ext, const char *tagfname, bool add_help_tags,</a>
+<a name="ln869">                         bool ignore_writeerr)</a>
+<a name="ln870">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln871">{</a>
+<a name="ln872">  garray_T ga;</a>
+<a name="ln873">  int filecount;</a>
+<a name="ln874">  char **files;</a>
+<a name="ln875">  char *p1, *p2;</a>
+<a name="ln876">  char *s;</a>
+<a name="ln877">  TriState utf8 = kNone;</a>
+<a name="ln878">  bool mix = false;             // detected mixed encodings</a>
+<a name="ln879"> </a>
+<a name="ln880">  // Find all *.txt files.</a>
+<a name="ln881">  size_t dirlen = xstrlcpy(NameBuff, dir, sizeof(NameBuff));</a>
+<a name="ln882">  if (dirlen &gt;= MAXPATHL</a>
+<a name="ln883">      || xstrlcat(NameBuff, &quot;/**/*&quot;, sizeof(NameBuff)) &gt;= MAXPATHL  // NOLINT</a>
+<a name="ln884">      || xstrlcat(NameBuff, ext, sizeof(NameBuff)) &gt;= MAXPATHL) {</a>
+<a name="ln885">    emsg(_(e_fnametoolong));</a>
+<a name="ln886">    return;</a>
+<a name="ln887">  }</a>
+<a name="ln888"> </a>
+<a name="ln889">  // Note: We cannot just do `&amp;NameBuff` because it is a statically sized array</a>
+<a name="ln890">  //       so `NameBuff == &amp;NameBuff` according to C semantics.</a>
+<a name="ln891">  char *buff_list[1] = { NameBuff };</a>
+<a name="ln892">  const int res = gen_expand_wildcards(1, buff_list, &amp;filecount, &amp;files,</a>
+<a name="ln893">                                       EW_FILE|EW_SILENT);</a>
+<a name="ln894">  if (res == FAIL || filecount == 0) {</a>
+<a name="ln895">    if (!got_int) {</a>
+<a name="ln896">      semsg(_(&quot;E151: No match: %s&quot;), NameBuff);</a>
+<a name="ln897">    }</a>
+<a name="ln898">    if (res != FAIL) {</a>
+<a name="ln899">      FreeWild(filecount, files);</a>
+<a name="ln900">    }</a>
+<a name="ln901">    return;</a>
+<a name="ln902">  }</a>
+<a name="ln903"> </a>
+<a name="ln904">  // Open the tags file for writing.</a>
+<a name="ln905">  // Do this before scanning through all the files.</a>
+<a name="ln906">  memcpy(NameBuff, dir, dirlen + 1);</a>
+<a name="ln907">  if (!add_pathsep(NameBuff)</a>
+<a name="ln908">      || xstrlcat(NameBuff, tagfname, sizeof(NameBuff)) &gt;= MAXPATHL) {</a>
+<a name="ln909">    emsg(_(e_fnametoolong));</a>
+<a name="ln910">    return;</a>
+<a name="ln911">  }</a>
+<a name="ln912"> </a>
+<a name="ln913">  FILE *const fd_tags = os_fopen(NameBuff, &quot;w&quot;);</a>
+<a name="ln914">  if (fd_tags == NULL) {</a>
+<a name="ln915">    if (!ignore_writeerr) {</a>
+<a name="ln916">      semsg(_(&quot;E152: Cannot open %s for writing&quot;), NameBuff);</a>
+<a name="ln917">    }</a>
+<a name="ln918">    FreeWild(filecount, files);</a>
+<a name="ln919">    return;</a>
+<a name="ln920">  }</a>
+<a name="ln921"> </a>
+<a name="ln922">  // If using the &quot;++t&quot; argument or generating tags for &quot;$VIMRUNTIME/doc&quot;</a>
+<a name="ln923">  // add the &quot;help-tags&quot; tag.</a>
+<a name="ln924">  ga_init(&amp;ga, (int)sizeof(char *), 100);</a>
+<a name="ln925">  if (add_help_tags</a>
+<a name="ln926">      || path_full_compare(&quot;$VIMRUNTIME/doc&quot;, dir, false, true) == kEqualFiles) {</a>
+<a name="ln927">    size_t s_len = 18 + strlen(tagfname);</a>
+<a name="ln928">    s = xmalloc(s_len);</a>
+<a name="ln929">    snprintf(s, s_len, &quot;help-tags\t%s\t1\n&quot;, tagfname);</a>
+<a name="ln930">    GA_APPEND(char *, &amp;ga, s);</a>
+<a name="ln931">  }</a>
+<a name="ln932"> </a>
+<a name="ln933">  // Go over all the files and extract the tags.</a>
+<a name="ln934">  for (int fi = 0; fi &lt; filecount &amp;&amp; !got_int; fi++) {</a>
+<a name="ln935">    FILE *const fd = os_fopen(files[fi], &quot;r&quot;);</a>
+<a name="ln936">    if (fd == NULL) {</a>
+<a name="ln937">      semsg(_(&quot;E153: Unable to open %s for reading&quot;), files[fi]);</a>
+<a name="ln938">      continue;</a>
+<a name="ln939">    }</a>
+<a name="ln940">    const char *const fname = files[fi] + dirlen + 1;</a>
+<a name="ln941"> </a>
+<a name="ln942">    bool in_example = false;</a>
+<a name="ln943">    bool firstline = true;</a>
+<a name="ln944">    while (!vim_fgets(IObuff, IOSIZE, fd) &amp;&amp; !got_int) {</a>
+<a name="ln945">      if (firstline) {</a>
+<a name="ln946">        // Detect utf-8 file by a non-ASCII char in the first line.</a>
+<a name="ln947">        TriState this_utf8 = kNone;</a>
+<a name="ln948">        for (s = IObuff; *s != NUL; s++) {</a>
+<a name="ln949">          if ((uint8_t)(*s) &gt;= 0x80) {</a>
+<a name="ln950">            this_utf8 = kTrue;</a>
+<a name="ln951">            const int l = utf_ptr2len(s);</a>
+<a name="ln952">            if (l == 1) {</a>
+<a name="ln953">              // Illegal UTF-8 byte sequence.</a>
+<a name="ln954">              this_utf8 = kFalse;</a>
+<a name="ln955">              break;</a>
+<a name="ln956">            }</a>
+<a name="ln957">            s += l - 1;</a>
+<a name="ln958">          }</a>
+<a name="ln959">        }</a>
+<a name="ln960">        if (this_utf8 == kNone) {           // only ASCII characters found</a>
+<a name="ln961">          this_utf8 = kFalse;</a>
+<a name="ln962">        }</a>
+<a name="ln963">        if (utf8 == kNone) {                // first file</a>
+<a name="ln964">          utf8 = this_utf8;</a>
+<a name="ln965">        } else if (utf8 != this_utf8) {</a>
+<a name="ln966">          semsg(_(&quot;E670: Mix of help file encodings within a language: %s&quot;),</a>
+<a name="ln967">                files[fi]);</a>
+<a name="ln968">          mix = !got_int;</a>
+<a name="ln969">          got_int = true;</a>
+<a name="ln970">        }</a>
+<a name="ln971">        firstline = false;</a>
+<a name="ln972">      }</a>
+<a name="ln973">      if (in_example) {</a>
+<a name="ln974">        // skip over example; a non-white in the first column ends it</a>
+<a name="ln975">        if (vim_strchr(&quot; \t\n\r&quot;, (uint8_t)IObuff[0])) {</a>
+<a name="ln976">          continue;</a>
+<a name="ln977">        }</a>
+<a name="ln978">        in_example = false;</a>
+<a name="ln979">      }</a>
+<a name="ln980">      p1 = vim_strchr(IObuff, '*');       // find first '*'</a>
+<a name="ln981">      while (p1 != NULL) {</a>
+<a name="ln982">        p2 = strchr(p1 + 1, '*');  // Find second '*'.</a>
+<a name="ln983">        if (p2 != NULL &amp;&amp; p2 &gt; p1 + 1) {         // Skip &quot;*&quot; and &quot;**&quot;.</a>
+<a name="ln984">          for (s = p1 + 1; s &lt; p2; s++) {</a>
+<a name="ln985">            if (*s == ' ' || *s == '\t' || *s == '|') {</a>
+<a name="ln986">              break;</a>
+<a name="ln987">            }</a>
+<a name="ln988">          }</a>
+<a name="ln989"> </a>
+<a name="ln990">          // Only accept a *tag* when it consists of valid</a>
+<a name="ln991">          // characters, there is white space before it and is</a>
+<a name="ln992">          // followed by a white character or end-of-line.</a>
+<a name="ln993">          if (s == p2</a>
+<a name="ln994">              &amp;&amp; (p1 == IObuff || p1[-1] == ' ' || p1[-1] == '\t')</a>
+<a name="ln995">              &amp;&amp; (vim_strchr(&quot; \t\n\r&quot;, (uint8_t)s[1]) != NULL</a>
+<a name="ln996">                  || s[1] == '\0')) {</a>
+<a name="ln997">            *p2 = '\0';</a>
+<a name="ln998">            p1++;</a>
+<a name="ln999">            size_t s_len = (size_t)(p2 - p1) + strlen(fname) + 2;</a>
+<a name="ln1000">            s = xmalloc(s_len);</a>
+<a name="ln1001">            GA_APPEND(char *, &amp;ga, s);</a>
+<a name="ln1002">            snprintf(s, s_len, &quot;%s\t%s&quot;, p1, fname);</a>
+<a name="ln1003"> </a>
+<a name="ln1004">            // find next '*'</a>
+<a name="ln1005">            p2 = vim_strchr(p2 + 1, '*');</a>
+<a name="ln1006">          }</a>
+<a name="ln1007">        }</a>
+<a name="ln1008">        p1 = p2;</a>
+<a name="ln1009">      }</a>
+<a name="ln1010">      size_t len = strlen(IObuff);</a>
+<a name="ln1011">      if ((len == 2 &amp;&amp; strcmp(&amp;IObuff[len - 2], &quot;&gt;\n&quot;) == 0)</a>
+<a name="ln1012">          || (len &gt;= 3 &amp;&amp; strcmp(&amp;IObuff[len - 3], &quot; &gt;\n&quot;) == 0)) {</a>
+<a name="ln1013">        in_example = true;</a>
+<a name="ln1014">      }</a>
+<a name="ln1015">      line_breakcheck();</a>
+<a name="ln1016">    }</a>
+<a name="ln1017"> </a>
+<a name="ln1018">    fclose(fd);</a>
+<a name="ln1019">  }</a>
 <a name="ln1020"> </a>
-<a name="ln1021">  if (!got_int &amp;&amp; ga.ga_data != NULL) {</a>
-<a name="ln1022">    // Sort the tags.</a>
-<a name="ln1023">    sort_strings(ga.ga_data, ga.ga_len);</a>
-<a name="ln1024"> </a>
-<a name="ln1025">    // Check for duplicates.</a>
-<a name="ln1026">    for (int i = 1; i &lt; ga.ga_len; i++) {</a>
-<a name="ln1027">      p1 = ((char **)ga.ga_data)[i - 1];</a>
-<a name="ln1028">      p2 = ((char **)ga.ga_data)[i];</a>
-<a name="ln1029">      while (*p1 == *p2) {</a>
-<a name="ln1030">        if (*p2 == '\t') {</a>
-<a name="ln1031">          *p2 = NUL;</a>
-<a name="ln1032">          vim_snprintf(NameBuff, MAXPATHL,</a>
-<a name="ln1033">                       _(&quot;E154: Duplicate tag \&quot;%s\&quot; in file %s/%s&quot;),</a>
-<a name="ln1034">                       ((char **)ga.ga_data)[i], dir, p2 + 1);</a>
-<a name="ln1035">          emsg(NameBuff);</a>
-<a name="ln1036">          *p2 = '\t';</a>
-<a name="ln1037">          break;</a>
-<a name="ln1038">        }</a>
-<a name="ln1039">        p1++;</a>
-<a name="ln1040">        p2++;</a>
-<a name="ln1041">      }</a>
-<a name="ln1042">    }</a>
-<a name="ln1043"> </a>
-<a name="ln1044">    if (utf8 == kTrue) {</a>
-<a name="ln1045">      fprintf(fd_tags, &quot;!_TAG_FILE_ENCODING\tutf-8\t//\n&quot;);</a>
-<a name="ln1046">    }</a>
-<a name="ln1047"> </a>
-<a name="ln1048">    // Write the tags into the file.</a>
-<a name="ln1049">    for (int i = 0; i &lt; ga.ga_len; i++) {</a>
-<a name="ln1050">      s = ((char **)ga.ga_data)[i];</a>
-<a name="ln1051">      if (strncmp(s, &quot;help-tags\t&quot;, 10) == 0) {</a>
-<a name="ln1052">        // help-tags entry was added in formatted form</a>
-<a name="ln1053">        fputs(s, fd_tags);</a>
-<a name="ln1054">      } else {</a>
-<a name="ln1055">        fprintf(fd_tags, &quot;%s\t/&quot; &quot;*&quot;, s);</a>
-<a name="ln1056">        for (p1 = s; *p1 != '\t'; p1++) {</a>
-<a name="ln1057">          // insert backslash before '\\' and '/'</a>
-<a name="ln1058">          if (*p1 == '\\' || *p1 == '/') {</a>
-<a name="ln1059">            putc('\\', fd_tags);</a>
-<a name="ln1060">          }</a>
-<a name="ln1061">          putc(*p1, fd_tags);</a>
-<a name="ln1062">        }</a>
-<a name="ln1063">        fprintf(fd_tags, &quot;*\n&quot;);</a>
-<a name="ln1064">      }</a>
-<a name="ln1065">    }</a>
-<a name="ln1066">  }</a>
-<a name="ln1067">  if (mix) {</a>
-<a name="ln1068">    got_int = false;        // continue with other languages</a>
-<a name="ln1069">  }</a>
-<a name="ln1070"> </a>
-<a name="ln1071">  GA_DEEP_CLEAR_PTR(&amp;ga);</a>
-<a name="ln1072">  fclose(fd_tags);          // there is no check for an error...</a>
-<a name="ln1073">}</a>
-<a name="ln1074"> </a>
-<a name="ln1075">/// Generate tags in one help directory, taking care of translations.</a>
-<a name="ln1076">static void do_helptags(char *dirname, bool add_help_tags, bool ignore_writeerr)</a>
-<a name="ln1077">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln1078">{</a>
-<a name="ln1079">  garray_T ga;</a>
-<a name="ln1080">  char lang[2];</a>
-<a name="ln1081">  char ext[5];</a>
-<a name="ln1082">  char fname[8];</a>
-<a name="ln1083">  int filecount;</a>
-<a name="ln1084">  char **files;</a>
-<a name="ln1085"> </a>
-<a name="ln1086">  // Get a list of all files in the help directory and in subdirectories.</a>
-<a name="ln1087">  xstrlcpy(NameBuff, dirname, sizeof(NameBuff));</a>
-<a name="ln1088">  if (!add_pathsep(NameBuff)</a>
-<a name="ln1089">      || xstrlcat(NameBuff, &quot;**&quot;, sizeof(NameBuff)) &gt;= MAXPATHL) {</a>
-<a name="ln1090">    emsg(_(e_fnametoolong));</a>
-<a name="ln1091">    return;</a>
-<a name="ln1092">  }</a>
-<a name="ln1093"> </a>
-<a name="ln1094">  // Note: We cannot just do `&amp;NameBuff` because it is a statically sized array</a>
-<a name="ln1095">  //       so `NameBuff == &amp;NameBuff` according to C semantics.</a>
-<a name="ln1096">  char *buff_list[1] = { NameBuff };</a>
-<a name="ln1097">  if (gen_expand_wildcards(1, buff_list, &amp;filecount, &amp;files,</a>
-<a name="ln1098">                           EW_FILE|EW_SILENT) == FAIL</a>
-<a name="ln1099">      || filecount == 0) {</a>
-<a name="ln1100">    semsg(_(&quot;E151: No match: %s&quot;), NameBuff);</a>
-<a name="ln1101">    return;</a>
-<a name="ln1102">  }</a>
-<a name="ln1103"> </a>
-<a name="ln1104">  // Go over all files in the directory to find out what languages are</a>
-<a name="ln1105">  // present.</a>
-<a name="ln1106">  int j;</a>
-<a name="ln1107">  ga_init(&amp;ga, 1, 10);</a>
-<a name="ln1108">  for (int i = 0; i &lt; filecount; i++) {</a>
-<a name="ln1109">    int len = (int)strlen(files[i]);</a>
-<a name="ln1110">    if (len &lt;= 4) {</a>
-<a name="ln1111">      continue;</a>
-<a name="ln1112">    }</a>
-<a name="ln1113"> </a>
-<a name="ln1114">    if (STRICMP(files[i] + len - 4, &quot;.txt&quot;) == 0) {</a>
-<a name="ln1115">      // &quot;.txt&quot; -&gt; language &quot;en&quot;</a>
-<a name="ln1116">      lang[0] = 'e';</a>
-<a name="ln1117">      lang[1] = 'n';</a>
-<a name="ln1118">    } else if (files[i][len - 4] == '.'</a>
-<a name="ln1119">               &amp;&amp; ASCII_ISALPHA(files[i][len - 3])</a>
-<a name="ln1120">               &amp;&amp; ASCII_ISALPHA(files[i][len - 2])</a>
-<a name="ln1121">               &amp;&amp; TOLOWER_ASC(files[i][len - 1]) == 'x') {</a>
-<a name="ln1122">      // &quot;.abx&quot; -&gt; language &quot;ab&quot;</a>
-<a name="ln1123">      lang[0] = (char)TOLOWER_ASC(files[i][len - 3]);</a>
-<a name="ln1124">      lang[1] = (char)TOLOWER_ASC(files[i][len - 2]);</a>
-<a name="ln1125">    } else {</a>
-<a name="ln1126">      continue;</a>
-<a name="ln1127">    }</a>
-<a name="ln1128"> </a>
-<a name="ln1129">    // Did we find this language already?</a>
-<a name="ln1130">    for (j = 0; j &lt; ga.ga_len; j += 2) {</a>
-<a name="ln1131">      if (strncmp(lang, ((char *)ga.ga_data) + j, 2) == 0) {</a>
-<a name="ln1132">        break;</a>
-<a name="ln1133">      }</a>
-<a name="ln1134">    }</a>
-<a name="ln1135">    if (j == ga.ga_len) {</a>
-<a name="ln1136">      // New language, add it.</a>
-<a name="ln1137">      ga_grow(&amp;ga, 2);</a>
-<a name="ln1138">      ((char *)ga.ga_data)[ga.ga_len++] = lang[0];</a>
-<a name="ln1139">      ((char *)ga.ga_data)[ga.ga_len++] = lang[1];</a>
-<a name="ln1140">    }</a>
-<a name="ln1141">  }</a>
-<a name="ln1142"> </a>
-<a name="ln1143">  // Loop over the found languages to generate a tags file for each one.</a>
-<a name="ln1144">  for (j = 0; j &lt; ga.ga_len; j += 2) {</a>
-<a name="ln1145">    STRCPY(fname, &quot;tags-xx&quot;);</a>
-<a name="ln1146">    fname[5] = ((char *)ga.ga_data)[j];</a>
-<a name="ln1147">    fname[6] = ((char *)ga.ga_data)[j + 1];</a>
-<a name="ln1148">    if (fname[5] == 'e' &amp;&amp; fname[6] == 'n') {</a>
-<a name="ln1149">      // English is an exception: use &quot;.txt&quot; and &quot;tags&quot;.</a>
-<a name="ln1150">      fname[4] = NUL;</a>
-<a name="ln1151">      STRCPY(ext, &quot;.txt&quot;);</a>
-<a name="ln1152">    } else {</a>
-<a name="ln1153">      // Language &quot;ab&quot; uses &quot;.abx&quot; and &quot;tags-ab&quot;.</a>
-<a name="ln1154">      STRCPY(ext, &quot;.xxx&quot;);</a>
-<a name="ln1155">      ext[1] = fname[5];</a>
-<a name="ln1156">      ext[2] = fname[6];</a>
-<a name="ln1157">    }</a>
-<a name="ln1158">    helptags_one(dirname, ext, fname, add_help_tags, ignore_writeerr);</a>
-<a name="ln1159">  }</a>
-<a name="ln1160"> </a>
-<a name="ln1161">  ga_clear(&amp;ga);</a>
-<a name="ln1162">  FreeWild(filecount, files);</a>
-<a name="ln1163">}</a>
-<a name="ln1164"> </a>
-<a name="ln1165">static bool helptags_cb(int num_fnames, char **fnames, bool all, void *cookie)</a>
-<a name="ln1166">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln1167">{</a>
-<a name="ln1168">  for (int i = 0; i &lt; num_fnames; i++) {</a>
-<a name="ln1169">    do_helptags(fnames[i], *(bool *)cookie, true);</a>
-<a name="ln1170">    if (!all) {</a>
-<a name="ln1171">      return true;</a>
-<a name="ln1172">    }</a>
-<a name="ln1173">  }</a>
-<a name="ln1174"> </a>
-<a name="ln1175">  return num_fnames &gt; 0;</a>
-<a name="ln1176">}</a>
-<a name="ln1177"> </a>
-<a name="ln1178">/// &quot;:helptags&quot;</a>
-<a name="ln1179">void ex_helptags(exarg_T *eap)</a>
-<a name="ln1180">{</a>
-<a name="ln1181">  expand_T xpc;</a>
-<a name="ln1182">  bool add_help_tags = false;</a>
-<a name="ln1183"> </a>
-<a name="ln1184">  // Check for &quot;:helptags ++t {dir}&quot;.</a>
-<a name="ln1185">  if (strncmp(eap-&gt;arg, &quot;++t&quot;, 3) == 0 &amp;&amp; ascii_iswhite(eap-&gt;arg[3])) {</a>
-<a name="ln1186">    add_help_tags = true;</a>
-<a name="ln1187">    eap-&gt;arg = skipwhite(eap-&gt;arg + 3);</a>
-<a name="ln1188">  }</a>
-<a name="ln1189"> </a>
-<a name="ln1190">  if (strcmp(eap-&gt;arg, &quot;ALL&quot;) == 0) {</a>
-<a name="ln1191">    do_in_path(p_rtp, &quot;&quot;, &quot;doc&quot;, DIP_ALL + DIP_DIR, helptags_cb, &amp;add_help_tags);</a>
-<a name="ln1192">  } else {</a>
-<a name="ln1193">    ExpandInit(&amp;xpc);</a>
-<a name="ln1194">    xpc.xp_context = EXPAND_DIRECTORIES;</a>
-<a name="ln1195">    char *dirname =</a>
-<a name="ln1196">      ExpandOne(&amp;xpc, eap-&gt;arg, NULL, WILD_LIST_NOTFOUND|WILD_SILENT, WILD_EXPAND_FREE);</a>
-<a name="ln1197">    if (dirname == NULL || !os_isdir(dirname)) {</a>
-<a name="ln1198">      semsg(_(&quot;E150: Not a directory: %s&quot;), eap-&gt;arg);</a>
-<a name="ln1199">    } else {</a>
-<a name="ln1200">      do_helptags(dirname, add_help_tags, false);</a>
-<a name="ln1201">    }</a>
-<a name="ln1202">    xfree(dirname);</a>
-<a name="ln1203">  }</a>
-<a name="ln1204">}</a>
+<a name="ln1021">  FreeWild(filecount, files);</a>
+<a name="ln1022"> </a>
+<a name="ln1023">  if (!got_int &amp;&amp; ga.ga_data != NULL) {</a>
+<a name="ln1024">    // Sort the tags.</a>
+<a name="ln1025">    sort_strings(ga.ga_data, ga.ga_len);</a>
+<a name="ln1026"> </a>
+<a name="ln1027">    // Check for duplicates.</a>
+<a name="ln1028">    for (int i = 1; i &lt; ga.ga_len; i++) {</a>
+<a name="ln1029">      p1 = ((char **)ga.ga_data)[i - 1];</a>
+<a name="ln1030">      p2 = ((char **)ga.ga_data)[i];</a>
+<a name="ln1031">      while (*p1 == *p2) {</a>
+<a name="ln1032">        if (*p2 == '\t') {</a>
+<a name="ln1033">          *p2 = NUL;</a>
+<a name="ln1034">          vim_snprintf(NameBuff, MAXPATHL,</a>
+<a name="ln1035">                       _(&quot;E154: Duplicate tag \&quot;%s\&quot; in file %s/%s&quot;),</a>
+<a name="ln1036">                       ((char **)ga.ga_data)[i], dir, p2 + 1);</a>
+<a name="ln1037">          emsg(NameBuff);</a>
+<a name="ln1038">          *p2 = '\t';</a>
+<a name="ln1039">          break;</a>
+<a name="ln1040">        }</a>
+<a name="ln1041">        p1++;</a>
+<a name="ln1042">        p2++;</a>
+<a name="ln1043">      }</a>
+<a name="ln1044">    }</a>
+<a name="ln1045"> </a>
+<a name="ln1046">    if (utf8 == kTrue) {</a>
+<a name="ln1047">      fprintf(fd_tags, &quot;!_TAG_FILE_ENCODING\tutf-8\t//\n&quot;);</a>
+<a name="ln1048">    }</a>
+<a name="ln1049"> </a>
+<a name="ln1050">    // Write the tags into the file.</a>
+<a name="ln1051">    for (int i = 0; i &lt; ga.ga_len; i++) {</a>
+<a name="ln1052">      s = ((char **)ga.ga_data)[i];</a>
+<a name="ln1053">      if (strncmp(s, &quot;help-tags\t&quot;, 10) == 0) {</a>
+<a name="ln1054">        // help-tags entry was added in formatted form</a>
+<a name="ln1055">        fputs(s, fd_tags);</a>
+<a name="ln1056">      } else {</a>
+<a name="ln1057">        fprintf(fd_tags, &quot;%s\t/&quot; &quot;*&quot;, s);</a>
+<a name="ln1058">        for (p1 = s; *p1 != '\t'; p1++) {</a>
+<a name="ln1059">          // insert backslash before '\\' and '/'</a>
+<a name="ln1060">          if (*p1 == '\\' || *p1 == '/') {</a>
+<a name="ln1061">            putc('\\', fd_tags);</a>
+<a name="ln1062">          }</a>
+<a name="ln1063">          putc(*p1, fd_tags);</a>
+<a name="ln1064">        }</a>
+<a name="ln1065">        fprintf(fd_tags, &quot;*\n&quot;);</a>
+<a name="ln1066">      }</a>
+<a name="ln1067">    }</a>
+<a name="ln1068">  }</a>
+<a name="ln1069">  if (mix) {</a>
+<a name="ln1070">    got_int = false;        // continue with other languages</a>
+<a name="ln1071">  }</a>
+<a name="ln1072"> </a>
+<a name="ln1073">  GA_DEEP_CLEAR_PTR(&amp;ga);</a>
+<a name="ln1074">  fclose(fd_tags);          // there is no check for an error...</a>
+<a name="ln1075">}</a>
+<a name="ln1076"> </a>
+<a name="ln1077">/// Generate tags in one help directory, taking care of translations.</a>
+<a name="ln1078">static void do_helptags(char *dirname, bool add_help_tags, bool ignore_writeerr)</a>
+<a name="ln1079">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln1080">{</a>
+<a name="ln1081">  garray_T ga;</a>
+<a name="ln1082">  char lang[2];</a>
+<a name="ln1083">  char ext[5];</a>
+<a name="ln1084">  char fname[8];</a>
+<a name="ln1085">  int filecount;</a>
+<a name="ln1086">  char **files;</a>
+<a name="ln1087"> </a>
+<a name="ln1088">  // Get a list of all files in the help directory and in subdirectories.</a>
+<a name="ln1089">  xstrlcpy(NameBuff, dirname, sizeof(NameBuff));</a>
+<a name="ln1090">  if (!add_pathsep(NameBuff)</a>
+<a name="ln1091">      || xstrlcat(NameBuff, &quot;**&quot;, sizeof(NameBuff)) &gt;= MAXPATHL) {</a>
+<a name="ln1092">    emsg(_(e_fnametoolong));</a>
+<a name="ln1093">    return;</a>
+<a name="ln1094">  }</a>
+<a name="ln1095"> </a>
+<a name="ln1096">  // Note: We cannot just do `&amp;NameBuff` because it is a statically sized array</a>
+<a name="ln1097">  //       so `NameBuff == &amp;NameBuff` according to C semantics.</a>
+<a name="ln1098">  char *buff_list[1] = { NameBuff };</a>
+<a name="ln1099">  if (gen_expand_wildcards(1, buff_list, &amp;filecount, &amp;files,</a>
+<a name="ln1100">                           EW_FILE|EW_SILENT) == FAIL</a>
+<a name="ln1101">      || filecount == 0) {</a>
+<a name="ln1102">    semsg(_(&quot;E151: No match: %s&quot;), NameBuff);</a>
+<a name="ln1103">    return;</a>
+<a name="ln1104">  }</a>
+<a name="ln1105"> </a>
+<a name="ln1106">  // Go over all files in the directory to find out what languages are</a>
+<a name="ln1107">  // present.</a>
+<a name="ln1108">  int j;</a>
+<a name="ln1109">  ga_init(&amp;ga, 1, 10);</a>
+<a name="ln1110">  for (int i = 0; i &lt; filecount; i++) {</a>
+<a name="ln1111">    int len = (int)strlen(files[i]);</a>
+<a name="ln1112">    if (len &lt;= 4) {</a>
+<a name="ln1113">      continue;</a>
+<a name="ln1114">    }</a>
+<a name="ln1115"> </a>
+<a name="ln1116">    if (STRICMP(files[i] + len - 4, &quot;.txt&quot;) == 0) {</a>
+<a name="ln1117">      // &quot;.txt&quot; -&gt; language &quot;en&quot;</a>
+<a name="ln1118">      lang[0] = 'e';</a>
+<a name="ln1119">      lang[1] = 'n';</a>
+<a name="ln1120">    } else if (files[i][len - 4] == '.'</a>
+<a name="ln1121">               &amp;&amp; ASCII_ISALPHA(files[i][len - 3])</a>
+<a name="ln1122">               &amp;&amp; ASCII_ISALPHA(files[i][len - 2])</a>
+<a name="ln1123">               &amp;&amp; TOLOWER_ASC(files[i][len - 1]) == 'x') {</a>
+<a name="ln1124">      // &quot;.abx&quot; -&gt; language &quot;ab&quot;</a>
+<a name="ln1125">      lang[0] = (char)TOLOWER_ASC(files[i][len - 3]);</a>
+<a name="ln1126">      lang[1] = (char)TOLOWER_ASC(files[i][len - 2]);</a>
+<a name="ln1127">    } else {</a>
+<a name="ln1128">      continue;</a>
+<a name="ln1129">    }</a>
+<a name="ln1130"> </a>
+<a name="ln1131">    // Did we find this language already?</a>
+<a name="ln1132">    for (j = 0; j &lt; ga.ga_len; j += 2) {</a>
+<a name="ln1133">      if (strncmp(lang, ((char *)ga.ga_data) + j, 2) == 0) {</a>
+<a name="ln1134">        break;</a>
+<a name="ln1135">      }</a>
+<a name="ln1136">    }</a>
+<a name="ln1137">    if (j == ga.ga_len) {</a>
+<a name="ln1138">      // New language, add it.</a>
+<a name="ln1139">      ga_grow(&amp;ga, 2);</a>
+<a name="ln1140">      ((char *)ga.ga_data)[ga.ga_len++] = lang[0];</a>
+<a name="ln1141">      ((char *)ga.ga_data)[ga.ga_len++] = lang[1];</a>
+<a name="ln1142">    }</a>
+<a name="ln1143">  }</a>
+<a name="ln1144"> </a>
+<a name="ln1145">  // Loop over the found languages to generate a tags file for each one.</a>
+<a name="ln1146">  for (j = 0; j &lt; ga.ga_len; j += 2) {</a>
+<a name="ln1147">    STRCPY(fname, &quot;tags-xx&quot;);</a>
+<a name="ln1148">    fname[5] = ((char *)ga.ga_data)[j];</a>
+<a name="ln1149">    fname[6] = ((char *)ga.ga_data)[j + 1];</a>
+<a name="ln1150">    if (fname[5] == 'e' &amp;&amp; fname[6] == 'n') {</a>
+<a name="ln1151">      // English is an exception: use &quot;.txt&quot; and &quot;tags&quot;.</a>
+<a name="ln1152">      fname[4] = NUL;</a>
+<a name="ln1153">      STRCPY(ext, &quot;.txt&quot;);</a>
+<a name="ln1154">    } else {</a>
+<a name="ln1155">      // Language &quot;ab&quot; uses &quot;.abx&quot; and &quot;tags-ab&quot;.</a>
+<a name="ln1156">      STRCPY(ext, &quot;.xxx&quot;);</a>
+<a name="ln1157">      ext[1] = fname[5];</a>
+<a name="ln1158">      ext[2] = fname[6];</a>
+<a name="ln1159">    }</a>
+<a name="ln1160">    helptags_one(dirname, ext, fname, add_help_tags, ignore_writeerr);</a>
+<a name="ln1161">  }</a>
+<a name="ln1162"> </a>
+<a name="ln1163">  ga_clear(&amp;ga);</a>
+<a name="ln1164">  FreeWild(filecount, files);</a>
+<a name="ln1165">}</a>
+<a name="ln1166"> </a>
+<a name="ln1167">static bool helptags_cb(int num_fnames, char **fnames, bool all, void *cookie)</a>
+<a name="ln1168">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln1169">{</a>
+<a name="ln1170">  for (int i = 0; i &lt; num_fnames; i++) {</a>
+<a name="ln1171">    do_helptags(fnames[i], *(bool *)cookie, true);</a>
+<a name="ln1172">    if (!all) {</a>
+<a name="ln1173">      return true;</a>
+<a name="ln1174">    }</a>
+<a name="ln1175">  }</a>
+<a name="ln1176"> </a>
+<a name="ln1177">  return num_fnames &gt; 0;</a>
+<a name="ln1178">}</a>
+<a name="ln1179"> </a>
+<a name="ln1180">/// &quot;:helptags&quot;</a>
+<a name="ln1181">void ex_helptags(exarg_T *eap)</a>
+<a name="ln1182">{</a>
+<a name="ln1183">  expand_T xpc;</a>
+<a name="ln1184">  bool add_help_tags = false;</a>
+<a name="ln1185"> </a>
+<a name="ln1186">  // Check for &quot;:helptags ++t {dir}&quot;.</a>
+<a name="ln1187">  if (strncmp(eap-&gt;arg, &quot;++t&quot;, 3) == 0 &amp;&amp; ascii_iswhite(eap-&gt;arg[3])) {</a>
+<a name="ln1188">    add_help_tags = true;</a>
+<a name="ln1189">    eap-&gt;arg = skipwhite(eap-&gt;arg + 3);</a>
+<a name="ln1190">  }</a>
+<a name="ln1191"> </a>
+<a name="ln1192">  if (strcmp(eap-&gt;arg, &quot;ALL&quot;) == 0) {</a>
+<a name="ln1193">    do_in_path(p_rtp, &quot;&quot;, &quot;doc&quot;, DIP_ALL + DIP_DIR, helptags_cb, &amp;add_help_tags);</a>
+<a name="ln1194">  } else {</a>
+<a name="ln1195">    ExpandInit(&amp;xpc);</a>
+<a name="ln1196">    xpc.xp_context = EXPAND_DIRECTORIES;</a>
+<a name="ln1197">    char *dirname =</a>
+<a name="ln1198">      ExpandOne(&amp;xpc, eap-&gt;arg, NULL, WILD_LIST_NOTFOUND|WILD_SILENT, WILD_EXPAND_FREE);</a>
+<a name="ln1199">    if (dirname == NULL || !os_isdir(dirname)) {</a>
+<a name="ln1200">      semsg(_(&quot;E150: Not a directory: %s&quot;), eap-&gt;arg);</a>
+<a name="ln1201">    } else {</a>
+<a name="ln1202">      do_helptags(dirname, add_help_tags, false);</a>
+<a name="ln1203">    }</a>
+<a name="ln1204">    xfree(dirname);</a>
+<a name="ln1205">  }</a>
+<a name="ln1206">}</a>
 </code></pre>
-<div class="balloon" rel="1009"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v781/" target="_blank">V781</a> The value of the 'len' index is checked after it was used. Perhaps there is a mistake in program logic.</p></div>
+<div class="balloon" rel="1011"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v781/" target="_blank">V781</a> The value of the 'len' index is checked after it was used. Perhaps there is a mistake in program logic.</p></div>
 <link rel="stylesheet" href="highlight.css">
 <script src="highlight.pack.js"></script>
 <script src="highlightjs-line-numbers.js"></script>
