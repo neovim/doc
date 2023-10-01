@@ -1,0 +1,3639 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
+  <title>tag.c</title>
+  <link rel="stylesheet" href="../style.css"/>
+  <script src="../jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<pre><code class = "cpp">
+<a name="ln1">// This is an open source non-commercial project. Dear PVS-Studio, please check</a>
+<a name="ln2">// it. PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com</a>
+<a name="ln3"> </a>
+<a name="ln4">// Code to handle tags and the tag stack</a>
+<a name="ln5"> </a>
+<a name="ln6">#include &lt;assert.h&gt;</a>
+<a name="ln7">#include &lt;ctype.h&gt;</a>
+<a name="ln8">#include &lt;inttypes.h&gt;</a>
+<a name="ln9">#include &lt;stdbool.h&gt;</a>
+<a name="ln10">#include &lt;stdio.h&gt;</a>
+<a name="ln11">#include &lt;stdlib.h&gt;</a>
+<a name="ln12">#include &lt;string.h&gt;</a>
+<a name="ln13"> </a>
+<a name="ln14">#include &quot;nvim/ascii.h&quot;</a>
+<a name="ln15">#include &quot;nvim/autocmd.h&quot;</a>
+<a name="ln16">#include &quot;nvim/buffer.h&quot;</a>
+<a name="ln17">#include &quot;nvim/charset.h&quot;</a>
+<a name="ln18">#include &quot;nvim/cmdexpand.h&quot;</a>
+<a name="ln19">#include &quot;nvim/cursor.h&quot;</a>
+<a name="ln20">#include &quot;nvim/drawscreen.h&quot;</a>
+<a name="ln21">#include &quot;nvim/eval.h&quot;</a>
+<a name="ln22">#include &quot;nvim/eval/typval.h&quot;</a>
+<a name="ln23">#include &quot;nvim/ex_cmds.h&quot;</a>
+<a name="ln24">#include &quot;nvim/ex_cmds_defs.h&quot;</a>
+<a name="ln25">#include &quot;nvim/ex_docmd.h&quot;</a>
+<a name="ln26">#include &quot;nvim/file_search.h&quot;</a>
+<a name="ln27">#include &quot;nvim/fileio.h&quot;</a>
+<a name="ln28">#include &quot;nvim/fold.h&quot;</a>
+<a name="ln29">#include &quot;nvim/garray.h&quot;</a>
+<a name="ln30">#include &quot;nvim/gettext.h&quot;</a>
+<a name="ln31">#include &quot;nvim/globals.h&quot;</a>
+<a name="ln32">#include &quot;nvim/hashtab.h&quot;</a>
+<a name="ln33">#include &quot;nvim/help.h&quot;</a>
+<a name="ln34">#include &quot;nvim/highlight_defs.h&quot;</a>
+<a name="ln35">#include &quot;nvim/input.h&quot;</a>
+<a name="ln36">#include &quot;nvim/insexpand.h&quot;</a>
+<a name="ln37">#include &quot;nvim/macros.h&quot;</a>
+<a name="ln38">#include &quot;nvim/mark.h&quot;</a>
+<a name="ln39">#include &quot;nvim/mbyte.h&quot;</a>
+<a name="ln40">#include &quot;nvim/memory.h&quot;</a>
+<a name="ln41">#include &quot;nvim/message.h&quot;</a>
+<a name="ln42">#include &quot;nvim/move.h&quot;</a>
+<a name="ln43">#include &quot;nvim/option.h&quot;</a>
+<a name="ln44">#include &quot;nvim/option_defs.h&quot;</a>
+<a name="ln45">#include &quot;nvim/option_vars.h&quot;</a>
+<a name="ln46">#include &quot;nvim/optionstr.h&quot;</a>
+<a name="ln47">#include &quot;nvim/os/input.h&quot;</a>
+<a name="ln48">#include &quot;nvim/os/os.h&quot;</a>
+<a name="ln49">#include &quot;nvim/os/os_defs.h&quot;</a>
+<a name="ln50">#include &quot;nvim/os/time.h&quot;</a>
+<a name="ln51">#include &quot;nvim/path.h&quot;</a>
+<a name="ln52">#include &quot;nvim/pos.h&quot;</a>
+<a name="ln53">#include &quot;nvim/quickfix.h&quot;</a>
+<a name="ln54">#include &quot;nvim/regexp.h&quot;</a>
+<a name="ln55">#include &quot;nvim/runtime.h&quot;</a>
+<a name="ln56">#include &quot;nvim/search.h&quot;</a>
+<a name="ln57">#include &quot;nvim/strings.h&quot;</a>
+<a name="ln58">#include &quot;nvim/tag.h&quot;</a>
+<a name="ln59">#include &quot;nvim/types.h&quot;</a>
+<a name="ln60">#include &quot;nvim/ui.h&quot;</a>
+<a name="ln61">#include &quot;nvim/vim.h&quot;</a>
+<a name="ln62">#include &quot;nvim/window.h&quot;</a>
+<a name="ln63"> </a>
+<a name="ln64">// Structure to hold pointers to various items in a tag line.</a>
+<a name="ln65">typedef struct tag_pointers {</a>
+<a name="ln66">  // filled in by parse_tag_line():</a>
+<a name="ln67">  char *tagname;        // start of tag name (skip &quot;file:&quot;)</a>
+<a name="ln68">  char *tagname_end;    // char after tag name</a>
+<a name="ln69">  char *fname;          // first char of file name</a>
+<a name="ln70">  char *fname_end;      // char after file name</a>
+<a name="ln71">  char *command;        // first char of command</a>
+<a name="ln72">  // filled in by parse_match():</a>
+<a name="ln73">  char *command_end;    // first char after command</a>
+<a name="ln74">  char *tag_fname;      // file name of the tags file. This is used</a>
+<a name="ln75">  // when 'tr' is set.</a>
+<a name="ln76">  char *tagkind;          // &quot;kind:&quot; value</a>
+<a name="ln77">  char *tagkind_end;      // end of tagkind</a>
+<a name="ln78">  char *user_data;        // user_data string</a>
+<a name="ln79">  char *user_data_end;    // end of user_data</a>
+<a name="ln80">  linenr_T tagline;       // &quot;line:&quot; value</a>
+<a name="ln81">} tagptrs_T;</a>
+<a name="ln82"> </a>
+<a name="ln83">// Structure to hold info about the tag pattern being used.</a>
+<a name="ln84">typedef struct {</a>
+<a name="ln85">  char *pat;            // the pattern</a>
+<a name="ln86">  int len;              // length of pat[]</a>
+<a name="ln87">  char *head;           // start of pattern head</a>
+<a name="ln88">  int headlen;          // length of head[]</a>
+<a name="ln89">  regmatch_T regmatch;  // regexp program, may be NULL</a>
+<a name="ln90">} pat_T;</a>
+<a name="ln91"> </a>
+<a name="ln92">// The matching tags are first stored in one of the hash tables.  In</a>
+<a name="ln93">// which one depends on the priority of the match.</a>
+<a name="ln94">// ht_match[] is used to find duplicates, ga_match[] to keep them in sequence.</a>
+<a name="ln95">// At the end, the matches from ga_match[] are concatenated, to make a list</a>
+<a name="ln96">// sorted on priority.</a>
+<a name="ln97">enum {</a>
+<a name="ln98">  MT_ST_CUR = 0,  // static match in current file</a>
+<a name="ln99">  MT_GL_CUR = 1,  // global match in current file</a>
+<a name="ln100">  MT_GL_OTH = 2,  // global match in other file</a>
+<a name="ln101">  MT_ST_OTH = 3,  // static match in other file</a>
+<a name="ln102">  MT_IC_OFF = 4,  // add for icase match</a>
+<a name="ln103">  MT_RE_OFF = 8,  // add for regexp match</a>
+<a name="ln104">  MT_MASK = 7,    // mask for printing priority</a>
+<a name="ln105">  MT_COUNT = 16,</a>
+<a name="ln106">};</a>
+<a name="ln107"> </a>
+<a name="ln108">static char *mt_names[MT_COUNT/2] =</a>
+<a name="ln109">{ &quot;FSC&quot;, &quot;F C&quot;, &quot;F  &quot;, &quot;FS &quot;, &quot; SC&quot;, &quot;  C&quot;, &quot;   &quot;, &quot; S &quot; };</a>
+<a name="ln110"> </a>
+<a name="ln111">#define NOTAGFILE       99              // return value for jumpto_tag</a>
+<a name="ln112">static char *nofile_fname = NULL;       // fname for NOTAGFILE error</a>
+<a name="ln113"> </a>
+<a name="ln114">/// Return values used when reading lines from a tags file.</a>
+<a name="ln115">typedef enum {</a>
+<a name="ln116">  TAGS_READ_SUCCESS = 1,</a>
+<a name="ln117">  TAGS_READ_EOF,</a>
+<a name="ln118">  TAGS_READ_IGNORE,</a>
+<a name="ln119">} tags_read_status_T;</a>
+<a name="ln120"> </a>
+<a name="ln121">/// States used during a tags search</a>
+<a name="ln122">typedef enum {</a>
+<a name="ln123">  TS_START,         ///&lt; at start of file</a>
+<a name="ln124">  TS_LINEAR,        ///&lt; linear searching forward, till EOF</a>
+<a name="ln125">  TS_BINARY,        ///&lt; binary searching</a>
+<a name="ln126">  TS_SKIP_BACK,     ///&lt; skipping backwards</a>
+<a name="ln127">  TS_STEP_FORWARD,  ///&lt; stepping forwards</a>
+<a name="ln128">} tagsearch_state_T;</a>
+<a name="ln129"> </a>
+<a name="ln130">/// Binary search file offsets in a tags file</a>
+<a name="ln131">typedef struct {</a>
+<a name="ln132">  off_T low_offset;        ///&lt; offset for first char of first line that</a>
+<a name="ln133">                           ///&lt; could match</a>
+<a name="ln134">  off_T high_offset;       ///&lt; offset of char after last line that could</a>
+<a name="ln135">                           ///&lt; match</a>
+<a name="ln136">  off_T curr_offset;       ///&lt; Current file offset in search range</a>
+<a name="ln137">  off_T curr_offset_used;  ///&lt; curr_offset used when skipping back</a>
+<a name="ln138">  off_T match_offset;      ///&lt; Where the binary search found a tag</a>
+<a name="ln139">  int low_char;            ///&lt; first char at low_offset</a>
+<a name="ln140">  int high_char;           ///&lt; first char at high_offset</a>
+<a name="ln141">} tagsearch_info_T;</a>
+<a name="ln142"> </a>
+<a name="ln143">/// Return values used when matching tags against a pattern.</a>
+<a name="ln144">typedef enum {</a>
+<a name="ln145">  TAG_MATCH_SUCCESS = 1,</a>
+<a name="ln146">  TAG_MATCH_FAIL,</a>
+<a name="ln147">  TAG_MATCH_STOP,</a>
+<a name="ln148">  TAG_MATCH_NEXT,</a>
+<a name="ln149">} tagmatch_status_T;</a>
+<a name="ln150"> </a>
+<a name="ln151">/// Arguments used for matching tags read from a tags file against a pattern.</a>
+<a name="ln152">typedef struct {</a>
+<a name="ln153">  int matchoff;      ///&lt; tag match offset</a>
+<a name="ln154">  bool match_re;     ///&lt; true if the tag matches a regexp</a>
+<a name="ln155">  bool match_no_ic;  ///&lt; true if the tag matches with case</a>
+<a name="ln156">  bool has_re;       ///&lt; regular expression used</a>
+<a name="ln157">  bool sortic;       ///&lt; tags file sorted ignoring case (foldcase)</a>
+<a name="ln158">  bool sort_error;   ///&lt; tags file not sorted</a>
+<a name="ln159">} findtags_match_args_T;</a>
+<a name="ln160"> </a>
+<a name="ln161">/// State information used during a tag search</a>
+<a name="ln162">typedef struct {</a>
+<a name="ln163">  tagsearch_state_T state;       ///&lt; tag search state</a>
+<a name="ln164">  bool stop_searching;           ///&lt; stop when match found or error</a>
+<a name="ln165">  pat_T *orgpat;                 ///&lt; holds unconverted pattern info</a>
+<a name="ln166">  char *lbuf;                    ///&lt; line buffer</a>
+<a name="ln167">  int lbuf_size;                 ///&lt; length of lbuf</a>
+<a name="ln168">  char *tag_fname;               ///&lt; name of the tag file</a>
+<a name="ln169">  FILE *fp;                      ///&lt; current tags file pointer</a>
+<a name="ln170">  int flags;                     ///&lt; flags used for tag search</a>
+<a name="ln171">  int tag_file_sorted;           ///&lt; !_TAG_FILE_SORTED value</a>
+<a name="ln172">  bool get_searchpat;            ///&lt; used for 'showfulltag'</a>
+<a name="ln173">  bool help_only;                ///&lt; only search for help tags</a>
+<a name="ln174">  bool did_open;                 ///&lt; did open a tag file</a>
+<a name="ln175">  int mincount;                  ///&lt; MAXCOL: find all matches</a>
+<a name="ln176">                                 ///&lt; other: minimal number of matches</a>
+<a name="ln177">  bool linear;                   ///&lt; do a linear search</a>
+<a name="ln178">  vimconv_T vimconv;</a>
+<a name="ln179">  char help_lang[3];             ///&lt; lang of current tags file</a>
+<a name="ln180">  int help_pri;                  ///&lt; help language priority</a>
+<a name="ln181">  char *help_lang_find;          ///&lt; lang to be found</a>
+<a name="ln182">  bool is_txt;                   ///&lt; flag of file extension</a>
+<a name="ln183">  int match_count;               ///&lt; number of matches found</a>
+<a name="ln184">  garray_T ga_match[MT_COUNT];   ///&lt; stores matches in sequence</a>
+<a name="ln185">  hashtab_T ht_match[MT_COUNT];  ///&lt; stores matches by key</a>
+<a name="ln186">} findtags_state_T;</a>
+<a name="ln187"> </a>
+<a name="ln188">#ifdef INCLUDE_GENERATED_DECLARATIONS</a>
+<a name="ln189"># include &quot;tag.c.generated.h&quot;</a>
+<a name="ln190">#endif</a>
+<a name="ln191"> </a>
+<a name="ln192">static const char e_tag_stack_empty[]</a>
+<a name="ln193">  = N_(&quot;E73: Tag stack empty&quot;);</a>
+<a name="ln194">static const char e_tag_not_found_str[]</a>
+<a name="ln195">  = N_(&quot;E426: Tag not found: %s&quot;);</a>
+<a name="ln196">static const char e_at_bottom_of_tag_stack[]</a>
+<a name="ln197">  = N_(&quot;E555: At bottom of tag stack&quot;);</a>
+<a name="ln198">static const char e_at_top_of_tag_stack[]</a>
+<a name="ln199">  = N_(&quot;E556: At top of tag stack&quot;);</a>
+<a name="ln200">static const char e_cannot_modify_tag_stack_within_tagfunc[]</a>
+<a name="ln201">  = N_(&quot;E986: Cannot modify the tag stack within tagfunc&quot;);</a>
+<a name="ln202">static const char e_invalid_return_value_from_tagfunc[]</a>
+<a name="ln203">  = N_(&quot;E987: Invalid return value from tagfunc&quot;);</a>
+<a name="ln204">static const char e_window_unexpectedly_close_while_searching_for_tags[]</a>
+<a name="ln205">  = N_(&quot;E1299: Window unexpectedly closed while searching for tags&quot;);</a>
+<a name="ln206"> </a>
+<a name="ln207">static char *tagmatchname = NULL;   // name of last used tag</a>
+<a name="ln208"> </a>
+<a name="ln209">// Tag for preview window is remembered separately, to avoid messing up the</a>
+<a name="ln210">// normal tagstack.</a>
+<a name="ln211">static taggy_T ptag_entry = { NULL, INIT_FMARK, 0, 0, NULL };</a>
+<a name="ln212"> </a>
+<a name="ln213">static int tfu_in_use = false;  // disallow recursive call of tagfunc</a>
+<a name="ln214">static Callback tfu_cb;         // 'tagfunc' callback function</a>
+<a name="ln215"> </a>
+<a name="ln216">// Used instead of NUL to separate tag fields in the growarrays.</a>
+<a name="ln217">#define TAG_SEP 0x02</a>
+<a name="ln218"> </a>
+<a name="ln219">/// Reads the 'tagfunc' option value and convert that to a callback value.</a>
+<a name="ln220">/// Invoked when the 'tagfunc' option is set. The option value can be a name of</a>
+<a name="ln221">/// a function (string), or function(&lt;name&gt;) or funcref(&lt;name&gt;) or a lambda.</a>
+<a name="ln222">const char *did_set_tagfunc(optset_T *args)</a>
+<a name="ln223">{</a>
+<a name="ln224">  buf_T *buf = (buf_T *)args-&gt;os_buf;</a>
+<a name="ln225"> </a>
+<a name="ln226">  callback_free(&amp;tfu_cb);</a>
+<a name="ln227">  callback_free(&amp;buf-&gt;b_tfu_cb);</a>
+<a name="ln228"> </a>
+<a name="ln229">  if (*buf-&gt;b_p_tfu == NUL) {</a>
+<a name="ln230">    return NULL;</a>
+<a name="ln231">  }</a>
+<a name="ln232"> </a>
+<a name="ln233">  if (option_set_callback_func(buf-&gt;b_p_tfu, &amp;tfu_cb) == FAIL) {</a>
+<a name="ln234">    return e_invarg;</a>
+<a name="ln235">  }</a>
+<a name="ln236"> </a>
+<a name="ln237">  callback_copy(&amp;buf-&gt;b_tfu_cb, &amp;tfu_cb);</a>
+<a name="ln238">  return NULL;</a>
+<a name="ln239">}</a>
+<a name="ln240"> </a>
+<a name="ln241">#if defined(EXITFREE)</a>
+<a name="ln242">void free_tagfunc_option(void)</a>
+<a name="ln243">{</a>
+<a name="ln244">  callback_free(&amp;tfu_cb);</a>
+<a name="ln245">}</a>
+<a name="ln246">#endif</a>
+<a name="ln247"> </a>
+<a name="ln248">/// Mark the global 'tagfunc' callback with &quot;copyID&quot; so that it is not garbage</a>
+<a name="ln249">/// collected.</a>
+<a name="ln250">bool set_ref_in_tagfunc(int copyID)</a>
+<a name="ln251">{</a>
+<a name="ln252">  return set_ref_in_callback(&amp;tfu_cb, copyID, NULL, NULL);</a>
+<a name="ln253">}</a>
+<a name="ln254"> </a>
+<a name="ln255">/// Copy the global 'tagfunc' callback function to the buffer-local 'tagfunc'</a>
+<a name="ln256">/// callback for 'buf'.</a>
+<a name="ln257">void set_buflocal_tfu_callback(buf_T *buf)</a>
+<a name="ln258">{</a>
+<a name="ln259">  callback_free(&amp;buf-&gt;b_tfu_cb);</a>
+<a name="ln260">  if (tfu_cb.type != kCallbackNone) {</a>
+<a name="ln261">    callback_copy(&amp;buf-&gt;b_tfu_cb, &amp;tfu_cb);</a>
+<a name="ln262">  }</a>
+<a name="ln263">}</a>
+<a name="ln264"> </a>
+<a name="ln265">/// Jump to tag; handling of tag commands and tag stack</a>
+<a name="ln266">///</a>
+<a name="ln267">/// *tag != NUL: &quot;:tag {tag}&quot;, jump to new tag, add to tag stack</a>
+<a name="ln268">///</a>
+<a name="ln269">/// type == DT_TAG:      &quot;:tag [tag]&quot;, jump to newer position or same tag again</a>
+<a name="ln270">/// type == DT_HELP:     like DT_TAG, but don't use regexp.</a>
+<a name="ln271">/// type == DT_POP:      &quot;:pop&quot; or CTRL-T, jump to old position</a>
+<a name="ln272">/// type == DT_NEXT:     jump to next match of same tag</a>
+<a name="ln273">/// type == DT_PREV:     jump to previous match of same tag</a>
+<a name="ln274">/// type == DT_FIRST:    jump to first match of same tag</a>
+<a name="ln275">/// type == DT_LAST:     jump to last match of same tag</a>
+<a name="ln276">/// type == DT_SELECT:   &quot;:tselect [tag]&quot;, select tag from a list of all matches</a>
+<a name="ln277">/// type == DT_JUMP:     &quot;:tjump [tag]&quot;, jump to tag or select tag from a list</a>
+<a name="ln278">/// type == DT_LTAG:     use location list for displaying tag matches</a>
+<a name="ln279">/// type == DT_FREE:     free cached matches</a>
+<a name="ln280">///</a>
+<a name="ln281">/// @param tag  tag (pattern) to jump to</a>
+<a name="ln282">/// @param forceit  :ta with !</a>
+<a name="ln283">/// @param verbose  print &quot;tag not found&quot; message</a>
+<a name="ln284">void do_tag(char *tag, int type, int count, int forceit, int verbose)</a>
+<a name="ln285">{</a>
+<a name="ln286">  taggy_T *tagstack = curwin-&gt;w_tagstack;</a>
+<a name="ln287">  int tagstackidx = curwin-&gt;w_tagstackidx;</a>
+<a name="ln288">  int tagstacklen = curwin-&gt;w_tagstacklen;</a>
+<a name="ln289">  int cur_match = 0;</a>
+<a name="ln290">  int cur_fnum = curbuf-&gt;b_fnum;</a>
+<a name="ln291">  int oldtagstackidx = tagstackidx;</a>
+<a name="ln292">  int prevtagstackidx = tagstackidx;</a>
+<a name="ln293">  int prev_num_matches;</a>
+<a name="ln294">  int new_tag = false;</a>
+<a name="ln295">  int i;</a>
+<a name="ln296">  int ic;</a>
+<a name="ln297">  int no_regexp = false;</a>
+<a name="ln298">  int error_cur_match = 0;</a>
+<a name="ln299">  int save_pos = false;</a>
+<a name="ln300">  fmark_T saved_fmark;</a>
+<a name="ln301">  int new_num_matches;</a>
+<a name="ln302">  char **new_matches;</a>
+<a name="ln303">  int use_tagstack;</a>
+<a name="ln304">  int skip_msg = false;</a>
+<a name="ln305">  char *buf_ffname = curbuf-&gt;b_ffname;  // name for priority computation</a>
+<a name="ln306">  int use_tfu = 1;</a>
+<a name="ln307">  char *tofree = NULL;</a>
+<a name="ln308"> </a>
+<a name="ln309">  // remember the matches for the last used tag</a>
+<a name="ln310">  static int num_matches = 0;</a>
+<a name="ln311">  static int max_num_matches = 0;             // limit used for match search</a>
+<a name="ln312">  static char **matches = NULL;</a>
+<a name="ln313">  static int flags;</a>
+<a name="ln314"> </a>
+<a name="ln315">  if (tfu_in_use) {</a>
+<a name="ln316">    emsg(_(e_cannot_modify_tag_stack_within_tagfunc));</a>
+<a name="ln317">    return;</a>
+<a name="ln318">  }</a>
+<a name="ln319"> </a>
+<a name="ln320">#ifdef EXITFREE</a>
+<a name="ln321">  if (type == DT_FREE) {</a>
+<a name="ln322">    // remove the list of matches</a>
+<a name="ln323">    FreeWild(num_matches, matches);</a>
+<a name="ln324">    num_matches = 0;</a>
+<a name="ln325">    return;</a>
+<a name="ln326">  }</a>
+<a name="ln327">#endif</a>
+<a name="ln328"> </a>
+<a name="ln329">  if (type == DT_HELP) {</a>
+<a name="ln330">    type = DT_TAG;</a>
+<a name="ln331">    no_regexp = true;</a>
+<a name="ln332">    use_tfu = 0;</a>
+<a name="ln333">  }</a>
+<a name="ln334"> </a>
+<a name="ln335">  prev_num_matches = num_matches;</a>
+<a name="ln336">  free_string_option(nofile_fname);</a>
+<a name="ln337">  nofile_fname = NULL;</a>
+<a name="ln338"> </a>
+<a name="ln339">  clearpos(&amp;saved_fmark.mark);          // shutup gcc 4.0</a>
+<a name="ln340">  saved_fmark.fnum = 0;</a>
+<a name="ln341"> </a>
+<a name="ln342">  // Don't add a tag to the tagstack if 'tagstack' has been reset.</a>
+<a name="ln343">  assert(tag != NULL);</a>
+<a name="ln344">  if (!p_tgst &amp;&amp; *tag != NUL) {  // -V522</a>
+<a name="ln345">    use_tagstack = false;</a>
+<a name="ln346">    new_tag = true;</a>
+<a name="ln347">    if (g_do_tagpreview != 0) {</a>
+<a name="ln348">      tagstack_clear_entry(&amp;ptag_entry);</a>
+<a name="ln349">      ptag_entry.tagname = xstrdup(tag);</a>
+<a name="ln350">    }</a>
+<a name="ln351">  } else {</a>
+<a name="ln352">    if (g_do_tagpreview != 0) {</a>
+<a name="ln353">      use_tagstack = false;</a>
+<a name="ln354">    } else {</a>
+<a name="ln355">      use_tagstack = true;</a>
+<a name="ln356">    }</a>
+<a name="ln357"> </a>
+<a name="ln358">    // new pattern, add to the tag stack</a>
+<a name="ln359">    if (*tag != NUL</a>
+<a name="ln360">        &amp;&amp; (type == DT_TAG || type == DT_SELECT || type == DT_JUMP</a>
+<a name="ln361">            || type == DT_LTAG)) {</a>
+<a name="ln362">      if (g_do_tagpreview != 0) {</a>
+<a name="ln363">        if (ptag_entry.tagname != NULL</a>
+<a name="ln364">            &amp;&amp; strcmp(ptag_entry.tagname, tag) == 0) {</a>
+<a name="ln365">          // Jumping to same tag: keep the current match, so that</a>
+<a name="ln366">          // the CursorHold autocommand example works.</a>
+<a name="ln367">          cur_match = ptag_entry.cur_match;</a>
+<a name="ln368">          cur_fnum = ptag_entry.cur_fnum;</a>
+<a name="ln369">        } else {</a>
+<a name="ln370">          tagstack_clear_entry(&amp;ptag_entry);</a>
+<a name="ln371">          ptag_entry.tagname = xstrdup(tag);</a>
+<a name="ln372">        }</a>
+<a name="ln373">      } else {</a>
+<a name="ln374">        // If the last used entry is not at the top, delete all tag</a>
+<a name="ln375">        // stack entries above it.</a>
+<a name="ln376">        while (tagstackidx &lt; tagstacklen) {</a>
+<a name="ln377">          tagstack_clear_entry(&amp;tagstack[--tagstacklen]);</a>
+<a name="ln378">        }</a>
+<a name="ln379"> </a>
+<a name="ln380">        // if the tagstack is full: remove oldest entry</a>
+<a name="ln381">        if (++tagstacklen &gt; TAGSTACKSIZE) {</a>
+<a name="ln382">          tagstacklen = TAGSTACKSIZE;</a>
+<a name="ln383">          tagstack_clear_entry(&amp;tagstack[0]);</a>
+<a name="ln384">          for (i = 1; i &lt; tagstacklen; i++) {</a>
+<a name="ln385">            tagstack[i - 1] = tagstack[i];</a>
+<a name="ln386">          }</a>
+<a name="ln387">          tagstackidx--;</a>
+<a name="ln388">        }</a>
+<a name="ln389"> </a>
+<a name="ln390">        // put the tag name in the tag stack</a>
+<a name="ln391">        tagstack[tagstackidx].tagname = xstrdup(tag);</a>
+<a name="ln392"> </a>
+<a name="ln393">        curwin-&gt;w_tagstacklen = tagstacklen;</a>
+<a name="ln394"> </a>
+<a name="ln395">        save_pos = true;                // save the cursor position below</a>
+<a name="ln396">      }</a>
+<a name="ln397"> </a>
+<a name="ln398">      new_tag = true;</a>
+<a name="ln399">    } else {</a>
+<a name="ln400">      if (g_do_tagpreview != 0 ? ptag_entry.tagname == NULL :</a>
+<a name="ln401">          tagstacklen == 0) {</a>
+<a name="ln402">        // empty stack</a>
+<a name="ln403">        emsg(_(e_tag_stack_empty));</a>
+<a name="ln404">        goto end_do_tag;</a>
+<a name="ln405">      }</a>
+<a name="ln406"> </a>
+<a name="ln407">      if (type == DT_POP) {             // go to older position</a>
+<a name="ln408">        const bool old_KeyTyped = KeyTyped;</a>
+<a name="ln409">        if ((tagstackidx -= count) &lt; 0) {</a>
+<a name="ln410">          emsg(_(e_at_bottom_of_tag_stack));</a>
+<a name="ln411">          if (tagstackidx + count == 0) {</a>
+<a name="ln412">            // We did [num]^T from the bottom of the stack</a>
+<a name="ln413">            tagstackidx = 0;</a>
+<a name="ln414">            goto end_do_tag;</a>
+<a name="ln415">          }</a>
+<a name="ln416">          // We weren't at the bottom of the stack, so jump all the</a>
+<a name="ln417">          // way to the bottom now.</a>
+<a name="ln418">          tagstackidx = 0;</a>
+<a name="ln419">        } else if (tagstackidx &gt;= tagstacklen) {        // count == 0?</a>
+<a name="ln420">          emsg(_(e_at_top_of_tag_stack));</a>
+<a name="ln421">          goto end_do_tag;</a>
+<a name="ln422">        }</a>
+<a name="ln423"> </a>
+<a name="ln424">        // Make a copy of the fmark, autocommands may invalidate the</a>
+<a name="ln425">        // tagstack before it's used.</a>
+<a name="ln426">        saved_fmark = tagstack[tagstackidx].fmark;</a>
+<a name="ln427">        if (saved_fmark.fnum != curbuf-&gt;b_fnum) {</a>
+<a name="ln428">          // Jump to other file. If this fails (e.g. because the</a>
+<a name="ln429">          // file was changed) keep original position in tag stack.</a>
+<a name="ln430">          if (buflist_getfile(saved_fmark.fnum, saved_fmark.mark.lnum,</a>
+<a name="ln431">                              GETF_SETMARK, forceit) == FAIL) {</a>
+<a name="ln432">            tagstackidx = oldtagstackidx;              // back to old posn</a>
+<a name="ln433">            goto end_do_tag;</a>
+<a name="ln434">          }</a>
+<a name="ln435">          // A BufReadPost autocommand may jump to the '&quot; mark, but</a>
+<a name="ln436">          // we don't what that here.</a>
+<a name="ln437">          curwin-&gt;w_cursor.lnum = saved_fmark.mark.lnum;</a>
+<a name="ln438">        } else {</a>
+<a name="ln439">          setpcmark();</a>
+<a name="ln440">          curwin-&gt;w_cursor.lnum = saved_fmark.mark.lnum;</a>
+<a name="ln441">        }</a>
+<a name="ln442">        curwin-&gt;w_cursor.col = saved_fmark.mark.col;</a>
+<a name="ln443">        curwin-&gt;w_set_curswant = true;</a>
+<a name="ln444">        check_cursor();</a>
+<a name="ln445">        if ((fdo_flags &amp; FDO_TAG) &amp;&amp; old_KeyTyped) {</a>
+<a name="ln446">          foldOpenCursor();</a>
+<a name="ln447">        }</a>
+<a name="ln448"> </a>
+<a name="ln449">        // remove the old list of matches</a>
+<a name="ln450">        FreeWild(num_matches, matches);</a>
+<a name="ln451">        num_matches = 0;</a>
+<a name="ln452">        tag_freematch();</a>
+<a name="ln453">        goto end_do_tag;</a>
+<a name="ln454">      }</a>
+<a name="ln455"> </a>
+<a name="ln456">      if (type == DT_TAG</a>
+<a name="ln457">          || type == DT_LTAG) {</a>
+<a name="ln458">        if (g_do_tagpreview != 0) {</a>
+<a name="ln459">          cur_match = ptag_entry.cur_match;</a>
+<a name="ln460">          cur_fnum = ptag_entry.cur_fnum;</a>
+<a name="ln461">        } else {</a>
+<a name="ln462">          // &quot;:tag&quot; (no argument): go to newer pattern</a>
+<a name="ln463">          save_pos = true;              // save the cursor position below</a>
+<a name="ln464">          if ((tagstackidx += count - 1) &gt;= tagstacklen) {</a>
+<a name="ln465">            // Beyond the last one, just give an error message and</a>
+<a name="ln466">            // go to the last one.  Don't store the cursor</a>
+<a name="ln467">            // position.</a>
+<a name="ln468">            tagstackidx = tagstacklen - 1;</a>
+<a name="ln469">            emsg(_(e_at_top_of_tag_stack));</a>
+<a name="ln470">            save_pos = false;</a>
+<a name="ln471">          } else if (tagstackidx &lt; 0) {         // must have been count == 0</a>
+<a name="ln472">            emsg(_(e_at_bottom_of_tag_stack));</a>
+<a name="ln473">            tagstackidx = 0;</a>
+<a name="ln474">            goto end_do_tag;</a>
+<a name="ln475">          }</a>
+<a name="ln476">          cur_match = tagstack[tagstackidx].cur_match;</a>
+<a name="ln477">          cur_fnum = tagstack[tagstackidx].cur_fnum;</a>
+<a name="ln478">        }</a>
+<a name="ln479">        new_tag = true;</a>
+<a name="ln480">      } else {                                // go to other matching tag</a>
+<a name="ln481">        // Save index for when selection is cancelled.</a>
+<a name="ln482">        prevtagstackidx = tagstackidx;</a>
+<a name="ln483"> </a>
+<a name="ln484">        if (g_do_tagpreview != 0) {</a>
+<a name="ln485">          cur_match = ptag_entry.cur_match;</a>
+<a name="ln486">          cur_fnum = ptag_entry.cur_fnum;</a>
+<a name="ln487">        } else {</a>
+<a name="ln488">          if (--tagstackidx &lt; 0) {</a>
+<a name="ln489">            tagstackidx = 0;</a>
+<a name="ln490">          }</a>
+<a name="ln491">          cur_match = tagstack[tagstackidx].cur_match;</a>
+<a name="ln492">          cur_fnum = tagstack[tagstackidx].cur_fnum;</a>
+<a name="ln493">        }</a>
+<a name="ln494">        switch (type) {</a>
+<a name="ln495">        case DT_FIRST:</a>
+<a name="ln496">          cur_match = count - 1; break;</a>
+<a name="ln497">        case DT_SELECT:</a>
+<a name="ln498">        case DT_JUMP:</a>
+<a name="ln499">        case DT_LAST:</a>
+<a name="ln500">          cur_match = MAXCOL - 1; break;</a>
+<a name="ln501">        case DT_NEXT:</a>
+<a name="ln502">          cur_match += count; break;</a>
+<a name="ln503">        case DT_PREV:</a>
+<a name="ln504">          cur_match -= count; break;</a>
+<a name="ln505">        }</a>
+<a name="ln506">        if (cur_match &gt;= MAXCOL) {</a>
+<a name="ln507">          cur_match = MAXCOL - 1;</a>
+<a name="ln508">        } else if (cur_match &lt; 0) {</a>
+<a name="ln509">          emsg(_(&quot;E425: Cannot go before first matching tag&quot;));</a>
+<a name="ln510">          skip_msg = true;</a>
+<a name="ln511">          cur_match = 0;</a>
+<a name="ln512">          cur_fnum = curbuf-&gt;b_fnum;</a>
+<a name="ln513">        }</a>
+<a name="ln514">      }</a>
+<a name="ln515">    }</a>
+<a name="ln516"> </a>
+<a name="ln517">    if (g_do_tagpreview != 0) {</a>
+<a name="ln518">      if (type != DT_SELECT &amp;&amp; type != DT_JUMP) {</a>
+<a name="ln519">        ptag_entry.cur_match = cur_match;</a>
+<a name="ln520">        ptag_entry.cur_fnum = cur_fnum;</a>
+<a name="ln521">      }</a>
+<a name="ln522">    } else {</a>
+<a name="ln523">      // For &quot;:tag [arg]&quot; or &quot;:tselect&quot; remember position before the jump.</a>
+<a name="ln524">      saved_fmark = tagstack[tagstackidx].fmark;</a>
+<a name="ln525">      if (save_pos) {</a>
+<a name="ln526">        tagstack[tagstackidx].fmark.mark = curwin-&gt;w_cursor;</a>
+<a name="ln527">        tagstack[tagstackidx].fmark.fnum = curbuf-&gt;b_fnum;</a>
+<a name="ln528">      }</a>
+<a name="ln529"> </a>
+<a name="ln530">      // Curwin will change in the call to jumpto_tag() if &quot;:stag&quot; was</a>
+<a name="ln531">      // used or an autocommand jumps to another window; store value of</a>
+<a name="ln532">      // tagstackidx now.</a>
+<a name="ln533">      curwin-&gt;w_tagstackidx = tagstackidx;</a>
+<a name="ln534">      if (type != DT_SELECT &amp;&amp; type != DT_JUMP) {</a>
+<a name="ln535">        curwin-&gt;w_tagstack[tagstackidx].cur_match = cur_match;</a>
+<a name="ln536">        curwin-&gt;w_tagstack[tagstackidx].cur_fnum = cur_fnum;</a>
+<a name="ln537">      }</a>
+<a name="ln538">    }</a>
+<a name="ln539">  }</a>
+<a name="ln540"> </a>
+<a name="ln541">  // When not using the current buffer get the name of buffer &quot;cur_fnum&quot;.</a>
+<a name="ln542">  // Makes sure that the tag order doesn't change when using a remembered</a>
+<a name="ln543">  // position for &quot;cur_match&quot;.</a>
+<a name="ln544">  if (cur_fnum != curbuf-&gt;b_fnum) {</a>
+<a name="ln545">    buf_T *buf = buflist_findnr(cur_fnum);</a>
+<a name="ln546"> </a>
+<a name="ln547">    if (buf != NULL) {</a>
+<a name="ln548">      buf_ffname = buf-&gt;b_ffname;</a>
+<a name="ln549">    }</a>
+<a name="ln550">  }</a>
+<a name="ln551"> </a>
+<a name="ln552">  // Repeat searching for tags, when a file has not been found.</a>
+<a name="ln553">  while (true) {</a>
+<a name="ln554">    int other_name;</a>
+<a name="ln555">    char *name;</a>
+<a name="ln556"> </a>
+<a name="ln557">    // When desired match not found yet, try to find it (and others).</a>
+<a name="ln558">    if (use_tagstack) {</a>
+<a name="ln559">      // make a copy, the tagstack may change in 'tagfunc'</a>
+<a name="ln560">      name = xstrdup(tagstack[tagstackidx].tagname);</a>
+<a name="ln561">      xfree(tofree);</a>
+<a name="ln562">      tofree = name;</a>
+<a name="ln563">    } else if (g_do_tagpreview != 0) {</a>
+<a name="ln564">      name = ptag_entry.tagname;</a>
+<a name="ln565">    } else {</a>
+<a name="ln566">      name = tag;</a>
+<a name="ln567">    }</a>
+<a name="ln568">    other_name = (tagmatchname == NULL || strcmp(tagmatchname, name) != 0);</a>
+<a name="ln569">    if (new_tag</a>
+<a name="ln570">        || (cur_match &gt;= num_matches &amp;&amp; max_num_matches != MAXCOL)</a>
+<a name="ln571">        || other_name) {</a>
+<a name="ln572">      if (other_name) {</a>
+<a name="ln573">        xfree(tagmatchname);</a>
+<a name="ln574">        tagmatchname = xstrdup(name);</a>
+<a name="ln575">      }</a>
+<a name="ln576"> </a>
+<a name="ln577">      if (type == DT_SELECT || type == DT_JUMP</a>
+<a name="ln578">          || type == DT_LTAG) {</a>
+<a name="ln579">        cur_match = MAXCOL - 1;</a>
+<a name="ln580">      }</a>
+<a name="ln581">      if (type == DT_TAG) {</a>
+<a name="ln582">        max_num_matches = MAXCOL;</a>
+<a name="ln583">      } else {</a>
+<a name="ln584">        max_num_matches = cur_match + 1;</a>
+<a name="ln585">      }</a>
+<a name="ln586"> </a>
+<a name="ln587">      // when the argument starts with '/', use it as a regexp</a>
+<a name="ln588">      if (!no_regexp &amp;&amp; *name == '/') {</a>
+<a name="ln589">        flags = TAG_REGEXP;</a>
+<a name="ln590">        name++;</a>
+<a name="ln591">      } else {</a>
+<a name="ln592">        flags = TAG_NOIC;</a>
+<a name="ln593">      }</a>
+<a name="ln594"> </a>
+<a name="ln595">      if (verbose) {</a>
+<a name="ln596">        flags |= TAG_VERBOSE;</a>
+<a name="ln597">      }</a>
+<a name="ln598">      if (!use_tfu) {</a>
+<a name="ln599">        flags |= TAG_NO_TAGFUNC;</a>
+<a name="ln600">      }</a>
+<a name="ln601"> </a>
+<a name="ln602">      if (find_tags(name, &amp;new_num_matches, &amp;new_matches, flags,</a>
+<a name="ln603">                    max_num_matches, buf_ffname) == OK</a>
+<a name="ln604">          &amp;&amp; new_num_matches &lt; max_num_matches) {</a>
+<a name="ln605">        max_num_matches = MAXCOL;  // If less than max_num_matches</a>
+<a name="ln606">                                   // found: all matches found.</a>
+<a name="ln607">      }</a>
+<a name="ln608"> </a>
+<a name="ln609">      // A tag function may do anything, which may cause various</a>
+<a name="ln610">      // information to become invalid.  At least check for the tagstack</a>
+<a name="ln611">      // to still be the same.</a>
+<a name="ln612">      if (tagstack != curwin-&gt;w_tagstack) {</a>
+<a name="ln613">        emsg(_(e_window_unexpectedly_close_while_searching_for_tags));</a>
+<a name="ln614">        FreeWild(new_num_matches, new_matches);</a>
+<a name="ln615">        break;</a>
+<a name="ln616">      }</a>
+<a name="ln617"> </a>
+<a name="ln618">      // If there already were some matches for the same name, move them</a>
+<a name="ln619">      // to the start.  Avoids that the order changes when using</a>
+<a name="ln620">      // &quot;:tnext&quot; and jumping to another file.</a>
+<a name="ln621">      if (!new_tag &amp;&amp; !other_name) {</a>
+<a name="ln622">        int j, k;</a>
+<a name="ln623">        int idx = 0;</a>
+<a name="ln624">        tagptrs_T tagp, tagp2;</a>
+<a name="ln625"> </a>
+<a name="ln626">        // Find the position of each old match in the new list.  Need</a>
+<a name="ln627">        // to use parse_match() to find the tag line.</a>
+<a name="ln628">        for (j = 0; j &lt; num_matches; j++) {</a>
+<a name="ln629">          parse_match(matches[j], &amp;tagp);</a>
+<a name="ln630">          for (i = idx; i &lt; new_num_matches; i++) {</a>
+<a name="ln631">            parse_match(new_matches[i], &amp;tagp2);</a>
+<a name="ln632">            if (strcmp(tagp.tagname, tagp2.tagname) == 0) {</a>
+<a name="ln633">              char *p = new_matches[i];</a>
+<a name="ln634">              for (k = i; k &gt; idx; k--) {</a>
+<a name="ln635">                new_matches[k] = new_matches[k - 1];</a>
+<a name="ln636">              }</a>
+<a name="ln637">              new_matches[idx++] = p;</a>
+<a name="ln638">              break;</a>
+<a name="ln639">            }</a>
+<a name="ln640">          }</a>
+<a name="ln641">        }</a>
+<a name="ln642">      }</a>
+<a name="ln643">      FreeWild(num_matches, matches);</a>
+<a name="ln644">      num_matches = new_num_matches;</a>
+<a name="ln645">      matches = new_matches;</a>
+<a name="ln646">    }</a>
+<a name="ln647"> </a>
+<a name="ln648">    if (num_matches &lt;= 0) {</a>
+<a name="ln649">      if (verbose) {</a>
+<a name="ln650">        semsg(_(e_tag_not_found_str), name);</a>
+<a name="ln651">      }</a>
+<a name="ln652">      g_do_tagpreview = 0;</a>
+<a name="ln653">    } else {</a>
+<a name="ln654">      bool ask_for_selection = false;</a>
+<a name="ln655"> </a>
+<a name="ln656">      if (type == DT_TAG &amp;&amp; *tag != NUL) {</a>
+<a name="ln657">        // If a count is supplied to the &quot;:tag &lt;name&gt;&quot; command, then</a>
+<a name="ln658">        // jump to count'th matching tag.</a>
+<a name="ln659">        cur_match = count &gt; 0 ? count - 1 : 0;</a>
+<a name="ln660">      } else if (type == DT_SELECT || (type == DT_JUMP &amp;&amp; num_matches &gt; 1)) {</a>
+<a name="ln661">        print_tag_list(new_tag, use_tagstack, num_matches, matches);</a>
+<a name="ln662">        ask_for_selection = true;</a>
+<a name="ln663">      } else if (type == DT_LTAG) {</a>
+<a name="ln664">        if (add_llist_tags(tag, num_matches, matches) == FAIL) {</a>
+<a name="ln665">          goto end_do_tag;</a>
+<a name="ln666">        }</a>
+<a name="ln667"> </a>
+<a name="ln668">        cur_match = 0;                  // Jump to the first tag</a>
+<a name="ln669">      }</a>
+<a name="ln670"> </a>
+<a name="ln671">      if (ask_for_selection) {</a>
+<a name="ln672">        // Ask to select a tag from the list.</a>
+<a name="ln673">        i = prompt_for_number(NULL);</a>
+<a name="ln674">        if (i &lt;= 0 || i &gt; num_matches || got_int) {</a>
+<a name="ln675">          // no valid choice: don't change anything</a>
+<a name="ln676">          if (use_tagstack) {</a>
+<a name="ln677">            tagstack[tagstackidx].fmark = saved_fmark;</a>
+<a name="ln678">            tagstackidx = prevtagstackidx;</a>
+<a name="ln679">          }</a>
+<a name="ln680">          break;</a>
+<a name="ln681">        }</a>
+<a name="ln682">        cur_match = i - 1;</a>
+<a name="ln683">      }</a>
+<a name="ln684"> </a>
+<a name="ln685">      if (cur_match &gt;= num_matches) {</a>
+<a name="ln686">        // Avoid giving this error when a file wasn't found and we're</a>
+<a name="ln687">        // looking for a match in another file, which wasn't found.</a>
+<a name="ln688">        // There will be an emsg(&quot;file doesn't exist&quot;) below then.</a>
+<a name="ln689">        if ((type == DT_NEXT || type == DT_FIRST)</a>
+<a name="ln690">            &amp;&amp; nofile_fname == NULL) {</a>
+<a name="ln691">          if (num_matches == 1) {</a>
+<a name="ln692">            emsg(_(&quot;E427: There is only one matching tag&quot;));</a>
+<a name="ln693">          } else {</a>
+<a name="ln694">            emsg(_(&quot;E428: Cannot go beyond last matching tag&quot;));</a>
+<a name="ln695">          }</a>
+<a name="ln696">          skip_msg = true;</a>
+<a name="ln697">        }</a>
+<a name="ln698">        cur_match = num_matches - 1;</a>
+<a name="ln699">      }</a>
+<a name="ln700">      if (use_tagstack) {</a>
+<a name="ln701">        tagptrs_T tagp2;</a>
+<a name="ln702"> </a>
+<a name="ln703">        tagstack[tagstackidx].cur_match = cur_match;</a>
+<a name="ln704">        tagstack[tagstackidx].cur_fnum = cur_fnum;</a>
+<a name="ln705"> </a>
+<a name="ln706">        // store user-provided data originating from tagfunc</a>
+<a name="ln707">        if (use_tfu &amp;&amp; parse_match(matches[cur_match], &amp;tagp2) == OK</a>
+<a name="ln708">            &amp;&amp; tagp2.user_data) {</a>
+<a name="ln709">          XFREE_CLEAR(tagstack[tagstackidx].user_data);</a>
+<a name="ln710">          tagstack[tagstackidx].user_data =</a>
+<a name="ln711">            xstrnsave(tagp2.user_data, (size_t)(tagp2.user_data_end - tagp2.user_data));</a>
+<a name="ln712">        }</a>
+<a name="ln713"> </a>
+<a name="ln714">        tagstackidx++;</a>
+<a name="ln715">      } else if (g_do_tagpreview != 0) {</a>
+<a name="ln716">        ptag_entry.cur_match = cur_match;</a>
+<a name="ln717">        ptag_entry.cur_fnum = cur_fnum;</a>
+<a name="ln718">      }</a>
+<a name="ln719"> </a>
+<a name="ln720">      // Only when going to try the next match, report that the previous</a>
+<a name="ln721">      // file didn't exist.  Otherwise an emsg() is given below.</a>
+<a name="ln722">      if (nofile_fname != NULL &amp;&amp; error_cur_match != cur_match) {</a>
+<a name="ln723">        smsg(0, _(&quot;File \&quot;%s\&quot; does not exist&quot;), nofile_fname);</a>
+<a name="ln724">      }</a>
+<a name="ln725"> </a>
+<a name="ln726">      ic = (matches[cur_match][0] &amp; MT_IC_OFF);</a>
+<a name="ln727">      if (type != DT_TAG &amp;&amp; type != DT_SELECT &amp;&amp; type != DT_JUMP</a>
+<a name="ln728">          &amp;&amp; (num_matches &gt; 1 || ic)</a>
+<a name="ln729">          &amp;&amp; !skip_msg) {</a>
+<a name="ln730">        // Give an indication of the number of matching tags</a>
+<a name="ln731">        snprintf(IObuff, sizeof(IObuff), _(&quot;tag %d of %d%s&quot;),</a>
+<a name="ln732">                 cur_match + 1,</a>
+<a name="ln733">                 num_matches,</a>
+<a name="ln734">                 max_num_matches != MAXCOL ? _(&quot; or more&quot;) : &quot;&quot;);</a>
+<a name="ln735">        if (ic) {</a>
+<a name="ln736">          xstrlcat(IObuff, _(&quot;  Using tag with different case!&quot;), IOSIZE);</a>
+<a name="ln737">        }</a>
+<a name="ln738">        if ((num_matches &gt; prev_num_matches || new_tag)</a>
+<a name="ln739">            &amp;&amp; num_matches &gt; 1) {</a>
+<a name="ln740">          msg(IObuff, ic ? HL_ATTR(HLF_W) : 0);</a>
+<a name="ln741">          msg_scroll = true;  // Don't overwrite this message.</a>
+<a name="ln742">        } else {</a>
+<a name="ln743">          give_warning(IObuff, ic);</a>
+<a name="ln744">        }</a>
+<a name="ln745">        if (ic &amp;&amp; !msg_scrolled &amp;&amp; msg_silent == 0) {</a>
+<a name="ln746">          ui_flush();</a>
+<a name="ln747">          os_delay(1007L, true);</a>
+<a name="ln748">        }</a>
+<a name="ln749">      }</a>
+<a name="ln750"> </a>
+<a name="ln751">      // Let the SwapExists event know what tag we are jumping to.</a>
+<a name="ln752">      vim_snprintf(IObuff, IOSIZE, &quot;:ta %s\r&quot;, name);</a>
+<a name="ln753">      set_vim_var_string(VV_SWAPCOMMAND, IObuff, -1);</a>
+<a name="ln754"> </a>
+<a name="ln755">      // Jump to the desired match.</a>
+<a name="ln756">      i = jumpto_tag(matches[cur_match], forceit, true);</a>
+<a name="ln757"> </a>
+<a name="ln758">      set_vim_var_string(VV_SWAPCOMMAND, NULL, -1);</a>
+<a name="ln759"> </a>
+<a name="ln760">      if (i == NOTAGFILE) {</a>
+<a name="ln761">        // File not found: try again with another matching tag</a>
+<a name="ln762">        if ((type == DT_PREV &amp;&amp; cur_match &gt; 0)</a>
+<a name="ln763">            || ((type == DT_TAG || type == DT_NEXT</a>
+<a name="ln764">                 || type == DT_FIRST)</a>
+<a name="ln765">                &amp;&amp; (max_num_matches != MAXCOL</a>
+<a name="ln766">                    || cur_match &lt; num_matches - 1))) {</a>
+<a name="ln767">          error_cur_match = cur_match;</a>
+<a name="ln768">          if (use_tagstack) {</a>
+<a name="ln769">            tagstackidx--;</a>
+<a name="ln770">          }</a>
+<a name="ln771">          if (type == DT_PREV) {</a>
+<a name="ln772">            cur_match--;</a>
+<a name="ln773">          } else {</a>
+<a name="ln774">            type = DT_NEXT;</a>
+<a name="ln775">            cur_match++;</a>
+<a name="ln776">          }</a>
+<a name="ln777">          continue;</a>
+<a name="ln778">        }</a>
+<a name="ln779">        semsg(_(&quot;E429: File \&quot;%s\&quot; does not exist&quot;), nofile_fname);</a>
+<a name="ln780">      } else {</a>
+<a name="ln781">        // We may have jumped to another window, check that</a>
+<a name="ln782">        // tagstackidx is still valid.</a>
+<a name="ln783">        if (use_tagstack &amp;&amp; tagstackidx &gt; curwin-&gt;w_tagstacklen) {</a>
+<a name="ln784">          tagstackidx = curwin-&gt;w_tagstackidx;</a>
+<a name="ln785">        }</a>
+<a name="ln786">      }</a>
+<a name="ln787">    }</a>
+<a name="ln788">    break;</a>
+<a name="ln789">  }</a>
+<a name="ln790"> </a>
+<a name="ln791">end_do_tag:</a>
+<a name="ln792">  // Only store the new index when using the tagstack and it's valid.</a>
+<a name="ln793">  if (use_tagstack &amp;&amp; tagstackidx &lt;= curwin-&gt;w_tagstacklen) {</a>
+<a name="ln794">    curwin-&gt;w_tagstackidx = tagstackidx;</a>
+<a name="ln795">  }</a>
+<a name="ln796">  postponed_split = 0;          // don't split next time</a>
+<a name="ln797">  g_do_tagpreview = 0;          // don't do tag preview next time</a>
+<a name="ln798">  xfree(tofree);</a>
+<a name="ln799">}</a>
+<a name="ln800"> </a>
+<a name="ln801">// List all the matching tags.</a>
+<a name="ln802">static void print_tag_list(int new_tag, int use_tagstack, int num_matches, char **matches)</a>
+<a name="ln803">{</a>
+<a name="ln804">  taggy_T *tagstack = curwin-&gt;w_tagstack;</a>
+<a name="ln805">  int tagstackidx = curwin-&gt;w_tagstackidx;</a>
+<a name="ln806">  const char *p;</a>
+<a name="ln807">  const char *command_end;</a>
+<a name="ln808">  tagptrs_T tagp;</a>
+<a name="ln809">  int taglen;</a>
+<a name="ln810">  int attr;</a>
+<a name="ln811"> </a>
+<a name="ln812">  // Assume that the first match indicates how long the tags can</a>
+<a name="ln813">  // be, and align the file names to that.</a>
+<a name="ln814">  parse_match(matches[0], &amp;tagp);</a>
+<a name="ln815">  taglen = (int)(tagp.tagname_end - tagp.tagname + 2);</a>
+<a name="ln816">  if (taglen &lt; 18) {</a>
+<a name="ln817">    taglen = 18;</a>
+<a name="ln818">  }</a>
+<a name="ln819">  if (taglen &gt; Columns - 25) {</a>
+<a name="ln820">    taglen = MAXCOL;</a>
+<a name="ln821">  }</a>
+<a name="ln822">  if (msg_col == 0) {</a>
+<a name="ln823">    msg_didout = false;     // overwrite previous message</a>
+<a name="ln824">  }</a>
+<a name="ln825">  msg_start();</a>
+<a name="ln826">  msg_puts_attr(_(&quot;  # pri kind tag&quot;), HL_ATTR(HLF_T));</a>
+<a name="ln827">  msg_clr_eos();</a>
+<a name="ln828">  taglen_advance(taglen);</a>
+<a name="ln829">  msg_puts_attr(_(&quot;file\n&quot;), HL_ATTR(HLF_T));</a>
+<a name="ln830"> </a>
+<a name="ln831">  for (int i = 0; i &lt; num_matches &amp;&amp; !got_int; i++) {</a>
+<a name="ln832">    parse_match(matches[i], &amp;tagp);</a>
+<a name="ln833">    if (!new_tag &amp;&amp; (</a>
+<a name="ln834">                     (g_do_tagpreview != 0</a>
+<a name="ln835">                      &amp;&amp; i == ptag_entry.cur_match)</a>
+<a name="ln836">                     || (use_tagstack</a>
+<a name="ln837">                         &amp;&amp; i == tagstack[tagstackidx].cur_match))) {</a>
+<a name="ln838">      *IObuff = '&gt;';</a>
+<a name="ln839">    } else {</a>
+<a name="ln840">      *IObuff = ' ';</a>
+<a name="ln841">    }</a>
+<a name="ln842">    vim_snprintf(IObuff + 1, IOSIZE - 1,</a>
+<a name="ln843">                 &quot;%2d %s &quot;, i + 1,</a>
+<a name="ln844">                 mt_names[matches[i][0] &amp; MT_MASK]);</a>
+<a name="ln845">    msg_puts(IObuff);</a>
+<a name="ln846">    if (tagp.tagkind != NULL) {</a>
+<a name="ln847">      msg_outtrans_len(tagp.tagkind, (int)(tagp.tagkind_end - tagp.tagkind), 0);</a>
+<a name="ln848">    }</a>
+<a name="ln849">    msg_advance(13);</a>
+<a name="ln850">    msg_outtrans_len(tagp.tagname, (int)(tagp.tagname_end - tagp.tagname), HL_ATTR(HLF_T));</a>
+<a name="ln851">    msg_putchar(' ');</a>
+<a name="ln852">    taglen_advance(taglen);</a>
+<a name="ln853"> </a>
+<a name="ln854">    // Find out the actual file name. If it is long, truncate</a>
+<a name="ln855">    // it and put &quot;...&quot; in the middle</a>
+<a name="ln856">    p = tag_full_fname(&amp;tagp);</a>
+<a name="ln857">    if (p != NULL) {</a>
+<a name="ln858">      msg_outtrans(p, HL_ATTR(HLF_D));</a>
+<a name="ln859">      XFREE_CLEAR(p);</a>
+<a name="ln860">    }</a>
+<a name="ln861">    if (msg_col &gt; 0) {</a>
+<a name="ln862">      msg_putchar('\n');</a>
+<a name="ln863">    }</a>
+<a name="ln864">    if (got_int) {</a>
+<a name="ln865">      break;</a>
+<a name="ln866">    }</a>
+<a name="ln867">    msg_advance(15);</a>
+<a name="ln868"> </a>
+<a name="ln869">    // print any extra fields</a>
+<a name="ln870">    command_end = tagp.command_end;</a>
+<a name="ln871">    if (command_end != NULL) {</a>
+<a name="ln872">      p = command_end + 3;</a>
+<a name="ln873">      while (*p &amp;&amp; *p != '\r' &amp;&amp; *p != '\n') {</a>
+<a name="ln874">        while (*p == TAB) {</a>
+<a name="ln875">          p++;</a>
+<a name="ln876">        }</a>
+<a name="ln877"> </a>
+<a name="ln878">        // skip &quot;file:&quot; without a value (static tag)</a>
+<a name="ln879">        if (strncmp(p, &quot;file:&quot;, 5) == 0 &amp;&amp; ascii_isspace(p[5])) {</a>
+<a name="ln880">          p += 5;</a>
+<a name="ln881">          continue;</a>
+<a name="ln882">        }</a>
+<a name="ln883">        // skip &quot;kind:&lt;kind&gt;&quot; and &quot;&lt;kind&gt;&quot;</a>
+<a name="ln884">        if (p == tagp.tagkind</a>
+<a name="ln885">            || (p + 5 == tagp.tagkind</a>
+<a name="ln886">                &amp;&amp; strncmp(p, &quot;kind:&quot;, 5) == 0)) {</a>
+<a name="ln887">          p = tagp.tagkind_end;</a>
+<a name="ln888">          continue;</a>
+<a name="ln889">        }</a>
+<a name="ln890">        // print all other extra fields</a>
+<a name="ln891">        attr = HL_ATTR(HLF_CM);</a>
+<a name="ln892">        while (*p &amp;&amp; *p != '\r' &amp;&amp; *p != '\n') {</a>
+<a name="ln893">          if (msg_col + ptr2cells(p) &gt;= Columns) {</a>
+<a name="ln894">            msg_putchar('\n');</a>
+<a name="ln895">            if (got_int) {</a>
+<a name="ln896">              break;</a>
+<a name="ln897">            }</a>
+<a name="ln898">            msg_advance(15);</a>
+<a name="ln899">          }</a>
+<a name="ln900">          p = msg_outtrans_one(p, attr);</a>
+<a name="ln901">          if (*p == TAB) {</a>
+<a name="ln902">            msg_puts_attr(&quot; &quot;, attr);</a>
+<a name="ln903">            break;</a>
+<a name="ln904">          }</a>
+<a name="ln905">          if (*p == ':') {</a>
+<a name="ln906">            attr = 0;</a>
+<a name="ln907">          }</a>
+<a name="ln908">        }</a>
+<a name="ln909">      }</a>
+<a name="ln910">      if (msg_col &gt; 15) {</a>
+<a name="ln911">        msg_putchar('\n');</a>
+<a name="ln912">        if (got_int) {</a>
+<a name="ln913">          break;</a>
+<a name="ln914">        }</a>
+<a name="ln915">        msg_advance(15);</a>
+<a name="ln916">      }</a>
+<a name="ln917">    } else {</a>
+<a name="ln918">      for (p = tagp.command;</a>
+<a name="ln919">           *p &amp;&amp; *p != '\r' &amp;&amp; *p != '\n';</a>
+<a name="ln920">           p++) {}</a>
+<a name="ln921">      command_end = p;</a>
+<a name="ln922">    }</a>
+<a name="ln923"> </a>
+<a name="ln924">    // Put the info (in several lines) at column 15.</a>
+<a name="ln925">    // Don't display &quot;/^&quot; and &quot;?^&quot;.</a>
+<a name="ln926">    p = tagp.command;</a>
+<a name="ln927">    if (*p == '/' || *p == '?') {</a>
+<a name="ln928">      p++;</a>
+<a name="ln929">      if (*p == '^') {</a>
+<a name="ln930">        p++;</a>
+<a name="ln931">      }</a>
+<a name="ln932">    }</a>
+<a name="ln933">    // Remove leading whitespace from pattern</a>
+<a name="ln934">    while (p != command_end &amp;&amp; ascii_isspace(*p)) {</a>
+<a name="ln935">      p++;</a>
+<a name="ln936">    }</a>
+<a name="ln937"> </a>
+<a name="ln938">    while (p != command_end) {</a>
+<a name="ln939">      if (msg_col + (*p == TAB ? 1 : ptr2cells(p)) &gt; Columns) {</a>
+<a name="ln940">        msg_putchar('\n');</a>
+<a name="ln941">      }</a>
+<a name="ln942">      if (got_int) {</a>
+<a name="ln943">        break;</a>
+<a name="ln944">      }</a>
+<a name="ln945">      msg_advance(15);</a>
+<a name="ln946"> </a>
+<a name="ln947">      // skip backslash used for escaping a command char or</a>
+<a name="ln948">      // a backslash</a>
+<a name="ln949">      if (*p == '\\' &amp;&amp; (*(p + 1) == *tagp.command</a>
+<a name="ln950">                         || *(p + 1) == '\\')) {</a>
+<a name="ln951">        p++;</a>
+<a name="ln952">      }</a>
+<a name="ln953"> </a>
+<a name="ln954">      if (*p == TAB) {</a>
+<a name="ln955">        msg_putchar(' ');</a>
+<a name="ln956">        p++;</a>
+<a name="ln957">      } else {</a>
+<a name="ln958">        p = msg_outtrans_one(p, 0);</a>
+<a name="ln959">      }</a>
+<a name="ln960"> </a>
+<a name="ln961">      // don't display the &quot;$/;\&quot;&quot; and &quot;$?;\&quot;&quot;</a>
+<a name="ln962">      if (p == command_end - 2 &amp;&amp; *p == '$'</a>
+<a name="ln963">          &amp;&amp; *(p + 1) == *tagp.command) {</a>
+<a name="ln964">        break;</a>
+<a name="ln965">      }</a>
+<a name="ln966">      // don't display matching '/' or '?'</a>
+<a name="ln967">      if (p == command_end - 1 &amp;&amp; *p == *tagp.command</a>
+<a name="ln968">          &amp;&amp; (*p == '/' || *p == '?')) {</a>
+<a name="ln969">        break;</a>
+<a name="ln970">      }</a>
+<a name="ln971">    }</a>
+<a name="ln972">    if (msg_col) {</a>
+<a name="ln973">      msg_putchar('\n');</a>
+<a name="ln974">    }</a>
+<a name="ln975">    os_breakcheck();</a>
+<a name="ln976">  }</a>
+<a name="ln977">  if (got_int) {</a>
+<a name="ln978">    got_int = false;        // only stop the listing</a>
+<a name="ln979">  }</a>
+<a name="ln980">}</a>
+<a name="ln981"> </a>
+<a name="ln982">/// Add the matching tags to the location list for the current</a>
+<a name="ln983">/// window.</a>
+<a name="ln984">static int add_llist_tags(char *tag, int num_matches, char **matches)</a>
+<a name="ln985">{</a>
+<a name="ln986">  char tag_name[128 + 1];</a>
+<a name="ln987">  char *p;</a>
+<a name="ln988">  tagptrs_T tagp;</a>
+<a name="ln989"> </a>
+<a name="ln990">  char *fname = xmalloc(MAXPATHL + 1);</a>
+<a name="ln991">  char *cmd = xmalloc(CMDBUFFSIZE + 1);</a>
+<a name="ln992">  list_T *list = tv_list_alloc(0);</a>
+<a name="ln993"> </a>
+<a name="ln994">  for (int i = 0; i &lt; num_matches; i++) {</a>
+<a name="ln995">    dict_T *dict;</a>
+<a name="ln996"> </a>
+<a name="ln997">    parse_match(matches[i], &amp;tagp);</a>
+<a name="ln998"> </a>
+<a name="ln999">    // Save the tag name</a>
+<a name="ln1000">    int len = (int)(tagp.tagname_end - tagp.tagname);</a>
+<a name="ln1001">    if (len &gt; 128) {</a>
+<a name="ln1002">      len = 128;</a>
+<a name="ln1003">    }</a>
+<a name="ln1004">    xstrlcpy(tag_name, tagp.tagname, (size_t)len + 1);</a>
+<a name="ln1005">    tag_name[len] = NUL;</a>
+<a name="ln1006"> </a>
+<a name="ln1007">    // Save the tag file name</a>
+<a name="ln1008">    p = tag_full_fname(&amp;tagp);</a>
+<a name="ln1009">    if (p == NULL) {</a>
+<a name="ln1010">      continue;</a>
+<a name="ln1011">    }</a>
+<a name="ln1012">    xstrlcpy(fname, p, MAXPATHL);</a>
+<a name="ln1013">    XFREE_CLEAR(p);</a>
+<a name="ln1014"> </a>
+<a name="ln1015">    // Get the line number or the search pattern used to locate</a>
+<a name="ln1016">    // the tag.</a>
+<a name="ln1017">    linenr_T lnum = 0;</a>
+<a name="ln1018">    if (isdigit((uint8_t)(*tagp.command))) {</a>
+<a name="ln1019">      // Line number is used to locate the tag</a>
+<a name="ln1020">      lnum = atoi(tagp.command);</a>
+<a name="ln1021">    } else {</a>
+<a name="ln1022">      char *cmd_start, *cmd_end;</a>
+<a name="ln1023"> </a>
+<a name="ln1024">      // Search pattern is used to locate the tag</a>
+<a name="ln1025"> </a>
+<a name="ln1026">      // Locate the end of the command</a>
+<a name="ln1027">      cmd_start = tagp.command;</a>
+<a name="ln1028">      cmd_end = tagp.command_end;</a>
+<a name="ln1029">      if (cmd_end == NULL) {</a>
+<a name="ln1030">        for (p = tagp.command;</a>
+<a name="ln1031">             *p &amp;&amp; *p != '\r' &amp;&amp; *p != '\n'; p++) {}</a>
+<a name="ln1032">        cmd_end = p;</a>
+<a name="ln1033">      }</a>
+<a name="ln1034"> </a>
+<a name="ln1035">      // Now, cmd_end points to the character after the</a>
+<a name="ln1036">      // command. Adjust it to point to the last</a>
+<a name="ln1037">      // character of the command.</a>
+<a name="ln1038">      cmd_end--;</a>
+<a name="ln1039"> </a>
+<a name="ln1040">      // Skip the '/' and '?' characters at the</a>
+<a name="ln1041">      // beginning and end of the search pattern.</a>
+<a name="ln1042">      if (*cmd_start == '/' || *cmd_start == '?') {</a>
+<a name="ln1043">        cmd_start++;</a>
+<a name="ln1044">      }</a>
+<a name="ln1045"> </a>
+<a name="ln1046">      if (*cmd_end == '/' || *cmd_end == '?') {</a>
+<a name="ln1047">        cmd_end--;</a>
+<a name="ln1048">      }</a>
+<a name="ln1049"> </a>
+<a name="ln1050">      len = 0;</a>
+<a name="ln1051">      cmd[0] = NUL;</a>
+<a name="ln1052"> </a>
+<a name="ln1053">      // If &quot;^&quot; is present in the tag search pattern, then</a>
+<a name="ln1054">      // copy it first.</a>
+<a name="ln1055">      if (*cmd_start == '^') {</a>
+<a name="ln1056">        STRCPY(cmd, &quot;^&quot;);</a>
+<a name="ln1057">        cmd_start++;</a>
+<a name="ln1058">        len++;</a>
+<a name="ln1059">      }</a>
+<a name="ln1060"> </a>
+<a name="ln1061">      // Precede the tag pattern with \V to make it very</a>
+<a name="ln1062">      // nomagic.</a>
+<a name="ln1063">      STRCAT(cmd, &quot;\\V&quot;);</a>
+<a name="ln1064">      len += 2;</a>
+<a name="ln1065"> </a>
+<a name="ln1066">      int cmd_len = (int)(cmd_end - cmd_start + 1);</a>
+<a name="ln1067">      if (cmd_len &gt; (CMDBUFFSIZE - 5)) {</a>
+<a name="ln1068">        cmd_len = CMDBUFFSIZE - 5;</a>
+<a name="ln1069">      }</a>
+<a name="ln1070">      snprintf(cmd + len, (size_t)(CMDBUFFSIZE + 1 - len),</a>
+<a name="ln1071">               &quot;%.*s&quot;, cmd_len, cmd_start);</a>
+<a name="ln1072">      len += cmd_len;</a>
+<a name="ln1073"> </a>
+<a name="ln1074">      if (cmd[len - 1] == '$') {</a>
+<a name="ln1075">        // Replace '$' at the end of the search pattern</a>
+<a name="ln1076">        // with '\$'</a>
+<a name="ln1077">        cmd[len - 1] = '\\';</a>
+<a name="ln1078">        cmd[len] = '$';</a>
+<a name="ln1079">        len++;</a>
+<a name="ln1080">      }</a>
+<a name="ln1081"> </a>
+<a name="ln1082">      cmd[len] = NUL;</a>
+<a name="ln1083">    }</a>
+<a name="ln1084"> </a>
+<a name="ln1085">    dict = tv_dict_alloc();</a>
+<a name="ln1086">    tv_list_append_dict(list, dict);</a>
+<a name="ln1087"> </a>
+<a name="ln1088">    tv_dict_add_str(dict, S_LEN(&quot;text&quot;), tag_name);</a>
+<a name="ln1089">    tv_dict_add_str(dict, S_LEN(&quot;filename&quot;), fname);</a>
+<a name="ln1090">    tv_dict_add_nr(dict, S_LEN(&quot;lnum&quot;), lnum);</a>
+<a name="ln1091">    if (lnum == 0) {</a>
+<a name="ln1092">      tv_dict_add_str(dict, S_LEN(&quot;pattern&quot;), cmd);</a>
+<a name="ln1093">    }</a>
+<a name="ln1094">  }</a>
+<a name="ln1095"> </a>
+<a name="ln1096">  vim_snprintf(IObuff, IOSIZE, &quot;ltag %s&quot;, tag);</a>
+<a name="ln1097">  set_errorlist(curwin, list, ' ', IObuff, NULL);</a>
+<a name="ln1098"> </a>
+<a name="ln1099">  tv_list_free(list);</a>
+<a name="ln1100">  XFREE_CLEAR(fname);</a>
+<a name="ln1101">  XFREE_CLEAR(cmd);</a>
+<a name="ln1102"> </a>
+<a name="ln1103">  return OK;</a>
+<a name="ln1104">}</a>
+<a name="ln1105"> </a>
+<a name="ln1106">// Free cached tags.</a>
+<a name="ln1107">void tag_freematch(void)</a>
+<a name="ln1108">{</a>
+<a name="ln1109">  XFREE_CLEAR(tagmatchname);</a>
+<a name="ln1110">}</a>
+<a name="ln1111"> </a>
+<a name="ln1112">static void taglen_advance(int l)</a>
+<a name="ln1113">{</a>
+<a name="ln1114">  if (l == MAXCOL) {</a>
+<a name="ln1115">    msg_putchar('\n');</a>
+<a name="ln1116">    msg_advance(24);</a>
+<a name="ln1117">  } else {</a>
+<a name="ln1118">    msg_advance(13 + l);</a>
+<a name="ln1119">  }</a>
+<a name="ln1120">}</a>
+<a name="ln1121"> </a>
+<a name="ln1122">// Print the tag stack</a>
+<a name="ln1123">void do_tags(exarg_T *eap)</a>
+<a name="ln1124">{</a>
+<a name="ln1125">  char *name;</a>
+<a name="ln1126">  taggy_T *tagstack = curwin-&gt;w_tagstack;</a>
+<a name="ln1127">  int tagstackidx = curwin-&gt;w_tagstackidx;</a>
+<a name="ln1128">  int tagstacklen = curwin-&gt;w_tagstacklen;</a>
+<a name="ln1129"> </a>
+<a name="ln1130">  // Highlight title</a>
+<a name="ln1131">  msg_puts_title(_(&quot;\n  # TO tag         FROM line  in file/text&quot;));</a>
+<a name="ln1132">  for (int i = 0; i &lt; tagstacklen; i++) {</a>
+<a name="ln1133">    if (tagstack[i].tagname != NULL) {</a>
+<a name="ln1134">      name = fm_getname(&amp;(tagstack[i].fmark), 30);</a>
+<a name="ln1135">      if (name == NULL) {           // file name not available</a>
+<a name="ln1136">        continue;</a>
+<a name="ln1137">      }</a>
+<a name="ln1138"> </a>
+<a name="ln1139">      msg_putchar('\n');</a>
+<a name="ln1140">      vim_snprintf(IObuff, IOSIZE, &quot;%c%2d %2d %-15s %5&quot; PRIdLINENR &quot;  &quot;,</a>
+<a name="ln1141">                   i == tagstackidx ? '&gt;' : ' ',</a>
+<a name="ln1142">                   i + 1,</a>
+<a name="ln1143">                   tagstack[i].cur_match + 1,</a>
+<a name="ln1144">                   tagstack[i].tagname,</a>
+<a name="ln1145">                   tagstack[i].fmark.mark.lnum);</a>
+<a name="ln1146">      msg_outtrans(IObuff, 0);</a>
+<a name="ln1147">      msg_outtrans(name, tagstack[i].fmark.fnum == curbuf-&gt;b_fnum ? HL_ATTR(HLF_D) : 0);</a>
+<a name="ln1148">      xfree(name);</a>
+<a name="ln1149">    }</a>
+<a name="ln1150">  }</a>
+<a name="ln1151">  if (tagstackidx == tagstacklen) {     // idx at top of stack</a>
+<a name="ln1152">    msg_puts(&quot;\n&gt;&quot;);</a>
+<a name="ln1153">  }</a>
+<a name="ln1154">}</a>
+<a name="ln1155"> </a>
+<a name="ln1156">// Compare two strings, for length &quot;len&quot;, ignoring case the ASCII way.</a>
+<a name="ln1157">// return 0 for match, &lt; 0 for smaller, &gt; 0 for bigger</a>
+<a name="ln1158">// Make sure case is folded to uppercase in comparison (like for 'sort -f')</a>
+<a name="ln1159">static int tag_strnicmp(char *s1, char *s2, size_t len)</a>
+<a name="ln1160">{</a>
+<a name="ln1161">  while (len &gt; 0) {</a>
+<a name="ln1162">    int i = TOUPPER_ASC((uint8_t)(*s1)) - TOUPPER_ASC((uint8_t)(*s2));</a>
+<a name="ln1163">    if (i != 0) {</a>
+<a name="ln1164">      return i;                         // this character different</a>
+<a name="ln1165">    }</a>
+<a name="ln1166">    if (*s1 == NUL) {</a>
+<a name="ln1167">      break;                            // strings match until NUL</a>
+<a name="ln1168">    }</a>
+<a name="ln1169">    s1++;</a>
+<a name="ln1170">    s2++;</a>
+<a name="ln1171">    len--;</a>
+<a name="ln1172">  }</a>
+<a name="ln1173">  return 0;                             // strings match</a>
+<a name="ln1174">}</a>
+<a name="ln1175"> </a>
+<a name="ln1176">// Extract info from the tag search pattern &quot;pats-&gt;pat&quot;.</a>
+<a name="ln1177">static void prepare_pats(pat_T *pats, int has_re)</a>
+<a name="ln1178">{</a>
+<a name="ln1179">  pats-&gt;head = pats-&gt;pat;</a>
+<a name="ln1180">  pats-&gt;headlen = pats-&gt;len;</a>
+<a name="ln1181">  if (has_re) {</a>
+<a name="ln1182">    // When the pattern starts with '^' or &quot;\\&lt;&quot;, binary searching can be</a>
+<a name="ln1183">    // used (much faster).</a>
+<a name="ln1184">    if (pats-&gt;pat[0] == '^') {</a>
+<a name="ln1185">      pats-&gt;head = pats-&gt;pat + 1;</a>
+<a name="ln1186">    } else if (pats-&gt;pat[0] == '\\' &amp;&amp; pats-&gt;pat[1] == '&lt;') {</a>
+<a name="ln1187">      pats-&gt;head = pats-&gt;pat + 2;</a>
+<a name="ln1188">    }</a>
+<a name="ln1189">    if (pats-&gt;head == pats-&gt;pat) {</a>
+<a name="ln1190">      pats-&gt;headlen = 0;</a>
+<a name="ln1191">    } else {</a>
+<a name="ln1192">      for (pats-&gt;headlen = 0; pats-&gt;head[pats-&gt;headlen] != NUL; pats-&gt;headlen++) {</a>
+<a name="ln1193">        if (vim_strchr(magic_isset() ? &quot;.[~*\\$&quot; : &quot;\\$&quot;,</a>
+<a name="ln1194">                       (uint8_t)pats-&gt;head[pats-&gt;headlen]) != NULL) {</a>
+<a name="ln1195">          break;</a>
+<a name="ln1196">        }</a>
+<a name="ln1197">      }</a>
+<a name="ln1198">    }</a>
+<a name="ln1199">    if (p_tl != 0 &amp;&amp; pats-&gt;headlen &gt; p_tl) {    // adjust for 'taglength'</a>
+<a name="ln1200">      pats-&gt;headlen = (int)p_tl;</a>
+<a name="ln1201">    }</a>
+<a name="ln1202">  }</a>
+<a name="ln1203"> </a>
+<a name="ln1204">  if (has_re) {</a>
+<a name="ln1205">    pats-&gt;regmatch.regprog = vim_regcomp(pats-&gt;pat, magic_isset() ? RE_MAGIC : 0);</a>
+<a name="ln1206">  } else {</a>
+<a name="ln1207">    pats-&gt;regmatch.regprog = NULL;</a>
+<a name="ln1208">  }</a>
+<a name="ln1209">}</a>
+<a name="ln1210"> </a>
+<a name="ln1211">/// Call the user-defined function to generate a list of tags used by</a>
+<a name="ln1212">/// find_tags().</a>
+<a name="ln1213">///</a>
+<a name="ln1214">/// Return OK if at least 1 tag has been successfully found,</a>
+<a name="ln1215">/// NOTDONE if the function returns v:null, and FAIL otherwise.</a>
+<a name="ln1216">///</a>
+<a name="ln1217">/// @param pat  pattern supplied to the user-defined function</a>
+<a name="ln1218">/// @param ga  the tags will be placed here</a>
+<a name="ln1219">/// @param match_count  here the number of tags found will be placed</a>
+<a name="ln1220">/// @param flags  flags from find_tags (TAG_*)</a>
+<a name="ln1221">/// @param buf_ffname  name of buffer for priority</a>
+<a name="ln1222">static int find_tagfunc_tags(char *pat, garray_T *ga, int *match_count, int flags, char *buf_ffname)</a>
+<a name="ln1223">{</a>
+<a name="ln1224">  pos_T save_pos;</a>
+<a name="ln1225">  list_T *taglist;</a>
+<a name="ln1226">  int ntags = 0;</a>
+<a name="ln1227">  int result = FAIL;</a>
+<a name="ln1228">  typval_T args[4];</a>
+<a name="ln1229">  typval_T rettv;</a>
+<a name="ln1230">  char flagString[4];</a>
+<a name="ln1231">  taggy_T *tag = NULL;</a>
+<a name="ln1232"> </a>
+<a name="ln1233">  if (curwin-&gt;w_tagstacklen &gt; 0) {</a>
+<a name="ln1234">    if (curwin-&gt;w_tagstackidx == curwin-&gt;w_tagstacklen) {</a>
+<a name="ln1235">      tag = &amp;curwin-&gt;w_tagstack[curwin-&gt;w_tagstackidx - 1];</a>
+<a name="ln1236">    } else {</a>
+<a name="ln1237">      tag = &amp;curwin-&gt;w_tagstack[curwin-&gt;w_tagstackidx];</a>
+<a name="ln1238">    }</a>
+<a name="ln1239">  }</a>
+<a name="ln1240"> </a>
+<a name="ln1241">  if (*curbuf-&gt;b_p_tfu == NUL || curbuf-&gt;b_tfu_cb.type == kCallbackNone) {</a>
+<a name="ln1242">    return FAIL;</a>
+<a name="ln1243">  }</a>
+<a name="ln1244"> </a>
+<a name="ln1245">  args[0].v_type = VAR_STRING;</a>
+<a name="ln1246">  args[0].vval.v_string = pat;</a>
+<a name="ln1247">  args[1].v_type = VAR_STRING;</a>
+<a name="ln1248">  args[1].vval.v_string = flagString;</a>
+<a name="ln1249"> </a>
+<a name="ln1250">  // create 'info' dict argument</a>
+<a name="ln1251">  dict_T *const d = tv_dict_alloc_lock(VAR_FIXED);</a>
+<a name="ln1252">  if (tag != NULL &amp;&amp; tag-&gt;user_data != NULL) {</a>
+<a name="ln1253">    tv_dict_add_str(d, S_LEN(&quot;user_data&quot;), tag-&gt;user_data);</a>
+<a name="ln1254">  }</a>
+<a name="ln1255">  if (buf_ffname != NULL) {</a>
+<a name="ln1256">    tv_dict_add_str(d, S_LEN(&quot;buf_ffname&quot;), buf_ffname);</a>
+<a name="ln1257">  }</a>
+<a name="ln1258"> </a>
+<a name="ln1259">  d-&gt;dv_refcount++;</a>
+<a name="ln1260">  args[2].v_type = VAR_DICT;</a>
+<a name="ln1261">  args[2].vval.v_dict = d;</a>
+<a name="ln1262"> </a>
+<a name="ln1263">  args[3].v_type = VAR_UNKNOWN;</a>
+<a name="ln1264"> </a>
+<a name="ln1265">  vim_snprintf(flagString, sizeof(flagString),</a>
+<a name="ln1266">               &quot;%s%s%s&quot;,</a>
+<a name="ln1267">               g_tag_at_cursor ? &quot;c&quot; : &quot;&quot;,</a>
+<a name="ln1268">               flags &amp; TAG_INS_COMP ? &quot;i&quot; : &quot;&quot;,</a>
+<a name="ln1269">               flags &amp; TAG_REGEXP ? &quot;r&quot; : &quot;&quot;);</a>
+<a name="ln1270"> </a>
+<a name="ln1271">  save_pos = curwin-&gt;w_cursor;</a>
+<a name="ln1272">  result = callback_call(&amp;curbuf-&gt;b_tfu_cb, 3, args, &amp;rettv);</a>
+<a name="ln1273">  curwin-&gt;w_cursor = save_pos;  // restore the cursor position</a>
+<a name="ln1274">  d-&gt;dv_refcount--;</a>
+<a name="ln1275"> </a>
+<a name="ln1276">  if (result == FAIL) {</a>
+<a name="ln1277">    return FAIL;</a>
+<a name="ln1278">  }</a>
+<a name="ln1279">  if (rettv.v_type == VAR_SPECIAL &amp;&amp; rettv.vval.v_special == kSpecialVarNull) {</a>
+<a name="ln1280">    tv_clear(&amp;rettv);</a>
+<a name="ln1281">    return NOTDONE;</a>
+<a name="ln1282">  }</a>
+<a name="ln1283">  if (rettv.v_type != VAR_LIST || !rettv.vval.v_list) {</a>
+<a name="ln1284">    tv_clear(&amp;rettv);</a>
+<a name="ln1285">    emsg(_(e_invalid_return_value_from_tagfunc));</a>
+<a name="ln1286">    return FAIL;</a>
+<a name="ln1287">  }</a>
+<a name="ln1288">  taglist = rettv.vval.v_list;</a>
+<a name="ln1289"> </a>
+<a name="ln1290">  TV_LIST_ITER_CONST(taglist, li, {</a>
+<a name="ln1291">    char *res_name;</a>
+<a name="ln1292">    char *res_fname;</a>
+<a name="ln1293">    char *res_cmd;</a>
+<a name="ln1294">    char *res_kind;</a>
+<a name="ln1295">    int has_extra = 0;</a>
+<a name="ln1296">    int name_only = flags &amp; TAG_NAMES;</a>
+<a name="ln1297"> </a>
+<a name="ln1298">    if (TV_LIST_ITEM_TV(li)-&gt;v_type != VAR_DICT) {</a>
+<a name="ln1299">      emsg(_(e_invalid_return_value_from_tagfunc));</a>
+<a name="ln1300">      break;</a>
+<a name="ln1301">    }</a>
+<a name="ln1302"> </a>
+<a name="ln1303">    size_t len = 2;</a>
+<a name="ln1304">    res_name = NULL;</a>
+<a name="ln1305">    res_fname = NULL;</a>
+<a name="ln1306">    res_cmd = NULL;</a>
+<a name="ln1307">    res_kind = NULL;</a>
+<a name="ln1308"> </a>
+<a name="ln1309">    TV_DICT_ITER(TV_LIST_ITEM_TV(li)-&gt;vval.v_dict, di, {</a>
+<a name="ln1310">      const char *dict_key = di-&gt;di_key;</a>
+<a name="ln1311">      typval_T *tv = &amp;di-&gt;di_tv;</a>
+<a name="ln1312"> </a>
+<a name="ln1313">      if (tv-&gt;v_type != VAR_STRING || tv-&gt;vval.v_string == NULL) {</a>
+<a name="ln1314">        continue;</a>
+<a name="ln1315">      }</a>
+<a name="ln1316"> </a>
+<a name="ln1317">      len += strlen(tv-&gt;vval.v_string) + 1;   // Space for &quot;\tVALUE&quot;</a>
+<a name="ln1318">      if (!strcmp(dict_key, &quot;name&quot;)) {</a>
+<a name="ln1319">        res_name = tv-&gt;vval.v_string;</a>
+<a name="ln1320">        continue;</a>
+<a name="ln1321">      }</a>
+<a name="ln1322">      if (!strcmp(dict_key, &quot;filename&quot;)) {</a>
+<a name="ln1323">        res_fname = tv-&gt;vval.v_string;</a>
+<a name="ln1324">        continue;</a>
+<a name="ln1325">      }</a>
+<a name="ln1326">      if (!strcmp(dict_key, &quot;cmd&quot;)) {</a>
+<a name="ln1327">        res_cmd = tv-&gt;vval.v_string;</a>
+<a name="ln1328">        continue;</a>
+<a name="ln1329">      }</a>
+<a name="ln1330">      has_extra = 1;</a>
+<a name="ln1331">      if (!strcmp(dict_key, &quot;kind&quot;)) {</a>
+<a name="ln1332">        res_kind = tv-&gt;vval.v_string;</a>
+<a name="ln1333">        continue;</a>
+<a name="ln1334">      }</a>
+<a name="ln1335">      // Other elements will be stored as &quot;\tKEY:VALUE&quot;</a>
+<a name="ln1336">      // Allocate space for the key and the colon</a>
+<a name="ln1337">      len += strlen(dict_key) + 1;</a>
+<a name="ln1338">    });</a>
+<a name="ln1339"> </a>
+<a name="ln1340">    if (has_extra) {</a>
+<a name="ln1341">      len += 2;  // need space for ;&quot;</a>
+<a name="ln1342">    }</a>
+<a name="ln1343"> </a>
+<a name="ln1344">    if (!res_name || !res_fname || !res_cmd) {</a>
+<a name="ln1345">      emsg(_(e_invalid_return_value_from_tagfunc));</a>
+<a name="ln1346">      break;</a>
+<a name="ln1347">    }</a>
+<a name="ln1348"> </a>
+<a name="ln1349">    char *const mfp = name_only ? xstrdup(res_name) : xmalloc(len + 2);</a>
+<a name="ln1350"> </a>
+<a name="ln1351">    if (!name_only) {</a>
+<a name="ln1352">      char *p = mfp;</a>
+<a name="ln1353"> </a>
+<a name="ln1354">      *p++ = MT_GL_OTH + 1;   // mtt</a>
+<a name="ln1355">      *p++ = TAG_SEP;     // no tag file name</a>
+<a name="ln1356"> </a>
+<a name="ln1357">      STRCPY(p, res_name);</a>
+<a name="ln1358">      p += strlen(p);</a>
+<a name="ln1359"> </a>
+<a name="ln1360">      *p++ = TAB;</a>
+<a name="ln1361">      STRCPY(p, res_fname);</a>
+<a name="ln1362">      p += strlen(p);</a>
+<a name="ln1363"> </a>
+<a name="ln1364">      *p++ = TAB;</a>
+<a name="ln1365">      STRCPY(p, res_cmd);</a>
+<a name="ln1366">      p += strlen(p);</a>
+<a name="ln1367"> </a>
+<a name="ln1368">      if (has_extra) {</a>
+<a name="ln1369">        STRCPY(p, &quot;;\&quot;&quot;);</a>
+<a name="ln1370">        p += strlen(p);</a>
+<a name="ln1371"> </a>
+<a name="ln1372">        if (res_kind) {</a>
+<a name="ln1373">          *p++ = TAB;</a>
+<a name="ln1374">          STRCPY(p, res_kind);</a>
+<a name="ln1375">          p += strlen(p);</a>
+<a name="ln1376">        }</a>
+<a name="ln1377"> </a>
+<a name="ln1378">        TV_DICT_ITER(TV_LIST_ITEM_TV(li)-&gt;vval.v_dict, di, {</a>
+<a name="ln1379">          const char *dict_key = di-&gt;di_key;</a>
+<a name="ln1380">          typval_T *tv = &amp;di-&gt;di_tv;</a>
+<a name="ln1381">          if (tv-&gt;v_type != VAR_STRING || tv-&gt;vval.v_string == NULL) {</a>
+<a name="ln1382">            continue;</a>
+<a name="ln1383">          }</a>
+<a name="ln1384"> </a>
+<a name="ln1385">          if (!strcmp(dict_key, &quot;name&quot;)) {</a>
+<a name="ln1386">            continue;</a>
+<a name="ln1387">          }</a>
+<a name="ln1388">          if (!strcmp(dict_key, &quot;filename&quot;)) {</a>
+<a name="ln1389">            continue;</a>
+<a name="ln1390">          }</a>
+<a name="ln1391">          if (!strcmp(dict_key, &quot;cmd&quot;)) {</a>
+<a name="ln1392">            continue;</a>
+<a name="ln1393">          }</a>
+<a name="ln1394">          if (!strcmp(dict_key, &quot;kind&quot;)) {</a>
+<a name="ln1395">            continue;</a>
+<a name="ln1396">          }</a>
+<a name="ln1397"> </a>
+<a name="ln1398">          *p++ = TAB;</a>
+<a name="ln1399">          STRCPY(p, dict_key);</a>
+<a name="ln1400">          p += strlen(p);</a>
+<a name="ln1401">          STRCPY(p, &quot;:&quot;);</a>
+<a name="ln1402">          p += strlen(p);</a>
+<a name="ln1403">          STRCPY(p, tv-&gt;vval.v_string);</a>
+<a name="ln1404">          p += strlen(p);</a>
+<a name="ln1405">        });</a>
+<a name="ln1406">      }</a>
+<a name="ln1407">    }</a>
+<a name="ln1408"> </a>
+<a name="ln1409">    // Add all matches because tagfunc should do filtering.</a>
+<a name="ln1410">    ga_grow(ga, 1);</a>
+<a name="ln1411">    ((char **)(ga-&gt;ga_data))[ga-&gt;ga_len++] = (char *)mfp;</a>
+<a name="ln1412">    ntags++;</a>
+<a name="ln1413">    result = OK;</a>
+<a name="ln1414">  });</a>
+<a name="ln1415"> </a>
+<a name="ln1416">  tv_clear(&amp;rettv);</a>
+<a name="ln1417"> </a>
+<a name="ln1418">  *match_count = ntags;</a>
+<a name="ln1419">  return result;</a>
+<a name="ln1420">}</a>
+<a name="ln1421"> </a>
+<a name="ln1422">/// Initialize the state used by find_tags()</a>
+<a name="ln1423">static void findtags_state_init(findtags_state_T *st, char *pat, int flags, int mincount)</a>
+<a name="ln1424">{</a>
+<a name="ln1425">  st-&gt;tag_fname = xmalloc(MAXPATHL + 1);</a>
+<a name="ln1426">  st-&gt;fp = NULL;</a>
+<a name="ln1427">  st-&gt;orgpat = xmalloc(sizeof(pat_T));</a>
+<a name="ln1428">  st-&gt;orgpat-&gt;pat = pat;</a>
+<a name="ln1429">  st-&gt;orgpat-&gt;len = (int)strlen(pat);</a>
+<a name="ln1430">  st-&gt;orgpat-&gt;regmatch.regprog = NULL;</a>
+<a name="ln1431">  st-&gt;flags = flags;</a>
+<a name="ln1432">  st-&gt;tag_file_sorted = NUL;</a>
+<a name="ln1433">  st-&gt;help_lang_find = NULL;</a>
+<a name="ln1434">  st-&gt;is_txt = false;</a>
+<a name="ln1435">  st-&gt;did_open = false;</a>
+<a name="ln1436">  st-&gt;help_only = (flags &amp; TAG_HELP);</a>
+<a name="ln1437">  st-&gt;get_searchpat = false;</a>
+<a name="ln1438">  st-&gt;help_lang[0] = NUL;</a>
+<a name="ln1439">  st-&gt;help_pri = 0;</a>
+<a name="ln1440">  st-&gt;mincount = mincount;</a>
+<a name="ln1441">  st-&gt;lbuf_size = LSIZE;</a>
+<a name="ln1442">  st-&gt;lbuf = xmalloc((size_t)st-&gt;lbuf_size);</a>
+<a name="ln1443">  st-&gt;match_count = 0;</a>
+<a name="ln1444">  st-&gt;stop_searching = false;</a>
+<a name="ln1445"> </a>
+<a name="ln1446">  for (int mtt = 0; mtt &lt; MT_COUNT; mtt++) {</a>
+<a name="ln1447">    ga_init(&amp;st-&gt;ga_match[mtt], sizeof(char *), 100);</a>
+<a name="ln1448">    hash_init(&amp;st-&gt;ht_match[mtt]);</a>
+<a name="ln1449">  }</a>
+<a name="ln1450">}</a>
+<a name="ln1451"> </a>
+<a name="ln1452">/// Free the state used by find_tags()</a>
+<a name="ln1453">static void findtags_state_free(findtags_state_T *st)</a>
+<a name="ln1454">{</a>
+<a name="ln1455">  xfree(st-&gt;tag_fname);</a>
+<a name="ln1456">  xfree(st-&gt;lbuf);</a>
+<a name="ln1457">  vim_regfree(st-&gt;orgpat-&gt;regmatch.regprog);</a>
+<a name="ln1458">  xfree(st-&gt;orgpat);</a>
+<a name="ln1459">}</a>
+<a name="ln1460"> </a>
+<a name="ln1461">/// Initialize the language and priority used for searching tags in a Vim help</a>
+<a name="ln1462">/// file.</a>
+<a name="ln1463">/// Returns true to process the help file for tags and false to skip the file.</a>
+<a name="ln1464">static bool findtags_in_help_init(findtags_state_T *st)</a>
+<a name="ln1465">{</a>
+<a name="ln1466">  int i;</a>
+<a name="ln1467"> </a>
+<a name="ln1468">  // Keep &quot;en&quot; as the language if the file extension is &quot;.txt&quot;</a>
+<a name="ln1469">  if (st-&gt;is_txt) {</a>
+<a name="ln1470">    STRCPY(st-&gt;help_lang, &quot;en&quot;);</a>
+<a name="ln1471">  } else {</a>
+<a name="ln1472">    // Prefer help tags according to 'helplang'.  Put the two-letter</a>
+<a name="ln1473">    // language name in help_lang[].</a>
+<a name="ln1474">    i = (int)strlen(st-&gt;tag_fname);</a>
+<a name="ln1475">    if (i &gt; 3 &amp;&amp; st-&gt;tag_fname[i - 3] == '-') {</a>
+<a name="ln1476">      xstrlcpy(st-&gt;help_lang, st-&gt;tag_fname + i - 2, 3);</a>
+<a name="ln1477">    } else {</a>
+<a name="ln1478">      STRCPY(st-&gt;help_lang, &quot;en&quot;);</a>
+<a name="ln1479">    }</a>
+<a name="ln1480">  }</a>
+<a name="ln1481">  // When searching for a specific language skip tags files for other</a>
+<a name="ln1482">  // languages.</a>
+<a name="ln1483">  if (st-&gt;help_lang_find != NULL</a>
+<a name="ln1484">      &amp;&amp; STRICMP(st-&gt;help_lang, st-&gt;help_lang_find) != 0) {</a>
+<a name="ln1485">    return false;</a>
+<a name="ln1486">  }</a>
+<a name="ln1487"> </a>
+<a name="ln1488">  // For CTRL-] in a help file prefer a match with the same language.</a>
+<a name="ln1489">  if ((st-&gt;flags &amp; TAG_KEEP_LANG)</a>
+<a name="ln1490">      &amp;&amp; st-&gt;help_lang_find == NULL</a>
+<a name="ln1491">      &amp;&amp; curbuf-&gt;b_fname != NULL</a>
+<a name="ln1492">      &amp;&amp; (i = (int)strlen(curbuf-&gt;b_fname)) &gt; 4</a>
+<a name="ln1493">      &amp;&amp; curbuf-&gt;b_fname[i - 1] == 'x'</a>
+<a name="ln1494">      &amp;&amp; curbuf-&gt;b_fname[i - 4] == '.'</a>
+<a name="ln1495">      &amp;&amp; STRNICMP(curbuf-&gt;b_fname + i - 3, st-&gt;help_lang, 2) == 0) {</a>
+<a name="ln1496">    st-&gt;help_pri = 0;</a>
+<a name="ln1497">  } else {</a>
+<a name="ln1498">    st-&gt;help_pri = 1;</a>
+<a name="ln1499">    char *s;</a>
+<a name="ln1500">    for (s = p_hlg; *s != NUL; s++) {</a>
+<a name="ln1501">      if (STRNICMP(s, st-&gt;help_lang, 2) == 0) {</a>
+<a name="ln1502">        break;</a>
+<a name="ln1503">      }</a>
+<a name="ln1504">      st-&gt;help_pri++;</a>
+<a name="ln1505">      if ((s = vim_strchr(s, ',')) == NULL) {</a>
+<a name="ln1506">        break;</a>
+<a name="ln1507">      }</a>
+<a name="ln1508">    }</a>
+<a name="ln1509">    if (s == NULL || *s == NUL) {</a>
+<a name="ln1510">      // Language not in 'helplang': use last, prefer English, unless</a>
+<a name="ln1511">      // found already.</a>
+<a name="ln1512">      st-&gt;help_pri++;</a>
+<a name="ln1513">      if (STRICMP(st-&gt;help_lang, &quot;en&quot;) != 0) {</a>
+<a name="ln1514">        st-&gt;help_pri++;</a>
+<a name="ln1515">      }</a>
+<a name="ln1516">    }</a>
+<a name="ln1517">  }</a>
+<a name="ln1518"> </a>
+<a name="ln1519">  return true;</a>
+<a name="ln1520">}</a>
+<a name="ln1521"> </a>
+<a name="ln1522">/// Use the function set in 'tagfunc' (if configured and enabled) to get the</a>
+<a name="ln1523">/// tags.</a>
+<a name="ln1524">/// Return OK if at least 1 tag has been successfully found, NOTDONE if the</a>
+<a name="ln1525">/// 'tagfunc' is not used or the 'tagfunc' returns v:null and FAIL otherwise.</a>
+<a name="ln1526">static int findtags_apply_tfu(findtags_state_T *st, char *pat, char *buf_ffname)</a>
+<a name="ln1527">{</a>
+<a name="ln1528">  const bool use_tfu = ((st-&gt;flags &amp; TAG_NO_TAGFUNC) == 0);</a>
+<a name="ln1529"> </a>
+<a name="ln1530">  if (!use_tfu || tfu_in_use || *curbuf-&gt;b_p_tfu == NUL) {</a>
+<a name="ln1531">    return NOTDONE;</a>
+<a name="ln1532">  }</a>
+<a name="ln1533"> </a>
+<a name="ln1534">  tfu_in_use = true;</a>
+<a name="ln1535">  int retval = find_tagfunc_tags(pat, st-&gt;ga_match, &amp;st-&gt;match_count,</a>
+<a name="ln1536">                                 st-&gt;flags, buf_ffname);</a>
+<a name="ln1537">  tfu_in_use = false;</a>
+<a name="ln1538"> </a>
+<a name="ln1539">  return retval;</a>
+<a name="ln1540">}</a>
+<a name="ln1541"> </a>
+<a name="ln1542">/// Read the next line from a tags file.</a>
+<a name="ln1543">/// Returns TAGS_READ_SUCCESS if a tags line is successfully read and should be</a>
+<a name="ln1544">/// processed.</a>
+<a name="ln1545">/// Returns TAGS_READ_EOF if the end of file is reached.</a>
+<a name="ln1546">/// Returns TAGS_READ_IGNORE if the current line should be ignored (used when</a>
+<a name="ln1547">/// reached end of a emacs included tags file)</a>
+<a name="ln1548">static tags_read_status_T findtags_get_next_line(findtags_state_T *st, tagsearch_info_T *sinfo_p)</a>
+<a name="ln1549">{</a>
+<a name="ln1550">  int eof;</a>
+<a name="ln1551">  off_T offset;</a>
+<a name="ln1552"> </a>
+<a name="ln1553">  // For binary search: compute the next offset to use.</a>
+<a name="ln1554">  if (st-&gt;state == TS_BINARY) {</a>
+<a name="ln1555">    offset = sinfo_p-&gt;low_offset + ((sinfo_p-&gt;high_offset - sinfo_p-&gt;low_offset) / 2);</a>
+<a name="ln1556">    if (offset == sinfo_p-&gt;curr_offset) {</a>
+<a name="ln1557">      return TAGS_READ_EOF;  // End the binary search without a match.</a>
+<a name="ln1558">    } else {</a>
+<a name="ln1559">      sinfo_p-&gt;curr_offset = offset;</a>
+<a name="ln1560">    }</a>
+<a name="ln1561">  } else if (st-&gt;state == TS_SKIP_BACK) {</a>
+<a name="ln1562">    // Skipping back (after a match during binary search).</a>
+<a name="ln1563">    sinfo_p-&gt;curr_offset -= st-&gt;lbuf_size * 2;</a>
+<a name="ln1564">    if (sinfo_p-&gt;curr_offset &lt; 0) {</a>
+<a name="ln1565">      sinfo_p-&gt;curr_offset = 0;</a>
+<a name="ln1566">      rewind(st-&gt;fp);</a>
+<a name="ln1567">      st-&gt;state = TS_STEP_FORWARD;</a>
+<a name="ln1568">    }</a>
+<a name="ln1569">  }</a>
+<a name="ln1570"> </a>
+<a name="ln1571">  // When jumping around in the file, first read a line to find the</a>
+<a name="ln1572">  // start of the next line.</a>
+<a name="ln1573">  if (st-&gt;state == TS_BINARY || st-&gt;state == TS_SKIP_BACK) {</a>
+<a name="ln1574">    // Adjust the search file offset to the correct position</a>
+<a name="ln1575">    sinfo_p-&gt;curr_offset_used = sinfo_p-&gt;curr_offset;</a>
+<a name="ln1576">    vim_ignored = vim_fseek(st-&gt;fp, sinfo_p-&gt;curr_offset, SEEK_SET);</a>
+<a name="ln1577">    eof = vim_fgets(st-&gt;lbuf, st-&gt;lbuf_size, st-&gt;fp);</a>
+<a name="ln1578">    if (!eof &amp;&amp; sinfo_p-&gt;curr_offset != 0) {</a>
+<a name="ln1579">      sinfo_p-&gt;curr_offset = vim_ftell(st-&gt;fp);</a>
+<a name="ln1580">      if (sinfo_p-&gt;curr_offset == sinfo_p-&gt;high_offset) {</a>
+<a name="ln1581">        // oops, gone a bit too far; try from low offset</a>
+<a name="ln1582">        vim_ignored = vim_fseek(st-&gt;fp, sinfo_p-&gt;low_offset, SEEK_SET);</a>
+<a name="ln1583">        sinfo_p-&gt;curr_offset = sinfo_p-&gt;low_offset;</a>
+<a name="ln1584">      }</a>
+<a name="ln1585">      eof = vim_fgets(st-&gt;lbuf, st-&gt;lbuf_size, st-&gt;fp);</a>
+<a name="ln1586">    }</a>
+<a name="ln1587">    // skip empty and blank lines</a>
+<a name="ln1588">    while (!eof &amp;&amp; vim_isblankline(st-&gt;lbuf)) {</a>
+<a name="ln1589">      sinfo_p-&gt;curr_offset = vim_ftell(st-&gt;fp);</a>
+<a name="ln1590">      eof = vim_fgets(st-&gt;lbuf, st-&gt;lbuf_size, st-&gt;fp);</a>
+<a name="ln1591">    }</a>
+<a name="ln1592">    if (eof) {</a>
+<a name="ln1593">      // Hit end of file.  Skip backwards.</a>
+<a name="ln1594">      st-&gt;state = TS_SKIP_BACK;</a>
+<a name="ln1595">      sinfo_p-&gt;match_offset = vim_ftell(st-&gt;fp);</a>
+<a name="ln1596">      sinfo_p-&gt;curr_offset = sinfo_p-&gt;curr_offset_used;</a>
+<a name="ln1597">      return TAGS_READ_IGNORE;</a>
+<a name="ln1598">    }</a>
+<a name="ln1599">  } else {</a>
+<a name="ln1600">    // Not jumping around in the file: Read the next line.</a>
+<a name="ln1601"> </a>
+<a name="ln1602">    // skip empty and blank lines</a>
+<a name="ln1603">    do {</a>
+<a name="ln1604">      eof = vim_fgets(st-&gt;lbuf, st-&gt;lbuf_size, st-&gt;fp);</a>
+<a name="ln1605">    } while (!eof &amp;&amp; vim_isblankline(st-&gt;lbuf));</a>
+<a name="ln1606"> </a>
+<a name="ln1607">    if (eof) {</a>
+<a name="ln1608">      return TAGS_READ_EOF;</a>
+<a name="ln1609">    }</a>
+<a name="ln1610">  }</a>
+<a name="ln1611"> </a>
+<a name="ln1612">  return TAGS_READ_SUCCESS;</a>
+<a name="ln1613">}</a>
+<a name="ln1614"> </a>
+<a name="ln1615">/// Parse a tags file header line in &quot;st-&gt;lbuf&quot;.</a>
+<a name="ln1616">/// Returns true if the current line in st-&gt;lbuf is not a tags header line and</a>
+<a name="ln1617">/// should be parsed as a regular tag line. Returns false if the line is a</a>
+<a name="ln1618">/// header line and the next header line should be read.</a>
+<a name="ln1619">static bool findtags_hdr_parse(findtags_state_T *st)</a>
+<a name="ln1620">{</a>
+<a name="ln1621">  // Header lines in a tags file start with &quot;!_TAG_&quot;</a>
+<a name="ln1622">  if (strncmp(st-&gt;lbuf, &quot;!_TAG_&quot;, 6) != 0) {</a>
+<a name="ln1623">    // Non-header item before the header, e.g. &quot;!&quot; itself.</a>
+<a name="ln1624">    return true;</a>
+<a name="ln1625">  }</a>
+<a name="ln1626"> </a>
+<a name="ln1627">  // Process the header line.</a>
+<a name="ln1628">  if (strncmp(st-&gt;lbuf, &quot;!_TAG_FILE_SORTED\t&quot;, 18) == 0) {</a>
+<a name="ln1629">    st-&gt;tag_file_sorted = (uint8_t)st-&gt;lbuf[18];</a>
+<a name="ln1630">  }</a>
+<a name="ln1631">  if (strncmp(st-&gt;lbuf, &quot;!_TAG_FILE_ENCODING\t&quot;, 20) == 0) {</a>
+<a name="ln1632">    // Prepare to convert every line from the specified encoding to</a>
+<a name="ln1633">    // 'encoding'.</a>
+<a name="ln1634">    char *p;</a>
+<a name="ln1635">    for (p = st-&gt;lbuf + 20; *p &gt; ' ' &amp;&amp; *p &lt; 127; p++) {}</a>
+<a name="ln1636">    *p = NUL;</a>
+<a name="ln1637">    convert_setup(&amp;st-&gt;vimconv, st-&gt;lbuf + 20, p_enc);</a>
+<a name="ln1638">  }</a>
+<a name="ln1639"> </a>
+<a name="ln1640">  // Read the next line.  Unrecognized flags are ignored.</a>
+<a name="ln1641">  return false;</a>
+<a name="ln1642">}</a>
+<a name="ln1643"> </a>
+<a name="ln1644">/// Handler to initialize the state when starting to process a new tags file.</a>
+<a name="ln1645">/// Called in the TS_START state when finding tags from a tags file.</a>
+<a name="ln1646">/// Returns true if the line read from the tags file should be parsed and</a>
+<a name="ln1647">/// false if the line should be ignored.</a>
+<a name="ln1648">static bool findtags_start_state_handler(findtags_state_T *st, bool *sortic,</a>
+<a name="ln1649">                                         tagsearch_info_T *sinfo_p)</a>
+<a name="ln1650">{</a>
+<a name="ln1651">  const bool noic = (st-&gt;flags &amp; TAG_NOIC);</a>
+<a name="ln1652"> </a>
+<a name="ln1653">  // The header ends when the line sorts below &quot;!_TAG_&quot;.  When case is</a>
+<a name="ln1654">  // folded lower case letters sort before &quot;_&quot;.</a>
+<a name="ln1655">  if (strncmp(st-&gt;lbuf, &quot;!_TAG_&quot;, 6) &lt;= 0</a>
+<a name="ln1656">      || (st-&gt;lbuf[0] == '!' &amp;&amp; ASCII_ISLOWER(st-&gt;lbuf[1]))) {</a>
+<a name="ln1657">    return findtags_hdr_parse(st);</a>
+<a name="ln1658">  }</a>
+<a name="ln1659"> </a>
+<a name="ln1660">  // Headers ends.</a>
+<a name="ln1661"> </a>
+<a name="ln1662">  // When there is no tag head, or ignoring case, need to do a</a>
+<a name="ln1663">  // linear search.</a>
+<a name="ln1664">  // When no &quot;!_TAG_&quot; is found, default to binary search.  If</a>
+<a name="ln1665">  // the tag file isn't sorted, the second loop will find it.</a>
+<a name="ln1666">  // When &quot;!_TAG_FILE_SORTED&quot; found: start binary search if</a>
+<a name="ln1667">  // flag set.</a>
+<a name="ln1668">  if (st-&gt;linear) {</a>
+<a name="ln1669">    st-&gt;state = TS_LINEAR;</a>
+<a name="ln1670">  } else if (st-&gt;tag_file_sorted == NUL) {</a>
+<a name="ln1671">    st-&gt;state = TS_BINARY;</a>
+<a name="ln1672">  } else if (st-&gt;tag_file_sorted == '1') {</a>
+<a name="ln1673">    st-&gt;state = TS_BINARY;</a>
+<a name="ln1674">  } else if (st-&gt;tag_file_sorted == '2') {</a>
+<a name="ln1675">    st-&gt;state = TS_BINARY;</a>
+<a name="ln1676">    *sortic = true;</a>
+<a name="ln1677">    st-&gt;orgpat-&gt;regmatch.rm_ic = (p_ic || !noic);</a>
+<a name="ln1678">  } else {</a>
+<a name="ln1679">    st-&gt;state = TS_LINEAR;</a>
+<a name="ln1680">  }</a>
+<a name="ln1681"> </a>
+<a name="ln1682">  if (st-&gt;state == TS_BINARY &amp;&amp; st-&gt;orgpat-&gt;regmatch.rm_ic &amp;&amp; !*sortic) {</a>
+<a name="ln1683">    // Binary search won't work for ignoring case, use linear</a>
+<a name="ln1684">    // search.</a>
+<a name="ln1685">    st-&gt;linear = true;</a>
+<a name="ln1686">    st-&gt;state = TS_LINEAR;</a>
+<a name="ln1687">  }</a>
+<a name="ln1688"> </a>
+<a name="ln1689">  // When starting a binary search, get the size of the file and</a>
+<a name="ln1690">  // compute the first offset.</a>
+<a name="ln1691">  if (st-&gt;state == TS_BINARY) {</a>
+<a name="ln1692">    if (vim_fseek(st-&gt;fp, 0, SEEK_END) != 0) {</a>
+<a name="ln1693">      // can't seek, don't use binary search</a>
+<a name="ln1694">      st-&gt;state = TS_LINEAR;</a>
+<a name="ln1695">    } else {</a>
+<a name="ln1696">      // Get the tag file size.</a>
+<a name="ln1697">      // Don't use lseek(), it doesn't work</a>
+<a name="ln1698">      // properly on MacOS Catalina.</a>
+<a name="ln1699">      const off_T filesize = vim_ftell(st-&gt;fp);</a>
+<a name="ln1700">      vim_ignored = vim_fseek(st-&gt;fp, 0, SEEK_SET);</a>
+<a name="ln1701"> </a>
+<a name="ln1702">      // Calculate the first read offset in the file.  Start</a>
+<a name="ln1703">      // the search in the middle of the file.</a>
+<a name="ln1704">      sinfo_p-&gt;low_offset = 0;</a>
+<a name="ln1705">      sinfo_p-&gt;low_char = 0;</a>
+<a name="ln1706">      sinfo_p-&gt;high_offset = filesize;</a>
+<a name="ln1707">      sinfo_p-&gt;curr_offset = 0;</a>
+<a name="ln1708">      sinfo_p-&gt;high_char = 0xff;</a>
+<a name="ln1709">    }</a>
+<a name="ln1710">    return false;</a>
+<a name="ln1711">  }</a>
+<a name="ln1712"> </a>
+<a name="ln1713">  return true;</a>
+<a name="ln1714">}</a>
+<a name="ln1715"> </a>
+<a name="ln1716">/// Parse a tag line read from a tags file.</a>
+<a name="ln1717">/// Also compares the tag name in &quot;tagpp-&gt;tagname&quot; with a search pattern in</a>
+<a name="ln1718">/// &quot;st-&gt;orgpat-&gt;head&quot; as a quick check if the tag may match.</a>
+<a name="ln1719">/// Returns:</a>
+<a name="ln1720">/// - TAG_MATCH_SUCCESS if the tag may match</a>
+<a name="ln1721">/// - TAG_MATCH_FAIL if the tag doesn't match</a>
+<a name="ln1722">/// - TAG_MATCH_NEXT to look for the next matching tag (used in a binary search)</a>
+<a name="ln1723">/// - TAG_MATCH_STOP if all the tags are processed without a match.</a>
+<a name="ln1724">/// Uses the values in &quot;margs&quot; for doing the comparison.</a>
+<a name="ln1725">static tagmatch_status_T findtags_parse_line(findtags_state_T *st, tagptrs_T *tagpp,</a>
+<a name="ln1726">                                             findtags_match_args_T *margs,</a>
+<a name="ln1727">                                             tagsearch_info_T *sinfo_p)</a>
+<a name="ln1728">{</a>
+<a name="ln1729">  int status;</a>
+<a name="ln1730"> </a>
+<a name="ln1731">  // Figure out where the different strings are in this line.</a>
+<a name="ln1732">  // For &quot;normal&quot; tags: Do a quick check if the tag matches.</a>
+<a name="ln1733">  // This speeds up tag searching a lot!</a>
+<a name="ln1734">  if (st-&gt;orgpat-&gt;headlen) {</a>
+<a name="ln1735">    CLEAR_FIELD(*tagpp);</a>
+<a name="ln1736">    tagpp-&gt;tagname = st-&gt;lbuf;</a>
+<a name="ln1737">    tagpp-&gt;tagname_end = vim_strchr(st-&gt;lbuf, TAB);</a>
+<a name="ln1738">    if (tagpp-&gt;tagname_end == NULL) {</a>
+<a name="ln1739">      // Corrupted tag line.</a>
+<a name="ln1740">      return TAG_MATCH_FAIL;</a>
+<a name="ln1741">    }</a>
+<a name="ln1742"> </a>
+<a name="ln1743">    // Skip this line if the length of the tag is different and</a>
+<a name="ln1744">    // there is no regexp, or the tag is too short.</a>
+<a name="ln1745">    int cmplen = (int)(tagpp-&gt;tagname_end - tagpp-&gt;tagname);</a>
+<a name="ln1746">    if (p_tl != 0 &amp;&amp; cmplen &gt; p_tl) {  // adjust for 'taglength'</a>
+<a name="ln1747">      cmplen = (int)p_tl;</a>
+<a name="ln1748">    }</a>
+<a name="ln1749">    if ((st-&gt;flags &amp; TAG_REGEXP) &amp;&amp; st-&gt;orgpat-&gt;headlen &lt; cmplen) {</a>
+<a name="ln1750">      cmplen = st-&gt;orgpat-&gt;headlen;</a>
+<a name="ln1751">    } else if (st-&gt;state == TS_LINEAR &amp;&amp; st-&gt;orgpat-&gt;headlen != cmplen) {</a>
+<a name="ln1752">      return TAG_MATCH_NEXT;</a>
+<a name="ln1753">    }</a>
+<a name="ln1754"> </a>
+<a name="ln1755">    if (st-&gt;state == TS_BINARY) {</a>
+<a name="ln1756">      int tagcmp;</a>
+<a name="ln1757">      // Simplistic check for unsorted tags file.</a>
+<a name="ln1758">      int i = (uint8_t)tagpp-&gt;tagname[0];</a>
+<a name="ln1759">      if (margs-&gt;sortic) {</a>
+<a name="ln1760">        i = TOUPPER_ASC(tagpp-&gt;tagname[0]);</a>
+<a name="ln1761">      }</a>
+<a name="ln1762">      if (i &lt; sinfo_p-&gt;low_char || i &gt; sinfo_p-&gt;high_char) {</a>
+<a name="ln1763">        margs-&gt;sort_error = true;</a>
+<a name="ln1764">      }</a>
+<a name="ln1765"> </a>
+<a name="ln1766">      // Compare the current tag with the searched tag.</a>
+<a name="ln1767">      if (margs-&gt;sortic) {</a>
+<a name="ln1768">        tagcmp = tag_strnicmp(tagpp-&gt;tagname, st-&gt;orgpat-&gt;head,</a>
+<a name="ln1769">                              (size_t)cmplen);</a>
+<a name="ln1770">      } else {</a>
+<a name="ln1771">        tagcmp = strncmp(tagpp-&gt;tagname, st-&gt;orgpat-&gt;head, (size_t)cmplen);</a>
+<a name="ln1772">      }</a>
+<a name="ln1773"> </a>
+<a name="ln1774">      // A match with a shorter tag means to search forward.</a>
+<a name="ln1775">      // A match with a longer tag means to search backward.</a>
+<a name="ln1776">      if (tagcmp == 0) {</a>
+<a name="ln1777">        if (cmplen &lt; st-&gt;orgpat-&gt;headlen) {</a>
+<a name="ln1778">          tagcmp = -1;</a>
+<a name="ln1779">        } else if (cmplen &gt; st-&gt;orgpat-&gt;headlen) {</a>
+<a name="ln1780">          tagcmp = 1;</a>
+<a name="ln1781">        }</a>
+<a name="ln1782">      }</a>
+<a name="ln1783"> </a>
+<a name="ln1784">      if (tagcmp == 0) {</a>
+<a name="ln1785">        // We've located the tag, now skip back and search</a>
+<a name="ln1786">        // forward until the first matching tag is found.</a>
+<a name="ln1787">        st-&gt;state = TS_SKIP_BACK;</a>
+<a name="ln1788">        sinfo_p-&gt;match_offset = sinfo_p-&gt;curr_offset;</a>
+<a name="ln1789">        return TAG_MATCH_NEXT;</a>
+<a name="ln1790">      }</a>
+<a name="ln1791">      if (tagcmp &lt; 0) {</a>
+<a name="ln1792">        sinfo_p-&gt;curr_offset = vim_ftell(st-&gt;fp);</a>
+<a name="ln1793">        if (sinfo_p-&gt;curr_offset &lt; sinfo_p-&gt;high_offset) {</a>
+<a name="ln1794">          sinfo_p-&gt;low_offset = sinfo_p-&gt;curr_offset;</a>
+<a name="ln1795">          if (margs-&gt;sortic) {</a>
+<a name="ln1796">            sinfo_p-&gt;low_char = TOUPPER_ASC(tagpp-&gt;tagname[0]);</a>
+<a name="ln1797">          } else {</a>
+<a name="ln1798">            sinfo_p-&gt;low_char = (uint8_t)tagpp-&gt;tagname[0];</a>
+<a name="ln1799">          }</a>
+<a name="ln1800">          return TAG_MATCH_NEXT;</a>
+<a name="ln1801">        }</a>
+<a name="ln1802">      }</a>
+<a name="ln1803">      if (tagcmp &gt; 0 &amp;&amp; sinfo_p-&gt;curr_offset != sinfo_p-&gt;high_offset) {</a>
+<a name="ln1804">        sinfo_p-&gt;high_offset = sinfo_p-&gt;curr_offset;</a>
+<a name="ln1805">        if (margs-&gt;sortic) {</a>
+<a name="ln1806">          sinfo_p-&gt;high_char = TOUPPER_ASC(tagpp-&gt;tagname[0]);</a>
+<a name="ln1807">        } else {</a>
+<a name="ln1808">          sinfo_p-&gt;high_char = (uint8_t)tagpp-&gt;tagname[0];</a>
+<a name="ln1809">        }</a>
+<a name="ln1810">        return TAG_MATCH_NEXT;</a>
+<a name="ln1811">      }</a>
+<a name="ln1812"> </a>
+<a name="ln1813">      // No match yet and are at the end of the binary search.</a>
+<a name="ln1814">      return TAG_MATCH_STOP;</a>
+<a name="ln1815">    } else if (st-&gt;state == TS_SKIP_BACK) {</a>
+<a name="ln1816">      assert(cmplen &gt;= 0);</a>
+<a name="ln1817">      if (mb_strnicmp(tagpp-&gt;tagname, st-&gt;orgpat-&gt;head, (size_t)cmplen) != 0) {</a>
+<a name="ln1818">        st-&gt;state = TS_STEP_FORWARD;</a>
+<a name="ln1819">      } else {</a>
+<a name="ln1820">        // Have to skip back more.  Restore the curr_offset</a>
+<a name="ln1821">        // used, otherwise we get stuck at a long line.</a>
+<a name="ln1822">        sinfo_p-&gt;curr_offset = sinfo_p-&gt;curr_offset_used;</a>
+<a name="ln1823">      }</a>
+<a name="ln1824">      return TAG_MATCH_NEXT;</a>
+<a name="ln1825">    } else if (st-&gt;state == TS_STEP_FORWARD) {</a>
+<a name="ln1826">      assert(cmplen &gt;= 0);</a>
+<a name="ln1827">      if (mb_strnicmp(tagpp-&gt;tagname, st-&gt;orgpat-&gt;head, (size_t)cmplen) != 0) {</a>
+<a name="ln1828">        if ((off_T)vim_ftell(st-&gt;fp) &gt; sinfo_p-&gt;match_offset) {</a>
+<a name="ln1829">          return TAG_MATCH_STOP;      // past last match</a>
+<a name="ln1830">        } else {</a>
+<a name="ln1831">          return TAG_MATCH_NEXT;      // before first match</a>
+<a name="ln1832">        }</a>
+<a name="ln1833">      }</a>
+<a name="ln1834">    } else {</a>
+<a name="ln1835">      // skip this match if it can't match</a>
+<a name="ln1836">      assert(cmplen &gt;= 0);</a>
+<a name="ln1837">      if (mb_strnicmp(tagpp-&gt;tagname, st-&gt;orgpat-&gt;head, (size_t)cmplen) != 0) {</a>
+<a name="ln1838">        return TAG_MATCH_NEXT;</a>
+<a name="ln1839">      }</a>
+<a name="ln1840">    }</a>
+<a name="ln1841"> </a>
+<a name="ln1842">    // Can be a matching tag, isolate the file name and command.</a>
+<a name="ln1843">    tagpp-&gt;fname = tagpp-&gt;tagname_end + 1;</a>
+<a name="ln1844">    tagpp-&gt;fname_end = vim_strchr(tagpp-&gt;fname, TAB);</a>
+<a name="ln1845">    if (tagpp-&gt;fname_end == NULL) {</a>
+<a name="ln1846">      status = FAIL;</a>
+<a name="ln1847">    } else {</a>
+<a name="ln1848">      tagpp-&gt;command = tagpp-&gt;fname_end + 1;</a>
+<a name="ln1849">      status = OK;</a>
+<a name="ln1850">    }</a>
+<a name="ln1851">  } else {</a>
+<a name="ln1852">    status = parse_tag_line(st-&gt;lbuf, tagpp);</a>
+<a name="ln1853">  }</a>
+<a name="ln1854"> </a>
+<a name="ln1855">  if (status == FAIL) {</a>
+<a name="ln1856">    return TAG_MATCH_FAIL;</a>
+<a name="ln1857">  }</a>
+<a name="ln1858"> </a>
+<a name="ln1859">  return TAG_MATCH_SUCCESS;</a>
+<a name="ln1860">}</a>
+<a name="ln1861"> </a>
+<a name="ln1862">/// Initialize the structure used for tag matching.</a>
+<a name="ln1863">static void findtags_matchargs_init(findtags_match_args_T *margs, int flags)</a>
+<a name="ln1864">{</a>
+<a name="ln1865">  margs-&gt;matchoff = 0;                        // match offset</a>
+<a name="ln1866">  margs-&gt;match_re = false;                    // match with regexp</a>
+<a name="ln1867">  margs-&gt;match_no_ic = false;                 // matches with case</a>
+<a name="ln1868">  margs-&gt;has_re = (flags &amp; TAG_REGEXP);       // regexp used</a>
+<a name="ln1869">  margs-&gt;sortic = false;                      // tag file sorted in nocase</a>
+<a name="ln1870">  margs-&gt;sort_error = false;                  // tags file not sorted</a>
+<a name="ln1871">}</a>
+<a name="ln1872"> </a>
+<a name="ln1873">/// Compares the tag name in &quot;tagpp-&gt;tagname&quot; with a search pattern in</a>
+<a name="ln1874">/// &quot;st-&gt;orgpat-&gt;pat&quot;.</a>
+<a name="ln1875">/// Returns true if the tag matches, false if the tag doesn't match.</a>
+<a name="ln1876">/// Uses the values in &quot;margs&quot; for doing the comparison.</a>
+<a name="ln1877">static bool findtags_match_tag(findtags_state_T *st, tagptrs_T *tagpp, findtags_match_args_T *margs)</a>
+<a name="ln1878">{</a>
+<a name="ln1879">  bool match = false;</a>
+<a name="ln1880"> </a>
+<a name="ln1881">  // First try matching with the pattern literally (also when it is</a>
+<a name="ln1882">  // a regexp).</a>
+<a name="ln1883">  int cmplen = (int)(tagpp-&gt;tagname_end - tagpp-&gt;tagname);</a>
+<a name="ln1884">  if (p_tl != 0 &amp;&amp; cmplen &gt; p_tl) {           // adjust for 'taglength'</a>
+<a name="ln1885">    cmplen = (int)p_tl;</a>
+<a name="ln1886">  }</a>
+<a name="ln1887">  // if tag length does not match, don't try comparing</a>
+<a name="ln1888">  if (st-&gt;orgpat-&gt;len != cmplen) {</a>
+<a name="ln1889">    match = false;</a>
+<a name="ln1890">  } else {</a>
+<a name="ln1891">    if (st-&gt;orgpat-&gt;regmatch.rm_ic) {</a>
+<a name="ln1892">      assert(cmplen &gt;= 0);</a>
+<a name="ln1893">      match = mb_strnicmp(tagpp-&gt;tagname, st-&gt;orgpat-&gt;pat, (size_t)cmplen) == 0;</a>
+<a name="ln1894">      if (match) {</a>
+<a name="ln1895">        margs-&gt;match_no_ic = strncmp(tagpp-&gt;tagname, st-&gt;orgpat-&gt;pat, (size_t)cmplen) == 0;</a>
+<a name="ln1896">      }</a>
+<a name="ln1897">    } else {</a>
+<a name="ln1898">      match = strncmp(tagpp-&gt;tagname, st-&gt;orgpat-&gt;pat, (size_t)cmplen) == 0;</a>
+<a name="ln1899">    }</a>
+<a name="ln1900">  }</a>
+<a name="ln1901"> </a>
+<a name="ln1902">  // Has a regexp: Also find tags matching regexp.</a>
+<a name="ln1903">  margs-&gt;match_re = false;</a>
+<a name="ln1904">  if (!match &amp;&amp; st-&gt;orgpat-&gt;regmatch.regprog != NULL) {</a>
+<a name="ln1905">    char cc = *tagpp-&gt;tagname_end;</a>
+<a name="ln1906">    *tagpp-&gt;tagname_end = NUL;</a>
+<a name="ln1907">    match = vim_regexec(&amp;st-&gt;orgpat-&gt;regmatch, tagpp-&gt;tagname, (colnr_T)0);</a>
+<a name="ln1908">    if (match) {</a>
+<a name="ln1909">      margs-&gt;matchoff = (int)(st-&gt;orgpat-&gt;regmatch.startp[0] - tagpp-&gt;tagname);</a>
+<a name="ln1910">      if (st-&gt;orgpat-&gt;regmatch.rm_ic) {</a>
+<a name="ln1911">        st-&gt;orgpat-&gt;regmatch.rm_ic = false;</a>
+<a name="ln1912">        margs-&gt;match_no_ic = vim_regexec(&amp;st-&gt;orgpat-&gt;regmatch,</a>
+<a name="ln1913">                                         tagpp-&gt;tagname, (colnr_T)0);</a>
+<a name="ln1914">        st-&gt;orgpat-&gt;regmatch.rm_ic = true;</a>
+<a name="ln1915">      }</a>
+<a name="ln1916">    }</a>
+<a name="ln1917">    *tagpp-&gt;tagname_end = cc;</a>
+<a name="ln1918">    margs-&gt;match_re = true;</a>
+<a name="ln1919">  }</a>
+<a name="ln1920"> </a>
+<a name="ln1921">  return match;</a>
+<a name="ln1922">}</a>
+<a name="ln1923"> </a>
+<a name="ln1924">/// Convert the encoding of a line read from a tags file in &quot;st-&gt;lbuf&quot;.</a>
+<a name="ln1925">/// Converting the pattern from 'enc' to the tags file encoding doesn't work,</a>
+<a name="ln1926">/// because characters are not recognized. The converted line is saved in</a>
+<a name="ln1927">/// st-&gt;lbuf.</a>
+<a name="ln1928">static void findtags_string_convert(findtags_state_T *st)</a>
+<a name="ln1929">{</a>
+<a name="ln1930">  char *conv_line = string_convert(&amp;st-&gt;vimconv, st-&gt;lbuf, NULL);</a>
+<a name="ln1931">  if (conv_line == NULL) {</a>
+<a name="ln1932">    return;</a>
+<a name="ln1933">  }</a>
+<a name="ln1934"> </a>
+<a name="ln1935">  // Copy or swap lbuf and conv_line.</a>
+<a name="ln1936">  int len = (int)strlen(conv_line) + 1;</a>
+<a name="ln1937">  if (len &gt; st-&gt;lbuf_size) {</a>
+<a name="ln1938">    xfree(st-&gt;lbuf);</a>
+<a name="ln1939">    st-&gt;lbuf = conv_line;</a>
+<a name="ln1940">    st-&gt;lbuf_size = len;</a>
+<a name="ln1941">  } else {</a>
+<a name="ln1942">    STRCPY(st-&gt;lbuf, conv_line);</a>
+<a name="ln1943">    xfree(conv_line);</a>
+<a name="ln1944">  }</a>
+<a name="ln1945">}</a>
+<a name="ln1946"> </a>
+<a name="ln1947">/// Add a matching tag found in a tags file to st-&gt;ht_match and st-&gt;ga_match.</a>
+<a name="ln1948">static void findtags_add_match(findtags_state_T *st, tagptrs_T *tagpp, findtags_match_args_T *margs,</a>
+<a name="ln1949">                               char *buf_ffname, hash_T *hash)</a>
+<a name="ln1950">{</a>
+<a name="ln1951">  const bool name_only = (st-&gt;flags &amp; TAG_NAMES);</a>
+<a name="ln1952">  int mtt;</a>
+<a name="ln1953">  size_t len = 0;</a>
+<a name="ln1954">  size_t mfp_size = 0;</a>
+<a name="ln1955">  bool is_current;             // file name matches</a>
+<a name="ln1956">  bool is_static;              // current tag line is static</a>
+<a name="ln1957">  char *mfp;</a>
+<a name="ln1958">  char *p;</a>
+<a name="ln1959">  char *s;</a>
+<a name="ln1960"> </a>
+<a name="ln1961">  // Decide in which array to store this match.</a>
+<a name="ln1962">  is_current = test_for_current(tagpp-&gt;fname, tagpp-&gt;fname_end,</a>
+<a name="ln1963">                                st-&gt;tag_fname, buf_ffname);</a>
+<a name="ln1964">  is_static = test_for_static(tagpp);</a>
+<a name="ln1965"> </a>
+<a name="ln1966">  // Decide in which of the sixteen tables to store this match.</a>
+<a name="ln1967">  if (is_static) {</a>
+<a name="ln1968">    if (is_current) {</a>
+<a name="ln1969">      mtt = MT_ST_CUR;</a>
+<a name="ln1970">    } else {</a>
+<a name="ln1971">      mtt = MT_ST_OTH;</a>
+<a name="ln1972">    }</a>
+<a name="ln1973">  } else {</a>
+<a name="ln1974">    if (is_current) {</a>
+<a name="ln1975">      mtt = MT_GL_CUR;</a>
+<a name="ln1976">    } else {</a>
+<a name="ln1977">      mtt = MT_GL_OTH;</a>
+<a name="ln1978">    }</a>
+<a name="ln1979">  }</a>
+<a name="ln1980">  if (st-&gt;orgpat-&gt;regmatch.rm_ic &amp;&amp; !margs-&gt;match_no_ic) {</a>
+<a name="ln1981">    mtt += MT_IC_OFF;</a>
+<a name="ln1982">  }</a>
+<a name="ln1983">  if (margs-&gt;match_re) {</a>
+<a name="ln1984">    mtt += MT_RE_OFF;</a>
+<a name="ln1985">  }</a>
+<a name="ln1986"> </a>
+<a name="ln1987">  // Add the found match in ht_match[mtt] and ga_match[mtt].</a>
+<a name="ln1988">  // Store the info we need later, which depends on the kind of</a>
+<a name="ln1989">  // tags we are dealing with.</a>
+<a name="ln1990">  if (st-&gt;help_only) {</a>
+<a name="ln1991">#define ML_EXTRA 3</a>
+<a name="ln1992">    // Append the help-heuristic number after the tagname, for</a>
+<a name="ln1993">    // sorting it later.  The heuristic is ignored for</a>
+<a name="ln1994">    // detecting duplicates.</a>
+<a name="ln1995">    // The format is {tagname}@{lang}NUL{heuristic}NUL</a>
+<a name="ln1996">    *tagpp-&gt;tagname_end = NUL;</a>
+<a name="ln1997">    len = (size_t)(tagpp-&gt;tagname_end - tagpp-&gt;tagname);</a>
+<a name="ln1998">    mfp_size = sizeof(char) + len + 10 + ML_EXTRA + 1;</a>
+<a name="ln1999">    mfp = xmalloc(mfp_size);</a>
+<a name="ln2000"> </a>
+<a name="ln2001">    p = mfp;</a>
+<a name="ln2002">    STRCPY(p, tagpp-&gt;tagname);</a>
+<a name="ln2003">    p[len] = '@';</a>
+<a name="ln2004">    STRCPY(p + len + 1, st-&gt;help_lang);</a>
+<a name="ln2005">    snprintf(p + len + 1 + ML_EXTRA, mfp_size - (len + 1 + ML_EXTRA), &quot;%06d&quot;,</a>
+<a name="ln2006">             help_heuristic(tagpp-&gt;tagname,</a>
+<a name="ln2007">                            margs-&gt;match_re ? margs-&gt;matchoff : 0,</a>
+<a name="ln2008">                            !margs-&gt;match_no_ic) + st-&gt;help_pri);</a>
+<a name="ln2009"> </a>
+<a name="ln2010">    *tagpp-&gt;tagname_end = TAB;</a>
+<a name="ln2011">  } else if (name_only) {</a>
+<a name="ln2012">    if (st-&gt;get_searchpat) {</a>
+<a name="ln2013">      char *temp_end = tagpp-&gt;command;</a>
+<a name="ln2014"> </a>
+<a name="ln2015">      if (*temp_end == '/') {</a>
+<a name="ln2016">        while (*temp_end &amp;&amp; *temp_end != '\r'</a>
+<a name="ln2017">               &amp;&amp; *temp_end != '\n'</a>
+<a name="ln2018">               &amp;&amp; *temp_end != '$') {</a>
+<a name="ln2019">          temp_end++;</a>
+<a name="ln2020">        }</a>
+<a name="ln2021">      }</a>
+<a name="ln2022"> </a>
+<a name="ln2023">      if (tagpp-&gt;command + 2 &lt; temp_end) {</a>
+<a name="ln2024">        len = (size_t)(temp_end - tagpp-&gt;command - 2);</a>
+<a name="ln2025">        mfp = xmalloc(len + 2);</a>
+<a name="ln2026">        xstrlcpy(mfp, tagpp-&gt;command + 2, len + 1);</a>
+<a name="ln2027">      } else {</a>
+<a name="ln2028">        mfp = NULL;</a>
+<a name="ln2029">      }</a>
+<a name="ln2030">      st-&gt;get_searchpat = false;</a>
+<a name="ln2031">    } else {</a>
+<a name="ln2032">      len = (size_t)(tagpp-&gt;tagname_end - tagpp-&gt;tagname);</a>
+<a name="ln2033">      mfp = xmalloc(sizeof(char) + len + 1);</a>
+<a name="ln2034">      xstrlcpy(mfp, tagpp-&gt;tagname, len + 1);</a>
+<a name="ln2035"> </a>
+<a name="ln2036">      // if wanted, re-read line to get long form too</a>
+<a name="ln2037">      if (State &amp; MODE_INSERT) {</a>
+<a name="ln2038">        st-&gt;get_searchpat = p_sft;</a>
+<a name="ln2039">      }</a>
+<a name="ln2040">    }</a>
+<a name="ln2041">  } else {</a>
+<a name="ln2042">    size_t tag_fname_len = strlen(st-&gt;tag_fname);</a>
+<a name="ln2043">    // Save the tag in a buffer.</a>
+<a name="ln2044">    // Use 0x02 to separate fields (Can't use NUL, because the</a>
+<a name="ln2045">    // hash key is terminated by NUL).</a>
+<a name="ln2046">    // Emacs tag: &lt;mtt&gt;&lt;tag_fname&gt;&lt;0x02&gt;&lt;ebuf&gt;&lt;0x02&gt;&lt;lbuf&gt;&lt;NUL&gt;</a>
+<a name="ln2047">    // other tag: &lt;mtt&gt;&lt;tag_fname&gt;&lt;0x02&gt;&lt;0x02&gt;&lt;lbuf&gt;&lt;NUL&gt;</a>
+<a name="ln2048">    // without Emacs tags: &lt;mtt&gt;&lt;tag_fname&gt;&lt;0x02&gt;&lt;lbuf&gt;&lt;NUL&gt;</a>
+<a name="ln2049">    // Here &lt;mtt&gt; is the &quot;mtt&quot; value plus 1 to avoid NUL.</a>
+<a name="ln2050">    len = tag_fname_len + strlen(st-&gt;lbuf) + 3;</a>
+<a name="ln2051">    mfp = xmalloc(sizeof(char) + len + 1);</a>
+<a name="ln2052">    p = mfp;</a>
+<a name="ln2053">    p[0] = (char)(mtt + 1);</a>
+<a name="ln2054">    STRCPY(p + 1, st-&gt;tag_fname);</a>
+<a name="ln2055">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln2056">    // Ignore differences in slashes, avoid adding</a>
+<a name="ln2057">    // both path/file and path\file.</a>
+<a name="ln2058">    slash_adjust(p + 1);</a>
+<a name="ln2059">#endif</a>
+<a name="ln2060">    p[tag_fname_len + 1] = TAG_SEP;</a>
+<a name="ln2061">    s = p + 1 + tag_fname_len + 1;</a>
+<a name="ln2062">    STRCPY(s, st-&gt;lbuf);</a>
+<a name="ln2063">  }</a>
+<a name="ln2064"> </a>
+<a name="ln2065">  if (mfp != NULL) {</a>
+<a name="ln2066">    hashitem_T *hi;</a>
+<a name="ln2067"> </a>
+<a name="ln2068">    // Don't add identical matches.</a>
+<a name="ln2069">    // &quot;mfp&quot; is used as a hash key, there is a NUL byte to end</a>
+<a name="ln2070">    // the part that matters for comparing, more bytes may</a>
+<a name="ln2071">    // follow after it.  E.g. help tags store the priority</a>
+<a name="ln2072">    // after the NUL.</a>
+<a name="ln2073">    *hash = hash_hash(mfp);</a>
+<a name="ln2074">    hi = hash_lookup(&amp;st-&gt;ht_match[mtt], mfp, strlen(mfp), *hash);</a>
+<a name="ln2075">    if (HASHITEM_EMPTY(hi)) {</a>
+<a name="ln2076">      hash_add_item(&amp;st-&gt;ht_match[mtt], hi, mfp, *hash);</a>
+<a name="ln2077">      GA_APPEND(char *, &amp;st-&gt;ga_match[mtt], mfp);</a>
+<a name="ln2078">      st-&gt;match_count++;</a>
+<a name="ln2079">    } else {</a>
+<a name="ln2080">      // duplicate tag, drop it</a>
+<a name="ln2081">      xfree(mfp);</a>
+<a name="ln2082">    }</a>
+<a name="ln2083">  }</a>
+<a name="ln2084">}</a>
+<a name="ln2085"> </a>
+<a name="ln2086">/// Read and get all the tags from file st-&gt;tag_fname.</a>
+<a name="ln2087">/// Sets &quot;st-&gt;stop_searching&quot; to true to stop searching for additional tags.</a>
+<a name="ln2088">static void findtags_get_all_tags(findtags_state_T *st, findtags_match_args_T *margs,</a>
+<a name="ln2089">                                  char *buf_ffname)</a>
+<a name="ln2090">{</a>
+<a name="ln2091">  tagptrs_T tagp;</a>
+<a name="ln2092">  tagsearch_info_T search_info;</a>
+<a name="ln2093">  int retval;</a>
+<a name="ln2094">  hash_T hash = 0;</a>
+<a name="ln2095"> </a>
+<a name="ln2096">  // This is only to avoid a compiler warning for using search_info</a>
+<a name="ln2097">  // uninitialised.</a>
+<a name="ln2098">  CLEAR_FIELD(search_info);</a>
+<a name="ln2099"> </a>
+<a name="ln2100">  // Read and parse the lines in the file one by one</a>
+<a name="ln2101">  while (true) {</a>
+<a name="ln2102">    // check for CTRL-C typed, more often when jumping around</a>
+<a name="ln2103">    if (st-&gt;state == TS_BINARY || st-&gt;state == TS_SKIP_BACK) {</a>
+<a name="ln2104">      line_breakcheck();</a>
+<a name="ln2105">    } else {</a>
+<a name="ln2106">      fast_breakcheck();</a>
+<a name="ln2107">    }</a>
+<a name="ln2108">    if ((st-&gt;flags &amp; TAG_INS_COMP)) {   // Double brackets for gcc</a>
+<a name="ln2109">      ins_compl_check_keys(30, false);</a>
+<a name="ln2110">    }</a>
+<a name="ln2111">    if (got_int || ins_compl_interrupted()) {</a>
+<a name="ln2112">      st-&gt;stop_searching = true;</a>
+<a name="ln2113">      break;</a>
+<a name="ln2114">    }</a>
+<a name="ln2115">    // When mincount is TAG_MANY, stop when enough matches have been</a>
+<a name="ln2116">    // found (for completion).</a>
+<a name="ln2117">    if (st-&gt;mincount == TAG_MANY &amp;&amp; st-&gt;match_count &gt;= TAG_MANY) {</a>
+<a name="ln2118">      st-&gt;stop_searching = true;</a>
+<a name="ln2119">      break;</a>
+<a name="ln2120">    }</a>
+<a name="ln2121">    if (st-&gt;get_searchpat) {</a>
+<a name="ln2122">      goto line_read_in;</a>
+<a name="ln2123">    }</a>
+<a name="ln2124"> </a>
+<a name="ln2125">    retval = (int)findtags_get_next_line(st, &amp;search_info);</a>
+<a name="ln2126">    if (retval == TAGS_READ_IGNORE) {</a>
+<a name="ln2127">      continue;</a>
+<a name="ln2128">    }</a>
+<a name="ln2129">    if (retval == TAGS_READ_EOF) {</a>
+<a name="ln2130">      break;</a>
+<a name="ln2131">    }</a>
+<a name="ln2132"> </a>
+<a name="ln2133">line_read_in:</a>
+<a name="ln2134"> </a>
+<a name="ln2135">    if (st-&gt;vimconv.vc_type != CONV_NONE) {</a>
+<a name="ln2136">      findtags_string_convert(st);</a>
+<a name="ln2137">    }</a>
+<a name="ln2138"> </a>
+<a name="ln2139">    // When still at the start of the file, check for Emacs tags file</a>
+<a name="ln2140">    // format, and for &quot;not sorted&quot; flag.</a>
+<a name="ln2141">    if (st-&gt;state == TS_START) {</a>
+<a name="ln2142">      if (!findtags_start_state_handler(st, &amp;margs-&gt;sortic, &amp;search_info)) {</a>
+<a name="ln2143">        continue;</a>
+<a name="ln2144">      }</a>
+<a name="ln2145">    }</a>
+<a name="ln2146"> </a>
+<a name="ln2147">    // When the line is too long the NUL will not be in the</a>
+<a name="ln2148">    // last-but-one byte (see vim_fgets()).</a>
+<a name="ln2149">    // Has been reported for Mozilla JS with extremely long names.</a>
+<a name="ln2150">    // In that case we need to increase lbuf_size.</a>
+<a name="ln2151">    if (st-&gt;lbuf[st-&gt;lbuf_size - 2] != NUL) {</a>
+<a name="ln2152">      st-&gt;lbuf_size *= 2;</a>
+<a name="ln2153">      xfree(st-&gt;lbuf);</a>
+<a name="ln2154">      st-&gt;lbuf = xmalloc((size_t)st-&gt;lbuf_size);</a>
+<a name="ln2155"> </a>
+<a name="ln2156">      if (st-&gt;state == TS_STEP_FORWARD || st-&gt;state == TS_LINEAR) {</a>
+<a name="ln2157">        // Seek to the same position to read the same line again</a>
+<a name="ln2158">        vim_ignored = vim_fseek(st-&gt;fp, search_info.curr_offset, SEEK_SET);</a>
+<a name="ln2159">      }</a>
+<a name="ln2160">      // this will try the same thing again, make sure the offset is</a>
+<a name="ln2161">      // different</a>
+<a name="ln2162">      search_info.curr_offset = 0;</a>
+<a name="ln2163">      continue;</a>
+<a name="ln2164">    }</a>
+<a name="ln2165"> </a>
+<a name="ln2166">    retval = (int)findtags_parse_line(st, &amp;tagp, margs, &amp;search_info);</a>
+<a name="ln2167">    if (retval == TAG_MATCH_NEXT) {</a>
+<a name="ln2168">      continue;</a>
+<a name="ln2169">    }</a>
+<a name="ln2170">    if (retval == TAG_MATCH_STOP) {</a>
+<a name="ln2171">      break;</a>
+<a name="ln2172">    }</a>
+<a name="ln2173">    if (retval == TAG_MATCH_FAIL) {</a>
+<a name="ln2174">      semsg(_(&quot;E431: Format error in tags file \&quot;%s\&quot;&quot;), st-&gt;tag_fname);</a>
+<a name="ln2175">      semsg(_(&quot;Before byte %&quot; PRId64), (int64_t)vim_ftell(st-&gt;fp));</a>
+<a name="ln2176">      st-&gt;stop_searching = true;</a>
+<a name="ln2177">      return;</a>
+<a name="ln2178">    }</a>
+<a name="ln2179"> </a>
+<a name="ln2180">    // If a match is found, add it to ht_match[] and ga_match[].</a>
+<a name="ln2181">    if (findtags_match_tag(st, &amp;tagp, margs)) {</a>
+<a name="ln2182">      findtags_add_match(st, &amp;tagp, margs, buf_ffname, &amp;hash);</a>
+<a name="ln2183">    }</a>
+<a name="ln2184">  }  // forever</a>
+<a name="ln2185">}</a>
+<a name="ln2186"> </a>
+<a name="ln2187">/// Search for tags matching &quot;st-&gt;orgpat.pat&quot; in the &quot;st-&gt;tag_fname&quot; tags file.</a>
+<a name="ln2188">/// Information needed to search for the tags is in the &quot;st&quot; state structure.</a>
+<a name="ln2189">/// The matching tags are returned in &quot;st&quot;. If an error is encountered, then</a>
+<a name="ln2190">/// &quot;st-&gt;stop_searching&quot; is set to true.</a>
+<a name="ln2191">static void findtags_in_file(findtags_state_T *st, int flags, char *buf_ffname)</a>
+<a name="ln2192">{</a>
+<a name="ln2193">  findtags_match_args_T margs;</a>
+<a name="ln2194"> </a>
+<a name="ln2195">  st-&gt;vimconv.vc_type = CONV_NONE;</a>
+<a name="ln2196">  st-&gt;tag_file_sorted = NUL;</a>
+<a name="ln2197">  st-&gt;fp = NULL;</a>
+<a name="ln2198">  findtags_matchargs_init(&amp;margs, st-&gt;flags);</a>
+<a name="ln2199"> </a>
+<a name="ln2200">  // A file that doesn't exist is silently ignored.  Only when not a</a>
+<a name="ln2201">  // single file is found, an error message is given (further on).</a>
+<a name="ln2202">  if (curbuf-&gt;b_help) {</a>
+<a name="ln2203">    if (!findtags_in_help_init(st)) {</a>
+<a name="ln2204">      return;</a>
+<a name="ln2205">    }</a>
+<a name="ln2206">  }</a>
+<a name="ln2207"> </a>
+<a name="ln2208">  st-&gt;fp = os_fopen(st-&gt;tag_fname, &quot;r&quot;);</a>
+<a name="ln2209">  if (st-&gt;fp == NULL) {</a>
+<a name="ln2210">    return;</a>
+<a name="ln2211">  }</a>
+<a name="ln2212"> </a>
+<a name="ln2213">  if (p_verbose &gt;= 5) {</a>
+<a name="ln2214">    verbose_enter();</a>
+<a name="ln2215">    smsg(0, _(&quot;Searching tags file %s&quot;), st-&gt;tag_fname);</a>
+<a name="ln2216">    verbose_leave();</a>
+<a name="ln2217">  }</a>
+<a name="ln2218">  st-&gt;did_open = true;   // remember that we found at least one file</a>
+<a name="ln2219"> </a>
+<a name="ln2220">  st-&gt;state = TS_START;  // we're at the start of the file</a>
+<a name="ln2221"> </a>
+<a name="ln2222">  // Read and parse the lines in the file one by one</a>
+<a name="ln2223">  findtags_get_all_tags(st, &amp;margs, buf_ffname);</a>
+<a name="ln2224"> </a>
+<a name="ln2225">  if (st-&gt;fp != NULL) {</a>
+<a name="ln2226">    fclose(st-&gt;fp);</a>
+<a name="ln2227">    st-&gt;fp = NULL;</a>
+<a name="ln2228">  }</a>
+<a name="ln2229">  if (st-&gt;vimconv.vc_type != CONV_NONE) {</a>
+<a name="ln2230">    convert_setup(&amp;st-&gt;vimconv, NULL, NULL);</a>
+<a name="ln2231">  }</a>
+<a name="ln2232"> </a>
+<a name="ln2233">  if (margs.sort_error) {</a>
+<a name="ln2234">    semsg(_(&quot;E432: Tags file not sorted: %s&quot;), st-&gt;tag_fname);</a>
+<a name="ln2235">  }</a>
+<a name="ln2236"> </a>
+<a name="ln2237">  // Stop searching if sufficient tags have been found.</a>
+<a name="ln2238">  if (st-&gt;match_count &gt;= st-&gt;mincount) {</a>
+<a name="ln2239">    st-&gt;stop_searching = true;</a>
+<a name="ln2240">  }</a>
+<a name="ln2241">}</a>
+<a name="ln2242"> </a>
+<a name="ln2243">/// Copy the tags found by find_tags() to &quot;matchesp&quot;.</a>
+<a name="ln2244">/// Returns the number of matches copied.</a>
+<a name="ln2245">static int findtags_copy_matches(findtags_state_T *st, char ***matchesp)</a>
+<a name="ln2246">{</a>
+<a name="ln2247">  const bool name_only = (st-&gt;flags &amp; TAG_NAMES);</a>
+<a name="ln2248">  char **matches;</a>
+<a name="ln2249">  int mtt;</a>
+<a name="ln2250">  char *mfp;</a>
+<a name="ln2251">  char *p;</a>
+<a name="ln2252"> </a>
+<a name="ln2253">  if (st-&gt;match_count &gt; 0) {</a>
+<a name="ln2254">    matches = xmalloc((size_t)st-&gt;match_count * sizeof(char *));</a>
+<a name="ln2255">  } else {</a>
+<a name="ln2256">    matches = NULL;</a>
+<a name="ln2257">  }</a>
+<a name="ln2258">  st-&gt;match_count = 0;</a>
+<a name="ln2259">  for (mtt = 0; mtt &lt; MT_COUNT; mtt++) {</a>
+<a name="ln2260">    for (int i = 0; i &lt; st-&gt;ga_match[mtt].ga_len; i++) {</a>
+<a name="ln2261">      mfp = ((char **)(st-&gt;ga_match[mtt].ga_data))[i];</a>
+<a name="ln2262">      if (matches == NULL) {</a>
+<a name="ln2263">        xfree(mfp);</a>
+<a name="ln2264">      } else {</a>
+<a name="ln2265">        if (!name_only) {</a>
+<a name="ln2266">          // Change mtt back to zero-based.</a>
+<a name="ln2267">          *mfp = (char)(*mfp - 1);</a>
+<a name="ln2268"> </a>
+<a name="ln2269">          // change the TAG_SEP back to NUL</a>
+<a name="ln2270">          for (p = mfp + 1; *p != NUL; p++) {</a>
+<a name="ln2271">            if (*p == TAG_SEP) {</a>
+<a name="ln2272">              *p = NUL;</a>
+<a name="ln2273">            }</a>
+<a name="ln2274">          }</a>
+<a name="ln2275">        }</a>
+<a name="ln2276">        matches[st-&gt;match_count++] = mfp;</a>
+<a name="ln2277">      }</a>
+<a name="ln2278">    }</a>
+<a name="ln2279"> </a>
+<a name="ln2280">    ga_clear(&amp;st-&gt;ga_match[mtt]);</a>
+<a name="ln2281">    hash_clear(&amp;st-&gt;ht_match[mtt]);</a>
+<a name="ln2282">  }</a>
+<a name="ln2283"> </a>
+<a name="ln2284">  *matchesp = matches;</a>
+<a name="ln2285">  return st-&gt;match_count;</a>
+<a name="ln2286">}</a>
+<a name="ln2287"> </a>
+<a name="ln2288">/// find_tags() - search for tags in tags files</a>
+<a name="ln2289">///</a>
+<a name="ln2290">/// Return FAIL if search completely failed (*num_matches will be 0, *matchesp</a>
+<a name="ln2291">/// will be NULL), OK otherwise.</a>
+<a name="ln2292">///</a>
+<a name="ln2293">/// There is a priority in which type of tag is recognized.</a>
+<a name="ln2294">///</a>
+<a name="ln2295">///  6.  A static or global tag with a full matching tag for the current file.</a>
+<a name="ln2296">///  5.  A global tag with a full matching tag for another file.</a>
+<a name="ln2297">///  4.  A static tag with a full matching tag for another file.</a>
+<a name="ln2298">///  3.  A static or global tag with an ignore-case matching tag for the</a>
+<a name="ln2299">///      current file.</a>
+<a name="ln2300">///  2.  A global tag with an ignore-case matching tag for another file.</a>
+<a name="ln2301">///  1.  A static tag with an ignore-case matching tag for another file.</a>
+<a name="ln2302">///</a>
+<a name="ln2303">/// Tags in an emacs-style tags file are always global.</a>
+<a name="ln2304">///</a>
+<a name="ln2305">/// flags:</a>
+<a name="ln2306">/// TAG_HELP       only search for help tags</a>
+<a name="ln2307">/// TAG_NAMES      only return name of tag</a>
+<a name="ln2308">/// TAG_REGEXP     use &quot;pat&quot; as a regexp</a>
+<a name="ln2309">/// TAG_NOIC       don't always ignore case</a>
+<a name="ln2310">/// TAG_KEEP_LANG  keep language</a>
+<a name="ln2311">/// TAG_NO_TAGFUNC do not call the 'tagfunc' function</a>
+<a name="ln2312">///</a>
+<a name="ln2313">/// @param pat  pattern to search for</a>
+<a name="ln2314">/// @param num_matches  return: number of matches found</a>
+<a name="ln2315">/// @param matchesp  return: array of matches found</a>
+<a name="ln2316">/// @param mincount  MAXCOL: find all matches</a>
+<a name="ln2317">///                  other: minimal number of matches</a>
+<a name="ln2318">/// @param buf_ffname  name of buffer for priority</a>
+<a name="ln2319">int find_tags(char *pat, int *num_matches, char ***matchesp, int flags, int mincount,</a>
+<a name="ln2320">              char *buf_ffname)</a>
+<a name="ln2321">{</a>
+<a name="ln2322">  findtags_state_T st;</a>
+<a name="ln2323">  tagname_T tn;                         // info for get_tagfname()</a>
+<a name="ln2324">  int first_file;                       // trying first tag file</a>
+<a name="ln2325">  int retval = FAIL;                    // return value</a>
+<a name="ln2326">  int round;</a>
+<a name="ln2327"> </a>
+<a name="ln2328">  int save_emsg_off;</a>
+<a name="ln2329"> </a>
+<a name="ln2330">  int help_save;</a>
+<a name="ln2331">  int i;</a>
+<a name="ln2332">  char *saved_pat = NULL;                // copy of pat[]</a>
+<a name="ln2333"> </a>
+<a name="ln2334">  int findall = (mincount == MAXCOL || mincount == TAG_MANY);  // find all matching tags</a>
+<a name="ln2335">  int has_re = (flags &amp; TAG_REGEXP);            // regexp used</a>
+<a name="ln2336">  int noic = (flags &amp; TAG_NOIC);</a>
+<a name="ln2337">  int verbose = (flags &amp; TAG_VERBOSE);</a>
+<a name="ln2338">  int save_p_ic = p_ic;</a>
+<a name="ln2339"> </a>
+<a name="ln2340">  // Change the value of 'ignorecase' according to 'tagcase' for the</a>
+<a name="ln2341">  // duration of this function.</a>
+<a name="ln2342">  switch (curbuf-&gt;b_tc_flags ? curbuf-&gt;b_tc_flags : tc_flags) {</a>
+<a name="ln2343">  case TC_FOLLOWIC:</a>
+<a name="ln2344">    break;</a>
+<a name="ln2345">  case TC_IGNORE:</a>
+<a name="ln2346">    p_ic = true;</a>
+<a name="ln2347">    break;</a>
+<a name="ln2348">  case TC_MATCH:</a>
+<a name="ln2349">    p_ic = false;</a>
+<a name="ln2350">    break;</a>
+<a name="ln2351">  case TC_FOLLOWSCS:</a>
+<a name="ln2352">    p_ic = ignorecase(pat);</a>
+<a name="ln2353">    break;</a>
+<a name="ln2354">  case TC_SMART:</a>
+<a name="ln2355">    p_ic = ignorecase_opt(pat, true, true);</a>
+<a name="ln2356">    break;</a>
+<a name="ln2357">  default:</a>
+<a name="ln2358">    abort();</a>
+<a name="ln2359">  }</a>
+<a name="ln2360"> </a>
+<a name="ln2361">  help_save = curbuf-&gt;b_help;</a>
+<a name="ln2362"> </a>
+<a name="ln2363">  findtags_state_init(&amp;st, pat, flags, mincount);</a>
+<a name="ln2364"> </a>
+<a name="ln2365">  // Initialize a few variables</a>
+<a name="ln2366">  if (st.help_only) {                           // want tags from help file</a>
+<a name="ln2367">    curbuf-&gt;b_help = true;                      // will be restored later</a>
+<a name="ln2368">  }</a>
+<a name="ln2369"> </a>
+<a name="ln2370">  if (curbuf-&gt;b_help) {</a>
+<a name="ln2371">    // When &quot;@ab&quot; is specified use only the &quot;ab&quot; language, otherwise</a>
+<a name="ln2372">    // search all languages.</a>
+<a name="ln2373">    if (st.orgpat-&gt;len &gt; 3 &amp;&amp; pat[st.orgpat-&gt;len - 3] == '@'</a>
+<a name="ln2374">        &amp;&amp; ASCII_ISALPHA(pat[st.orgpat-&gt;len - 2])</a>
+<a name="ln2375">        &amp;&amp; ASCII_ISALPHA(pat[st.orgpat-&gt;len - 1])) {</a>
+<a name="ln2376">      saved_pat = xstrnsave(pat, (size_t)st.orgpat-&gt;len - 3);</a>
+<a name="ln2377">      st.help_lang_find = &amp;pat[st.orgpat-&gt;len - 2];</a>
+<a name="ln2378">      st.orgpat-&gt;pat = saved_pat;</a>
+<a name="ln2379">      st.orgpat-&gt;len -= 3;</a>
+<a name="ln2380">    }</a>
+<a name="ln2381">  }</a>
+<a name="ln2382">  if (p_tl != 0 &amp;&amp; st.orgpat-&gt;len &gt; p_tl) {  // adjust for 'taglength'</a>
+<a name="ln2383">    st.orgpat-&gt;len = (int)p_tl;</a>
+<a name="ln2384">  }</a>
+<a name="ln2385"> </a>
+<a name="ln2386">  save_emsg_off = emsg_off;</a>
+<a name="ln2387">  emsg_off = true;    // don't want error for invalid RE here</a>
+<a name="ln2388">  prepare_pats(st.orgpat, has_re);</a>
+<a name="ln2389">  emsg_off = save_emsg_off;</a>
+<a name="ln2390">  if (has_re &amp;&amp; st.orgpat-&gt;regmatch.regprog == NULL) {</a>
+<a name="ln2391">    goto findtag_end;</a>
+<a name="ln2392">  }</a>
+<a name="ln2393"> </a>
+<a name="ln2394">  retval = findtags_apply_tfu(&amp;st, pat, buf_ffname);</a>
+<a name="ln2395">  if (retval != NOTDONE) {</a>
+<a name="ln2396">    goto findtag_end;</a>
+<a name="ln2397">  }</a>
+<a name="ln2398"> </a>
+<a name="ln2399">  // re-initialize the default return value</a>
+<a name="ln2400">  retval = FAIL;</a>
+<a name="ln2401"> </a>
+<a name="ln2402">  // Set a flag if the file extension is .txt</a>
+<a name="ln2403">  if ((flags &amp; TAG_KEEP_LANG)</a>
+<a name="ln2404">      &amp;&amp; st.help_lang_find == NULL</a>
+<a name="ln2405">      &amp;&amp; curbuf-&gt;b_fname != NULL</a>
+<a name="ln2406">      &amp;&amp; (i = (int)strlen(curbuf-&gt;b_fname)) &gt; 4</a>
+<a name="ln2407">      &amp;&amp; STRICMP(curbuf-&gt;b_fname + i - 4, &quot;.txt&quot;) == 0) {</a>
+<a name="ln2408">    st.is_txt = true;</a>
+<a name="ln2409">  }</a>
+<a name="ln2410"> </a>
+<a name="ln2411">  // When finding a specified number of matches, first try with matching</a>
+<a name="ln2412">  // case, so binary search can be used, and try ignore-case matches in a</a>
+<a name="ln2413">  // second loop.</a>
+<a name="ln2414">  // When finding all matches, 'tagbsearch' is off, or there is no fixed</a>
+<a name="ln2415">  // string to look for, ignore case right away to avoid going though the</a>
+<a name="ln2416">  // tags files twice.</a>
+<a name="ln2417">  // When the tag file is case-fold sorted, it is either one or the other.</a>
+<a name="ln2418">  // Only ignore case when TAG_NOIC not used or 'ignorecase' set.</a>
+<a name="ln2419">  st.orgpat-&gt;regmatch.rm_ic = ((p_ic || !noic)</a>
+<a name="ln2420">                               &amp;&amp; (findall || st.orgpat-&gt;headlen == 0 || !p_tbs));</a>
+<a name="ln2421">  for (round = 1; round &lt;= 2; round++) {</a>
+<a name="ln2422">    st.linear = (st.orgpat-&gt;headlen == 0 || !p_tbs || round == 2);</a>
+<a name="ln2423"> </a>
+<a name="ln2424">    // Try tag file names from tags option one by one.</a>
+<a name="ln2425">    for (first_file = true;</a>
+<a name="ln2426">         get_tagfname(&amp;tn, first_file, st.tag_fname) == OK;</a>
+<a name="ln2427">         first_file = false) {</a>
+<a name="ln2428">      findtags_in_file(&amp;st, flags, buf_ffname);</a>
+<a name="ln2429">      if (st.stop_searching) {</a>
+<a name="ln2430">        retval = OK;</a>
+<a name="ln2431">        break;</a>
+<a name="ln2432">      }</a>
+<a name="ln2433">    }   // end of for-each-file loop</a>
+<a name="ln2434"> </a>
+<a name="ln2435">    tagname_free(&amp;tn);</a>
+<a name="ln2436"> </a>
+<a name="ln2437">    // stop searching when already did a linear search, or when TAG_NOIC</a>
+<a name="ln2438">    // used, and 'ignorecase' not set or already did case-ignore search</a>
+<a name="ln2439">    if (st.stop_searching || st.linear || (!p_ic &amp;&amp; noic)</a>
+<a name="ln2440">        || st.orgpat-&gt;regmatch.rm_ic) {</a>
+<a name="ln2441">      break;</a>
+<a name="ln2442">    }</a>
+<a name="ln2443"> </a>
+<a name="ln2444">    // try another time while ignoring case</a>
+<a name="ln2445">    st.orgpat-&gt;regmatch.rm_ic = true;</a>
+<a name="ln2446">  }</a>
+<a name="ln2447"> </a>
+<a name="ln2448">  if (!st.stop_searching) {</a>
+<a name="ln2449">    if (!st.did_open &amp;&amp; verbose) {  // never opened any tags file</a>
+<a name="ln2450">      emsg(_(&quot;E433: No tags file&quot;));</a>
+<a name="ln2451">    }</a>
+<a name="ln2452">    retval = OK;                // It's OK even when no tag found</a>
+<a name="ln2453">  }</a>
+<a name="ln2454"> </a>
+<a name="ln2455">findtag_end:</a>
+<a name="ln2456">  findtags_state_free(&amp;st);</a>
+<a name="ln2457"> </a>
+<a name="ln2458">  // Move the matches from the ga_match[] arrays into one list of</a>
+<a name="ln2459">  // matches.  When retval == FAIL, free the matches.</a>
+<a name="ln2460">  if (retval == FAIL) {</a>
+<a name="ln2461">    st.match_count = 0;</a>
+<a name="ln2462">  }</a>
+<a name="ln2463"> </a>
+<a name="ln2464">  *num_matches = findtags_copy_matches(&amp;st, matchesp);</a>
+<a name="ln2465"> </a>
+<a name="ln2466">  curbuf-&gt;b_help = help_save;</a>
+<a name="ln2467">  xfree(saved_pat);</a>
+<a name="ln2468"> </a>
+<a name="ln2469">  p_ic = save_p_ic;</a>
+<a name="ln2470"> </a>
+<a name="ln2471">  return retval;</a>
+<a name="ln2472">}</a>
+<a name="ln2473"> </a>
+<a name="ln2474">static garray_T tag_fnames = GA_EMPTY_INIT_VALUE;</a>
+<a name="ln2475"> </a>
+<a name="ln2476">// Callback function for finding all &quot;tags&quot; and &quot;tags-??&quot; files in</a>
+<a name="ln2477">// 'runtimepath' doc directories.</a>
+<a name="ln2478">static bool found_tagfile_cb(int num_fnames, char **fnames, bool all, void *cookie)</a>
+<a name="ln2479">{</a>
+<a name="ln2480">  for (int i = 0; i &lt; num_fnames; i++) {</a>
+<a name="ln2481">    char *const tag_fname = xstrdup(fnames[i]);</a>
+<a name="ln2482"> </a>
+<a name="ln2483">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln2484">    slash_adjust(tag_fname);</a>
+<a name="ln2485">#endif</a>
+<a name="ln2486">    simplify_filename(tag_fname);</a>
+<a name="ln2487">    GA_APPEND(char *, &amp;tag_fnames, tag_fname);</a>
+<a name="ln2488"> </a>
+<a name="ln2489">    if (!all) {</a>
+<a name="ln2490">      break;</a>
+<a name="ln2491">    }</a>
+<a name="ln2492">  }</a>
+<a name="ln2493"> </a>
+<a name="ln2494">  return num_fnames &gt; 0;</a>
+<a name="ln2495">}</a>
+<a name="ln2496"> </a>
+<a name="ln2497">#if defined(EXITFREE)</a>
+<a name="ln2498">void free_tag_stuff(void)</a>
+<a name="ln2499">{</a>
+<a name="ln2500">  ga_clear_strings(&amp;tag_fnames);</a>
+<a name="ln2501">  do_tag(NULL, DT_FREE, 0, 0, 0);</a>
+<a name="ln2502">  tag_freematch();</a>
+<a name="ln2503"> </a>
+<a name="ln2504">  tagstack_clear_entry(&amp;ptag_entry);</a>
+<a name="ln2505">}</a>
+<a name="ln2506"> </a>
+<a name="ln2507">#endif</a>
+<a name="ln2508"> </a>
+<a name="ln2509">/// Get the next name of a tag file from the tag file list.</a>
+<a name="ln2510">/// For help files, use &quot;tags&quot; file only.</a>
+<a name="ln2511">///</a>
+<a name="ln2512">/// @param tnp  holds status info</a>
+<a name="ln2513">/// @param first  true when first file name is wanted</a>
+<a name="ln2514">/// @param buf  pointer to buffer of MAXPATHL chars</a>
+<a name="ln2515">///</a>
+<a name="ln2516">/// @return  FAIL if no more tag file names, OK otherwise.</a>
+<a name="ln2517">int get_tagfname(tagname_T *tnp, int first, char *buf)</a>
+<a name="ln2518">{</a>
+<a name="ln2519">  char *fname = NULL;</a>
+<a name="ln2520">  char *r_ptr;</a>
+<a name="ln2521"> </a>
+<a name="ln2522">  if (first) {</a>
+<a name="ln2523">    CLEAR_POINTER(tnp);</a>
+<a name="ln2524">  }</a>
+<a name="ln2525"> </a>
+<a name="ln2526">  if (curbuf-&gt;b_help) {</a>
+<a name="ln2527">    // For help files it's done in a completely different way:</a>
+<a name="ln2528">    // Find &quot;doc/tags&quot; and &quot;doc/tags-??&quot; in all directories in</a>
+<a name="ln2529">    // 'runtimepath'.</a>
+<a name="ln2530">    if (first) {</a>
+<a name="ln2531">      ga_clear_strings(&amp;tag_fnames);</a>
+<a name="ln2532">      ga_init(&amp;tag_fnames, (int)sizeof(char *), 10);</a>
+<a name="ln2533">      do_in_runtimepath(&quot;doc/tags doc/tags-??&quot;, DIP_ALL,</a>
+<a name="ln2534">                        found_tagfile_cb, NULL);</a>
+<a name="ln2535">    }</a>
+<a name="ln2536"> </a>
+<a name="ln2537">    if (tnp-&gt;tn_hf_idx &gt;= tag_fnames.ga_len) {</a>
+<a name="ln2538">      // Not found in 'runtimepath', use 'helpfile', if it exists and</a>
+<a name="ln2539">      // wasn't used yet, replacing &quot;help.txt&quot; with &quot;tags&quot;.</a>
+<a name="ln2540">      if (tnp-&gt;tn_hf_idx &gt; tag_fnames.ga_len || *p_hf == NUL) {</a>
+<a name="ln2541">        return FAIL;</a>
+<a name="ln2542">      }</a>
+<a name="ln2543">      tnp-&gt;tn_hf_idx++;</a>
+<a name="ln2544">      STRCPY(buf, p_hf);</a>
+<a name="ln2545">      STRCPY(path_tail(buf), &quot;tags&quot;);</a>
+<a name="ln2546">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln2547">      slash_adjust(buf);</a>
+<a name="ln2548">#endif</a>
+<a name="ln2549">      simplify_filename(buf);</a>
+<a name="ln2550"> </a>
+<a name="ln2551">      for (int i = 0; i &lt; tag_fnames.ga_len; i++) {</a>
+<a name="ln2552">        if (strcmp(buf, ((char **)(tag_fnames.ga_data))[i]) == 0) {</a>
+<a name="ln2553">          return FAIL;  // avoid duplicate file names</a>
+<a name="ln2554">        }</a>
+<a name="ln2555">      }</a>
+<a name="ln2556">    } else {</a>
+<a name="ln2557">      xstrlcpy(buf, ((char **)(tag_fnames.ga_data))[tnp-&gt;tn_hf_idx++], MAXPATHL);</a>
+<a name="ln2558">    }</a>
+<a name="ln2559">    return OK;</a>
+<a name="ln2560">  }</a>
+<a name="ln2561"> </a>
+<a name="ln2562">  if (first) {</a>
+<a name="ln2563">    // Init.  We make a copy of 'tags', because autocommands may change</a>
+<a name="ln2564">    // the value without notifying us.</a>
+<a name="ln2565">    tnp-&gt;tn_tags = xstrdup((*curbuf-&gt;b_p_tags != NUL) ? curbuf-&gt;b_p_tags : p_tags);</a>
+<a name="ln2566">    tnp-&gt;tn_np = tnp-&gt;tn_tags;</a>
+<a name="ln2567">  }</a>
+<a name="ln2568"> </a>
+<a name="ln2569">  // Loop until we have found a file name that can be used.</a>
+<a name="ln2570">  // There are two states:</a>
+<a name="ln2571">  // tnp-&gt;tn_did_filefind_init == false: setup for next part in 'tags'.</a>
+<a name="ln2572">  // tnp-&gt;tn_did_filefind_init == true: find next file in this part.</a>
+<a name="ln2573">  while (true) {</a>
+<a name="ln2574">    if (tnp-&gt;tn_did_filefind_init) {</a>
+<a name="ln2575">      fname = vim_findfile(tnp-&gt;tn_search_ctx);</a>
+<a name="ln2576">      if (fname != NULL) {</a>
+<a name="ln2577">        break;</a>
+<a name="ln2578">      }</a>
+<a name="ln2579"> </a>
+<a name="ln2580">      tnp-&gt;tn_did_filefind_init = false;</a>
+<a name="ln2581">    } else {</a>
+<a name="ln2582">      char *filename = NULL;</a>
+<a name="ln2583"> </a>
+<a name="ln2584">      // Stop when used all parts of 'tags'.</a>
+<a name="ln2585">      if (*tnp-&gt;tn_np == NUL) {</a>
+<a name="ln2586">        vim_findfile_cleanup(tnp-&gt;tn_search_ctx);</a>
+<a name="ln2587">        tnp-&gt;tn_search_ctx = NULL;</a>
+<a name="ln2588">        return FAIL;</a>
+<a name="ln2589">      }</a>
+<a name="ln2590"> </a>
+<a name="ln2591">      // Copy next file name into buf.</a>
+<a name="ln2592">      buf[0] = NUL;</a>
+<a name="ln2593">      (void)copy_option_part(&amp;tnp-&gt;tn_np, buf, MAXPATHL - 1, &quot; ,&quot;);</a>
+<a name="ln2594"> </a>
+<a name="ln2595">      r_ptr = vim_findfile_stopdir(buf);</a>
+<a name="ln2596">      // move the filename one char forward and truncate the</a>
+<a name="ln2597">      // filepath with a NUL</a>
+<a name="ln2598">      filename = path_tail(buf);</a>
+<a name="ln2599">      STRMOVE(filename + 1, filename);</a>
+<a name="ln2600">      *filename++ = NUL;</a>
+<a name="ln2601"> </a>
+<a name="ln2602">      tnp-&gt;tn_search_ctx = vim_findfile_init(buf, filename,</a>
+<a name="ln2603">                                             r_ptr, 100,</a>
+<a name="ln2604">                                             false,                   // don't free visited list</a>
+<a name="ln2605">                                             FINDFILE_FILE,           // we search for a file</a>
+<a name="ln2606">                                             tnp-&gt;tn_search_ctx, true, curbuf-&gt;b_ffname);</a>
+<a name="ln2607">      if (tnp-&gt;tn_search_ctx != NULL) {</a>
+<a name="ln2608">        tnp-&gt;tn_did_filefind_init = true;</a>
+<a name="ln2609">      }</a>
+<a name="ln2610">    }</a>
+<a name="ln2611">  }</a>
+<a name="ln2612"> </a>
+<a name="ln2613">  STRCPY(buf, fname);</a>
+<a name="ln2614">  xfree(fname);</a>
+<a name="ln2615">  return OK;</a>
+<a name="ln2616">}</a>
+<a name="ln2617"> </a>
+<a name="ln2618">// Free the contents of a tagname_T that was filled by get_tagfname().</a>
+<a name="ln2619">void tagname_free(tagname_T *tnp)</a>
+<a name="ln2620">{</a>
+<a name="ln2621">  xfree(tnp-&gt;tn_tags);</a>
+<a name="ln2622">  vim_findfile_cleanup(tnp-&gt;tn_search_ctx);</a>
+<a name="ln2623">  tnp-&gt;tn_search_ctx = NULL;</a>
+<a name="ln2624">  ga_clear_strings(&amp;tag_fnames);</a>
+<a name="ln2625">}</a>
+<a name="ln2626"> </a>
+<a name="ln2627">/// Parse one line from the tags file. Find start/end of tag name, start/end of</a>
+<a name="ln2628">/// file name and start of search pattern.</a>
+<a name="ln2629">///</a>
+<a name="ln2630">/// If is_etag is true, tagp-&gt;fname and tagp-&gt;fname_end are not set.</a>
+<a name="ln2631">///</a>
+<a name="ln2632">/// @param lbuf  line to be parsed</a>
+<a name="ln2633">///</a>
+<a name="ln2634">/// @return  FAIL if there is a format error in this line, OK otherwise.</a>
+<a name="ln2635">static int parse_tag_line(char *lbuf, tagptrs_T *tagp)</a>
+<a name="ln2636">{</a>
+<a name="ln2637">  char *p;</a>
+<a name="ln2638"> </a>
+<a name="ln2639">  // Isolate the tagname, from lbuf up to the first white</a>
+<a name="ln2640">  tagp-&gt;tagname = lbuf;</a>
+<a name="ln2641">  p = vim_strchr(lbuf, TAB);</a>
+<a name="ln2642">  if (p == NULL) {</a>
+<a name="ln2643">    return FAIL;</a>
+<a name="ln2644">  }</a>
+<a name="ln2645">  tagp-&gt;tagname_end = p;</a>
+<a name="ln2646"> </a>
+<a name="ln2647">  // Isolate file name, from first to second white space</a>
+<a name="ln2648">  if (*p != NUL) {</a>
+<a name="ln2649">    p++;</a>
+<a name="ln2650">  }</a>
+<a name="ln2651">  tagp-&gt;fname = p;</a>
+<a name="ln2652">  p = vim_strchr(p, TAB);</a>
+<a name="ln2653">  if (p == NULL) {</a>
+<a name="ln2654">    return FAIL;</a>
+<a name="ln2655">  }</a>
+<a name="ln2656">  tagp-&gt;fname_end = p;</a>
+<a name="ln2657"> </a>
+<a name="ln2658">  // find start of search command, after second white space</a>
+<a name="ln2659">  if (*p != NUL) {</a>
+<a name="ln2660">    p++;</a>
+<a name="ln2661">  }</a>
+<a name="ln2662">  if (*p == NUL) {</a>
+<a name="ln2663">    return FAIL;</a>
+<a name="ln2664">  }</a>
+<a name="ln2665">  tagp-&gt;command = p;</a>
+<a name="ln2666"> </a>
+<a name="ln2667">  return OK;</a>
+<a name="ln2668">}</a>
+<a name="ln2669"> </a>
+<a name="ln2670">// Check if tagname is a static tag</a>
+<a name="ln2671">//</a>
+<a name="ln2672">// Static tags produced by the older ctags program have the format:</a>
+<a name="ln2673">//      'file:tag  file  /pattern'.</a>
+<a name="ln2674">// This is only recognized when both occurrence of 'file' are the same, to</a>
+<a name="ln2675">// avoid recognizing &quot;string::string&quot; or &quot;:exit&quot;.</a>
+<a name="ln2676">//</a>
+<a name="ln2677">// Static tags produced by the new ctags program have the format:</a>
+<a name="ln2678">//      'tag  file  /pattern/;&quot;&lt;Tab&gt;file:'          &quot;</a>
+<a name="ln2679">//</a>
+<a name="ln2680">// Return true if it is a static tag and adjust *tagname to the real tag.</a>
+<a name="ln2681">// Return false if it is not a static tag.</a>
+<a name="ln2682">static bool test_for_static(tagptrs_T *tagp)</a>
+<a name="ln2683">{</a>
+<a name="ln2684">  char *p;</a>
+<a name="ln2685"> </a>
+<a name="ln2686">  // Check for new style static tag &quot;:...&lt;Tab&gt;file:[&lt;Tab&gt;...]&quot;</a>
+<a name="ln2687">  p = tagp-&gt;command;</a>
+<a name="ln2688">  while ((p = vim_strchr(p, '\t')) != NULL) {</a>
+<a name="ln2689">    p++;</a>
+<a name="ln2690">    if (strncmp(p, &quot;file:&quot;, 5) == 0) {</a>
+<a name="ln2691">      return true;</a>
+<a name="ln2692">    }</a>
+<a name="ln2693">  }</a>
+<a name="ln2694"> </a>
+<a name="ln2695">  return false;</a>
+<a name="ln2696">}</a>
+<a name="ln2697"> </a>
+<a name="ln2698">/// @return  the length of a matching tag line.</a>
+<a name="ln2699">static size_t matching_line_len(const char *const lbuf)</a>
+<a name="ln2700">{</a>
+<a name="ln2701">  const char *p = lbuf + 1;</a>
+<a name="ln2702"> </a>
+<a name="ln2703">  // does the same thing as parse_match()</a>
+<a name="ln2704">  p += strlen(p) + 1;</a>
+<a name="ln2705">  return (size_t)(p - lbuf) + strlen(p);</a>
+<a name="ln2706">}</a>
+<a name="ln2707"> </a>
+<a name="ln2708">/// Parse a line from a matching tag.  Does not change the line itself.</a>
+<a name="ln2709">///</a>
+<a name="ln2710">/// The line that we get looks like this:</a>
+<a name="ln2711">/// Emacs tag: &lt;mtt&gt;&lt;tag_fname&gt;&lt;NUL&gt;&lt;ebuf&gt;&lt;NUL&gt;&lt;lbuf&gt;</a>
+<a name="ln2712">/// other tag: &lt;mtt&gt;&lt;tag_fname&gt;&lt;NUL&gt;&lt;NUL&gt;&lt;lbuf&gt;</a>
+<a name="ln2713">/// without Emacs tags: &lt;mtt&gt;&lt;tag_fname&gt;&lt;NUL&gt;&lt;lbuf&gt;</a>
+<a name="ln2714">///</a>
+<a name="ln2715">/// @param lbuf  input: matching line</a>
+<a name="ln2716">/// @param tagp  output: pointers into the line</a>
+<a name="ln2717">///</a>
+<a name="ln2718">/// @return  OK or FAIL.</a>
+<a name="ln2719">static int parse_match(char *lbuf, tagptrs_T *tagp)</a>
+<a name="ln2720">{</a>
+<a name="ln2721">  int retval;</a>
+<a name="ln2722">  char *p;</a>
+<a name="ln2723">  char *pt;</a>
+<a name="ln2724"> </a>
+<a name="ln2725">  tagp-&gt;tag_fname = lbuf + 1;</a>
+<a name="ln2726">  lbuf += strlen(tagp-&gt;tag_fname) + 2;</a>
+<a name="ln2727"> </a>
+<a name="ln2728">  // Find search pattern and the file name for non-etags.</a>
+<a name="ln2729">  retval = parse_tag_line(lbuf, tagp);</a>
+<a name="ln2730"> </a>
+<a name="ln2731">  tagp-&gt;tagkind = NULL;</a>
+<a name="ln2732">  tagp-&gt;user_data = NULL;</a>
+<a name="ln2733">  tagp-&gt;tagline = 0;</a>
+<a name="ln2734">  tagp-&gt;command_end = NULL;</a>
+<a name="ln2735"> </a>
+<a name="ln2736">  if (retval != OK) {</a>
+<a name="ln2737">    return retval;</a>
+<a name="ln2738">  }</a>
+<a name="ln2739"> </a>
+<a name="ln2740">  // Try to find a kind field: &quot;kind:&lt;kind&gt;&quot; or just &quot;&lt;kind&gt;&quot;</a>
+<a name="ln2741">  p = tagp-&gt;command;</a>
+<a name="ln2742">  if (find_extra(&amp;p) == OK) {</a>
+<a name="ln2743">    tagp-&gt;command_end = p;</a>
+<a name="ln2744">    if (p &gt; tagp-&gt;command &amp;&amp; p[-1] == '|') {</a>
+<a name="ln2745">      tagp-&gt;command_end = p - 1;  // drop trailing bar</a>
+<a name="ln2746">    }</a>
+<a name="ln2747">    p += 2;  // skip &quot;;\&quot;&quot;</a>
+<a name="ln2748">    if (*p++ == TAB) {</a>
+<a name="ln2749">      // Accept ASCII alphabetic kind characters and any multi-byte</a>
+<a name="ln2750">      // character.</a>
+<a name="ln2751">      while (ASCII_ISALPHA(*p) || utfc_ptr2len(p) &gt; 1) {</a>
+<a name="ln2752">        if (strncmp(p, &quot;kind:&quot;, 5) == 0) {</a>
+<a name="ln2753">          tagp-&gt;tagkind = p + 5;</a>
+<a name="ln2754">        } else if (strncmp(p, &quot;user_data:&quot;, 10) == 0) {</a>
+<a name="ln2755">          tagp-&gt;user_data = p + 10;</a>
+<a name="ln2756">        } else if (strncmp(p, &quot;line:&quot;, 5) == 0) {</a>
+<a name="ln2757">          tagp-&gt;tagline = atoi(p + 5);</a>
+<a name="ln2758">        }</a>
+<a name="ln2759">        if (tagp-&gt;tagkind != NULL &amp;&amp; tagp-&gt;user_data != NULL) {</a>
+<a name="ln2760">          break;</a>
+<a name="ln2761">        }</a>
+<a name="ln2762"> </a>
+<a name="ln2763">        char *pc = vim_strchr(p, ':');</a>
+<a name="ln2764">        pt = vim_strchr(p, '\t');</a>
+<a name="ln2765">        if (pc == NULL || (pt != NULL &amp;&amp; pc &gt; pt)) {</a>
+<a name="ln2766">          tagp-&gt;tagkind = p;</a>
+<a name="ln2767">        }</a>
+<a name="ln2768">        if (pt == NULL) {</a>
+<a name="ln2769">          break;</a>
+<a name="ln2770">        }</a>
+<a name="ln2771">        p = pt;</a>
+<a name="ln2772">        MB_PTR_ADV(p);</a>
+<a name="ln2773">      }</a>
+<a name="ln2774">    }</a>
+<a name="ln2775">  }</a>
+<a name="ln2776">  if (tagp-&gt;tagkind != NULL) {</a>
+<a name="ln2777">    for (p = tagp-&gt;tagkind;</a>
+<a name="ln2778">         *p &amp;&amp; *p != '\t' &amp;&amp; *p != '\r' &amp;&amp; *p != '\n';</a>
+<a name="ln2779">         MB_PTR_ADV(p)) {}</a>
+<a name="ln2780">    tagp-&gt;tagkind_end = p;</a>
+<a name="ln2781">  }</a>
+<a name="ln2782">  if (tagp-&gt;user_data != NULL) {</a>
+<a name="ln2783">    for (p = tagp-&gt;user_data;</a>
+<a name="ln2784">         *p &amp;&amp; *p != '\t' &amp;&amp; *p != '\r' &amp;&amp; *p != '\n';</a>
+<a name="ln2785">         MB_PTR_ADV(p)) {}</a>
+<a name="ln2786">    tagp-&gt;user_data_end = p;</a>
+<a name="ln2787">  }</a>
+<a name="ln2788">  return retval;</a>
+<a name="ln2789">}</a>
+<a name="ln2790"> </a>
+<a name="ln2791">// Find out the actual file name of a tag.  Concatenate the tags file name</a>
+<a name="ln2792">// with the matching tag file name.</a>
+<a name="ln2793">// Returns an allocated string.</a>
+<a name="ln2794">static char *tag_full_fname(tagptrs_T *tagp)</a>
+<a name="ln2795">{</a>
+<a name="ln2796">  char c = *tagp-&gt;fname_end;</a>
+<a name="ln2797">  *tagp-&gt;fname_end = NUL;</a>
+<a name="ln2798">  char *fullname = expand_tag_fname(tagp-&gt;fname, tagp-&gt;tag_fname, false);</a>
+<a name="ln2799">  *tagp-&gt;fname_end = c;</a>
+<a name="ln2800"> </a>
+<a name="ln2801">  return fullname;</a>
+<a name="ln2802">}</a>
+<a name="ln2803"> </a>
+<a name="ln2804">/// Jump to a tag that has been found in one of the tag files</a>
+<a name="ln2805">///</a>
+<a name="ln2806">/// @param lbuf_arg  line from the tags file for this tag</a>
+<a name="ln2807">/// @param forceit  :ta with !</a>
+<a name="ln2808">/// @param keep_help  keep help flag</a>
+<a name="ln2809">///</a>
+<a name="ln2810">/// @return  OK for success, NOTAGFILE when file not found, FAIL otherwise.</a>
+<a name="ln2811">static int jumpto_tag(const char *lbuf_arg, int forceit, int keep_help)</a>
+<a name="ln2812">{</a>
+<a name="ln2813">  bool save_p_ws;</a>
+<a name="ln2814">  int save_p_scs, save_p_ic;</a>
+<a name="ln2815">  linenr_T save_lnum;</a>
+<a name="ln2816">  char *str;</a>
+<a name="ln2817">  char *pbuf;                    // search pattern buffer</a>
+<a name="ln2818">  char *pbuf_end;</a>
+<a name="ln2819">  char *tofree_fname = NULL;</a>
+<a name="ln2820">  char *fname;</a>
+<a name="ln2821">  tagptrs_T tagp;</a>
+<a name="ln2822">  int retval = FAIL;</a>
+<a name="ln2823">  int getfile_result = GETFILE_UNUSED;</a>
+<a name="ln2824">  int search_options;</a>
+<a name="ln2825">  win_T *curwin_save = NULL;</a>
+<a name="ln2826">  char *full_fname = NULL;</a>
+<a name="ln2827">  const bool old_KeyTyped = KeyTyped;       // getting the file may reset it</a>
+<a name="ln2828">  const int l_g_do_tagpreview = g_do_tagpreview;</a>
+<a name="ln2829">  const size_t len = matching_line_len(lbuf_arg) + 1;</a>
+<a name="ln2830">  char *lbuf = xmalloc(len);</a>
+<a name="ln2831">  memmove(lbuf, lbuf_arg, len);</a>
+<a name="ln2832"> </a>
+<a name="ln2833">  pbuf = xmalloc(LSIZE);</a>
+<a name="ln2834"> </a>
+<a name="ln2835">  // parse the match line into the tagp structure</a>
+<a name="ln2836">  if (parse_match(lbuf, &amp;tagp) == FAIL) {</a>
+<a name="ln2837">    tagp.fname_end = NULL;</a>
+<a name="ln2838">    goto erret;</a>
+<a name="ln2839">  }</a>
+<a name="ln2840"> </a>
+<a name="ln2841">  // truncate the file name, so it can be used as a string</a>
+<a name="ln2842">  *tagp.fname_end = NUL;</a>
+<a name="ln2843">  fname = tagp.fname;</a>
+<a name="ln2844"> </a>
+<a name="ln2845">  // copy the command to pbuf[], remove trailing CR/NL</a>
+<a name="ln2846">  str = tagp.command;</a>
+<a name="ln2847">  for (pbuf_end = pbuf; *str &amp;&amp; *str != '\n' &amp;&amp; *str != '\r';) {</a>
+<a name="ln2848">    *pbuf_end++ = *str++;</a>
+<a name="ln2849">    if (pbuf_end - pbuf + 1 &gt;= LSIZE) {</a>
+<a name="ln2850">      break;</a>
+<a name="ln2851">    }</a>
+<a name="ln2852">  }</a>
+<a name="ln2853">  *pbuf_end = NUL;</a>
+<a name="ln2854"> </a>
+<a name="ln2855">  {</a>
+<a name="ln2856">    // Remove the &quot;&lt;Tab&gt;fieldname:value&quot; stuff; we don't need it here.</a>
+<a name="ln2857">    str = pbuf;</a>
+<a name="ln2858">    if (find_extra(&amp;str) == OK) {</a>
+<a name="ln2859">      pbuf_end = str;</a>
+<a name="ln2860">      *pbuf_end = NUL;</a>
+<a name="ln2861">    }</a>
+<a name="ln2862">  }</a>
+<a name="ln2863"> </a>
+<a name="ln2864">  // Expand file name, when needed (for environment variables).</a>
+<a name="ln2865">  // If 'tagrelative' option set, may change file name.</a>
+<a name="ln2866">  fname = expand_tag_fname(fname, tagp.tag_fname, true);</a>
+<a name="ln2867">  tofree_fname = fname;         // free() it later</a>
+<a name="ln2868"> </a>
+<a name="ln2869">  // Check if the file with the tag exists before abandoning the current</a>
+<a name="ln2870">  // file.  Also accept a file name for which there is a matching BufReadCmd</a>
+<a name="ln2871">  // autocommand event (e.g., http://sys/file).</a>
+<a name="ln2872">  if (!os_path_exists(fname)</a>
+<a name="ln2873">      &amp;&amp; !has_autocmd(EVENT_BUFREADCMD, fname, NULL)) {</a>
+<a name="ln2874">    retval = NOTAGFILE;</a>
+<a name="ln2875">    xfree(nofile_fname);</a>
+<a name="ln2876">    nofile_fname = xstrdup(fname);</a>
+<a name="ln2877">    goto erret;</a>
+<a name="ln2878">  }</a>
+<a name="ln2879"> </a>
+<a name="ln2880">  RedrawingDisabled++;</a>
+<a name="ln2881"> </a>
+<a name="ln2882">  if (l_g_do_tagpreview != 0) {</a>
+<a name="ln2883">    postponed_split = 0;        // don't split again below</a>
+<a name="ln2884">    curwin_save = curwin;       // Save current window</a>
+<a name="ln2885"> </a>
+<a name="ln2886">    // If we are reusing a window, we may change dir when</a>
+<a name="ln2887">    // entering it (autocommands) so turn the tag filename</a>
+<a name="ln2888">    // into a fullpath</a>
+<a name="ln2889">    if (!curwin-&gt;w_p_pvw) {</a>
+<a name="ln2890">      full_fname = FullName_save(fname, false);</a>
+<a name="ln2891">      fname = full_fname;</a>
+<a name="ln2892"> </a>
+<a name="ln2893">      // Make the preview window the current window.</a>
+<a name="ln2894">      // Open a preview window when needed.</a>
+<a name="ln2895">      prepare_tagpreview(true);</a>
+<a name="ln2896">    }</a>
+<a name="ln2897">  }</a>
+<a name="ln2898"> </a>
+<a name="ln2899">  // If it was a CTRL-W CTRL-] command split window now.  For &quot;:tab tag&quot;</a>
+<a name="ln2900">  // open a new tab page.</a>
+<a name="ln2901">  if (postponed_split &amp;&amp; (swb_flags &amp; (SWB_USEOPEN | SWB_USETAB))) {</a>
+<a name="ln2902">    buf_T *const existing_buf = buflist_findname_exp(fname);</a>
+<a name="ln2903"> </a>
+<a name="ln2904">    if (existing_buf != NULL) {</a>
+<a name="ln2905">      // If 'switchbuf' is set jump to the window containing &quot;buf&quot;.</a>
+<a name="ln2906">      if (swbuf_goto_win_with_buf(existing_buf) != NULL) {</a>
+<a name="ln2907">        // We've switched to the buffer, the usual loading of the file</a>
+<a name="ln2908">        // must be skipped.</a>
+<a name="ln2909">        getfile_result = GETFILE_SAME_FILE;</a>
+<a name="ln2910">      }</a>
+<a name="ln2911">    }</a>
+<a name="ln2912">  }</a>
+<a name="ln2913">  if (getfile_result == GETFILE_UNUSED</a>
+<a name="ln2914">      &amp;&amp; (postponed_split || cmdmod.cmod_tab != 0)) {</a>
+<a name="ln2915">    if (win_split(postponed_split &gt; 0 ? postponed_split : 0,</a>
+<a name="ln2916">                  postponed_split_flags) == FAIL) {</a>
+<a name="ln2917">      RedrawingDisabled--;</a>
+<a name="ln2918">      goto erret;</a>
+<a name="ln2919">    }</a>
+<a name="ln2920">    RESET_BINDING(curwin);</a>
+<a name="ln2921">  }</a>
+<a name="ln2922"> </a>
+<a name="ln2923">  if (keep_help) {</a>
+<a name="ln2924">    // A :ta from a help file will keep the b_help flag set.  For &quot;:ptag&quot;</a>
+<a name="ln2925">    // we need to use the flag from the window where we came from.</a>
+<a name="ln2926">    if (l_g_do_tagpreview != 0) {</a>
+<a name="ln2927">      keep_help_flag = bt_help(curwin_save-&gt;w_buffer);</a>
+<a name="ln2928">    } else {</a>
+<a name="ln2929">      keep_help_flag = curbuf-&gt;b_help;</a>
+<a name="ln2930">    }</a>
+<a name="ln2931">  }</a>
+<a name="ln2932"> </a>
+<a name="ln2933">  if (getfile_result == GETFILE_UNUSED) {</a>
+<a name="ln2934">    // Careful: getfile() may trigger autocommands and call jumpto_tag()</a>
+<a name="ln2935">    // recursively.</a>
+<a name="ln2936">    getfile_result = getfile(0, fname, NULL, true, (linenr_T)0, forceit);</a>
+<a name="ln2937">  }</a>
+<a name="ln2938">  keep_help_flag = false;</a>
+<a name="ln2939"> </a>
+<a name="ln2940">  if (GETFILE_SUCCESS(getfile_result)) {    // got to the right file</a>
+<a name="ln2941">    curwin-&gt;w_set_curswant = true;</a>
+<a name="ln2942">    postponed_split = 0;</a>
+<a name="ln2943"> </a>
+<a name="ln2944">    const optmagic_T save_magic_overruled = magic_overruled;</a>
+<a name="ln2945">    magic_overruled = OPTION_MAGIC_OFF;  // always execute with 'nomagic'</a>
+<a name="ln2946">    // Save value of no_hlsearch, jumping to a tag is not a real search</a>
+<a name="ln2947">    const bool save_no_hlsearch = no_hlsearch;</a>
+<a name="ln2948"> </a>
+<a name="ln2949">    // If 'cpoptions' contains 't', store the search pattern for the &quot;n&quot;</a>
+<a name="ln2950">    // command.  If 'cpoptions' does not contain 't', the search pattern</a>
+<a name="ln2951">    // is not stored.</a>
+<a name="ln2952">    if (vim_strchr(p_cpo, CPO_TAGPAT) != NULL) {</a>
+<a name="ln2953">      search_options = 0;</a>
+<a name="ln2954">    } else {</a>
+<a name="ln2955">      search_options = SEARCH_KEEP;</a>
+<a name="ln2956">    }</a>
+<a name="ln2957"> </a>
+<a name="ln2958">    // If the command is a search, try here.</a>
+<a name="ln2959">    //</a>
+<a name="ln2960">    // Reset 'smartcase' for the search, since the search pattern was not</a>
+<a name="ln2961">    // typed by the user.</a>
+<a name="ln2962">    // Only use do_search() when there is a full search command, without</a>
+<a name="ln2963">    // anything following.</a>
+<a name="ln2964">    str = pbuf;</a>
+<a name="ln2965">    if (pbuf[0] == '/' || pbuf[0] == '?') {</a>
+<a name="ln2966">      str = skip_regexp(pbuf + 1, pbuf[0], false) + 1;</a>
+<a name="ln2967">    }</a>
+<a name="ln2968">    if (str &gt; pbuf_end - 1) {   // search command with nothing following</a>
+<a name="ln2969">      save_p_ws = p_ws;</a>
+<a name="ln2970">      save_p_ic = p_ic;</a>
+<a name="ln2971">      save_p_scs = p_scs;</a>
+<a name="ln2972">      p_ws = true;              // need 'wrapscan' for backward searches</a>
+<a name="ln2973">      p_ic = false;             // don't ignore case now</a>
+<a name="ln2974">      p_scs = false;</a>
+<a name="ln2975">      save_lnum = curwin-&gt;w_cursor.lnum;</a>
+<a name="ln2976">      if (tagp.tagline &gt; 0) {</a>
+<a name="ln2977">        // start search before line from &quot;line:&quot; field</a>
+<a name="ln2978">        curwin-&gt;w_cursor.lnum = tagp.tagline - 1;</a>
+<a name="ln2979">      } else {</a>
+<a name="ln2980">        // start search before first line</a>
+<a name="ln2981">        curwin-&gt;w_cursor.lnum = 0;</a>
+<a name="ln2982">      }</a>
+<a name="ln2983">      if (do_search(NULL, pbuf[0], pbuf[0], pbuf + 1, 1, search_options, NULL)) {</a>
+<a name="ln2984">        retval = OK;</a>
+<a name="ln2985">      } else {</a>
+<a name="ln2986">        int found = 1;</a>
+<a name="ln2987"> </a>
+<a name="ln2988">        // try again, ignore case now</a>
+<a name="ln2989">        p_ic = true;</a>
+<a name="ln2990">        if (!do_search(NULL, pbuf[0], pbuf[0], pbuf + 1, 1,</a>
+<a name="ln2991">                       search_options, NULL)) {</a>
+<a name="ln2992">          // Failed to find pattern, take a guess: &quot;^func  (&quot;</a>
+<a name="ln2993">          found = 2;</a>
+<a name="ln2994">          (void)test_for_static(&amp;tagp);</a>
+<a name="ln2995">          char cc = *tagp.tagname_end;</a>
+<a name="ln2996">          *tagp.tagname_end = NUL;</a>
+<a name="ln2997">          snprintf(pbuf, LSIZE, &quot;^%s\\s\\*(&quot;, tagp.tagname);</a>
+<a name="ln2998">          if (!do_search(NULL, '/', '/', pbuf, 1, search_options, NULL)) {</a>
+<a name="ln2999">            // Guess again: &quot;^char * \&lt;func  (&quot;</a>
+<a name="ln3000">            snprintf(pbuf, LSIZE, &quot;^\\[#a-zA-Z_]\\.\\*\\&lt;%s\\s\\*(&quot;,</a>
+<a name="ln3001">                     tagp.tagname);</a>
+<a name="ln3002">            if (!do_search(NULL, '/', '/', pbuf, 1, search_options, NULL)) {</a>
+<a name="ln3003">              found = 0;</a>
+<a name="ln3004">            }</a>
+<a name="ln3005">          }</a>
+<a name="ln3006">          *tagp.tagname_end = cc;</a>
+<a name="ln3007">        }</a>
+<a name="ln3008">        if (found == 0) {</a>
+<a name="ln3009">          emsg(_(&quot;E434: Can't find tag pattern&quot;));</a>
+<a name="ln3010">          curwin-&gt;w_cursor.lnum = save_lnum;</a>
+<a name="ln3011">        } else {</a>
+<a name="ln3012">          // Only give a message when really guessed, not when 'ic'</a>
+<a name="ln3013">          // is set and match found while ignoring case.</a>
+<a name="ln3014">          if (found == 2 || !save_p_ic) {</a>
+<a name="ln3015">            msg(_(&quot;E435: Couldn't find tag, just guessing!&quot;), 0);</a>
+<a name="ln3016">            if (!msg_scrolled &amp;&amp; msg_silent == 0) {</a>
+<a name="ln3017">              ui_flush();</a>
+<a name="ln3018">              os_delay(1010L, true);</a>
+<a name="ln3019">            }</a>
+<a name="ln3020">          }</a>
+<a name="ln3021">          retval = OK;</a>
+<a name="ln3022">        }</a>
+<a name="ln3023">      }</a>
+<a name="ln3024">      p_ws = save_p_ws;</a>
+<a name="ln3025">      p_ic = save_p_ic;  // -V519</a>
+<a name="ln3026">      p_scs = save_p_scs;</a>
+<a name="ln3027"> </a>
+<a name="ln3028">      // A search command may have positioned the cursor beyond the end</a>
+<a name="ln3029">      // of the line.  May need to correct that here.</a>
+<a name="ln3030">      check_cursor();</a>
+<a name="ln3031">    } else {</a>
+<a name="ln3032">      const int save_secure = secure;</a>
+<a name="ln3033"> </a>
+<a name="ln3034">      // Setup the sandbox for executing the command from the tags file.</a>
+<a name="ln3035">      secure = 1;</a>
+<a name="ln3036">      sandbox++;</a>
+<a name="ln3037">      curwin-&gt;w_cursor.lnum = 1;  // start command in line 1</a>
+<a name="ln3038">      do_cmdline_cmd(pbuf);</a>
+<a name="ln3039">      retval = OK;</a>
+<a name="ln3040"> </a>
+<a name="ln3041">      // When the command has done something that is not allowed make sure</a>
+<a name="ln3042">      // the error message can be seen.</a>
+<a name="ln3043">      if (secure == 2) {</a>
+<a name="ln3044">        wait_return(true);</a>
+<a name="ln3045">      }</a>
+<a name="ln3046">      secure = save_secure;</a>
+<a name="ln3047">      sandbox--;</a>
+<a name="ln3048">    }</a>
+<a name="ln3049"> </a>
+<a name="ln3050">    magic_overruled = save_magic_overruled;</a>
+<a name="ln3051">    // restore no_hlsearch when keeping the old search pattern</a>
+<a name="ln3052">    if (search_options) {</a>
+<a name="ln3053">      set_no_hlsearch(save_no_hlsearch);</a>
+<a name="ln3054">    }</a>
+<a name="ln3055"> </a>
+<a name="ln3056">    // Return OK if jumped to another file (at least we found the file!).</a>
+<a name="ln3057">    if (getfile_result == GETFILE_OPEN_OTHER) {</a>
+<a name="ln3058">      retval = OK;</a>
+<a name="ln3059">    }</a>
+<a name="ln3060"> </a>
+<a name="ln3061">    if (retval == OK) {</a>
+<a name="ln3062">      // For a help buffer: Put the cursor line at the top of the window,</a>
+<a name="ln3063">      // the help subject will be below it.</a>
+<a name="ln3064">      if (curbuf-&gt;b_help) {</a>
+<a name="ln3065">        set_topline(curwin, curwin-&gt;w_cursor.lnum);</a>
+<a name="ln3066">      }</a>
+<a name="ln3067">      if ((fdo_flags &amp; FDO_TAG) &amp;&amp; old_KeyTyped) {</a>
+<a name="ln3068">        foldOpenCursor();</a>
+<a name="ln3069">      }</a>
+<a name="ln3070">    }</a>
+<a name="ln3071"> </a>
+<a name="ln3072">    if (l_g_do_tagpreview != 0</a>
+<a name="ln3073">        &amp;&amp; curwin != curwin_save &amp;&amp; win_valid(curwin_save)) {</a>
+<a name="ln3074">      // Return cursor to where we were</a>
+<a name="ln3075">      validate_cursor();</a>
+<a name="ln3076">      redraw_later(curwin, UPD_VALID);</a>
+<a name="ln3077">      win_enter(curwin_save, true);</a>
+<a name="ln3078">    }</a>
+<a name="ln3079"> </a>
+<a name="ln3080">    RedrawingDisabled--;</a>
+<a name="ln3081">  } else {</a>
+<a name="ln3082">    RedrawingDisabled--;</a>
+<a name="ln3083">    if (postponed_split) {              // close the window</a>
+<a name="ln3084">      win_close(curwin, false, false);</a>
+<a name="ln3085">      postponed_split = 0;</a>
+<a name="ln3086">    }</a>
+<a name="ln3087">  }</a>
+<a name="ln3088"> </a>
+<a name="ln3089">erret:</a>
+<a name="ln3090">  g_do_tagpreview = 0;  // For next time</a>
+<a name="ln3091">  xfree(lbuf);</a>
+<a name="ln3092">  xfree(pbuf);</a>
+<a name="ln3093">  xfree(tofree_fname);</a>
+<a name="ln3094">  xfree(full_fname);</a>
+<a name="ln3095"> </a>
+<a name="ln3096">  return retval;</a>
+<a name="ln3097">}</a>
+<a name="ln3098"> </a>
+<a name="ln3099">/// If &quot;expand&quot; is true, expand wildcards in fname.</a>
+<a name="ln3100">/// If 'tagrelative' option set, change fname (name of file containing tag)</a>
+<a name="ln3101">/// according to tag_fname (name of tag file containing fname).</a>
+<a name="ln3102">///</a>
+<a name="ln3103">/// @return  a pointer to allocated memory.</a>
+<a name="ln3104">static char *expand_tag_fname(char *fname, char *const tag_fname, const bool expand)</a>
+<a name="ln3105">{</a>
+<a name="ln3106">  char *p;</a>
+<a name="ln3107">  char *expanded_fname = NULL;</a>
+<a name="ln3108">  expand_T xpc;</a>
+<a name="ln3109"> </a>
+<a name="ln3110">  // Expand file name (for environment variables) when needed.</a>
+<a name="ln3111">  if (expand &amp;&amp; path_has_wildcard(fname)) {</a>
+<a name="ln3112">    ExpandInit(&amp;xpc);</a>
+<a name="ln3113">    xpc.xp_context = EXPAND_FILES;</a>
+<a name="ln3114">    expanded_fname = ExpandOne(&amp;xpc, fname, NULL,</a>
+<a name="ln3115">                               WILD_LIST_NOTFOUND|WILD_SILENT, WILD_EXPAND_FREE);</a>
+<a name="ln3116">    if (expanded_fname != NULL) {</a>
+<a name="ln3117">      fname = expanded_fname;</a>
+<a name="ln3118">    }</a>
+<a name="ln3119">  }</a>
+<a name="ln3120"> </a>
+<a name="ln3121">  char *retval;</a>
+<a name="ln3122">  if ((p_tr || curbuf-&gt;b_help)</a>
+<a name="ln3123">      &amp;&amp; !vim_isAbsName(fname)</a>
+<a name="ln3124">      &amp;&amp; (p = path_tail(tag_fname)) != tag_fname) {</a>
+<a name="ln3125">    retval = xmalloc(MAXPATHL);</a>
+<a name="ln3126">    STRCPY(retval, tag_fname);</a>
+<a name="ln3127">    xstrlcpy(retval + (p - tag_fname), fname, (size_t)(MAXPATHL - (p - tag_fname)));</a>
+<a name="ln3128">    // Translate names like &quot;src/a/../b/file.c&quot; into &quot;src/b/file.c&quot;.</a>
+<a name="ln3129">    simplify_filename(retval);</a>
+<a name="ln3130">  } else {</a>
+<a name="ln3131">    retval = xstrdup(fname);</a>
+<a name="ln3132">  }</a>
+<a name="ln3133"> </a>
+<a name="ln3134">  xfree(expanded_fname);</a>
+<a name="ln3135"> </a>
+<a name="ln3136">  return retval;</a>
+<a name="ln3137">}</a>
+<a name="ln3138"> </a>
+<a name="ln3139">/// Check if we have a tag for the buffer with name &quot;buf_ffname&quot;.</a>
+<a name="ln3140">/// This is a bit slow, because of the full path compare in path_full_compare().</a>
+<a name="ln3141">///</a>
+<a name="ln3142">/// @return  true if tag for file &quot;fname&quot; if tag file &quot;tag_fname&quot; is for current</a>
+<a name="ln3143">///          file.</a>
+<a name="ln3144">static int test_for_current(char *fname, char *fname_end, char *tag_fname, char *buf_ffname)</a>
+<a name="ln3145">{</a>
+<a name="ln3146">  int retval = false;</a>
+<a name="ln3147"> </a>
+<a name="ln3148">  if (buf_ffname != NULL) {     // if the buffer has a name</a>
+<a name="ln3149">    char c;</a>
+<a name="ln3150">    {</a>
+<a name="ln3151">      c = *fname_end;</a>
+<a name="ln3152">      *fname_end = NUL;</a>
+<a name="ln3153">    }</a>
+<a name="ln3154">    char *fullname = expand_tag_fname(fname, tag_fname, true);</a>
+<a name="ln3155">    retval = (path_full_compare(fullname, buf_ffname, true, true) &amp; kEqualFiles);</a>
+<a name="ln3156">    xfree(fullname);</a>
+<a name="ln3157">    *fname_end = c;</a>
+<a name="ln3158">  }</a>
+<a name="ln3159"> </a>
+<a name="ln3160">  return retval;</a>
+<a name="ln3161">}</a>
+<a name="ln3162"> </a>
+<a name="ln3163">// Find the end of the tagaddress.</a>
+<a name="ln3164">// Return OK if &quot;;\&quot;&quot; is following, FAIL otherwise.</a>
+<a name="ln3165">static int find_extra(char **pp)</a>
+<a name="ln3166">{</a>
+<a name="ln3167">  char *str = *pp;</a>
+<a name="ln3168">  char first_char = **pp;</a>
+<a name="ln3169"> </a>
+<a name="ln3170">  // Repeat for addresses separated with ';'</a>
+<a name="ln3171">  while (true) {</a>
+<a name="ln3172">    if (ascii_isdigit(*str)) {</a>
+<a name="ln3173">      str = skipdigits(str + 1);</a>
+<a name="ln3174">    } else if (*str == '/' || *str == '?') {</a>
+<a name="ln3175">      str = skip_regexp(str + 1, *str, false);</a>
+<a name="ln3176">      if (*str != first_char) {</a>
+<a name="ln3177">        str = NULL;</a>
+<a name="ln3178">      } else {</a>
+<a name="ln3179">        str++;</a>
+<a name="ln3180">      }</a>
+<a name="ln3181">    } else {</a>
+<a name="ln3182">      // not a line number or search string, look for terminator.</a>
+<a name="ln3183">      str = strstr(str, &quot;|;\&quot;&quot;);</a>
+<a name="ln3184">      if (str != NULL) {</a>
+<a name="ln3185">        str++;</a>
+<a name="ln3186">        break;</a>
+<a name="ln3187">      }</a>
+<a name="ln3188">    }</a>
+<a name="ln3189">    if (str == NULL || *str != ';'</a>
+<a name="ln3190">        || !(ascii_isdigit(str[1]) || str[1] == '/' || str[1] == '?')) {</a>
+<a name="ln3191">      break;</a>
+<a name="ln3192">    }</a>
+<a name="ln3193">    str++;  // skip ';'</a>
+<a name="ln3194">    first_char = *str;</a>
+<a name="ln3195">  }</a>
+<a name="ln3196"> </a>
+<a name="ln3197">  if (str != NULL &amp;&amp; strncmp(str, &quot;;\&quot;&quot;, 2) == 0) {</a>
+<a name="ln3198">    *pp = str;</a>
+<a name="ln3199">    return OK;</a>
+<a name="ln3200">  }</a>
+<a name="ln3201">  return FAIL;</a>
+<a name="ln3202">}</a>
+<a name="ln3203"> </a>
+<a name="ln3204">//</a>
+<a name="ln3205">// Free a single entry in a tag stack</a>
+<a name="ln3206">//</a>
+<a name="ln3207">static void tagstack_clear_entry(taggy_T *item)</a>
+<a name="ln3208">{</a>
+<a name="ln3209">  XFREE_CLEAR(item-&gt;tagname);</a>
+<a name="ln3210">  XFREE_CLEAR(item-&gt;user_data);</a>
+<a name="ln3211">}</a>
+<a name="ln3212"> </a>
+<a name="ln3213">/// @param tagnames  expand tag names</a>
+<a name="ln3214">int expand_tags(int tagnames, char *pat, int *num_file, char ***file)</a>
+<a name="ln3215">{</a>
+<a name="ln3216">  int extra_flag;</a>
+<a name="ln3217">  char *name_buf;</a>
+<a name="ln3218">  size_t name_buf_size = 100;</a>
+<a name="ln3219">  tagptrs_T t_p;</a>
+<a name="ln3220">  int ret;</a>
+<a name="ln3221"> </a>
+<a name="ln3222">  name_buf = xmalloc(name_buf_size);</a>
+<a name="ln3223"> </a>
+<a name="ln3224">  if (tagnames) {</a>
+<a name="ln3225">    extra_flag = TAG_NAMES;</a>
+<a name="ln3226">  } else {</a>
+<a name="ln3227">    extra_flag = 0;</a>
+<a name="ln3228">  }</a>
+<a name="ln3229">  if (pat[0] == '/') {</a>
+<a name="ln3230">    ret = find_tags(pat + 1, num_file, file,</a>
+<a name="ln3231">                    TAG_REGEXP | extra_flag | TAG_VERBOSE | TAG_NO_TAGFUNC,</a>
+<a name="ln3232">                    TAG_MANY, curbuf-&gt;b_ffname);</a>
+<a name="ln3233">  } else {</a>
+<a name="ln3234">    ret = find_tags(pat, num_file, file,</a>
+<a name="ln3235">                    TAG_REGEXP | extra_flag | TAG_VERBOSE | TAG_NO_TAGFUNC | TAG_NOIC,</a>
+<a name="ln3236">                    TAG_MANY, curbuf-&gt;b_ffname);</a>
+<a name="ln3237">  }</a>
+<a name="ln3238">  if (ret == OK &amp;&amp; !tagnames) {</a>
+<a name="ln3239">    // Reorganize the tags for display and matching as strings of:</a>
+<a name="ln3240">    // &quot;&lt;tagname&gt;\0&lt;kind&gt;\0&lt;filename&gt;\0&quot;</a>
+<a name="ln3241">    for (int i = 0; i &lt; *num_file; i++) {</a>
+<a name="ln3242">      size_t len;</a>
+<a name="ln3243"> </a>
+<a name="ln3244">      parse_match((*file)[i], &amp;t_p);</a>
+<a name="ln3245">      len = (size_t)(t_p.tagname_end - t_p.tagname);</a>
+<a name="ln3246">      if (len &gt; name_buf_size - 3) {</a>
+<a name="ln3247">        char *buf;</a>
+<a name="ln3248"> </a>
+<a name="ln3249">        name_buf_size = len + 3;</a>
+<a name="ln3250">        buf = xrealloc(name_buf, name_buf_size);</a>
+<a name="ln3251">        name_buf = buf;</a>
+<a name="ln3252">      }</a>
+<a name="ln3253"> </a>
+<a name="ln3254">      memmove(name_buf, t_p.tagname, len);</a>
+<a name="ln3255">      name_buf[len++] = 0;</a>
+<a name="ln3256">      name_buf[len++] = (t_p.tagkind != NULL &amp;&amp; *t_p.tagkind)</a>
+<a name="ln3257">                                                   ? *t_p.tagkind : 'f';</a>
+<a name="ln3258">      name_buf[len++] = 0;</a>
+<a name="ln3259">      memmove((*file)[i] + len, t_p.fname, (size_t)(t_p.fname_end - t_p.fname));</a>
+<a name="ln3260">      (*file)[i][len + (size_t)(t_p.fname_end - t_p.fname)] = 0;</a>
+<a name="ln3261">      memmove((*file)[i], name_buf, len);</a>
+<a name="ln3262">    }</a>
+<a name="ln3263">  }</a>
+<a name="ln3264">  xfree(name_buf);</a>
+<a name="ln3265">  return ret;</a>
+<a name="ln3266">}</a>
+<a name="ln3267"> </a>
+<a name="ln3268">/// Add a tag field to the dictionary &quot;dict&quot;.</a>
+<a name="ln3269">/// Return OK or FAIL.</a>
+<a name="ln3270">///</a>
+<a name="ln3271">/// @param start  start of the value</a>
+<a name="ln3272">/// @param end  after the value; can be NULL</a>
+<a name="ln3273">static int add_tag_field(dict_T *dict, const char *field_name, const char *start, const char *end)</a>
+<a name="ln3274">  FUNC_ATTR_NONNULL_ARG(1, 2)</a>
+<a name="ln3275">{</a>
+<a name="ln3276">  int len = 0;</a>
+<a name="ln3277">  int retval;</a>
+<a name="ln3278"> </a>
+<a name="ln3279">  // Check that the field name doesn't exist yet.</a>
+<a name="ln3280">  if (tv_dict_find(dict, field_name, -1) != NULL) {</a>
+<a name="ln3281">    if (p_verbose &gt; 0) {</a>
+<a name="ln3282">      verbose_enter();</a>
+<a name="ln3283">      smsg(0, _(&quot;Duplicate field name: %s&quot;), field_name);</a>
+<a name="ln3284">      verbose_leave();</a>
+<a name="ln3285">    }</a>
+<a name="ln3286">    return FAIL;</a>
+<a name="ln3287">  }</a>
+<a name="ln3288">  char *buf = xmalloc(MAXPATHL);</a>
+<a name="ln3289">  if (start != NULL) {</a>
+<a name="ln3290">    if (end == NULL) {</a>
+<a name="ln3291">      end = start + strlen(start);</a>
+<a name="ln3292">      while (end &gt; start &amp;&amp; (end[-1] == '\r' || end[-1] == '\n')) {</a>
+<a name="ln3293">        end--;</a>
+<a name="ln3294">      }</a>
+<a name="ln3295">    }</a>
+<a name="ln3296">    len = (int)(end - start);</a>
+<a name="ln3297">    if (len &gt; MAXPATHL - 1) {</a>
+<a name="ln3298">      len = MAXPATHL - 1;</a>
+<a name="ln3299">    }</a>
+<a name="ln3300">    xstrlcpy(buf, start, (size_t)len + 1);</a>
+<a name="ln3301">  }</a>
+<a name="ln3302">  buf[len] = NUL;</a>
+<a name="ln3303">  retval = tv_dict_add_str(dict, field_name, strlen(field_name), buf);</a>
+<a name="ln3304">  xfree(buf);</a>
+<a name="ln3305">  return retval;</a>
+<a name="ln3306">}</a>
+<a name="ln3307"> </a>
+<a name="ln3308">/// Add the tags matching the specified pattern &quot;pat&quot; to the list &quot;list&quot;</a>
+<a name="ln3309">/// as a dictionary. Use &quot;buf_fname&quot; for priority, unless NULL.</a>
+<a name="ln3310">int get_tags(list_T *list, char *pat, char *buf_fname)</a>
+<a name="ln3311">{</a>
+<a name="ln3312">  int num_matches, i, ret;</a>
+<a name="ln3313">  char **matches;</a>
+<a name="ln3314">  char *full_fname;</a>
+<a name="ln3315">  dict_T *dict;</a>
+<a name="ln3316">  tagptrs_T tp;</a>
+<a name="ln3317"> </a>
+<a name="ln3318">  ret = find_tags(pat, &amp;num_matches, &amp;matches,</a>
+<a name="ln3319">                  TAG_REGEXP | TAG_NOIC, MAXCOL, buf_fname);</a>
+<a name="ln3320">  if (ret != OK || num_matches &lt;= 0) {</a>
+<a name="ln3321">    return ret;</a>
+<a name="ln3322">  }</a>
+<a name="ln3323"> </a>
+<a name="ln3324">  for (i = 0; i &lt; num_matches; i++) {</a>
+<a name="ln3325">    if (parse_match(matches[i], &amp;tp) == FAIL) {</a>
+<a name="ln3326">      xfree(matches[i]);</a>
+<a name="ln3327">      continue;</a>
+<a name="ln3328">    }</a>
+<a name="ln3329"> </a>
+<a name="ln3330">    bool is_static = test_for_static(&amp;tp);</a>
+<a name="ln3331"> </a>
+<a name="ln3332">    // Skip pseudo-tag lines.</a>
+<a name="ln3333">    if (strncmp(tp.tagname, &quot;!_TAG_&quot;, 6) == 0) {</a>
+<a name="ln3334">      xfree(matches[i]);</a>
+<a name="ln3335">      continue;</a>
+<a name="ln3336">    }</a>
+<a name="ln3337"> </a>
+<a name="ln3338">    dict = tv_dict_alloc();</a>
+<a name="ln3339">    tv_list_append_dict(list, dict);</a>
+<a name="ln3340"> </a>
+<a name="ln3341">    full_fname = tag_full_fname(&amp;tp);</a>
+<a name="ln3342">    if (add_tag_field(dict, &quot;name&quot;, tp.tagname, tp.tagname_end) == FAIL</a>
+<a name="ln3343">        || add_tag_field(dict, &quot;filename&quot;, full_fname, NULL) == FAIL</a>
+<a name="ln3344">        || add_tag_field(dict, &quot;cmd&quot;, tp.command, tp.command_end) == FAIL</a>
+<a name="ln3345">        || add_tag_field(dict, &quot;kind&quot;, tp.tagkind,</a>
+<a name="ln3346">                         tp.tagkind ? tp.tagkind_end : NULL) == FAIL</a>
+<a name="ln3347">        || tv_dict_add_nr(dict, S_LEN(&quot;static&quot;), is_static) == FAIL) {</a>
+<a name="ln3348">      ret = FAIL;</a>
+<a name="ln3349">    }</a>
+<a name="ln3350"> </a>
+<a name="ln3351">    xfree(full_fname);</a>
+<a name="ln3352"> </a>
+<a name="ln3353">    if (tp.command_end != NULL) {</a>
+<a name="ln3354">      for (char *p = tp.command_end + 3;</a>
+<a name="ln3355">           *p != NUL &amp;&amp; *p != '\n' &amp;&amp; *p != '\r';</a>
+<a name="ln3356">           MB_PTR_ADV(p)) {</a>
+<a name="ln3357">        if (p == tp.tagkind</a>
+<a name="ln3358">            || (p + 5 == tp.tagkind &amp;&amp; strncmp(p, &quot;kind:&quot;, 5) == 0)) {</a>
+<a name="ln3359">          // skip &quot;kind:&lt;kind&gt;&quot; and &quot;&lt;kind&gt;&quot;</a>
+<a name="ln3360">          p = tp.tagkind_end - 1;</a>
+<a name="ln3361">        } else if (strncmp(p, &quot;file:&quot;, 5) == 0) {</a>
+<a name="ln3362">          // skip &quot;file:&quot; (static tag)</a>
+<a name="ln3363">          p += 4;</a>
+<a name="ln3364">        } else if (!ascii_iswhite(*p)) {</a>
+<a name="ln3365">          char *n;</a>
+<a name="ln3366">          int len;</a>
+<a name="ln3367"> </a>
+<a name="ln3368">          // Add extra field as a dict entry.  Fields are</a>
+<a name="ln3369">          // separated by Tabs.</a>
+<a name="ln3370">          n = p;</a>
+<a name="ln3371">          while (*p != NUL &amp;&amp; *p &gt;= ' ' &amp;&amp; *p &lt; 127 &amp;&amp; *p != ':') {</a>
+<a name="ln3372">            p++;</a>
+<a name="ln3373">          }</a>
+<a name="ln3374">          len = (int)(p - n);</a>
+<a name="ln3375">          if (*p == ':' &amp;&amp; len &gt; 0) {</a>
+<a name="ln3376">            char *s = ++p;</a>
+<a name="ln3377">            while (*p != NUL &amp;&amp; (uint8_t)(*p) &gt;= ' ') {</a>
+<a name="ln3378">              p++;</a>
+<a name="ln3379">            }</a>
+<a name="ln3380">            n[len] = NUL;</a>
+<a name="ln3381">            if (add_tag_field(dict, n, s, p) == FAIL) {</a>
+<a name="ln3382">              ret = FAIL;</a>
+<a name="ln3383">            }</a>
+<a name="ln3384">            n[len] = ':';</a>
+<a name="ln3385">          } else {</a>
+<a name="ln3386">            // Skip field without colon.</a>
+<a name="ln3387">            while (*p != NUL &amp;&amp; (uint8_t)(*p) &gt;= ' ') {</a>
+<a name="ln3388">              p++;</a>
+<a name="ln3389">            }</a>
+<a name="ln3390">          }</a>
+<a name="ln3391">          if (*p == NUL) {</a>
+<a name="ln3392">            break;</a>
+<a name="ln3393">          }</a>
+<a name="ln3394">        }</a>
+<a name="ln3395">      }</a>
+<a name="ln3396">    }</a>
+<a name="ln3397"> </a>
+<a name="ln3398">    xfree(matches[i]);</a>
+<a name="ln3399">  }</a>
+<a name="ln3400">  xfree(matches);</a>
+<a name="ln3401">  return ret;</a>
+<a name="ln3402">}</a>
+<a name="ln3403"> </a>
+<a name="ln3404">// Return information about 'tag' in dict 'retdict'.</a>
+<a name="ln3405">static void get_tag_details(taggy_T *tag, dict_T *retdict)</a>
+<a name="ln3406">{</a>
+<a name="ln3407">  list_T *pos;</a>
+<a name="ln3408">  fmark_T *fmark;</a>
+<a name="ln3409"> </a>
+<a name="ln3410">  tv_dict_add_str(retdict, S_LEN(&quot;tagname&quot;), tag-&gt;tagname);</a>
+<a name="ln3411">  tv_dict_add_nr(retdict, S_LEN(&quot;matchnr&quot;), tag-&gt;cur_match + 1);</a>
+<a name="ln3412">  tv_dict_add_nr(retdict, S_LEN(&quot;bufnr&quot;), tag-&gt;cur_fnum);</a>
+<a name="ln3413">  if (tag-&gt;user_data) {</a>
+<a name="ln3414">    tv_dict_add_str(retdict, S_LEN(&quot;user_data&quot;), tag-&gt;user_data);</a>
+<a name="ln3415">  }</a>
+<a name="ln3416"> </a>
+<a name="ln3417">  pos = tv_list_alloc(4);</a>
+<a name="ln3418">  tv_dict_add_list(retdict, S_LEN(&quot;from&quot;), pos);</a>
+<a name="ln3419"> </a>
+<a name="ln3420">  fmark = &amp;tag-&gt;fmark;</a>
+<a name="ln3421">  tv_list_append_number(pos,</a>
+<a name="ln3422">                        (varnumber_T)(fmark-&gt;fnum != -1 ? fmark-&gt;fnum : 0));</a>
+<a name="ln3423">  tv_list_append_number(pos, (varnumber_T)fmark-&gt;mark.lnum);</a>
+<a name="ln3424">  tv_list_append_number(pos, (varnumber_T)(fmark-&gt;mark.col == MAXCOL</a>
+<a name="ln3425">                                           ? MAXCOL : fmark-&gt;mark.col + 1));</a>
+<a name="ln3426">  tv_list_append_number(pos, (varnumber_T)fmark-&gt;mark.coladd);</a>
+<a name="ln3427">}</a>
+<a name="ln3428"> </a>
+<a name="ln3429">// Return the tag stack entries of the specified window 'wp' in dictionary</a>
+<a name="ln3430">// 'retdict'.</a>
+<a name="ln3431">void get_tagstack(win_T *wp, dict_T *retdict)</a>
+<a name="ln3432">{</a>
+<a name="ln3433">  tv_dict_add_nr(retdict, S_LEN(&quot;length&quot;), wp-&gt;w_tagstacklen);</a>
+<a name="ln3434">  tv_dict_add_nr(retdict, S_LEN(&quot;curidx&quot;), wp-&gt;w_tagstackidx + 1);</a>
+<a name="ln3435">  list_T *l = tv_list_alloc(2);</a>
+<a name="ln3436">  tv_dict_add_list(retdict, S_LEN(&quot;items&quot;), l);</a>
+<a name="ln3437"> </a>
+<a name="ln3438">  for (int i = 0; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
+<a name="ln3439">    dict_T *d = tv_dict_alloc();</a>
+<a name="ln3440">    tv_list_append_dict(l, d);</a>
+<a name="ln3441">    get_tag_details(&amp;wp-&gt;w_tagstack[i], d);</a>
+<a name="ln3442">  }</a>
+<a name="ln3443">}</a>
+<a name="ln3444"> </a>
+<a name="ln3445">// Free all the entries in the tag stack of the specified window</a>
+<a name="ln3446">static void tagstack_clear(win_T *wp)</a>
+<a name="ln3447">{</a>
+<a name="ln3448">  // Free the current tag stack</a>
+<a name="ln3449">  for (int i = 0; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
+<a name="ln3450">    tagstack_clear_entry(&amp;wp-&gt;w_tagstack[i]);</a>
+<a name="ln3451">  }</a>
+<a name="ln3452">  wp-&gt;w_tagstacklen = 0;</a>
+<a name="ln3453">  wp-&gt;w_tagstackidx = 0;</a>
+<a name="ln3454">}</a>
+<a name="ln3455"> </a>
+<a name="ln3456">// Remove the oldest entry from the tag stack and shift the rest of</a>
+<a name="ln3457">// the entries to free up the top of the stack.</a>
+<a name="ln3458">static void tagstack_shift(win_T *wp)</a>
+<a name="ln3459">{</a>
+<a name="ln3460">  taggy_T *tagstack = wp-&gt;w_tagstack;</a>
+<a name="ln3461">  tagstack_clear_entry(&amp;tagstack[0]);</a>
+<a name="ln3462">  for (int i = 1; i &lt; wp-&gt;w_tagstacklen; i++) {</a>
+<a name="ln3463">    tagstack[i - 1] = tagstack[i];</a>
+<a name="ln3464">  }</a>
+<a name="ln3465">  wp-&gt;w_tagstacklen--;</a>
+<a name="ln3466">}</a>
+<a name="ln3467"> </a>
+<a name="ln3468">/// Push a new item to the tag stack</a>
+<a name="ln3469">static void tagstack_push_item(win_T *wp, char *tagname, int cur_fnum, int cur_match, pos_T mark,</a>
+<a name="ln3470">                               int fnum, char *user_data)</a>
+<a name="ln3471">{</a>
+<a name="ln3472">  taggy_T *tagstack = wp-&gt;w_tagstack;</a>
+<a name="ln3473">  int idx = wp-&gt;w_tagstacklen;  // top of the stack</a>
+<a name="ln3474"> </a>
+<a name="ln3475">  // if the tagstack is full: remove the oldest entry</a>
+<a name="ln3476">  if (idx &gt;= TAGSTACKSIZE) {</a>
+<a name="ln3477">    tagstack_shift(wp);</a>
+<a name="ln3478">    idx = TAGSTACKSIZE - 1;</a>
+<a name="ln3479">  }</a>
+<a name="ln3480"> </a>
+<a name="ln3481">  wp-&gt;w_tagstacklen++;</a>
+<a name="ln3482">  tagstack[idx].tagname = tagname;</a>
+<a name="ln3483">  tagstack[idx].cur_fnum = cur_fnum;</a>
+<a name="ln3484">  tagstack[idx].cur_match = cur_match;</a>
+<a name="ln3485">  if (tagstack[idx].cur_match &lt; 0) {</a>
+<a name="ln3486">    tagstack[idx].cur_match = 0;</a>
+<a name="ln3487">  }</a>
+<a name="ln3488">  tagstack[idx].fmark.mark = mark;</a>
+<a name="ln3489">  tagstack[idx].fmark.fnum = fnum;</a>
+<a name="ln3490">  tagstack[idx].user_data = user_data;</a>
+<a name="ln3491">}</a>
+<a name="ln3492"> </a>
+<a name="ln3493">/// Add a list of items to the tag stack in the specified window</a>
+<a name="ln3494">static void tagstack_push_items(win_T *wp, list_T *l)</a>
+<a name="ln3495">{</a>
+<a name="ln3496">  listitem_T *li;</a>
+<a name="ln3497">  dictitem_T *di;</a>
+<a name="ln3498">  dict_T *itemdict;</a>
+<a name="ln3499">  char *tagname;</a>
+<a name="ln3500">  pos_T mark;</a>
+<a name="ln3501">  int fnum;</a>
+<a name="ln3502"> </a>
+<a name="ln3503">  // Add one entry at a time to the tag stack</a>
+<a name="ln3504">  for (li = tv_list_first(l); li != NULL; li = TV_LIST_ITEM_NEXT(l, li)) {</a>
+<a name="ln3505">    if (TV_LIST_ITEM_TV(li)-&gt;v_type != VAR_DICT</a>
+<a name="ln3506">        || TV_LIST_ITEM_TV(li)-&gt;vval.v_dict == NULL) {</a>
+<a name="ln3507">      continue;  // Skip non-dict items</a>
+<a name="ln3508">    }</a>
+<a name="ln3509">    itemdict = TV_LIST_ITEM_TV(li)-&gt;vval.v_dict;</a>
+<a name="ln3510"> </a>
+<a name="ln3511">    // parse 'from' for the cursor position before the tag jump</a>
+<a name="ln3512">    if ((di = tv_dict_find(itemdict, &quot;from&quot;, -1)) == NULL) {</a>
+<a name="ln3513">      continue;</a>
+<a name="ln3514">    }</a>
+<a name="ln3515">    if (list2fpos(&amp;di-&gt;di_tv, &amp;mark, &amp;fnum, NULL, false) != OK) {</a>
+<a name="ln3516">      continue;</a>
+<a name="ln3517">    }</a>
+<a name="ln3518">    if ((tagname = tv_dict_get_string(itemdict, &quot;tagname&quot;, true)) == NULL) {</a>
+<a name="ln3519">      continue;</a>
+<a name="ln3520">    }</a>
+<a name="ln3521"> </a>
+<a name="ln3522">    if (mark.col &gt; 0) {</a>
+<a name="ln3523">      mark.col--;</a>
+<a name="ln3524">    }</a>
+<a name="ln3525">    tagstack_push_item(wp,</a>
+<a name="ln3526">                       tagname,</a>
+<a name="ln3527">                       (int)tv_dict_get_number(itemdict, &quot;bufnr&quot;),</a>
+<a name="ln3528">                       (int)tv_dict_get_number(itemdict, &quot;matchnr&quot;) - 1,</a>
+<a name="ln3529">                       mark, fnum,</a>
+<a name="ln3530">                       tv_dict_get_string(itemdict, &quot;user_data&quot;, true));</a>
+<a name="ln3531">  }</a>
+<a name="ln3532">}</a>
+<a name="ln3533"> </a>
+<a name="ln3534">// Set the current index in the tag stack. Valid values are between 0</a>
+<a name="ln3535">// and the stack length (inclusive).</a>
+<a name="ln3536">static void tagstack_set_curidx(win_T *wp, int curidx)</a>
+<a name="ln3537">{</a>
+<a name="ln3538">  wp-&gt;w_tagstackidx = curidx;</a>
+<a name="ln3539">  if (wp-&gt;w_tagstackidx &lt; 0) {  // sanity check</a>
+<a name="ln3540">    wp-&gt;w_tagstackidx = 0;</a>
+<a name="ln3541">  }</a>
+<a name="ln3542">  if (wp-&gt;w_tagstackidx &gt; wp-&gt;w_tagstacklen) {</a>
+<a name="ln3543">    wp-&gt;w_tagstackidx = wp-&gt;w_tagstacklen;</a>
+<a name="ln3544">  }</a>
+<a name="ln3545">}</a>
+<a name="ln3546"> </a>
+<a name="ln3547">// Set the tag stack entries of the specified window.</a>
+<a name="ln3548">// 'action' is set to one of:</a>
+<a name="ln3549">//    'a' for append</a>
+<a name="ln3550">//    'r' for replace</a>
+<a name="ln3551">//    't' for truncate</a>
+<a name="ln3552">int set_tagstack(win_T *wp, const dict_T *d, int action)</a>
+<a name="ln3553">  FUNC_ATTR_NONNULL_ARG(1)</a>
+<a name="ln3554">{</a>
+<a name="ln3555">  dictitem_T *di;</a>
+<a name="ln3556">  list_T *l = NULL;</a>
+<a name="ln3557"> </a>
+<a name="ln3558">  // not allowed to alter the tag stack entries from inside tagfunc</a>
+<a name="ln3559">  if (tfu_in_use) {</a>
+<a name="ln3560">    emsg(_(e_cannot_modify_tag_stack_within_tagfunc));</a>
+<a name="ln3561">    return FAIL;</a>
+<a name="ln3562">  }</a>
+<a name="ln3563"> </a>
+<a name="ln3564">  if ((di = tv_dict_find(d, &quot;items&quot;, -1)) != NULL) {</a>
+<a name="ln3565">    if (di-&gt;di_tv.v_type != VAR_LIST) {</a>
+<a name="ln3566">      emsg(_(e_listreq));</a>
+<a name="ln3567">      return FAIL;</a>
+<a name="ln3568">    }</a>
+<a name="ln3569">    l = di-&gt;di_tv.vval.v_list;</a>
+<a name="ln3570">  }</a>
+<a name="ln3571"> </a>
+<a name="ln3572">  if ((di = tv_dict_find(d, &quot;curidx&quot;, -1)) != NULL) {</a>
+<a name="ln3573">    tagstack_set_curidx(wp, (int)tv_get_number(&amp;di-&gt;di_tv) - 1);</a>
+<a name="ln3574">  }</a>
+<a name="ln3575"> </a>
+<a name="ln3576">  if (action == 't') {  // truncate the stack</a>
+<a name="ln3577">    taggy_T *const tagstack = wp-&gt;w_tagstack;</a>
+<a name="ln3578">    const int tagstackidx = wp-&gt;w_tagstackidx;</a>
+<a name="ln3579">    int tagstacklen = wp-&gt;w_tagstacklen;</a>
+<a name="ln3580"> </a>
+<a name="ln3581">    // delete all the tag stack entries above the current entry</a>
+<a name="ln3582">    while (tagstackidx &lt; tagstacklen) {</a>
+<a name="ln3583">      tagstack_clear_entry(&amp;tagstack[--tagstacklen]);</a>
+<a name="ln3584">    }</a>
+<a name="ln3585">    wp-&gt;w_tagstacklen = tagstacklen;</a>
+<a name="ln3586">  }</a>
+<a name="ln3587"> </a>
+<a name="ln3588">  if (l != NULL) {</a>
+<a name="ln3589">    if (action == 'r') {  // replace the stack</a>
+<a name="ln3590">      tagstack_clear(wp);</a>
+<a name="ln3591">    }</a>
+<a name="ln3592"> </a>
+<a name="ln3593">    tagstack_push_items(wp, l);</a>
+<a name="ln3594">    // set the current index after the last entry</a>
+<a name="ln3595">    wp-&gt;w_tagstackidx = wp-&gt;w_tagstacklen;</a>
+<a name="ln3596">  }</a>
+<a name="ln3597"> </a>
+<a name="ln3598">  return OK;</a>
+<a name="ln3599">}</a>
+</code></pre>
+<div class="balloon" rel="482"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v1048/" target="_blank">V1048</a> The 'prevtagstackidx' variable was assigned the same value.</p></div>
+<link rel="stylesheet" href="highlight.css">
+<script src="highlight.pack.js"></script>
+<script src="highlightjs-line-numbers.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>hljs.initLineNumbersOnLoad();</script>
+<script>
+  $(document).ready(function() {
+      $('.balloon').each(function () {
+          var bl = $(this);
+          var line = bl.attr('rel');
+          var text = $('a[name="ln'+line+'"]').text();
+
+          var space_count = 0;
+          for(var i = 0; i<text.length; i++){
+              var char = text[i];
+              if((char !== ' ')&&(char !== '\t'))break;
+              if(char === '\t')space_count++;
+              space_count++;
+          }
+
+          bl.css('margin-left', space_count*8);
+          $('a[name="ln'+line+'"]').after(bl);
+      });
+
+      window.location = window.location;
+  });
+</script>
+</body>
+</html>
