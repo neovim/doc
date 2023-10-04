@@ -8103,1107 +8103,1100 @@
 <a name="ln8094">  }</a>
 <a name="ln8095"> </a>
 <a name="ln8096">  if (ret != FAIL &amp;&amp; ga.ga_data != NULL) {</a>
-<a name="ln8097">    if (eap-&gt;cmdidx == CMD_echomsg || eap-&gt;cmdidx == CMD_echoerr) {</a>
-<a name="ln8098">      // Mark the already saved text as finishing the line, so that what</a>
-<a name="ln8099">      // follows is displayed on a new line when scrolling back at the</a>
-<a name="ln8100">      // more prompt.</a>
-<a name="ln8101">      msg_sb_eol();</a>
-<a name="ln8102">    }</a>
-<a name="ln8103"> </a>
-<a name="ln8104">    if (eap-&gt;cmdidx == CMD_echomsg) {</a>
-<a name="ln8105">      msg_ext_set_kind(&quot;echomsg&quot;);</a>
-<a name="ln8106">      msg(ga.ga_data, echo_attr);</a>
-<a name="ln8107">    } else if (eap-&gt;cmdidx == CMD_echoerr) {</a>
-<a name="ln8108">      // We don't want to abort following commands, restore did_emsg.</a>
-<a name="ln8109">      int save_did_emsg = did_emsg;</a>
-<a name="ln8110">      msg_ext_set_kind(&quot;echoerr&quot;);</a>
-<a name="ln8111">      emsg(ga.ga_data);</a>
-<a name="ln8112">      if (!force_abort) {</a>
-<a name="ln8113">        did_emsg = save_did_emsg;</a>
-<a name="ln8114">      }</a>
-<a name="ln8115">    } else if (eap-&gt;cmdidx == CMD_execute) {</a>
-<a name="ln8116">      do_cmdline(ga.ga_data, eap-&gt;getline, eap-&gt;cookie, DOCMD_NOWAIT|DOCMD_VERBOSE);</a>
-<a name="ln8117">    }</a>
-<a name="ln8118">  }</a>
-<a name="ln8119"> </a>
-<a name="ln8120">  ga_clear(&amp;ga);</a>
+<a name="ln8097">    if (eap-&gt;cmdidx == CMD_echomsg) {</a>
+<a name="ln8098">      msg_ext_set_kind(&quot;echomsg&quot;);</a>
+<a name="ln8099">      msg(ga.ga_data, echo_attr);</a>
+<a name="ln8100">    } else if (eap-&gt;cmdidx == CMD_echoerr) {</a>
+<a name="ln8101">      // We don't want to abort following commands, restore did_emsg.</a>
+<a name="ln8102">      int save_did_emsg = did_emsg;</a>
+<a name="ln8103">      msg_ext_set_kind(&quot;echoerr&quot;);</a>
+<a name="ln8104">      emsg(ga.ga_data);</a>
+<a name="ln8105">      if (!force_abort) {</a>
+<a name="ln8106">        did_emsg = save_did_emsg;</a>
+<a name="ln8107">      }</a>
+<a name="ln8108">    } else if (eap-&gt;cmdidx == CMD_execute) {</a>
+<a name="ln8109">      do_cmdline(ga.ga_data, eap-&gt;getline, eap-&gt;cookie, DOCMD_NOWAIT|DOCMD_VERBOSE);</a>
+<a name="ln8110">    }</a>
+<a name="ln8111">  }</a>
+<a name="ln8112"> </a>
+<a name="ln8113">  ga_clear(&amp;ga);</a>
+<a name="ln8114"> </a>
+<a name="ln8115">  if (eap-&gt;skip) {</a>
+<a name="ln8116">    emsg_skip--;</a>
+<a name="ln8117">  }</a>
+<a name="ln8118"> </a>
+<a name="ln8119">  eap-&gt;nextcmd = check_nextcmd(arg);</a>
+<a name="ln8120">}</a>
 <a name="ln8121"> </a>
-<a name="ln8122">  if (eap-&gt;skip) {</a>
-<a name="ln8123">    emsg_skip--;</a>
-<a name="ln8124">  }</a>
-<a name="ln8125"> </a>
-<a name="ln8126">  eap-&gt;nextcmd = check_nextcmd(arg);</a>
-<a name="ln8127">}</a>
-<a name="ln8128"> </a>
-<a name="ln8129">/// Skip over the name of an option: &quot;&amp;option&quot;, &quot;&amp;g:option&quot; or &quot;&amp;l:option&quot;.</a>
-<a name="ln8130">///</a>
-<a name="ln8131">/// @param arg  points to the &quot;&amp;&quot; or '+' when called, to &quot;option&quot; when returning.</a>
-<a name="ln8132">///</a>
-<a name="ln8133">/// @return  NULL when no option name found.  Otherwise pointer to the char</a>
-<a name="ln8134">///          after the option name.</a>
-<a name="ln8135">const char *find_option_end(const char **const arg, int *const scope)</a>
-<a name="ln8136">{</a>
-<a name="ln8137">  const char *p = *arg;</a>
-<a name="ln8138"> </a>
-<a name="ln8139">  p++;</a>
-<a name="ln8140">  if (*p == 'g' &amp;&amp; p[1] == ':') {</a>
-<a name="ln8141">    *scope = OPT_GLOBAL;</a>
-<a name="ln8142">    p += 2;</a>
-<a name="ln8143">  } else if (*p == 'l' &amp;&amp; p[1] == ':') {</a>
-<a name="ln8144">    *scope = OPT_LOCAL;</a>
-<a name="ln8145">    p += 2;</a>
-<a name="ln8146">  } else {</a>
-<a name="ln8147">    *scope = 0;</a>
-<a name="ln8148">  }</a>
-<a name="ln8149"> </a>
-<a name="ln8150">  if (!ASCII_ISALPHA(*p)) {</a>
-<a name="ln8151">    return NULL;</a>
-<a name="ln8152">  }</a>
-<a name="ln8153">  *arg = p;</a>
-<a name="ln8154"> </a>
-<a name="ln8155">  if (p[0] == 't' &amp;&amp; p[1] == '_' &amp;&amp; p[2] != NUL &amp;&amp; p[3] != NUL) {</a>
-<a name="ln8156">    p += 4;  // t_xx/termcap option</a>
-<a name="ln8157">  } else {</a>
-<a name="ln8158">    while (ASCII_ISALPHA(*p)) {</a>
-<a name="ln8159">      p++;</a>
-<a name="ln8160">    }</a>
-<a name="ln8161">  }</a>
-<a name="ln8162">  return p;</a>
-<a name="ln8163">}</a>
-<a name="ln8164"> </a>
-<a name="ln8165">static var_flavour_T var_flavour(char *varname)</a>
-<a name="ln8166">  FUNC_ATTR_PURE</a>
-<a name="ln8167">{</a>
-<a name="ln8168">  char *p = varname;</a>
-<a name="ln8169"> </a>
-<a name="ln8170">  if (ASCII_ISUPPER(*p)) {</a>
-<a name="ln8171">    while (*(++p)) {</a>
-<a name="ln8172">      if (ASCII_ISLOWER(*p)) {</a>
-<a name="ln8173">        return VAR_FLAVOUR_SESSION;</a>
-<a name="ln8174">      }</a>
-<a name="ln8175">    }</a>
-<a name="ln8176">    return VAR_FLAVOUR_SHADA;</a>
-<a name="ln8177">  }</a>
-<a name="ln8178">  return VAR_FLAVOUR_DEFAULT;</a>
-<a name="ln8179">}</a>
-<a name="ln8180"> </a>
-<a name="ln8181">/// Iterate over global variables</a>
+<a name="ln8122">/// Skip over the name of an option: &quot;&amp;option&quot;, &quot;&amp;g:option&quot; or &quot;&amp;l:option&quot;.</a>
+<a name="ln8123">///</a>
+<a name="ln8124">/// @param arg  points to the &quot;&amp;&quot; or '+' when called, to &quot;option&quot; when returning.</a>
+<a name="ln8125">///</a>
+<a name="ln8126">/// @return  NULL when no option name found.  Otherwise pointer to the char</a>
+<a name="ln8127">///          after the option name.</a>
+<a name="ln8128">const char *find_option_end(const char **const arg, int *const scope)</a>
+<a name="ln8129">{</a>
+<a name="ln8130">  const char *p = *arg;</a>
+<a name="ln8131"> </a>
+<a name="ln8132">  p++;</a>
+<a name="ln8133">  if (*p == 'g' &amp;&amp; p[1] == ':') {</a>
+<a name="ln8134">    *scope = OPT_GLOBAL;</a>
+<a name="ln8135">    p += 2;</a>
+<a name="ln8136">  } else if (*p == 'l' &amp;&amp; p[1] == ':') {</a>
+<a name="ln8137">    *scope = OPT_LOCAL;</a>
+<a name="ln8138">    p += 2;</a>
+<a name="ln8139">  } else {</a>
+<a name="ln8140">    *scope = 0;</a>
+<a name="ln8141">  }</a>
+<a name="ln8142"> </a>
+<a name="ln8143">  if (!ASCII_ISALPHA(*p)) {</a>
+<a name="ln8144">    return NULL;</a>
+<a name="ln8145">  }</a>
+<a name="ln8146">  *arg = p;</a>
+<a name="ln8147"> </a>
+<a name="ln8148">  if (p[0] == 't' &amp;&amp; p[1] == '_' &amp;&amp; p[2] != NUL &amp;&amp; p[3] != NUL) {</a>
+<a name="ln8149">    p += 4;  // t_xx/termcap option</a>
+<a name="ln8150">  } else {</a>
+<a name="ln8151">    while (ASCII_ISALPHA(*p)) {</a>
+<a name="ln8152">      p++;</a>
+<a name="ln8153">    }</a>
+<a name="ln8154">  }</a>
+<a name="ln8155">  return p;</a>
+<a name="ln8156">}</a>
+<a name="ln8157"> </a>
+<a name="ln8158">static var_flavour_T var_flavour(char *varname)</a>
+<a name="ln8159">  FUNC_ATTR_PURE</a>
+<a name="ln8160">{</a>
+<a name="ln8161">  char *p = varname;</a>
+<a name="ln8162"> </a>
+<a name="ln8163">  if (ASCII_ISUPPER(*p)) {</a>
+<a name="ln8164">    while (*(++p)) {</a>
+<a name="ln8165">      if (ASCII_ISLOWER(*p)) {</a>
+<a name="ln8166">        return VAR_FLAVOUR_SESSION;</a>
+<a name="ln8167">      }</a>
+<a name="ln8168">    }</a>
+<a name="ln8169">    return VAR_FLAVOUR_SHADA;</a>
+<a name="ln8170">  }</a>
+<a name="ln8171">  return VAR_FLAVOUR_DEFAULT;</a>
+<a name="ln8172">}</a>
+<a name="ln8173"> </a>
+<a name="ln8174">/// Iterate over global variables</a>
+<a name="ln8175">///</a>
+<a name="ln8176">/// @warning No modifications to global variable dictionary must be performed</a>
+<a name="ln8177">///          while iteration is in progress.</a>
+<a name="ln8178">///</a>
+<a name="ln8179">/// @param[in]   iter   Iterator. Pass NULL to start iteration.</a>
+<a name="ln8180">/// @param[out]  name   Variable name.</a>
+<a name="ln8181">/// @param[out]  rettv  Variable value.</a>
 <a name="ln8182">///</a>
-<a name="ln8183">/// @warning No modifications to global variable dictionary must be performed</a>
-<a name="ln8184">///          while iteration is in progress.</a>
-<a name="ln8185">///</a>
-<a name="ln8186">/// @param[in]   iter   Iterator. Pass NULL to start iteration.</a>
-<a name="ln8187">/// @param[out]  name   Variable name.</a>
-<a name="ln8188">/// @param[out]  rettv  Variable value.</a>
-<a name="ln8189">///</a>
-<a name="ln8190">/// @return Pointer that needs to be passed to next `var_shada_iter` invocation</a>
-<a name="ln8191">///         or NULL to indicate that iteration is over.</a>
-<a name="ln8192">const void *var_shada_iter(const void *const iter, const char **const name, typval_T *rettv,</a>
-<a name="ln8193">                           var_flavour_T flavour)</a>
-<a name="ln8194">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ARG(2, 3)</a>
-<a name="ln8195">{</a>
-<a name="ln8196">  const hashitem_T *hi;</a>
-<a name="ln8197">  const hashitem_T *hifirst = globvarht.ht_array;</a>
-<a name="ln8198">  const size_t hinum = (size_t)globvarht.ht_mask + 1;</a>
-<a name="ln8199">  *name = NULL;</a>
-<a name="ln8200">  if (iter == NULL) {</a>
-<a name="ln8201">    hi = globvarht.ht_array;</a>
-<a name="ln8202">    while ((size_t)(hi - hifirst) &lt; hinum</a>
-<a name="ln8203">           &amp;&amp; (HASHITEM_EMPTY(hi)</a>
-<a name="ln8204">               || !(var_flavour(hi-&gt;hi_key) &amp; flavour))) {</a>
-<a name="ln8205">      hi++;</a>
-<a name="ln8206">    }</a>
-<a name="ln8207">    if ((size_t)(hi - hifirst) == hinum) {</a>
-<a name="ln8208">      return NULL;</a>
-<a name="ln8209">    }</a>
-<a name="ln8210">  } else {</a>
-<a name="ln8211">    hi = (const hashitem_T *)iter;</a>
+<a name="ln8183">/// @return Pointer that needs to be passed to next `var_shada_iter` invocation</a>
+<a name="ln8184">///         or NULL to indicate that iteration is over.</a>
+<a name="ln8185">const void *var_shada_iter(const void *const iter, const char **const name, typval_T *rettv,</a>
+<a name="ln8186">                           var_flavour_T flavour)</a>
+<a name="ln8187">  FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_NONNULL_ARG(2, 3)</a>
+<a name="ln8188">{</a>
+<a name="ln8189">  const hashitem_T *hi;</a>
+<a name="ln8190">  const hashitem_T *hifirst = globvarht.ht_array;</a>
+<a name="ln8191">  const size_t hinum = (size_t)globvarht.ht_mask + 1;</a>
+<a name="ln8192">  *name = NULL;</a>
+<a name="ln8193">  if (iter == NULL) {</a>
+<a name="ln8194">    hi = globvarht.ht_array;</a>
+<a name="ln8195">    while ((size_t)(hi - hifirst) &lt; hinum</a>
+<a name="ln8196">           &amp;&amp; (HASHITEM_EMPTY(hi)</a>
+<a name="ln8197">               || !(var_flavour(hi-&gt;hi_key) &amp; flavour))) {</a>
+<a name="ln8198">      hi++;</a>
+<a name="ln8199">    }</a>
+<a name="ln8200">    if ((size_t)(hi - hifirst) == hinum) {</a>
+<a name="ln8201">      return NULL;</a>
+<a name="ln8202">    }</a>
+<a name="ln8203">  } else {</a>
+<a name="ln8204">    hi = (const hashitem_T *)iter;</a>
+<a name="ln8205">  }</a>
+<a name="ln8206">  *name = TV_DICT_HI2DI(hi)-&gt;di_key;</a>
+<a name="ln8207">  tv_copy(&amp;TV_DICT_HI2DI(hi)-&gt;di_tv, rettv);</a>
+<a name="ln8208">  while ((size_t)(++hi - hifirst) &lt; hinum) {</a>
+<a name="ln8209">    if (!HASHITEM_EMPTY(hi) &amp;&amp; (var_flavour(hi-&gt;hi_key) &amp; flavour)) {</a>
+<a name="ln8210">      return hi;</a>
+<a name="ln8211">    }</a>
 <a name="ln8212">  }</a>
-<a name="ln8213">  *name = TV_DICT_HI2DI(hi)-&gt;di_key;</a>
-<a name="ln8214">  tv_copy(&amp;TV_DICT_HI2DI(hi)-&gt;di_tv, rettv);</a>
-<a name="ln8215">  while ((size_t)(++hi - hifirst) &lt; hinum) {</a>
-<a name="ln8216">    if (!HASHITEM_EMPTY(hi) &amp;&amp; (var_flavour(hi-&gt;hi_key) &amp; flavour)) {</a>
-<a name="ln8217">      return hi;</a>
-<a name="ln8218">    }</a>
-<a name="ln8219">  }</a>
-<a name="ln8220">  return NULL;</a>
-<a name="ln8221">}</a>
-<a name="ln8222"> </a>
-<a name="ln8223">void var_set_global(const char *const name, typval_T vartv)</a>
-<a name="ln8224">{</a>
-<a name="ln8225">  funccal_entry_T funccall_entry;</a>
-<a name="ln8226"> </a>
-<a name="ln8227">  save_funccal(&amp;funccall_entry);</a>
-<a name="ln8228">  set_var(name, strlen(name), &amp;vartv, false);</a>
-<a name="ln8229">  restore_funccal();</a>
-<a name="ln8230">}</a>
-<a name="ln8231"> </a>
-<a name="ln8232">int store_session_globals(FILE *fd)</a>
-<a name="ln8233">{</a>
-<a name="ln8234">  TV_DICT_ITER(&amp;globvardict, this_var, {</a>
-<a name="ln8235">    if ((this_var-&gt;di_tv.v_type == VAR_NUMBER</a>
-<a name="ln8236">         || this_var-&gt;di_tv.v_type == VAR_STRING)</a>
-<a name="ln8237">        &amp;&amp; var_flavour(this_var-&gt;di_key) == VAR_FLAVOUR_SESSION) {</a>
-<a name="ln8238">      // Escape special characters with a backslash.  Turn a LF and</a>
-<a name="ln8239">      // CR into \n and \r.</a>
-<a name="ln8240">      char *const p = vim_strsave_escaped(tv_get_string(&amp;this_var-&gt;di_tv), &quot;\\\&quot;\n\r&quot;);</a>
-<a name="ln8241">      for (char *t = p; *t != NUL; t++) {</a>
-<a name="ln8242">        if (*t == '\n') {</a>
-<a name="ln8243">          *t = 'n';</a>
-<a name="ln8244">        } else if (*t == '\r') {</a>
-<a name="ln8245">          *t = 'r';</a>
-<a name="ln8246">        }</a>
-<a name="ln8247">      }</a>
-<a name="ln8248">      if ((fprintf(fd, &quot;let %s = %c%s%c&quot;,</a>
-<a name="ln8249">                   this_var-&gt;di_key,</a>
-<a name="ln8250">                   ((this_var-&gt;di_tv.v_type == VAR_STRING) ? '&quot;' : ' '),</a>
-<a name="ln8251">                   p,</a>
-<a name="ln8252">                   ((this_var-&gt;di_tv.v_type == VAR_STRING) ? '&quot;' : ' ')) &lt; 0)</a>
-<a name="ln8253">          || put_eol(fd) == FAIL) {</a>
-<a name="ln8254">        xfree(p);</a>
-<a name="ln8255">        return FAIL;</a>
-<a name="ln8256">      }</a>
-<a name="ln8257">      xfree(p);</a>
-<a name="ln8258">    } else if (this_var-&gt;di_tv.v_type == VAR_FLOAT</a>
-<a name="ln8259">               &amp;&amp; var_flavour(this_var-&gt;di_key) == VAR_FLAVOUR_SESSION) {</a>
-<a name="ln8260">      float_T f = this_var-&gt;di_tv.vval.v_float;</a>
-<a name="ln8261">      int sign = ' ';</a>
-<a name="ln8262"> </a>
-<a name="ln8263">      if (f &lt; 0) {</a>
-<a name="ln8264">        f = -f;</a>
-<a name="ln8265">        sign = '-';</a>
-<a name="ln8266">      }</a>
-<a name="ln8267">      if ((fprintf(fd, &quot;let %s = %c%f&quot;, this_var-&gt;di_key, sign, f) &lt; 0)</a>
-<a name="ln8268">          || put_eol(fd) == FAIL) {</a>
-<a name="ln8269">        return FAIL;</a>
-<a name="ln8270">      }</a>
-<a name="ln8271">    }</a>
-<a name="ln8272">  });</a>
-<a name="ln8273">  return OK;</a>
-<a name="ln8274">}</a>
-<a name="ln8275"> </a>
-<a name="ln8276">/// Display script name where an item was last set.</a>
-<a name="ln8277">/// Should only be invoked when 'verbose' is non-zero.</a>
-<a name="ln8278">void last_set_msg(sctx_T script_ctx)</a>
-<a name="ln8279">{</a>
-<a name="ln8280">  const LastSet last_set = (LastSet){</a>
-<a name="ln8281">    .script_ctx = script_ctx,</a>
-<a name="ln8282">    .channel_id = 0,</a>
-<a name="ln8283">  };</a>
-<a name="ln8284">  option_last_set_msg(last_set);</a>
-<a name="ln8285">}</a>
-<a name="ln8286"> </a>
-<a name="ln8287">/// Displays where an option was last set.</a>
-<a name="ln8288">///</a>
-<a name="ln8289">/// Should only be invoked when 'verbose' is non-zero.</a>
-<a name="ln8290">void option_last_set_msg(LastSet last_set)</a>
-<a name="ln8291">{</a>
-<a name="ln8292">  if (last_set.script_ctx.sc_sid != 0) {</a>
-<a name="ln8293">    bool should_free;</a>
-<a name="ln8294">    char *p = get_scriptname(last_set, &amp;should_free);</a>
-<a name="ln8295">    verbose_enter();</a>
-<a name="ln8296">    msg_puts(_(&quot;\n\tLast set from &quot;));</a>
-<a name="ln8297">    msg_puts(p);</a>
-<a name="ln8298">    if (last_set.script_ctx.sc_lnum &gt; 0) {</a>
-<a name="ln8299">      msg_puts(_(line_msg));</a>
-<a name="ln8300">      msg_outnum((long)last_set.script_ctx.sc_lnum);</a>
-<a name="ln8301">    }</a>
-<a name="ln8302">    if (should_free) {</a>
-<a name="ln8303">      xfree(p);</a>
-<a name="ln8304">    }</a>
-<a name="ln8305">    verbose_leave();</a>
-<a name="ln8306">  }</a>
-<a name="ln8307">}</a>
-<a name="ln8308"> </a>
-<a name="ln8309">// reset v:option_new, v:option_old, v:option_oldlocal, v:option_oldglobal,</a>
-<a name="ln8310">// v:option_type, and v:option_command.</a>
-<a name="ln8311">void reset_v_option_vars(void)</a>
-<a name="ln8312">{</a>
-<a name="ln8313">  set_vim_var_string(VV_OPTION_NEW, NULL, -1);</a>
-<a name="ln8314">  set_vim_var_string(VV_OPTION_OLD, NULL, -1);</a>
-<a name="ln8315">  set_vim_var_string(VV_OPTION_OLDLOCAL, NULL, -1);</a>
-<a name="ln8316">  set_vim_var_string(VV_OPTION_OLDGLOBAL, NULL, -1);</a>
-<a name="ln8317">  set_vim_var_string(VV_OPTION_COMMAND, NULL, -1);</a>
-<a name="ln8318">  set_vim_var_string(VV_OPTION_TYPE, NULL, -1);</a>
-<a name="ln8319">}</a>
-<a name="ln8320"> </a>
-<a name="ln8321">/// Adjust a filename, according to a string of modifiers.</a>
-<a name="ln8322">/// *fnamep must be NUL terminated when called.  When returning, the length is</a>
-<a name="ln8323">/// determined by *fnamelen.</a>
-<a name="ln8324">/// Returns VALID_ flags or -1 for failure.</a>
-<a name="ln8325">/// When there is an error, *fnamep is set to NULL.</a>
-<a name="ln8326">///</a>
-<a name="ln8327">/// @param src  string with modifiers</a>
-<a name="ln8328">/// @param tilde_file  &quot;~&quot; is a file name, not $HOME</a>
-<a name="ln8329">/// @param usedlen  characters after src that are used</a>
-<a name="ln8330">/// @param fnamep  file name so far</a>
-<a name="ln8331">/// @param bufp  buffer for allocated file name or NULL</a>
-<a name="ln8332">/// @param fnamelen  length of fnamep</a>
-<a name="ln8333">int modify_fname(char *src, bool tilde_file, size_t *usedlen, char **fnamep, char **bufp,</a>
-<a name="ln8334">                 size_t *fnamelen)</a>
-<a name="ln8335">{</a>
-<a name="ln8336">  int valid = 0;</a>
-<a name="ln8337">  char *s, *p, *pbuf;</a>
-<a name="ln8338">  char dirname[MAXPATHL];</a>
-<a name="ln8339">  bool has_fullname = false;</a>
-<a name="ln8340">  bool has_homerelative = false;</a>
-<a name="ln8341"> </a>
-<a name="ln8342">repeat:</a>
-<a name="ln8343">  // &quot;:p&quot; - full path/file_name</a>
-<a name="ln8344">  if (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == 'p') {</a>
-<a name="ln8345">    has_fullname = true;</a>
-<a name="ln8346"> </a>
-<a name="ln8347">    valid |= VALID_PATH;</a>
-<a name="ln8348">    *usedlen += 2;</a>
-<a name="ln8349"> </a>
-<a name="ln8350">    // Expand &quot;~/path&quot; for all systems and &quot;~user/path&quot; for Unix</a>
-<a name="ln8351">    if ((*fnamep)[0] == '~'</a>
-<a name="ln8352">#if !defined(UNIX)</a>
-<a name="ln8353">        &amp;&amp; ((*fnamep)[1] == '/'</a>
-<a name="ln8354"># ifdef BACKSLASH_IN_FILENAME</a>
-<a name="ln8355">            || (*fnamep)[1] == '\\'</a>
-<a name="ln8356"># endif</a>
-<a name="ln8357">            || (*fnamep)[1] == NUL)</a>
-<a name="ln8358">#endif</a>
-<a name="ln8359">        &amp;&amp; !(tilde_file &amp;&amp; (*fnamep)[1] == NUL)) {</a>
-<a name="ln8360">      *fnamep = expand_env_save(*fnamep);</a>
-<a name="ln8361">      xfree(*bufp);          // free any allocated file name</a>
-<a name="ln8362">      *bufp = *fnamep;</a>
-<a name="ln8363">      if (*fnamep == NULL) {</a>
-<a name="ln8364">        return -1;</a>
-<a name="ln8365">      }</a>
-<a name="ln8366">    }</a>
-<a name="ln8367"> </a>
-<a name="ln8368">    // When &quot;/.&quot; or &quot;/..&quot; is used: force expansion to get rid of it.</a>
-<a name="ln8369">    for (p = *fnamep; *p != NUL; MB_PTR_ADV(p)) {</a>
-<a name="ln8370">      if (vim_ispathsep(*p)</a>
-<a name="ln8371">          &amp;&amp; p[1] == '.'</a>
-<a name="ln8372">          &amp;&amp; (p[2] == NUL</a>
-<a name="ln8373">              || vim_ispathsep(p[2])</a>
-<a name="ln8374">              || (p[2] == '.'</a>
-<a name="ln8375">                  &amp;&amp; (p[3] == NUL || vim_ispathsep(p[3]))))) {</a>
-<a name="ln8376">        break;</a>
-<a name="ln8377">      }</a>
-<a name="ln8378">    }</a>
-<a name="ln8379"> </a>
-<a name="ln8380">    // FullName_save() is slow, don't use it when not needed.</a>
-<a name="ln8381">    if (*p != NUL || !vim_isAbsName(*fnamep)) {</a>
-<a name="ln8382">      *fnamep = FullName_save(*fnamep, *p != NUL);</a>
-<a name="ln8383">      xfree(*bufp);          // free any allocated file name</a>
-<a name="ln8384">      *bufp = *fnamep;</a>
-<a name="ln8385">      if (*fnamep == NULL) {</a>
-<a name="ln8386">        return -1;</a>
-<a name="ln8387">      }</a>
-<a name="ln8388">    }</a>
-<a name="ln8389"> </a>
-<a name="ln8390">    // Append a path separator to a directory.</a>
-<a name="ln8391">    if (os_isdir(*fnamep)) {</a>
-<a name="ln8392">      // Make room for one or two extra characters.</a>
-<a name="ln8393">      *fnamep = xstrnsave(*fnamep, strlen(*fnamep) + 2);</a>
-<a name="ln8394">      xfree(*bufp);          // free any allocated file name</a>
-<a name="ln8395">      *bufp = *fnamep;</a>
-<a name="ln8396">      add_pathsep(*fnamep);</a>
-<a name="ln8397">    }</a>
-<a name="ln8398">  }</a>
-<a name="ln8399"> </a>
-<a name="ln8400">  int c;</a>
-<a name="ln8401"> </a>
-<a name="ln8402">  // &quot;:.&quot; - path relative to the current directory</a>
-<a name="ln8403">  // &quot;:~&quot; - path relative to the home directory</a>
-<a name="ln8404">  // &quot;:8&quot; - shortname path - postponed till after</a>
-<a name="ln8405">  while (src[*usedlen] == ':'</a>
-<a name="ln8406">         &amp;&amp; ((c = (uint8_t)src[*usedlen + 1]) == '.' || c == '~' || c == '8')) {</a>
-<a name="ln8407">    *usedlen += 2;</a>
-<a name="ln8408">    if (c == '8') {</a>
-<a name="ln8409">      continue;</a>
-<a name="ln8410">    }</a>
-<a name="ln8411">    pbuf = NULL;</a>
-<a name="ln8412">    // Need full path first (use expand_env() to remove a &quot;~/&quot;)</a>
-<a name="ln8413">    if (!has_fullname &amp;&amp; !has_homerelative) {</a>
-<a name="ln8414">      if (**fnamep == '~') {</a>
-<a name="ln8415">        p = pbuf = expand_env_save(*fnamep);</a>
-<a name="ln8416">      } else {</a>
-<a name="ln8417">        p = pbuf = FullName_save(*fnamep, false);</a>
-<a name="ln8418">      }</a>
-<a name="ln8419">    } else {</a>
-<a name="ln8420">      p = *fnamep;</a>
-<a name="ln8421">    }</a>
-<a name="ln8422"> </a>
-<a name="ln8423">    has_fullname = false;</a>
-<a name="ln8424"> </a>
-<a name="ln8425">    if (p != NULL) {</a>
-<a name="ln8426">      if (c == '.') {</a>
-<a name="ln8427">        os_dirname(dirname, MAXPATHL);</a>
-<a name="ln8428">        if (has_homerelative) {</a>
-<a name="ln8429">          s = xstrdup(dirname);</a>
-<a name="ln8430">          home_replace(NULL, s, dirname, MAXPATHL, true);</a>
-<a name="ln8431">          xfree(s);</a>
-<a name="ln8432">        }</a>
-<a name="ln8433">        size_t namelen = strlen(dirname);</a>
-<a name="ln8434"> </a>
-<a name="ln8435">        // Do not call shorten_fname() here since it removes the prefix</a>
-<a name="ln8436">        // even though the path does not have a prefix.</a>
-<a name="ln8437">        if (path_fnamencmp(p, dirname, namelen) == 0) {</a>
-<a name="ln8438">          p += namelen;</a>
-<a name="ln8439">          if (vim_ispathsep(*p)) {</a>
-<a name="ln8440">            while (*p &amp;&amp; vim_ispathsep(*p)) {</a>
-<a name="ln8441">              p++;</a>
+<a name="ln8213">  return NULL;</a>
+<a name="ln8214">}</a>
+<a name="ln8215"> </a>
+<a name="ln8216">void var_set_global(const char *const name, typval_T vartv)</a>
+<a name="ln8217">{</a>
+<a name="ln8218">  funccal_entry_T funccall_entry;</a>
+<a name="ln8219"> </a>
+<a name="ln8220">  save_funccal(&amp;funccall_entry);</a>
+<a name="ln8221">  set_var(name, strlen(name), &amp;vartv, false);</a>
+<a name="ln8222">  restore_funccal();</a>
+<a name="ln8223">}</a>
+<a name="ln8224"> </a>
+<a name="ln8225">int store_session_globals(FILE *fd)</a>
+<a name="ln8226">{</a>
+<a name="ln8227">  TV_DICT_ITER(&amp;globvardict, this_var, {</a>
+<a name="ln8228">    if ((this_var-&gt;di_tv.v_type == VAR_NUMBER</a>
+<a name="ln8229">         || this_var-&gt;di_tv.v_type == VAR_STRING)</a>
+<a name="ln8230">        &amp;&amp; var_flavour(this_var-&gt;di_key) == VAR_FLAVOUR_SESSION) {</a>
+<a name="ln8231">      // Escape special characters with a backslash.  Turn a LF and</a>
+<a name="ln8232">      // CR into \n and \r.</a>
+<a name="ln8233">      char *const p = vim_strsave_escaped(tv_get_string(&amp;this_var-&gt;di_tv), &quot;\\\&quot;\n\r&quot;);</a>
+<a name="ln8234">      for (char *t = p; *t != NUL; t++) {</a>
+<a name="ln8235">        if (*t == '\n') {</a>
+<a name="ln8236">          *t = 'n';</a>
+<a name="ln8237">        } else if (*t == '\r') {</a>
+<a name="ln8238">          *t = 'r';</a>
+<a name="ln8239">        }</a>
+<a name="ln8240">      }</a>
+<a name="ln8241">      if ((fprintf(fd, &quot;let %s = %c%s%c&quot;,</a>
+<a name="ln8242">                   this_var-&gt;di_key,</a>
+<a name="ln8243">                   ((this_var-&gt;di_tv.v_type == VAR_STRING) ? '&quot;' : ' '),</a>
+<a name="ln8244">                   p,</a>
+<a name="ln8245">                   ((this_var-&gt;di_tv.v_type == VAR_STRING) ? '&quot;' : ' ')) &lt; 0)</a>
+<a name="ln8246">          || put_eol(fd) == FAIL) {</a>
+<a name="ln8247">        xfree(p);</a>
+<a name="ln8248">        return FAIL;</a>
+<a name="ln8249">      }</a>
+<a name="ln8250">      xfree(p);</a>
+<a name="ln8251">    } else if (this_var-&gt;di_tv.v_type == VAR_FLOAT</a>
+<a name="ln8252">               &amp;&amp; var_flavour(this_var-&gt;di_key) == VAR_FLAVOUR_SESSION) {</a>
+<a name="ln8253">      float_T f = this_var-&gt;di_tv.vval.v_float;</a>
+<a name="ln8254">      int sign = ' ';</a>
+<a name="ln8255"> </a>
+<a name="ln8256">      if (f &lt; 0) {</a>
+<a name="ln8257">        f = -f;</a>
+<a name="ln8258">        sign = '-';</a>
+<a name="ln8259">      }</a>
+<a name="ln8260">      if ((fprintf(fd, &quot;let %s = %c%f&quot;, this_var-&gt;di_key, sign, f) &lt; 0)</a>
+<a name="ln8261">          || put_eol(fd) == FAIL) {</a>
+<a name="ln8262">        return FAIL;</a>
+<a name="ln8263">      }</a>
+<a name="ln8264">    }</a>
+<a name="ln8265">  });</a>
+<a name="ln8266">  return OK;</a>
+<a name="ln8267">}</a>
+<a name="ln8268"> </a>
+<a name="ln8269">/// Display script name where an item was last set.</a>
+<a name="ln8270">/// Should only be invoked when 'verbose' is non-zero.</a>
+<a name="ln8271">void last_set_msg(sctx_T script_ctx)</a>
+<a name="ln8272">{</a>
+<a name="ln8273">  const LastSet last_set = (LastSet){</a>
+<a name="ln8274">    .script_ctx = script_ctx,</a>
+<a name="ln8275">    .channel_id = 0,</a>
+<a name="ln8276">  };</a>
+<a name="ln8277">  option_last_set_msg(last_set);</a>
+<a name="ln8278">}</a>
+<a name="ln8279"> </a>
+<a name="ln8280">/// Displays where an option was last set.</a>
+<a name="ln8281">///</a>
+<a name="ln8282">/// Should only be invoked when 'verbose' is non-zero.</a>
+<a name="ln8283">void option_last_set_msg(LastSet last_set)</a>
+<a name="ln8284">{</a>
+<a name="ln8285">  if (last_set.script_ctx.sc_sid != 0) {</a>
+<a name="ln8286">    bool should_free;</a>
+<a name="ln8287">    char *p = get_scriptname(last_set, &amp;should_free);</a>
+<a name="ln8288">    verbose_enter();</a>
+<a name="ln8289">    msg_puts(_(&quot;\n\tLast set from &quot;));</a>
+<a name="ln8290">    msg_puts(p);</a>
+<a name="ln8291">    if (last_set.script_ctx.sc_lnum &gt; 0) {</a>
+<a name="ln8292">      msg_puts(_(line_msg));</a>
+<a name="ln8293">      msg_outnum(last_set.script_ctx.sc_lnum);</a>
+<a name="ln8294">    }</a>
+<a name="ln8295">    if (should_free) {</a>
+<a name="ln8296">      xfree(p);</a>
+<a name="ln8297">    }</a>
+<a name="ln8298">    verbose_leave();</a>
+<a name="ln8299">  }</a>
+<a name="ln8300">}</a>
+<a name="ln8301"> </a>
+<a name="ln8302">// reset v:option_new, v:option_old, v:option_oldlocal, v:option_oldglobal,</a>
+<a name="ln8303">// v:option_type, and v:option_command.</a>
+<a name="ln8304">void reset_v_option_vars(void)</a>
+<a name="ln8305">{</a>
+<a name="ln8306">  set_vim_var_string(VV_OPTION_NEW, NULL, -1);</a>
+<a name="ln8307">  set_vim_var_string(VV_OPTION_OLD, NULL, -1);</a>
+<a name="ln8308">  set_vim_var_string(VV_OPTION_OLDLOCAL, NULL, -1);</a>
+<a name="ln8309">  set_vim_var_string(VV_OPTION_OLDGLOBAL, NULL, -1);</a>
+<a name="ln8310">  set_vim_var_string(VV_OPTION_COMMAND, NULL, -1);</a>
+<a name="ln8311">  set_vim_var_string(VV_OPTION_TYPE, NULL, -1);</a>
+<a name="ln8312">}</a>
+<a name="ln8313"> </a>
+<a name="ln8314">/// Adjust a filename, according to a string of modifiers.</a>
+<a name="ln8315">/// *fnamep must be NUL terminated when called.  When returning, the length is</a>
+<a name="ln8316">/// determined by *fnamelen.</a>
+<a name="ln8317">/// Returns VALID_ flags or -1 for failure.</a>
+<a name="ln8318">/// When there is an error, *fnamep is set to NULL.</a>
+<a name="ln8319">///</a>
+<a name="ln8320">/// @param src  string with modifiers</a>
+<a name="ln8321">/// @param tilde_file  &quot;~&quot; is a file name, not $HOME</a>
+<a name="ln8322">/// @param usedlen  characters after src that are used</a>
+<a name="ln8323">/// @param fnamep  file name so far</a>
+<a name="ln8324">/// @param bufp  buffer for allocated file name or NULL</a>
+<a name="ln8325">/// @param fnamelen  length of fnamep</a>
+<a name="ln8326">int modify_fname(char *src, bool tilde_file, size_t *usedlen, char **fnamep, char **bufp,</a>
+<a name="ln8327">                 size_t *fnamelen)</a>
+<a name="ln8328">{</a>
+<a name="ln8329">  int valid = 0;</a>
+<a name="ln8330">  char *s, *p, *pbuf;</a>
+<a name="ln8331">  char dirname[MAXPATHL];</a>
+<a name="ln8332">  bool has_fullname = false;</a>
+<a name="ln8333">  bool has_homerelative = false;</a>
+<a name="ln8334"> </a>
+<a name="ln8335">repeat:</a>
+<a name="ln8336">  // &quot;:p&quot; - full path/file_name</a>
+<a name="ln8337">  if (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == 'p') {</a>
+<a name="ln8338">    has_fullname = true;</a>
+<a name="ln8339"> </a>
+<a name="ln8340">    valid |= VALID_PATH;</a>
+<a name="ln8341">    *usedlen += 2;</a>
+<a name="ln8342"> </a>
+<a name="ln8343">    // Expand &quot;~/path&quot; for all systems and &quot;~user/path&quot; for Unix</a>
+<a name="ln8344">    if ((*fnamep)[0] == '~'</a>
+<a name="ln8345">#if !defined(UNIX)</a>
+<a name="ln8346">        &amp;&amp; ((*fnamep)[1] == '/'</a>
+<a name="ln8347"># ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln8348">            || (*fnamep)[1] == '\\'</a>
+<a name="ln8349"># endif</a>
+<a name="ln8350">            || (*fnamep)[1] == NUL)</a>
+<a name="ln8351">#endif</a>
+<a name="ln8352">        &amp;&amp; !(tilde_file &amp;&amp; (*fnamep)[1] == NUL)) {</a>
+<a name="ln8353">      *fnamep = expand_env_save(*fnamep);</a>
+<a name="ln8354">      xfree(*bufp);          // free any allocated file name</a>
+<a name="ln8355">      *bufp = *fnamep;</a>
+<a name="ln8356">      if (*fnamep == NULL) {</a>
+<a name="ln8357">        return -1;</a>
+<a name="ln8358">      }</a>
+<a name="ln8359">    }</a>
+<a name="ln8360"> </a>
+<a name="ln8361">    // When &quot;/.&quot; or &quot;/..&quot; is used: force expansion to get rid of it.</a>
+<a name="ln8362">    for (p = *fnamep; *p != NUL; MB_PTR_ADV(p)) {</a>
+<a name="ln8363">      if (vim_ispathsep(*p)</a>
+<a name="ln8364">          &amp;&amp; p[1] == '.'</a>
+<a name="ln8365">          &amp;&amp; (p[2] == NUL</a>
+<a name="ln8366">              || vim_ispathsep(p[2])</a>
+<a name="ln8367">              || (p[2] == '.'</a>
+<a name="ln8368">                  &amp;&amp; (p[3] == NUL || vim_ispathsep(p[3]))))) {</a>
+<a name="ln8369">        break;</a>
+<a name="ln8370">      }</a>
+<a name="ln8371">    }</a>
+<a name="ln8372"> </a>
+<a name="ln8373">    // FullName_save() is slow, don't use it when not needed.</a>
+<a name="ln8374">    if (*p != NUL || !vim_isAbsName(*fnamep)) {</a>
+<a name="ln8375">      *fnamep = FullName_save(*fnamep, *p != NUL);</a>
+<a name="ln8376">      xfree(*bufp);          // free any allocated file name</a>
+<a name="ln8377">      *bufp = *fnamep;</a>
+<a name="ln8378">      if (*fnamep == NULL) {</a>
+<a name="ln8379">        return -1;</a>
+<a name="ln8380">      }</a>
+<a name="ln8381">    }</a>
+<a name="ln8382"> </a>
+<a name="ln8383">    // Append a path separator to a directory.</a>
+<a name="ln8384">    if (os_isdir(*fnamep)) {</a>
+<a name="ln8385">      // Make room for one or two extra characters.</a>
+<a name="ln8386">      *fnamep = xstrnsave(*fnamep, strlen(*fnamep) + 2);</a>
+<a name="ln8387">      xfree(*bufp);          // free any allocated file name</a>
+<a name="ln8388">      *bufp = *fnamep;</a>
+<a name="ln8389">      add_pathsep(*fnamep);</a>
+<a name="ln8390">    }</a>
+<a name="ln8391">  }</a>
+<a name="ln8392"> </a>
+<a name="ln8393">  int c;</a>
+<a name="ln8394"> </a>
+<a name="ln8395">  // &quot;:.&quot; - path relative to the current directory</a>
+<a name="ln8396">  // &quot;:~&quot; - path relative to the home directory</a>
+<a name="ln8397">  // &quot;:8&quot; - shortname path - postponed till after</a>
+<a name="ln8398">  while (src[*usedlen] == ':'</a>
+<a name="ln8399">         &amp;&amp; ((c = (uint8_t)src[*usedlen + 1]) == '.' || c == '~' || c == '8')) {</a>
+<a name="ln8400">    *usedlen += 2;</a>
+<a name="ln8401">    if (c == '8') {</a>
+<a name="ln8402">      continue;</a>
+<a name="ln8403">    }</a>
+<a name="ln8404">    pbuf = NULL;</a>
+<a name="ln8405">    // Need full path first (use expand_env() to remove a &quot;~/&quot;)</a>
+<a name="ln8406">    if (!has_fullname &amp;&amp; !has_homerelative) {</a>
+<a name="ln8407">      if (**fnamep == '~') {</a>
+<a name="ln8408">        p = pbuf = expand_env_save(*fnamep);</a>
+<a name="ln8409">      } else {</a>
+<a name="ln8410">        p = pbuf = FullName_save(*fnamep, false);</a>
+<a name="ln8411">      }</a>
+<a name="ln8412">    } else {</a>
+<a name="ln8413">      p = *fnamep;</a>
+<a name="ln8414">    }</a>
+<a name="ln8415"> </a>
+<a name="ln8416">    has_fullname = false;</a>
+<a name="ln8417"> </a>
+<a name="ln8418">    if (p != NULL) {</a>
+<a name="ln8419">      if (c == '.') {</a>
+<a name="ln8420">        os_dirname(dirname, MAXPATHL);</a>
+<a name="ln8421">        if (has_homerelative) {</a>
+<a name="ln8422">          s = xstrdup(dirname);</a>
+<a name="ln8423">          home_replace(NULL, s, dirname, MAXPATHL, true);</a>
+<a name="ln8424">          xfree(s);</a>
+<a name="ln8425">        }</a>
+<a name="ln8426">        size_t namelen = strlen(dirname);</a>
+<a name="ln8427"> </a>
+<a name="ln8428">        // Do not call shorten_fname() here since it removes the prefix</a>
+<a name="ln8429">        // even though the path does not have a prefix.</a>
+<a name="ln8430">        if (path_fnamencmp(p, dirname, namelen) == 0) {</a>
+<a name="ln8431">          p += namelen;</a>
+<a name="ln8432">          if (vim_ispathsep(*p)) {</a>
+<a name="ln8433">            while (*p &amp;&amp; vim_ispathsep(*p)) {</a>
+<a name="ln8434">              p++;</a>
+<a name="ln8435">            }</a>
+<a name="ln8436">            *fnamep = p;</a>
+<a name="ln8437">            if (pbuf != NULL) {</a>
+<a name="ln8438">              // free any allocated file name</a>
+<a name="ln8439">              xfree(*bufp);</a>
+<a name="ln8440">              *bufp = pbuf;</a>
+<a name="ln8441">              pbuf = NULL;</a>
 <a name="ln8442">            }</a>
-<a name="ln8443">            *fnamep = p;</a>
-<a name="ln8444">            if (pbuf != NULL) {</a>
-<a name="ln8445">              // free any allocated file name</a>
-<a name="ln8446">              xfree(*bufp);</a>
-<a name="ln8447">              *bufp = pbuf;</a>
-<a name="ln8448">              pbuf = NULL;</a>
-<a name="ln8449">            }</a>
-<a name="ln8450">          }</a>
-<a name="ln8451">        }</a>
-<a name="ln8452">      } else {</a>
-<a name="ln8453">        home_replace(NULL, p, dirname, MAXPATHL, true);</a>
-<a name="ln8454">        // Only replace it when it starts with '~'</a>
-<a name="ln8455">        if (*dirname == '~') {</a>
-<a name="ln8456">          s = xstrdup(dirname);</a>
-<a name="ln8457">          assert(s != NULL);  // suppress clang &quot;Argument with 'nonnull' attribute passed null&quot;</a>
-<a name="ln8458">          *fnamep = s;</a>
-<a name="ln8459">          xfree(*bufp);</a>
-<a name="ln8460">          *bufp = s;</a>
-<a name="ln8461">          has_homerelative = true;</a>
-<a name="ln8462">        }</a>
-<a name="ln8463">      }</a>
-<a name="ln8464">      xfree(pbuf);</a>
-<a name="ln8465">    }</a>
-<a name="ln8466">  }</a>
-<a name="ln8467"> </a>
-<a name="ln8468">  char *tail = path_tail(*fnamep);</a>
-<a name="ln8469">  *fnamelen = strlen(*fnamep);</a>
-<a name="ln8470"> </a>
-<a name="ln8471">  // &quot;:h&quot; - head, remove &quot;/file_name&quot;, can be repeated</a>
-<a name="ln8472">  // Don't remove the first &quot;/&quot; or &quot;c:\&quot;</a>
-<a name="ln8473">  while (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == 'h') {</a>
-<a name="ln8474">    valid |= VALID_HEAD;</a>
-<a name="ln8475">    *usedlen += 2;</a>
-<a name="ln8476">    s = get_past_head(*fnamep);</a>
-<a name="ln8477">    while (tail &gt; s &amp;&amp; after_pathsep(s, tail)) {</a>
-<a name="ln8478">      MB_PTR_BACK(*fnamep, tail);</a>
-<a name="ln8479">    }</a>
-<a name="ln8480">    *fnamelen = (size_t)(tail - *fnamep);</a>
-<a name="ln8481">    if (*fnamelen == 0) {</a>
-<a name="ln8482">      // Result is empty.  Turn it into &quot;.&quot; to make &quot;:cd %:h&quot; work.</a>
-<a name="ln8483">      xfree(*bufp);</a>
-<a name="ln8484">      *bufp = *fnamep = tail = xstrdup(&quot;.&quot;);</a>
-<a name="ln8485">      *fnamelen = 1;</a>
-<a name="ln8486">    } else {</a>
-<a name="ln8487">      while (tail &gt; s &amp;&amp; !after_pathsep(s, tail)) {</a>
-<a name="ln8488">        MB_PTR_BACK(*fnamep, tail);</a>
-<a name="ln8489">      }</a>
-<a name="ln8490">    }</a>
-<a name="ln8491">  }</a>
-<a name="ln8492"> </a>
-<a name="ln8493">  // &quot;:8&quot; - shortname</a>
-<a name="ln8494">  if (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == '8') {</a>
-<a name="ln8495">    *usedlen += 2;</a>
+<a name="ln8443">          }</a>
+<a name="ln8444">        }</a>
+<a name="ln8445">      } else {</a>
+<a name="ln8446">        home_replace(NULL, p, dirname, MAXPATHL, true);</a>
+<a name="ln8447">        // Only replace it when it starts with '~'</a>
+<a name="ln8448">        if (*dirname == '~') {</a>
+<a name="ln8449">          s = xstrdup(dirname);</a>
+<a name="ln8450">          assert(s != NULL);  // suppress clang &quot;Argument with 'nonnull' attribute passed null&quot;</a>
+<a name="ln8451">          *fnamep = s;</a>
+<a name="ln8452">          xfree(*bufp);</a>
+<a name="ln8453">          *bufp = s;</a>
+<a name="ln8454">          has_homerelative = true;</a>
+<a name="ln8455">        }</a>
+<a name="ln8456">      }</a>
+<a name="ln8457">      xfree(pbuf);</a>
+<a name="ln8458">    }</a>
+<a name="ln8459">  }</a>
+<a name="ln8460"> </a>
+<a name="ln8461">  char *tail = path_tail(*fnamep);</a>
+<a name="ln8462">  *fnamelen = strlen(*fnamep);</a>
+<a name="ln8463"> </a>
+<a name="ln8464">  // &quot;:h&quot; - head, remove &quot;/file_name&quot;, can be repeated</a>
+<a name="ln8465">  // Don't remove the first &quot;/&quot; or &quot;c:\&quot;</a>
+<a name="ln8466">  while (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == 'h') {</a>
+<a name="ln8467">    valid |= VALID_HEAD;</a>
+<a name="ln8468">    *usedlen += 2;</a>
+<a name="ln8469">    s = get_past_head(*fnamep);</a>
+<a name="ln8470">    while (tail &gt; s &amp;&amp; after_pathsep(s, tail)) {</a>
+<a name="ln8471">      MB_PTR_BACK(*fnamep, tail);</a>
+<a name="ln8472">    }</a>
+<a name="ln8473">    *fnamelen = (size_t)(tail - *fnamep);</a>
+<a name="ln8474">    if (*fnamelen == 0) {</a>
+<a name="ln8475">      // Result is empty.  Turn it into &quot;.&quot; to make &quot;:cd %:h&quot; work.</a>
+<a name="ln8476">      xfree(*bufp);</a>
+<a name="ln8477">      *bufp = *fnamep = tail = xstrdup(&quot;.&quot;);</a>
+<a name="ln8478">      *fnamelen = 1;</a>
+<a name="ln8479">    } else {</a>
+<a name="ln8480">      while (tail &gt; s &amp;&amp; !after_pathsep(s, tail)) {</a>
+<a name="ln8481">        MB_PTR_BACK(*fnamep, tail);</a>
+<a name="ln8482">      }</a>
+<a name="ln8483">    }</a>
+<a name="ln8484">  }</a>
+<a name="ln8485"> </a>
+<a name="ln8486">  // &quot;:8&quot; - shortname</a>
+<a name="ln8487">  if (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == '8') {</a>
+<a name="ln8488">    *usedlen += 2;</a>
+<a name="ln8489">  }</a>
+<a name="ln8490"> </a>
+<a name="ln8491">  // &quot;:t&quot; - tail, just the basename</a>
+<a name="ln8492">  if (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == 't') {</a>
+<a name="ln8493">    *usedlen += 2;</a>
+<a name="ln8494">    *fnamelen -= (size_t)(tail - *fnamep);</a>
+<a name="ln8495">    *fnamep = tail;</a>
 <a name="ln8496">  }</a>
 <a name="ln8497"> </a>
-<a name="ln8498">  // &quot;:t&quot; - tail, just the basename</a>
-<a name="ln8499">  if (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == 't') {</a>
-<a name="ln8500">    *usedlen += 2;</a>
-<a name="ln8501">    *fnamelen -= (size_t)(tail - *fnamep);</a>
-<a name="ln8502">    *fnamep = tail;</a>
-<a name="ln8503">  }</a>
-<a name="ln8504"> </a>
-<a name="ln8505">  // &quot;:e&quot; - extension, can be repeated</a>
-<a name="ln8506">  // &quot;:r&quot; - root, without extension, can be repeated</a>
-<a name="ln8507">  while (src[*usedlen] == ':'</a>
-<a name="ln8508">         &amp;&amp; (src[*usedlen + 1] == 'e' || src[*usedlen + 1] == 'r')) {</a>
-<a name="ln8509">    // find a '.' in the tail:</a>
-<a name="ln8510">    // - for second :e: before the current fname</a>
-<a name="ln8511">    // - otherwise: The last '.'</a>
-<a name="ln8512">    const bool is_second_e = *fnamep &gt; tail;</a>
-<a name="ln8513">    if (src[*usedlen + 1] == 'e' &amp;&amp; is_second_e) {</a>
-<a name="ln8514">      s = (*fnamep) - 2;</a>
-<a name="ln8515">    } else {</a>
-<a name="ln8516">      s = (*fnamep) + *fnamelen - 1;</a>
-<a name="ln8517">    }</a>
-<a name="ln8518"> </a>
-<a name="ln8519">    for (; s &gt; tail; s--) {</a>
-<a name="ln8520">      if (s[0] == '.') {</a>
-<a name="ln8521">        break;</a>
-<a name="ln8522">      }</a>
-<a name="ln8523">    }</a>
-<a name="ln8524">    if (src[*usedlen + 1] == 'e') {</a>
-<a name="ln8525">      if (s &gt; tail || (0 &amp;&amp; is_second_e &amp;&amp; s == tail)) {</a>
-<a name="ln8526">        // we stopped at a '.' (so anchor to &amp;'.' + 1)</a>
-<a name="ln8527">        char *newstart = s + 1;</a>
-<a name="ln8528">        size_t distance_stepped_back = (size_t)(*fnamep - newstart);</a>
-<a name="ln8529">        *fnamelen += distance_stepped_back;</a>
-<a name="ln8530">        *fnamep = newstart;</a>
-<a name="ln8531">      } else if (*fnamep &lt;= tail) {</a>
-<a name="ln8532">        *fnamelen = 0;</a>
-<a name="ln8533">      }</a>
-<a name="ln8534">    } else {</a>
-<a name="ln8535">      // :r - Remove one extension</a>
+<a name="ln8498">  // &quot;:e&quot; - extension, can be repeated</a>
+<a name="ln8499">  // &quot;:r&quot; - root, without extension, can be repeated</a>
+<a name="ln8500">  while (src[*usedlen] == ':'</a>
+<a name="ln8501">         &amp;&amp; (src[*usedlen + 1] == 'e' || src[*usedlen + 1] == 'r')) {</a>
+<a name="ln8502">    // find a '.' in the tail:</a>
+<a name="ln8503">    // - for second :e: before the current fname</a>
+<a name="ln8504">    // - otherwise: The last '.'</a>
+<a name="ln8505">    const bool is_second_e = *fnamep &gt; tail;</a>
+<a name="ln8506">    if (src[*usedlen + 1] == 'e' &amp;&amp; is_second_e) {</a>
+<a name="ln8507">      s = (*fnamep) - 2;</a>
+<a name="ln8508">    } else {</a>
+<a name="ln8509">      s = (*fnamep) + *fnamelen - 1;</a>
+<a name="ln8510">    }</a>
+<a name="ln8511"> </a>
+<a name="ln8512">    for (; s &gt; tail; s--) {</a>
+<a name="ln8513">      if (s[0] == '.') {</a>
+<a name="ln8514">        break;</a>
+<a name="ln8515">      }</a>
+<a name="ln8516">    }</a>
+<a name="ln8517">    if (src[*usedlen + 1] == 'e') {</a>
+<a name="ln8518">      if (s &gt; tail || (0 &amp;&amp; is_second_e &amp;&amp; s == tail)) {</a>
+<a name="ln8519">        // we stopped at a '.' (so anchor to &amp;'.' + 1)</a>
+<a name="ln8520">        char *newstart = s + 1;</a>
+<a name="ln8521">        size_t distance_stepped_back = (size_t)(*fnamep - newstart);</a>
+<a name="ln8522">        *fnamelen += distance_stepped_back;</a>
+<a name="ln8523">        *fnamep = newstart;</a>
+<a name="ln8524">      } else if (*fnamep &lt;= tail) {</a>
+<a name="ln8525">        *fnamelen = 0;</a>
+<a name="ln8526">      }</a>
+<a name="ln8527">    } else {</a>
+<a name="ln8528">      // :r - Remove one extension</a>
+<a name="ln8529">      //</a>
+<a name="ln8530">      // Ensure that `s` doesn't go before `*fnamep`,</a>
+<a name="ln8531">      // since then we're taking too many roots:</a>
+<a name="ln8532">      //</a>
+<a name="ln8533">      // &quot;path/to/this.file.ext&quot; :e:e:r:r</a>
+<a name="ln8534">      //          ^    ^-------- *fnamep</a>
+<a name="ln8535">      //          +------------- tail</a>
 <a name="ln8536">      //</a>
-<a name="ln8537">      // Ensure that `s` doesn't go before `*fnamep`,</a>
-<a name="ln8538">      // since then we're taking too many roots:</a>
+<a name="ln8537">      // Also ensure `s` doesn't go before `tail`,</a>
+<a name="ln8538">      // since then we're taking too many roots again:</a>
 <a name="ln8539">      //</a>
-<a name="ln8540">      // &quot;path/to/this.file.ext&quot; :e:e:r:r</a>
-<a name="ln8541">      //          ^    ^-------- *fnamep</a>
-<a name="ln8542">      //          +------------- tail</a>
-<a name="ln8543">      //</a>
-<a name="ln8544">      // Also ensure `s` doesn't go before `tail`,</a>
-<a name="ln8545">      // since then we're taking too many roots again:</a>
-<a name="ln8546">      //</a>
-<a name="ln8547">      // &quot;path/to/this.file.ext&quot; :r:r:r</a>
-<a name="ln8548">      //  ^       ^------------- tail</a>
-<a name="ln8549">      //  +--------------------- *fnamep</a>
-<a name="ln8550">      if (s &gt; MAX(tail, *fnamep)) {</a>
-<a name="ln8551">        *fnamelen = (size_t)(s - *fnamep);</a>
-<a name="ln8552">      }</a>
-<a name="ln8553">    }</a>
-<a name="ln8554">    *usedlen += 2;</a>
-<a name="ln8555">  }</a>
+<a name="ln8540">      // &quot;path/to/this.file.ext&quot; :r:r:r</a>
+<a name="ln8541">      //  ^       ^------------- tail</a>
+<a name="ln8542">      //  +--------------------- *fnamep</a>
+<a name="ln8543">      if (s &gt; MAX(tail, *fnamep)) {</a>
+<a name="ln8544">        *fnamelen = (size_t)(s - *fnamep);</a>
+<a name="ln8545">      }</a>
+<a name="ln8546">    }</a>
+<a name="ln8547">    *usedlen += 2;</a>
+<a name="ln8548">  }</a>
+<a name="ln8549"> </a>
+<a name="ln8550">  // &quot;:s?pat?foo?&quot; - substitute</a>
+<a name="ln8551">  // &quot;:gs?pat?foo?&quot; - global substitute</a>
+<a name="ln8552">  if (src[*usedlen] == ':'</a>
+<a name="ln8553">      &amp;&amp; (src[*usedlen + 1] == 's'</a>
+<a name="ln8554">          || (src[*usedlen + 1] == 'g' &amp;&amp; src[*usedlen + 2] == 's'))) {</a>
+<a name="ln8555">    bool didit = false;</a>
 <a name="ln8556"> </a>
-<a name="ln8557">  // &quot;:s?pat?foo?&quot; - substitute</a>
-<a name="ln8558">  // &quot;:gs?pat?foo?&quot; - global substitute</a>
-<a name="ln8559">  if (src[*usedlen] == ':'</a>
-<a name="ln8560">      &amp;&amp; (src[*usedlen + 1] == 's'</a>
-<a name="ln8561">          || (src[*usedlen + 1] == 'g' &amp;&amp; src[*usedlen + 2] == 's'))) {</a>
-<a name="ln8562">    bool didit = false;</a>
+<a name="ln8557">    char *flags = &quot;&quot;;</a>
+<a name="ln8558">    s = src + *usedlen + 2;</a>
+<a name="ln8559">    if (src[*usedlen + 1] == 'g') {</a>
+<a name="ln8560">      flags = &quot;g&quot;;</a>
+<a name="ln8561">      s++;</a>
+<a name="ln8562">    }</a>
 <a name="ln8563"> </a>
-<a name="ln8564">    char *flags = &quot;&quot;;</a>
-<a name="ln8565">    s = src + *usedlen + 2;</a>
-<a name="ln8566">    if (src[*usedlen + 1] == 'g') {</a>
-<a name="ln8567">      flags = &quot;g&quot;;</a>
-<a name="ln8568">      s++;</a>
-<a name="ln8569">    }</a>
-<a name="ln8570"> </a>
-<a name="ln8571">    int sep = (uint8_t)(*s++);</a>
-<a name="ln8572">    if (sep) {</a>
-<a name="ln8573">      // find end of pattern</a>
-<a name="ln8574">      p = vim_strchr(s, sep);</a>
-<a name="ln8575">      if (p != NULL) {</a>
-<a name="ln8576">        char *const pat = xstrnsave(s, (size_t)(p - s));</a>
-<a name="ln8577">        s = p + 1;</a>
-<a name="ln8578">        // find end of substitution</a>
-<a name="ln8579">        p = vim_strchr(s, sep);</a>
-<a name="ln8580">        if (p != NULL) {</a>
-<a name="ln8581">          char *const sub = xstrnsave(s, (size_t)(p - s));</a>
-<a name="ln8582">          char *const str = xstrnsave(*fnamep, *fnamelen);</a>
-<a name="ln8583">          *usedlen = (size_t)(p + 1 - src);</a>
-<a name="ln8584">          s = do_string_sub(str, pat, sub, NULL, flags);</a>
-<a name="ln8585">          *fnamep = s;</a>
-<a name="ln8586">          *fnamelen = strlen(s);</a>
-<a name="ln8587">          xfree(*bufp);</a>
-<a name="ln8588">          *bufp = s;</a>
-<a name="ln8589">          didit = true;</a>
-<a name="ln8590">          xfree(sub);</a>
-<a name="ln8591">          xfree(str);</a>
-<a name="ln8592">        }</a>
-<a name="ln8593">        xfree(pat);</a>
-<a name="ln8594">      }</a>
-<a name="ln8595">      // after using &quot;:s&quot;, repeat all the modifiers</a>
-<a name="ln8596">      if (didit) {</a>
-<a name="ln8597">        goto repeat;</a>
-<a name="ln8598">      }</a>
-<a name="ln8599">    }</a>
-<a name="ln8600">  }</a>
-<a name="ln8601"> </a>
-<a name="ln8602">  if (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == 'S') {</a>
-<a name="ln8603">    // vim_strsave_shellescape() needs a NUL terminated string.</a>
-<a name="ln8604">    c = (uint8_t)(*fnamep)[*fnamelen];</a>
-<a name="ln8605">    if (c != NUL) {</a>
-<a name="ln8606">      (*fnamep)[*fnamelen] = NUL;</a>
-<a name="ln8607">    }</a>
-<a name="ln8608">    p = vim_strsave_shellescape(*fnamep, false, false);</a>
-<a name="ln8609">    if (c != NUL) {</a>
-<a name="ln8610">      (*fnamep)[*fnamelen] = (char)c;</a>
-<a name="ln8611">    }</a>
-<a name="ln8612">    xfree(*bufp);</a>
-<a name="ln8613">    *bufp = *fnamep = p;</a>
-<a name="ln8614">    *fnamelen = strlen(p);</a>
-<a name="ln8615">    *usedlen += 2;</a>
-<a name="ln8616">  }</a>
-<a name="ln8617"> </a>
-<a name="ln8618">  return valid;</a>
-<a name="ln8619">}</a>
-<a name="ln8620"> </a>
-<a name="ln8621">/// Perform a substitution on &quot;str&quot; with pattern &quot;pat&quot; and substitute &quot;sub&quot;.</a>
-<a name="ln8622">/// When &quot;sub&quot; is NULL &quot;expr&quot; is used, must be a VAR_FUNC or VAR_PARTIAL.</a>
-<a name="ln8623">/// &quot;flags&quot; can be &quot;g&quot; to do a global substitute.</a>
-<a name="ln8624">///</a>
-<a name="ln8625">/// @return  an allocated string, NULL for error.</a>
-<a name="ln8626">char *do_string_sub(char *str, char *pat, char *sub, typval_T *expr, const char *flags)</a>
-<a name="ln8627">{</a>
-<a name="ln8628">  regmatch_T regmatch;</a>
-<a name="ln8629">  garray_T ga;</a>
-<a name="ln8630">  char *zero_width = NULL;</a>
-<a name="ln8631"> </a>
-<a name="ln8632">  // Make 'cpoptions' empty, so that the 'l' flag doesn't work here</a>
-<a name="ln8633">  char *save_cpo = p_cpo;</a>
-<a name="ln8634">  p_cpo = empty_option;</a>
-<a name="ln8635"> </a>
-<a name="ln8636">  ga_init(&amp;ga, 1, 200);</a>
-<a name="ln8637"> </a>
-<a name="ln8638">  int do_all = (flags[0] == 'g');</a>
-<a name="ln8639"> </a>
-<a name="ln8640">  regmatch.rm_ic = p_ic;</a>
-<a name="ln8641">  regmatch.regprog = vim_regcomp(pat, RE_MAGIC + RE_STRING);</a>
-<a name="ln8642">  if (regmatch.regprog != NULL) {</a>
-<a name="ln8643">    int sublen;</a>
-<a name="ln8644">    char *tail = str;</a>
-<a name="ln8645">    char *end = str + strlen(str);</a>
-<a name="ln8646">    while (vim_regexec_nl(&amp;regmatch, str, (colnr_T)(tail - str))) {</a>
-<a name="ln8647">      // Skip empty match except for first match.</a>
-<a name="ln8648">      if (regmatch.startp[0] == regmatch.endp[0]) {</a>
-<a name="ln8649">        if (zero_width == regmatch.startp[0]) {</a>
-<a name="ln8650">          // avoid getting stuck on a match with an empty string</a>
-<a name="ln8651">          int i = utfc_ptr2len(tail);</a>
-<a name="ln8652">          memmove((char *)ga.ga_data + ga.ga_len, tail, (size_t)i);</a>
-<a name="ln8653">          ga.ga_len += i;</a>
-<a name="ln8654">          tail += i;</a>
-<a name="ln8655">          continue;</a>
-<a name="ln8656">        }</a>
-<a name="ln8657">        zero_width = regmatch.startp[0];</a>
-<a name="ln8658">      }</a>
-<a name="ln8659"> </a>
-<a name="ln8660">      // Get some space for a temporary buffer to do the substitution</a>
-<a name="ln8661">      // into.  It will contain:</a>
-<a name="ln8662">      // - The text up to where the match is.</a>
-<a name="ln8663">      // - The substituted text.</a>
-<a name="ln8664">      // - The text after the match.</a>
-<a name="ln8665">      sublen = vim_regsub(&amp;regmatch, sub, expr, tail, 0, REGSUB_MAGIC);</a>
-<a name="ln8666">      if (sublen &lt;= 0) {</a>
-<a name="ln8667">        ga_clear(&amp;ga);</a>
-<a name="ln8668">        break;</a>
-<a name="ln8669">      }</a>
-<a name="ln8670">      ga_grow(&amp;ga, (int)((end - tail) + sublen -</a>
-<a name="ln8671">                         (regmatch.endp[0] - regmatch.startp[0])));</a>
-<a name="ln8672"> </a>
-<a name="ln8673">      // copy the text up to where the match is</a>
-<a name="ln8674">      int i = (int)(regmatch.startp[0] - tail);</a>
-<a name="ln8675">      memmove((char *)ga.ga_data + ga.ga_len, tail, (size_t)i);</a>
-<a name="ln8676">      // add the substituted text</a>
-<a name="ln8677">      (void)vim_regsub(&amp;regmatch, sub, expr,</a>
-<a name="ln8678">                       (char *)ga.ga_data + ga.ga_len + i, sublen,</a>
-<a name="ln8679">                       REGSUB_COPY | REGSUB_MAGIC);</a>
-<a name="ln8680">      ga.ga_len += i + sublen - 1;</a>
-<a name="ln8681">      tail = regmatch.endp[0];</a>
-<a name="ln8682">      if (*tail == NUL) {</a>
-<a name="ln8683">        break;</a>
-<a name="ln8684">      }</a>
-<a name="ln8685">      if (!do_all) {</a>
-<a name="ln8686">        break;</a>
-<a name="ln8687">      }</a>
-<a name="ln8688">    }</a>
+<a name="ln8564">    int sep = (uint8_t)(*s++);</a>
+<a name="ln8565">    if (sep) {</a>
+<a name="ln8566">      // find end of pattern</a>
+<a name="ln8567">      p = vim_strchr(s, sep);</a>
+<a name="ln8568">      if (p != NULL) {</a>
+<a name="ln8569">        char *const pat = xstrnsave(s, (size_t)(p - s));</a>
+<a name="ln8570">        s = p + 1;</a>
+<a name="ln8571">        // find end of substitution</a>
+<a name="ln8572">        p = vim_strchr(s, sep);</a>
+<a name="ln8573">        if (p != NULL) {</a>
+<a name="ln8574">          char *const sub = xstrnsave(s, (size_t)(p - s));</a>
+<a name="ln8575">          char *const str = xstrnsave(*fnamep, *fnamelen);</a>
+<a name="ln8576">          *usedlen = (size_t)(p + 1 - src);</a>
+<a name="ln8577">          s = do_string_sub(str, pat, sub, NULL, flags);</a>
+<a name="ln8578">          *fnamep = s;</a>
+<a name="ln8579">          *fnamelen = strlen(s);</a>
+<a name="ln8580">          xfree(*bufp);</a>
+<a name="ln8581">          *bufp = s;</a>
+<a name="ln8582">          didit = true;</a>
+<a name="ln8583">          xfree(sub);</a>
+<a name="ln8584">          xfree(str);</a>
+<a name="ln8585">        }</a>
+<a name="ln8586">        xfree(pat);</a>
+<a name="ln8587">      }</a>
+<a name="ln8588">      // after using &quot;:s&quot;, repeat all the modifiers</a>
+<a name="ln8589">      if (didit) {</a>
+<a name="ln8590">        goto repeat;</a>
+<a name="ln8591">      }</a>
+<a name="ln8592">    }</a>
+<a name="ln8593">  }</a>
+<a name="ln8594"> </a>
+<a name="ln8595">  if (src[*usedlen] == ':' &amp;&amp; src[*usedlen + 1] == 'S') {</a>
+<a name="ln8596">    // vim_strsave_shellescape() needs a NUL terminated string.</a>
+<a name="ln8597">    c = (uint8_t)(*fnamep)[*fnamelen];</a>
+<a name="ln8598">    if (c != NUL) {</a>
+<a name="ln8599">      (*fnamep)[*fnamelen] = NUL;</a>
+<a name="ln8600">    }</a>
+<a name="ln8601">    p = vim_strsave_shellescape(*fnamep, false, false);</a>
+<a name="ln8602">    if (c != NUL) {</a>
+<a name="ln8603">      (*fnamep)[*fnamelen] = (char)c;</a>
+<a name="ln8604">    }</a>
+<a name="ln8605">    xfree(*bufp);</a>
+<a name="ln8606">    *bufp = *fnamep = p;</a>
+<a name="ln8607">    *fnamelen = strlen(p);</a>
+<a name="ln8608">    *usedlen += 2;</a>
+<a name="ln8609">  }</a>
+<a name="ln8610"> </a>
+<a name="ln8611">  return valid;</a>
+<a name="ln8612">}</a>
+<a name="ln8613"> </a>
+<a name="ln8614">/// Perform a substitution on &quot;str&quot; with pattern &quot;pat&quot; and substitute &quot;sub&quot;.</a>
+<a name="ln8615">/// When &quot;sub&quot; is NULL &quot;expr&quot; is used, must be a VAR_FUNC or VAR_PARTIAL.</a>
+<a name="ln8616">/// &quot;flags&quot; can be &quot;g&quot; to do a global substitute.</a>
+<a name="ln8617">///</a>
+<a name="ln8618">/// @return  an allocated string, NULL for error.</a>
+<a name="ln8619">char *do_string_sub(char *str, char *pat, char *sub, typval_T *expr, const char *flags)</a>
+<a name="ln8620">{</a>
+<a name="ln8621">  regmatch_T regmatch;</a>
+<a name="ln8622">  garray_T ga;</a>
+<a name="ln8623">  char *zero_width = NULL;</a>
+<a name="ln8624"> </a>
+<a name="ln8625">  // Make 'cpoptions' empty, so that the 'l' flag doesn't work here</a>
+<a name="ln8626">  char *save_cpo = p_cpo;</a>
+<a name="ln8627">  p_cpo = empty_option;</a>
+<a name="ln8628"> </a>
+<a name="ln8629">  ga_init(&amp;ga, 1, 200);</a>
+<a name="ln8630"> </a>
+<a name="ln8631">  int do_all = (flags[0] == 'g');</a>
+<a name="ln8632"> </a>
+<a name="ln8633">  regmatch.rm_ic = p_ic;</a>
+<a name="ln8634">  regmatch.regprog = vim_regcomp(pat, RE_MAGIC + RE_STRING);</a>
+<a name="ln8635">  if (regmatch.regprog != NULL) {</a>
+<a name="ln8636">    int sublen;</a>
+<a name="ln8637">    char *tail = str;</a>
+<a name="ln8638">    char *end = str + strlen(str);</a>
+<a name="ln8639">    while (vim_regexec_nl(&amp;regmatch, str, (colnr_T)(tail - str))) {</a>
+<a name="ln8640">      // Skip empty match except for first match.</a>
+<a name="ln8641">      if (regmatch.startp[0] == regmatch.endp[0]) {</a>
+<a name="ln8642">        if (zero_width == regmatch.startp[0]) {</a>
+<a name="ln8643">          // avoid getting stuck on a match with an empty string</a>
+<a name="ln8644">          int i = utfc_ptr2len(tail);</a>
+<a name="ln8645">          memmove((char *)ga.ga_data + ga.ga_len, tail, (size_t)i);</a>
+<a name="ln8646">          ga.ga_len += i;</a>
+<a name="ln8647">          tail += i;</a>
+<a name="ln8648">          continue;</a>
+<a name="ln8649">        }</a>
+<a name="ln8650">        zero_width = regmatch.startp[0];</a>
+<a name="ln8651">      }</a>
+<a name="ln8652"> </a>
+<a name="ln8653">      // Get some space for a temporary buffer to do the substitution</a>
+<a name="ln8654">      // into.  It will contain:</a>
+<a name="ln8655">      // - The text up to where the match is.</a>
+<a name="ln8656">      // - The substituted text.</a>
+<a name="ln8657">      // - The text after the match.</a>
+<a name="ln8658">      sublen = vim_regsub(&amp;regmatch, sub, expr, tail, 0, REGSUB_MAGIC);</a>
+<a name="ln8659">      if (sublen &lt;= 0) {</a>
+<a name="ln8660">        ga_clear(&amp;ga);</a>
+<a name="ln8661">        break;</a>
+<a name="ln8662">      }</a>
+<a name="ln8663">      ga_grow(&amp;ga, (int)((end - tail) + sublen -</a>
+<a name="ln8664">                         (regmatch.endp[0] - regmatch.startp[0])));</a>
+<a name="ln8665"> </a>
+<a name="ln8666">      // copy the text up to where the match is</a>
+<a name="ln8667">      int i = (int)(regmatch.startp[0] - tail);</a>
+<a name="ln8668">      memmove((char *)ga.ga_data + ga.ga_len, tail, (size_t)i);</a>
+<a name="ln8669">      // add the substituted text</a>
+<a name="ln8670">      (void)vim_regsub(&amp;regmatch, sub, expr,</a>
+<a name="ln8671">                       (char *)ga.ga_data + ga.ga_len + i, sublen,</a>
+<a name="ln8672">                       REGSUB_COPY | REGSUB_MAGIC);</a>
+<a name="ln8673">      ga.ga_len += i + sublen - 1;</a>
+<a name="ln8674">      tail = regmatch.endp[0];</a>
+<a name="ln8675">      if (*tail == NUL) {</a>
+<a name="ln8676">        break;</a>
+<a name="ln8677">      }</a>
+<a name="ln8678">      if (!do_all) {</a>
+<a name="ln8679">        break;</a>
+<a name="ln8680">      }</a>
+<a name="ln8681">    }</a>
+<a name="ln8682"> </a>
+<a name="ln8683">    if (ga.ga_data != NULL) {</a>
+<a name="ln8684">      STRCPY((char *)ga.ga_data + ga.ga_len, tail);</a>
+<a name="ln8685">    }</a>
+<a name="ln8686"> </a>
+<a name="ln8687">    vim_regfree(regmatch.regprog);</a>
+<a name="ln8688">  }</a>
 <a name="ln8689"> </a>
-<a name="ln8690">    if (ga.ga_data != NULL) {</a>
-<a name="ln8691">      STRCPY((char *)ga.ga_data + ga.ga_len, tail);</a>
-<a name="ln8692">    }</a>
-<a name="ln8693"> </a>
-<a name="ln8694">    vim_regfree(regmatch.regprog);</a>
-<a name="ln8695">  }</a>
-<a name="ln8696"> </a>
-<a name="ln8697">  char *ret = xstrdup(ga.ga_data == NULL ? str : ga.ga_data);</a>
-<a name="ln8698">  ga_clear(&amp;ga);</a>
-<a name="ln8699">  if (p_cpo == empty_option) {</a>
-<a name="ln8700">    p_cpo = save_cpo;</a>
-<a name="ln8701">  } else {</a>
-<a name="ln8702">    // Darn, evaluating {sub} expression or {expr} changed the value.</a>
-<a name="ln8703">    // If it's still empty it was changed and restored, need to restore in</a>
-<a name="ln8704">    // the complicated way.</a>
-<a name="ln8705">    if (*p_cpo == NUL) {</a>
-<a name="ln8706">      set_option_value_give_err(&quot;cpo&quot;, CSTR_AS_OPTVAL(save_cpo), 0);</a>
-<a name="ln8707">    }</a>
-<a name="ln8708">    free_string_option(save_cpo);</a>
-<a name="ln8709">  }</a>
-<a name="ln8710"> </a>
-<a name="ln8711">  return ret;</a>
-<a name="ln8712">}</a>
-<a name="ln8713"> </a>
-<a name="ln8714">/// common code for getting job callbacks for jobstart, termopen and rpcstart</a>
-<a name="ln8715">///</a>
-<a name="ln8716">/// @return true/false on success/failure.</a>
-<a name="ln8717">bool common_job_callbacks(dict_T *vopts, CallbackReader *on_stdout, CallbackReader *on_stderr,</a>
-<a name="ln8718">                          Callback *on_exit)</a>
-<a name="ln8719">{</a>
-<a name="ln8720">  if (tv_dict_get_callback(vopts, S_LEN(&quot;on_stdout&quot;), &amp;on_stdout-&gt;cb)</a>
-<a name="ln8721">      &amp;&amp; tv_dict_get_callback(vopts, S_LEN(&quot;on_stderr&quot;), &amp;on_stderr-&gt;cb)</a>
-<a name="ln8722">      &amp;&amp; tv_dict_get_callback(vopts, S_LEN(&quot;on_exit&quot;), on_exit)) {</a>
-<a name="ln8723">    on_stdout-&gt;buffered = tv_dict_get_number(vopts, &quot;stdout_buffered&quot;);</a>
-<a name="ln8724">    on_stderr-&gt;buffered = tv_dict_get_number(vopts, &quot;stderr_buffered&quot;);</a>
-<a name="ln8725">    if (on_stdout-&gt;buffered &amp;&amp; on_stdout-&gt;cb.type == kCallbackNone) {</a>
-<a name="ln8726">      on_stdout-&gt;self = vopts;</a>
-<a name="ln8727">    }</a>
-<a name="ln8728">    if (on_stderr-&gt;buffered &amp;&amp; on_stderr-&gt;cb.type == kCallbackNone) {</a>
-<a name="ln8729">      on_stderr-&gt;self = vopts;</a>
-<a name="ln8730">    }</a>
-<a name="ln8731">    vopts-&gt;dv_refcount++;</a>
-<a name="ln8732">    return true;</a>
-<a name="ln8733">  }</a>
-<a name="ln8734"> </a>
-<a name="ln8735">  callback_reader_free(on_stdout);</a>
-<a name="ln8736">  callback_reader_free(on_stderr);</a>
-<a name="ln8737">  callback_free(on_exit);</a>
-<a name="ln8738">  return false;</a>
-<a name="ln8739">}</a>
-<a name="ln8740"> </a>
-<a name="ln8741">Channel *find_job(uint64_t id, bool show_error)</a>
-<a name="ln8742">{</a>
-<a name="ln8743">  Channel *data = find_channel(id);</a>
-<a name="ln8744">  if (!data || data-&gt;streamtype != kChannelStreamProc</a>
-<a name="ln8745">      || process_is_stopped(&amp;data-&gt;stream.proc)) {</a>
-<a name="ln8746">    if (show_error) {</a>
-<a name="ln8747">      if (data &amp;&amp; data-&gt;streamtype != kChannelStreamProc) {</a>
-<a name="ln8748">        emsg(_(e_invchanjob));</a>
-<a name="ln8749">      } else {</a>
-<a name="ln8750">        emsg(_(e_invchan));</a>
-<a name="ln8751">      }</a>
-<a name="ln8752">    }</a>
-<a name="ln8753">    return NULL;</a>
-<a name="ln8754">  }</a>
-<a name="ln8755">  return data;</a>
-<a name="ln8756">}</a>
-<a name="ln8757"> </a>
-<a name="ln8758">void script_host_eval(char *name, typval_T *argvars, typval_T *rettv)</a>
-<a name="ln8759">{</a>
-<a name="ln8760">  if (check_secure()) {</a>
-<a name="ln8761">    return;</a>
-<a name="ln8762">  }</a>
-<a name="ln8763"> </a>
-<a name="ln8764">  if (argvars[0].v_type != VAR_STRING) {</a>
-<a name="ln8765">    emsg(_(e_invarg));</a>
-<a name="ln8766">    return;</a>
-<a name="ln8767">  }</a>
-<a name="ln8768"> </a>
-<a name="ln8769">  list_T *args = tv_list_alloc(1);</a>
-<a name="ln8770">  tv_list_append_string(args, argvars[0].vval.v_string, -1);</a>
-<a name="ln8771">  *rettv = eval_call_provider(name, &quot;eval&quot;, args, false);</a>
-<a name="ln8772">}</a>
-<a name="ln8773"> </a>
-<a name="ln8774">/// @param discard  Clears the value returned by the provider and returns</a>
-<a name="ln8775">///                 an empty typval_T.</a>
-<a name="ln8776">typval_T eval_call_provider(char *provider, char *method, list_T *arguments, bool discard)</a>
-<a name="ln8777">{</a>
-<a name="ln8778">  if (!eval_has_provider(provider)) {</a>
-<a name="ln8779">    semsg(&quot;E319: No \&quot;%s\&quot; provider found. Run \&quot;:checkhealth provider\&quot;&quot;,</a>
-<a name="ln8780">          provider);</a>
-<a name="ln8781">    return (typval_T){</a>
-<a name="ln8782">      .v_type = VAR_NUMBER,</a>
-<a name="ln8783">      .v_lock = VAR_UNLOCKED,</a>
-<a name="ln8784">      .vval.v_number = (varnumber_T)0</a>
-<a name="ln8785">    };</a>
-<a name="ln8786">  }</a>
-<a name="ln8787"> </a>
-<a name="ln8788">  char func[256];</a>
-<a name="ln8789">  int name_len = snprintf(func, sizeof(func), &quot;provider#%s#Call&quot;, provider);</a>
-<a name="ln8790"> </a>
-<a name="ln8791">  // Save caller scope information</a>
-<a name="ln8792">  struct caller_scope saved_provider_caller_scope = provider_caller_scope;</a>
-<a name="ln8793">  provider_caller_scope = (struct caller_scope) {</a>
-<a name="ln8794">    .script_ctx = current_sctx,</a>
-<a name="ln8795">    .es_entry = ((estack_T *)exestack.ga_data)[exestack.ga_len - 1],</a>
-<a name="ln8796">    .autocmd_fname = autocmd_fname,</a>
-<a name="ln8797">    .autocmd_match = autocmd_match,</a>
-<a name="ln8798">    .autocmd_fname_full = autocmd_fname_full,</a>
-<a name="ln8799">    .autocmd_bufnr = autocmd_bufnr,</a>
-<a name="ln8800">    .funccalp = (void *)get_current_funccal()</a>
-<a name="ln8801">  };</a>
-<a name="ln8802">  funccal_entry_T funccal_entry;</a>
-<a name="ln8803">  save_funccal(&amp;funccal_entry);</a>
-<a name="ln8804">  provider_call_nesting++;</a>
-<a name="ln8805"> </a>
-<a name="ln8806">  typval_T argvars[3] = {</a>
-<a name="ln8807">    { .v_type = VAR_STRING, .vval.v_string = method,</a>
-<a name="ln8808">      .v_lock = VAR_UNLOCKED },</a>
-<a name="ln8809">    { .v_type = VAR_LIST, .vval.v_list = arguments, .v_lock = VAR_UNLOCKED },</a>
-<a name="ln8810">    { .v_type = VAR_UNKNOWN }</a>
-<a name="ln8811">  };</a>
-<a name="ln8812">  typval_T rettv = { .v_type = VAR_UNKNOWN, .v_lock = VAR_UNLOCKED };</a>
-<a name="ln8813">  tv_list_ref(arguments);</a>
-<a name="ln8814"> </a>
-<a name="ln8815">  funcexe_T funcexe = FUNCEXE_INIT;</a>
-<a name="ln8816">  funcexe.fe_firstline = curwin-&gt;w_cursor.lnum;</a>
-<a name="ln8817">  funcexe.fe_lastline = curwin-&gt;w_cursor.lnum;</a>
-<a name="ln8818">  funcexe.fe_evaluate = true;</a>
-<a name="ln8819">  (void)call_func(func, name_len, &amp;rettv, 2, argvars, &amp;funcexe);</a>
+<a name="ln8690">  char *ret = xstrdup(ga.ga_data == NULL ? str : ga.ga_data);</a>
+<a name="ln8691">  ga_clear(&amp;ga);</a>
+<a name="ln8692">  if (p_cpo == empty_option) {</a>
+<a name="ln8693">    p_cpo = save_cpo;</a>
+<a name="ln8694">  } else {</a>
+<a name="ln8695">    // Darn, evaluating {sub} expression or {expr} changed the value.</a>
+<a name="ln8696">    // If it's still empty it was changed and restored, need to restore in</a>
+<a name="ln8697">    // the complicated way.</a>
+<a name="ln8698">    if (*p_cpo == NUL) {</a>
+<a name="ln8699">      set_option_value_give_err(&quot;cpo&quot;, CSTR_AS_OPTVAL(save_cpo), 0);</a>
+<a name="ln8700">    }</a>
+<a name="ln8701">    free_string_option(save_cpo);</a>
+<a name="ln8702">  }</a>
+<a name="ln8703"> </a>
+<a name="ln8704">  return ret;</a>
+<a name="ln8705">}</a>
+<a name="ln8706"> </a>
+<a name="ln8707">/// common code for getting job callbacks for jobstart, termopen and rpcstart</a>
+<a name="ln8708">///</a>
+<a name="ln8709">/// @return true/false on success/failure.</a>
+<a name="ln8710">bool common_job_callbacks(dict_T *vopts, CallbackReader *on_stdout, CallbackReader *on_stderr,</a>
+<a name="ln8711">                          Callback *on_exit)</a>
+<a name="ln8712">{</a>
+<a name="ln8713">  if (tv_dict_get_callback(vopts, S_LEN(&quot;on_stdout&quot;), &amp;on_stdout-&gt;cb)</a>
+<a name="ln8714">      &amp;&amp; tv_dict_get_callback(vopts, S_LEN(&quot;on_stderr&quot;), &amp;on_stderr-&gt;cb)</a>
+<a name="ln8715">      &amp;&amp; tv_dict_get_callback(vopts, S_LEN(&quot;on_exit&quot;), on_exit)) {</a>
+<a name="ln8716">    on_stdout-&gt;buffered = tv_dict_get_number(vopts, &quot;stdout_buffered&quot;);</a>
+<a name="ln8717">    on_stderr-&gt;buffered = tv_dict_get_number(vopts, &quot;stderr_buffered&quot;);</a>
+<a name="ln8718">    if (on_stdout-&gt;buffered &amp;&amp; on_stdout-&gt;cb.type == kCallbackNone) {</a>
+<a name="ln8719">      on_stdout-&gt;self = vopts;</a>
+<a name="ln8720">    }</a>
+<a name="ln8721">    if (on_stderr-&gt;buffered &amp;&amp; on_stderr-&gt;cb.type == kCallbackNone) {</a>
+<a name="ln8722">      on_stderr-&gt;self = vopts;</a>
+<a name="ln8723">    }</a>
+<a name="ln8724">    vopts-&gt;dv_refcount++;</a>
+<a name="ln8725">    return true;</a>
+<a name="ln8726">  }</a>
+<a name="ln8727"> </a>
+<a name="ln8728">  callback_reader_free(on_stdout);</a>
+<a name="ln8729">  callback_reader_free(on_stderr);</a>
+<a name="ln8730">  callback_free(on_exit);</a>
+<a name="ln8731">  return false;</a>
+<a name="ln8732">}</a>
+<a name="ln8733"> </a>
+<a name="ln8734">Channel *find_job(uint64_t id, bool show_error)</a>
+<a name="ln8735">{</a>
+<a name="ln8736">  Channel *data = find_channel(id);</a>
+<a name="ln8737">  if (!data || data-&gt;streamtype != kChannelStreamProc</a>
+<a name="ln8738">      || process_is_stopped(&amp;data-&gt;stream.proc)) {</a>
+<a name="ln8739">    if (show_error) {</a>
+<a name="ln8740">      if (data &amp;&amp; data-&gt;streamtype != kChannelStreamProc) {</a>
+<a name="ln8741">        emsg(_(e_invchanjob));</a>
+<a name="ln8742">      } else {</a>
+<a name="ln8743">        emsg(_(e_invchan));</a>
+<a name="ln8744">      }</a>
+<a name="ln8745">    }</a>
+<a name="ln8746">    return NULL;</a>
+<a name="ln8747">  }</a>
+<a name="ln8748">  return data;</a>
+<a name="ln8749">}</a>
+<a name="ln8750"> </a>
+<a name="ln8751">void script_host_eval(char *name, typval_T *argvars, typval_T *rettv)</a>
+<a name="ln8752">{</a>
+<a name="ln8753">  if (check_secure()) {</a>
+<a name="ln8754">    return;</a>
+<a name="ln8755">  }</a>
+<a name="ln8756"> </a>
+<a name="ln8757">  if (argvars[0].v_type != VAR_STRING) {</a>
+<a name="ln8758">    emsg(_(e_invarg));</a>
+<a name="ln8759">    return;</a>
+<a name="ln8760">  }</a>
+<a name="ln8761"> </a>
+<a name="ln8762">  list_T *args = tv_list_alloc(1);</a>
+<a name="ln8763">  tv_list_append_string(args, argvars[0].vval.v_string, -1);</a>
+<a name="ln8764">  *rettv = eval_call_provider(name, &quot;eval&quot;, args, false);</a>
+<a name="ln8765">}</a>
+<a name="ln8766"> </a>
+<a name="ln8767">/// @param discard  Clears the value returned by the provider and returns</a>
+<a name="ln8768">///                 an empty typval_T.</a>
+<a name="ln8769">typval_T eval_call_provider(char *provider, char *method, list_T *arguments, bool discard)</a>
+<a name="ln8770">{</a>
+<a name="ln8771">  if (!eval_has_provider(provider)) {</a>
+<a name="ln8772">    semsg(&quot;E319: No \&quot;%s\&quot; provider found. Run \&quot;:checkhealth provider\&quot;&quot;,</a>
+<a name="ln8773">          provider);</a>
+<a name="ln8774">    return (typval_T){</a>
+<a name="ln8775">      .v_type = VAR_NUMBER,</a>
+<a name="ln8776">      .v_lock = VAR_UNLOCKED,</a>
+<a name="ln8777">      .vval.v_number = (varnumber_T)0</a>
+<a name="ln8778">    };</a>
+<a name="ln8779">  }</a>
+<a name="ln8780"> </a>
+<a name="ln8781">  char func[256];</a>
+<a name="ln8782">  int name_len = snprintf(func, sizeof(func), &quot;provider#%s#Call&quot;, provider);</a>
+<a name="ln8783"> </a>
+<a name="ln8784">  // Save caller scope information</a>
+<a name="ln8785">  struct caller_scope saved_provider_caller_scope = provider_caller_scope;</a>
+<a name="ln8786">  provider_caller_scope = (struct caller_scope) {</a>
+<a name="ln8787">    .script_ctx = current_sctx,</a>
+<a name="ln8788">    .es_entry = ((estack_T *)exestack.ga_data)[exestack.ga_len - 1],</a>
+<a name="ln8789">    .autocmd_fname = autocmd_fname,</a>
+<a name="ln8790">    .autocmd_match = autocmd_match,</a>
+<a name="ln8791">    .autocmd_fname_full = autocmd_fname_full,</a>
+<a name="ln8792">    .autocmd_bufnr = autocmd_bufnr,</a>
+<a name="ln8793">    .funccalp = (void *)get_current_funccal()</a>
+<a name="ln8794">  };</a>
+<a name="ln8795">  funccal_entry_T funccal_entry;</a>
+<a name="ln8796">  save_funccal(&amp;funccal_entry);</a>
+<a name="ln8797">  provider_call_nesting++;</a>
+<a name="ln8798"> </a>
+<a name="ln8799">  typval_T argvars[3] = {</a>
+<a name="ln8800">    { .v_type = VAR_STRING, .vval.v_string = method,</a>
+<a name="ln8801">      .v_lock = VAR_UNLOCKED },</a>
+<a name="ln8802">    { .v_type = VAR_LIST, .vval.v_list = arguments, .v_lock = VAR_UNLOCKED },</a>
+<a name="ln8803">    { .v_type = VAR_UNKNOWN }</a>
+<a name="ln8804">  };</a>
+<a name="ln8805">  typval_T rettv = { .v_type = VAR_UNKNOWN, .v_lock = VAR_UNLOCKED };</a>
+<a name="ln8806">  tv_list_ref(arguments);</a>
+<a name="ln8807"> </a>
+<a name="ln8808">  funcexe_T funcexe = FUNCEXE_INIT;</a>
+<a name="ln8809">  funcexe.fe_firstline = curwin-&gt;w_cursor.lnum;</a>
+<a name="ln8810">  funcexe.fe_lastline = curwin-&gt;w_cursor.lnum;</a>
+<a name="ln8811">  funcexe.fe_evaluate = true;</a>
+<a name="ln8812">  (void)call_func(func, name_len, &amp;rettv, 2, argvars, &amp;funcexe);</a>
+<a name="ln8813"> </a>
+<a name="ln8814">  tv_list_unref(arguments);</a>
+<a name="ln8815">  // Restore caller scope information</a>
+<a name="ln8816">  restore_funccal();</a>
+<a name="ln8817">  provider_caller_scope = saved_provider_caller_scope;</a>
+<a name="ln8818">  provider_call_nesting--;</a>
+<a name="ln8819">  assert(provider_call_nesting &gt;= 0);</a>
 <a name="ln8820"> </a>
-<a name="ln8821">  tv_list_unref(arguments);</a>
-<a name="ln8822">  // Restore caller scope information</a>
-<a name="ln8823">  restore_funccal();</a>
-<a name="ln8824">  provider_caller_scope = saved_provider_caller_scope;</a>
-<a name="ln8825">  provider_call_nesting--;</a>
-<a name="ln8826">  assert(provider_call_nesting &gt;= 0);</a>
+<a name="ln8821">  if (discard) {</a>
+<a name="ln8822">    tv_clear(&amp;rettv);</a>
+<a name="ln8823">  }</a>
+<a name="ln8824"> </a>
+<a name="ln8825">  return rettv;</a>
+<a name="ln8826">}</a>
 <a name="ln8827"> </a>
-<a name="ln8828">  if (discard) {</a>
-<a name="ln8829">    tv_clear(&amp;rettv);</a>
-<a name="ln8830">  }</a>
-<a name="ln8831"> </a>
-<a name="ln8832">  return rettv;</a>
-<a name="ln8833">}</a>
-<a name="ln8834"> </a>
-<a name="ln8835">/// Checks if provider for feature `feat` is enabled.</a>
-<a name="ln8836">bool eval_has_provider(const char *feat)</a>
-<a name="ln8837">{</a>
-<a name="ln8838">  if (!strequal(feat, &quot;clipboard&quot;)</a>
-<a name="ln8839">      &amp;&amp; !strequal(feat, &quot;python3&quot;)</a>
-<a name="ln8840">      &amp;&amp; !strequal(feat, &quot;python3_compiled&quot;)</a>
-<a name="ln8841">      &amp;&amp; !strequal(feat, &quot;python3_dynamic&quot;)</a>
-<a name="ln8842">      &amp;&amp; !strequal(feat, &quot;perl&quot;)</a>
-<a name="ln8843">      &amp;&amp; !strequal(feat, &quot;ruby&quot;)</a>
-<a name="ln8844">      &amp;&amp; !strequal(feat, &quot;node&quot;)) {</a>
-<a name="ln8845">    // Avoid autoload for non-provider has() features.</a>
-<a name="ln8846">    return false;</a>
-<a name="ln8847">  }</a>
-<a name="ln8848"> </a>
-<a name="ln8849">  char name[32];  // Normalized: &quot;python3_compiled&quot; =&gt; &quot;python3&quot;.</a>
-<a name="ln8850">  snprintf(name, sizeof(name), &quot;%s&quot;, feat);</a>
-<a name="ln8851">  strchrsub(name, '_', '\0');  // Chop any &quot;_xx&quot; suffix.</a>
-<a name="ln8852"> </a>
-<a name="ln8853">  char buf[256];</a>
-<a name="ln8854">  typval_T tv;</a>
-<a name="ln8855">  // Get the g:loaded_xx_provider variable.</a>
-<a name="ln8856">  int len = snprintf(buf, sizeof(buf), &quot;g:loaded_%s_provider&quot;, name);</a>
-<a name="ln8857">  if (eval_variable(buf, len, &amp;tv, NULL, false, true) == FAIL) {</a>
-<a name="ln8858">    // Trigger autoload once.</a>
-<a name="ln8859">    len = snprintf(buf, sizeof(buf), &quot;provider#%s#bogus&quot;, name);</a>
-<a name="ln8860">    script_autoload(buf, (size_t)len, false);</a>
-<a name="ln8861"> </a>
-<a name="ln8862">    // Retry the (non-autoload-style) variable.</a>
-<a name="ln8863">    len = snprintf(buf, sizeof(buf), &quot;g:loaded_%s_provider&quot;, name);</a>
-<a name="ln8864">    if (eval_variable(buf, len, &amp;tv, NULL, false, true) == FAIL) {</a>
-<a name="ln8865">      // Show a hint if Call() is defined but g:loaded_xx_provider is missing.</a>
-<a name="ln8866">      snprintf(buf, sizeof(buf), &quot;provider#%s#Call&quot;, name);</a>
-<a name="ln8867">      if (!!find_func(buf) &amp;&amp; p_lpl) {</a>
-<a name="ln8868">        semsg(&quot;provider: %s: missing required variable g:loaded_%s_provider&quot;,</a>
-<a name="ln8869">              name, name);</a>
-<a name="ln8870">      }</a>
-<a name="ln8871">      return false;</a>
-<a name="ln8872">    }</a>
-<a name="ln8873">  }</a>
-<a name="ln8874"> </a>
-<a name="ln8875">  bool ok = (tv.v_type == VAR_NUMBER)</a>
-<a name="ln8876">    ? 2 == tv.vval.v_number  // Value of 2 means &quot;loaded and working&quot;.</a>
-<a name="ln8877">    : false;</a>
-<a name="ln8878"> </a>
-<a name="ln8879">  if (ok) {</a>
-<a name="ln8880">    // Call() must be defined if provider claims to be working.</a>
-<a name="ln8881">    snprintf(buf, sizeof(buf), &quot;provider#%s#Call&quot;, name);</a>
-<a name="ln8882">    if (!find_func(buf)) {</a>
-<a name="ln8883">      semsg(&quot;provider: %s: g:loaded_%s_provider=2 but %s is not defined&quot;,</a>
-<a name="ln8884">            name, name, buf);</a>
-<a name="ln8885">      ok = false;</a>
-<a name="ln8886">    }</a>
-<a name="ln8887">  }</a>
-<a name="ln8888"> </a>
-<a name="ln8889">  return ok;</a>
-<a name="ln8890">}</a>
-<a name="ln8891"> </a>
-<a name="ln8892">/// Writes &quot;&lt;sourcing_name&gt;:&lt;sourcing_lnum&gt;&quot; to `buf[bufsize]`.</a>
-<a name="ln8893">void eval_fmt_source_name_line(char *buf, size_t bufsize)</a>
-<a name="ln8894">{</a>
-<a name="ln8895">  if (SOURCING_NAME) {</a>
-<a name="ln8896">    snprintf(buf, bufsize, &quot;%s:%&quot; PRIdLINENR, SOURCING_NAME, SOURCING_LNUM);</a>
-<a name="ln8897">  } else {</a>
-<a name="ln8898">    snprintf(buf, bufsize, &quot;?&quot;);</a>
-<a name="ln8899">  }</a>
-<a name="ln8900">}</a>
-<a name="ln8901"> </a>
-<a name="ln8902">/// &quot;:checkhealth [plugins]&quot;</a>
-<a name="ln8903">void ex_checkhealth(exarg_T *eap)</a>
-<a name="ln8904">{</a>
-<a name="ln8905">  Error err = ERROR_INIT;</a>
-<a name="ln8906">  MAXSIZE_TEMP_ARRAY(args, 1);</a>
-<a name="ln8907">  ADD_C(args, CSTR_AS_OBJ(eap-&gt;arg));</a>
-<a name="ln8908">  NLUA_EXEC_STATIC(&quot;return vim.health._check(...)&quot;, args, &amp;err);</a>
-<a name="ln8909">  if (!ERROR_SET(&amp;err)) {</a>
-<a name="ln8910">    return;</a>
-<a name="ln8911">  }</a>
-<a name="ln8912"> </a>
-<a name="ln8913">  const char *vimruntime_env = os_getenv(&quot;VIMRUNTIME&quot;);</a>
-<a name="ln8914">  if (vimruntime_env == NULL) {</a>
-<a name="ln8915">    emsg(_(&quot;E5009: $VIMRUNTIME is empty or unset&quot;));</a>
-<a name="ln8916">  } else {</a>
-<a name="ln8917">    bool rtp_ok = NULL != strstr(p_rtp, vimruntime_env);</a>
-<a name="ln8918">    if (rtp_ok) {</a>
-<a name="ln8919">      semsg(_(&quot;E5009: Invalid $VIMRUNTIME: %s&quot;), vimruntime_env);</a>
-<a name="ln8920">    } else {</a>
-<a name="ln8921">      emsg(_(&quot;E5009: Invalid 'runtimepath'&quot;));</a>
-<a name="ln8922">    }</a>
-<a name="ln8923">  }</a>
-<a name="ln8924">  semsg_multiline(err.msg);</a>
-<a name="ln8925">  api_clear_error(&amp;err);</a>
-<a name="ln8926">}</a>
-<a name="ln8927"> </a>
-<a name="ln8928">void invoke_prompt_callback(void)</a>
-<a name="ln8929">{</a>
-<a name="ln8930">  typval_T rettv;</a>
-<a name="ln8931">  typval_T argv[2];</a>
-<a name="ln8932">  linenr_T lnum = curbuf-&gt;b_ml.ml_line_count;</a>
-<a name="ln8933"> </a>
-<a name="ln8934">  // Add a new line for the prompt before invoking the callback, so that</a>
-<a name="ln8935">  // text can always be inserted above the last line.</a>
-<a name="ln8936">  ml_append(lnum, &quot;&quot;, 0, false);</a>
-<a name="ln8937">  curwin-&gt;w_cursor.lnum = lnum + 1;</a>
-<a name="ln8938">  curwin-&gt;w_cursor.col = 0;</a>
-<a name="ln8939"> </a>
-<a name="ln8940">  if (curbuf-&gt;b_prompt_callback.type == kCallbackNone) {</a>
-<a name="ln8941">    return;</a>
-<a name="ln8942">  }</a>
-<a name="ln8943">  char *text = ml_get(lnum);</a>
-<a name="ln8944">  char *prompt = prompt_text();</a>
-<a name="ln8945">  if (strlen(text) &gt;= strlen(prompt)) {</a>
-<a name="ln8946">    text += strlen(prompt);</a>
-<a name="ln8947">  }</a>
-<a name="ln8948">  argv[0].v_type = VAR_STRING;</a>
-<a name="ln8949">  argv[0].vval.v_string = xstrdup(text);</a>
-<a name="ln8950">  argv[1].v_type = VAR_UNKNOWN;</a>
-<a name="ln8951"> </a>
-<a name="ln8952">  callback_call(&amp;curbuf-&gt;b_prompt_callback, 1, argv, &amp;rettv);</a>
-<a name="ln8953">  tv_clear(&amp;argv[0]);</a>
-<a name="ln8954">  tv_clear(&amp;rettv);</a>
-<a name="ln8955">}</a>
-<a name="ln8956"> </a>
-<a name="ln8957">/// @return  true when the interrupt callback was invoked.</a>
-<a name="ln8958">bool invoke_prompt_interrupt(void)</a>
-<a name="ln8959">{</a>
-<a name="ln8960">  typval_T rettv;</a>
-<a name="ln8961">  typval_T argv[1];</a>
-<a name="ln8962"> </a>
-<a name="ln8963">  if (curbuf-&gt;b_prompt_interrupt.type == kCallbackNone) {</a>
-<a name="ln8964">    return false;</a>
-<a name="ln8965">  }</a>
-<a name="ln8966">  argv[0].v_type = VAR_UNKNOWN;</a>
-<a name="ln8967"> </a>
-<a name="ln8968">  got_int = false;  // don't skip executing commands</a>
-<a name="ln8969">  int ret = callback_call(&amp;curbuf-&gt;b_prompt_interrupt, 0, argv, &amp;rettv);</a>
-<a name="ln8970">  tv_clear(&amp;rettv);</a>
-<a name="ln8971">  return ret != FAIL;</a>
-<a name="ln8972">}</a>
-<a name="ln8973"> </a>
-<a name="ln8974">/// Compare &quot;typ1&quot; and &quot;typ2&quot;.  Put the result in &quot;typ1&quot;.</a>
-<a name="ln8975">///</a>
-<a name="ln8976">/// @param typ1  first operand</a>
-<a name="ln8977">/// @param typ2  second operand</a>
-<a name="ln8978">/// @param type  operator</a>
-<a name="ln8979">/// @param ic  ignore case</a>
-<a name="ln8980">int typval_compare(typval_T *typ1, typval_T *typ2, exprtype_T type, bool ic)</a>
-<a name="ln8981">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln8982">{</a>
-<a name="ln8983">  varnumber_T n1, n2;</a>
-<a name="ln8984">  const bool type_is = type == EXPR_IS || type == EXPR_ISNOT;</a>
-<a name="ln8985"> </a>
-<a name="ln8986">  if (type_is &amp;&amp; typ1-&gt;v_type != typ2-&gt;v_type) {</a>
-<a name="ln8987">    // For &quot;is&quot; a different type always means false, for &quot;isnot&quot;</a>
-<a name="ln8988">    // it means true.</a>
-<a name="ln8989">    n1 = type == EXPR_ISNOT;</a>
-<a name="ln8990">  } else if (typ1-&gt;v_type == VAR_BLOB || typ2-&gt;v_type == VAR_BLOB) {</a>
-<a name="ln8991">    if (type_is) {</a>
-<a name="ln8992">      n1 = typ1-&gt;v_type == typ2-&gt;v_type</a>
-<a name="ln8993">           &amp;&amp; typ1-&gt;vval.v_blob == typ2-&gt;vval.v_blob;</a>
-<a name="ln8994">      if (type == EXPR_ISNOT) {</a>
-<a name="ln8995">        n1 = !n1;</a>
+<a name="ln8828">/// Checks if provider for feature `feat` is enabled.</a>
+<a name="ln8829">bool eval_has_provider(const char *feat)</a>
+<a name="ln8830">{</a>
+<a name="ln8831">  if (!strequal(feat, &quot;clipboard&quot;)</a>
+<a name="ln8832">      &amp;&amp; !strequal(feat, &quot;python3&quot;)</a>
+<a name="ln8833">      &amp;&amp; !strequal(feat, &quot;python3_compiled&quot;)</a>
+<a name="ln8834">      &amp;&amp; !strequal(feat, &quot;python3_dynamic&quot;)</a>
+<a name="ln8835">      &amp;&amp; !strequal(feat, &quot;perl&quot;)</a>
+<a name="ln8836">      &amp;&amp; !strequal(feat, &quot;ruby&quot;)</a>
+<a name="ln8837">      &amp;&amp; !strequal(feat, &quot;node&quot;)) {</a>
+<a name="ln8838">    // Avoid autoload for non-provider has() features.</a>
+<a name="ln8839">    return false;</a>
+<a name="ln8840">  }</a>
+<a name="ln8841"> </a>
+<a name="ln8842">  char name[32];  // Normalized: &quot;python3_compiled&quot; =&gt; &quot;python3&quot;.</a>
+<a name="ln8843">  snprintf(name, sizeof(name), &quot;%s&quot;, feat);</a>
+<a name="ln8844">  strchrsub(name, '_', '\0');  // Chop any &quot;_xx&quot; suffix.</a>
+<a name="ln8845"> </a>
+<a name="ln8846">  char buf[256];</a>
+<a name="ln8847">  typval_T tv;</a>
+<a name="ln8848">  // Get the g:loaded_xx_provider variable.</a>
+<a name="ln8849">  int len = snprintf(buf, sizeof(buf), &quot;g:loaded_%s_provider&quot;, name);</a>
+<a name="ln8850">  if (eval_variable(buf, len, &amp;tv, NULL, false, true) == FAIL) {</a>
+<a name="ln8851">    // Trigger autoload once.</a>
+<a name="ln8852">    len = snprintf(buf, sizeof(buf), &quot;provider#%s#bogus&quot;, name);</a>
+<a name="ln8853">    script_autoload(buf, (size_t)len, false);</a>
+<a name="ln8854"> </a>
+<a name="ln8855">    // Retry the (non-autoload-style) variable.</a>
+<a name="ln8856">    len = snprintf(buf, sizeof(buf), &quot;g:loaded_%s_provider&quot;, name);</a>
+<a name="ln8857">    if (eval_variable(buf, len, &amp;tv, NULL, false, true) == FAIL) {</a>
+<a name="ln8858">      // Show a hint if Call() is defined but g:loaded_xx_provider is missing.</a>
+<a name="ln8859">      snprintf(buf, sizeof(buf), &quot;provider#%s#Call&quot;, name);</a>
+<a name="ln8860">      if (!!find_func(buf) &amp;&amp; p_lpl) {</a>
+<a name="ln8861">        semsg(&quot;provider: %s: missing required variable g:loaded_%s_provider&quot;,</a>
+<a name="ln8862">              name, name);</a>
+<a name="ln8863">      }</a>
+<a name="ln8864">      return false;</a>
+<a name="ln8865">    }</a>
+<a name="ln8866">  }</a>
+<a name="ln8867"> </a>
+<a name="ln8868">  bool ok = (tv.v_type == VAR_NUMBER)</a>
+<a name="ln8869">    ? 2 == tv.vval.v_number  // Value of 2 means &quot;loaded and working&quot;.</a>
+<a name="ln8870">    : false;</a>
+<a name="ln8871"> </a>
+<a name="ln8872">  if (ok) {</a>
+<a name="ln8873">    // Call() must be defined if provider claims to be working.</a>
+<a name="ln8874">    snprintf(buf, sizeof(buf), &quot;provider#%s#Call&quot;, name);</a>
+<a name="ln8875">    if (!find_func(buf)) {</a>
+<a name="ln8876">      semsg(&quot;provider: %s: g:loaded_%s_provider=2 but %s is not defined&quot;,</a>
+<a name="ln8877">            name, name, buf);</a>
+<a name="ln8878">      ok = false;</a>
+<a name="ln8879">    }</a>
+<a name="ln8880">  }</a>
+<a name="ln8881"> </a>
+<a name="ln8882">  return ok;</a>
+<a name="ln8883">}</a>
+<a name="ln8884"> </a>
+<a name="ln8885">/// Writes &quot;&lt;sourcing_name&gt;:&lt;sourcing_lnum&gt;&quot; to `buf[bufsize]`.</a>
+<a name="ln8886">void eval_fmt_source_name_line(char *buf, size_t bufsize)</a>
+<a name="ln8887">{</a>
+<a name="ln8888">  if (SOURCING_NAME) {</a>
+<a name="ln8889">    snprintf(buf, bufsize, &quot;%s:%&quot; PRIdLINENR, SOURCING_NAME, SOURCING_LNUM);</a>
+<a name="ln8890">  } else {</a>
+<a name="ln8891">    snprintf(buf, bufsize, &quot;?&quot;);</a>
+<a name="ln8892">  }</a>
+<a name="ln8893">}</a>
+<a name="ln8894"> </a>
+<a name="ln8895">/// &quot;:checkhealth [plugins]&quot;</a>
+<a name="ln8896">void ex_checkhealth(exarg_T *eap)</a>
+<a name="ln8897">{</a>
+<a name="ln8898">  Error err = ERROR_INIT;</a>
+<a name="ln8899">  MAXSIZE_TEMP_ARRAY(args, 1);</a>
+<a name="ln8900">  ADD_C(args, CSTR_AS_OBJ(eap-&gt;arg));</a>
+<a name="ln8901">  NLUA_EXEC_STATIC(&quot;return vim.health._check(...)&quot;, args, &amp;err);</a>
+<a name="ln8902">  if (!ERROR_SET(&amp;err)) {</a>
+<a name="ln8903">    return;</a>
+<a name="ln8904">  }</a>
+<a name="ln8905"> </a>
+<a name="ln8906">  const char *vimruntime_env = os_getenv(&quot;VIMRUNTIME&quot;);</a>
+<a name="ln8907">  if (vimruntime_env == NULL) {</a>
+<a name="ln8908">    emsg(_(&quot;E5009: $VIMRUNTIME is empty or unset&quot;));</a>
+<a name="ln8909">  } else {</a>
+<a name="ln8910">    bool rtp_ok = NULL != strstr(p_rtp, vimruntime_env);</a>
+<a name="ln8911">    if (rtp_ok) {</a>
+<a name="ln8912">      semsg(_(&quot;E5009: Invalid $VIMRUNTIME: %s&quot;), vimruntime_env);</a>
+<a name="ln8913">    } else {</a>
+<a name="ln8914">      emsg(_(&quot;E5009: Invalid 'runtimepath'&quot;));</a>
+<a name="ln8915">    }</a>
+<a name="ln8916">  }</a>
+<a name="ln8917">  semsg_multiline(err.msg);</a>
+<a name="ln8918">  api_clear_error(&amp;err);</a>
+<a name="ln8919">}</a>
+<a name="ln8920"> </a>
+<a name="ln8921">void invoke_prompt_callback(void)</a>
+<a name="ln8922">{</a>
+<a name="ln8923">  typval_T rettv;</a>
+<a name="ln8924">  typval_T argv[2];</a>
+<a name="ln8925">  linenr_T lnum = curbuf-&gt;b_ml.ml_line_count;</a>
+<a name="ln8926"> </a>
+<a name="ln8927">  // Add a new line for the prompt before invoking the callback, so that</a>
+<a name="ln8928">  // text can always be inserted above the last line.</a>
+<a name="ln8929">  ml_append(lnum, &quot;&quot;, 0, false);</a>
+<a name="ln8930">  curwin-&gt;w_cursor.lnum = lnum + 1;</a>
+<a name="ln8931">  curwin-&gt;w_cursor.col = 0;</a>
+<a name="ln8932"> </a>
+<a name="ln8933">  if (curbuf-&gt;b_prompt_callback.type == kCallbackNone) {</a>
+<a name="ln8934">    return;</a>
+<a name="ln8935">  }</a>
+<a name="ln8936">  char *text = ml_get(lnum);</a>
+<a name="ln8937">  char *prompt = prompt_text();</a>
+<a name="ln8938">  if (strlen(text) &gt;= strlen(prompt)) {</a>
+<a name="ln8939">    text += strlen(prompt);</a>
+<a name="ln8940">  }</a>
+<a name="ln8941">  argv[0].v_type = VAR_STRING;</a>
+<a name="ln8942">  argv[0].vval.v_string = xstrdup(text);</a>
+<a name="ln8943">  argv[1].v_type = VAR_UNKNOWN;</a>
+<a name="ln8944"> </a>
+<a name="ln8945">  callback_call(&amp;curbuf-&gt;b_prompt_callback, 1, argv, &amp;rettv);</a>
+<a name="ln8946">  tv_clear(&amp;argv[0]);</a>
+<a name="ln8947">  tv_clear(&amp;rettv);</a>
+<a name="ln8948">}</a>
+<a name="ln8949"> </a>
+<a name="ln8950">/// @return  true when the interrupt callback was invoked.</a>
+<a name="ln8951">bool invoke_prompt_interrupt(void)</a>
+<a name="ln8952">{</a>
+<a name="ln8953">  typval_T rettv;</a>
+<a name="ln8954">  typval_T argv[1];</a>
+<a name="ln8955"> </a>
+<a name="ln8956">  if (curbuf-&gt;b_prompt_interrupt.type == kCallbackNone) {</a>
+<a name="ln8957">    return false;</a>
+<a name="ln8958">  }</a>
+<a name="ln8959">  argv[0].v_type = VAR_UNKNOWN;</a>
+<a name="ln8960"> </a>
+<a name="ln8961">  got_int = false;  // don't skip executing commands</a>
+<a name="ln8962">  int ret = callback_call(&amp;curbuf-&gt;b_prompt_interrupt, 0, argv, &amp;rettv);</a>
+<a name="ln8963">  tv_clear(&amp;rettv);</a>
+<a name="ln8964">  return ret != FAIL;</a>
+<a name="ln8965">}</a>
+<a name="ln8966"> </a>
+<a name="ln8967">/// Compare &quot;typ1&quot; and &quot;typ2&quot;.  Put the result in &quot;typ1&quot;.</a>
+<a name="ln8968">///</a>
+<a name="ln8969">/// @param typ1  first operand</a>
+<a name="ln8970">/// @param typ2  second operand</a>
+<a name="ln8971">/// @param type  operator</a>
+<a name="ln8972">/// @param ic  ignore case</a>
+<a name="ln8973">int typval_compare(typval_T *typ1, typval_T *typ2, exprtype_T type, bool ic)</a>
+<a name="ln8974">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln8975">{</a>
+<a name="ln8976">  varnumber_T n1, n2;</a>
+<a name="ln8977">  const bool type_is = type == EXPR_IS || type == EXPR_ISNOT;</a>
+<a name="ln8978"> </a>
+<a name="ln8979">  if (type_is &amp;&amp; typ1-&gt;v_type != typ2-&gt;v_type) {</a>
+<a name="ln8980">    // For &quot;is&quot; a different type always means false, for &quot;isnot&quot;</a>
+<a name="ln8981">    // it means true.</a>
+<a name="ln8982">    n1 = type == EXPR_ISNOT;</a>
+<a name="ln8983">  } else if (typ1-&gt;v_type == VAR_BLOB || typ2-&gt;v_type == VAR_BLOB) {</a>
+<a name="ln8984">    if (type_is) {</a>
+<a name="ln8985">      n1 = typ1-&gt;v_type == typ2-&gt;v_type</a>
+<a name="ln8986">           &amp;&amp; typ1-&gt;vval.v_blob == typ2-&gt;vval.v_blob;</a>
+<a name="ln8987">      if (type == EXPR_ISNOT) {</a>
+<a name="ln8988">        n1 = !n1;</a>
+<a name="ln8989">      }</a>
+<a name="ln8990">    } else if (typ1-&gt;v_type != typ2-&gt;v_type</a>
+<a name="ln8991">               || (type != EXPR_EQUAL &amp;&amp; type != EXPR_NEQUAL)) {</a>
+<a name="ln8992">      if (typ1-&gt;v_type != typ2-&gt;v_type) {</a>
+<a name="ln8993">        emsg(_(&quot;E977: Can only compare Blob with Blob&quot;));</a>
+<a name="ln8994">      } else {</a>
+<a name="ln8995">        emsg(_(e_invalblob));</a>
 <a name="ln8996">      }</a>
-<a name="ln8997">    } else if (typ1-&gt;v_type != typ2-&gt;v_type</a>
-<a name="ln8998">               || (type != EXPR_EQUAL &amp;&amp; type != EXPR_NEQUAL)) {</a>
-<a name="ln8999">      if (typ1-&gt;v_type != typ2-&gt;v_type) {</a>
-<a name="ln9000">        emsg(_(&quot;E977: Can only compare Blob with Blob&quot;));</a>
-<a name="ln9001">      } else {</a>
-<a name="ln9002">        emsg(_(e_invalblob));</a>
-<a name="ln9003">      }</a>
-<a name="ln9004">      tv_clear(typ1);</a>
-<a name="ln9005">      return FAIL;</a>
-<a name="ln9006">    } else {</a>
-<a name="ln9007">      // Compare two Blobs for being equal or unequal.</a>
-<a name="ln9008">      n1 = tv_blob_equal(typ1-&gt;vval.v_blob, typ2-&gt;vval.v_blob);</a>
-<a name="ln9009">      if (type == EXPR_NEQUAL) {</a>
-<a name="ln9010">        n1 = !n1;</a>
-<a name="ln9011">      }</a>
-<a name="ln9012">    }</a>
-<a name="ln9013">  } else if (typ1-&gt;v_type == VAR_LIST || typ2-&gt;v_type == VAR_LIST) {</a>
-<a name="ln9014">    if (type_is) {</a>
-<a name="ln9015">      n1 = typ1-&gt;v_type == typ2-&gt;v_type</a>
-<a name="ln9016">           &amp;&amp; typ1-&gt;vval.v_list == typ2-&gt;vval.v_list;</a>
-<a name="ln9017">      if (type == EXPR_ISNOT) {</a>
-<a name="ln9018">        n1 = !n1;</a>
+<a name="ln8997">      tv_clear(typ1);</a>
+<a name="ln8998">      return FAIL;</a>
+<a name="ln8999">    } else {</a>
+<a name="ln9000">      // Compare two Blobs for being equal or unequal.</a>
+<a name="ln9001">      n1 = tv_blob_equal(typ1-&gt;vval.v_blob, typ2-&gt;vval.v_blob);</a>
+<a name="ln9002">      if (type == EXPR_NEQUAL) {</a>
+<a name="ln9003">        n1 = !n1;</a>
+<a name="ln9004">      }</a>
+<a name="ln9005">    }</a>
+<a name="ln9006">  } else if (typ1-&gt;v_type == VAR_LIST || typ2-&gt;v_type == VAR_LIST) {</a>
+<a name="ln9007">    if (type_is) {</a>
+<a name="ln9008">      n1 = typ1-&gt;v_type == typ2-&gt;v_type</a>
+<a name="ln9009">           &amp;&amp; typ1-&gt;vval.v_list == typ2-&gt;vval.v_list;</a>
+<a name="ln9010">      if (type == EXPR_ISNOT) {</a>
+<a name="ln9011">        n1 = !n1;</a>
+<a name="ln9012">      }</a>
+<a name="ln9013">    } else if (typ1-&gt;v_type != typ2-&gt;v_type</a>
+<a name="ln9014">               || (type != EXPR_EQUAL &amp;&amp; type != EXPR_NEQUAL)) {</a>
+<a name="ln9015">      if (typ1-&gt;v_type != typ2-&gt;v_type) {</a>
+<a name="ln9016">        emsg(_(&quot;E691: Can only compare List with List&quot;));</a>
+<a name="ln9017">      } else {</a>
+<a name="ln9018">        emsg(_(&quot;E692: Invalid operation for List&quot;));</a>
 <a name="ln9019">      }</a>
-<a name="ln9020">    } else if (typ1-&gt;v_type != typ2-&gt;v_type</a>
-<a name="ln9021">               || (type != EXPR_EQUAL &amp;&amp; type != EXPR_NEQUAL)) {</a>
-<a name="ln9022">      if (typ1-&gt;v_type != typ2-&gt;v_type) {</a>
-<a name="ln9023">        emsg(_(&quot;E691: Can only compare List with List&quot;));</a>
-<a name="ln9024">      } else {</a>
-<a name="ln9025">        emsg(_(&quot;E692: Invalid operation for List&quot;));</a>
-<a name="ln9026">      }</a>
-<a name="ln9027">      tv_clear(typ1);</a>
-<a name="ln9028">      return FAIL;</a>
-<a name="ln9029">    } else {</a>
-<a name="ln9030">      // Compare two Lists for being equal or unequal.</a>
-<a name="ln9031">      n1 = tv_list_equal(typ1-&gt;vval.v_list, typ2-&gt;vval.v_list, ic, false);</a>
-<a name="ln9032">      if (type == EXPR_NEQUAL) {</a>
-<a name="ln9033">        n1 = !n1;</a>
-<a name="ln9034">      }</a>
-<a name="ln9035">    }</a>
-<a name="ln9036">  } else if (typ1-&gt;v_type == VAR_DICT || typ2-&gt;v_type == VAR_DICT) {</a>
-<a name="ln9037">    if (type_is) {</a>
-<a name="ln9038">      n1 = typ1-&gt;v_type == typ2-&gt;v_type</a>
-<a name="ln9039">           &amp;&amp; typ1-&gt;vval.v_dict == typ2-&gt;vval.v_dict;</a>
-<a name="ln9040">      if (type == EXPR_ISNOT) {</a>
-<a name="ln9041">        n1 = !n1;</a>
+<a name="ln9020">      tv_clear(typ1);</a>
+<a name="ln9021">      return FAIL;</a>
+<a name="ln9022">    } else {</a>
+<a name="ln9023">      // Compare two Lists for being equal or unequal.</a>
+<a name="ln9024">      n1 = tv_list_equal(typ1-&gt;vval.v_list, typ2-&gt;vval.v_list, ic, false);</a>
+<a name="ln9025">      if (type == EXPR_NEQUAL) {</a>
+<a name="ln9026">        n1 = !n1;</a>
+<a name="ln9027">      }</a>
+<a name="ln9028">    }</a>
+<a name="ln9029">  } else if (typ1-&gt;v_type == VAR_DICT || typ2-&gt;v_type == VAR_DICT) {</a>
+<a name="ln9030">    if (type_is) {</a>
+<a name="ln9031">      n1 = typ1-&gt;v_type == typ2-&gt;v_type</a>
+<a name="ln9032">           &amp;&amp; typ1-&gt;vval.v_dict == typ2-&gt;vval.v_dict;</a>
+<a name="ln9033">      if (type == EXPR_ISNOT) {</a>
+<a name="ln9034">        n1 = !n1;</a>
+<a name="ln9035">      }</a>
+<a name="ln9036">    } else if (typ1-&gt;v_type != typ2-&gt;v_type</a>
+<a name="ln9037">               || (type != EXPR_EQUAL &amp;&amp; type != EXPR_NEQUAL)) {</a>
+<a name="ln9038">      if (typ1-&gt;v_type != typ2-&gt;v_type) {</a>
+<a name="ln9039">        emsg(_(&quot;E735: Can only compare Dictionary with Dictionary&quot;));</a>
+<a name="ln9040">      } else {</a>
+<a name="ln9041">        emsg(_(&quot;E736: Invalid operation for Dictionary&quot;));</a>
 <a name="ln9042">      }</a>
-<a name="ln9043">    } else if (typ1-&gt;v_type != typ2-&gt;v_type</a>
-<a name="ln9044">               || (type != EXPR_EQUAL &amp;&amp; type != EXPR_NEQUAL)) {</a>
-<a name="ln9045">      if (typ1-&gt;v_type != typ2-&gt;v_type) {</a>
-<a name="ln9046">        emsg(_(&quot;E735: Can only compare Dictionary with Dictionary&quot;));</a>
-<a name="ln9047">      } else {</a>
-<a name="ln9048">        emsg(_(&quot;E736: Invalid operation for Dictionary&quot;));</a>
-<a name="ln9049">      }</a>
-<a name="ln9050">      tv_clear(typ1);</a>
-<a name="ln9051">      return FAIL;</a>
-<a name="ln9052">    } else {</a>
-<a name="ln9053">      // Compare two Dictionaries for being equal or unequal.</a>
-<a name="ln9054">      n1 = tv_dict_equal(typ1-&gt;vval.v_dict, typ2-&gt;vval.v_dict, ic, false);</a>
-<a name="ln9055">      if (type == EXPR_NEQUAL) {</a>
-<a name="ln9056">        n1 = !n1;</a>
-<a name="ln9057">      }</a>
+<a name="ln9043">      tv_clear(typ1);</a>
+<a name="ln9044">      return FAIL;</a>
+<a name="ln9045">    } else {</a>
+<a name="ln9046">      // Compare two Dictionaries for being equal or unequal.</a>
+<a name="ln9047">      n1 = tv_dict_equal(typ1-&gt;vval.v_dict, typ2-&gt;vval.v_dict, ic, false);</a>
+<a name="ln9048">      if (type == EXPR_NEQUAL) {</a>
+<a name="ln9049">        n1 = !n1;</a>
+<a name="ln9050">      }</a>
+<a name="ln9051">    }</a>
+<a name="ln9052">  } else if (tv_is_func(*typ1) || tv_is_func(*typ2)) {</a>
+<a name="ln9053">    if (type != EXPR_EQUAL &amp;&amp; type != EXPR_NEQUAL</a>
+<a name="ln9054">        &amp;&amp; type != EXPR_IS &amp;&amp; type != EXPR_ISNOT) {</a>
+<a name="ln9055">      emsg(_(&quot;E694: Invalid operation for Funcrefs&quot;));</a>
+<a name="ln9056">      tv_clear(typ1);</a>
+<a name="ln9057">      return FAIL;</a>
 <a name="ln9058">    }</a>
-<a name="ln9059">  } else if (tv_is_func(*typ1) || tv_is_func(*typ2)) {</a>
-<a name="ln9060">    if (type != EXPR_EQUAL &amp;&amp; type != EXPR_NEQUAL</a>
-<a name="ln9061">        &amp;&amp; type != EXPR_IS &amp;&amp; type != EXPR_ISNOT) {</a>
-<a name="ln9062">      emsg(_(&quot;E694: Invalid operation for Funcrefs&quot;));</a>
-<a name="ln9063">      tv_clear(typ1);</a>
-<a name="ln9064">      return FAIL;</a>
-<a name="ln9065">    }</a>
-<a name="ln9066">    if ((typ1-&gt;v_type == VAR_PARTIAL &amp;&amp; typ1-&gt;vval.v_partial == NULL)</a>
-<a name="ln9067">        || (typ2-&gt;v_type == VAR_PARTIAL &amp;&amp; typ2-&gt;vval.v_partial == NULL)) {</a>
-<a name="ln9068">      // When both partials are NULL, then they are equal.</a>
-<a name="ln9069">      // Otherwise they are not equal.</a>
-<a name="ln9070">      n1 = (typ1-&gt;vval.v_partial == typ2-&gt;vval.v_partial);</a>
-<a name="ln9071">    } else if (type_is) {</a>
-<a name="ln9072">      if (typ1-&gt;v_type == VAR_FUNC &amp;&amp; typ2-&gt;v_type == VAR_FUNC) {</a>
-<a name="ln9073">        // strings are considered the same if their value is</a>
-<a name="ln9074">        // the same</a>
-<a name="ln9075">        n1 = tv_equal(typ1, typ2, ic, false);</a>
-<a name="ln9076">      } else if (typ1-&gt;v_type == VAR_PARTIAL &amp;&amp; typ2-&gt;v_type == VAR_PARTIAL) {</a>
-<a name="ln9077">        n1 = typ1-&gt;vval.v_partial == typ2-&gt;vval.v_partial;</a>
-<a name="ln9078">      } else {</a>
-<a name="ln9079">        n1 = false;</a>
-<a name="ln9080">      }</a>
-<a name="ln9081">    } else {</a>
-<a name="ln9082">      n1 = tv_equal(typ1, typ2, ic, false);</a>
-<a name="ln9083">    }</a>
-<a name="ln9084">    if (type == EXPR_NEQUAL || type == EXPR_ISNOT) {</a>
-<a name="ln9085">      n1 = !n1;</a>
-<a name="ln9086">    }</a>
-<a name="ln9087">  } else if ((typ1-&gt;v_type == VAR_FLOAT || typ2-&gt;v_type == VAR_FLOAT)</a>
-<a name="ln9088">             &amp;&amp; type != EXPR_MATCH &amp;&amp; type != EXPR_NOMATCH) {</a>
-<a name="ln9089">    // If one of the two variables is a float, compare as a float.</a>
-<a name="ln9090">    // When using &quot;=~&quot; or &quot;!~&quot;, always compare as string.</a>
-<a name="ln9091">    const float_T f1 = tv_get_float(typ1);</a>
-<a name="ln9092">    const float_T f2 = tv_get_float(typ2);</a>
-<a name="ln9093">    n1 = false;</a>
-<a name="ln9094">    switch (type) {</a>
-<a name="ln9095">    case EXPR_IS:</a>
-<a name="ln9096">    case EXPR_EQUAL:</a>
-<a name="ln9097">      n1 = f1 == f2; break;</a>
-<a name="ln9098">    case EXPR_ISNOT:</a>
-<a name="ln9099">    case EXPR_NEQUAL:</a>
-<a name="ln9100">      n1 = f1 != f2; break;</a>
-<a name="ln9101">    case EXPR_GREATER:</a>
-<a name="ln9102">      n1 = f1 &gt; f2; break;</a>
-<a name="ln9103">    case EXPR_GEQUAL:</a>
-<a name="ln9104">      n1 = f1 &gt;= f2; break;</a>
-<a name="ln9105">    case EXPR_SMALLER:</a>
-<a name="ln9106">      n1 = f1 &lt; f2; break;</a>
-<a name="ln9107">    case EXPR_SEQUAL:</a>
-<a name="ln9108">      n1 = f1 &lt;= f2; break;</a>
-<a name="ln9109">    case EXPR_UNKNOWN:</a>
-<a name="ln9110">    case EXPR_MATCH:</a>
-<a name="ln9111">    case EXPR_NOMATCH:</a>
-<a name="ln9112">      break;  // avoid gcc warning</a>
-<a name="ln9113">    }</a>
-<a name="ln9114">  } else if ((typ1-&gt;v_type == VAR_NUMBER || typ2-&gt;v_type == VAR_NUMBER)</a>
-<a name="ln9115">             &amp;&amp; type != EXPR_MATCH &amp;&amp; type != EXPR_NOMATCH) {</a>
-<a name="ln9116">    // If one of the two variables is a number, compare as a number.</a>
-<a name="ln9117">    // When using &quot;=~&quot; or &quot;!~&quot;, always compare as string.</a>
-<a name="ln9118">    n1 = tv_get_number(typ1);</a>
-<a name="ln9119">    n2 = tv_get_number(typ2);</a>
-<a name="ln9120">    switch (type) {</a>
-<a name="ln9121">    case EXPR_IS:</a>
-<a name="ln9122">    case EXPR_EQUAL:</a>
-<a name="ln9123">      n1 = n1 == n2; break;</a>
-<a name="ln9124">    case EXPR_ISNOT:</a>
-<a name="ln9125">    case EXPR_NEQUAL:</a>
-<a name="ln9126">      n1 = n1 != n2; break;</a>
-<a name="ln9127">    case EXPR_GREATER:</a>
-<a name="ln9128">      n1 = n1 &gt; n2; break;</a>
-<a name="ln9129">    case EXPR_GEQUAL:</a>
-<a name="ln9130">      n1 = n1 &gt;= n2; break;</a>
-<a name="ln9131">    case EXPR_SMALLER:</a>
-<a name="ln9132">      n1 = n1 &lt; n2; break;</a>
-<a name="ln9133">    case EXPR_SEQUAL:</a>
-<a name="ln9134">      n1 = n1 &lt;= n2; break;</a>
-<a name="ln9135">    case EXPR_UNKNOWN:</a>
-<a name="ln9136">    case EXPR_MATCH:</a>
-<a name="ln9137">    case EXPR_NOMATCH:</a>
-<a name="ln9138">      break;  // avoid gcc warning</a>
-<a name="ln9139">    }</a>
-<a name="ln9140">  } else {</a>
-<a name="ln9141">    char buf1[NUMBUFLEN];</a>
-<a name="ln9142">    char buf2[NUMBUFLEN];</a>
-<a name="ln9143">    const char *const s1 = tv_get_string_buf(typ1, buf1);</a>
-<a name="ln9144">    const char *const s2 = tv_get_string_buf(typ2, buf2);</a>
-<a name="ln9145">    int i;</a>
-<a name="ln9146">    if (type != EXPR_MATCH &amp;&amp; type != EXPR_NOMATCH) {</a>
-<a name="ln9147">      i = mb_strcmp_ic(ic, s1, s2);</a>
-<a name="ln9148">    } else {</a>
-<a name="ln9149">      i = 0;</a>
-<a name="ln9150">    }</a>
-<a name="ln9151">    n1 = false;</a>
-<a name="ln9152">    switch (type) {</a>
-<a name="ln9153">    case EXPR_IS:</a>
-<a name="ln9154">    case EXPR_EQUAL:</a>
-<a name="ln9155">      n1 = i == 0; break;</a>
-<a name="ln9156">    case EXPR_ISNOT:</a>
-<a name="ln9157">    case EXPR_NEQUAL:</a>
-<a name="ln9158">      n1 = i != 0; break;</a>
-<a name="ln9159">    case EXPR_GREATER:</a>
-<a name="ln9160">      n1 = i &gt; 0; break;</a>
-<a name="ln9161">    case EXPR_GEQUAL:</a>
-<a name="ln9162">      n1 = i &gt;= 0; break;</a>
-<a name="ln9163">    case EXPR_SMALLER:</a>
-<a name="ln9164">      n1 = i &lt; 0; break;</a>
-<a name="ln9165">    case EXPR_SEQUAL:</a>
-<a name="ln9166">      n1 = i &lt;= 0; break;</a>
-<a name="ln9167"> </a>
-<a name="ln9168">    case EXPR_MATCH:</a>
-<a name="ln9169">    case EXPR_NOMATCH:</a>
-<a name="ln9170">      n1 = pattern_match(s2, s1, ic);</a>
-<a name="ln9171">      if (type == EXPR_NOMATCH) {</a>
-<a name="ln9172">        n1 = !n1;</a>
-<a name="ln9173">      }</a>
-<a name="ln9174">      break;</a>
-<a name="ln9175">    case EXPR_UNKNOWN:</a>
-<a name="ln9176">      break;  // avoid gcc warning</a>
-<a name="ln9177">    }</a>
-<a name="ln9178">  }</a>
-<a name="ln9179">  tv_clear(typ1);</a>
-<a name="ln9180">  typ1-&gt;v_type = VAR_NUMBER;</a>
-<a name="ln9181">  typ1-&gt;vval.v_number = n1;</a>
-<a name="ln9182">  return OK;</a>
-<a name="ln9183">}</a>
-<a name="ln9184"> </a>
-<a name="ln9185">/// Convert any type to a string, never give an error.</a>
-<a name="ln9186">/// When &quot;quotes&quot; is true add quotes to a string.</a>
-<a name="ln9187">/// Returns an allocated string.</a>
-<a name="ln9188">char *typval_tostring(typval_T *arg, bool quotes)</a>
-<a name="ln9189">{</a>
-<a name="ln9190">  if (arg == NULL) {</a>
-<a name="ln9191">    return xstrdup(&quot;(does not exist)&quot;);</a>
-<a name="ln9192">  }</a>
-<a name="ln9193">  if (!quotes &amp;&amp; arg-&gt;v_type == VAR_STRING) {</a>
-<a name="ln9194">    return xstrdup(arg-&gt;vval.v_string == NULL ? &quot;&quot; : arg-&gt;vval.v_string);</a>
-<a name="ln9195">  }</a>
-<a name="ln9196">  return encode_tv2string(arg, NULL);</a>
-<a name="ln9197">}</a>
+<a name="ln9059">    if ((typ1-&gt;v_type == VAR_PARTIAL &amp;&amp; typ1-&gt;vval.v_partial == NULL)</a>
+<a name="ln9060">        || (typ2-&gt;v_type == VAR_PARTIAL &amp;&amp; typ2-&gt;vval.v_partial == NULL)) {</a>
+<a name="ln9061">      // When both partials are NULL, then they are equal.</a>
+<a name="ln9062">      // Otherwise they are not equal.</a>
+<a name="ln9063">      n1 = (typ1-&gt;vval.v_partial == typ2-&gt;vval.v_partial);</a>
+<a name="ln9064">    } else if (type_is) {</a>
+<a name="ln9065">      if (typ1-&gt;v_type == VAR_FUNC &amp;&amp; typ2-&gt;v_type == VAR_FUNC) {</a>
+<a name="ln9066">        // strings are considered the same if their value is</a>
+<a name="ln9067">        // the same</a>
+<a name="ln9068">        n1 = tv_equal(typ1, typ2, ic, false);</a>
+<a name="ln9069">      } else if (typ1-&gt;v_type == VAR_PARTIAL &amp;&amp; typ2-&gt;v_type == VAR_PARTIAL) {</a>
+<a name="ln9070">        n1 = typ1-&gt;vval.v_partial == typ2-&gt;vval.v_partial;</a>
+<a name="ln9071">      } else {</a>
+<a name="ln9072">        n1 = false;</a>
+<a name="ln9073">      }</a>
+<a name="ln9074">    } else {</a>
+<a name="ln9075">      n1 = tv_equal(typ1, typ2, ic, false);</a>
+<a name="ln9076">    }</a>
+<a name="ln9077">    if (type == EXPR_NEQUAL || type == EXPR_ISNOT) {</a>
+<a name="ln9078">      n1 = !n1;</a>
+<a name="ln9079">    }</a>
+<a name="ln9080">  } else if ((typ1-&gt;v_type == VAR_FLOAT || typ2-&gt;v_type == VAR_FLOAT)</a>
+<a name="ln9081">             &amp;&amp; type != EXPR_MATCH &amp;&amp; type != EXPR_NOMATCH) {</a>
+<a name="ln9082">    // If one of the two variables is a float, compare as a float.</a>
+<a name="ln9083">    // When using &quot;=~&quot; or &quot;!~&quot;, always compare as string.</a>
+<a name="ln9084">    const float_T f1 = tv_get_float(typ1);</a>
+<a name="ln9085">    const float_T f2 = tv_get_float(typ2);</a>
+<a name="ln9086">    n1 = false;</a>
+<a name="ln9087">    switch (type) {</a>
+<a name="ln9088">    case EXPR_IS:</a>
+<a name="ln9089">    case EXPR_EQUAL:</a>
+<a name="ln9090">      n1 = f1 == f2; break;</a>
+<a name="ln9091">    case EXPR_ISNOT:</a>
+<a name="ln9092">    case EXPR_NEQUAL:</a>
+<a name="ln9093">      n1 = f1 != f2; break;</a>
+<a name="ln9094">    case EXPR_GREATER:</a>
+<a name="ln9095">      n1 = f1 &gt; f2; break;</a>
+<a name="ln9096">    case EXPR_GEQUAL:</a>
+<a name="ln9097">      n1 = f1 &gt;= f2; break;</a>
+<a name="ln9098">    case EXPR_SMALLER:</a>
+<a name="ln9099">      n1 = f1 &lt; f2; break;</a>
+<a name="ln9100">    case EXPR_SEQUAL:</a>
+<a name="ln9101">      n1 = f1 &lt;= f2; break;</a>
+<a name="ln9102">    case EXPR_UNKNOWN:</a>
+<a name="ln9103">    case EXPR_MATCH:</a>
+<a name="ln9104">    case EXPR_NOMATCH:</a>
+<a name="ln9105">      break;  // avoid gcc warning</a>
+<a name="ln9106">    }</a>
+<a name="ln9107">  } else if ((typ1-&gt;v_type == VAR_NUMBER || typ2-&gt;v_type == VAR_NUMBER)</a>
+<a name="ln9108">             &amp;&amp; type != EXPR_MATCH &amp;&amp; type != EXPR_NOMATCH) {</a>
+<a name="ln9109">    // If one of the two variables is a number, compare as a number.</a>
+<a name="ln9110">    // When using &quot;=~&quot; or &quot;!~&quot;, always compare as string.</a>
+<a name="ln9111">    n1 = tv_get_number(typ1);</a>
+<a name="ln9112">    n2 = tv_get_number(typ2);</a>
+<a name="ln9113">    switch (type) {</a>
+<a name="ln9114">    case EXPR_IS:</a>
+<a name="ln9115">    case EXPR_EQUAL:</a>
+<a name="ln9116">      n1 = n1 == n2; break;</a>
+<a name="ln9117">    case EXPR_ISNOT:</a>
+<a name="ln9118">    case EXPR_NEQUAL:</a>
+<a name="ln9119">      n1 = n1 != n2; break;</a>
+<a name="ln9120">    case EXPR_GREATER:</a>
+<a name="ln9121">      n1 = n1 &gt; n2; break;</a>
+<a name="ln9122">    case EXPR_GEQUAL:</a>
+<a name="ln9123">      n1 = n1 &gt;= n2; break;</a>
+<a name="ln9124">    case EXPR_SMALLER:</a>
+<a name="ln9125">      n1 = n1 &lt; n2; break;</a>
+<a name="ln9126">    case EXPR_SEQUAL:</a>
+<a name="ln9127">      n1 = n1 &lt;= n2; break;</a>
+<a name="ln9128">    case EXPR_UNKNOWN:</a>
+<a name="ln9129">    case EXPR_MATCH:</a>
+<a name="ln9130">    case EXPR_NOMATCH:</a>
+<a name="ln9131">      break;  // avoid gcc warning</a>
+<a name="ln9132">    }</a>
+<a name="ln9133">  } else {</a>
+<a name="ln9134">    char buf1[NUMBUFLEN];</a>
+<a name="ln9135">    char buf2[NUMBUFLEN];</a>
+<a name="ln9136">    const char *const s1 = tv_get_string_buf(typ1, buf1);</a>
+<a name="ln9137">    const char *const s2 = tv_get_string_buf(typ2, buf2);</a>
+<a name="ln9138">    int i;</a>
+<a name="ln9139">    if (type != EXPR_MATCH &amp;&amp; type != EXPR_NOMATCH) {</a>
+<a name="ln9140">      i = mb_strcmp_ic(ic, s1, s2);</a>
+<a name="ln9141">    } else {</a>
+<a name="ln9142">      i = 0;</a>
+<a name="ln9143">    }</a>
+<a name="ln9144">    n1 = false;</a>
+<a name="ln9145">    switch (type) {</a>
+<a name="ln9146">    case EXPR_IS:</a>
+<a name="ln9147">    case EXPR_EQUAL:</a>
+<a name="ln9148">      n1 = i == 0; break;</a>
+<a name="ln9149">    case EXPR_ISNOT:</a>
+<a name="ln9150">    case EXPR_NEQUAL:</a>
+<a name="ln9151">      n1 = i != 0; break;</a>
+<a name="ln9152">    case EXPR_GREATER:</a>
+<a name="ln9153">      n1 = i &gt; 0; break;</a>
+<a name="ln9154">    case EXPR_GEQUAL:</a>
+<a name="ln9155">      n1 = i &gt;= 0; break;</a>
+<a name="ln9156">    case EXPR_SMALLER:</a>
+<a name="ln9157">      n1 = i &lt; 0; break;</a>
+<a name="ln9158">    case EXPR_SEQUAL:</a>
+<a name="ln9159">      n1 = i &lt;= 0; break;</a>
+<a name="ln9160"> </a>
+<a name="ln9161">    case EXPR_MATCH:</a>
+<a name="ln9162">    case EXPR_NOMATCH:</a>
+<a name="ln9163">      n1 = pattern_match(s2, s1, ic);</a>
+<a name="ln9164">      if (type == EXPR_NOMATCH) {</a>
+<a name="ln9165">        n1 = !n1;</a>
+<a name="ln9166">      }</a>
+<a name="ln9167">      break;</a>
+<a name="ln9168">    case EXPR_UNKNOWN:</a>
+<a name="ln9169">      break;  // avoid gcc warning</a>
+<a name="ln9170">    }</a>
+<a name="ln9171">  }</a>
+<a name="ln9172">  tv_clear(typ1);</a>
+<a name="ln9173">  typ1-&gt;v_type = VAR_NUMBER;</a>
+<a name="ln9174">  typ1-&gt;vval.v_number = n1;</a>
+<a name="ln9175">  return OK;</a>
+<a name="ln9176">}</a>
+<a name="ln9177"> </a>
+<a name="ln9178">/// Convert any type to a string, never give an error.</a>
+<a name="ln9179">/// When &quot;quotes&quot; is true add quotes to a string.</a>
+<a name="ln9180">/// Returns an allocated string.</a>
+<a name="ln9181">char *typval_tostring(typval_T *arg, bool quotes)</a>
+<a name="ln9182">{</a>
+<a name="ln9183">  if (arg == NULL) {</a>
+<a name="ln9184">    return xstrdup(&quot;(does not exist)&quot;);</a>
+<a name="ln9185">  }</a>
+<a name="ln9186">  if (!quotes &amp;&amp; arg-&gt;v_type == VAR_STRING) {</a>
+<a name="ln9187">    return xstrdup(arg-&gt;vval.v_string == NULL ? &quot;&quot; : arg-&gt;vval.v_string);</a>
+<a name="ln9188">  }</a>
+<a name="ln9189">  return encode_tv2string(arg, NULL);</a>
+<a name="ln9190">}</a>
 </code></pre>
 <div class="balloon" rel="2349"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v595/" target="_blank">V595</a> The 'p' pointer was utilized before it was verified against nullptr. Check lines: 2349, 2369.</p></div>
 <link rel="stylesheet" href="highlight.css">

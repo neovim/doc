@@ -465,7 +465,7 @@
 <a name="ln456">  regmatch_T regmatch;</a>
 <a name="ln457">  int len;</a>
 <a name="ln458">  linenr_T lnum;</a>
-<a name="ln459">  long maxlen = 0;</a>
+<a name="ln459">  int maxlen = 0;</a>
 <a name="ln460">  size_t count = (size_t)(eap-&gt;line2 - eap-&gt;line1) + 1;</a>
 <a name="ln461">  size_t i;</a>
 <a name="ln462">  char *p;</a>
@@ -702,7 +702,7 @@
 <a name="ln693">  // Adjust marks for deleted (or added) lines and prepare for displaying.</a>
 <a name="ln694">  deleted = (linenr_T)count - (lnum - eap-&gt;line2);</a>
 <a name="ln695">  if (deleted &gt; 0) {</a>
-<a name="ln696">    mark_adjust(eap-&gt;line2 - deleted, eap-&gt;line2, (long)MAXLNUM, -deleted, kExtmarkNOOP);</a>
+<a name="ln696">    mark_adjust(eap-&gt;line2 - deleted, eap-&gt;line2, MAXLNUM, -deleted, kExtmarkNOOP);</a>
 <a name="ln697">    msgmore(-deleted);</a>
 <a name="ln698">  } else if (deleted &lt; 0) {</a>
 <a name="ln699">    mark_adjust(eap-&gt;line2, MAXLNUM, -deleted, 0L, kExtmarkNOOP);</a>
@@ -931,7 +931,7 @@
 <a name="ln922">    check_pos(curbuf, &amp;VIsual);</a>
 <a name="ln923">  }</a>
 <a name="ln924"> </a>
-<a name="ln925">  msgmore((long)count);</a>
+<a name="ln925">  msgmore(count);</a>
 <a name="ln926">}</a>
 <a name="ln927"> </a>
 <a name="ln928">static char *prevcmd = NULL;        // the previous command</a>
@@ -1290,7 +1290,7 @@
 <a name="ln1281">          set_keep_msg(msg_buf, 0);</a>
 <a name="ln1282">        }</a>
 <a name="ln1283">      } else {</a>
-<a name="ln1284">        msgmore((long)linecount);</a>
+<a name="ln1284">        msgmore(linecount);</a>
 <a name="ln1285">      }</a>
 <a name="ln1286">    }</a>
 <a name="ln1287">  } else {</a>
@@ -3300,7 +3300,7 @@
 <a name="ln3291">/// @param cmdpreview_ns  The namespace to show 'inccommand' preview highlights.</a>
 <a name="ln3292">///                       If &lt;= 0, preview shouldn't be shown.</a>
 <a name="ln3293">/// @return 0, 1 or 2. See show_cmdpreview() for more information on what the return value means.</a>
-<a name="ln3294">static int do_sub(exarg_T *eap, const proftime_T timeout, const long cmdpreview_ns,</a>
+<a name="ln3294">static int do_sub(exarg_T *eap, const proftime_T timeout, const int cmdpreview_ns,</a>
 <a name="ln3295">                  const handle_T cmdpreview_bufnr)</a>
 <a name="ln3296">{</a>
 <a name="ln3297">#define ADJUST_SUB_FIRSTLNUM() \</a>
@@ -3327,7 +3327,7 @@
 <a name="ln3318">    } \</a>
 <a name="ln3319">  } while (0)</a>
 <a name="ln3320"> </a>
-<a name="ln3321">  long i = 0;</a>
+<a name="ln3321">  int i = 0;</a>
 <a name="ln3322">  regmmatch_T regmatch;</a>
 <a name="ln3323">  static subflags_T subflags = {</a>
 <a name="ln3324">    .do_all = false,</a>
@@ -3355,7 +3355,7 @@
 <a name="ln3346">  PreviewLines preview_lines = { KV_INITIAL_VALUE, 0 };</a>
 <a name="ln3347">  static int pre_hl_id = 0;</a>
 <a name="ln3348">  pos_T old_cursor = curwin-&gt;w_cursor;</a>
-<a name="ln3349">  long start_nsubs;</a>
+<a name="ln3349">  int start_nsubs;</a>
 <a name="ln3350"> </a>
 <a name="ln3351">  bool did_save = false;</a>
 <a name="ln3352"> </a>
@@ -3451,7 +3451,7 @@
 <a name="ln3442">  // check for a trailing count</a>
 <a name="ln3443">  cmd = skipwhite(cmd);</a>
 <a name="ln3444">  if (ascii_isdigit(*cmd)) {</a>
-<a name="ln3445">    i = getdigits_long(&amp;cmd, true, 0);</a>
+<a name="ln3445">    i = getdigits_int(&amp;cmd, true, 0);</a>
 <a name="ln3446">    if (i &lt;= 0 &amp;&amp; !eap-&gt;skip &amp;&amp; subflags.do_error) {</a>
 <a name="ln3447">      emsg(_(e_zerocount));</a>
 <a name="ln3448">      return 0;</a>
@@ -3530,8 +3530,8 @@
 <a name="ln3521">       &amp;&amp; (cmdpreview_ns &lt;= 0 || preview_lines.lines_needed &lt;= (linenr_T)p_cwh</a>
 <a name="ln3522">           || lnum &lt;= curwin-&gt;w_botline);</a>
 <a name="ln3523">       lnum++) {</a>
-<a name="ln3524">    long nmatch = vim_regexec_multi(&amp;regmatch, curwin, curbuf, lnum,</a>
-<a name="ln3525">                                    (colnr_T)0, NULL, NULL);</a>
+<a name="ln3524">    int nmatch = (int)vim_regexec_multi(&amp;regmatch, curwin, curbuf, lnum,</a>
+<a name="ln3525">                                        (colnr_T)0, NULL, NULL);</a>
 <a name="ln3526">    if (nmatch) {</a>
 <a name="ln3527">      colnr_T copycol;</a>
 <a name="ln3528">      colnr_T matchcol;</a>
@@ -3541,7 +3541,7 @@
 <a name="ln3532">      char *p1;</a>
 <a name="ln3533">      bool did_sub = false;</a>
 <a name="ln3534">      int lastone;</a>
-<a name="ln3535">      long nmatch_tl = 0;               // nr of lines matched below lnum</a>
+<a name="ln3535">      linenr_T nmatch_tl = 0;               // nr of lines matched below lnum</a>
 <a name="ln3536">      int do_again;                     // do it again after joining lines</a>
 <a name="ln3537">      bool skip_match = false;</a>
 <a name="ln3538">      linenr_T sub_firstlnum;           // nr of first sub line</a>
@@ -3814,7 +3814,7 @@
 <a name="ln3805">              // Same highlight as wait_return().</a>
 <a name="ln3806">              smsg(HL_ATTR(HLF_R), _(&quot;replace with %s (y/n/a/q/l/^E/^Y)?&quot;), sub);</a>
 <a name="ln3807">              msg_no_more = false;</a>
-<a name="ln3808">              msg_scroll = (int)i;</a>
+<a name="ln3808">              msg_scroll = i;</a>
 <a name="ln3809">              if (!ui_has(kUIMessages)) {</a>
 <a name="ln3810">                ui_cursor_goto(msg_row, msg_col);</a>
 <a name="ln3811">              }</a>
@@ -4096,9 +4096,9 @@
 <a name="ln4087">        // need to replace the line first (using \zs after \n).</a>
 <a name="ln4088">        if (lastone</a>
 <a name="ln4089">            || nmatch_tl &gt; 0</a>
-<a name="ln4090">            || (nmatch = vim_regexec_multi(&amp;regmatch, curwin,</a>
-<a name="ln4091">                                           curbuf, sub_firstlnum,</a>
-<a name="ln4092">                                           matchcol, NULL, NULL)) == 0</a>
+<a name="ln4090">            || (nmatch = (int)vim_regexec_multi(&amp;regmatch, curwin,</a>
+<a name="ln4091">                                                curbuf, sub_firstlnum,</a>
+<a name="ln4092">                                                matchcol, NULL, NULL)) == 0</a>
 <a name="ln4093">            || regmatch.startpos[0].lnum &gt; 0) {</a>
 <a name="ln4094">          if (new_start != NULL) {</a>
 <a name="ln4095">            // Copy the rest of the line, that didn't match.</a>
@@ -4128,707 +4128,706 @@
 <a name="ln4119">              for (i = 0; i &lt; nmatch_tl; i++) {</a>
 <a name="ln4120">                ml_delete(lnum, false);</a>
 <a name="ln4121">              }</a>
-<a name="ln4122">              mark_adjust(lnum, lnum + (linenr_T)nmatch_tl - 1,</a>
-<a name="ln4123">                          (long)MAXLNUM, (linenr_T)(-nmatch_tl), kExtmarkNOOP);</a>
-<a name="ln4124">              if (subflags.do_ask) {</a>
-<a name="ln4125">                deleted_lines(lnum, (linenr_T)nmatch_tl);</a>
-<a name="ln4126">              }</a>
-<a name="ln4127">              lnum--;</a>
-<a name="ln4128">              line2 -= (linenr_T)nmatch_tl;  // nr of lines decreases</a>
-<a name="ln4129">              nmatch_tl = 0;</a>
-<a name="ln4130">            }</a>
-<a name="ln4131"> </a>
-<a name="ln4132">            // When asking, undo is saved each time, must also set</a>
-<a name="ln4133">            // changed flag each time.</a>
-<a name="ln4134">            if (subflags.do_ask) {</a>
-<a name="ln4135">              changed_bytes(lnum, 0);</a>
-<a name="ln4136">            } else {</a>
-<a name="ln4137">              if (first_line == 0) {</a>
-<a name="ln4138">                first_line = lnum;</a>
-<a name="ln4139">              }</a>
-<a name="ln4140">              last_line = lnum + 1;</a>
-<a name="ln4141">            }</a>
-<a name="ln4142"> </a>
-<a name="ln4143">            sub_firstlnum = lnum;</a>
-<a name="ln4144">            xfree(sub_firstline);                // free the temp buffer</a>
-<a name="ln4145">            sub_firstline = new_start;</a>
-<a name="ln4146">            new_start = NULL;</a>
-<a name="ln4147">            matchcol = (colnr_T)strlen(sub_firstline) - matchcol;</a>
-<a name="ln4148">            prev_matchcol = (colnr_T)strlen(sub_firstline)</a>
-<a name="ln4149">                            - prev_matchcol;</a>
-<a name="ln4150">            copycol = 0;</a>
-<a name="ln4151">          }</a>
-<a name="ln4152">          if (nmatch == -1 &amp;&amp; !lastone) {</a>
-<a name="ln4153">            nmatch = vim_regexec_multi(&amp;regmatch, curwin, curbuf,</a>
-<a name="ln4154">                                       sub_firstlnum, matchcol, NULL, NULL);</a>
-<a name="ln4155">          }</a>
-<a name="ln4156"> </a>
-<a name="ln4157">          // 5. break if there isn't another match in this line</a>
-<a name="ln4158">          if (nmatch &lt;= 0) {</a>
-<a name="ln4159">            // If the match found didn't start where we were</a>
-<a name="ln4160">            // searching, do the next search in the line where we</a>
-<a name="ln4161">            // found the match.</a>
-<a name="ln4162">            if (nmatch == -1) {</a>
-<a name="ln4163">              lnum -= regmatch.startpos[0].lnum;</a>
-<a name="ln4164">            }</a>
-<a name="ln4165"> </a>
-<a name="ln4166">            // uncrustify:off</a>
-<a name="ln4167"> </a>
-<a name="ln4168">#define PUSH_PREVIEW_LINES() \</a>
-<a name="ln4169">  do { \</a>
-<a name="ln4170">    if (cmdpreview_ns &gt; 0) { \</a>
-<a name="ln4171">      linenr_T match_lines = current_match.end.lnum \</a>
-<a name="ln4172">                             - current_match.start.lnum +1; \</a>
-<a name="ln4173">      if (preview_lines.subresults.size &gt; 0) { \</a>
-<a name="ln4174">        linenr_T last = kv_last(preview_lines.subresults).end.lnum; \</a>
-<a name="ln4175">        if (last == current_match.start.lnum) { \</a>
-<a name="ln4176">          preview_lines.lines_needed += match_lines - 1; \</a>
-<a name="ln4177">        } else { \</a>
-<a name="ln4178">          preview_lines.lines_needed += match_lines; \</a>
-<a name="ln4179">        } \</a>
-<a name="ln4180">      } else { \</a>
-<a name="ln4181">        preview_lines.lines_needed += match_lines; \</a>
-<a name="ln4182">      } \</a>
-<a name="ln4183">      kv_push(preview_lines.subresults, current_match); \</a>
-<a name="ln4184">    } \</a>
-<a name="ln4185">  } while (0)</a>
-<a name="ln4186"> </a>
-<a name="ln4187">            // uncrustify:on</a>
-<a name="ln4188"> </a>
-<a name="ln4189">            // Push the match to preview_lines.</a>
-<a name="ln4190">            PUSH_PREVIEW_LINES();</a>
-<a name="ln4191"> </a>
-<a name="ln4192">            break;</a>
-<a name="ln4193">          }</a>
-<a name="ln4194">        }</a>
-<a name="ln4195">        // Push the match to preview_lines.</a>
-<a name="ln4196">        PUSH_PREVIEW_LINES();</a>
-<a name="ln4197"> </a>
-<a name="ln4198">        line_breakcheck();</a>
-<a name="ln4199">      }</a>
-<a name="ln4200"> </a>
-<a name="ln4201">      if (did_sub) {</a>
-<a name="ln4202">        sub_nlines++;</a>
-<a name="ln4203">      }</a>
-<a name="ln4204">      xfree(new_start);              // for when substitute was cancelled</a>
-<a name="ln4205">      XFREE_CLEAR(sub_firstline);    // free the copy of the original line</a>
-<a name="ln4206">    }</a>
-<a name="ln4207"> </a>
-<a name="ln4208">    line_breakcheck();</a>
-<a name="ln4209"> </a>
-<a name="ln4210">    if (profile_passed_limit(timeout)) {</a>
-<a name="ln4211">      got_quit = true;</a>
-<a name="ln4212">    }</a>
-<a name="ln4213">  }</a>
-<a name="ln4214"> </a>
-<a name="ln4215">  curbuf-&gt;deleted_bytes2 = 0;</a>
-<a name="ln4216"> </a>
-<a name="ln4217">  if (first_line != 0) {</a>
-<a name="ln4218">    // Need to subtract the number of added lines from &quot;last_line&quot; to get</a>
-<a name="ln4219">    // the line number before the change (same as adding the number of</a>
-<a name="ln4220">    // deleted lines).</a>
-<a name="ln4221">    i = curbuf-&gt;b_ml.ml_line_count - old_line_count;</a>
-<a name="ln4222">    changed_lines(curbuf, first_line, 0, last_line - (linenr_T)i, (linenr_T)i, false);</a>
-<a name="ln4223"> </a>
-<a name="ln4224">    int64_t num_added = last_line - first_line;</a>
-<a name="ln4225">    int64_t num_removed = num_added - i;</a>
-<a name="ln4226">    buf_updates_send_changes(curbuf, first_line, num_added, num_removed);</a>
-<a name="ln4227">  }</a>
-<a name="ln4228"> </a>
-<a name="ln4229">  xfree(sub_firstline);   // may have to free allocated copy of the line</a>
-<a name="ln4230"> </a>
-<a name="ln4231">  // &quot;:s/pat//n&quot; doesn't move the cursor</a>
-<a name="ln4232">  if (subflags.do_count) {</a>
-<a name="ln4233">    curwin-&gt;w_cursor = old_cursor;</a>
-<a name="ln4234">  }</a>
-<a name="ln4235"> </a>
-<a name="ln4236">  if (sub_nsubs &gt; start_nsubs) {</a>
-<a name="ln4237">    if ((cmdmod.cmod_flags &amp; CMOD_LOCKMARKS) == 0) {</a>
-<a name="ln4238">      // Set the '[ and '] marks.</a>
-<a name="ln4239">      curbuf-&gt;b_op_start.lnum = eap-&gt;line1;</a>
-<a name="ln4240">      curbuf-&gt;b_op_end.lnum = line2;</a>
-<a name="ln4241">      curbuf-&gt;b_op_start.col = curbuf-&gt;b_op_end.col = 0;</a>
-<a name="ln4242">    }</a>
-<a name="ln4243"> </a>
-<a name="ln4244">    if (!global_busy) {</a>
-<a name="ln4245">      // when interactive leave cursor on the match</a>
-<a name="ln4246">      if (!subflags.do_ask) {</a>
-<a name="ln4247">        if (endcolumn) {</a>
-<a name="ln4248">          coladvance(MAXCOL);</a>
-<a name="ln4249">        } else {</a>
-<a name="ln4250">          beginline(BL_WHITE | BL_FIX);</a>
-<a name="ln4251">        }</a>
-<a name="ln4252">      }</a>
-<a name="ln4253">      if (cmdpreview_ns &lt;= 0 &amp;&amp; !do_sub_msg(subflags.do_count) &amp;&amp; subflags.do_ask &amp;&amp; p_ch &gt; 0) {</a>
-<a name="ln4254">        msg(&quot;&quot;, 0);</a>
-<a name="ln4255">      }</a>
-<a name="ln4256">    } else {</a>
-<a name="ln4257">      global_need_beginline = true;</a>
-<a name="ln4258">    }</a>
-<a name="ln4259">    if (subflags.do_print) {</a>
-<a name="ln4260">      print_line(curwin-&gt;w_cursor.lnum, subflags.do_number, subflags.do_list);</a>
-<a name="ln4261">    }</a>
-<a name="ln4262">  } else if (!global_busy) {</a>
-<a name="ln4263">    if (got_int) {</a>
-<a name="ln4264">      // interrupted</a>
-<a name="ln4265">      emsg(_(e_interr));</a>
-<a name="ln4266">    } else if (got_match) {</a>
-<a name="ln4267">      // did find something but nothing substituted</a>
-<a name="ln4268">      if (p_ch &gt; 0) {</a>
-<a name="ln4269">        msg(&quot;&quot;, 0);</a>
-<a name="ln4270">      }</a>
-<a name="ln4271">    } else if (subflags.do_error) {</a>
-<a name="ln4272">      // nothing found</a>
-<a name="ln4273">      semsg(_(e_patnotf2), get_search_pat());</a>
-<a name="ln4274">    }</a>
-<a name="ln4275">  }</a>
-<a name="ln4276"> </a>
-<a name="ln4277">  if (subflags.do_ask &amp;&amp; hasAnyFolding(curwin)) {</a>
-<a name="ln4278">    // Cursor position may require updating</a>
-<a name="ln4279">    changed_window_setting();</a>
-<a name="ln4280">  }</a>
-<a name="ln4281"> </a>
-<a name="ln4282">  vim_regfree(regmatch.regprog);</a>
-<a name="ln4283">  xfree(sub_copy);</a>
-<a name="ln4284"> </a>
-<a name="ln4285">  // Restore the flag values, they can be used for &quot;:&amp;&amp;&quot;.</a>
-<a name="ln4286">  subflags.do_all = save_do_all;</a>
-<a name="ln4287">  subflags.do_ask = save_do_ask;</a>
-<a name="ln4288"> </a>
-<a name="ln4289">  int retv = 0;</a>
-<a name="ln4290"> </a>
-<a name="ln4291">  // Show 'inccommand' preview if there are matched lines.</a>
-<a name="ln4292">  if (cmdpreview_ns &gt; 0 &amp;&amp; !aborting()) {</a>
-<a name="ln4293">    if (got_quit || profile_passed_limit(timeout)) {  // Too slow, disable.</a>
-<a name="ln4294">      set_string_option_direct(&quot;icm&quot;, -1, &quot;&quot;, OPT_FREE, SID_NONE);</a>
-<a name="ln4295">    } else if (*p_icm != NUL &amp;&amp; pat != NULL) {</a>
-<a name="ln4296">      if (pre_hl_id == 0) {</a>
-<a name="ln4297">        pre_hl_id = syn_check_group(S_LEN(&quot;Substitute&quot;));</a>
-<a name="ln4298">      }</a>
-<a name="ln4299">      retv = show_sub(eap, old_cursor, &amp;preview_lines, pre_hl_id, cmdpreview_ns, cmdpreview_bufnr);</a>
-<a name="ln4300">    }</a>
-<a name="ln4301">  }</a>
-<a name="ln4302"> </a>
-<a name="ln4303">  kv_destroy(preview_lines.subresults);</a>
-<a name="ln4304">  return retv;</a>
-<a name="ln4305">#undef ADJUST_SUB_FIRSTLNUM</a>
-<a name="ln4306">#undef PUSH_PREVIEW_LINES</a>
-<a name="ln4307">}</a>
-<a name="ln4308"> </a>
-<a name="ln4309">/// Give message for number of substitutions.</a>
-<a name="ln4310">/// Can also be used after a &quot;:global&quot; command.</a>
-<a name="ln4311">///</a>
-<a name="ln4312">/// @param count_only  used 'n' flag for &quot;:s&quot;</a>
-<a name="ln4313">///</a>
-<a name="ln4314">/// @return            true if a message was given.</a>
-<a name="ln4315">bool do_sub_msg(bool count_only)</a>
-<a name="ln4316">{</a>
-<a name="ln4317">  // Only report substitutions when:</a>
-<a name="ln4318">  // - more than 'report' substitutions</a>
-<a name="ln4319">  // - command was typed by user, or number of changed lines &gt; 'report'</a>
-<a name="ln4320">  // - giving messages is not disabled by 'lazyredraw'</a>
-<a name="ln4321">  if (((sub_nsubs &gt; p_report &amp;&amp; (KeyTyped || sub_nlines &gt; 1 || p_report &lt; 1))</a>
-<a name="ln4322">       || count_only)</a>
-<a name="ln4323">      &amp;&amp; messaging()) {</a>
-<a name="ln4324">    if (got_int) {</a>
-<a name="ln4325">      STRCPY(msg_buf, _(&quot;(Interrupted) &quot;));</a>
-<a name="ln4326">    } else {</a>
-<a name="ln4327">      *msg_buf = NUL;</a>
-<a name="ln4328">    }</a>
-<a name="ln4329"> </a>
-<a name="ln4330">    char *msg_single = count_only</a>
-<a name="ln4331">                     ? NGETTEXT(&quot;%&quot; PRId64 &quot; match on %&quot; PRId64 &quot; line&quot;,</a>
-<a name="ln4332">                                &quot;%&quot; PRId64 &quot; matches on %&quot; PRId64 &quot; line&quot;, sub_nsubs)</a>
-<a name="ln4333">                     : NGETTEXT(&quot;%&quot; PRId64 &quot; substitution on %&quot; PRId64 &quot; line&quot;,</a>
-<a name="ln4334">                                &quot;%&quot; PRId64 &quot; substitutions on %&quot; PRId64 &quot; line&quot;, sub_nsubs);</a>
-<a name="ln4335">    char *msg_plural = count_only</a>
-<a name="ln4336">                     ? NGETTEXT(&quot;%&quot; PRId64 &quot; match on %&quot; PRId64 &quot; lines&quot;,</a>
-<a name="ln4337">                                &quot;%&quot; PRId64 &quot; matches on %&quot; PRId64 &quot; lines&quot;, sub_nsubs)</a>
-<a name="ln4338">                     : NGETTEXT(&quot;%&quot; PRId64 &quot; substitution on %&quot; PRId64 &quot; lines&quot;,</a>
-<a name="ln4339">                                &quot;%&quot; PRId64 &quot; substitutions on %&quot; PRId64 &quot; lines&quot;, sub_nsubs);</a>
-<a name="ln4340">    vim_snprintf_add(msg_buf, sizeof(msg_buf),</a>
-<a name="ln4341">                     NGETTEXT(msg_single, msg_plural, sub_nlines),</a>
-<a name="ln4342">                     (int64_t)sub_nsubs, (int64_t)sub_nlines);</a>
-<a name="ln4343">    if (msg(msg_buf, 0)) {</a>
-<a name="ln4344">      // save message to display it after redraw</a>
-<a name="ln4345">      set_keep_msg(msg_buf, 0);</a>
-<a name="ln4346">    }</a>
-<a name="ln4347">    return true;</a>
-<a name="ln4348">  }</a>
-<a name="ln4349">  if (got_int) {</a>
-<a name="ln4350">    emsg(_(e_interr));</a>
-<a name="ln4351">    return true;</a>
-<a name="ln4352">  }</a>
-<a name="ln4353">  return false;</a>
-<a name="ln4354">}</a>
-<a name="ln4355"> </a>
-<a name="ln4356">static void global_exe_one(char *const cmd, const linenr_T lnum)</a>
-<a name="ln4357">{</a>
-<a name="ln4358">  curwin-&gt;w_cursor.lnum = lnum;</a>
-<a name="ln4359">  curwin-&gt;w_cursor.col = 0;</a>
-<a name="ln4360">  if (*cmd == NUL || *cmd == '\n') {</a>
-<a name="ln4361">    do_cmdline(&quot;p&quot;, NULL, NULL, DOCMD_NOWAIT);</a>
-<a name="ln4362">  } else {</a>
-<a name="ln4363">    do_cmdline(cmd, NULL, NULL, DOCMD_NOWAIT);</a>
-<a name="ln4364">  }</a>
-<a name="ln4365">}</a>
-<a name="ln4366"> </a>
-<a name="ln4367">/// Execute a global command of the form:</a>
-<a name="ln4368">///</a>
-<a name="ln4369">/// g/pattern/X : execute X on all lines where pattern matches</a>
-<a name="ln4370">/// v/pattern/X : execute X on all lines where pattern does not match</a>
-<a name="ln4371">///</a>
-<a name="ln4372">/// where 'X' is an EX command</a>
-<a name="ln4373">///</a>
-<a name="ln4374">/// The command character (as well as the trailing slash) is optional, and</a>
-<a name="ln4375">/// is assumed to be 'p' if missing.</a>
-<a name="ln4376">///</a>
-<a name="ln4377">/// This is implemented in two passes: first we scan the file for the pattern and</a>
-<a name="ln4378">/// set a mark for each line that (not) matches. Secondly we execute the command</a>
-<a name="ln4379">/// for each line that has a mark. This is required because after deleting</a>
-<a name="ln4380">/// lines we do not know where to search for the next match.</a>
-<a name="ln4381">void ex_global(exarg_T *eap)</a>
-<a name="ln4382">{</a>
-<a name="ln4383">  linenr_T lnum;                // line number according to old situation</a>
-<a name="ln4384">  int type;                     // first char of cmd: 'v' or 'g'</a>
-<a name="ln4385">  char *cmd;             // command argument</a>
-<a name="ln4386"> </a>
-<a name="ln4387">  char delim;                 // delimiter, normally '/'</a>
-<a name="ln4388">  char *pat;</a>
-<a name="ln4389">  regmmatch_T regmatch;</a>
-<a name="ln4390">  int match;</a>
-<a name="ln4391">  int which_pat;</a>
-<a name="ln4392"> </a>
-<a name="ln4393">  // When nesting the command works on one line.  This allows for</a>
-<a name="ln4394">  // &quot;:g/found/v/notfound/command&quot;.</a>
-<a name="ln4395">  if (global_busy &amp;&amp; (eap-&gt;line1 != 1</a>
-<a name="ln4396">                      || eap-&gt;line2 != curbuf-&gt;b_ml.ml_line_count)) {</a>
-<a name="ln4397">    // will increment global_busy to break out of the loop</a>
-<a name="ln4398">    emsg(_(&quot;E147: Cannot do :global recursive with a range&quot;));</a>
-<a name="ln4399">    return;</a>
-<a name="ln4400">  }</a>
-<a name="ln4401"> </a>
-<a name="ln4402">  if (eap-&gt;forceit) {               // &quot;:global!&quot; is like &quot;:vglobal&quot;</a>
-<a name="ln4403">    type = 'v';</a>
-<a name="ln4404">  } else {</a>
-<a name="ln4405">    type = (uint8_t)(*eap-&gt;cmd);</a>
-<a name="ln4406">  }</a>
-<a name="ln4407">  cmd = eap-&gt;arg;</a>
-<a name="ln4408">  which_pat = RE_LAST;              // default: use last used regexp</a>
-<a name="ln4409"> </a>
-<a name="ln4410">  // undocumented vi feature:</a>
-<a name="ln4411">  //    &quot;\/&quot; and &quot;\?&quot;: use previous search pattern.</a>
-<a name="ln4412">  //             &quot;\&amp;&quot;: use previous substitute pattern.</a>
-<a name="ln4413">  if (*cmd == '\\') {</a>
-<a name="ln4414">    cmd++;</a>
-<a name="ln4415">    if (vim_strchr(&quot;/?&amp;&quot;, (uint8_t)(*cmd)) == NULL) {</a>
-<a name="ln4416">      emsg(_(e_backslash));</a>
-<a name="ln4417">      return;</a>
-<a name="ln4418">    }</a>
-<a name="ln4419">    if (*cmd == '&amp;') {</a>
-<a name="ln4420">      which_pat = RE_SUBST;             // use previous substitute pattern</a>
-<a name="ln4421">    } else {</a>
-<a name="ln4422">      which_pat = RE_SEARCH;            // use previous search pattern</a>
-<a name="ln4423">    }</a>
-<a name="ln4424">    cmd++;</a>
-<a name="ln4425">    pat = &quot;&quot;;</a>
-<a name="ln4426">  } else if (*cmd == NUL) {</a>
-<a name="ln4427">    emsg(_(&quot;E148: Regular expression missing from global&quot;));</a>
-<a name="ln4428">    return;</a>
-<a name="ln4429">  } else if (check_regexp_delim(*cmd) == FAIL) {</a>
-<a name="ln4430">    return;</a>
-<a name="ln4431">  } else {</a>
-<a name="ln4432">    delim = *cmd;               // get the delimiter</a>
-<a name="ln4433">    cmd++;                      // skip delimiter if there is one</a>
-<a name="ln4434">    pat = cmd;                  // remember start of pattern</a>
-<a name="ln4435">    cmd = skip_regexp_ex(cmd, delim, magic_isset(), &amp;eap-&gt;arg, NULL, NULL);</a>
-<a name="ln4436">    if (cmd[0] == delim) {                  // end delimiter found</a>
-<a name="ln4437">      *cmd++ = NUL;                         // replace it with a NUL</a>
-<a name="ln4438">    }</a>
-<a name="ln4439">  }</a>
-<a name="ln4440"> </a>
-<a name="ln4441">  char *used_pat;</a>
-<a name="ln4442">  if (search_regcomp(pat, &amp;used_pat, RE_BOTH, which_pat,</a>
-<a name="ln4443">                     SEARCH_HIS, &amp;regmatch) == FAIL) {</a>
-<a name="ln4444">    emsg(_(e_invcmd));</a>
-<a name="ln4445">    return;</a>
-<a name="ln4446">  }</a>
-<a name="ln4447"> </a>
-<a name="ln4448">  if (global_busy) {</a>
-<a name="ln4449">    lnum = curwin-&gt;w_cursor.lnum;</a>
-<a name="ln4450">    match = (int)vim_regexec_multi(&amp;regmatch, curwin, curbuf, lnum, 0, NULL, NULL);</a>
-<a name="ln4451">    if ((type == 'g' &amp;&amp; match) || (type == 'v' &amp;&amp; !match)) {</a>
-<a name="ln4452">      global_exe_one(cmd, lnum);</a>
-<a name="ln4453">    }</a>
-<a name="ln4454">  } else {</a>
-<a name="ln4455">    int ndone = 0;</a>
-<a name="ln4456">    // pass 1: set marks for each (not) matching line</a>
-<a name="ln4457">    for (lnum = eap-&gt;line1; lnum &lt;= eap-&gt;line2 &amp;&amp; !got_int; lnum++) {</a>
-<a name="ln4458">      // a match on this line?</a>
-<a name="ln4459">      match = (int)vim_regexec_multi(&amp;regmatch, curwin, curbuf, lnum, 0, NULL, NULL);</a>
-<a name="ln4460">      if (regmatch.regprog == NULL) {</a>
-<a name="ln4461">        break;  // re-compiling regprog failed</a>
-<a name="ln4462">      }</a>
-<a name="ln4463">      if ((type == 'g' &amp;&amp; match) || (type == 'v' &amp;&amp; !match)) {</a>
-<a name="ln4464">        ml_setmarked(lnum);</a>
-<a name="ln4465">        ndone++;</a>
-<a name="ln4466">      }</a>
-<a name="ln4467">      line_breakcheck();</a>
-<a name="ln4468">    }</a>
-<a name="ln4469"> </a>
-<a name="ln4470">    // pass 2: execute the command for each line that has been marked</a>
-<a name="ln4471">    if (got_int) {</a>
-<a name="ln4472">      msg(_(e_interr), 0);</a>
-<a name="ln4473">    } else if (ndone == 0) {</a>
-<a name="ln4474">      if (type == 'v') {</a>
-<a name="ln4475">        smsg(0, _(&quot;Pattern found in every line: %s&quot;), used_pat);</a>
-<a name="ln4476">      } else {</a>
-<a name="ln4477">        smsg(0, _(&quot;Pattern not found: %s&quot;), used_pat);</a>
-<a name="ln4478">      }</a>
-<a name="ln4479">    } else {</a>
-<a name="ln4480">      global_exe(cmd);</a>
-<a name="ln4481">    }</a>
-<a name="ln4482">    ml_clearmarked();         // clear rest of the marks</a>
-<a name="ln4483">  }</a>
-<a name="ln4484">  vim_regfree(regmatch.regprog);</a>
-<a name="ln4485">}</a>
-<a name="ln4486"> </a>
-<a name="ln4487">/// Execute `cmd` on lines marked with ml_setmarked().</a>
-<a name="ln4488">void global_exe(char *cmd)</a>
-<a name="ln4489">{</a>
-<a name="ln4490">  linenr_T old_lcount;      // b_ml.ml_line_count before the command</a>
-<a name="ln4491">  buf_T *old_buf = curbuf;  // remember what buffer we started in</a>
-<a name="ln4492">  linenr_T lnum;            // line number according to old situation</a>
-<a name="ln4493"> </a>
-<a name="ln4494">  // Set current position only once for a global command.</a>
-<a name="ln4495">  // If global_busy is set, setpcmark() will not do anything.</a>
-<a name="ln4496">  // If there is an error, global_busy will be incremented.</a>
-<a name="ln4497">  setpcmark();</a>
-<a name="ln4498"> </a>
-<a name="ln4499">  // When the command writes a message, don't overwrite the command.</a>
-<a name="ln4500">  msg_didout = true;</a>
-<a name="ln4501"> </a>
-<a name="ln4502">  sub_nsubs = 0;</a>
-<a name="ln4503">  sub_nlines = 0;</a>
-<a name="ln4504">  global_need_beginline = false;</a>
-<a name="ln4505">  global_busy = 1;</a>
-<a name="ln4506">  old_lcount = curbuf-&gt;b_ml.ml_line_count;</a>
-<a name="ln4507"> </a>
-<a name="ln4508">  while (!got_int &amp;&amp; (lnum = ml_firstmarked()) != 0 &amp;&amp; global_busy == 1) {</a>
-<a name="ln4509">    global_exe_one(cmd, lnum);</a>
-<a name="ln4510">    os_breakcheck();</a>
-<a name="ln4511">  }</a>
-<a name="ln4512"> </a>
-<a name="ln4513">  global_busy = 0;</a>
-<a name="ln4514">  if (global_need_beginline) {</a>
-<a name="ln4515">    beginline(BL_WHITE | BL_FIX);</a>
-<a name="ln4516">  } else {</a>
-<a name="ln4517">    check_cursor();  // cursor may be beyond the end of the line</a>
-<a name="ln4518">  }</a>
-<a name="ln4519"> </a>
-<a name="ln4520">  // the cursor may not have moved in the text but a change in a previous</a>
-<a name="ln4521">  // line may move it on the screen</a>
-<a name="ln4522">  changed_line_abv_curs();</a>
-<a name="ln4523"> </a>
-<a name="ln4524">  // If it looks like no message was written, allow overwriting the</a>
-<a name="ln4525">  // command with the report for number of changes.</a>
-<a name="ln4526">  if (msg_col == 0 &amp;&amp; msg_scrolled == 0) {</a>
-<a name="ln4527">    msg_didout = false;</a>
-<a name="ln4528">  }</a>
-<a name="ln4529"> </a>
-<a name="ln4530">  // If substitutes done, report number of substitutes, otherwise report</a>
-<a name="ln4531">  // number of extra or deleted lines.</a>
-<a name="ln4532">  // Don't report extra or deleted lines in the edge case where the buffer</a>
-<a name="ln4533">  // we are in after execution is different from the buffer we started in.</a>
-<a name="ln4534">  if (!do_sub_msg(false) &amp;&amp; curbuf == old_buf) {</a>
-<a name="ln4535">    msgmore(curbuf-&gt;b_ml.ml_line_count - old_lcount);</a>
-<a name="ln4536">  }</a>
-<a name="ln4537">}</a>
-<a name="ln4538"> </a>
-<a name="ln4539">#if defined(EXITFREE)</a>
-<a name="ln4540">void free_old_sub(void)</a>
-<a name="ln4541">{</a>
-<a name="ln4542">  sub_set_replacement((SubReplacementString) { NULL, 0, NULL });</a>
-<a name="ln4543">}</a>
-<a name="ln4544"> </a>
-<a name="ln4545">#endif</a>
-<a name="ln4546"> </a>
-<a name="ln4547">/// Set up for a tagpreview.</a>
-<a name="ln4548">///</a>
-<a name="ln4549">/// @param undo_sync  sync undo when leaving the window</a>
-<a name="ln4550">///</a>
-<a name="ln4551">/// @return           true when it was created.</a>
-<a name="ln4552">bool prepare_tagpreview(bool undo_sync)</a>
-<a name="ln4553">{</a>
-<a name="ln4554">  if (curwin-&gt;w_p_pvw) {</a>
-<a name="ln4555">    return false;</a>
-<a name="ln4556">  }</a>
-<a name="ln4557"> </a>
-<a name="ln4558">  // If there is already a preview window open, use that one.</a>
-<a name="ln4559">  FOR_ALL_WINDOWS_IN_TAB(wp, curtab) {</a>
-<a name="ln4560">    if (wp-&gt;w_p_pvw) {</a>
-<a name="ln4561">      win_enter(wp, undo_sync);</a>
-<a name="ln4562">      return false;</a>
-<a name="ln4563">    }</a>
-<a name="ln4564">  }</a>
-<a name="ln4565"> </a>
-<a name="ln4566">  // There is no preview window open yet.  Create one.</a>
-<a name="ln4567">  if (win_split(g_do_tagpreview &gt; 0 ? g_do_tagpreview : 0, 0)</a>
-<a name="ln4568">      == FAIL) {</a>
-<a name="ln4569">    return false;</a>
-<a name="ln4570">  }</a>
-<a name="ln4571">  curwin-&gt;w_p_pvw = true;</a>
-<a name="ln4572">  curwin-&gt;w_p_wfh = true;</a>
-<a name="ln4573">  RESET_BINDING(curwin);                // don't take over 'scrollbind' and 'cursorbind'</a>
-<a name="ln4574">  curwin-&gt;w_p_diff = false;             // no 'diff'</a>
-<a name="ln4575">  set_string_option_direct(&quot;fdc&quot;, -1,     // no 'foldcolumn'</a>
-<a name="ln4576">                           &quot;0&quot;, OPT_FREE, SID_NONE);</a>
-<a name="ln4577">  return true;</a>
-<a name="ln4578">}</a>
-<a name="ln4579"> </a>
-<a name="ln4580">/// Shows the effects of the :substitute command being typed ('inccommand').</a>
-<a name="ln4581">/// If inccommand=split, shows a preview window and later restores the layout.</a>
-<a name="ln4582">///</a>
-<a name="ln4583">/// @return 1 if preview window isn't needed, 2 if preview window is needed.</a>
-<a name="ln4584">static int show_sub(exarg_T *eap, pos_T old_cusr, PreviewLines *preview_lines, int hl_id,</a>
-<a name="ln4585">                    long cmdpreview_ns, handle_T cmdpreview_bufnr)</a>
-<a name="ln4586">  FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln4587">{</a>
-<a name="ln4588">  char *save_shm_p = xstrdup(p_shm);</a>
-<a name="ln4589">  PreviewLines lines = *preview_lines;</a>
-<a name="ln4590">  buf_T *orig_buf = curbuf;</a>
-<a name="ln4591">  // We keep a special-purpose buffer around, but don't assume it exists.</a>
-<a name="ln4592">  buf_T *cmdpreview_buf = NULL;</a>
-<a name="ln4593"> </a>
-<a name="ln4594">  // disable file info message</a>
-<a name="ln4595">  set_string_option_direct(&quot;shm&quot;, -1, &quot;F&quot;, OPT_FREE, SID_NONE);</a>
-<a name="ln4596"> </a>
-<a name="ln4597">  // Update the topline to ensure that main window is on the correct line</a>
-<a name="ln4598">  update_topline(curwin);</a>
-<a name="ln4599"> </a>
-<a name="ln4600">  // Place cursor on nearest matching line, to undo do_sub() cursor placement.</a>
-<a name="ln4601">  for (size_t i = 0; i &lt; lines.subresults.size; i++) {</a>
-<a name="ln4602">    SubResult curres = lines.subresults.items[i];</a>
-<a name="ln4603">    if (curres.start.lnum &gt;= old_cusr.lnum) {</a>
-<a name="ln4604">      curwin-&gt;w_cursor.lnum = curres.start.lnum;</a>
-<a name="ln4605">      curwin-&gt;w_cursor.col = curres.start.col;</a>
-<a name="ln4606">      break;</a>
-<a name="ln4607">    }  // Else: All matches are above, do_sub() already placed cursor.</a>
-<a name="ln4608">  }</a>
-<a name="ln4609"> </a>
-<a name="ln4610">  // Width of the &quot;| lnum|...&quot; column which displays the line numbers.</a>
-<a name="ln4611">  linenr_T highest_num_line = 0;</a>
-<a name="ln4612">  int col_width = 0;</a>
-<a name="ln4613">  // Use preview window only when inccommand=split and range is not just the current line</a>
-<a name="ln4614">  bool preview = (*p_icm == 's') &amp;&amp; (eap-&gt;line1 != old_cusr.lnum || eap-&gt;line2 != old_cusr.lnum);</a>
-<a name="ln4615"> </a>
-<a name="ln4616">  if (preview) {</a>
-<a name="ln4617">    cmdpreview_buf = buflist_findnr(cmdpreview_bufnr);</a>
-<a name="ln4618">    assert(cmdpreview_buf != NULL);</a>
-<a name="ln4619"> </a>
-<a name="ln4620">    if (lines.subresults.size &gt; 0) {</a>
-<a name="ln4621">      highest_num_line = kv_last(lines.subresults).end.lnum;</a>
-<a name="ln4622">      col_width = (int)log10(highest_num_line) + 1 + 3;</a>
-<a name="ln4623">    }</a>
-<a name="ln4624">  }</a>
-<a name="ln4625"> </a>
-<a name="ln4626">  char *str = NULL;  // construct the line to show in here</a>
-<a name="ln4627">  size_t old_line_size = 0;</a>
-<a name="ln4628">  size_t line_size = 0;</a>
-<a name="ln4629">  linenr_T linenr_preview = 0;  // last line added to preview buffer</a>
-<a name="ln4630">  linenr_T linenr_origbuf = 0;  // last line added to original buffer</a>
-<a name="ln4631">  linenr_T next_linenr = 0;     // next line to show for the match</a>
-<a name="ln4632"> </a>
-<a name="ln4633">  for (size_t matchidx = 0; matchidx &lt; lines.subresults.size; matchidx++) {</a>
-<a name="ln4634">    SubResult match = lines.subresults.items[matchidx];</a>
-<a name="ln4635"> </a>
-<a name="ln4636">    if (cmdpreview_buf) {</a>
-<a name="ln4637">      lpos_T p_start = { 0, match.start.col };  // match starts here in preview</a>
-<a name="ln4638">      lpos_T p_end   = { 0, match.end.col };    // ... and ends here</a>
-<a name="ln4639"> </a>
-<a name="ln4640">      // You Might Gonna Need It</a>
-<a name="ln4641">      buf_ensure_loaded(cmdpreview_buf);</a>
-<a name="ln4642"> </a>
-<a name="ln4643">      if (match.pre_match == 0) {</a>
-<a name="ln4644">        next_linenr = match.start.lnum;</a>
-<a name="ln4645">      } else {</a>
-<a name="ln4646">        next_linenr = match.pre_match;</a>
-<a name="ln4647">      }</a>
-<a name="ln4648">      // Don't add a line twice</a>
-<a name="ln4649">      if (next_linenr == linenr_origbuf) {</a>
-<a name="ln4650">        next_linenr++;</a>
-<a name="ln4651">        p_start.lnum = linenr_preview;  // might be redefined below</a>
-<a name="ln4652">        p_end.lnum = linenr_preview;  // might be redefined below</a>
-<a name="ln4653">      }</a>
-<a name="ln4654"> </a>
-<a name="ln4655">      for (; next_linenr &lt;= match.end.lnum; next_linenr++) {</a>
-<a name="ln4656">        if (next_linenr == match.start.lnum) {</a>
-<a name="ln4657">          p_start.lnum = linenr_preview + 1;</a>
-<a name="ln4658">        }</a>
-<a name="ln4659">        if (next_linenr == match.end.lnum) {</a>
-<a name="ln4660">          p_end.lnum = linenr_preview + 1;</a>
-<a name="ln4661">        }</a>
-<a name="ln4662">        char *line;</a>
-<a name="ln4663">        if (next_linenr == orig_buf-&gt;b_ml.ml_line_count + 1) {</a>
-<a name="ln4664">          line = &quot;&quot;;</a>
-<a name="ln4665">        } else {</a>
-<a name="ln4666">          line = ml_get_buf(orig_buf, next_linenr);</a>
-<a name="ln4667">          line_size = strlen(line) + (size_t)col_width + 1;</a>
-<a name="ln4668"> </a>
-<a name="ln4669">          // Reallocate if line not long enough</a>
-<a name="ln4670">          if (line_size &gt; old_line_size) {</a>
-<a name="ln4671">            str = xrealloc(str, line_size * sizeof(char));</a>
-<a name="ln4672">            old_line_size = line_size;</a>
-<a name="ln4673">          }</a>
-<a name="ln4674">        }</a>
-<a name="ln4675">        // Put &quot;|lnum| line&quot; into `str` and append it to the preview buffer.</a>
-<a name="ln4676">        snprintf(str, line_size, &quot;|%*&quot; PRIdLINENR &quot;| %s&quot;, col_width - 3,</a>
-<a name="ln4677">                 next_linenr, line);</a>
-<a name="ln4678">        if (linenr_preview == 0) {</a>
-<a name="ln4679">          ml_replace_buf(cmdpreview_buf, 1, str, true);</a>
-<a name="ln4680">        } else {</a>
-<a name="ln4681">          ml_append_buf(cmdpreview_buf, linenr_preview, str, (colnr_T)line_size, false);</a>
-<a name="ln4682">        }</a>
-<a name="ln4683">        linenr_preview += 1;</a>
-<a name="ln4684">      }</a>
-<a name="ln4685">      linenr_origbuf = match.end.lnum;</a>
-<a name="ln4686"> </a>
-<a name="ln4687">      bufhl_add_hl_pos_offset(cmdpreview_buf, (int)cmdpreview_ns, hl_id, p_start, p_end, col_width);</a>
-<a name="ln4688">    }</a>
-<a name="ln4689">    bufhl_add_hl_pos_offset(orig_buf, (int)cmdpreview_ns, hl_id, match.start, match.end, 0);</a>
-<a name="ln4690">  }</a>
-<a name="ln4691"> </a>
-<a name="ln4692">  xfree(str);</a>
-<a name="ln4693"> </a>
-<a name="ln4694">  set_string_option_direct(&quot;shm&quot;, -1, save_shm_p, OPT_FREE, SID_NONE);</a>
-<a name="ln4695">  xfree(save_shm_p);</a>
-<a name="ln4696"> </a>
-<a name="ln4697">  return preview ? 2 : 1;</a>
-<a name="ln4698">}</a>
-<a name="ln4699"> </a>
-<a name="ln4700">/// :substitute command.</a>
-<a name="ln4701">void ex_substitute(exarg_T *eap)</a>
-<a name="ln4702">{</a>
-<a name="ln4703">  (void)do_sub(eap, profile_zero(), 0, 0);</a>
-<a name="ln4704">}</a>
-<a name="ln4705"> </a>
-<a name="ln4706">/// :substitute command preview callback.</a>
-<a name="ln4707">int ex_substitute_preview(exarg_T *eap, long cmdpreview_ns, handle_T cmdpreview_bufnr)</a>
-<a name="ln4708">{</a>
-<a name="ln4709">  // Only preview once the pattern delimiter has been typed</a>
-<a name="ln4710">  if (*eap-&gt;arg &amp;&amp; !ASCII_ISALNUM(*eap-&gt;arg)) {</a>
-<a name="ln4711">    char *save_eap = eap-&gt;arg;</a>
-<a name="ln4712">    int retv = do_sub(eap, profile_setlimit(p_rdt), cmdpreview_ns, cmdpreview_bufnr);</a>
-<a name="ln4713">    eap-&gt;arg = save_eap;</a>
-<a name="ln4714">    return retv;</a>
-<a name="ln4715">  }</a>
-<a name="ln4716"> </a>
-<a name="ln4717">  return 0;</a>
-<a name="ln4718">}</a>
-<a name="ln4719"> </a>
-<a name="ln4720">/// Skip over the pattern argument of &quot;:vimgrep /pat/[g][j]&quot;.</a>
-<a name="ln4721">/// Put the start of the pattern in &quot;*s&quot;, unless &quot;s&quot; is NULL.</a>
-<a name="ln4722">///</a>
-<a name="ln4723">/// @param flags  if not NULL, put the flags in it: VGR_GLOBAL, VGR_NOJUMP.</a>
-<a name="ln4724">/// @param s      if not NULL, terminate the pattern with a NUL.</a>
-<a name="ln4725">///</a>
-<a name="ln4726">/// @return  a pointer to the char just past the pattern plus flags.</a>
-<a name="ln4727">char *skip_vimgrep_pat(char *p, char **s, int *flags)</a>
-<a name="ln4728">{</a>
-<a name="ln4729">  if (vim_isIDc((uint8_t)(*p))) {</a>
-<a name="ln4730">    // &quot;:vimgrep pattern fname&quot;</a>
-<a name="ln4731">    if (s != NULL) {</a>
-<a name="ln4732">      *s = p;</a>
-<a name="ln4733">    }</a>
-<a name="ln4734">    p = skiptowhite(p);</a>
-<a name="ln4735">    if (s != NULL &amp;&amp; *p != NUL) {</a>
-<a name="ln4736">      *p++ = NUL;</a>
-<a name="ln4737">    }</a>
-<a name="ln4738">  } else {</a>
-<a name="ln4739">    // &quot;:vimgrep /pattern/[g][j] fname&quot;</a>
-<a name="ln4740">    if (s != NULL) {</a>
-<a name="ln4741">      *s = p + 1;</a>
-<a name="ln4742">    }</a>
-<a name="ln4743">    int c = (uint8_t)(*p);</a>
-<a name="ln4744">    p = skip_regexp(p + 1, c, true);</a>
-<a name="ln4745">    if (*p != c) {</a>
-<a name="ln4746">      return NULL;</a>
-<a name="ln4747">    }</a>
-<a name="ln4748"> </a>
-<a name="ln4749">    // Truncate the pattern.</a>
-<a name="ln4750">    if (s != NULL) {</a>
-<a name="ln4751">      *p = NUL;</a>
-<a name="ln4752">    }</a>
-<a name="ln4753">    p++;</a>
-<a name="ln4754"> </a>
-<a name="ln4755">    // Find the flags</a>
-<a name="ln4756">    while (*p == 'g' || *p == 'j' || *p == 'f') {</a>
-<a name="ln4757">      if (flags != NULL) {</a>
-<a name="ln4758">        if (*p == 'g') {</a>
-<a name="ln4759">          *flags |= VGR_GLOBAL;</a>
-<a name="ln4760">        } else if (*p == 'j') {</a>
-<a name="ln4761">          *flags |= VGR_NOJUMP;</a>
-<a name="ln4762">        } else {</a>
-<a name="ln4763">          *flags |= VGR_FUZZY;</a>
-<a name="ln4764">        }</a>
-<a name="ln4765">      }</a>
-<a name="ln4766">      p++;</a>
-<a name="ln4767">    }</a>
-<a name="ln4768">  }</a>
-<a name="ln4769">  return p;</a>
-<a name="ln4770">}</a>
-<a name="ln4771"> </a>
-<a name="ln4772">/// List v:oldfiles in a nice way.</a>
-<a name="ln4773">void ex_oldfiles(exarg_T *eap)</a>
-<a name="ln4774">{</a>
-<a name="ln4775">  list_T *l = get_vim_var_list(VV_OLDFILES);</a>
-<a name="ln4776">  long nr = 0;</a>
-<a name="ln4777"> </a>
-<a name="ln4778">  if (l == NULL) {</a>
-<a name="ln4779">    msg(_(&quot;No old files&quot;), 0);</a>
-<a name="ln4780">    return;</a>
-<a name="ln4781">  }</a>
-<a name="ln4782"> </a>
-<a name="ln4783">  msg_start();</a>
-<a name="ln4784">  msg_scroll = true;</a>
-<a name="ln4785">  TV_LIST_ITER(l, li, {</a>
-<a name="ln4786">    if (got_int) {</a>
-<a name="ln4787">      break;</a>
-<a name="ln4788">    }</a>
-<a name="ln4789">    nr++;</a>
-<a name="ln4790">    const char *fname = tv_get_string(TV_LIST_ITEM_TV(li));</a>
-<a name="ln4791">    if (!message_filtered(fname)) {</a>
-<a name="ln4792">      msg_outnum(nr);</a>
-<a name="ln4793">      msg_puts(&quot;: &quot;);</a>
-<a name="ln4794">      msg_outtrans(tv_get_string(TV_LIST_ITEM_TV(li)), 0);</a>
-<a name="ln4795">      msg_clr_eos();</a>
-<a name="ln4796">      msg_putchar('\n');</a>
-<a name="ln4797">      os_breakcheck();</a>
-<a name="ln4798">    }</a>
-<a name="ln4799">  });</a>
-<a name="ln4800"> </a>
-<a name="ln4801">  // Assume &quot;got_int&quot; was set to truncate the listing.</a>
-<a name="ln4802">  got_int = false;</a>
-<a name="ln4803"> </a>
-<a name="ln4804">  // File selection prompt on &quot;:browse oldfiles&quot;</a>
-<a name="ln4805">  if (cmdmod.cmod_flags &amp; CMOD_BROWSE) {</a>
-<a name="ln4806">    quit_more = false;</a>
-<a name="ln4807">    nr = prompt_for_number(false);</a>
-<a name="ln4808">    msg_starthere();</a>
-<a name="ln4809">    if (nr &gt; 0 &amp;&amp; nr &lt;= tv_list_len(l)) {</a>
-<a name="ln4810">      const char *const p = tv_list_find_str(l, (int)nr - 1);</a>
-<a name="ln4811">      if (p == NULL) {</a>
-<a name="ln4812">        return;</a>
-<a name="ln4813">      }</a>
-<a name="ln4814">      char *const s = expand_env_save((char *)p);</a>
-<a name="ln4815">      eap-&gt;arg = s;</a>
-<a name="ln4816">      eap-&gt;cmdidx = CMD_edit;</a>
-<a name="ln4817">      cmdmod.cmod_flags &amp;= ~CMOD_BROWSE;</a>
-<a name="ln4818">      do_exedit(eap, NULL);</a>
-<a name="ln4819">      xfree(s);</a>
-<a name="ln4820">    }</a>
-<a name="ln4821">  }</a>
-<a name="ln4822">}</a>
+<a name="ln4122">              mark_adjust(lnum, lnum + nmatch_tl - 1, MAXLNUM, -nmatch_tl, kExtmarkNOOP);</a>
+<a name="ln4123">              if (subflags.do_ask) {</a>
+<a name="ln4124">                deleted_lines(lnum, nmatch_tl);</a>
+<a name="ln4125">              }</a>
+<a name="ln4126">              lnum--;</a>
+<a name="ln4127">              line2 -= nmatch_tl;  // nr of lines decreases</a>
+<a name="ln4128">              nmatch_tl = 0;</a>
+<a name="ln4129">            }</a>
+<a name="ln4130"> </a>
+<a name="ln4131">            // When asking, undo is saved each time, must also set</a>
+<a name="ln4132">            // changed flag each time.</a>
+<a name="ln4133">            if (subflags.do_ask) {</a>
+<a name="ln4134">              changed_bytes(lnum, 0);</a>
+<a name="ln4135">            } else {</a>
+<a name="ln4136">              if (first_line == 0) {</a>
+<a name="ln4137">                first_line = lnum;</a>
+<a name="ln4138">              }</a>
+<a name="ln4139">              last_line = lnum + 1;</a>
+<a name="ln4140">            }</a>
+<a name="ln4141"> </a>
+<a name="ln4142">            sub_firstlnum = lnum;</a>
+<a name="ln4143">            xfree(sub_firstline);                // free the temp buffer</a>
+<a name="ln4144">            sub_firstline = new_start;</a>
+<a name="ln4145">            new_start = NULL;</a>
+<a name="ln4146">            matchcol = (colnr_T)strlen(sub_firstline) - matchcol;</a>
+<a name="ln4147">            prev_matchcol = (colnr_T)strlen(sub_firstline)</a>
+<a name="ln4148">                            - prev_matchcol;</a>
+<a name="ln4149">            copycol = 0;</a>
+<a name="ln4150">          }</a>
+<a name="ln4151">          if (nmatch == -1 &amp;&amp; !lastone) {</a>
+<a name="ln4152">            nmatch = (int)vim_regexec_multi(&amp;regmatch, curwin, curbuf,</a>
+<a name="ln4153">                                            sub_firstlnum, matchcol, NULL, NULL);</a>
+<a name="ln4154">          }</a>
+<a name="ln4155"> </a>
+<a name="ln4156">          // 5. break if there isn't another match in this line</a>
+<a name="ln4157">          if (nmatch &lt;= 0) {</a>
+<a name="ln4158">            // If the match found didn't start where we were</a>
+<a name="ln4159">            // searching, do the next search in the line where we</a>
+<a name="ln4160">            // found the match.</a>
+<a name="ln4161">            if (nmatch == -1) {</a>
+<a name="ln4162">              lnum -= regmatch.startpos[0].lnum;</a>
+<a name="ln4163">            }</a>
+<a name="ln4164"> </a>
+<a name="ln4165">            // uncrustify:off</a>
+<a name="ln4166"> </a>
+<a name="ln4167">#define PUSH_PREVIEW_LINES() \</a>
+<a name="ln4168">  do { \</a>
+<a name="ln4169">    if (cmdpreview_ns &gt; 0) { \</a>
+<a name="ln4170">      linenr_T match_lines = current_match.end.lnum \</a>
+<a name="ln4171">                             - current_match.start.lnum +1; \</a>
+<a name="ln4172">      if (preview_lines.subresults.size &gt; 0) { \</a>
+<a name="ln4173">        linenr_T last = kv_last(preview_lines.subresults).end.lnum; \</a>
+<a name="ln4174">        if (last == current_match.start.lnum) { \</a>
+<a name="ln4175">          preview_lines.lines_needed += match_lines - 1; \</a>
+<a name="ln4176">        } else { \</a>
+<a name="ln4177">          preview_lines.lines_needed += match_lines; \</a>
+<a name="ln4178">        } \</a>
+<a name="ln4179">      } else { \</a>
+<a name="ln4180">        preview_lines.lines_needed += match_lines; \</a>
+<a name="ln4181">      } \</a>
+<a name="ln4182">      kv_push(preview_lines.subresults, current_match); \</a>
+<a name="ln4183">    } \</a>
+<a name="ln4184">  } while (0)</a>
+<a name="ln4185"> </a>
+<a name="ln4186">            // uncrustify:on</a>
+<a name="ln4187"> </a>
+<a name="ln4188">            // Push the match to preview_lines.</a>
+<a name="ln4189">            PUSH_PREVIEW_LINES();</a>
+<a name="ln4190"> </a>
+<a name="ln4191">            break;</a>
+<a name="ln4192">          }</a>
+<a name="ln4193">        }</a>
+<a name="ln4194">        // Push the match to preview_lines.</a>
+<a name="ln4195">        PUSH_PREVIEW_LINES();</a>
+<a name="ln4196"> </a>
+<a name="ln4197">        line_breakcheck();</a>
+<a name="ln4198">      }</a>
+<a name="ln4199"> </a>
+<a name="ln4200">      if (did_sub) {</a>
+<a name="ln4201">        sub_nlines++;</a>
+<a name="ln4202">      }</a>
+<a name="ln4203">      xfree(new_start);              // for when substitute was cancelled</a>
+<a name="ln4204">      XFREE_CLEAR(sub_firstline);    // free the copy of the original line</a>
+<a name="ln4205">    }</a>
+<a name="ln4206"> </a>
+<a name="ln4207">    line_breakcheck();</a>
+<a name="ln4208"> </a>
+<a name="ln4209">    if (profile_passed_limit(timeout)) {</a>
+<a name="ln4210">      got_quit = true;</a>
+<a name="ln4211">    }</a>
+<a name="ln4212">  }</a>
+<a name="ln4213"> </a>
+<a name="ln4214">  curbuf-&gt;deleted_bytes2 = 0;</a>
+<a name="ln4215"> </a>
+<a name="ln4216">  if (first_line != 0) {</a>
+<a name="ln4217">    // Need to subtract the number of added lines from &quot;last_line&quot; to get</a>
+<a name="ln4218">    // the line number before the change (same as adding the number of</a>
+<a name="ln4219">    // deleted lines).</a>
+<a name="ln4220">    i = curbuf-&gt;b_ml.ml_line_count - old_line_count;</a>
+<a name="ln4221">    changed_lines(curbuf, first_line, 0, last_line - (linenr_T)i, (linenr_T)i, false);</a>
+<a name="ln4222"> </a>
+<a name="ln4223">    int64_t num_added = last_line - first_line;</a>
+<a name="ln4224">    int64_t num_removed = num_added - i;</a>
+<a name="ln4225">    buf_updates_send_changes(curbuf, first_line, num_added, num_removed);</a>
+<a name="ln4226">  }</a>
+<a name="ln4227"> </a>
+<a name="ln4228">  xfree(sub_firstline);   // may have to free allocated copy of the line</a>
+<a name="ln4229"> </a>
+<a name="ln4230">  // &quot;:s/pat//n&quot; doesn't move the cursor</a>
+<a name="ln4231">  if (subflags.do_count) {</a>
+<a name="ln4232">    curwin-&gt;w_cursor = old_cursor;</a>
+<a name="ln4233">  }</a>
+<a name="ln4234"> </a>
+<a name="ln4235">  if (sub_nsubs &gt; start_nsubs) {</a>
+<a name="ln4236">    if ((cmdmod.cmod_flags &amp; CMOD_LOCKMARKS) == 0) {</a>
+<a name="ln4237">      // Set the '[ and '] marks.</a>
+<a name="ln4238">      curbuf-&gt;b_op_start.lnum = eap-&gt;line1;</a>
+<a name="ln4239">      curbuf-&gt;b_op_end.lnum = line2;</a>
+<a name="ln4240">      curbuf-&gt;b_op_start.col = curbuf-&gt;b_op_end.col = 0;</a>
+<a name="ln4241">    }</a>
+<a name="ln4242"> </a>
+<a name="ln4243">    if (!global_busy) {</a>
+<a name="ln4244">      // when interactive leave cursor on the match</a>
+<a name="ln4245">      if (!subflags.do_ask) {</a>
+<a name="ln4246">        if (endcolumn) {</a>
+<a name="ln4247">          coladvance(MAXCOL);</a>
+<a name="ln4248">        } else {</a>
+<a name="ln4249">          beginline(BL_WHITE | BL_FIX);</a>
+<a name="ln4250">        }</a>
+<a name="ln4251">      }</a>
+<a name="ln4252">      if (cmdpreview_ns &lt;= 0 &amp;&amp; !do_sub_msg(subflags.do_count) &amp;&amp; subflags.do_ask &amp;&amp; p_ch &gt; 0) {</a>
+<a name="ln4253">        msg(&quot;&quot;, 0);</a>
+<a name="ln4254">      }</a>
+<a name="ln4255">    } else {</a>
+<a name="ln4256">      global_need_beginline = true;</a>
+<a name="ln4257">    }</a>
+<a name="ln4258">    if (subflags.do_print) {</a>
+<a name="ln4259">      print_line(curwin-&gt;w_cursor.lnum, subflags.do_number, subflags.do_list);</a>
+<a name="ln4260">    }</a>
+<a name="ln4261">  } else if (!global_busy) {</a>
+<a name="ln4262">    if (got_int) {</a>
+<a name="ln4263">      // interrupted</a>
+<a name="ln4264">      emsg(_(e_interr));</a>
+<a name="ln4265">    } else if (got_match) {</a>
+<a name="ln4266">      // did find something but nothing substituted</a>
+<a name="ln4267">      if (p_ch &gt; 0) {</a>
+<a name="ln4268">        msg(&quot;&quot;, 0);</a>
+<a name="ln4269">      }</a>
+<a name="ln4270">    } else if (subflags.do_error) {</a>
+<a name="ln4271">      // nothing found</a>
+<a name="ln4272">      semsg(_(e_patnotf2), get_search_pat());</a>
+<a name="ln4273">    }</a>
+<a name="ln4274">  }</a>
+<a name="ln4275"> </a>
+<a name="ln4276">  if (subflags.do_ask &amp;&amp; hasAnyFolding(curwin)) {</a>
+<a name="ln4277">    // Cursor position may require updating</a>
+<a name="ln4278">    changed_window_setting();</a>
+<a name="ln4279">  }</a>
+<a name="ln4280"> </a>
+<a name="ln4281">  vim_regfree(regmatch.regprog);</a>
+<a name="ln4282">  xfree(sub_copy);</a>
+<a name="ln4283"> </a>
+<a name="ln4284">  // Restore the flag values, they can be used for &quot;:&amp;&amp;&quot;.</a>
+<a name="ln4285">  subflags.do_all = save_do_all;</a>
+<a name="ln4286">  subflags.do_ask = save_do_ask;</a>
+<a name="ln4287"> </a>
+<a name="ln4288">  int retv = 0;</a>
+<a name="ln4289"> </a>
+<a name="ln4290">  // Show 'inccommand' preview if there are matched lines.</a>
+<a name="ln4291">  if (cmdpreview_ns &gt; 0 &amp;&amp; !aborting()) {</a>
+<a name="ln4292">    if (got_quit || profile_passed_limit(timeout)) {  // Too slow, disable.</a>
+<a name="ln4293">      set_string_option_direct(&quot;icm&quot;, -1, &quot;&quot;, OPT_FREE, SID_NONE);</a>
+<a name="ln4294">    } else if (*p_icm != NUL &amp;&amp; pat != NULL) {</a>
+<a name="ln4295">      if (pre_hl_id == 0) {</a>
+<a name="ln4296">        pre_hl_id = syn_check_group(S_LEN(&quot;Substitute&quot;));</a>
+<a name="ln4297">      }</a>
+<a name="ln4298">      retv = show_sub(eap, old_cursor, &amp;preview_lines, pre_hl_id, cmdpreview_ns, cmdpreview_bufnr);</a>
+<a name="ln4299">    }</a>
+<a name="ln4300">  }</a>
+<a name="ln4301"> </a>
+<a name="ln4302">  kv_destroy(preview_lines.subresults);</a>
+<a name="ln4303">  return retv;</a>
+<a name="ln4304">#undef ADJUST_SUB_FIRSTLNUM</a>
+<a name="ln4305">#undef PUSH_PREVIEW_LINES</a>
+<a name="ln4306">}</a>
+<a name="ln4307"> </a>
+<a name="ln4308">/// Give message for number of substitutions.</a>
+<a name="ln4309">/// Can also be used after a &quot;:global&quot; command.</a>
+<a name="ln4310">///</a>
+<a name="ln4311">/// @param count_only  used 'n' flag for &quot;:s&quot;</a>
+<a name="ln4312">///</a>
+<a name="ln4313">/// @return            true if a message was given.</a>
+<a name="ln4314">bool do_sub_msg(bool count_only)</a>
+<a name="ln4315">{</a>
+<a name="ln4316">  // Only report substitutions when:</a>
+<a name="ln4317">  // - more than 'report' substitutions</a>
+<a name="ln4318">  // - command was typed by user, or number of changed lines &gt; 'report'</a>
+<a name="ln4319">  // - giving messages is not disabled by 'lazyredraw'</a>
+<a name="ln4320">  if (((sub_nsubs &gt; p_report &amp;&amp; (KeyTyped || sub_nlines &gt; 1 || p_report &lt; 1))</a>
+<a name="ln4321">       || count_only)</a>
+<a name="ln4322">      &amp;&amp; messaging()) {</a>
+<a name="ln4323">    if (got_int) {</a>
+<a name="ln4324">      STRCPY(msg_buf, _(&quot;(Interrupted) &quot;));</a>
+<a name="ln4325">    } else {</a>
+<a name="ln4326">      *msg_buf = NUL;</a>
+<a name="ln4327">    }</a>
+<a name="ln4328"> </a>
+<a name="ln4329">    char *msg_single = count_only</a>
+<a name="ln4330">                     ? NGETTEXT(&quot;%&quot; PRId64 &quot; match on %&quot; PRId64 &quot; line&quot;,</a>
+<a name="ln4331">                                &quot;%&quot; PRId64 &quot; matches on %&quot; PRId64 &quot; line&quot;, sub_nsubs)</a>
+<a name="ln4332">                     : NGETTEXT(&quot;%&quot; PRId64 &quot; substitution on %&quot; PRId64 &quot; line&quot;,</a>
+<a name="ln4333">                                &quot;%&quot; PRId64 &quot; substitutions on %&quot; PRId64 &quot; line&quot;, sub_nsubs);</a>
+<a name="ln4334">    char *msg_plural = count_only</a>
+<a name="ln4335">                     ? NGETTEXT(&quot;%&quot; PRId64 &quot; match on %&quot; PRId64 &quot; lines&quot;,</a>
+<a name="ln4336">                                &quot;%&quot; PRId64 &quot; matches on %&quot; PRId64 &quot; lines&quot;, sub_nsubs)</a>
+<a name="ln4337">                     : NGETTEXT(&quot;%&quot; PRId64 &quot; substitution on %&quot; PRId64 &quot; lines&quot;,</a>
+<a name="ln4338">                                &quot;%&quot; PRId64 &quot; substitutions on %&quot; PRId64 &quot; lines&quot;, sub_nsubs);</a>
+<a name="ln4339">    vim_snprintf_add(msg_buf, sizeof(msg_buf),</a>
+<a name="ln4340">                     NGETTEXT(msg_single, msg_plural, sub_nlines),</a>
+<a name="ln4341">                     (int64_t)sub_nsubs, (int64_t)sub_nlines);</a>
+<a name="ln4342">    if (msg(msg_buf, 0)) {</a>
+<a name="ln4343">      // save message to display it after redraw</a>
+<a name="ln4344">      set_keep_msg(msg_buf, 0);</a>
+<a name="ln4345">    }</a>
+<a name="ln4346">    return true;</a>
+<a name="ln4347">  }</a>
+<a name="ln4348">  if (got_int) {</a>
+<a name="ln4349">    emsg(_(e_interr));</a>
+<a name="ln4350">    return true;</a>
+<a name="ln4351">  }</a>
+<a name="ln4352">  return false;</a>
+<a name="ln4353">}</a>
+<a name="ln4354"> </a>
+<a name="ln4355">static void global_exe_one(char *const cmd, const linenr_T lnum)</a>
+<a name="ln4356">{</a>
+<a name="ln4357">  curwin-&gt;w_cursor.lnum = lnum;</a>
+<a name="ln4358">  curwin-&gt;w_cursor.col = 0;</a>
+<a name="ln4359">  if (*cmd == NUL || *cmd == '\n') {</a>
+<a name="ln4360">    do_cmdline(&quot;p&quot;, NULL, NULL, DOCMD_NOWAIT);</a>
+<a name="ln4361">  } else {</a>
+<a name="ln4362">    do_cmdline(cmd, NULL, NULL, DOCMD_NOWAIT);</a>
+<a name="ln4363">  }</a>
+<a name="ln4364">}</a>
+<a name="ln4365"> </a>
+<a name="ln4366">/// Execute a global command of the form:</a>
+<a name="ln4367">///</a>
+<a name="ln4368">/// g/pattern/X : execute X on all lines where pattern matches</a>
+<a name="ln4369">/// v/pattern/X : execute X on all lines where pattern does not match</a>
+<a name="ln4370">///</a>
+<a name="ln4371">/// where 'X' is an EX command</a>
+<a name="ln4372">///</a>
+<a name="ln4373">/// The command character (as well as the trailing slash) is optional, and</a>
+<a name="ln4374">/// is assumed to be 'p' if missing.</a>
+<a name="ln4375">///</a>
+<a name="ln4376">/// This is implemented in two passes: first we scan the file for the pattern and</a>
+<a name="ln4377">/// set a mark for each line that (not) matches. Secondly we execute the command</a>
+<a name="ln4378">/// for each line that has a mark. This is required because after deleting</a>
+<a name="ln4379">/// lines we do not know where to search for the next match.</a>
+<a name="ln4380">void ex_global(exarg_T *eap)</a>
+<a name="ln4381">{</a>
+<a name="ln4382">  linenr_T lnum;                // line number according to old situation</a>
+<a name="ln4383">  int type;                     // first char of cmd: 'v' or 'g'</a>
+<a name="ln4384">  char *cmd;             // command argument</a>
+<a name="ln4385"> </a>
+<a name="ln4386">  char delim;                 // delimiter, normally '/'</a>
+<a name="ln4387">  char *pat;</a>
+<a name="ln4388">  regmmatch_T regmatch;</a>
+<a name="ln4389">  int match;</a>
+<a name="ln4390">  int which_pat;</a>
+<a name="ln4391"> </a>
+<a name="ln4392">  // When nesting the command works on one line.  This allows for</a>
+<a name="ln4393">  // &quot;:g/found/v/notfound/command&quot;.</a>
+<a name="ln4394">  if (global_busy &amp;&amp; (eap-&gt;line1 != 1</a>
+<a name="ln4395">                      || eap-&gt;line2 != curbuf-&gt;b_ml.ml_line_count)) {</a>
+<a name="ln4396">    // will increment global_busy to break out of the loop</a>
+<a name="ln4397">    emsg(_(&quot;E147: Cannot do :global recursive with a range&quot;));</a>
+<a name="ln4398">    return;</a>
+<a name="ln4399">  }</a>
+<a name="ln4400"> </a>
+<a name="ln4401">  if (eap-&gt;forceit) {               // &quot;:global!&quot; is like &quot;:vglobal&quot;</a>
+<a name="ln4402">    type = 'v';</a>
+<a name="ln4403">  } else {</a>
+<a name="ln4404">    type = (uint8_t)(*eap-&gt;cmd);</a>
+<a name="ln4405">  }</a>
+<a name="ln4406">  cmd = eap-&gt;arg;</a>
+<a name="ln4407">  which_pat = RE_LAST;              // default: use last used regexp</a>
+<a name="ln4408"> </a>
+<a name="ln4409">  // undocumented vi feature:</a>
+<a name="ln4410">  //    &quot;\/&quot; and &quot;\?&quot;: use previous search pattern.</a>
+<a name="ln4411">  //             &quot;\&amp;&quot;: use previous substitute pattern.</a>
+<a name="ln4412">  if (*cmd == '\\') {</a>
+<a name="ln4413">    cmd++;</a>
+<a name="ln4414">    if (vim_strchr(&quot;/?&amp;&quot;, (uint8_t)(*cmd)) == NULL) {</a>
+<a name="ln4415">      emsg(_(e_backslash));</a>
+<a name="ln4416">      return;</a>
+<a name="ln4417">    }</a>
+<a name="ln4418">    if (*cmd == '&amp;') {</a>
+<a name="ln4419">      which_pat = RE_SUBST;             // use previous substitute pattern</a>
+<a name="ln4420">    } else {</a>
+<a name="ln4421">      which_pat = RE_SEARCH;            // use previous search pattern</a>
+<a name="ln4422">    }</a>
+<a name="ln4423">    cmd++;</a>
+<a name="ln4424">    pat = &quot;&quot;;</a>
+<a name="ln4425">  } else if (*cmd == NUL) {</a>
+<a name="ln4426">    emsg(_(&quot;E148: Regular expression missing from global&quot;));</a>
+<a name="ln4427">    return;</a>
+<a name="ln4428">  } else if (check_regexp_delim(*cmd) == FAIL) {</a>
+<a name="ln4429">    return;</a>
+<a name="ln4430">  } else {</a>
+<a name="ln4431">    delim = *cmd;               // get the delimiter</a>
+<a name="ln4432">    cmd++;                      // skip delimiter if there is one</a>
+<a name="ln4433">    pat = cmd;                  // remember start of pattern</a>
+<a name="ln4434">    cmd = skip_regexp_ex(cmd, delim, magic_isset(), &amp;eap-&gt;arg, NULL, NULL);</a>
+<a name="ln4435">    if (cmd[0] == delim) {                  // end delimiter found</a>
+<a name="ln4436">      *cmd++ = NUL;                         // replace it with a NUL</a>
+<a name="ln4437">    }</a>
+<a name="ln4438">  }</a>
+<a name="ln4439"> </a>
+<a name="ln4440">  char *used_pat;</a>
+<a name="ln4441">  if (search_regcomp(pat, &amp;used_pat, RE_BOTH, which_pat,</a>
+<a name="ln4442">                     SEARCH_HIS, &amp;regmatch) == FAIL) {</a>
+<a name="ln4443">    emsg(_(e_invcmd));</a>
+<a name="ln4444">    return;</a>
+<a name="ln4445">  }</a>
+<a name="ln4446"> </a>
+<a name="ln4447">  if (global_busy) {</a>
+<a name="ln4448">    lnum = curwin-&gt;w_cursor.lnum;</a>
+<a name="ln4449">    match = (int)vim_regexec_multi(&amp;regmatch, curwin, curbuf, lnum, 0, NULL, NULL);</a>
+<a name="ln4450">    if ((type == 'g' &amp;&amp; match) || (type == 'v' &amp;&amp; !match)) {</a>
+<a name="ln4451">      global_exe_one(cmd, lnum);</a>
+<a name="ln4452">    }</a>
+<a name="ln4453">  } else {</a>
+<a name="ln4454">    int ndone = 0;</a>
+<a name="ln4455">    // pass 1: set marks for each (not) matching line</a>
+<a name="ln4456">    for (lnum = eap-&gt;line1; lnum &lt;= eap-&gt;line2 &amp;&amp; !got_int; lnum++) {</a>
+<a name="ln4457">      // a match on this line?</a>
+<a name="ln4458">      match = (int)vim_regexec_multi(&amp;regmatch, curwin, curbuf, lnum, 0, NULL, NULL);</a>
+<a name="ln4459">      if (regmatch.regprog == NULL) {</a>
+<a name="ln4460">        break;  // re-compiling regprog failed</a>
+<a name="ln4461">      }</a>
+<a name="ln4462">      if ((type == 'g' &amp;&amp; match) || (type == 'v' &amp;&amp; !match)) {</a>
+<a name="ln4463">        ml_setmarked(lnum);</a>
+<a name="ln4464">        ndone++;</a>
+<a name="ln4465">      }</a>
+<a name="ln4466">      line_breakcheck();</a>
+<a name="ln4467">    }</a>
+<a name="ln4468"> </a>
+<a name="ln4469">    // pass 2: execute the command for each line that has been marked</a>
+<a name="ln4470">    if (got_int) {</a>
+<a name="ln4471">      msg(_(e_interr), 0);</a>
+<a name="ln4472">    } else if (ndone == 0) {</a>
+<a name="ln4473">      if (type == 'v') {</a>
+<a name="ln4474">        smsg(0, _(&quot;Pattern found in every line: %s&quot;), used_pat);</a>
+<a name="ln4475">      } else {</a>
+<a name="ln4476">        smsg(0, _(&quot;Pattern not found: %s&quot;), used_pat);</a>
+<a name="ln4477">      }</a>
+<a name="ln4478">    } else {</a>
+<a name="ln4479">      global_exe(cmd);</a>
+<a name="ln4480">    }</a>
+<a name="ln4481">    ml_clearmarked();         // clear rest of the marks</a>
+<a name="ln4482">  }</a>
+<a name="ln4483">  vim_regfree(regmatch.regprog);</a>
+<a name="ln4484">}</a>
+<a name="ln4485"> </a>
+<a name="ln4486">/// Execute `cmd` on lines marked with ml_setmarked().</a>
+<a name="ln4487">void global_exe(char *cmd)</a>
+<a name="ln4488">{</a>
+<a name="ln4489">  linenr_T old_lcount;      // b_ml.ml_line_count before the command</a>
+<a name="ln4490">  buf_T *old_buf = curbuf;  // remember what buffer we started in</a>
+<a name="ln4491">  linenr_T lnum;            // line number according to old situation</a>
+<a name="ln4492"> </a>
+<a name="ln4493">  // Set current position only once for a global command.</a>
+<a name="ln4494">  // If global_busy is set, setpcmark() will not do anything.</a>
+<a name="ln4495">  // If there is an error, global_busy will be incremented.</a>
+<a name="ln4496">  setpcmark();</a>
+<a name="ln4497"> </a>
+<a name="ln4498">  // When the command writes a message, don't overwrite the command.</a>
+<a name="ln4499">  msg_didout = true;</a>
+<a name="ln4500"> </a>
+<a name="ln4501">  sub_nsubs = 0;</a>
+<a name="ln4502">  sub_nlines = 0;</a>
+<a name="ln4503">  global_need_beginline = false;</a>
+<a name="ln4504">  global_busy = 1;</a>
+<a name="ln4505">  old_lcount = curbuf-&gt;b_ml.ml_line_count;</a>
+<a name="ln4506"> </a>
+<a name="ln4507">  while (!got_int &amp;&amp; (lnum = ml_firstmarked()) != 0 &amp;&amp; global_busy == 1) {</a>
+<a name="ln4508">    global_exe_one(cmd, lnum);</a>
+<a name="ln4509">    os_breakcheck();</a>
+<a name="ln4510">  }</a>
+<a name="ln4511"> </a>
+<a name="ln4512">  global_busy = 0;</a>
+<a name="ln4513">  if (global_need_beginline) {</a>
+<a name="ln4514">    beginline(BL_WHITE | BL_FIX);</a>
+<a name="ln4515">  } else {</a>
+<a name="ln4516">    check_cursor();  // cursor may be beyond the end of the line</a>
+<a name="ln4517">  }</a>
+<a name="ln4518"> </a>
+<a name="ln4519">  // the cursor may not have moved in the text but a change in a previous</a>
+<a name="ln4520">  // line may move it on the screen</a>
+<a name="ln4521">  changed_line_abv_curs();</a>
+<a name="ln4522"> </a>
+<a name="ln4523">  // If it looks like no message was written, allow overwriting the</a>
+<a name="ln4524">  // command with the report for number of changes.</a>
+<a name="ln4525">  if (msg_col == 0 &amp;&amp; msg_scrolled == 0) {</a>
+<a name="ln4526">    msg_didout = false;</a>
+<a name="ln4527">  }</a>
+<a name="ln4528"> </a>
+<a name="ln4529">  // If substitutes done, report number of substitutes, otherwise report</a>
+<a name="ln4530">  // number of extra or deleted lines.</a>
+<a name="ln4531">  // Don't report extra or deleted lines in the edge case where the buffer</a>
+<a name="ln4532">  // we are in after execution is different from the buffer we started in.</a>
+<a name="ln4533">  if (!do_sub_msg(false) &amp;&amp; curbuf == old_buf) {</a>
+<a name="ln4534">    msgmore(curbuf-&gt;b_ml.ml_line_count - old_lcount);</a>
+<a name="ln4535">  }</a>
+<a name="ln4536">}</a>
+<a name="ln4537"> </a>
+<a name="ln4538">#if defined(EXITFREE)</a>
+<a name="ln4539">void free_old_sub(void)</a>
+<a name="ln4540">{</a>
+<a name="ln4541">  sub_set_replacement((SubReplacementString) { NULL, 0, NULL });</a>
+<a name="ln4542">}</a>
+<a name="ln4543"> </a>
+<a name="ln4544">#endif</a>
+<a name="ln4545"> </a>
+<a name="ln4546">/// Set up for a tagpreview.</a>
+<a name="ln4547">///</a>
+<a name="ln4548">/// @param undo_sync  sync undo when leaving the window</a>
+<a name="ln4549">///</a>
+<a name="ln4550">/// @return           true when it was created.</a>
+<a name="ln4551">bool prepare_tagpreview(bool undo_sync)</a>
+<a name="ln4552">{</a>
+<a name="ln4553">  if (curwin-&gt;w_p_pvw) {</a>
+<a name="ln4554">    return false;</a>
+<a name="ln4555">  }</a>
+<a name="ln4556"> </a>
+<a name="ln4557">  // If there is already a preview window open, use that one.</a>
+<a name="ln4558">  FOR_ALL_WINDOWS_IN_TAB(wp, curtab) {</a>
+<a name="ln4559">    if (wp-&gt;w_p_pvw) {</a>
+<a name="ln4560">      win_enter(wp, undo_sync);</a>
+<a name="ln4561">      return false;</a>
+<a name="ln4562">    }</a>
+<a name="ln4563">  }</a>
+<a name="ln4564"> </a>
+<a name="ln4565">  // There is no preview window open yet.  Create one.</a>
+<a name="ln4566">  if (win_split(g_do_tagpreview &gt; 0 ? g_do_tagpreview : 0, 0)</a>
+<a name="ln4567">      == FAIL) {</a>
+<a name="ln4568">    return false;</a>
+<a name="ln4569">  }</a>
+<a name="ln4570">  curwin-&gt;w_p_pvw = true;</a>
+<a name="ln4571">  curwin-&gt;w_p_wfh = true;</a>
+<a name="ln4572">  RESET_BINDING(curwin);                // don't take over 'scrollbind' and 'cursorbind'</a>
+<a name="ln4573">  curwin-&gt;w_p_diff = false;             // no 'diff'</a>
+<a name="ln4574">  set_string_option_direct(&quot;fdc&quot;, -1,     // no 'foldcolumn'</a>
+<a name="ln4575">                           &quot;0&quot;, OPT_FREE, SID_NONE);</a>
+<a name="ln4576">  return true;</a>
+<a name="ln4577">}</a>
+<a name="ln4578"> </a>
+<a name="ln4579">/// Shows the effects of the :substitute command being typed ('inccommand').</a>
+<a name="ln4580">/// If inccommand=split, shows a preview window and later restores the layout.</a>
+<a name="ln4581">///</a>
+<a name="ln4582">/// @return 1 if preview window isn't needed, 2 if preview window is needed.</a>
+<a name="ln4583">static int show_sub(exarg_T *eap, pos_T old_cusr, PreviewLines *preview_lines, int hl_id,</a>
+<a name="ln4584">                    int cmdpreview_ns, handle_T cmdpreview_bufnr)</a>
+<a name="ln4585">  FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln4586">{</a>
+<a name="ln4587">  char *save_shm_p = xstrdup(p_shm);</a>
+<a name="ln4588">  PreviewLines lines = *preview_lines;</a>
+<a name="ln4589">  buf_T *orig_buf = curbuf;</a>
+<a name="ln4590">  // We keep a special-purpose buffer around, but don't assume it exists.</a>
+<a name="ln4591">  buf_T *cmdpreview_buf = NULL;</a>
+<a name="ln4592"> </a>
+<a name="ln4593">  // disable file info message</a>
+<a name="ln4594">  set_string_option_direct(&quot;shm&quot;, -1, &quot;F&quot;, OPT_FREE, SID_NONE);</a>
+<a name="ln4595"> </a>
+<a name="ln4596">  // Update the topline to ensure that main window is on the correct line</a>
+<a name="ln4597">  update_topline(curwin);</a>
+<a name="ln4598"> </a>
+<a name="ln4599">  // Place cursor on nearest matching line, to undo do_sub() cursor placement.</a>
+<a name="ln4600">  for (size_t i = 0; i &lt; lines.subresults.size; i++) {</a>
+<a name="ln4601">    SubResult curres = lines.subresults.items[i];</a>
+<a name="ln4602">    if (curres.start.lnum &gt;= old_cusr.lnum) {</a>
+<a name="ln4603">      curwin-&gt;w_cursor.lnum = curres.start.lnum;</a>
+<a name="ln4604">      curwin-&gt;w_cursor.col = curres.start.col;</a>
+<a name="ln4605">      break;</a>
+<a name="ln4606">    }  // Else: All matches are above, do_sub() already placed cursor.</a>
+<a name="ln4607">  }</a>
+<a name="ln4608"> </a>
+<a name="ln4609">  // Width of the &quot;| lnum|...&quot; column which displays the line numbers.</a>
+<a name="ln4610">  linenr_T highest_num_line = 0;</a>
+<a name="ln4611">  int col_width = 0;</a>
+<a name="ln4612">  // Use preview window only when inccommand=split and range is not just the current line</a>
+<a name="ln4613">  bool preview = (*p_icm == 's') &amp;&amp; (eap-&gt;line1 != old_cusr.lnum || eap-&gt;line2 != old_cusr.lnum);</a>
+<a name="ln4614"> </a>
+<a name="ln4615">  if (preview) {</a>
+<a name="ln4616">    cmdpreview_buf = buflist_findnr(cmdpreview_bufnr);</a>
+<a name="ln4617">    assert(cmdpreview_buf != NULL);</a>
+<a name="ln4618"> </a>
+<a name="ln4619">    if (lines.subresults.size &gt; 0) {</a>
+<a name="ln4620">      highest_num_line = kv_last(lines.subresults).end.lnum;</a>
+<a name="ln4621">      col_width = (int)log10(highest_num_line) + 1 + 3;</a>
+<a name="ln4622">    }</a>
+<a name="ln4623">  }</a>
+<a name="ln4624"> </a>
+<a name="ln4625">  char *str = NULL;  // construct the line to show in here</a>
+<a name="ln4626">  size_t old_line_size = 0;</a>
+<a name="ln4627">  size_t line_size = 0;</a>
+<a name="ln4628">  linenr_T linenr_preview = 0;  // last line added to preview buffer</a>
+<a name="ln4629">  linenr_T linenr_origbuf = 0;  // last line added to original buffer</a>
+<a name="ln4630">  linenr_T next_linenr = 0;     // next line to show for the match</a>
+<a name="ln4631"> </a>
+<a name="ln4632">  for (size_t matchidx = 0; matchidx &lt; lines.subresults.size; matchidx++) {</a>
+<a name="ln4633">    SubResult match = lines.subresults.items[matchidx];</a>
+<a name="ln4634"> </a>
+<a name="ln4635">    if (cmdpreview_buf) {</a>
+<a name="ln4636">      lpos_T p_start = { 0, match.start.col };  // match starts here in preview</a>
+<a name="ln4637">      lpos_T p_end   = { 0, match.end.col };    // ... and ends here</a>
+<a name="ln4638"> </a>
+<a name="ln4639">      // You Might Gonna Need It</a>
+<a name="ln4640">      buf_ensure_loaded(cmdpreview_buf);</a>
+<a name="ln4641"> </a>
+<a name="ln4642">      if (match.pre_match == 0) {</a>
+<a name="ln4643">        next_linenr = match.start.lnum;</a>
+<a name="ln4644">      } else {</a>
+<a name="ln4645">        next_linenr = match.pre_match;</a>
+<a name="ln4646">      }</a>
+<a name="ln4647">      // Don't add a line twice</a>
+<a name="ln4648">      if (next_linenr == linenr_origbuf) {</a>
+<a name="ln4649">        next_linenr++;</a>
+<a name="ln4650">        p_start.lnum = linenr_preview;  // might be redefined below</a>
+<a name="ln4651">        p_end.lnum = linenr_preview;  // might be redefined below</a>
+<a name="ln4652">      }</a>
+<a name="ln4653"> </a>
+<a name="ln4654">      for (; next_linenr &lt;= match.end.lnum; next_linenr++) {</a>
+<a name="ln4655">        if (next_linenr == match.start.lnum) {</a>
+<a name="ln4656">          p_start.lnum = linenr_preview + 1;</a>
+<a name="ln4657">        }</a>
+<a name="ln4658">        if (next_linenr == match.end.lnum) {</a>
+<a name="ln4659">          p_end.lnum = linenr_preview + 1;</a>
+<a name="ln4660">        }</a>
+<a name="ln4661">        char *line;</a>
+<a name="ln4662">        if (next_linenr == orig_buf-&gt;b_ml.ml_line_count + 1) {</a>
+<a name="ln4663">          line = &quot;&quot;;</a>
+<a name="ln4664">        } else {</a>
+<a name="ln4665">          line = ml_get_buf(orig_buf, next_linenr);</a>
+<a name="ln4666">          line_size = strlen(line) + (size_t)col_width + 1;</a>
+<a name="ln4667"> </a>
+<a name="ln4668">          // Reallocate if line not long enough</a>
+<a name="ln4669">          if (line_size &gt; old_line_size) {</a>
+<a name="ln4670">            str = xrealloc(str, line_size * sizeof(char));</a>
+<a name="ln4671">            old_line_size = line_size;</a>
+<a name="ln4672">          }</a>
+<a name="ln4673">        }</a>
+<a name="ln4674">        // Put &quot;|lnum| line&quot; into `str` and append it to the preview buffer.</a>
+<a name="ln4675">        snprintf(str, line_size, &quot;|%*&quot; PRIdLINENR &quot;| %s&quot;, col_width - 3,</a>
+<a name="ln4676">                 next_linenr, line);</a>
+<a name="ln4677">        if (linenr_preview == 0) {</a>
+<a name="ln4678">          ml_replace_buf(cmdpreview_buf, 1, str, true);</a>
+<a name="ln4679">        } else {</a>
+<a name="ln4680">          ml_append_buf(cmdpreview_buf, linenr_preview, str, (colnr_T)line_size, false);</a>
+<a name="ln4681">        }</a>
+<a name="ln4682">        linenr_preview += 1;</a>
+<a name="ln4683">      }</a>
+<a name="ln4684">      linenr_origbuf = match.end.lnum;</a>
+<a name="ln4685"> </a>
+<a name="ln4686">      bufhl_add_hl_pos_offset(cmdpreview_buf, cmdpreview_ns, hl_id, p_start, p_end, col_width);</a>
+<a name="ln4687">    }</a>
+<a name="ln4688">    bufhl_add_hl_pos_offset(orig_buf, cmdpreview_ns, hl_id, match.start, match.end, 0);</a>
+<a name="ln4689">  }</a>
+<a name="ln4690"> </a>
+<a name="ln4691">  xfree(str);</a>
+<a name="ln4692"> </a>
+<a name="ln4693">  set_string_option_direct(&quot;shm&quot;, -1, save_shm_p, OPT_FREE, SID_NONE);</a>
+<a name="ln4694">  xfree(save_shm_p);</a>
+<a name="ln4695"> </a>
+<a name="ln4696">  return preview ? 2 : 1;</a>
+<a name="ln4697">}</a>
+<a name="ln4698"> </a>
+<a name="ln4699">/// :substitute command.</a>
+<a name="ln4700">void ex_substitute(exarg_T *eap)</a>
+<a name="ln4701">{</a>
+<a name="ln4702">  (void)do_sub(eap, profile_zero(), 0, 0);</a>
+<a name="ln4703">}</a>
+<a name="ln4704"> </a>
+<a name="ln4705">/// :substitute command preview callback.</a>
+<a name="ln4706">int ex_substitute_preview(exarg_T *eap, int cmdpreview_ns, handle_T cmdpreview_bufnr)</a>
+<a name="ln4707">{</a>
+<a name="ln4708">  // Only preview once the pattern delimiter has been typed</a>
+<a name="ln4709">  if (*eap-&gt;arg &amp;&amp; !ASCII_ISALNUM(*eap-&gt;arg)) {</a>
+<a name="ln4710">    char *save_eap = eap-&gt;arg;</a>
+<a name="ln4711">    int retv = do_sub(eap, profile_setlimit(p_rdt), cmdpreview_ns, cmdpreview_bufnr);</a>
+<a name="ln4712">    eap-&gt;arg = save_eap;</a>
+<a name="ln4713">    return retv;</a>
+<a name="ln4714">  }</a>
+<a name="ln4715"> </a>
+<a name="ln4716">  return 0;</a>
+<a name="ln4717">}</a>
+<a name="ln4718"> </a>
+<a name="ln4719">/// Skip over the pattern argument of &quot;:vimgrep /pat/[g][j]&quot;.</a>
+<a name="ln4720">/// Put the start of the pattern in &quot;*s&quot;, unless &quot;s&quot; is NULL.</a>
+<a name="ln4721">///</a>
+<a name="ln4722">/// @param flags  if not NULL, put the flags in it: VGR_GLOBAL, VGR_NOJUMP.</a>
+<a name="ln4723">/// @param s      if not NULL, terminate the pattern with a NUL.</a>
+<a name="ln4724">///</a>
+<a name="ln4725">/// @return  a pointer to the char just past the pattern plus flags.</a>
+<a name="ln4726">char *skip_vimgrep_pat(char *p, char **s, int *flags)</a>
+<a name="ln4727">{</a>
+<a name="ln4728">  if (vim_isIDc((uint8_t)(*p))) {</a>
+<a name="ln4729">    // &quot;:vimgrep pattern fname&quot;</a>
+<a name="ln4730">    if (s != NULL) {</a>
+<a name="ln4731">      *s = p;</a>
+<a name="ln4732">    }</a>
+<a name="ln4733">    p = skiptowhite(p);</a>
+<a name="ln4734">    if (s != NULL &amp;&amp; *p != NUL) {</a>
+<a name="ln4735">      *p++ = NUL;</a>
+<a name="ln4736">    }</a>
+<a name="ln4737">  } else {</a>
+<a name="ln4738">    // &quot;:vimgrep /pattern/[g][j] fname&quot;</a>
+<a name="ln4739">    if (s != NULL) {</a>
+<a name="ln4740">      *s = p + 1;</a>
+<a name="ln4741">    }</a>
+<a name="ln4742">    int c = (uint8_t)(*p);</a>
+<a name="ln4743">    p = skip_regexp(p + 1, c, true);</a>
+<a name="ln4744">    if (*p != c) {</a>
+<a name="ln4745">      return NULL;</a>
+<a name="ln4746">    }</a>
+<a name="ln4747"> </a>
+<a name="ln4748">    // Truncate the pattern.</a>
+<a name="ln4749">    if (s != NULL) {</a>
+<a name="ln4750">      *p = NUL;</a>
+<a name="ln4751">    }</a>
+<a name="ln4752">    p++;</a>
+<a name="ln4753"> </a>
+<a name="ln4754">    // Find the flags</a>
+<a name="ln4755">    while (*p == 'g' || *p == 'j' || *p == 'f') {</a>
+<a name="ln4756">      if (flags != NULL) {</a>
+<a name="ln4757">        if (*p == 'g') {</a>
+<a name="ln4758">          *flags |= VGR_GLOBAL;</a>
+<a name="ln4759">        } else if (*p == 'j') {</a>
+<a name="ln4760">          *flags |= VGR_NOJUMP;</a>
+<a name="ln4761">        } else {</a>
+<a name="ln4762">          *flags |= VGR_FUZZY;</a>
+<a name="ln4763">        }</a>
+<a name="ln4764">      }</a>
+<a name="ln4765">      p++;</a>
+<a name="ln4766">    }</a>
+<a name="ln4767">  }</a>
+<a name="ln4768">  return p;</a>
+<a name="ln4769">}</a>
+<a name="ln4770"> </a>
+<a name="ln4771">/// List v:oldfiles in a nice way.</a>
+<a name="ln4772">void ex_oldfiles(exarg_T *eap)</a>
+<a name="ln4773">{</a>
+<a name="ln4774">  list_T *l = get_vim_var_list(VV_OLDFILES);</a>
+<a name="ln4775">  int nr = 0;</a>
+<a name="ln4776"> </a>
+<a name="ln4777">  if (l == NULL) {</a>
+<a name="ln4778">    msg(_(&quot;No old files&quot;), 0);</a>
+<a name="ln4779">    return;</a>
+<a name="ln4780">  }</a>
+<a name="ln4781"> </a>
+<a name="ln4782">  msg_start();</a>
+<a name="ln4783">  msg_scroll = true;</a>
+<a name="ln4784">  TV_LIST_ITER(l, li, {</a>
+<a name="ln4785">    if (got_int) {</a>
+<a name="ln4786">      break;</a>
+<a name="ln4787">    }</a>
+<a name="ln4788">    nr++;</a>
+<a name="ln4789">    const char *fname = tv_get_string(TV_LIST_ITEM_TV(li));</a>
+<a name="ln4790">    if (!message_filtered(fname)) {</a>
+<a name="ln4791">      msg_outnum(nr);</a>
+<a name="ln4792">      msg_puts(&quot;: &quot;);</a>
+<a name="ln4793">      msg_outtrans(tv_get_string(TV_LIST_ITEM_TV(li)), 0);</a>
+<a name="ln4794">      msg_clr_eos();</a>
+<a name="ln4795">      msg_putchar('\n');</a>
+<a name="ln4796">      os_breakcheck();</a>
+<a name="ln4797">    }</a>
+<a name="ln4798">  });</a>
+<a name="ln4799"> </a>
+<a name="ln4800">  // Assume &quot;got_int&quot; was set to truncate the listing.</a>
+<a name="ln4801">  got_int = false;</a>
+<a name="ln4802"> </a>
+<a name="ln4803">  // File selection prompt on &quot;:browse oldfiles&quot;</a>
+<a name="ln4804">  if (cmdmod.cmod_flags &amp; CMOD_BROWSE) {</a>
+<a name="ln4805">    quit_more = false;</a>
+<a name="ln4806">    nr = prompt_for_number(false);</a>
+<a name="ln4807">    msg_starthere();</a>
+<a name="ln4808">    if (nr &gt; 0 &amp;&amp; nr &lt;= tv_list_len(l)) {</a>
+<a name="ln4809">      const char *const p = tv_list_find_str(l, nr - 1);</a>
+<a name="ln4810">      if (p == NULL) {</a>
+<a name="ln4811">        return;</a>
+<a name="ln4812">      }</a>
+<a name="ln4813">      char *const s = expand_env_save((char *)p);</a>
+<a name="ln4814">      eap-&gt;arg = s;</a>
+<a name="ln4815">      eap-&gt;cmdidx = CMD_edit;</a>
+<a name="ln4816">      cmdmod.cmod_flags &amp;= ~CMOD_BROWSE;</a>
+<a name="ln4817">      do_exedit(eap, NULL);</a>
+<a name="ln4818">      xfree(s);</a>
+<a name="ln4819">    }</a>
+<a name="ln4820">  }</a>
+<a name="ln4821">}</a>
 </code></pre>
 <div class="balloon" rel="140"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v666/" target="_blank">V666</a> Consider inspecting second argument of the function 'msg'. It is possible that the value does not correspond with the length of a string which was passed with the first argument.</p></div>
 <link rel="stylesheet" href="highlight.css">

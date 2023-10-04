@@ -567,7 +567,7 @@
 <a name="ln558"> </a>
 <a name="ln559">/// Set the Vi-default value of a number option.</a>
 <a name="ln560">/// Used for 'lines' and 'columns'.</a>
-<a name="ln561">void set_number_default(char *name, long val)</a>
+<a name="ln561">void set_number_default(char *name, OptInt val)</a>
 <a name="ln562">{</a>
 <a name="ln563">  int opt_idx = findoption(name);</a>
 <a name="ln564">  if (opt_idx &gt;= 0) {</a>
@@ -809,7 +809,7 @@
 <a name="ln800">  // other        error</a>
 <a name="ln801">  arg++;</a>
 <a name="ln802">  if (nextchar == '&amp;') {</a>
-<a name="ln803">    value = (long)(intptr_t)options[opt_idx].def_val;</a>
+<a name="ln803">    value = (varnumber_T)options[opt_idx].def_val;</a>
 <a name="ln804">  } else if (nextchar == '&lt;') {</a>
 <a name="ln805">    if ((OptInt *)varp == &amp;curbuf-&gt;b_p_ul &amp;&amp; opt_flags == OPT_LOCAL) {</a>
 <a name="ln806">      // for 'undolevels' NO_LOCAL_UNDOLEVEL means using the global value</a>
@@ -855,7 +855,7 @@
 <a name="ln846">  if (op == OP_REMOVING) {</a>
 <a name="ln847">    value = *(OptInt *)varp - value;</a>
 <a name="ln848">  }</a>
-<a name="ln849">  *errmsg = set_num_option(opt_idx, (void *)varp, (long)value,</a>
+<a name="ln849">  *errmsg = set_num_option(opt_idx, (void *)varp, value,</a>
 <a name="ln850">                           errbuf, errbuflen, opt_flags);</a>
 <a name="ln851">}</a>
 <a name="ln852"> </a>
@@ -1988,8 +1988,8 @@
 <a name="ln1979">}</a>
 <a name="ln1980"> </a>
 <a name="ln1981">/// Apply the OptionSet autocommand.</a>
-<a name="ln1982">static void apply_optionset_autocmd(int opt_idx, long opt_flags, OptInt oldval, OptInt oldval_g,</a>
-<a name="ln1983">                                    long newval, const char *errmsg)</a>
+<a name="ln1982">static void apply_optionset_autocmd(int opt_idx, int opt_flags, OptInt oldval, OptInt oldval_g,</a>
+<a name="ln1983">                                    OptInt newval, const char *errmsg)</a>
 <a name="ln1984">{</a>
 <a name="ln1985">  // Don't do this while starting up, failure or recursively.</a>
 <a name="ln1986">  if (starting || errmsg != NULL || *get_vim_var_str(VV_OPTION_TYPE) != NUL) {</a>
@@ -2000,7 +2000,7 @@
 <a name="ln1991"> </a>
 <a name="ln1992">  vim_snprintf(buf_old, sizeof(buf_old), &quot;%&quot; PRId64, oldval);</a>
 <a name="ln1993">  vim_snprintf(buf_old_global, sizeof(buf_old_global), &quot;%&quot; PRId64, oldval_g);</a>
-<a name="ln1994">  vim_snprintf(buf_new, sizeof(buf_new), &quot;%ld&quot;, newval);</a>
+<a name="ln1994">  vim_snprintf(buf_new, sizeof(buf_new), &quot;%&quot; PRId64, newval);</a>
 <a name="ln1995">  vim_snprintf(buf_type, sizeof(buf_type), &quot;%s&quot;,</a>
 <a name="ln1996">               (opt_flags &amp; OPT_LOCAL) ? &quot;local&quot; : &quot;global&quot;);</a>
 <a name="ln1997">  set_vim_var_string(VV_OPTION_NEW, buf_new, -1);</a>
@@ -2911,9 +2911,9 @@
 <a name="ln2902">  options[opt_idx].flags |= P_WAS_SET;</a>
 <a name="ln2903"> </a>
 <a name="ln2904">  apply_optionset_autocmd(opt_idx, opt_flags,</a>
-<a name="ln2905">                          (long)(old_value ? true : false),</a>
-<a name="ln2906">                          (long)(old_global_value ? true : false),</a>
-<a name="ln2907">                          (long)(value ? true : false), NULL);</a>
+<a name="ln2905">                          (old_value ? true : false),</a>
+<a name="ln2906">                          (old_global_value ? true : false),</a>
+<a name="ln2907">                          (value ? true : false), NULL);</a>
 <a name="ln2908"> </a>
 <a name="ln2909">  if (options[opt_idx].flags &amp; P_UI_OPTION) {</a>
 <a name="ln2910">    ui_call_option_set(cstr_as_string(options[opt_idx].fullname),</a>
@@ -2933,8 +2933,8 @@
 <a name="ln2924">}</a>
 <a name="ln2925"> </a>
 <a name="ln2926">/// Check the bounds of numeric options.</a>
-<a name="ln2927">static const char *check_num_option_bounds(OptInt *pp, OptInt old_value, long old_Rows,</a>
-<a name="ln2928">                                           char *errbuf, size_t errbuflen, const char *errmsg)</a>
+<a name="ln2927">static const char *check_num_option_bounds(OptInt *pp, OptInt old_value, int old_Rows, char *errbuf,</a>
+<a name="ln2928">                                           size_t errbuflen, const char *errmsg)</a>
 <a name="ln2929">{</a>
 <a name="ln2930">  // Check the (new) bounds for Rows and Columns here.</a>
 <a name="ln2931">  if (p_lines &lt; min_rows() &amp;&amp; full_screen) {</a>
@@ -3009,9 +3009,9 @@
 <a name="ln3000">}</a>
 <a name="ln3001"> </a>
 <a name="ln3002">/// Options that need some validation.</a>
-<a name="ln3003">static const char *validate_num_option(const OptInt *pp, long *valuep)</a>
+<a name="ln3003">static const char *validate_num_option(const OptInt *pp, OptInt *valuep)</a>
 <a name="ln3004">{</a>
-<a name="ln3005">  long value = *valuep;</a>
+<a name="ln3005">  OptInt value = *valuep;</a>
 <a name="ln3006"> </a>
 <a name="ln3007">  // Many number options assume their value is in the signed int range.</a>
 <a name="ln3008">  if (value &lt; INT_MIN || value &gt; INT_MAX) {</a>
@@ -3169,12 +3169,12 @@
 <a name="ln3160">/// @param[in]  opt_flags  OPT_LOCAL, OPT_GLOBAL or OPT_MODELINE.</a>
 <a name="ln3161">///</a>
 <a name="ln3162">/// @return NULL on success, error message on error.</a>
-<a name="ln3163">static const char *set_num_option(int opt_idx, void *varp, long value, char *errbuf,</a>
+<a name="ln3163">static const char *set_num_option(int opt_idx, void *varp, OptInt value, char *errbuf,</a>
 <a name="ln3164">                                  size_t errbuflen, int opt_flags)</a>
 <a name="ln3165">{</a>
 <a name="ln3166">  OptInt old_value = *(OptInt *)varp;</a>
 <a name="ln3167">  OptInt old_global_value = 0;  // only used when setting a local and global option</a>
-<a name="ln3168">  long old_Rows = Rows;       // remember old Rows</a>
+<a name="ln3168">  int old_Rows = Rows;       // remember old Rows</a>
 <a name="ln3169">  OptInt *pp = (OptInt *)varp;</a>
 <a name="ln3170"> </a>
 <a name="ln3171">  // Disallow changing some options from secure mode.</a>
@@ -3196,7 +3196,7 @@
 <a name="ln3187">    return errmsg;</a>
 <a name="ln3188">  }</a>
 <a name="ln3189"> </a>
-<a name="ln3190">  *pp = (OptInt)value;</a>
+<a name="ln3190">  *pp = value;</a>
 <a name="ln3191">  // Remember where the option was set.</a>
 <a name="ln3192">  set_option_sctx_idx(opt_idx, opt_flags, current_sctx);</a>
 <a name="ln3193"> </a>
@@ -3207,7 +3207,7 @@
 <a name="ln3198">      .os_varp = varp,</a>
 <a name="ln3199">      .os_flags = opt_flags,</a>
 <a name="ln3200">      .os_oldval.number = old_value,</a>
-<a name="ln3201">      .os_newval.number = (OptInt)value,</a>
+<a name="ln3201">      .os_newval.number = value,</a>
 <a name="ln3202">      .os_errbuf = NULL,</a>
 <a name="ln3203">      .os_errbuflen = 0,</a>
 <a name="ln3204">      .os_buf = curbuf,</a>
@@ -3227,7 +3227,7 @@
 <a name="ln3218">  options[opt_idx].flags |= P_WAS_SET;</a>
 <a name="ln3219"> </a>
 <a name="ln3220">  apply_optionset_autocmd(opt_idx, opt_flags, old_value, old_global_value,</a>
-<a name="ln3221">                          value, errmsg);</a>
+<a name="ln3221">                          (int)value, errmsg);</a>
 <a name="ln3222"> </a>
 <a name="ln3223">  if (errmsg == NULL &amp;&amp; options[opt_idx].flags &amp; P_UI_OPTION) {</a>
 <a name="ln3224">    ui_call_option_set(cstr_as_string(options[opt_idx].fullname),</a>
@@ -3798,7 +3798,7 @@
 <a name="ln3789">  if (v-&gt;type == kOptValTypeBoolean) {</a>
 <a name="ln3790">    errmsg = set_bool_option(opt_idx, varp, (int)v-&gt;data.boolean, opt_flags);</a>
 <a name="ln3791">  } else if (v-&gt;type == kOptValTypeNumber) {</a>
-<a name="ln3792">    errmsg = set_num_option(opt_idx, varp, (long)v-&gt;data.number, errbuf, errbuflen, opt_flags);</a>
+<a name="ln3792">    errmsg = set_num_option(opt_idx, varp, v-&gt;data.number, errbuf, errbuflen, opt_flags);</a>
 <a name="ln3793">  } else if (v-&gt;type == kOptValTypeString) {</a>
 <a name="ln3794">    errmsg = set_string_option(opt_idx, varp, v-&gt;data.string.data, opt_flags, &amp;value_checked,</a>
 <a name="ln3795">                               errbuf, errbuflen);</a>

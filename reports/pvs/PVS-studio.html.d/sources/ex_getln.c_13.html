@@ -151,11 +151,11 @@
 <a name="ln142">  u_header_T *save_b_u_curhead;</a>
 <a name="ln143">  int save_b_u_numhead;</a>
 <a name="ln144">  bool save_b_u_synced;</a>
-<a name="ln145">  long save_b_u_seq_last;</a>
-<a name="ln146">  long save_b_u_save_nr_last;</a>
-<a name="ln147">  long save_b_u_seq_cur;</a>
+<a name="ln145">  int save_b_u_seq_last;</a>
+<a name="ln146">  int save_b_u_save_nr_last;</a>
+<a name="ln147">  int save_b_u_seq_cur;</a>
 <a name="ln148">  time_t save_b_u_time_cur;</a>
-<a name="ln149">  long save_b_u_save_nr_cur;</a>
+<a name="ln149">  int save_b_u_save_nr_cur;</a>
 <a name="ln150">  char *save_b_u_line_ptr;</a>
 <a name="ln151">  linenr_T save_b_u_line_lnum;</a>
 <a name="ln152">  colnr_T save_b_u_line_colnr;</a>
@@ -216,7 +216,7 @@
 <a name="ln207">#endif</a>
 <a name="ln208"> </a>
 <a name="ln209">static handle_T cmdpreview_bufnr = 0;</a>
-<a name="ln210">static long cmdpreview_ns = 0;</a>
+<a name="ln210">static int cmdpreview_ns = 0;</a>
 <a name="ln211"> </a>
 <a name="ln212">static void save_viewstate(win_T *wp, viewstate_T *vs)</a>
 <a name="ln213">  FUNC_ATTR_NONNULL_ALL</a>
@@ -1338,7 +1338,7 @@
 <a name="ln1329"> </a>
 <a name="ln1330">      if (!cmd_silent) {</a>
 <a name="ln1331">        if (!ui_has(kUICmdline)) {</a>
-<a name="ln1332">          cmd_cursor_goto(msg_row, 0);</a>
+<a name="ln1332">          msg_cursor_goto(msg_row, 0);</a>
 <a name="ln1333">        }</a>
 <a name="ln1334">        ui_flush();</a>
 <a name="ln1335">      }</a>
@@ -3893,7 +3893,7 @@
 <a name="ln3884"> </a>
 <a name="ln3885">  // when 'incsearch' is set there may be no command line while redrawing</a>
 <a name="ln3886">  if (ccline.cmdbuff == NULL) {</a>
-<a name="ln3887">    cmd_cursor_goto(cmdline_row, 0);</a>
+<a name="ln3887">    msg_cursor_goto(cmdline_row, 0);</a>
 <a name="ln3888">    msg_clr_eos();</a>
 <a name="ln3889">    return;</a>
 <a name="ln3890">  }</a>
@@ -3970,736 +3970,729 @@
 <a name="ln3961">    }</a>
 <a name="ln3962">  }</a>
 <a name="ln3963"> </a>
-<a name="ln3964">  cmd_cursor_goto(msg_row, msg_col);</a>
+<a name="ln3964">  msg_cursor_goto(msg_row, msg_col);</a>
 <a name="ln3965">}</a>
 <a name="ln3966"> </a>
-<a name="ln3967">static void cmd_cursor_goto(int row, int col)</a>
+<a name="ln3967">void gotocmdline(bool clr)</a>
 <a name="ln3968">{</a>
-<a name="ln3969">  ScreenGrid *grid = &amp;msg_grid_adj;</a>
-<a name="ln3970">  grid_adjust(&amp;grid, &amp;row, &amp;col);</a>
-<a name="ln3971">  ui_grid_cursor_goto(grid-&gt;handle, row, col);</a>
-<a name="ln3972">}</a>
-<a name="ln3973"> </a>
-<a name="ln3974">void gotocmdline(bool clr)</a>
-<a name="ln3975">{</a>
-<a name="ln3976">  if (ui_has(kUICmdline)) {</a>
-<a name="ln3977">    return;</a>
-<a name="ln3978">  }</a>
-<a name="ln3979">  msg_start();</a>
-<a name="ln3980">  if (cmdmsg_rl) {</a>
-<a name="ln3981">    msg_col = Columns - 1;</a>
-<a name="ln3982">  } else {</a>
-<a name="ln3983">    msg_col = 0;  // always start in column 0</a>
-<a name="ln3984">  }</a>
-<a name="ln3985">  if (clr) {  // clear the bottom line(s)</a>
-<a name="ln3986">    msg_clr_eos();  // will reset clear_cmdline</a>
-<a name="ln3987">  }</a>
-<a name="ln3988">  cmd_cursor_goto(cmdline_row, 0);</a>
-<a name="ln3989">}</a>
-<a name="ln3990"> </a>
-<a name="ln3991">// Check the word in front of the cursor for an abbreviation.</a>
-<a name="ln3992">// Called when the non-id character &quot;c&quot; has been entered.</a>
-<a name="ln3993">// When an abbreviation is recognized it is removed from the text with</a>
-<a name="ln3994">// backspaces and the replacement string is inserted, followed by &quot;c&quot;.</a>
-<a name="ln3995">static int ccheck_abbr(int c)</a>
-<a name="ln3996">{</a>
-<a name="ln3997">  int spos = 0;</a>
-<a name="ln3998"> </a>
-<a name="ln3999">  if (p_paste || no_abbr) {         // no abbreviations or in paste mode</a>
-<a name="ln4000">    return false;</a>
-<a name="ln4001">  }</a>
-<a name="ln4002"> </a>
-<a name="ln4003">  // Do not consider '&lt;,'&gt; be part of the mapping, skip leading whitespace.</a>
-<a name="ln4004">  // Actually accepts any mark.</a>
-<a name="ln4005">  while (spos &lt; ccline.cmdlen &amp;&amp; ascii_iswhite(ccline.cmdbuff[spos])) {</a>
-<a name="ln4006">    spos++;</a>
-<a name="ln4007">  }</a>
-<a name="ln4008">  if (ccline.cmdlen - spos &gt; 5</a>
-<a name="ln4009">      &amp;&amp; ccline.cmdbuff[spos] == '\''</a>
-<a name="ln4010">      &amp;&amp; ccline.cmdbuff[spos + 2] == ','</a>
-<a name="ln4011">      &amp;&amp; ccline.cmdbuff[spos + 3] == '\'') {</a>
-<a name="ln4012">    spos += 5;</a>
-<a name="ln4013">  } else {</a>
-<a name="ln4014">    // check abbreviation from the beginning of the commandline</a>
-<a name="ln4015">    spos = 0;</a>
-<a name="ln4016">  }</a>
-<a name="ln4017"> </a>
-<a name="ln4018">  return check_abbr(c, ccline.cmdbuff, ccline.cmdpos, spos);</a>
-<a name="ln4019">}</a>
-<a name="ln4020"> </a>
-<a name="ln4021">/// Escape special characters in &quot;fname&quot;, depending on &quot;what&quot;:</a>
-<a name="ln4022">///</a>
-<a name="ln4023">/// @param[in]  fname  File name to escape.</a>
-<a name="ln4024">/// @param[in]  what   What to escape for:</a>
-<a name="ln4025">/// - VSE_NONE: for when used as a file name argument after a Vim command.</a>
-<a name="ln4026">/// - VSE_SHELL: for a shell command.</a>
-<a name="ln4027">/// - VSE_BUFFER: for the &quot;:buffer&quot; command.</a>
-<a name="ln4028">///</a>
-<a name="ln4029">/// @return [allocated] escaped file name.</a>
-<a name="ln4030">char *vim_strsave_fnameescape(const char *const fname, const int what)</a>
-<a name="ln4031">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
-<a name="ln4032">{</a>
-<a name="ln4033">#ifdef BACKSLASH_IN_FILENAME</a>
-<a name="ln4034"># define PATH_ESC_CHARS &quot; \t\n*?[{`%#'\&quot;|!&lt;&quot;</a>
-<a name="ln4035"># define BUFFER_ESC_CHARS (&quot; \t\n*?[`%#'\&quot;|!&lt;&quot;)</a>
-<a name="ln4036">  char buf[sizeof(PATH_ESC_CHARS)];</a>
-<a name="ln4037">  int j = 0;</a>
-<a name="ln4038"> </a>
-<a name="ln4039">  // Don't escape '[', '{' and '!' if they are in 'isfname' and for the</a>
-<a name="ln4040">  // &quot;:buffer&quot; command.</a>
-<a name="ln4041">  for (const char *p = what == VSE_BUFFER ? BUFFER_ESC_CHARS : PATH_ESC_CHARS;</a>
-<a name="ln4042">       *p != NUL; p++) {</a>
-<a name="ln4043">    if ((*p != '[' &amp;&amp; *p != '{' &amp;&amp; *p != '!') || !vim_isfilec((uint8_t)(*p))) {</a>
-<a name="ln4044">      buf[j++] = *p;</a>
-<a name="ln4045">    }</a>
-<a name="ln4046">  }</a>
-<a name="ln4047">  buf[j] = NUL;</a>
-<a name="ln4048">  char *p = vim_strsave_escaped(fname, buf);</a>
-<a name="ln4049">#else</a>
-<a name="ln4050"># define PATH_ESC_CHARS &quot; \t\n*?[{`$\\%#'\&quot;|!&lt;&quot;</a>
-<a name="ln4051"># define SHELL_ESC_CHARS &quot; \t\n*?[{`$\\%#'\&quot;|!&lt;&gt;();&amp;&quot;</a>
-<a name="ln4052"># define BUFFER_ESC_CHARS &quot; \t\n*?[`$\\%#'\&quot;|!&lt;&quot;</a>
-<a name="ln4053">  char *p = vim_strsave_escaped(fname,</a>
-<a name="ln4054">                                what == VSE_SHELL ? SHELL_ESC_CHARS : what ==</a>
-<a name="ln4055">                                VSE_BUFFER ? BUFFER_ESC_CHARS : PATH_ESC_CHARS);</a>
-<a name="ln4056">  if (what == VSE_SHELL &amp;&amp; csh_like_shell()) {</a>
-<a name="ln4057">    // For csh and similar shells need to put two backslashes before '!'.</a>
-<a name="ln4058">    // One is taken by Vim, one by the shell.</a>
-<a name="ln4059">    char *s = vim_strsave_escaped(p, &quot;!&quot;);</a>
-<a name="ln4060">    xfree(p);</a>
-<a name="ln4061">    p = s;</a>
+<a name="ln3969">  if (ui_has(kUICmdline)) {</a>
+<a name="ln3970">    return;</a>
+<a name="ln3971">  }</a>
+<a name="ln3972">  msg_start();</a>
+<a name="ln3973">  if (cmdmsg_rl) {</a>
+<a name="ln3974">    msg_col = Columns - 1;</a>
+<a name="ln3975">  } else {</a>
+<a name="ln3976">    msg_col = 0;  // always start in column 0</a>
+<a name="ln3977">  }</a>
+<a name="ln3978">  if (clr) {  // clear the bottom line(s)</a>
+<a name="ln3979">    msg_clr_eos();  // will reset clear_cmdline</a>
+<a name="ln3980">  }</a>
+<a name="ln3981">  msg_cursor_goto(cmdline_row, 0);</a>
+<a name="ln3982">}</a>
+<a name="ln3983"> </a>
+<a name="ln3984">// Check the word in front of the cursor for an abbreviation.</a>
+<a name="ln3985">// Called when the non-id character &quot;c&quot; has been entered.</a>
+<a name="ln3986">// When an abbreviation is recognized it is removed from the text with</a>
+<a name="ln3987">// backspaces and the replacement string is inserted, followed by &quot;c&quot;.</a>
+<a name="ln3988">static int ccheck_abbr(int c)</a>
+<a name="ln3989">{</a>
+<a name="ln3990">  int spos = 0;</a>
+<a name="ln3991"> </a>
+<a name="ln3992">  if (p_paste || no_abbr) {         // no abbreviations or in paste mode</a>
+<a name="ln3993">    return false;</a>
+<a name="ln3994">  }</a>
+<a name="ln3995"> </a>
+<a name="ln3996">  // Do not consider '&lt;,'&gt; be part of the mapping, skip leading whitespace.</a>
+<a name="ln3997">  // Actually accepts any mark.</a>
+<a name="ln3998">  while (spos &lt; ccline.cmdlen &amp;&amp; ascii_iswhite(ccline.cmdbuff[spos])) {</a>
+<a name="ln3999">    spos++;</a>
+<a name="ln4000">  }</a>
+<a name="ln4001">  if (ccline.cmdlen - spos &gt; 5</a>
+<a name="ln4002">      &amp;&amp; ccline.cmdbuff[spos] == '\''</a>
+<a name="ln4003">      &amp;&amp; ccline.cmdbuff[spos + 2] == ','</a>
+<a name="ln4004">      &amp;&amp; ccline.cmdbuff[spos + 3] == '\'') {</a>
+<a name="ln4005">    spos += 5;</a>
+<a name="ln4006">  } else {</a>
+<a name="ln4007">    // check abbreviation from the beginning of the commandline</a>
+<a name="ln4008">    spos = 0;</a>
+<a name="ln4009">  }</a>
+<a name="ln4010"> </a>
+<a name="ln4011">  return check_abbr(c, ccline.cmdbuff, ccline.cmdpos, spos);</a>
+<a name="ln4012">}</a>
+<a name="ln4013"> </a>
+<a name="ln4014">/// Escape special characters in &quot;fname&quot;, depending on &quot;what&quot;:</a>
+<a name="ln4015">///</a>
+<a name="ln4016">/// @param[in]  fname  File name to escape.</a>
+<a name="ln4017">/// @param[in]  what   What to escape for:</a>
+<a name="ln4018">/// - VSE_NONE: for when used as a file name argument after a Vim command.</a>
+<a name="ln4019">/// - VSE_SHELL: for a shell command.</a>
+<a name="ln4020">/// - VSE_BUFFER: for the &quot;:buffer&quot; command.</a>
+<a name="ln4021">///</a>
+<a name="ln4022">/// @return [allocated] escaped file name.</a>
+<a name="ln4023">char *vim_strsave_fnameescape(const char *const fname, const int what)</a>
+<a name="ln4024">  FUNC_ATTR_NONNULL_RET FUNC_ATTR_MALLOC FUNC_ATTR_NONNULL_ALL</a>
+<a name="ln4025">{</a>
+<a name="ln4026">#ifdef BACKSLASH_IN_FILENAME</a>
+<a name="ln4027"># define PATH_ESC_CHARS &quot; \t\n*?[{`%#'\&quot;|!&lt;&quot;</a>
+<a name="ln4028"># define BUFFER_ESC_CHARS (&quot; \t\n*?[`%#'\&quot;|!&lt;&quot;)</a>
+<a name="ln4029">  char buf[sizeof(PATH_ESC_CHARS)];</a>
+<a name="ln4030">  int j = 0;</a>
+<a name="ln4031"> </a>
+<a name="ln4032">  // Don't escape '[', '{' and '!' if they are in 'isfname' and for the</a>
+<a name="ln4033">  // &quot;:buffer&quot; command.</a>
+<a name="ln4034">  for (const char *p = what == VSE_BUFFER ? BUFFER_ESC_CHARS : PATH_ESC_CHARS;</a>
+<a name="ln4035">       *p != NUL; p++) {</a>
+<a name="ln4036">    if ((*p != '[' &amp;&amp; *p != '{' &amp;&amp; *p != '!') || !vim_isfilec((uint8_t)(*p))) {</a>
+<a name="ln4037">      buf[j++] = *p;</a>
+<a name="ln4038">    }</a>
+<a name="ln4039">  }</a>
+<a name="ln4040">  buf[j] = NUL;</a>
+<a name="ln4041">  char *p = vim_strsave_escaped(fname, buf);</a>
+<a name="ln4042">#else</a>
+<a name="ln4043"># define PATH_ESC_CHARS &quot; \t\n*?[{`$\\%#'\&quot;|!&lt;&quot;</a>
+<a name="ln4044"># define SHELL_ESC_CHARS &quot; \t\n*?[{`$\\%#'\&quot;|!&lt;&gt;();&amp;&quot;</a>
+<a name="ln4045"># define BUFFER_ESC_CHARS &quot; \t\n*?[`$\\%#'\&quot;|!&lt;&quot;</a>
+<a name="ln4046">  char *p = vim_strsave_escaped(fname,</a>
+<a name="ln4047">                                what == VSE_SHELL ? SHELL_ESC_CHARS : what ==</a>
+<a name="ln4048">                                VSE_BUFFER ? BUFFER_ESC_CHARS : PATH_ESC_CHARS);</a>
+<a name="ln4049">  if (what == VSE_SHELL &amp;&amp; csh_like_shell()) {</a>
+<a name="ln4050">    // For csh and similar shells need to put two backslashes before '!'.</a>
+<a name="ln4051">    // One is taken by Vim, one by the shell.</a>
+<a name="ln4052">    char *s = vim_strsave_escaped(p, &quot;!&quot;);</a>
+<a name="ln4053">    xfree(p);</a>
+<a name="ln4054">    p = s;</a>
+<a name="ln4055">  }</a>
+<a name="ln4056">#endif</a>
+<a name="ln4057"> </a>
+<a name="ln4058">  // '&gt;' and '+' are special at the start of some commands, e.g. &quot;:edit&quot; and</a>
+<a name="ln4059">  // &quot;:write&quot;.  &quot;cd -&quot; has a special meaning.</a>
+<a name="ln4060">  if (*p == '&gt;' || *p == '+' || (*p == '-' &amp;&amp; p[1] == NUL)) {</a>
+<a name="ln4061">    escape_fname(&amp;p);</a>
 <a name="ln4062">  }</a>
-<a name="ln4063">#endif</a>
-<a name="ln4064"> </a>
-<a name="ln4065">  // '&gt;' and '+' are special at the start of some commands, e.g. &quot;:edit&quot; and</a>
-<a name="ln4066">  // &quot;:write&quot;.  &quot;cd -&quot; has a special meaning.</a>
-<a name="ln4067">  if (*p == '&gt;' || *p == '+' || (*p == '-' &amp;&amp; p[1] == NUL)) {</a>
-<a name="ln4068">    escape_fname(&amp;p);</a>
-<a name="ln4069">  }</a>
-<a name="ln4070"> </a>
-<a name="ln4071">  return p;</a>
-<a name="ln4072">}</a>
-<a name="ln4073"> </a>
-<a name="ln4074">/// Put a backslash before the file name in &quot;pp&quot;, which is in allocated memory.</a>
-<a name="ln4075">void escape_fname(char **pp)</a>
-<a name="ln4076">{</a>
-<a name="ln4077">  char *p = xmalloc(strlen(*pp) + 2);</a>
-<a name="ln4078">  p[0] = '\\';</a>
-<a name="ln4079">  STRCPY(p + 1, *pp);</a>
-<a name="ln4080">  xfree(*pp);</a>
-<a name="ln4081">  *pp = p;</a>
-<a name="ln4082">}</a>
-<a name="ln4083"> </a>
-<a name="ln4084">/// For each file name in files[num_files]:</a>
-<a name="ln4085">/// If 'orig_pat' starts with &quot;~/&quot;, replace the home directory with &quot;~&quot;.</a>
-<a name="ln4086">void tilde_replace(char *orig_pat, int num_files, char **files)</a>
-<a name="ln4087">{</a>
-<a name="ln4088">  char *p;</a>
-<a name="ln4089"> </a>
-<a name="ln4090">  if (orig_pat[0] == '~' &amp;&amp; vim_ispathsep(orig_pat[1])) {</a>
-<a name="ln4091">    for (int i = 0; i &lt; num_files; i++) {</a>
-<a name="ln4092">      p = home_replace_save(NULL, files[i]);</a>
-<a name="ln4093">      xfree(files[i]);</a>
-<a name="ln4094">      files[i] = p;</a>
-<a name="ln4095">    }</a>
-<a name="ln4096">  }</a>
-<a name="ln4097">}</a>
-<a name="ln4098"> </a>
-<a name="ln4099">/// Get a pointer to the current command line info.</a>
-<a name="ln4100">CmdlineInfo *get_cmdline_info(void)</a>
-<a name="ln4101">{</a>
-<a name="ln4102">  return &amp;ccline;</a>
-<a name="ln4103">}</a>
-<a name="ln4104"> </a>
-<a name="ln4105">unsigned get_cmdline_last_prompt_id(void)</a>
+<a name="ln4063"> </a>
+<a name="ln4064">  return p;</a>
+<a name="ln4065">}</a>
+<a name="ln4066"> </a>
+<a name="ln4067">/// Put a backslash before the file name in &quot;pp&quot;, which is in allocated memory.</a>
+<a name="ln4068">void escape_fname(char **pp)</a>
+<a name="ln4069">{</a>
+<a name="ln4070">  char *p = xmalloc(strlen(*pp) + 2);</a>
+<a name="ln4071">  p[0] = '\\';</a>
+<a name="ln4072">  STRCPY(p + 1, *pp);</a>
+<a name="ln4073">  xfree(*pp);</a>
+<a name="ln4074">  *pp = p;</a>
+<a name="ln4075">}</a>
+<a name="ln4076"> </a>
+<a name="ln4077">/// For each file name in files[num_files]:</a>
+<a name="ln4078">/// If 'orig_pat' starts with &quot;~/&quot;, replace the home directory with &quot;~&quot;.</a>
+<a name="ln4079">void tilde_replace(char *orig_pat, int num_files, char **files)</a>
+<a name="ln4080">{</a>
+<a name="ln4081">  char *p;</a>
+<a name="ln4082"> </a>
+<a name="ln4083">  if (orig_pat[0] == '~' &amp;&amp; vim_ispathsep(orig_pat[1])) {</a>
+<a name="ln4084">    for (int i = 0; i &lt; num_files; i++) {</a>
+<a name="ln4085">      p = home_replace_save(NULL, files[i]);</a>
+<a name="ln4086">      xfree(files[i]);</a>
+<a name="ln4087">      files[i] = p;</a>
+<a name="ln4088">    }</a>
+<a name="ln4089">  }</a>
+<a name="ln4090">}</a>
+<a name="ln4091"> </a>
+<a name="ln4092">/// Get a pointer to the current command line info.</a>
+<a name="ln4093">CmdlineInfo *get_cmdline_info(void)</a>
+<a name="ln4094">{</a>
+<a name="ln4095">  return &amp;ccline;</a>
+<a name="ln4096">}</a>
+<a name="ln4097"> </a>
+<a name="ln4098">unsigned get_cmdline_last_prompt_id(void)</a>
+<a name="ln4099">{</a>
+<a name="ln4100">  return last_prompt_id;</a>
+<a name="ln4101">}</a>
+<a name="ln4102"> </a>
+<a name="ln4103">/// Get pointer to the command line info to use. save_cmdline() may clear</a>
+<a name="ln4104">/// ccline and put the previous value in ccline.prev_ccline.</a>
+<a name="ln4105">static CmdlineInfo *get_ccline_ptr(void)</a>
 <a name="ln4106">{</a>
-<a name="ln4107">  return last_prompt_id;</a>
-<a name="ln4108">}</a>
-<a name="ln4109"> </a>
-<a name="ln4110">/// Get pointer to the command line info to use. save_cmdline() may clear</a>
-<a name="ln4111">/// ccline and put the previous value in ccline.prev_ccline.</a>
-<a name="ln4112">static CmdlineInfo *get_ccline_ptr(void)</a>
-<a name="ln4113">{</a>
-<a name="ln4114">  if ((State &amp; MODE_CMDLINE) == 0) {</a>
-<a name="ln4115">    return NULL;</a>
-<a name="ln4116">  } else if (ccline.cmdbuff != NULL) {</a>
-<a name="ln4117">    return &amp;ccline;</a>
-<a name="ln4118">  } else if (ccline.prev_ccline &amp;&amp; ccline.prev_ccline-&gt;cmdbuff != NULL) {</a>
-<a name="ln4119">    return ccline.prev_ccline;</a>
-<a name="ln4120">  } else {</a>
-<a name="ln4121">    return NULL;</a>
-<a name="ln4122">  }</a>
-<a name="ln4123">}</a>
-<a name="ln4124"> </a>
-<a name="ln4125">/// Get the current command-line type.</a>
-<a name="ln4126">/// Returns ':' or '/' or '?' or '@' or '&gt;' or '-'</a>
-<a name="ln4127">/// Only works when the command line is being edited.</a>
-<a name="ln4128">/// Returns NUL when something is wrong.</a>
-<a name="ln4129">static int get_cmdline_type(void)</a>
-<a name="ln4130">{</a>
-<a name="ln4131">  CmdlineInfo *p = get_ccline_ptr();</a>
-<a name="ln4132"> </a>
-<a name="ln4133">  if (p == NULL) {</a>
-<a name="ln4134">    return NUL;</a>
-<a name="ln4135">  }</a>
-<a name="ln4136">  if (p-&gt;cmdfirstc == NUL) {</a>
-<a name="ln4137">    return (p-&gt;input_fn) ? '@' : '-';</a>
-<a name="ln4138">  }</a>
-<a name="ln4139">  return p-&gt;cmdfirstc;</a>
-<a name="ln4140">}</a>
-<a name="ln4141"> </a>
-<a name="ln4142">/// Get the current command line in allocated memory.</a>
-<a name="ln4143">/// Only works when the command line is being edited.</a>
-<a name="ln4144">///</a>
-<a name="ln4145">/// @return  NULL when something is wrong.</a>
-<a name="ln4146">static char *get_cmdline_str(void)</a>
-<a name="ln4147">{</a>
-<a name="ln4148">  if (cmdline_star &gt; 0) {</a>
-<a name="ln4149">    return NULL;</a>
-<a name="ln4150">  }</a>
-<a name="ln4151">  CmdlineInfo *p = get_ccline_ptr();</a>
-<a name="ln4152"> </a>
-<a name="ln4153">  if (p == NULL) {</a>
-<a name="ln4154">    return NULL;</a>
-<a name="ln4155">  }</a>
-<a name="ln4156">  return xstrnsave(p-&gt;cmdbuff, (size_t)p-&gt;cmdlen);</a>
-<a name="ln4157">}</a>
-<a name="ln4158"> </a>
-<a name="ln4159">/// Get the current command-line completion type.</a>
-<a name="ln4160">static char *get_cmdline_completion(void)</a>
-<a name="ln4161">{</a>
-<a name="ln4162">  if (cmdline_star &gt; 0) {</a>
-<a name="ln4163">    return NULL;</a>
-<a name="ln4164">  }</a>
-<a name="ln4165">  CmdlineInfo *p = get_ccline_ptr();</a>
-<a name="ln4166"> </a>
-<a name="ln4167">  if (p == NULL || p-&gt;xpc == NULL) {</a>
-<a name="ln4168">    return NULL;</a>
-<a name="ln4169">  }</a>
-<a name="ln4170"> </a>
-<a name="ln4171">  set_expand_context(p-&gt;xpc);</a>
-<a name="ln4172">  if (p-&gt;xpc-&gt;xp_context == EXPAND_UNSUCCESSFUL) {</a>
-<a name="ln4173">    return NULL;</a>
-<a name="ln4174">  }</a>
-<a name="ln4175"> </a>
-<a name="ln4176">  char *cmd_compl = get_user_cmd_complete(p-&gt;xpc, p-&gt;xpc-&gt;xp_context);</a>
-<a name="ln4177">  if (cmd_compl == NULL) {</a>
-<a name="ln4178">    return NULL;</a>
-<a name="ln4179">  }</a>
-<a name="ln4180"> </a>
-<a name="ln4181">  if (p-&gt;xpc-&gt;xp_context == EXPAND_USER_LIST</a>
-<a name="ln4182">      || p-&gt;xpc-&gt;xp_context == EXPAND_USER_DEFINED) {</a>
-<a name="ln4183">    size_t buflen = strlen(cmd_compl) + strlen(p-&gt;xpc-&gt;xp_arg) + 2;</a>
-<a name="ln4184">    char *buffer = xmalloc(buflen);</a>
-<a name="ln4185">    snprintf(buffer, buflen, &quot;%s,%s&quot;, cmd_compl, p-&gt;xpc-&gt;xp_arg);</a>
-<a name="ln4186">    return buffer;</a>
-<a name="ln4187">  }</a>
-<a name="ln4188"> </a>
-<a name="ln4189">  return xstrdup(cmd_compl);</a>
+<a name="ln4107">  if ((State &amp; MODE_CMDLINE) == 0) {</a>
+<a name="ln4108">    return NULL;</a>
+<a name="ln4109">  } else if (ccline.cmdbuff != NULL) {</a>
+<a name="ln4110">    return &amp;ccline;</a>
+<a name="ln4111">  } else if (ccline.prev_ccline &amp;&amp; ccline.prev_ccline-&gt;cmdbuff != NULL) {</a>
+<a name="ln4112">    return ccline.prev_ccline;</a>
+<a name="ln4113">  } else {</a>
+<a name="ln4114">    return NULL;</a>
+<a name="ln4115">  }</a>
+<a name="ln4116">}</a>
+<a name="ln4117"> </a>
+<a name="ln4118">/// Get the current command-line type.</a>
+<a name="ln4119">/// Returns ':' or '/' or '?' or '@' or '&gt;' or '-'</a>
+<a name="ln4120">/// Only works when the command line is being edited.</a>
+<a name="ln4121">/// Returns NUL when something is wrong.</a>
+<a name="ln4122">static int get_cmdline_type(void)</a>
+<a name="ln4123">{</a>
+<a name="ln4124">  CmdlineInfo *p = get_ccline_ptr();</a>
+<a name="ln4125"> </a>
+<a name="ln4126">  if (p == NULL) {</a>
+<a name="ln4127">    return NUL;</a>
+<a name="ln4128">  }</a>
+<a name="ln4129">  if (p-&gt;cmdfirstc == NUL) {</a>
+<a name="ln4130">    return (p-&gt;input_fn) ? '@' : '-';</a>
+<a name="ln4131">  }</a>
+<a name="ln4132">  return p-&gt;cmdfirstc;</a>
+<a name="ln4133">}</a>
+<a name="ln4134"> </a>
+<a name="ln4135">/// Get the current command line in allocated memory.</a>
+<a name="ln4136">/// Only works when the command line is being edited.</a>
+<a name="ln4137">///</a>
+<a name="ln4138">/// @return  NULL when something is wrong.</a>
+<a name="ln4139">static char *get_cmdline_str(void)</a>
+<a name="ln4140">{</a>
+<a name="ln4141">  if (cmdline_star &gt; 0) {</a>
+<a name="ln4142">    return NULL;</a>
+<a name="ln4143">  }</a>
+<a name="ln4144">  CmdlineInfo *p = get_ccline_ptr();</a>
+<a name="ln4145"> </a>
+<a name="ln4146">  if (p == NULL) {</a>
+<a name="ln4147">    return NULL;</a>
+<a name="ln4148">  }</a>
+<a name="ln4149">  return xstrnsave(p-&gt;cmdbuff, (size_t)p-&gt;cmdlen);</a>
+<a name="ln4150">}</a>
+<a name="ln4151"> </a>
+<a name="ln4152">/// Get the current command-line completion type.</a>
+<a name="ln4153">static char *get_cmdline_completion(void)</a>
+<a name="ln4154">{</a>
+<a name="ln4155">  if (cmdline_star &gt; 0) {</a>
+<a name="ln4156">    return NULL;</a>
+<a name="ln4157">  }</a>
+<a name="ln4158">  CmdlineInfo *p = get_ccline_ptr();</a>
+<a name="ln4159"> </a>
+<a name="ln4160">  if (p == NULL || p-&gt;xpc == NULL) {</a>
+<a name="ln4161">    return NULL;</a>
+<a name="ln4162">  }</a>
+<a name="ln4163"> </a>
+<a name="ln4164">  set_expand_context(p-&gt;xpc);</a>
+<a name="ln4165">  if (p-&gt;xpc-&gt;xp_context == EXPAND_UNSUCCESSFUL) {</a>
+<a name="ln4166">    return NULL;</a>
+<a name="ln4167">  }</a>
+<a name="ln4168"> </a>
+<a name="ln4169">  char *cmd_compl = get_user_cmd_complete(p-&gt;xpc, p-&gt;xpc-&gt;xp_context);</a>
+<a name="ln4170">  if (cmd_compl == NULL) {</a>
+<a name="ln4171">    return NULL;</a>
+<a name="ln4172">  }</a>
+<a name="ln4173"> </a>
+<a name="ln4174">  if (p-&gt;xpc-&gt;xp_context == EXPAND_USER_LIST</a>
+<a name="ln4175">      || p-&gt;xpc-&gt;xp_context == EXPAND_USER_DEFINED) {</a>
+<a name="ln4176">    size_t buflen = strlen(cmd_compl) + strlen(p-&gt;xpc-&gt;xp_arg) + 2;</a>
+<a name="ln4177">    char *buffer = xmalloc(buflen);</a>
+<a name="ln4178">    snprintf(buffer, buflen, &quot;%s,%s&quot;, cmd_compl, p-&gt;xpc-&gt;xp_arg);</a>
+<a name="ln4179">    return buffer;</a>
+<a name="ln4180">  }</a>
+<a name="ln4181"> </a>
+<a name="ln4182">  return xstrdup(cmd_compl);</a>
+<a name="ln4183">}</a>
+<a name="ln4184"> </a>
+<a name="ln4185">/// &quot;getcmdcompltype()&quot; function</a>
+<a name="ln4186">void f_getcmdcompltype(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln4187">{</a>
+<a name="ln4188">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln4189">  rettv-&gt;vval.v_string = get_cmdline_completion();</a>
 <a name="ln4190">}</a>
 <a name="ln4191"> </a>
-<a name="ln4192">/// &quot;getcmdcompltype()&quot; function</a>
-<a name="ln4193">void f_getcmdcompltype(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln4192">/// &quot;getcmdline()&quot; function</a>
+<a name="ln4193">void f_getcmdline(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
 <a name="ln4194">{</a>
 <a name="ln4195">  rettv-&gt;v_type = VAR_STRING;</a>
-<a name="ln4196">  rettv-&gt;vval.v_string = get_cmdline_completion();</a>
+<a name="ln4196">  rettv-&gt;vval.v_string = get_cmdline_str();</a>
 <a name="ln4197">}</a>
 <a name="ln4198"> </a>
-<a name="ln4199">/// &quot;getcmdline()&quot; function</a>
-<a name="ln4200">void f_getcmdline(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln4199">/// &quot;getcmdpos()&quot; function</a>
+<a name="ln4200">void f_getcmdpos(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
 <a name="ln4201">{</a>
-<a name="ln4202">  rettv-&gt;v_type = VAR_STRING;</a>
-<a name="ln4203">  rettv-&gt;vval.v_string = get_cmdline_str();</a>
+<a name="ln4202">  CmdlineInfo *p = get_ccline_ptr();</a>
+<a name="ln4203">  rettv-&gt;vval.v_number = p != NULL ? p-&gt;cmdpos + 1 : 0;</a>
 <a name="ln4204">}</a>
 <a name="ln4205"> </a>
-<a name="ln4206">/// &quot;getcmdpos()&quot; function</a>
-<a name="ln4207">void f_getcmdpos(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln4206">/// &quot;getcmdscreenpos()&quot; function</a>
+<a name="ln4207">void f_getcmdscreenpos(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
 <a name="ln4208">{</a>
 <a name="ln4209">  CmdlineInfo *p = get_ccline_ptr();</a>
-<a name="ln4210">  rettv-&gt;vval.v_number = p != NULL ? p-&gt;cmdpos + 1 : 0;</a>
+<a name="ln4210">  rettv-&gt;vval.v_number = p != NULL ? p-&gt;cmdspos + 1 : 0;</a>
 <a name="ln4211">}</a>
 <a name="ln4212"> </a>
-<a name="ln4213">/// &quot;getcmdscreenpos()&quot; function</a>
-<a name="ln4214">void f_getcmdscreenpos(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln4213">/// &quot;getcmdtype()&quot; function</a>
+<a name="ln4214">void f_getcmdtype(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
 <a name="ln4215">{</a>
-<a name="ln4216">  CmdlineInfo *p = get_ccline_ptr();</a>
-<a name="ln4217">  rettv-&gt;vval.v_number = p != NULL ? p-&gt;cmdspos + 1 : 0;</a>
-<a name="ln4218">}</a>
-<a name="ln4219"> </a>
-<a name="ln4220">/// &quot;getcmdtype()&quot; function</a>
-<a name="ln4221">void f_getcmdtype(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
-<a name="ln4222">{</a>
-<a name="ln4223">  rettv-&gt;v_type = VAR_STRING;</a>
-<a name="ln4224">  rettv-&gt;vval.v_string = xmallocz(1);</a>
-<a name="ln4225">  rettv-&gt;vval.v_string[0] = (char)get_cmdline_type();</a>
-<a name="ln4226">}</a>
-<a name="ln4227"> </a>
-<a name="ln4228">/// Set the command line str to &quot;str&quot;.</a>
-<a name="ln4229">/// @return  1 when failed, 0 when OK.</a>
-<a name="ln4230">static int set_cmdline_str(const char *str, int pos)</a>
-<a name="ln4231">{</a>
-<a name="ln4232">  CmdlineInfo *p = get_ccline_ptr();</a>
-<a name="ln4233"> </a>
-<a name="ln4234">  if (p == NULL) {</a>
-<a name="ln4235">    return 1;</a>
-<a name="ln4236">  }</a>
-<a name="ln4237"> </a>
-<a name="ln4238">  int len = (int)strlen(str);</a>
-<a name="ln4239">  realloc_cmdbuff(len + 1);</a>
-<a name="ln4240">  p-&gt;cmdlen = len;</a>
-<a name="ln4241">  STRCPY(p-&gt;cmdbuff, str);</a>
-<a name="ln4242"> </a>
-<a name="ln4243">  p-&gt;cmdpos = pos &lt; 0 || pos &gt; p-&gt;cmdlen ? p-&gt;cmdlen : pos;</a>
-<a name="ln4244">  new_cmdpos = p-&gt;cmdpos;</a>
-<a name="ln4245"> </a>
-<a name="ln4246">  redrawcmd();</a>
-<a name="ln4247"> </a>
-<a name="ln4248">  // Trigger CmdlineChanged autocommands.</a>
-<a name="ln4249">  do_autocmd_cmdlinechanged(get_cmdline_type());</a>
-<a name="ln4250"> </a>
-<a name="ln4251">  return 0;</a>
-<a name="ln4252">}</a>
+<a name="ln4216">  rettv-&gt;v_type = VAR_STRING;</a>
+<a name="ln4217">  rettv-&gt;vval.v_string = xmallocz(1);</a>
+<a name="ln4218">  rettv-&gt;vval.v_string[0] = (char)get_cmdline_type();</a>
+<a name="ln4219">}</a>
+<a name="ln4220"> </a>
+<a name="ln4221">/// Set the command line str to &quot;str&quot;.</a>
+<a name="ln4222">/// @return  1 when failed, 0 when OK.</a>
+<a name="ln4223">static int set_cmdline_str(const char *str, int pos)</a>
+<a name="ln4224">{</a>
+<a name="ln4225">  CmdlineInfo *p = get_ccline_ptr();</a>
+<a name="ln4226"> </a>
+<a name="ln4227">  if (p == NULL) {</a>
+<a name="ln4228">    return 1;</a>
+<a name="ln4229">  }</a>
+<a name="ln4230"> </a>
+<a name="ln4231">  int len = (int)strlen(str);</a>
+<a name="ln4232">  realloc_cmdbuff(len + 1);</a>
+<a name="ln4233">  p-&gt;cmdlen = len;</a>
+<a name="ln4234">  STRCPY(p-&gt;cmdbuff, str);</a>
+<a name="ln4235"> </a>
+<a name="ln4236">  p-&gt;cmdpos = pos &lt; 0 || pos &gt; p-&gt;cmdlen ? p-&gt;cmdlen : pos;</a>
+<a name="ln4237">  new_cmdpos = p-&gt;cmdpos;</a>
+<a name="ln4238"> </a>
+<a name="ln4239">  redrawcmd();</a>
+<a name="ln4240"> </a>
+<a name="ln4241">  // Trigger CmdlineChanged autocommands.</a>
+<a name="ln4242">  do_autocmd_cmdlinechanged(get_cmdline_type());</a>
+<a name="ln4243"> </a>
+<a name="ln4244">  return 0;</a>
+<a name="ln4245">}</a>
+<a name="ln4246"> </a>
+<a name="ln4247">/// Set the command line byte position to &quot;pos&quot;.  Zero is the first position.</a>
+<a name="ln4248">/// Only works when the command line is being edited.</a>
+<a name="ln4249">/// @return  1 when failed, 0 when OK.</a>
+<a name="ln4250">static int set_cmdline_pos(int pos)</a>
+<a name="ln4251">{</a>
+<a name="ln4252">  CmdlineInfo *p = get_ccline_ptr();</a>
 <a name="ln4253"> </a>
-<a name="ln4254">/// Set the command line byte position to &quot;pos&quot;.  Zero is the first position.</a>
-<a name="ln4255">/// Only works when the command line is being edited.</a>
-<a name="ln4256">/// @return  1 when failed, 0 when OK.</a>
-<a name="ln4257">static int set_cmdline_pos(int pos)</a>
-<a name="ln4258">{</a>
-<a name="ln4259">  CmdlineInfo *p = get_ccline_ptr();</a>
-<a name="ln4260"> </a>
-<a name="ln4261">  if (p == NULL) {</a>
-<a name="ln4262">    return 1;</a>
-<a name="ln4263">  }</a>
-<a name="ln4264"> </a>
-<a name="ln4265">  // The position is not set directly but after CTRL-\ e or CTRL-R = has</a>
-<a name="ln4266">  // changed the command line.</a>
-<a name="ln4267">  if (pos &lt; 0) {</a>
-<a name="ln4268">    new_cmdpos = 0;</a>
-<a name="ln4269">  } else {</a>
-<a name="ln4270">    new_cmdpos = pos;</a>
-<a name="ln4271">  }</a>
-<a name="ln4272">  return 0;</a>
-<a name="ln4273">}</a>
-<a name="ln4274"> </a>
-<a name="ln4275">/// &quot;setcmdline()&quot; function</a>
-<a name="ln4276">void f_setcmdline(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
-<a name="ln4277">{</a>
-<a name="ln4278">  if (tv_check_for_string_arg(argvars, 0) == FAIL</a>
-<a name="ln4279">      || tv_check_for_opt_number_arg(argvars, 1) == FAIL) {</a>
-<a name="ln4280">    return;</a>
-<a name="ln4281">  }</a>
-<a name="ln4282"> </a>
-<a name="ln4283">  int pos = -1;</a>
-<a name="ln4284">  if (argvars[1].v_type != VAR_UNKNOWN) {</a>
-<a name="ln4285">    bool error = false;</a>
-<a name="ln4286"> </a>
-<a name="ln4287">    pos = (int)tv_get_number_chk(&amp;argvars[1], &amp;error) - 1;</a>
-<a name="ln4288">    if (error) {</a>
-<a name="ln4289">      return;</a>
-<a name="ln4290">    }</a>
-<a name="ln4291">    if (pos &lt; 0) {</a>
-<a name="ln4292">      emsg(_(e_positive));</a>
-<a name="ln4293">      return;</a>
-<a name="ln4294">    }</a>
-<a name="ln4295">  }</a>
-<a name="ln4296"> </a>
-<a name="ln4297">  // Use tv_get_string() to handle a NULL string like an empty string.</a>
-<a name="ln4298">  rettv-&gt;vval.v_number = set_cmdline_str(tv_get_string(&amp;argvars[0]), pos);</a>
-<a name="ln4299">}</a>
-<a name="ln4300"> </a>
-<a name="ln4301">/// &quot;setcmdpos()&quot; function</a>
-<a name="ln4302">void f_setcmdpos(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
-<a name="ln4303">{</a>
-<a name="ln4304">  const int pos = (int)tv_get_number(&amp;argvars[0]) - 1;</a>
-<a name="ln4305"> </a>
-<a name="ln4306">  if (pos &gt;= 0) {</a>
-<a name="ln4307">    rettv-&gt;vval.v_number = set_cmdline_pos(pos);</a>
-<a name="ln4308">  }</a>
-<a name="ln4309">}</a>
-<a name="ln4310"> </a>
-<a name="ln4311">/// Return the first character of the current command line.</a>
-<a name="ln4312">int get_cmdline_firstc(void)</a>
-<a name="ln4313">{</a>
-<a name="ln4314">  return ccline.cmdfirstc;</a>
-<a name="ln4315">}</a>
-<a name="ln4316"> </a>
-<a name="ln4317">/// Get indices that specify a range within a list (not a range of text lines</a>
-<a name="ln4318">/// in a buffer!) from a string.  Used for &quot;:history&quot; and &quot;:clist&quot;.</a>
-<a name="ln4319">///</a>
-<a name="ln4320">/// @param str string to parse range from</a>
-<a name="ln4321">/// @param num1 from</a>
-<a name="ln4322">/// @param num2 to</a>
-<a name="ln4323">///</a>
-<a name="ln4324">/// @return OK if parsed successfully, otherwise FAIL.</a>
-<a name="ln4325">int get_list_range(char **str, int *num1, int *num2)</a>
-<a name="ln4326">{</a>
-<a name="ln4327">  int len;</a>
-<a name="ln4328">  int first = false;</a>
-<a name="ln4329">  varnumber_T num;</a>
-<a name="ln4330"> </a>
+<a name="ln4254">  if (p == NULL) {</a>
+<a name="ln4255">    return 1;</a>
+<a name="ln4256">  }</a>
+<a name="ln4257"> </a>
+<a name="ln4258">  // The position is not set directly but after CTRL-\ e or CTRL-R = has</a>
+<a name="ln4259">  // changed the command line.</a>
+<a name="ln4260">  if (pos &lt; 0) {</a>
+<a name="ln4261">    new_cmdpos = 0;</a>
+<a name="ln4262">  } else {</a>
+<a name="ln4263">    new_cmdpos = pos;</a>
+<a name="ln4264">  }</a>
+<a name="ln4265">  return 0;</a>
+<a name="ln4266">}</a>
+<a name="ln4267"> </a>
+<a name="ln4268">/// &quot;setcmdline()&quot; function</a>
+<a name="ln4269">void f_setcmdline(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln4270">{</a>
+<a name="ln4271">  if (tv_check_for_string_arg(argvars, 0) == FAIL</a>
+<a name="ln4272">      || tv_check_for_opt_number_arg(argvars, 1) == FAIL) {</a>
+<a name="ln4273">    return;</a>
+<a name="ln4274">  }</a>
+<a name="ln4275"> </a>
+<a name="ln4276">  int pos = -1;</a>
+<a name="ln4277">  if (argvars[1].v_type != VAR_UNKNOWN) {</a>
+<a name="ln4278">    bool error = false;</a>
+<a name="ln4279"> </a>
+<a name="ln4280">    pos = (int)tv_get_number_chk(&amp;argvars[1], &amp;error) - 1;</a>
+<a name="ln4281">    if (error) {</a>
+<a name="ln4282">      return;</a>
+<a name="ln4283">    }</a>
+<a name="ln4284">    if (pos &lt; 0) {</a>
+<a name="ln4285">      emsg(_(e_positive));</a>
+<a name="ln4286">      return;</a>
+<a name="ln4287">    }</a>
+<a name="ln4288">  }</a>
+<a name="ln4289"> </a>
+<a name="ln4290">  // Use tv_get_string() to handle a NULL string like an empty string.</a>
+<a name="ln4291">  rettv-&gt;vval.v_number = set_cmdline_str(tv_get_string(&amp;argvars[0]), pos);</a>
+<a name="ln4292">}</a>
+<a name="ln4293"> </a>
+<a name="ln4294">/// &quot;setcmdpos()&quot; function</a>
+<a name="ln4295">void f_setcmdpos(typval_T *argvars, typval_T *rettv, EvalFuncData fptr)</a>
+<a name="ln4296">{</a>
+<a name="ln4297">  const int pos = (int)tv_get_number(&amp;argvars[0]) - 1;</a>
+<a name="ln4298"> </a>
+<a name="ln4299">  if (pos &gt;= 0) {</a>
+<a name="ln4300">    rettv-&gt;vval.v_number = set_cmdline_pos(pos);</a>
+<a name="ln4301">  }</a>
+<a name="ln4302">}</a>
+<a name="ln4303"> </a>
+<a name="ln4304">/// Return the first character of the current command line.</a>
+<a name="ln4305">int get_cmdline_firstc(void)</a>
+<a name="ln4306">{</a>
+<a name="ln4307">  return ccline.cmdfirstc;</a>
+<a name="ln4308">}</a>
+<a name="ln4309"> </a>
+<a name="ln4310">/// Get indices that specify a range within a list (not a range of text lines</a>
+<a name="ln4311">/// in a buffer!) from a string.  Used for &quot;:history&quot; and &quot;:clist&quot;.</a>
+<a name="ln4312">///</a>
+<a name="ln4313">/// @param str string to parse range from</a>
+<a name="ln4314">/// @param num1 from</a>
+<a name="ln4315">/// @param num2 to</a>
+<a name="ln4316">///</a>
+<a name="ln4317">/// @return OK if parsed successfully, otherwise FAIL.</a>
+<a name="ln4318">int get_list_range(char **str, int *num1, int *num2)</a>
+<a name="ln4319">{</a>
+<a name="ln4320">  int len;</a>
+<a name="ln4321">  int first = false;</a>
+<a name="ln4322">  varnumber_T num;</a>
+<a name="ln4323"> </a>
+<a name="ln4324">  *str = skipwhite((*str));</a>
+<a name="ln4325">  if (**str == '-' || ascii_isdigit(**str)) {  // parse &quot;from&quot; part of range</a>
+<a name="ln4326">    vim_str2nr(*str, NULL, &amp;len, 0, &amp;num, NULL, 0, false, NULL);</a>
+<a name="ln4327">    *str += len;</a>
+<a name="ln4328">    *num1 = (int)num;</a>
+<a name="ln4329">    first = true;</a>
+<a name="ln4330">  }</a>
 <a name="ln4331">  *str = skipwhite((*str));</a>
-<a name="ln4332">  if (**str == '-' || ascii_isdigit(**str)) {  // parse &quot;from&quot; part of range</a>
-<a name="ln4333">    vim_str2nr(*str, NULL, &amp;len, 0, &amp;num, NULL, 0, false, NULL);</a>
-<a name="ln4334">    *str += len;</a>
-<a name="ln4335">    *num1 = (int)num;</a>
-<a name="ln4336">    first = true;</a>
-<a name="ln4337">  }</a>
-<a name="ln4338">  *str = skipwhite((*str));</a>
-<a name="ln4339">  if (**str == ',') {                   // parse &quot;to&quot; part of range</a>
-<a name="ln4340">    *str = skipwhite((*str) + 1);</a>
-<a name="ln4341">    vim_str2nr(*str, NULL, &amp;len, 0, &amp;num, NULL, 0, false, NULL);</a>
-<a name="ln4342">    if (len &gt; 0) {</a>
-<a name="ln4343">      *num2 = (int)num;</a>
-<a name="ln4344">      *str = skipwhite((*str) + len);</a>
-<a name="ln4345">    } else if (!first) {                  // no number given at all</a>
-<a name="ln4346">      return FAIL;</a>
-<a name="ln4347">    }</a>
-<a name="ln4348">  } else if (first) {                     // only one number given</a>
-<a name="ln4349">    *num2 = *num1;</a>
-<a name="ln4350">  }</a>
-<a name="ln4351">  return OK;</a>
-<a name="ln4352">}</a>
-<a name="ln4353"> </a>
-<a name="ln4354">void cmdline_init(void)</a>
+<a name="ln4332">  if (**str == ',') {                   // parse &quot;to&quot; part of range</a>
+<a name="ln4333">    *str = skipwhite((*str) + 1);</a>
+<a name="ln4334">    vim_str2nr(*str, NULL, &amp;len, 0, &amp;num, NULL, 0, false, NULL);</a>
+<a name="ln4335">    if (len &gt; 0) {</a>
+<a name="ln4336">      *num2 = (int)num;</a>
+<a name="ln4337">      *str = skipwhite((*str) + len);</a>
+<a name="ln4338">    } else if (!first) {                  // no number given at all</a>
+<a name="ln4339">      return FAIL;</a>
+<a name="ln4340">    }</a>
+<a name="ln4341">  } else if (first) {                     // only one number given</a>
+<a name="ln4342">    *num2 = *num1;</a>
+<a name="ln4343">  }</a>
+<a name="ln4344">  return OK;</a>
+<a name="ln4345">}</a>
+<a name="ln4346"> </a>
+<a name="ln4347">void cmdline_init(void)</a>
+<a name="ln4348">{</a>
+<a name="ln4349">  CLEAR_FIELD(ccline);</a>
+<a name="ln4350">}</a>
+<a name="ln4351"> </a>
+<a name="ln4352">/// Check value of 'cedit' and set cedit_key.</a>
+<a name="ln4353">/// Returns NULL if value is OK, error message otherwise.</a>
+<a name="ln4354">const char *did_set_cedit(optset_T *args)</a>
 <a name="ln4355">{</a>
-<a name="ln4356">  CLEAR_FIELD(ccline);</a>
-<a name="ln4357">}</a>
-<a name="ln4358"> </a>
-<a name="ln4359">/// Check value of 'cedit' and set cedit_key.</a>
-<a name="ln4360">/// Returns NULL if value is OK, error message otherwise.</a>
-<a name="ln4361">const char *did_set_cedit(optset_T *args)</a>
-<a name="ln4362">{</a>
-<a name="ln4363">  if (*p_cedit == NUL) {</a>
-<a name="ln4364">    cedit_key = -1;</a>
-<a name="ln4365">  } else {</a>
-<a name="ln4366">    int n = string_to_key(p_cedit);</a>
-<a name="ln4367">    if (vim_isprintc(n)) {</a>
-<a name="ln4368">      return e_invarg;</a>
-<a name="ln4369">    }</a>
-<a name="ln4370">    cedit_key = n;</a>
-<a name="ln4371">  }</a>
-<a name="ln4372">  return NULL;</a>
-<a name="ln4373">}</a>
-<a name="ln4374"> </a>
-<a name="ln4375">/// Open a window on the current command line and history.  Allow editing in</a>
-<a name="ln4376">/// the window.  Returns when the window is closed.</a>
-<a name="ln4377">/// Returns:</a>
-<a name="ln4378">///     CR       if the command is to be executed</a>
-<a name="ln4379">///     Ctrl_C   if it is to be abandoned</a>
-<a name="ln4380">///     K_IGNORE if editing continues</a>
-<a name="ln4381">static int open_cmdwin(void)</a>
-<a name="ln4382">{</a>
-<a name="ln4383">  bufref_T old_curbuf;</a>
-<a name="ln4384">  bufref_T bufref;</a>
-<a name="ln4385">  win_T *old_curwin = curwin;</a>
-<a name="ln4386">  int i;</a>
-<a name="ln4387">  garray_T winsizes;</a>
-<a name="ln4388">  char typestr[2];</a>
-<a name="ln4389">  int save_restart_edit = restart_edit;</a>
-<a name="ln4390">  int save_State = State;</a>
-<a name="ln4391">  bool save_exmode = exmode_active;</a>
-<a name="ln4392">  int save_cmdmsg_rl = cmdmsg_rl;</a>
+<a name="ln4356">  if (*p_cedit == NUL) {</a>
+<a name="ln4357">    cedit_key = -1;</a>
+<a name="ln4358">  } else {</a>
+<a name="ln4359">    int n = string_to_key(p_cedit);</a>
+<a name="ln4360">    if (vim_isprintc(n)) {</a>
+<a name="ln4361">      return e_invarg;</a>
+<a name="ln4362">    }</a>
+<a name="ln4363">    cedit_key = n;</a>
+<a name="ln4364">  }</a>
+<a name="ln4365">  return NULL;</a>
+<a name="ln4366">}</a>
+<a name="ln4367"> </a>
+<a name="ln4368">/// Open a window on the current command line and history.  Allow editing in</a>
+<a name="ln4369">/// the window.  Returns when the window is closed.</a>
+<a name="ln4370">/// Returns:</a>
+<a name="ln4371">///     CR       if the command is to be executed</a>
+<a name="ln4372">///     Ctrl_C   if it is to be abandoned</a>
+<a name="ln4373">///     K_IGNORE if editing continues</a>
+<a name="ln4374">static int open_cmdwin(void)</a>
+<a name="ln4375">{</a>
+<a name="ln4376">  bufref_T old_curbuf;</a>
+<a name="ln4377">  bufref_T bufref;</a>
+<a name="ln4378">  win_T *old_curwin = curwin;</a>
+<a name="ln4379">  int i;</a>
+<a name="ln4380">  garray_T winsizes;</a>
+<a name="ln4381">  char typestr[2];</a>
+<a name="ln4382">  int save_restart_edit = restart_edit;</a>
+<a name="ln4383">  int save_State = State;</a>
+<a name="ln4384">  bool save_exmode = exmode_active;</a>
+<a name="ln4385">  int save_cmdmsg_rl = cmdmsg_rl;</a>
+<a name="ln4386"> </a>
+<a name="ln4387">  // Can't do this when text or buffer is locked.</a>
+<a name="ln4388">  // Can't do this recursively.  Can't do it when typing a password.</a>
+<a name="ln4389">  if (text_or_buf_locked() || cmdwin_type != 0 || cmdline_star &gt; 0) {</a>
+<a name="ln4390">    beep_flush();</a>
+<a name="ln4391">    return K_IGNORE;</a>
+<a name="ln4392">  }</a>
 <a name="ln4393"> </a>
-<a name="ln4394">  // Can't do this when text or buffer is locked.</a>
-<a name="ln4395">  // Can't do this recursively.  Can't do it when typing a password.</a>
-<a name="ln4396">  if (text_or_buf_locked() || cmdwin_type != 0 || cmdline_star &gt; 0) {</a>
-<a name="ln4397">    beep_flush();</a>
-<a name="ln4398">    return K_IGNORE;</a>
-<a name="ln4399">  }</a>
-<a name="ln4400"> </a>
-<a name="ln4401">  set_bufref(&amp;old_curbuf, curbuf);</a>
+<a name="ln4394">  set_bufref(&amp;old_curbuf, curbuf);</a>
+<a name="ln4395"> </a>
+<a name="ln4396">  // Save current window sizes.</a>
+<a name="ln4397">  win_size_save(&amp;winsizes);</a>
+<a name="ln4398"> </a>
+<a name="ln4399">  // When using completion in Insert mode with &lt;C-R&gt;=&lt;C-F&gt; one can open the</a>
+<a name="ln4400">  // command line window, but we don't want the popup menu then.</a>
+<a name="ln4401">  pum_undisplay(true);</a>
 <a name="ln4402"> </a>
-<a name="ln4403">  // Save current window sizes.</a>
-<a name="ln4404">  win_size_save(&amp;winsizes);</a>
-<a name="ln4405"> </a>
-<a name="ln4406">  // When using completion in Insert mode with &lt;C-R&gt;=&lt;C-F&gt; one can open the</a>
-<a name="ln4407">  // command line window, but we don't want the popup menu then.</a>
-<a name="ln4408">  pum_undisplay(true);</a>
-<a name="ln4409"> </a>
-<a name="ln4410">  // don't use a new tab page</a>
-<a name="ln4411">  cmdmod.cmod_tab = 0;</a>
-<a name="ln4412">  cmdmod.cmod_flags |= CMOD_NOSWAPFILE;</a>
-<a name="ln4413"> </a>
-<a name="ln4414">  // Create a window for the command-line buffer.</a>
-<a name="ln4415">  if (win_split((int)p_cwh, WSP_BOT) == FAIL) {</a>
-<a name="ln4416">    beep_flush();</a>
-<a name="ln4417">    ga_clear(&amp;winsizes);</a>
-<a name="ln4418">    return K_IGNORE;</a>
-<a name="ln4419">  }</a>
-<a name="ln4420">  // Don't let quitting the More prompt make this fail.</a>
-<a name="ln4421">  got_int = false;</a>
-<a name="ln4422"> </a>
-<a name="ln4423">  // Set &quot;cmdwin_type&quot; before any autocommands may mess things up.</a>
-<a name="ln4424">  cmdwin_type = get_cmdline_type();</a>
-<a name="ln4425">  cmdwin_level = ccline.level;</a>
-<a name="ln4426">  cmdwin_old_curwin = old_curwin;</a>
-<a name="ln4427"> </a>
-<a name="ln4428">  // Create empty command-line buffer.</a>
-<a name="ln4429">  if (buf_open_scratch(0, _(&quot;[Command Line]&quot;)) == FAIL) {</a>
-<a name="ln4430">    // Some autocommand messed it up?</a>
-<a name="ln4431">    win_close(curwin, true, false);</a>
-<a name="ln4432">    ga_clear(&amp;winsizes);</a>
-<a name="ln4433">    cmdwin_type = 0;</a>
-<a name="ln4434">    cmdwin_old_curwin = NULL;</a>
-<a name="ln4435">    return Ctrl_C;</a>
-<a name="ln4436">  }</a>
-<a name="ln4437">  // Command-line buffer has bufhidden=wipe, unlike a true &quot;scratch&quot; buffer.</a>
-<a name="ln4438">  set_option_value_give_err(&quot;bh&quot;, STATIC_CSTR_AS_OPTVAL(&quot;wipe&quot;), OPT_LOCAL);</a>
-<a name="ln4439">  curbuf-&gt;b_p_ma = true;</a>
-<a name="ln4440">  curwin-&gt;w_p_fen = false;</a>
-<a name="ln4441">  curwin-&gt;w_p_rl = cmdmsg_rl;</a>
-<a name="ln4442">  cmdmsg_rl = false;</a>
-<a name="ln4443"> </a>
-<a name="ln4444">  // Don't allow switching to another buffer.</a>
-<a name="ln4445">  curbuf-&gt;b_ro_locked++;</a>
-<a name="ln4446"> </a>
-<a name="ln4447">  // Showing the prompt may have set need_wait_return, reset it.</a>
-<a name="ln4448">  need_wait_return = false;</a>
-<a name="ln4449"> </a>
-<a name="ln4450">  const int histtype = hist_char2type(cmdwin_type);</a>
-<a name="ln4451">  if (histtype == HIST_CMD || histtype == HIST_DEBUG) {</a>
-<a name="ln4452">    if (p_wc == TAB) {</a>
-<a name="ln4453">      add_map(&quot;&lt;Tab&gt;&quot;, &quot;&lt;C-X&gt;&lt;C-V&gt;&quot;, MODE_INSERT, true);</a>
-<a name="ln4454">      add_map(&quot;&lt;Tab&gt;&quot;, &quot;a&lt;C-X&gt;&lt;C-V&gt;&quot;, MODE_NORMAL, true);</a>
-<a name="ln4455">    }</a>
-<a name="ln4456">    set_option_value_give_err(&quot;ft&quot;, STATIC_CSTR_AS_OPTVAL(&quot;vim&quot;), OPT_LOCAL);</a>
-<a name="ln4457">  }</a>
-<a name="ln4458">  curbuf-&gt;b_ro_locked--;</a>
-<a name="ln4459"> </a>
-<a name="ln4460">  // Reset 'textwidth' after setting 'filetype' (the Vim filetype plugin</a>
-<a name="ln4461">  // sets 'textwidth' to 78).</a>
-<a name="ln4462">  curbuf-&gt;b_p_tw = 0;</a>
-<a name="ln4463"> </a>
-<a name="ln4464">  // Fill the buffer with the history.</a>
-<a name="ln4465">  init_history();</a>
-<a name="ln4466">  if (get_hislen() &gt; 0 &amp;&amp; histtype != HIST_INVALID) {</a>
-<a name="ln4467">    i = *get_hisidx(histtype);</a>
-<a name="ln4468">    if (i &gt;= 0) {</a>
-<a name="ln4469">      linenr_T lnum = 0;</a>
-<a name="ln4470">      do {</a>
-<a name="ln4471">        if (++i == get_hislen()) {</a>
-<a name="ln4472">          i = 0;</a>
-<a name="ln4473">        }</a>
-<a name="ln4474">        if (get_histentry(histtype)[i].hisstr != NULL) {</a>
-<a name="ln4475">          ml_append(lnum++, get_histentry(histtype)[i].hisstr, (colnr_T)0, false);</a>
-<a name="ln4476">        }</a>
-<a name="ln4477">      } while (i != *get_hisidx(histtype));</a>
-<a name="ln4478">    }</a>
-<a name="ln4479">  }</a>
-<a name="ln4480"> </a>
-<a name="ln4481">  // Replace the empty last line with the current command-line and put the</a>
-<a name="ln4482">  // cursor there.</a>
-<a name="ln4483">  ml_replace(curbuf-&gt;b_ml.ml_line_count, ccline.cmdbuff, true);</a>
-<a name="ln4484">  curwin-&gt;w_cursor.lnum = curbuf-&gt;b_ml.ml_line_count;</a>
-<a name="ln4485">  curwin-&gt;w_cursor.col = ccline.cmdpos;</a>
-<a name="ln4486">  changed_line_abv_curs();</a>
-<a name="ln4487">  invalidate_botline(curwin);</a>
-<a name="ln4488">  if (ui_has(kUICmdline)) {</a>
-<a name="ln4489">    ccline.redraw_state = kCmdRedrawNone;</a>
-<a name="ln4490">    ui_call_cmdline_hide(ccline.level);</a>
-<a name="ln4491">  }</a>
-<a name="ln4492">  redraw_later(curwin, UPD_SOME_VALID);</a>
-<a name="ln4493"> </a>
-<a name="ln4494">  // No Ex mode here!</a>
-<a name="ln4495">  exmode_active = false;</a>
-<a name="ln4496"> </a>
-<a name="ln4497">  State = MODE_NORMAL;</a>
-<a name="ln4498">  setmouse();</a>
-<a name="ln4499"> </a>
-<a name="ln4500">  // Reset here so it can be set by a CmdWinEnter autocommand.</a>
-<a name="ln4501">  cmdwin_result = 0;</a>
-<a name="ln4502"> </a>
-<a name="ln4503">  // Trigger CmdwinEnter autocommands.</a>
-<a name="ln4504">  typestr[0] = (char)cmdwin_type;</a>
-<a name="ln4505">  typestr[1] = NUL;</a>
-<a name="ln4506">  apply_autocmds(EVENT_CMDWINENTER, typestr, typestr, false, curbuf);</a>
-<a name="ln4507">  if (restart_edit != 0) {  // autocmd with &quot;:startinsert&quot;</a>
-<a name="ln4508">    stuffcharReadbuff(K_NOP);</a>
-<a name="ln4509">  }</a>
+<a name="ln4403">  // don't use a new tab page</a>
+<a name="ln4404">  cmdmod.cmod_tab = 0;</a>
+<a name="ln4405">  cmdmod.cmod_flags |= CMOD_NOSWAPFILE;</a>
+<a name="ln4406"> </a>
+<a name="ln4407">  // Create a window for the command-line buffer.</a>
+<a name="ln4408">  if (win_split((int)p_cwh, WSP_BOT) == FAIL) {</a>
+<a name="ln4409">    beep_flush();</a>
+<a name="ln4410">    ga_clear(&amp;winsizes);</a>
+<a name="ln4411">    return K_IGNORE;</a>
+<a name="ln4412">  }</a>
+<a name="ln4413">  // Don't let quitting the More prompt make this fail.</a>
+<a name="ln4414">  got_int = false;</a>
+<a name="ln4415"> </a>
+<a name="ln4416">  // Set &quot;cmdwin_type&quot; before any autocommands may mess things up.</a>
+<a name="ln4417">  cmdwin_type = get_cmdline_type();</a>
+<a name="ln4418">  cmdwin_level = ccline.level;</a>
+<a name="ln4419">  cmdwin_old_curwin = old_curwin;</a>
+<a name="ln4420"> </a>
+<a name="ln4421">  // Create empty command-line buffer.</a>
+<a name="ln4422">  if (buf_open_scratch(0, _(&quot;[Command Line]&quot;)) == FAIL) {</a>
+<a name="ln4423">    // Some autocommand messed it up?</a>
+<a name="ln4424">    win_close(curwin, true, false);</a>
+<a name="ln4425">    ga_clear(&amp;winsizes);</a>
+<a name="ln4426">    cmdwin_type = 0;</a>
+<a name="ln4427">    cmdwin_old_curwin = NULL;</a>
+<a name="ln4428">    return Ctrl_C;</a>
+<a name="ln4429">  }</a>
+<a name="ln4430">  // Command-line buffer has bufhidden=wipe, unlike a true &quot;scratch&quot; buffer.</a>
+<a name="ln4431">  set_option_value_give_err(&quot;bh&quot;, STATIC_CSTR_AS_OPTVAL(&quot;wipe&quot;), OPT_LOCAL);</a>
+<a name="ln4432">  curbuf-&gt;b_p_ma = true;</a>
+<a name="ln4433">  curwin-&gt;w_p_fen = false;</a>
+<a name="ln4434">  curwin-&gt;w_p_rl = cmdmsg_rl;</a>
+<a name="ln4435">  cmdmsg_rl = false;</a>
+<a name="ln4436"> </a>
+<a name="ln4437">  // Don't allow switching to another buffer.</a>
+<a name="ln4438">  curbuf-&gt;b_ro_locked++;</a>
+<a name="ln4439"> </a>
+<a name="ln4440">  // Showing the prompt may have set need_wait_return, reset it.</a>
+<a name="ln4441">  need_wait_return = false;</a>
+<a name="ln4442"> </a>
+<a name="ln4443">  const int histtype = hist_char2type(cmdwin_type);</a>
+<a name="ln4444">  if (histtype == HIST_CMD || histtype == HIST_DEBUG) {</a>
+<a name="ln4445">    if (p_wc == TAB) {</a>
+<a name="ln4446">      add_map(&quot;&lt;Tab&gt;&quot;, &quot;&lt;C-X&gt;&lt;C-V&gt;&quot;, MODE_INSERT, true);</a>
+<a name="ln4447">      add_map(&quot;&lt;Tab&gt;&quot;, &quot;a&lt;C-X&gt;&lt;C-V&gt;&quot;, MODE_NORMAL, true);</a>
+<a name="ln4448">    }</a>
+<a name="ln4449">    set_option_value_give_err(&quot;ft&quot;, STATIC_CSTR_AS_OPTVAL(&quot;vim&quot;), OPT_LOCAL);</a>
+<a name="ln4450">  }</a>
+<a name="ln4451">  curbuf-&gt;b_ro_locked--;</a>
+<a name="ln4452"> </a>
+<a name="ln4453">  // Reset 'textwidth' after setting 'filetype' (the Vim filetype plugin</a>
+<a name="ln4454">  // sets 'textwidth' to 78).</a>
+<a name="ln4455">  curbuf-&gt;b_p_tw = 0;</a>
+<a name="ln4456"> </a>
+<a name="ln4457">  // Fill the buffer with the history.</a>
+<a name="ln4458">  init_history();</a>
+<a name="ln4459">  if (get_hislen() &gt; 0 &amp;&amp; histtype != HIST_INVALID) {</a>
+<a name="ln4460">    i = *get_hisidx(histtype);</a>
+<a name="ln4461">    if (i &gt;= 0) {</a>
+<a name="ln4462">      linenr_T lnum = 0;</a>
+<a name="ln4463">      do {</a>
+<a name="ln4464">        if (++i == get_hislen()) {</a>
+<a name="ln4465">          i = 0;</a>
+<a name="ln4466">        }</a>
+<a name="ln4467">        if (get_histentry(histtype)[i].hisstr != NULL) {</a>
+<a name="ln4468">          ml_append(lnum++, get_histentry(histtype)[i].hisstr, (colnr_T)0, false);</a>
+<a name="ln4469">        }</a>
+<a name="ln4470">      } while (i != *get_hisidx(histtype));</a>
+<a name="ln4471">    }</a>
+<a name="ln4472">  }</a>
+<a name="ln4473"> </a>
+<a name="ln4474">  // Replace the empty last line with the current command-line and put the</a>
+<a name="ln4475">  // cursor there.</a>
+<a name="ln4476">  ml_replace(curbuf-&gt;b_ml.ml_line_count, ccline.cmdbuff, true);</a>
+<a name="ln4477">  curwin-&gt;w_cursor.lnum = curbuf-&gt;b_ml.ml_line_count;</a>
+<a name="ln4478">  curwin-&gt;w_cursor.col = ccline.cmdpos;</a>
+<a name="ln4479">  changed_line_abv_curs();</a>
+<a name="ln4480">  invalidate_botline(curwin);</a>
+<a name="ln4481">  if (ui_has(kUICmdline)) {</a>
+<a name="ln4482">    ccline.redraw_state = kCmdRedrawNone;</a>
+<a name="ln4483">    ui_call_cmdline_hide(ccline.level);</a>
+<a name="ln4484">  }</a>
+<a name="ln4485">  redraw_later(curwin, UPD_SOME_VALID);</a>
+<a name="ln4486"> </a>
+<a name="ln4487">  // No Ex mode here!</a>
+<a name="ln4488">  exmode_active = false;</a>
+<a name="ln4489"> </a>
+<a name="ln4490">  State = MODE_NORMAL;</a>
+<a name="ln4491">  setmouse();</a>
+<a name="ln4492"> </a>
+<a name="ln4493">  // Reset here so it can be set by a CmdWinEnter autocommand.</a>
+<a name="ln4494">  cmdwin_result = 0;</a>
+<a name="ln4495"> </a>
+<a name="ln4496">  // Trigger CmdwinEnter autocommands.</a>
+<a name="ln4497">  typestr[0] = (char)cmdwin_type;</a>
+<a name="ln4498">  typestr[1] = NUL;</a>
+<a name="ln4499">  apply_autocmds(EVENT_CMDWINENTER, typestr, typestr, false, curbuf);</a>
+<a name="ln4500">  if (restart_edit != 0) {  // autocmd with &quot;:startinsert&quot;</a>
+<a name="ln4501">    stuffcharReadbuff(K_NOP);</a>
+<a name="ln4502">  }</a>
+<a name="ln4503"> </a>
+<a name="ln4504">  i = RedrawingDisabled;</a>
+<a name="ln4505">  RedrawingDisabled = 0;</a>
+<a name="ln4506">  int save_count = save_batch_count();</a>
+<a name="ln4507"> </a>
+<a name="ln4508">  // Call the main loop until &lt;CR&gt; or CTRL-C is typed.</a>
+<a name="ln4509">  normal_enter(true, false);</a>
 <a name="ln4510"> </a>
-<a name="ln4511">  i = RedrawingDisabled;</a>
-<a name="ln4512">  RedrawingDisabled = 0;</a>
-<a name="ln4513">  int save_count = save_batch_count();</a>
-<a name="ln4514"> </a>
-<a name="ln4515">  // Call the main loop until &lt;CR&gt; or CTRL-C is typed.</a>
-<a name="ln4516">  normal_enter(true, false);</a>
-<a name="ln4517"> </a>
-<a name="ln4518">  RedrawingDisabled = i;</a>
-<a name="ln4519">  restore_batch_count(save_count);</a>
-<a name="ln4520"> </a>
-<a name="ln4521">  const bool save_KeyTyped = KeyTyped;</a>
-<a name="ln4522"> </a>
-<a name="ln4523">  // Trigger CmdwinLeave autocommands.</a>
-<a name="ln4524">  apply_autocmds(EVENT_CMDWINLEAVE, typestr, typestr, false, curbuf);</a>
+<a name="ln4511">  RedrawingDisabled = i;</a>
+<a name="ln4512">  restore_batch_count(save_count);</a>
+<a name="ln4513"> </a>
+<a name="ln4514">  const bool save_KeyTyped = KeyTyped;</a>
+<a name="ln4515"> </a>
+<a name="ln4516">  // Trigger CmdwinLeave autocommands.</a>
+<a name="ln4517">  apply_autocmds(EVENT_CMDWINLEAVE, typestr, typestr, false, curbuf);</a>
+<a name="ln4518"> </a>
+<a name="ln4519">  // Restore KeyTyped in case it is modified by autocommands</a>
+<a name="ln4520">  KeyTyped = save_KeyTyped;</a>
+<a name="ln4521"> </a>
+<a name="ln4522">  cmdwin_type = 0;</a>
+<a name="ln4523">  cmdwin_level = 0;</a>
+<a name="ln4524">  cmdwin_old_curwin = NULL;</a>
 <a name="ln4525"> </a>
-<a name="ln4526">  // Restore KeyTyped in case it is modified by autocommands</a>
-<a name="ln4527">  KeyTyped = save_KeyTyped;</a>
-<a name="ln4528"> </a>
-<a name="ln4529">  cmdwin_type = 0;</a>
-<a name="ln4530">  cmdwin_level = 0;</a>
-<a name="ln4531">  cmdwin_old_curwin = NULL;</a>
-<a name="ln4532"> </a>
-<a name="ln4533">  exmode_active = save_exmode;</a>
-<a name="ln4534"> </a>
-<a name="ln4535">  // Safety check: The old window or buffer was deleted: It's a bug when</a>
-<a name="ln4536">  // this happens!</a>
-<a name="ln4537">  if (!win_valid(old_curwin) || !bufref_valid(&amp;old_curbuf)) {</a>
-<a name="ln4538">    cmdwin_result = Ctrl_C;</a>
-<a name="ln4539">    emsg(_(&quot;E199: Active window or buffer deleted&quot;));</a>
-<a name="ln4540">  } else {</a>
-<a name="ln4541">    win_T *wp;</a>
-<a name="ln4542">    // autocmds may abort script processing</a>
-<a name="ln4543">    if (aborting() &amp;&amp; cmdwin_result != K_IGNORE) {</a>
-<a name="ln4544">      cmdwin_result = Ctrl_C;</a>
-<a name="ln4545">    }</a>
-<a name="ln4546">    // Set the new command line from the cmdline buffer.</a>
-<a name="ln4547">    xfree(ccline.cmdbuff);</a>
-<a name="ln4548">    if (cmdwin_result == K_XF1 || cmdwin_result == K_XF2) {  // :qa[!] typed</a>
-<a name="ln4549">      const char *p = (cmdwin_result == K_XF2) ? &quot;qa&quot; : &quot;qa!&quot;;</a>
-<a name="ln4550"> </a>
-<a name="ln4551">      if (histtype == HIST_CMD) {</a>
-<a name="ln4552">        // Execute the command directly.</a>
-<a name="ln4553">        ccline.cmdbuff = xstrdup(p);</a>
-<a name="ln4554">        cmdwin_result = CAR;</a>
-<a name="ln4555">      } else {</a>
-<a name="ln4556">        // First need to cancel what we were doing.</a>
-<a name="ln4557">        ccline.cmdbuff = NULL;</a>
-<a name="ln4558">        stuffcharReadbuff(':');</a>
-<a name="ln4559">        stuffReadbuff(p);</a>
-<a name="ln4560">        stuffcharReadbuff(CAR);</a>
-<a name="ln4561">      }</a>
-<a name="ln4562">    } else if (cmdwin_result == Ctrl_C) {</a>
-<a name="ln4563">      // :q or :close, don't execute any command</a>
-<a name="ln4564">      // and don't modify the cmd window.</a>
-<a name="ln4565">      ccline.cmdbuff = NULL;</a>
-<a name="ln4566">    } else {</a>
-<a name="ln4567">      ccline.cmdbuff = xstrdup(get_cursor_line_ptr());</a>
-<a name="ln4568">    }</a>
-<a name="ln4569">    if (ccline.cmdbuff == NULL) {</a>
-<a name="ln4570">      ccline.cmdbuff = xstrdup(&quot;&quot;);</a>
-<a name="ln4571">      ccline.cmdlen = 0;</a>
-<a name="ln4572">      ccline.cmdbufflen = 1;</a>
-<a name="ln4573">      ccline.cmdpos = 0;</a>
-<a name="ln4574">      cmdwin_result = Ctrl_C;</a>
-<a name="ln4575">    } else {</a>
-<a name="ln4576">      ccline.cmdlen = (int)strlen(ccline.cmdbuff);</a>
-<a name="ln4577">      ccline.cmdbufflen = ccline.cmdlen + 1;</a>
-<a name="ln4578">      ccline.cmdpos = curwin-&gt;w_cursor.col;</a>
-<a name="ln4579">      // If the cursor is on the last character, it probably should be after it.</a>
-<a name="ln4580">      if (ccline.cmdpos == ccline.cmdlen - 1 || ccline.cmdpos &gt; ccline.cmdlen) {</a>
-<a name="ln4581">        ccline.cmdpos = ccline.cmdlen;</a>
-<a name="ln4582">      }</a>
-<a name="ln4583">      if (cmdwin_result == K_IGNORE) {</a>
-<a name="ln4584">        ccline.cmdspos = cmd_screencol(ccline.cmdpos);</a>
-<a name="ln4585">        redrawcmd();</a>
-<a name="ln4586">      }</a>
-<a name="ln4587">    }</a>
-<a name="ln4588"> </a>
-<a name="ln4589">    // Avoid command-line window first character being concealed.</a>
-<a name="ln4590">    curwin-&gt;w_p_cole = 0;</a>
-<a name="ln4591">    // First go back to the original window.</a>
-<a name="ln4592">    wp = curwin;</a>
-<a name="ln4593">    set_bufref(&amp;bufref, curbuf);</a>
-<a name="ln4594">    skip_win_fix_cursor = true;</a>
-<a name="ln4595">    win_goto(old_curwin);</a>
-<a name="ln4596"> </a>
-<a name="ln4597">    // win_goto() may trigger an autocommand that already closes the</a>
-<a name="ln4598">    // cmdline window.</a>
-<a name="ln4599">    if (win_valid(wp) &amp;&amp; wp != curwin) {</a>
-<a name="ln4600">      win_close(wp, true, false);</a>
-<a name="ln4601">    }</a>
-<a name="ln4602"> </a>
-<a name="ln4603">    // win_close() may have already wiped the buffer when 'bh' is</a>
-<a name="ln4604">    // set to 'wipe', autocommands may have closed other windows</a>
-<a name="ln4605">    if (bufref_valid(&amp;bufref) &amp;&amp; bufref.br_buf != curbuf) {</a>
-<a name="ln4606">      close_buffer(NULL, bufref.br_buf, DOBUF_WIPE, false, false);</a>
-<a name="ln4607">    }</a>
-<a name="ln4608"> </a>
-<a name="ln4609">    // Restore window sizes.</a>
-<a name="ln4610">    win_size_restore(&amp;winsizes);</a>
-<a name="ln4611">    skip_win_fix_cursor = false;</a>
-<a name="ln4612">  }</a>
-<a name="ln4613"> </a>
-<a name="ln4614">  ga_clear(&amp;winsizes);</a>
-<a name="ln4615">  restart_edit = save_restart_edit;</a>
-<a name="ln4616">  cmdmsg_rl = save_cmdmsg_rl;</a>
+<a name="ln4526">  exmode_active = save_exmode;</a>
+<a name="ln4527"> </a>
+<a name="ln4528">  // Safety check: The old window or buffer was deleted: It's a bug when</a>
+<a name="ln4529">  // this happens!</a>
+<a name="ln4530">  if (!win_valid(old_curwin) || !bufref_valid(&amp;old_curbuf)) {</a>
+<a name="ln4531">    cmdwin_result = Ctrl_C;</a>
+<a name="ln4532">    emsg(_(&quot;E199: Active window or buffer deleted&quot;));</a>
+<a name="ln4533">  } else {</a>
+<a name="ln4534">    win_T *wp;</a>
+<a name="ln4535">    // autocmds may abort script processing</a>
+<a name="ln4536">    if (aborting() &amp;&amp; cmdwin_result != K_IGNORE) {</a>
+<a name="ln4537">      cmdwin_result = Ctrl_C;</a>
+<a name="ln4538">    }</a>
+<a name="ln4539">    // Set the new command line from the cmdline buffer.</a>
+<a name="ln4540">    xfree(ccline.cmdbuff);</a>
+<a name="ln4541">    if (cmdwin_result == K_XF1 || cmdwin_result == K_XF2) {  // :qa[!] typed</a>
+<a name="ln4542">      const char *p = (cmdwin_result == K_XF2) ? &quot;qa&quot; : &quot;qa!&quot;;</a>
+<a name="ln4543"> </a>
+<a name="ln4544">      if (histtype == HIST_CMD) {</a>
+<a name="ln4545">        // Execute the command directly.</a>
+<a name="ln4546">        ccline.cmdbuff = xstrdup(p);</a>
+<a name="ln4547">        cmdwin_result = CAR;</a>
+<a name="ln4548">      } else {</a>
+<a name="ln4549">        // First need to cancel what we were doing.</a>
+<a name="ln4550">        ccline.cmdbuff = NULL;</a>
+<a name="ln4551">        stuffcharReadbuff(':');</a>
+<a name="ln4552">        stuffReadbuff(p);</a>
+<a name="ln4553">        stuffcharReadbuff(CAR);</a>
+<a name="ln4554">      }</a>
+<a name="ln4555">    } else if (cmdwin_result == Ctrl_C) {</a>
+<a name="ln4556">      // :q or :close, don't execute any command</a>
+<a name="ln4557">      // and don't modify the cmd window.</a>
+<a name="ln4558">      ccline.cmdbuff = NULL;</a>
+<a name="ln4559">    } else {</a>
+<a name="ln4560">      ccline.cmdbuff = xstrdup(get_cursor_line_ptr());</a>
+<a name="ln4561">    }</a>
+<a name="ln4562">    if (ccline.cmdbuff == NULL) {</a>
+<a name="ln4563">      ccline.cmdbuff = xstrdup(&quot;&quot;);</a>
+<a name="ln4564">      ccline.cmdlen = 0;</a>
+<a name="ln4565">      ccline.cmdbufflen = 1;</a>
+<a name="ln4566">      ccline.cmdpos = 0;</a>
+<a name="ln4567">      cmdwin_result = Ctrl_C;</a>
+<a name="ln4568">    } else {</a>
+<a name="ln4569">      ccline.cmdlen = (int)strlen(ccline.cmdbuff);</a>
+<a name="ln4570">      ccline.cmdbufflen = ccline.cmdlen + 1;</a>
+<a name="ln4571">      ccline.cmdpos = curwin-&gt;w_cursor.col;</a>
+<a name="ln4572">      // If the cursor is on the last character, it probably should be after it.</a>
+<a name="ln4573">      if (ccline.cmdpos == ccline.cmdlen - 1 || ccline.cmdpos &gt; ccline.cmdlen) {</a>
+<a name="ln4574">        ccline.cmdpos = ccline.cmdlen;</a>
+<a name="ln4575">      }</a>
+<a name="ln4576">      if (cmdwin_result == K_IGNORE) {</a>
+<a name="ln4577">        ccline.cmdspos = cmd_screencol(ccline.cmdpos);</a>
+<a name="ln4578">        redrawcmd();</a>
+<a name="ln4579">      }</a>
+<a name="ln4580">    }</a>
+<a name="ln4581"> </a>
+<a name="ln4582">    // Avoid command-line window first character being concealed.</a>
+<a name="ln4583">    curwin-&gt;w_p_cole = 0;</a>
+<a name="ln4584">    // First go back to the original window.</a>
+<a name="ln4585">    wp = curwin;</a>
+<a name="ln4586">    set_bufref(&amp;bufref, curbuf);</a>
+<a name="ln4587">    skip_win_fix_cursor = true;</a>
+<a name="ln4588">    win_goto(old_curwin);</a>
+<a name="ln4589"> </a>
+<a name="ln4590">    // win_goto() may trigger an autocommand that already closes the</a>
+<a name="ln4591">    // cmdline window.</a>
+<a name="ln4592">    if (win_valid(wp) &amp;&amp; wp != curwin) {</a>
+<a name="ln4593">      win_close(wp, true, false);</a>
+<a name="ln4594">    }</a>
+<a name="ln4595"> </a>
+<a name="ln4596">    // win_close() may have already wiped the buffer when 'bh' is</a>
+<a name="ln4597">    // set to 'wipe', autocommands may have closed other windows</a>
+<a name="ln4598">    if (bufref_valid(&amp;bufref) &amp;&amp; bufref.br_buf != curbuf) {</a>
+<a name="ln4599">      close_buffer(NULL, bufref.br_buf, DOBUF_WIPE, false, false);</a>
+<a name="ln4600">    }</a>
+<a name="ln4601"> </a>
+<a name="ln4602">    // Restore window sizes.</a>
+<a name="ln4603">    win_size_restore(&amp;winsizes);</a>
+<a name="ln4604">    skip_win_fix_cursor = false;</a>
+<a name="ln4605">  }</a>
+<a name="ln4606"> </a>
+<a name="ln4607">  ga_clear(&amp;winsizes);</a>
+<a name="ln4608">  restart_edit = save_restart_edit;</a>
+<a name="ln4609">  cmdmsg_rl = save_cmdmsg_rl;</a>
+<a name="ln4610"> </a>
+<a name="ln4611">  State = save_State;</a>
+<a name="ln4612">  may_trigger_modechanged();</a>
+<a name="ln4613">  setmouse();</a>
+<a name="ln4614"> </a>
+<a name="ln4615">  return cmdwin_result;</a>
+<a name="ln4616">}</a>
 <a name="ln4617"> </a>
-<a name="ln4618">  State = save_State;</a>
-<a name="ln4619">  may_trigger_modechanged();</a>
-<a name="ln4620">  setmouse();</a>
-<a name="ln4621"> </a>
-<a name="ln4622">  return cmdwin_result;</a>
+<a name="ln4618">/// @return true if in the cmdwin, not editing the command line.</a>
+<a name="ln4619">bool is_in_cmdwin(void)</a>
+<a name="ln4620">  FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
+<a name="ln4621">{</a>
+<a name="ln4622">  return cmdwin_type != 0 &amp;&amp; get_cmdline_type() == NUL;</a>
 <a name="ln4623">}</a>
 <a name="ln4624"> </a>
-<a name="ln4625">/// @return true if in the cmdwin, not editing the command line.</a>
-<a name="ln4626">bool is_in_cmdwin(void)</a>
-<a name="ln4627">  FUNC_ATTR_PURE FUNC_ATTR_WARN_UNUSED_RESULT</a>
-<a name="ln4628">{</a>
-<a name="ln4629">  return cmdwin_type != 0 &amp;&amp; get_cmdline_type() == NUL;</a>
-<a name="ln4630">}</a>
-<a name="ln4631"> </a>
-<a name="ln4632">/// Get script string</a>
-<a name="ln4633">///</a>
-<a name="ln4634">/// Used for commands which accept either `:command script` or</a>
-<a name="ln4635">///</a>
-<a name="ln4636">///     :command &lt;&lt; endmarker</a>
-<a name="ln4637">///       script</a>
-<a name="ln4638">///     endmarker</a>
-<a name="ln4639">///</a>
-<a name="ln4640">/// @param  eap  Command being run.</a>
-<a name="ln4641">/// @param[out]  lenp  Location where length of resulting string is saved. Will</a>
-<a name="ln4642">///                    be set to zero when skipping.</a>
-<a name="ln4643">///</a>
-<a name="ln4644">/// @return [allocated] NULL or script. Does not show any error messages.</a>
-<a name="ln4645">///                     NULL is returned when skipping and on error.</a>
-<a name="ln4646">char *script_get(exarg_T *const eap, size_t *const lenp)</a>
-<a name="ln4647">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_MALLOC</a>
-<a name="ln4648">{</a>
-<a name="ln4649">  char *cmd = eap-&gt;arg;</a>
-<a name="ln4650"> </a>
-<a name="ln4651">  if (cmd[0] != '&lt;' || cmd[1] != '&lt;' || eap-&gt;getline == NULL) {</a>
-<a name="ln4652">    *lenp = strlen(eap-&gt;arg);</a>
-<a name="ln4653">    return eap-&gt;skip ? NULL : xmemdupz(eap-&gt;arg, *lenp);</a>
-<a name="ln4654">  }</a>
-<a name="ln4655">  cmd += 2;</a>
+<a name="ln4625">/// Get script string</a>
+<a name="ln4626">///</a>
+<a name="ln4627">/// Used for commands which accept either `:command script` or</a>
+<a name="ln4628">///</a>
+<a name="ln4629">///     :command &lt;&lt; endmarker</a>
+<a name="ln4630">///       script</a>
+<a name="ln4631">///     endmarker</a>
+<a name="ln4632">///</a>
+<a name="ln4633">/// @param  eap  Command being run.</a>
+<a name="ln4634">/// @param[out]  lenp  Location where length of resulting string is saved. Will</a>
+<a name="ln4635">///                    be set to zero when skipping.</a>
+<a name="ln4636">///</a>
+<a name="ln4637">/// @return [allocated] NULL or script. Does not show any error messages.</a>
+<a name="ln4638">///                     NULL is returned when skipping and on error.</a>
+<a name="ln4639">char *script_get(exarg_T *const eap, size_t *const lenp)</a>
+<a name="ln4640">  FUNC_ATTR_NONNULL_ALL FUNC_ATTR_WARN_UNUSED_RESULT FUNC_ATTR_MALLOC</a>
+<a name="ln4641">{</a>
+<a name="ln4642">  char *cmd = eap-&gt;arg;</a>
+<a name="ln4643"> </a>
+<a name="ln4644">  if (cmd[0] != '&lt;' || cmd[1] != '&lt;' || eap-&gt;getline == NULL) {</a>
+<a name="ln4645">    *lenp = strlen(eap-&gt;arg);</a>
+<a name="ln4646">    return eap-&gt;skip ? NULL : xmemdupz(eap-&gt;arg, *lenp);</a>
+<a name="ln4647">  }</a>
+<a name="ln4648">  cmd += 2;</a>
+<a name="ln4649"> </a>
+<a name="ln4650">  garray_T ga = { .ga_data = NULL, .ga_len = 0 };</a>
+<a name="ln4651"> </a>
+<a name="ln4652">  list_T *const l = heredoc_get(eap, cmd, true);</a>
+<a name="ln4653">  if (l == NULL) {</a>
+<a name="ln4654">    return NULL;</a>
+<a name="ln4655">  }</a>
 <a name="ln4656"> </a>
-<a name="ln4657">  garray_T ga = { .ga_data = NULL, .ga_len = 0 };</a>
-<a name="ln4658"> </a>
-<a name="ln4659">  list_T *const l = heredoc_get(eap, cmd, true);</a>
-<a name="ln4660">  if (l == NULL) {</a>
-<a name="ln4661">    return NULL;</a>
-<a name="ln4662">  }</a>
-<a name="ln4663"> </a>
-<a name="ln4664">  if (!eap-&gt;skip) {</a>
-<a name="ln4665">    ga_init(&amp;ga, 1, 0x400);</a>
-<a name="ln4666">  }</a>
-<a name="ln4667"> </a>
-<a name="ln4668">  TV_LIST_ITER_CONST(l, li, {</a>
-<a name="ln4669">    if (!eap-&gt;skip) {</a>
-<a name="ln4670">      ga_concat(&amp;ga, tv_get_string(TV_LIST_ITEM_TV(li)));</a>
-<a name="ln4671">      ga_append(&amp;ga, '\n');</a>
-<a name="ln4672">    }</a>
-<a name="ln4673">  });</a>
-<a name="ln4674">  *lenp = (size_t)ga.ga_len;  // Set length without trailing NUL.</a>
-<a name="ln4675">  if (!eap-&gt;skip) {</a>
-<a name="ln4676">    ga_append(&amp;ga, NUL);</a>
-<a name="ln4677">  }</a>
-<a name="ln4678"> </a>
-<a name="ln4679">  tv_list_free(l);</a>
-<a name="ln4680">  return (char *)ga.ga_data;</a>
-<a name="ln4681">}</a>
-<a name="ln4682"> </a>
-<a name="ln4683">static void set_search_match(pos_T *t)</a>
-<a name="ln4684">{</a>
-<a name="ln4685">  // First move cursor to end of match, then to the start.  This</a>
-<a name="ln4686">  // moves the whole match onto the screen when 'nowrap' is set.</a>
-<a name="ln4687">  t-&gt;lnum += search_match_lines;</a>
-<a name="ln4688">  t-&gt;col = search_match_endcol;</a>
-<a name="ln4689">  if (t-&gt;lnum &gt; curbuf-&gt;b_ml.ml_line_count) {</a>
-<a name="ln4690">    t-&gt;lnum = curbuf-&gt;b_ml.ml_line_count;</a>
-<a name="ln4691">    coladvance(MAXCOL);</a>
-<a name="ln4692">  }</a>
-<a name="ln4693">}</a>
+<a name="ln4657">  if (!eap-&gt;skip) {</a>
+<a name="ln4658">    ga_init(&amp;ga, 1, 0x400);</a>
+<a name="ln4659">  }</a>
+<a name="ln4660"> </a>
+<a name="ln4661">  TV_LIST_ITER_CONST(l, li, {</a>
+<a name="ln4662">    if (!eap-&gt;skip) {</a>
+<a name="ln4663">      ga_concat(&amp;ga, tv_get_string(TV_LIST_ITEM_TV(li)));</a>
+<a name="ln4664">      ga_append(&amp;ga, '\n');</a>
+<a name="ln4665">    }</a>
+<a name="ln4666">  });</a>
+<a name="ln4667">  *lenp = (size_t)ga.ga_len;  // Set length without trailing NUL.</a>
+<a name="ln4668">  if (!eap-&gt;skip) {</a>
+<a name="ln4669">    ga_append(&amp;ga, NUL);</a>
+<a name="ln4670">  }</a>
+<a name="ln4671"> </a>
+<a name="ln4672">  tv_list_free(l);</a>
+<a name="ln4673">  return (char *)ga.ga_data;</a>
+<a name="ln4674">}</a>
+<a name="ln4675"> </a>
+<a name="ln4676">static void set_search_match(pos_T *t)</a>
+<a name="ln4677">{</a>
+<a name="ln4678">  // First move cursor to end of match, then to the start.  This</a>
+<a name="ln4679">  // moves the whole match onto the screen when 'nowrap' is set.</a>
+<a name="ln4680">  t-&gt;lnum += search_match_lines;</a>
+<a name="ln4681">  t-&gt;col = search_match_endcol;</a>
+<a name="ln4682">  if (t-&gt;lnum &gt; curbuf-&gt;b_ml.ml_line_count) {</a>
+<a name="ln4683">    t-&gt;lnum = curbuf-&gt;b_ml.ml_line_count;</a>
+<a name="ln4684">    coladvance(MAXCOL);</a>
+<a name="ln4685">  }</a>
+<a name="ln4686">}</a>
 </code></pre>
 <div class="balloon" rel="3104"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v595/" target="_blank">V595</a> The 'colored_ccline-&gt;cmdbuff' pointer was utilized before it was verified against nullptr. Check lines: 3104, 3110.</p></div>
 <link rel="stylesheet" href="highlight.css">
