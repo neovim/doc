@@ -1635,7 +1635,7 @@
 <a name="ln1626">{</a>
 <a name="ln1627">  Damage *d1 = (Damage *)s1, *d2 = (Damage *)s2;</a>
 <a name="ln1628">  assert(d1-&gt;id != d2-&gt;id);</a>
-<a name="ln1629">  return d1-&gt;id &gt; d2-&gt;id;</a>
+<a name="ln1629">  return d1-&gt;id &gt; d2-&gt;id ? 1 : -1;</a>
 <a name="ln1630">}</a>
 <a name="ln1631"> </a>
 <a name="ln1632">bool marktree_splice(MarkTree *b, int32_t start_line, int start_col, int old_extent_line,</a>
@@ -1801,525 +1801,526 @@
 <a name="ln1792"> </a>
 <a name="ln1793">    for (size_t i = 0; i &lt; kv_size(damage); i++) {</a>
 <a name="ln1794">      Damage d = kv_A(damage, i);</a>
-<a name="ln1795">      if (!(d.id &amp; MARKTREE_END_FLAG)) {  // start</a>
-<a name="ln1796">        if (i + 1 &lt; kv_size(damage) &amp;&amp; kv_A(damage, i + 1).id == (d.id | MARKTREE_END_FLAG)) {</a>
-<a name="ln1797">          Damage d2 = kv_A(damage, i + 1);</a>
-<a name="ln1798"> </a>
-<a name="ln1799">          // pair</a>
-<a name="ln1800">          marktree_itr_set_node(b, itr, d.old, d.old_i);</a>
-<a name="ln1801">          marktree_itr_set_node(b, enditr, d2.old, d2.old_i);</a>
-<a name="ln1802">          marktree_intersect_pair(b, d.id, itr, enditr, true);</a>
-<a name="ln1803">          marktree_itr_set_node(b, itr, d.new, d.new_i);</a>
-<a name="ln1804">          marktree_itr_set_node(b, enditr, d2.new, d2.new_i);</a>
-<a name="ln1805">          marktree_intersect_pair(b, d.id, itr, enditr, false);</a>
-<a name="ln1806"> </a>
-<a name="ln1807">          i++;  // consume two items</a>
-<a name="ln1808">          continue;</a>
-<a name="ln1809">        }</a>
-<a name="ln1810"> </a>
-<a name="ln1811">        // d is lone start, end didn't move</a>
-<a name="ln1812">        MarkTreeIter endpos[1];</a>
-<a name="ln1813">        marktree_lookup(b, d.id | MARKTREE_END_FLAG, endpos);</a>
-<a name="ln1814">        if (endpos-&gt;x) {</a>
-<a name="ln1815">          marktree_itr_set_node(b, itr, d.old, d.old_i);</a>
-<a name="ln1816">          *enditr = *endpos;</a>
-<a name="ln1817">          marktree_intersect_pair(b, d.id, itr, enditr, true);</a>
-<a name="ln1818">          marktree_itr_set_node(b, itr, d.new, d.new_i);</a>
-<a name="ln1819">          *enditr = *endpos;</a>
-<a name="ln1820">          marktree_intersect_pair(b, d.id, itr, enditr, false);</a>
-<a name="ln1821">        }</a>
-<a name="ln1822">      } else {</a>
-<a name="ln1823">        // d is lone end, start didn't move</a>
-<a name="ln1824">        MarkTreeIter startpos[1];</a>
-<a name="ln1825">        uint64_t start_id = d.id &amp; ~MARKTREE_END_FLAG;</a>
-<a name="ln1826"> </a>
-<a name="ln1827">        marktree_lookup(b, start_id, startpos);</a>
-<a name="ln1828">        if (startpos-&gt;x) {</a>
-<a name="ln1829">          *itr = *startpos;</a>
-<a name="ln1830">          marktree_itr_set_node(b, enditr, d.old, d.old_i);</a>
-<a name="ln1831">          marktree_intersect_pair(b, start_id, itr, enditr, true);</a>
-<a name="ln1832">          *itr = *startpos;</a>
-<a name="ln1833">          marktree_itr_set_node(b, enditr, d.new, d.new_i);</a>
-<a name="ln1834">          marktree_intersect_pair(b, start_id, itr, enditr, false);</a>
-<a name="ln1835">        }</a>
-<a name="ln1836">      }</a>
-<a name="ln1837">    }</a>
-<a name="ln1838">  }</a>
-<a name="ln1839">  kvi_destroy(damage);</a>
-<a name="ln1840"> </a>
-<a name="ln1841">  return moved;</a>
-<a name="ln1842">}</a>
-<a name="ln1843"> </a>
-<a name="ln1844">void marktree_move_region(MarkTree *b, int start_row, colnr_T start_col, int extent_row,</a>
-<a name="ln1845">                          colnr_T extent_col, int new_row, colnr_T new_col)</a>
-<a name="ln1846">{</a>
-<a name="ln1847">  MTPos start = { start_row, start_col }, size = { extent_row, extent_col };</a>
-<a name="ln1848">  MTPos end = size;</a>
-<a name="ln1849">  unrelative(start, &amp;end);</a>
-<a name="ln1850">  MarkTreeIter itr[1] = { 0 };</a>
-<a name="ln1851">  marktree_itr_get_ext(b, start, itr, false, true, NULL);</a>
-<a name="ln1852">  kvec_t(MTKey) saved = KV_INITIAL_VALUE;</a>
-<a name="ln1853">  while (itr-&gt;x) {</a>
-<a name="ln1854">    MTKey k = marktree_itr_current(itr);</a>
-<a name="ln1855">    if (!pos_leq(k.pos, end) || (k.pos.row == end.row &amp;&amp; k.pos.col == end.col</a>
-<a name="ln1856">                                 &amp;&amp; mt_right(k))) {</a>
-<a name="ln1857">      break;</a>
-<a name="ln1858">    }</a>
-<a name="ln1859">    relative(start, &amp;k.pos);</a>
-<a name="ln1860">    kv_push(saved, k);</a>
-<a name="ln1861">    marktree_del_itr(b, itr, false);</a>
-<a name="ln1862">  }</a>
-<a name="ln1863"> </a>
-<a name="ln1864">  marktree_splice(b, start.row, start.col, size.row, size.col, 0, 0);</a>
-<a name="ln1865">  MTPos new = { new_row, new_col };</a>
-<a name="ln1866">  marktree_splice(b, new.row, new.col,</a>
-<a name="ln1867">                  0, 0, size.row, size.col);</a>
-<a name="ln1868"> </a>
-<a name="ln1869">  for (size_t i = 0; i &lt; kv_size(saved); i++) {</a>
-<a name="ln1870">    MTKey item = kv_A(saved, i);</a>
-<a name="ln1871">    unrelative(new, &amp;item.pos);</a>
-<a name="ln1872">    marktree_put_key(b, item);</a>
-<a name="ln1873">    if (mt_paired(item)) {</a>
-<a name="ln1874">      // other end might be later in `saved`, this will safely bail out then</a>
-<a name="ln1875">      marktree_restore_pair(b, item);</a>
-<a name="ln1876">    }</a>
-<a name="ln1877">  }</a>
-<a name="ln1878">  kv_destroy(saved);</a>
-<a name="ln1879">}</a>
-<a name="ln1880"> </a>
-<a name="ln1881">/// @param itr OPTIONAL. set itr to pos.</a>
-<a name="ln1882">MTKey marktree_lookup_ns(MarkTree *b, uint32_t ns, uint32_t id, bool end, MarkTreeIter *itr)</a>
-<a name="ln1883">{</a>
-<a name="ln1884">  return marktree_lookup(b, mt_lookup_id(ns, id, end), itr);</a>
-<a name="ln1885">}</a>
-<a name="ln1886"> </a>
-<a name="ln1887">static uint64_t pseudo_index(MTNode *x, int i)</a>
-<a name="ln1888">{</a>
-<a name="ln1889">  int off = MT_LOG2_BRANCH * x-&gt;level;</a>
-<a name="ln1890">  uint64_t index = 0;</a>
-<a name="ln1891"> </a>
-<a name="ln1892">  while (x) {</a>
-<a name="ln1893">    index |= (uint64_t)(i + 1) &lt;&lt; off;</a>
-<a name="ln1894">    off += MT_LOG2_BRANCH;</a>
-<a name="ln1895">    i = x-&gt;p_idx;</a>
-<a name="ln1896">    x = x-&gt;parent;</a>
-<a name="ln1897">  }</a>
-<a name="ln1898"> </a>
-<a name="ln1899">  return index;</a>
-<a name="ln1900">}</a>
-<a name="ln1901"> </a>
-<a name="ln1902">/// @param itr OPTIONAL. set itr to pos.</a>
-<a name="ln1903">/// if sloppy, two keys at the same _leaf_ node has the same index</a>
-<a name="ln1904">static uint64_t pseudo_index_for_id(MarkTree *b, uint64_t id, bool sloppy)</a>
-<a name="ln1905">{</a>
-<a name="ln1906">  MTNode *n = id2node(b, id);</a>
-<a name="ln1907">  if (n == NULL) {</a>
-<a name="ln1908">    return 0;  // a valid pseudo-index is never zero!</a>
-<a name="ln1909">  }</a>
-<a name="ln1910"> </a>
-<a name="ln1911">  int i = 0;</a>
-<a name="ln1912">  if (n-&gt;level || !sloppy) {</a>
-<a name="ln1913">    for (i = 0; i &lt; n-&gt;n; i++) {</a>
-<a name="ln1914">      if (mt_lookup_key(n-&gt;key[i]) == id) {</a>
-<a name="ln1915">        break;</a>
-<a name="ln1916">      }</a>
-<a name="ln1917">    }</a>
-<a name="ln1918">    assert(i &lt; n-&gt;n);</a>
-<a name="ln1919">    if (n-&gt;level) {</a>
-<a name="ln1920">      i += 1;  // internal key i comes after ptr[i]</a>
-<a name="ln1921">    }</a>
-<a name="ln1922">  }</a>
-<a name="ln1923"> </a>
-<a name="ln1924">  return pseudo_index(n, i);</a>
-<a name="ln1925">}</a>
-<a name="ln1926"> </a>
-<a name="ln1927">/// @param itr OPTIONAL. set itr to pos.</a>
-<a name="ln1928">MTKey marktree_lookup(MarkTree *b, uint64_t id, MarkTreeIter *itr)</a>
-<a name="ln1929">{</a>
-<a name="ln1930">  MTNode *n = id2node(b, id);</a>
-<a name="ln1931">  if (n == NULL) {</a>
-<a name="ln1932">    if (itr) {</a>
-<a name="ln1933">      itr-&gt;x = NULL;</a>
-<a name="ln1934">    }</a>
-<a name="ln1935">    return MT_INVALID_KEY;</a>
-<a name="ln1936">  }</a>
-<a name="ln1937">  int i = 0;</a>
-<a name="ln1938">  for (i = 0; i &lt; n-&gt;n; i++) {</a>
-<a name="ln1939">    if (mt_lookup_key(n-&gt;key[i]) == id) {</a>
-<a name="ln1940">      return marktree_itr_set_node(b, itr, n, i);</a>
-<a name="ln1941">    }</a>
-<a name="ln1942">  }</a>
-<a name="ln1943"> </a>
-<a name="ln1944">  abort();</a>
-<a name="ln1945">}</a>
-<a name="ln1946"> </a>
-<a name="ln1947">MTKey marktree_itr_set_node(MarkTree *b, MarkTreeIter *itr, MTNode *n, int i)</a>
-<a name="ln1948">{</a>
-<a name="ln1949">  MTKey key = n-&gt;key[i];</a>
-<a name="ln1950">  if (itr) {</a>
-<a name="ln1951">    itr-&gt;i = i;</a>
-<a name="ln1952">    itr-&gt;x = n;</a>
-<a name="ln1953">    itr-&gt;lvl = b-&gt;root-&gt;level - n-&gt;level;</a>
-<a name="ln1954">  }</a>
-<a name="ln1955">  while (n-&gt;parent != NULL) {</a>
-<a name="ln1956">    MTNode *p = n-&gt;parent;</a>
-<a name="ln1957">    i = n-&gt;p_idx;</a>
-<a name="ln1958">    assert(p-&gt;ptr[i] == n);</a>
-<a name="ln1959"> </a>
-<a name="ln1960">    if (itr) {</a>
-<a name="ln1961">      itr-&gt;s[b-&gt;root-&gt;level - p-&gt;level].i = i;</a>
-<a name="ln1962">    }</a>
-<a name="ln1963">    if (i &gt; 0) {</a>
-<a name="ln1964">      unrelative(p-&gt;key[i - 1].pos, &amp;key.pos);</a>
-<a name="ln1965">    }</a>
-<a name="ln1966">    n = p;</a>
-<a name="ln1967">  }</a>
-<a name="ln1968">  if (itr) {</a>
-<a name="ln1969">    marktree_itr_fix_pos(b, itr);</a>
-<a name="ln1970">  }</a>
-<a name="ln1971">  return key;</a>
-<a name="ln1972">}</a>
-<a name="ln1973"> </a>
-<a name="ln1974">MTPos marktree_get_altpos(MarkTree *b, MTKey mark, MarkTreeIter *itr)</a>
-<a name="ln1975">{</a>
-<a name="ln1976">  return marktree_get_alt(b, mark, itr).pos;</a>
-<a name="ln1977">}</a>
-<a name="ln1978"> </a>
-<a name="ln1979">MTKey marktree_get_alt(MarkTree *b, MTKey mark, MarkTreeIter *itr)</a>
-<a name="ln1980">{</a>
-<a name="ln1981">  MTKey end = MT_INVALID_KEY;</a>
-<a name="ln1982">  if (mt_paired(mark)) {</a>
-<a name="ln1983">    end = marktree_lookup_ns(b, mark.ns, mark.id, !mt_end(mark), itr);</a>
-<a name="ln1984">  }</a>
-<a name="ln1985">  return end;</a>
-<a name="ln1986">}</a>
-<a name="ln1987"> </a>
-<a name="ln1988">static void marktree_itr_fix_pos(MarkTree *b, MarkTreeIter *itr)</a>
-<a name="ln1989">{</a>
-<a name="ln1990">  itr-&gt;pos = (MTPos){ 0, 0 };</a>
-<a name="ln1991">  MTNode *x = b-&gt;root;</a>
-<a name="ln1992">  for (int lvl = 0; lvl &lt; itr-&gt;lvl; lvl++) {</a>
-<a name="ln1993">    itr-&gt;s[lvl].oldcol = itr-&gt;pos.col;</a>
-<a name="ln1994">    int i = itr-&gt;s[lvl].i;</a>
-<a name="ln1995">    if (i &gt; 0) {</a>
-<a name="ln1996">      compose(&amp;itr-&gt;pos, x-&gt;key[i - 1].pos);</a>
-<a name="ln1997">    }</a>
-<a name="ln1998">    assert(x-&gt;level);</a>
-<a name="ln1999">    x = x-&gt;ptr[i];</a>
-<a name="ln2000">  }</a>
-<a name="ln2001">  assert(x == itr-&gt;x);</a>
-<a name="ln2002">}</a>
-<a name="ln2003"> </a>
-<a name="ln2004">// for unit test</a>
-<a name="ln2005">void marktree_put_test(MarkTree *b, uint32_t ns, uint32_t id, int row, int col, bool right_gravity,</a>
-<a name="ln2006">                       int end_row, int end_col, bool end_right)</a>
-<a name="ln2007">{</a>
-<a name="ln2008">  MTKey key = { { row, col }, ns, id, 0,</a>
-<a name="ln2009">                mt_flags(right_gravity, 0), 0, NULL };</a>
-<a name="ln2010">  marktree_put(b, key, end_row, end_col, end_right);</a>
-<a name="ln2011">}</a>
-<a name="ln2012"> </a>
-<a name="ln2013">// for unit test</a>
-<a name="ln2014">bool mt_right_test(MTKey key)</a>
-<a name="ln2015">{</a>
-<a name="ln2016">  return mt_right(key);</a>
-<a name="ln2017">}</a>
-<a name="ln2018"> </a>
-<a name="ln2019">// for unit test</a>
-<a name="ln2020">void marktree_del_pair_test(MarkTree *b, uint32_t ns, uint32_t id)</a>
-<a name="ln2021">{</a>
-<a name="ln2022">  MarkTreeIter itr[1];</a>
-<a name="ln2023">  marktree_lookup_ns(b, ns, id, false, itr);</a>
-<a name="ln2024"> </a>
-<a name="ln2025">  uint64_t other = marktree_del_itr(b, itr, false);</a>
-<a name="ln2026">  assert(other);</a>
-<a name="ln2027">  marktree_lookup(b, other, itr);</a>
-<a name="ln2028">  marktree_del_itr(b, itr, false);</a>
-<a name="ln2029">}</a>
-<a name="ln2030"> </a>
-<a name="ln2031">void marktree_check(MarkTree *b)</a>
-<a name="ln2032">{</a>
-<a name="ln2033">#ifndef NDEBUG</a>
-<a name="ln2034">  if (b-&gt;root == NULL) {</a>
-<a name="ln2035">    assert(b-&gt;n_keys == 0);</a>
-<a name="ln2036">    assert(b-&gt;n_nodes == 0);</a>
-<a name="ln2037">    assert(b-&gt;id2node == NULL || map_size(b-&gt;id2node) == 0);</a>
-<a name="ln2038">    return;</a>
-<a name="ln2039">  }</a>
-<a name="ln2040"> </a>
-<a name="ln2041">  MTPos dummy;</a>
-<a name="ln2042">  bool last_right = false;</a>
-<a name="ln2043">  size_t nkeys = marktree_check_node(b, b-&gt;root, &amp;dummy, &amp;last_right);</a>
-<a name="ln2044">  assert(b-&gt;n_keys == nkeys);</a>
-<a name="ln2045">  assert(b-&gt;n_keys == map_size(b-&gt;id2node));</a>
-<a name="ln2046">#else</a>
-<a name="ln2047">  // Do nothing, as assertions are required</a>
-<a name="ln2048">  (void)b;</a>
-<a name="ln2049">#endif</a>
-<a name="ln2050">}</a>
-<a name="ln2051"> </a>
-<a name="ln2052">#ifndef NDEBUG</a>
-<a name="ln2053">size_t marktree_check_node(MarkTree *b, MTNode *x, MTPos *last, bool *last_right)</a>
-<a name="ln2054">{</a>
-<a name="ln2055">  assert(x-&gt;n &lt;= 2 * T - 1);</a>
-<a name="ln2056">  // TODO(bfredl): too strict if checking &quot;in repair&quot; post-delete tree.</a>
-<a name="ln2057">  assert(x-&gt;n &gt;= (x != b-&gt;root ? T - 1 : 0));</a>
-<a name="ln2058">  size_t n_keys = (size_t)x-&gt;n;</a>
-<a name="ln2059"> </a>
-<a name="ln2060">  for (int i = 0; i &lt; x-&gt;n; i++) {</a>
-<a name="ln2061">    if (x-&gt;level) {</a>
-<a name="ln2062">      n_keys += marktree_check_node(b, x-&gt;ptr[i], last, last_right);</a>
-<a name="ln2063">    } else {</a>
-<a name="ln2064">      *last = (MTPos) { 0, 0 };</a>
-<a name="ln2065">    }</a>
-<a name="ln2066">    if (i &gt; 0) {</a>
-<a name="ln2067">      unrelative(x-&gt;key[i - 1].pos, last);</a>
-<a name="ln2068">    }</a>
-<a name="ln2069">    assert(pos_leq(*last, x-&gt;key[i].pos));</a>
-<a name="ln2070">    if (last-&gt;row == x-&gt;key[i].pos.row &amp;&amp; last-&gt;col == x-&gt;key[i].pos.col) {</a>
-<a name="ln2071">      assert(!*last_right || mt_right(x-&gt;key[i]));</a>
-<a name="ln2072">    }</a>
-<a name="ln2073">    *last_right = mt_right(x-&gt;key[i]);</a>
-<a name="ln2074">    assert(x-&gt;key[i].pos.col &gt;= 0);</a>
-<a name="ln2075">    assert(pmap_get(uint64_t)(b-&gt;id2node, mt_lookup_key(x-&gt;key[i])) == x);</a>
-<a name="ln2076">  }</a>
-<a name="ln2077"> </a>
-<a name="ln2078">  if (x-&gt;level) {</a>
-<a name="ln2079">    n_keys += marktree_check_node(b, x-&gt;ptr[x-&gt;n], last, last_right);</a>
-<a name="ln2080">    unrelative(x-&gt;key[x-&gt;n - 1].pos, last);</a>
-<a name="ln2081"> </a>
-<a name="ln2082">    for (int i = 0; i &lt; x-&gt;n + 1; i++) {</a>
-<a name="ln2083">      assert(x-&gt;ptr[i]-&gt;parent == x);</a>
-<a name="ln2084">      assert(x-&gt;ptr[i]-&gt;p_idx == i);</a>
-<a name="ln2085">      assert(x-&gt;ptr[i]-&gt;level == x-&gt;level - 1);</a>
-<a name="ln2086">      // PARANOIA: check no double node ref</a>
-<a name="ln2087">      for (int j = 0; j &lt; i; j++) {</a>
-<a name="ln2088">        assert(x-&gt;ptr[i] != x-&gt;ptr[j]);</a>
-<a name="ln2089">      }</a>
-<a name="ln2090">    }</a>
-<a name="ln2091">  } else if (x-&gt;n &gt; 0) {</a>
-<a name="ln2092">    *last = x-&gt;key[x-&gt;n - 1].pos;</a>
-<a name="ln2093">  }</a>
-<a name="ln2094">  return n_keys;</a>
-<a name="ln2095">}</a>
-<a name="ln2096"> </a>
-<a name="ln2097">bool marktree_check_intersections(MarkTree *b)</a>
-<a name="ln2098">{</a>
-<a name="ln2099">  if (!b-&gt;root) {</a>
-<a name="ln2100">    return true;</a>
-<a name="ln2101">  }</a>
-<a name="ln2102">  PMap(ptr_t) checked = MAP_INIT;</a>
-<a name="ln2103"> </a>
-<a name="ln2104">  // 1. move x-&gt;intersect to checked[x] and reinit x-&gt;intersect</a>
-<a name="ln2105">  mt_recurse_nodes(b-&gt;root, &amp;checked);</a>
-<a name="ln2106"> </a>
-<a name="ln2107">  // 2. iterate over all marks. for each START mark of a pair,</a>
-<a name="ln2108">  // intersect the nodes between the pair</a>
-<a name="ln2109">  MarkTreeIter itr[1];</a>
-<a name="ln2110">  marktree_itr_first(b, itr);</a>
-<a name="ln2111">  while (true) {</a>
-<a name="ln2112">    MTKey mark = marktree_itr_current(itr);</a>
-<a name="ln2113">    if (mark.pos.row &lt; 0) {</a>
-<a name="ln2114">      break;</a>
-<a name="ln2115">    }</a>
-<a name="ln2116"> </a>
-<a name="ln2117">    if (mt_start(mark)) {</a>
-<a name="ln2118">      MarkTreeIter start_itr[1];</a>
-<a name="ln2119">      MarkTreeIter end_itr[1];</a>
-<a name="ln2120">      uint64_t end_id = mt_lookup_id(mark.ns, mark.id, true);</a>
-<a name="ln2121">      MTKey k = marktree_lookup(b, end_id, end_itr);</a>
-<a name="ln2122">      if (k.pos.row &gt;= 0) {</a>
-<a name="ln2123">        *start_itr = *itr;</a>
-<a name="ln2124">        marktree_intersect_pair(b, mt_lookup_key(mark), start_itr, end_itr, false);</a>
-<a name="ln2125">      }</a>
-<a name="ln2126">    }</a>
-<a name="ln2127"> </a>
-<a name="ln2128">    marktree_itr_next(b, itr);</a>
-<a name="ln2129">  }</a>
-<a name="ln2130"> </a>
-<a name="ln2131">  // 3. for each node check if the recreated intersection</a>
-<a name="ln2132">  // matches the old checked[x] intersection.</a>
-<a name="ln2133">  bool status = mt_recurse_nodes_compare(b-&gt;root, &amp;checked);</a>
-<a name="ln2134"> </a>
-<a name="ln2135">  uint64_t *val;</a>
-<a name="ln2136">  map_foreach_value(&amp;checked, val, {</a>
-<a name="ln2137">    xfree(val);</a>
-<a name="ln2138">  });</a>
-<a name="ln2139">  map_destroy(ptr_t, &amp;checked);</a>
-<a name="ln2140"> </a>
-<a name="ln2141">  return status;</a>
-<a name="ln2142">}</a>
-<a name="ln2143"> </a>
-<a name="ln2144">void mt_recurse_nodes(MTNode *x, PMap(ptr_t) *checked)</a>
-<a name="ln2145">{</a>
-<a name="ln2146">  if (kv_size(x-&gt;intersect)) {</a>
-<a name="ln2147">    kvi_push(x-&gt;intersect, (uint64_t)-1);  // sentinel</a>
-<a name="ln2148">    uint64_t *val;</a>
-<a name="ln2149">    if (x-&gt;intersect.items == x-&gt;intersect.init_array) {</a>
-<a name="ln2150">      val = xmemdup(x-&gt;intersect.items, x-&gt;intersect.size * sizeof(*x-&gt;intersect.items));</a>
-<a name="ln2151">    } else {</a>
-<a name="ln2152">      val = x-&gt;intersect.items;</a>
-<a name="ln2153">    }</a>
-<a name="ln2154">    pmap_put(ptr_t)(checked, x, val);</a>
-<a name="ln2155">    kvi_init(x-&gt;intersect);</a>
-<a name="ln2156">  }</a>
-<a name="ln2157"> </a>
-<a name="ln2158">  if (x-&gt;level) {</a>
-<a name="ln2159">    for (int i = 0; i &lt; x-&gt;n + 1; i++) {</a>
-<a name="ln2160">      mt_recurse_nodes(x-&gt;ptr[i], checked);</a>
-<a name="ln2161">    }</a>
-<a name="ln2162">  }</a>
-<a name="ln2163">}</a>
-<a name="ln2164"> </a>
-<a name="ln2165">bool mt_recurse_nodes_compare(MTNode *x, PMap(ptr_t) *checked)</a>
-<a name="ln2166">{</a>
-<a name="ln2167">  uint64_t *ref = pmap_get(ptr_t)(checked, x);</a>
-<a name="ln2168">  if (ref != NULL) {</a>
-<a name="ln2169">    for (size_t i = 0;; i++) {</a>
-<a name="ln2170">      if (ref[i] == (uint64_t)-1) {</a>
-<a name="ln2171">        if (i != kv_size(x-&gt;intersect)) {</a>
-<a name="ln2172">          return false;</a>
-<a name="ln2173">        }</a>
-<a name="ln2174"> </a>
-<a name="ln2175">        break;</a>
-<a name="ln2176">      } else {</a>
-<a name="ln2177">        if (kv_size(x-&gt;intersect) &lt;= i || ref[i] != kv_A(x-&gt;intersect, i)) {</a>
-<a name="ln2178">          return false;</a>
-<a name="ln2179">        }</a>
-<a name="ln2180">      }</a>
-<a name="ln2181">    }</a>
-<a name="ln2182">  } else {</a>
-<a name="ln2183">    if (kv_size(x-&gt;intersect)) {</a>
-<a name="ln2184">      return false;</a>
-<a name="ln2185">    }</a>
-<a name="ln2186">  }</a>
-<a name="ln2187"> </a>
-<a name="ln2188">  if (x-&gt;level) {</a>
-<a name="ln2189">    for (int i = 0; i &lt; x-&gt;n + 1; i++) {</a>
-<a name="ln2190">      if (!mt_recurse_nodes_compare(x-&gt;ptr[i], checked)) {</a>
-<a name="ln2191">        return false;</a>
-<a name="ln2192">      }</a>
-<a name="ln2193">    }</a>
-<a name="ln2194">  }</a>
-<a name="ln2195"> </a>
-<a name="ln2196">  return true;</a>
-<a name="ln2197">}</a>
-<a name="ln2198"> </a>
-<a name="ln2199">#endif</a>
-<a name="ln2200"> </a>
-<a name="ln2201">// TODO(bfredl): kv_print</a>
-<a name="ln2202">#define GA_PUT(x) ga_concat(ga, (char *)(x))</a>
-<a name="ln2203">#define GA_PRINT(fmt, ...) snprintf(buf, sizeof(buf), fmt, __VA_ARGS__); \</a>
-<a name="ln2204">  GA_PUT(buf);</a>
-<a name="ln2205"> </a>
-<a name="ln2206">String mt_inspect(MarkTree *b, bool keys, bool dot)</a>
-<a name="ln2207">{</a>
-<a name="ln2208">  garray_T ga[1];</a>
-<a name="ln2209">  ga_init(ga, (int)sizeof(char), 80);</a>
-<a name="ln2210">  MTPos p = { 0, 0 };</a>
-<a name="ln2211">  if (b-&gt;root) {</a>
-<a name="ln2212">    if (dot) {</a>
-<a name="ln2213">      GA_PUT(&quot;digraph D {\n\n&quot;);</a>
-<a name="ln2214">      mt_inspect_dotfile_node(b, ga, b-&gt;root, p, NULL);</a>
-<a name="ln2215">      GA_PUT(&quot;\n}&quot;);</a>
-<a name="ln2216">    } else {</a>
-<a name="ln2217">      mt_inspect_node(b, ga, keys, b-&gt;root, p);</a>
-<a name="ln2218">    }</a>
-<a name="ln2219">  }</a>
-<a name="ln2220">  return ga_take_string(ga);</a>
-<a name="ln2221">}</a>
-<a name="ln2222"> </a>
-<a name="ln2223">void mt_inspect_node(MarkTree *b, garray_T *ga, bool keys, MTNode *n, MTPos off)</a>
-<a name="ln2224">{</a>
-<a name="ln2225">  static char buf[1024];</a>
-<a name="ln2226">  GA_PUT(&quot;[&quot;);</a>
-<a name="ln2227">  if (keys &amp;&amp; kv_size(n-&gt;intersect)) {</a>
-<a name="ln2228">    for (size_t i = 0; i &lt; kv_size(n-&gt;intersect); i++) {</a>
-<a name="ln2229">      GA_PUT(i == 0 ? &quot;{&quot; : &quot;;&quot;);</a>
-<a name="ln2230">      // GA_PRINT(&quot;%&quot;PRIu64, kv_A(n-&gt;intersect, i));</a>
-<a name="ln2231">      GA_PRINT(&quot;%&quot; PRIu64, mt_dbg_id(kv_A(n-&gt;intersect, i)));</a>
-<a name="ln2232">    }</a>
-<a name="ln2233">    GA_PUT(&quot;},&quot;);</a>
-<a name="ln2234">  }</a>
-<a name="ln2235">  if (n-&gt;level) {</a>
-<a name="ln2236">    mt_inspect_node(b, ga, keys, n-&gt;ptr[0], off);</a>
-<a name="ln2237">  }</a>
-<a name="ln2238">  for (int i = 0; i &lt; n-&gt;n; i++) {</a>
-<a name="ln2239">    MTPos p = n-&gt;key[i].pos;</a>
-<a name="ln2240">    unrelative(off, &amp;p);</a>
-<a name="ln2241">    GA_PRINT(&quot;%d/%d&quot;, p.row, p.col);</a>
-<a name="ln2242">    if (keys) {</a>
-<a name="ln2243">      MTKey key = n-&gt;key[i];</a>
-<a name="ln2244">      GA_PUT(&quot;:&quot;);</a>
-<a name="ln2245">      if (mt_start(key)) {</a>
-<a name="ln2246">        GA_PUT(&quot;&lt;&quot;);</a>
-<a name="ln2247">      }</a>
-<a name="ln2248">      // GA_PRINT(&quot;%&quot;PRIu64, mt_lookup_id(key.ns, key.id, false));</a>
-<a name="ln2249">      GA_PRINT(&quot;%&quot; PRIu32, key.id);</a>
-<a name="ln2250">      if (mt_end(key)) {</a>
-<a name="ln2251">        GA_PUT(&quot;&gt;&quot;);</a>
-<a name="ln2252">      }</a>
-<a name="ln2253">    }</a>
-<a name="ln2254">    if (n-&gt;level) {</a>
-<a name="ln2255">      mt_inspect_node(b, ga, keys, n-&gt;ptr[i + 1], p);</a>
-<a name="ln2256">    } else {</a>
-<a name="ln2257">      ga_concat(ga, &quot;,&quot;);</a>
-<a name="ln2258">    }</a>
-<a name="ln2259">  }</a>
-<a name="ln2260">  ga_concat(ga, &quot;]&quot;);</a>
-<a name="ln2261">}</a>
-<a name="ln2262"> </a>
-<a name="ln2263">void mt_inspect_dotfile_node(MarkTree *b, garray_T *ga, MTNode *n, MTPos off, char *parent)</a>
-<a name="ln2264">{</a>
-<a name="ln2265">  static char buf[1024];</a>
-<a name="ln2266">  char namebuf[64];</a>
-<a name="ln2267">  if (parent != NULL) {</a>
-<a name="ln2268">    snprintf(namebuf, sizeof namebuf, &quot;%s_%c%d&quot;, parent, 'a' + n-&gt;level, n-&gt;p_idx);</a>
-<a name="ln2269">  } else {</a>
-<a name="ln2270">    snprintf(namebuf, sizeof namebuf, &quot;Node&quot;);</a>
-<a name="ln2271">  }</a>
-<a name="ln2272"> </a>
-<a name="ln2273">  GA_PRINT(&quot;  %s[shape=plaintext, label=&lt;\n&quot;, namebuf);</a>
-<a name="ln2274">  GA_PUT(&quot;    &lt;table border='0' cellborder='1' cellspacing='0'&gt;\n&quot;);</a>
-<a name="ln2275">  if (kv_size(n-&gt;intersect)) {</a>
-<a name="ln2276">    GA_PUT(&quot;    &lt;tr&gt;&lt;td&gt;&quot;);</a>
-<a name="ln2277">    for (size_t i = 0; i &lt; kv_size(n-&gt;intersect); i++) {</a>
-<a name="ln2278">      if (i &gt; 0) {</a>
-<a name="ln2279">        GA_PUT(&quot;, &quot;);</a>
-<a name="ln2280">      }</a>
-<a name="ln2281">      GA_PRINT(&quot;%&quot; PRIu64, mt_dbg_id(kv_A(n-&gt;intersect, i)));</a>
-<a name="ln2282">    }</a>
-<a name="ln2283">    GA_PUT(&quot;&lt;/td&gt;&lt;/tr&gt;\n&quot;);</a>
-<a name="ln2284">  }</a>
-<a name="ln2285"> </a>
-<a name="ln2286">  GA_PUT(&quot;    &lt;tr&gt;&lt;td&gt;&quot;);</a>
-<a name="ln2287">  for (int i = 0; i &lt; n-&gt;n; i++) {</a>
-<a name="ln2288">    MTKey k = n-&gt;key[i];</a>
-<a name="ln2289">    if (i &gt; 0) {</a>
-<a name="ln2290">      GA_PUT(&quot;, &quot;);</a>
-<a name="ln2291">    }</a>
-<a name="ln2292">    GA_PRINT(&quot;%d&quot;, k.id);</a>
-<a name="ln2293">    if (mt_paired(k)) {</a>
-<a name="ln2294">      GA_PUT(mt_end(k) ? &quot;e&quot; : &quot;s&quot;);</a>
-<a name="ln2295">    }</a>
-<a name="ln2296">  }</a>
-<a name="ln2297">  GA_PUT(&quot;&lt;/td&gt;&lt;/tr&gt;\n&quot;);</a>
-<a name="ln2298">  GA_PUT(&quot;    &lt;/table&gt;\n&quot;);</a>
-<a name="ln2299">  GA_PUT(&quot;&gt;];\n&quot;);</a>
-<a name="ln2300">  if (parent) {</a>
-<a name="ln2301">    GA_PRINT(&quot;  %s -&gt; %s\n&quot;, parent, namebuf);</a>
-<a name="ln2302">  }</a>
-<a name="ln2303">  if (n-&gt;level) {</a>
-<a name="ln2304">    mt_inspect_dotfile_node(b, ga, n-&gt;ptr[0], off, namebuf);</a>
-<a name="ln2305">  }</a>
-<a name="ln2306">  for (int i = 0; i &lt; n-&gt;n; i++) {</a>
-<a name="ln2307">    MTPos p = n-&gt;key[i].pos;</a>
-<a name="ln2308">    unrelative(off, &amp;p);</a>
-<a name="ln2309">    if (n-&gt;level) {</a>
-<a name="ln2310">      mt_inspect_dotfile_node(b, ga, n-&gt;ptr[i + 1], p, namebuf);</a>
-<a name="ln2311">    }</a>
-<a name="ln2312">  }</a>
-<a name="ln2313">}</a>
+<a name="ln1795">      assert(i == 0 || d.id &gt; kv_A(damage, i - 1).id);</a>
+<a name="ln1796">      if (!(d.id &amp; MARKTREE_END_FLAG)) {  // start</a>
+<a name="ln1797">        if (i + 1 &lt; kv_size(damage) &amp;&amp; kv_A(damage, i + 1).id == (d.id | MARKTREE_END_FLAG)) {</a>
+<a name="ln1798">          Damage d2 = kv_A(damage, i + 1);</a>
+<a name="ln1799"> </a>
+<a name="ln1800">          // pair</a>
+<a name="ln1801">          marktree_itr_set_node(b, itr, d.old, d.old_i);</a>
+<a name="ln1802">          marktree_itr_set_node(b, enditr, d2.old, d2.old_i);</a>
+<a name="ln1803">          marktree_intersect_pair(b, d.id, itr, enditr, true);</a>
+<a name="ln1804">          marktree_itr_set_node(b, itr, d.new, d.new_i);</a>
+<a name="ln1805">          marktree_itr_set_node(b, enditr, d2.new, d2.new_i);</a>
+<a name="ln1806">          marktree_intersect_pair(b, d.id, itr, enditr, false);</a>
+<a name="ln1807"> </a>
+<a name="ln1808">          i++;  // consume two items</a>
+<a name="ln1809">          continue;</a>
+<a name="ln1810">        }</a>
+<a name="ln1811"> </a>
+<a name="ln1812">        // d is lone start, end didn't move</a>
+<a name="ln1813">        MarkTreeIter endpos[1];</a>
+<a name="ln1814">        marktree_lookup(b, d.id | MARKTREE_END_FLAG, endpos);</a>
+<a name="ln1815">        if (endpos-&gt;x) {</a>
+<a name="ln1816">          marktree_itr_set_node(b, itr, d.old, d.old_i);</a>
+<a name="ln1817">          *enditr = *endpos;</a>
+<a name="ln1818">          marktree_intersect_pair(b, d.id, itr, enditr, true);</a>
+<a name="ln1819">          marktree_itr_set_node(b, itr, d.new, d.new_i);</a>
+<a name="ln1820">          *enditr = *endpos;</a>
+<a name="ln1821">          marktree_intersect_pair(b, d.id, itr, enditr, false);</a>
+<a name="ln1822">        }</a>
+<a name="ln1823">      } else {</a>
+<a name="ln1824">        // d is lone end, start didn't move</a>
+<a name="ln1825">        MarkTreeIter startpos[1];</a>
+<a name="ln1826">        uint64_t start_id = d.id &amp; ~MARKTREE_END_FLAG;</a>
+<a name="ln1827"> </a>
+<a name="ln1828">        marktree_lookup(b, start_id, startpos);</a>
+<a name="ln1829">        if (startpos-&gt;x) {</a>
+<a name="ln1830">          *itr = *startpos;</a>
+<a name="ln1831">          marktree_itr_set_node(b, enditr, d.old, d.old_i);</a>
+<a name="ln1832">          marktree_intersect_pair(b, start_id, itr, enditr, true);</a>
+<a name="ln1833">          *itr = *startpos;</a>
+<a name="ln1834">          marktree_itr_set_node(b, enditr, d.new, d.new_i);</a>
+<a name="ln1835">          marktree_intersect_pair(b, start_id, itr, enditr, false);</a>
+<a name="ln1836">        }</a>
+<a name="ln1837">      }</a>
+<a name="ln1838">    }</a>
+<a name="ln1839">  }</a>
+<a name="ln1840">  kvi_destroy(damage);</a>
+<a name="ln1841"> </a>
+<a name="ln1842">  return moved;</a>
+<a name="ln1843">}</a>
+<a name="ln1844"> </a>
+<a name="ln1845">void marktree_move_region(MarkTree *b, int start_row, colnr_T start_col, int extent_row,</a>
+<a name="ln1846">                          colnr_T extent_col, int new_row, colnr_T new_col)</a>
+<a name="ln1847">{</a>
+<a name="ln1848">  MTPos start = { start_row, start_col }, size = { extent_row, extent_col };</a>
+<a name="ln1849">  MTPos end = size;</a>
+<a name="ln1850">  unrelative(start, &amp;end);</a>
+<a name="ln1851">  MarkTreeIter itr[1] = { 0 };</a>
+<a name="ln1852">  marktree_itr_get_ext(b, start, itr, false, true, NULL);</a>
+<a name="ln1853">  kvec_t(MTKey) saved = KV_INITIAL_VALUE;</a>
+<a name="ln1854">  while (itr-&gt;x) {</a>
+<a name="ln1855">    MTKey k = marktree_itr_current(itr);</a>
+<a name="ln1856">    if (!pos_leq(k.pos, end) || (k.pos.row == end.row &amp;&amp; k.pos.col == end.col</a>
+<a name="ln1857">                                 &amp;&amp; mt_right(k))) {</a>
+<a name="ln1858">      break;</a>
+<a name="ln1859">    }</a>
+<a name="ln1860">    relative(start, &amp;k.pos);</a>
+<a name="ln1861">    kv_push(saved, k);</a>
+<a name="ln1862">    marktree_del_itr(b, itr, false);</a>
+<a name="ln1863">  }</a>
+<a name="ln1864"> </a>
+<a name="ln1865">  marktree_splice(b, start.row, start.col, size.row, size.col, 0, 0);</a>
+<a name="ln1866">  MTPos new = { new_row, new_col };</a>
+<a name="ln1867">  marktree_splice(b, new.row, new.col,</a>
+<a name="ln1868">                  0, 0, size.row, size.col);</a>
+<a name="ln1869"> </a>
+<a name="ln1870">  for (size_t i = 0; i &lt; kv_size(saved); i++) {</a>
+<a name="ln1871">    MTKey item = kv_A(saved, i);</a>
+<a name="ln1872">    unrelative(new, &amp;item.pos);</a>
+<a name="ln1873">    marktree_put_key(b, item);</a>
+<a name="ln1874">    if (mt_paired(item)) {</a>
+<a name="ln1875">      // other end might be later in `saved`, this will safely bail out then</a>
+<a name="ln1876">      marktree_restore_pair(b, item);</a>
+<a name="ln1877">    }</a>
+<a name="ln1878">  }</a>
+<a name="ln1879">  kv_destroy(saved);</a>
+<a name="ln1880">}</a>
+<a name="ln1881"> </a>
+<a name="ln1882">/// @param itr OPTIONAL. set itr to pos.</a>
+<a name="ln1883">MTKey marktree_lookup_ns(MarkTree *b, uint32_t ns, uint32_t id, bool end, MarkTreeIter *itr)</a>
+<a name="ln1884">{</a>
+<a name="ln1885">  return marktree_lookup(b, mt_lookup_id(ns, id, end), itr);</a>
+<a name="ln1886">}</a>
+<a name="ln1887"> </a>
+<a name="ln1888">static uint64_t pseudo_index(MTNode *x, int i)</a>
+<a name="ln1889">{</a>
+<a name="ln1890">  int off = MT_LOG2_BRANCH * x-&gt;level;</a>
+<a name="ln1891">  uint64_t index = 0;</a>
+<a name="ln1892"> </a>
+<a name="ln1893">  while (x) {</a>
+<a name="ln1894">    index |= (uint64_t)(i + 1) &lt;&lt; off;</a>
+<a name="ln1895">    off += MT_LOG2_BRANCH;</a>
+<a name="ln1896">    i = x-&gt;p_idx;</a>
+<a name="ln1897">    x = x-&gt;parent;</a>
+<a name="ln1898">  }</a>
+<a name="ln1899"> </a>
+<a name="ln1900">  return index;</a>
+<a name="ln1901">}</a>
+<a name="ln1902"> </a>
+<a name="ln1903">/// @param itr OPTIONAL. set itr to pos.</a>
+<a name="ln1904">/// if sloppy, two keys at the same _leaf_ node has the same index</a>
+<a name="ln1905">static uint64_t pseudo_index_for_id(MarkTree *b, uint64_t id, bool sloppy)</a>
+<a name="ln1906">{</a>
+<a name="ln1907">  MTNode *n = id2node(b, id);</a>
+<a name="ln1908">  if (n == NULL) {</a>
+<a name="ln1909">    return 0;  // a valid pseudo-index is never zero!</a>
+<a name="ln1910">  }</a>
+<a name="ln1911"> </a>
+<a name="ln1912">  int i = 0;</a>
+<a name="ln1913">  if (n-&gt;level || !sloppy) {</a>
+<a name="ln1914">    for (i = 0; i &lt; n-&gt;n; i++) {</a>
+<a name="ln1915">      if (mt_lookup_key(n-&gt;key[i]) == id) {</a>
+<a name="ln1916">        break;</a>
+<a name="ln1917">      }</a>
+<a name="ln1918">    }</a>
+<a name="ln1919">    assert(i &lt; n-&gt;n);</a>
+<a name="ln1920">    if (n-&gt;level) {</a>
+<a name="ln1921">      i += 1;  // internal key i comes after ptr[i]</a>
+<a name="ln1922">    }</a>
+<a name="ln1923">  }</a>
+<a name="ln1924"> </a>
+<a name="ln1925">  return pseudo_index(n, i);</a>
+<a name="ln1926">}</a>
+<a name="ln1927"> </a>
+<a name="ln1928">/// @param itr OPTIONAL. set itr to pos.</a>
+<a name="ln1929">MTKey marktree_lookup(MarkTree *b, uint64_t id, MarkTreeIter *itr)</a>
+<a name="ln1930">{</a>
+<a name="ln1931">  MTNode *n = id2node(b, id);</a>
+<a name="ln1932">  if (n == NULL) {</a>
+<a name="ln1933">    if (itr) {</a>
+<a name="ln1934">      itr-&gt;x = NULL;</a>
+<a name="ln1935">    }</a>
+<a name="ln1936">    return MT_INVALID_KEY;</a>
+<a name="ln1937">  }</a>
+<a name="ln1938">  int i = 0;</a>
+<a name="ln1939">  for (i = 0; i &lt; n-&gt;n; i++) {</a>
+<a name="ln1940">    if (mt_lookup_key(n-&gt;key[i]) == id) {</a>
+<a name="ln1941">      return marktree_itr_set_node(b, itr, n, i);</a>
+<a name="ln1942">    }</a>
+<a name="ln1943">  }</a>
+<a name="ln1944"> </a>
+<a name="ln1945">  abort();</a>
+<a name="ln1946">}</a>
+<a name="ln1947"> </a>
+<a name="ln1948">MTKey marktree_itr_set_node(MarkTree *b, MarkTreeIter *itr, MTNode *n, int i)</a>
+<a name="ln1949">{</a>
+<a name="ln1950">  MTKey key = n-&gt;key[i];</a>
+<a name="ln1951">  if (itr) {</a>
+<a name="ln1952">    itr-&gt;i = i;</a>
+<a name="ln1953">    itr-&gt;x = n;</a>
+<a name="ln1954">    itr-&gt;lvl = b-&gt;root-&gt;level - n-&gt;level;</a>
+<a name="ln1955">  }</a>
+<a name="ln1956">  while (n-&gt;parent != NULL) {</a>
+<a name="ln1957">    MTNode *p = n-&gt;parent;</a>
+<a name="ln1958">    i = n-&gt;p_idx;</a>
+<a name="ln1959">    assert(p-&gt;ptr[i] == n);</a>
+<a name="ln1960"> </a>
+<a name="ln1961">    if (itr) {</a>
+<a name="ln1962">      itr-&gt;s[b-&gt;root-&gt;level - p-&gt;level].i = i;</a>
+<a name="ln1963">    }</a>
+<a name="ln1964">    if (i &gt; 0) {</a>
+<a name="ln1965">      unrelative(p-&gt;key[i - 1].pos, &amp;key.pos);</a>
+<a name="ln1966">    }</a>
+<a name="ln1967">    n = p;</a>
+<a name="ln1968">  }</a>
+<a name="ln1969">  if (itr) {</a>
+<a name="ln1970">    marktree_itr_fix_pos(b, itr);</a>
+<a name="ln1971">  }</a>
+<a name="ln1972">  return key;</a>
+<a name="ln1973">}</a>
+<a name="ln1974"> </a>
+<a name="ln1975">MTPos marktree_get_altpos(MarkTree *b, MTKey mark, MarkTreeIter *itr)</a>
+<a name="ln1976">{</a>
+<a name="ln1977">  return marktree_get_alt(b, mark, itr).pos;</a>
+<a name="ln1978">}</a>
+<a name="ln1979"> </a>
+<a name="ln1980">MTKey marktree_get_alt(MarkTree *b, MTKey mark, MarkTreeIter *itr)</a>
+<a name="ln1981">{</a>
+<a name="ln1982">  MTKey end = MT_INVALID_KEY;</a>
+<a name="ln1983">  if (mt_paired(mark)) {</a>
+<a name="ln1984">    end = marktree_lookup_ns(b, mark.ns, mark.id, !mt_end(mark), itr);</a>
+<a name="ln1985">  }</a>
+<a name="ln1986">  return end;</a>
+<a name="ln1987">}</a>
+<a name="ln1988"> </a>
+<a name="ln1989">static void marktree_itr_fix_pos(MarkTree *b, MarkTreeIter *itr)</a>
+<a name="ln1990">{</a>
+<a name="ln1991">  itr-&gt;pos = (MTPos){ 0, 0 };</a>
+<a name="ln1992">  MTNode *x = b-&gt;root;</a>
+<a name="ln1993">  for (int lvl = 0; lvl &lt; itr-&gt;lvl; lvl++) {</a>
+<a name="ln1994">    itr-&gt;s[lvl].oldcol = itr-&gt;pos.col;</a>
+<a name="ln1995">    int i = itr-&gt;s[lvl].i;</a>
+<a name="ln1996">    if (i &gt; 0) {</a>
+<a name="ln1997">      compose(&amp;itr-&gt;pos, x-&gt;key[i - 1].pos);</a>
+<a name="ln1998">    }</a>
+<a name="ln1999">    assert(x-&gt;level);</a>
+<a name="ln2000">    x = x-&gt;ptr[i];</a>
+<a name="ln2001">  }</a>
+<a name="ln2002">  assert(x == itr-&gt;x);</a>
+<a name="ln2003">}</a>
+<a name="ln2004"> </a>
+<a name="ln2005">// for unit test</a>
+<a name="ln2006">void marktree_put_test(MarkTree *b, uint32_t ns, uint32_t id, int row, int col, bool right_gravity,</a>
+<a name="ln2007">                       int end_row, int end_col, bool end_right)</a>
+<a name="ln2008">{</a>
+<a name="ln2009">  MTKey key = { { row, col }, ns, id, 0,</a>
+<a name="ln2010">                mt_flags(right_gravity, 0), 0, NULL };</a>
+<a name="ln2011">  marktree_put(b, key, end_row, end_col, end_right);</a>
+<a name="ln2012">}</a>
+<a name="ln2013"> </a>
+<a name="ln2014">// for unit test</a>
+<a name="ln2015">bool mt_right_test(MTKey key)</a>
+<a name="ln2016">{</a>
+<a name="ln2017">  return mt_right(key);</a>
+<a name="ln2018">}</a>
+<a name="ln2019"> </a>
+<a name="ln2020">// for unit test</a>
+<a name="ln2021">void marktree_del_pair_test(MarkTree *b, uint32_t ns, uint32_t id)</a>
+<a name="ln2022">{</a>
+<a name="ln2023">  MarkTreeIter itr[1];</a>
+<a name="ln2024">  marktree_lookup_ns(b, ns, id, false, itr);</a>
+<a name="ln2025"> </a>
+<a name="ln2026">  uint64_t other = marktree_del_itr(b, itr, false);</a>
+<a name="ln2027">  assert(other);</a>
+<a name="ln2028">  marktree_lookup(b, other, itr);</a>
+<a name="ln2029">  marktree_del_itr(b, itr, false);</a>
+<a name="ln2030">}</a>
+<a name="ln2031"> </a>
+<a name="ln2032">void marktree_check(MarkTree *b)</a>
+<a name="ln2033">{</a>
+<a name="ln2034">#ifndef NDEBUG</a>
+<a name="ln2035">  if (b-&gt;root == NULL) {</a>
+<a name="ln2036">    assert(b-&gt;n_keys == 0);</a>
+<a name="ln2037">    assert(b-&gt;n_nodes == 0);</a>
+<a name="ln2038">    assert(b-&gt;id2node == NULL || map_size(b-&gt;id2node) == 0);</a>
+<a name="ln2039">    return;</a>
+<a name="ln2040">  }</a>
+<a name="ln2041"> </a>
+<a name="ln2042">  MTPos dummy;</a>
+<a name="ln2043">  bool last_right = false;</a>
+<a name="ln2044">  size_t nkeys = marktree_check_node(b, b-&gt;root, &amp;dummy, &amp;last_right);</a>
+<a name="ln2045">  assert(b-&gt;n_keys == nkeys);</a>
+<a name="ln2046">  assert(b-&gt;n_keys == map_size(b-&gt;id2node));</a>
+<a name="ln2047">#else</a>
+<a name="ln2048">  // Do nothing, as assertions are required</a>
+<a name="ln2049">  (void)b;</a>
+<a name="ln2050">#endif</a>
+<a name="ln2051">}</a>
+<a name="ln2052"> </a>
+<a name="ln2053">#ifndef NDEBUG</a>
+<a name="ln2054">size_t marktree_check_node(MarkTree *b, MTNode *x, MTPos *last, bool *last_right)</a>
+<a name="ln2055">{</a>
+<a name="ln2056">  assert(x-&gt;n &lt;= 2 * T - 1);</a>
+<a name="ln2057">  // TODO(bfredl): too strict if checking &quot;in repair&quot; post-delete tree.</a>
+<a name="ln2058">  assert(x-&gt;n &gt;= (x != b-&gt;root ? T - 1 : 0));</a>
+<a name="ln2059">  size_t n_keys = (size_t)x-&gt;n;</a>
+<a name="ln2060"> </a>
+<a name="ln2061">  for (int i = 0; i &lt; x-&gt;n; i++) {</a>
+<a name="ln2062">    if (x-&gt;level) {</a>
+<a name="ln2063">      n_keys += marktree_check_node(b, x-&gt;ptr[i], last, last_right);</a>
+<a name="ln2064">    } else {</a>
+<a name="ln2065">      *last = (MTPos) { 0, 0 };</a>
+<a name="ln2066">    }</a>
+<a name="ln2067">    if (i &gt; 0) {</a>
+<a name="ln2068">      unrelative(x-&gt;key[i - 1].pos, last);</a>
+<a name="ln2069">    }</a>
+<a name="ln2070">    assert(pos_leq(*last, x-&gt;key[i].pos));</a>
+<a name="ln2071">    if (last-&gt;row == x-&gt;key[i].pos.row &amp;&amp; last-&gt;col == x-&gt;key[i].pos.col) {</a>
+<a name="ln2072">      assert(!*last_right || mt_right(x-&gt;key[i]));</a>
+<a name="ln2073">    }</a>
+<a name="ln2074">    *last_right = mt_right(x-&gt;key[i]);</a>
+<a name="ln2075">    assert(x-&gt;key[i].pos.col &gt;= 0);</a>
+<a name="ln2076">    assert(pmap_get(uint64_t)(b-&gt;id2node, mt_lookup_key(x-&gt;key[i])) == x);</a>
+<a name="ln2077">  }</a>
+<a name="ln2078"> </a>
+<a name="ln2079">  if (x-&gt;level) {</a>
+<a name="ln2080">    n_keys += marktree_check_node(b, x-&gt;ptr[x-&gt;n], last, last_right);</a>
+<a name="ln2081">    unrelative(x-&gt;key[x-&gt;n - 1].pos, last);</a>
+<a name="ln2082"> </a>
+<a name="ln2083">    for (int i = 0; i &lt; x-&gt;n + 1; i++) {</a>
+<a name="ln2084">      assert(x-&gt;ptr[i]-&gt;parent == x);</a>
+<a name="ln2085">      assert(x-&gt;ptr[i]-&gt;p_idx == i);</a>
+<a name="ln2086">      assert(x-&gt;ptr[i]-&gt;level == x-&gt;level - 1);</a>
+<a name="ln2087">      // PARANOIA: check no double node ref</a>
+<a name="ln2088">      for (int j = 0; j &lt; i; j++) {</a>
+<a name="ln2089">        assert(x-&gt;ptr[i] != x-&gt;ptr[j]);</a>
+<a name="ln2090">      }</a>
+<a name="ln2091">    }</a>
+<a name="ln2092">  } else if (x-&gt;n &gt; 0) {</a>
+<a name="ln2093">    *last = x-&gt;key[x-&gt;n - 1].pos;</a>
+<a name="ln2094">  }</a>
+<a name="ln2095">  return n_keys;</a>
+<a name="ln2096">}</a>
+<a name="ln2097"> </a>
+<a name="ln2098">bool marktree_check_intersections(MarkTree *b)</a>
+<a name="ln2099">{</a>
+<a name="ln2100">  if (!b-&gt;root) {</a>
+<a name="ln2101">    return true;</a>
+<a name="ln2102">  }</a>
+<a name="ln2103">  PMap(ptr_t) checked = MAP_INIT;</a>
+<a name="ln2104"> </a>
+<a name="ln2105">  // 1. move x-&gt;intersect to checked[x] and reinit x-&gt;intersect</a>
+<a name="ln2106">  mt_recurse_nodes(b-&gt;root, &amp;checked);</a>
+<a name="ln2107"> </a>
+<a name="ln2108">  // 2. iterate over all marks. for each START mark of a pair,</a>
+<a name="ln2109">  // intersect the nodes between the pair</a>
+<a name="ln2110">  MarkTreeIter itr[1];</a>
+<a name="ln2111">  marktree_itr_first(b, itr);</a>
+<a name="ln2112">  while (true) {</a>
+<a name="ln2113">    MTKey mark = marktree_itr_current(itr);</a>
+<a name="ln2114">    if (mark.pos.row &lt; 0) {</a>
+<a name="ln2115">      break;</a>
+<a name="ln2116">    }</a>
+<a name="ln2117"> </a>
+<a name="ln2118">    if (mt_start(mark)) {</a>
+<a name="ln2119">      MarkTreeIter start_itr[1];</a>
+<a name="ln2120">      MarkTreeIter end_itr[1];</a>
+<a name="ln2121">      uint64_t end_id = mt_lookup_id(mark.ns, mark.id, true);</a>
+<a name="ln2122">      MTKey k = marktree_lookup(b, end_id, end_itr);</a>
+<a name="ln2123">      if (k.pos.row &gt;= 0) {</a>
+<a name="ln2124">        *start_itr = *itr;</a>
+<a name="ln2125">        marktree_intersect_pair(b, mt_lookup_key(mark), start_itr, end_itr, false);</a>
+<a name="ln2126">      }</a>
+<a name="ln2127">    }</a>
+<a name="ln2128"> </a>
+<a name="ln2129">    marktree_itr_next(b, itr);</a>
+<a name="ln2130">  }</a>
+<a name="ln2131"> </a>
+<a name="ln2132">  // 3. for each node check if the recreated intersection</a>
+<a name="ln2133">  // matches the old checked[x] intersection.</a>
+<a name="ln2134">  bool status = mt_recurse_nodes_compare(b-&gt;root, &amp;checked);</a>
+<a name="ln2135"> </a>
+<a name="ln2136">  uint64_t *val;</a>
+<a name="ln2137">  map_foreach_value(&amp;checked, val, {</a>
+<a name="ln2138">    xfree(val);</a>
+<a name="ln2139">  });</a>
+<a name="ln2140">  map_destroy(ptr_t, &amp;checked);</a>
+<a name="ln2141"> </a>
+<a name="ln2142">  return status;</a>
+<a name="ln2143">}</a>
+<a name="ln2144"> </a>
+<a name="ln2145">void mt_recurse_nodes(MTNode *x, PMap(ptr_t) *checked)</a>
+<a name="ln2146">{</a>
+<a name="ln2147">  if (kv_size(x-&gt;intersect)) {</a>
+<a name="ln2148">    kvi_push(x-&gt;intersect, (uint64_t)-1);  // sentinel</a>
+<a name="ln2149">    uint64_t *val;</a>
+<a name="ln2150">    if (x-&gt;intersect.items == x-&gt;intersect.init_array) {</a>
+<a name="ln2151">      val = xmemdup(x-&gt;intersect.items, x-&gt;intersect.size * sizeof(*x-&gt;intersect.items));</a>
+<a name="ln2152">    } else {</a>
+<a name="ln2153">      val = x-&gt;intersect.items;</a>
+<a name="ln2154">    }</a>
+<a name="ln2155">    pmap_put(ptr_t)(checked, x, val);</a>
+<a name="ln2156">    kvi_init(x-&gt;intersect);</a>
+<a name="ln2157">  }</a>
+<a name="ln2158"> </a>
+<a name="ln2159">  if (x-&gt;level) {</a>
+<a name="ln2160">    for (int i = 0; i &lt; x-&gt;n + 1; i++) {</a>
+<a name="ln2161">      mt_recurse_nodes(x-&gt;ptr[i], checked);</a>
+<a name="ln2162">    }</a>
+<a name="ln2163">  }</a>
+<a name="ln2164">}</a>
+<a name="ln2165"> </a>
+<a name="ln2166">bool mt_recurse_nodes_compare(MTNode *x, PMap(ptr_t) *checked)</a>
+<a name="ln2167">{</a>
+<a name="ln2168">  uint64_t *ref = pmap_get(ptr_t)(checked, x);</a>
+<a name="ln2169">  if (ref != NULL) {</a>
+<a name="ln2170">    for (size_t i = 0;; i++) {</a>
+<a name="ln2171">      if (ref[i] == (uint64_t)-1) {</a>
+<a name="ln2172">        if (i != kv_size(x-&gt;intersect)) {</a>
+<a name="ln2173">          return false;</a>
+<a name="ln2174">        }</a>
+<a name="ln2175"> </a>
+<a name="ln2176">        break;</a>
+<a name="ln2177">      } else {</a>
+<a name="ln2178">        if (kv_size(x-&gt;intersect) &lt;= i || ref[i] != kv_A(x-&gt;intersect, i)) {</a>
+<a name="ln2179">          return false;</a>
+<a name="ln2180">        }</a>
+<a name="ln2181">      }</a>
+<a name="ln2182">    }</a>
+<a name="ln2183">  } else {</a>
+<a name="ln2184">    if (kv_size(x-&gt;intersect)) {</a>
+<a name="ln2185">      return false;</a>
+<a name="ln2186">    }</a>
+<a name="ln2187">  }</a>
+<a name="ln2188"> </a>
+<a name="ln2189">  if (x-&gt;level) {</a>
+<a name="ln2190">    for (int i = 0; i &lt; x-&gt;n + 1; i++) {</a>
+<a name="ln2191">      if (!mt_recurse_nodes_compare(x-&gt;ptr[i], checked)) {</a>
+<a name="ln2192">        return false;</a>
+<a name="ln2193">      }</a>
+<a name="ln2194">    }</a>
+<a name="ln2195">  }</a>
+<a name="ln2196"> </a>
+<a name="ln2197">  return true;</a>
+<a name="ln2198">}</a>
+<a name="ln2199"> </a>
+<a name="ln2200">#endif</a>
+<a name="ln2201"> </a>
+<a name="ln2202">// TODO(bfredl): kv_print</a>
+<a name="ln2203">#define GA_PUT(x) ga_concat(ga, (char *)(x))</a>
+<a name="ln2204">#define GA_PRINT(fmt, ...) snprintf(buf, sizeof(buf), fmt, __VA_ARGS__); \</a>
+<a name="ln2205">  GA_PUT(buf);</a>
+<a name="ln2206"> </a>
+<a name="ln2207">String mt_inspect(MarkTree *b, bool keys, bool dot)</a>
+<a name="ln2208">{</a>
+<a name="ln2209">  garray_T ga[1];</a>
+<a name="ln2210">  ga_init(ga, (int)sizeof(char), 80);</a>
+<a name="ln2211">  MTPos p = { 0, 0 };</a>
+<a name="ln2212">  if (b-&gt;root) {</a>
+<a name="ln2213">    if (dot) {</a>
+<a name="ln2214">      GA_PUT(&quot;digraph D {\n\n&quot;);</a>
+<a name="ln2215">      mt_inspect_dotfile_node(b, ga, b-&gt;root, p, NULL);</a>
+<a name="ln2216">      GA_PUT(&quot;\n}&quot;);</a>
+<a name="ln2217">    } else {</a>
+<a name="ln2218">      mt_inspect_node(b, ga, keys, b-&gt;root, p);</a>
+<a name="ln2219">    }</a>
+<a name="ln2220">  }</a>
+<a name="ln2221">  return ga_take_string(ga);</a>
+<a name="ln2222">}</a>
+<a name="ln2223"> </a>
+<a name="ln2224">void mt_inspect_node(MarkTree *b, garray_T *ga, bool keys, MTNode *n, MTPos off)</a>
+<a name="ln2225">{</a>
+<a name="ln2226">  static char buf[1024];</a>
+<a name="ln2227">  GA_PUT(&quot;[&quot;);</a>
+<a name="ln2228">  if (keys &amp;&amp; kv_size(n-&gt;intersect)) {</a>
+<a name="ln2229">    for (size_t i = 0; i &lt; kv_size(n-&gt;intersect); i++) {</a>
+<a name="ln2230">      GA_PUT(i == 0 ? &quot;{&quot; : &quot;;&quot;);</a>
+<a name="ln2231">      // GA_PRINT(&quot;%&quot;PRIu64, kv_A(n-&gt;intersect, i));</a>
+<a name="ln2232">      GA_PRINT(&quot;%&quot; PRIu64, mt_dbg_id(kv_A(n-&gt;intersect, i)));</a>
+<a name="ln2233">    }</a>
+<a name="ln2234">    GA_PUT(&quot;},&quot;);</a>
+<a name="ln2235">  }</a>
+<a name="ln2236">  if (n-&gt;level) {</a>
+<a name="ln2237">    mt_inspect_node(b, ga, keys, n-&gt;ptr[0], off);</a>
+<a name="ln2238">  }</a>
+<a name="ln2239">  for (int i = 0; i &lt; n-&gt;n; i++) {</a>
+<a name="ln2240">    MTPos p = n-&gt;key[i].pos;</a>
+<a name="ln2241">    unrelative(off, &amp;p);</a>
+<a name="ln2242">    GA_PRINT(&quot;%d/%d&quot;, p.row, p.col);</a>
+<a name="ln2243">    if (keys) {</a>
+<a name="ln2244">      MTKey key = n-&gt;key[i];</a>
+<a name="ln2245">      GA_PUT(&quot;:&quot;);</a>
+<a name="ln2246">      if (mt_start(key)) {</a>
+<a name="ln2247">        GA_PUT(&quot;&lt;&quot;);</a>
+<a name="ln2248">      }</a>
+<a name="ln2249">      // GA_PRINT(&quot;%&quot;PRIu64, mt_lookup_id(key.ns, key.id, false));</a>
+<a name="ln2250">      GA_PRINT(&quot;%&quot; PRIu32, key.id);</a>
+<a name="ln2251">      if (mt_end(key)) {</a>
+<a name="ln2252">        GA_PUT(&quot;&gt;&quot;);</a>
+<a name="ln2253">      }</a>
+<a name="ln2254">    }</a>
+<a name="ln2255">    if (n-&gt;level) {</a>
+<a name="ln2256">      mt_inspect_node(b, ga, keys, n-&gt;ptr[i + 1], p);</a>
+<a name="ln2257">    } else {</a>
+<a name="ln2258">      ga_concat(ga, &quot;,&quot;);</a>
+<a name="ln2259">    }</a>
+<a name="ln2260">  }</a>
+<a name="ln2261">  ga_concat(ga, &quot;]&quot;);</a>
+<a name="ln2262">}</a>
+<a name="ln2263"> </a>
+<a name="ln2264">void mt_inspect_dotfile_node(MarkTree *b, garray_T *ga, MTNode *n, MTPos off, char *parent)</a>
+<a name="ln2265">{</a>
+<a name="ln2266">  static char buf[1024];</a>
+<a name="ln2267">  char namebuf[64];</a>
+<a name="ln2268">  if (parent != NULL) {</a>
+<a name="ln2269">    snprintf(namebuf, sizeof namebuf, &quot;%s_%c%d&quot;, parent, 'a' + n-&gt;level, n-&gt;p_idx);</a>
+<a name="ln2270">  } else {</a>
+<a name="ln2271">    snprintf(namebuf, sizeof namebuf, &quot;MTNode&quot;);</a>
+<a name="ln2272">  }</a>
+<a name="ln2273"> </a>
+<a name="ln2274">  GA_PRINT(&quot;  %s[shape=plaintext, label=&lt;\n&quot;, namebuf);</a>
+<a name="ln2275">  GA_PUT(&quot;    &lt;table border='0' cellborder='1' cellspacing='0'&gt;\n&quot;);</a>
+<a name="ln2276">  if (kv_size(n-&gt;intersect)) {</a>
+<a name="ln2277">    GA_PUT(&quot;    &lt;tr&gt;&lt;td&gt;&quot;);</a>
+<a name="ln2278">    for (size_t i = 0; i &lt; kv_size(n-&gt;intersect); i++) {</a>
+<a name="ln2279">      if (i &gt; 0) {</a>
+<a name="ln2280">        GA_PUT(&quot;, &quot;);</a>
+<a name="ln2281">      }</a>
+<a name="ln2282">      GA_PRINT(&quot;%&quot; PRIu64, mt_dbg_id(kv_A(n-&gt;intersect, i)));</a>
+<a name="ln2283">    }</a>
+<a name="ln2284">    GA_PUT(&quot;&lt;/td&gt;&lt;/tr&gt;\n&quot;);</a>
+<a name="ln2285">  }</a>
+<a name="ln2286"> </a>
+<a name="ln2287">  GA_PUT(&quot;    &lt;tr&gt;&lt;td&gt;&quot;);</a>
+<a name="ln2288">  for (int i = 0; i &lt; n-&gt;n; i++) {</a>
+<a name="ln2289">    MTKey k = n-&gt;key[i];</a>
+<a name="ln2290">    if (i &gt; 0) {</a>
+<a name="ln2291">      GA_PUT(&quot;, &quot;);</a>
+<a name="ln2292">    }</a>
+<a name="ln2293">    GA_PRINT(&quot;%d&quot;, k.id);</a>
+<a name="ln2294">    if (mt_paired(k)) {</a>
+<a name="ln2295">      GA_PUT(mt_end(k) ? &quot;e&quot; : &quot;s&quot;);</a>
+<a name="ln2296">    }</a>
+<a name="ln2297">  }</a>
+<a name="ln2298">  GA_PUT(&quot;&lt;/td&gt;&lt;/tr&gt;\n&quot;);</a>
+<a name="ln2299">  GA_PUT(&quot;    &lt;/table&gt;\n&quot;);</a>
+<a name="ln2300">  GA_PUT(&quot;&gt;];\n&quot;);</a>
+<a name="ln2301">  if (parent) {</a>
+<a name="ln2302">    GA_PRINT(&quot;  %s -&gt; %s\n&quot;, parent, namebuf);</a>
+<a name="ln2303">  }</a>
+<a name="ln2304">  if (n-&gt;level) {</a>
+<a name="ln2305">    mt_inspect_dotfile_node(b, ga, n-&gt;ptr[0], off, namebuf);</a>
+<a name="ln2306">  }</a>
+<a name="ln2307">  for (int i = 0; i &lt; n-&gt;n; i++) {</a>
+<a name="ln2308">    MTPos p = n-&gt;key[i].pos;</a>
+<a name="ln2309">    unrelative(off, &amp;p);</a>
+<a name="ln2310">    if (n-&gt;level) {</a>
+<a name="ln2311">      mt_inspect_dotfile_node(b, ga, n-&gt;ptr[i + 1], p, namebuf);</a>
+<a name="ln2312">    }</a>
+<a name="ln2313">  }</a>
+<a name="ln2314">}</a>
 </code></pre>
 <div class="balloon" rel="222"><p><span style="font-size:18px">&uarr;</span> <a href="https://pvs-studio.com/en/docs/warnings/v1086/" target="_blank">V1086</a> A call of the 'memcpy' function will lead to underflow of the buffer 'z-&gt;key'.</p></div>
 <link rel="stylesheet" href="highlight.css">
