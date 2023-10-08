@@ -28,7 +28,6 @@ log_error() {
 require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
 CI_TARGET=${CI_TARGET:-$(basename "${0%.sh}")}
-MAKE_CMD=${MAKE_CMD:-"make -j2"}
 GIT_NAME=${GIT_NAME:-marvim}
 GIT_EMAIL=${GIT_EMAIL:-marvim@users.noreply.github.com}
 
