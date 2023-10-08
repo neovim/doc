@@ -14,7 +14,7 @@ generate_clang_report() {
   mkdir -p build/clang-report
 
   # Compile deps
-  ${MAKE_CMD} deps
+  make deps
 
   # Generate report
   if "${SCAN_BUILD:-scan-build}" \
@@ -23,7 +23,7 @@ generate_clang_report() {
       --exclude "src/cjson/" \
       --exclude "src/xdiff/" \
       -o build/clang-report \
-      ${MAKE_CMD} \
+      make \
       | tee ${BUILD_DIR}/scan-build.out
   then
     scan_build_result=no-warnings
