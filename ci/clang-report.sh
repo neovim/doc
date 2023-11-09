@@ -16,11 +16,13 @@ generate_clang_report() {
   make deps
 
   # Generate report
-  if "${SCAN_BUILD:-scan-build}" \
+  if scan-build \
       --status-bugs \
       --html-title="Neovim Static Analysis" \
       --exclude "src/cjson/" \
       --exclude "src/xdiff/" \
+      --exclude "src/klib/" \
+      --exclude "src/mpack/" \
       -o build/clang-report \
       make \
       | tee ${BUILD_DIR}/scan-build.out
