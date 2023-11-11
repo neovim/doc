@@ -30,6 +30,9 @@ require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 CI_TARGET=${CI_TARGET:-$(basename "${0%.sh}")}
 GIT_NAME=${GIT_NAME:-marvim}
 GIT_EMAIL=${GIT_EMAIL:-marvim@users.noreply.github.com}
+DOC_DIR=${DOC_DIR:-${BUILD_DIR}/build/doc}
+DOC_REPO=${DOC_REPO:-neovim/doc}
+DOC_BRANCH=${DOC_BRANCH:-gh-pages}
 
 git_truncate() {
   local branch="${1}"

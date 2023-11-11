@@ -7,10 +7,6 @@ source "$BUILD_DIR/ci/common/common.sh"
 
 require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
-DOC_DIR=${DOC_DIR:-${BUILD_DIR}/build/doc}
-DOC_REPO=${DOC_REPO:-neovim/doc}
-DOC_BRANCH=${DOC_BRANCH:-gh-pages}
-
 # Trim the https://github.com/neovim/doc/ repository history, else it gets huge
 # and slow to clone.  We don't care about the history of the `gh-pages` branch.
 try_truncate_history() {
