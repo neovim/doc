@@ -11,7 +11,6 @@ This repo contains automation scripts and CI configuration to run the scripts.
         - [user/ docs](https://neovim.io/doc/user)
     - Build reports:
         - [Clang report](https://neovim.io/doc/reports/clang)
-        - [PVS-studio report](https://neovim.io/doc/reports/pvs)
         - [Vimpatch report](https://neovim.io/doc/reports/vimpatch)
 
 ## Run Locally
