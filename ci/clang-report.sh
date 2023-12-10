@@ -23,6 +23,7 @@ generate_clang_report() {
       --exclude "src/xdiff/" \
       --exclude "src/klib/" \
       --exclude "src/mpack/" \
+      --exclude "src/termkey/" \
       -o build/clang-report \
       make \
       | tee ${BUILD_DIR}/scan-build.out
