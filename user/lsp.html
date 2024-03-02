@@ -346,7 +346,7 @@ Each response handler has this signature:<pre>function(err, result, ctx, config)
 </div><div class="help-li" style=""> <code>{ctx}</code>     (table) Table of calling state associated with the
                     handler, with these keys:
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{method}</code>  (string) <a href="lsp.html#lsp-method">lsp-method</a> name.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{client_id}</code> (number) <a href="lsp.html#vim.lsp.client">vim.lsp.client</a> identifier.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{client_id}</code> (number) <a href="lsp.html#vim.lsp.Client">vim.lsp.Client</a> identifier.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{bufnr}</code>   (Buffer) Buffer handle.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{params}</code>  (table|nil) Request parameters table.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{version}</code> (number) Document version at time of
@@ -513,38 +513,6 @@ LSP response shape:
                                                                 <code id="lsp-notification" class="help-tag-right"><a href="#lsp-notification">lsp-notification</a></code>
 LSP notification shape:
 <a href="https://microsoft.github.io/language-server-protocol/specifications/specification-current/#notificationMessage">https://microsoft.github.io/language-server-protocol/specifications/specification-current/#notificationMessage</a>
-
-</div>
-<div class="help-para">
-                                                                <code id="lsp-on-list-handler" class="help-tag-right"><a href="#lsp-on-list-handler">lsp-on-list-handler</a></code>
-
-</div>
-<div class="help-para">
-<code>on_list</code> receives a table with:
-
-</div>
-<div class="help-para">
-<div class="help-li" style=""> <code>items</code> table[], structured like <a href="builtin.html#setqflist-what">setqflist-what</a>
-</div><div class="help-li" style=""> <code>title</code> string, title for the list.
-</div><div class="help-li" style=""> <code>context</code> table|nil. <code>ctx</code> from <a href="lsp.html#lsp-handler">lsp-handler</a>
-</div>
-</div>
-<div class="help-para">
-This table can be used with vim.fn.setqflist or vim.fn.setloclist. E.g.:
-<pre><code class="language-lua">local function on_list(options)
-  vim.fn.setqflist({}, ' ', options)
-  vim.api.nvim_command('cfirst')
-end
-vim.lsp.buf.definition{on_list=on_list}
-vim.lsp.buf.references(nil, {on_list=on_list})</code></pre>
-
-</div>
-<div class="help-para">
-If you prefer loclist do something like this:
-<pre><code class="language-lua">local function on_list(options)
-  vim.fn.setloclist(0, {}, ' ', options)
-  vim.api.nvim_command('lopen')
-end</code></pre>
 
 </div>
 <div class="help-para">
@@ -752,7 +720,7 @@ LspNotify                                                          <code id="Lsp
 <div class="help-para">
 LspProgress                                                       <code id="LspProgress" class="help-tag-right"><a href="#LspProgress">LspProgress</a></code>
     Upon receipt of a progress notification from the server. Notifications can
-    be polled from a <code>progress</code> ring buffer of a <a href="lsp.html#vim.lsp.client">vim.lsp.client</a> or use
+    be polled from a <code>progress</code> ring buffer of a <a href="lsp.html#vim.lsp.Client">vim.lsp.Client</a> or use
     <a href="lsp.html#vim.lsp.status()">vim.lsp.status()</a> to get an aggregate message
 
 </div>
@@ -788,7 +756,7 @@ LspRequest                                                        <code id="LspR
 </div>
 <div class="help-para">
     When used from Lua, the client ID, request ID, and request are sent in
-    the "data" table. See <code>{requests}</code> in <a href="lsp.html#vim.lsp.client">vim.lsp.client</a> for details on the
+    the "data" table. See <code>{requests}</code> in <a href="lsp.html#vim.lsp.Client">vim.lsp.Client</a> for details on the
     <code>{request}</code> value. If the request type is <code>complete</code>, the request will be
     deleted from the client's pending requests table immediately after
     calling the event's callbacks. Example:<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspRequest', {
@@ -956,79 +924,6 @@ buf_request_sync(<code>{bufnr}</code>, <code>{method}</code>, <code>{params}</co
 
 </div>
 <div class="help-para">
-client                                                        <code id="vim.lsp.client" class="help-tag-right"><a href="#vim.lsp.client">vim.lsp.client</a></code>
-    LSP client object. You can get an active client object via
-    <a href="lsp.html#vim.lsp.get_client_by_id()">vim.lsp.get_client_by_id()</a> or <a href="lsp.html#vim.lsp.get_clients()">vim.lsp.get_clients()</a>.
-<div class="help-li" style=""> Methods:
-</div><div class="help-li" style="margin-left: 3rem;"> request(method, params, [handler], bufnr) Sends a request to the
-        server. This is a thin wrapper around <code>{client.rpc.request}</code> with some
-        additional checking. If <code>{handler}</code> is not specified, If one is not
-        found there, then an error will occur. Returns: <code>{status}</code>,
-        <code>{[client_id]}</code>. <code>{status}</code> is a boolean indicating if the notification
-        was successful. If it is <code>false</code>, then it will always be <code>false</code> (the
-        client has shutdown). If <code>{status}</code> is <code>true</code>, the function returns
-        <code>{request_id}</code> as the second result. You can use this with
-        <code>client.cancel_request(request_id)</code> to cancel the request.
-</div><div class="help-li" style="margin-left: 3rem;"> request_sync(method, params, timeout_ms, bufnr) Sends a request to the
-        server and synchronously waits for the response. This is a wrapper
-        around <code>{client.request}</code> Returns: { err=err, result=result }, a
-        dictionary, where <code>err</code> and <code>result</code> come from the <a href="lsp.html#lsp-handler">lsp-handler</a>. On
-        timeout, cancel or error, returns <code>(nil, err)</code> where <code>err</code> is a string
-        describing the failure reason. If the request was unsuccessful returns
-        <code>nil</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> notify(method, params) Sends a notification to an LSP server. Returns:
-        a boolean to indicate if the notification was successful. If it is
-        false, then it will always be false (the client has shutdown).
-</div><div class="help-li" style="margin-left: 3rem;"> cancel_request(id) Cancels a request with a given request id. Returns:
-        same as <code>notify()</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> stop([force]) Stops a client, optionally with force. By default, it
-        will just ask the server to shutdown without force. If you request to
-        stop a client which has previously been requested to shutdown, it will
-        automatically escalate and force shutdown.
-</div><div class="help-li" style="margin-left: 3rem;"> is_stopped() Checks whether a client is stopped. Returns: true if the
-        client is fully stopped.
-</div><div class="help-li" style="margin-left: 3rem;"> on_attach(client, bufnr) Runs the on_attach function from the client's
-        config if it was defined. Useful for buffer-local setup.
-</div><div class="help-li" style="margin-left: 3rem;"> supports_method(method, [opts]): boolean Checks if a client supports a
-        given method. Always returns true for unknown off-spec methods. [opts]
-        is a optional <code>{bufnr?: integer}</code> table. Some language server
-        capabilities can be file specific.
-</div><div class="help-li" style=""> Members
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{id}</code> (number): The id allocated to the client.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{name}</code> (string): If a name is specified on creation, that will be
-        used. Otherwise it is just the client id. This is used for logs and
-        messages.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{rpc}</code> (table): RPC client object, for low level interaction with the
-        client. See <a href="lsp.html#vim.lsp.rpc.start()">vim.lsp.rpc.start()</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{offset_encoding}</code> (string): The encoding used for communicating with
-        the server. You can modify this in the <code>config</code>'s <code>on_init</code> method
-        before text is sent to the server.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{handlers}</code> (table): The handlers used by the client as described in
-        <a href="lsp.html#lsp-handler">lsp-handler</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{commands}</code> (table): Table of command name to function which is called
-        if any LSP action (code action, code lenses, ...) triggers the
-        command. Client commands take precedence over the global command
-        registry.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{requests}</code> (table): The current pending requests in flight to the
-        server. Entries are key-value pairs with the key being the request ID
-        while the value is a table with <code>type</code>, <code>bufnr</code>, and <code>method</code>
-        key-value pairs. <code>type</code> is either "pending" for an active request, or
-        "cancel" for a cancel request. It will be "complete" ephemerally while
-        executing <a href="lsp.html#LspRequest">LspRequest</a> autocmds when replies are received from the
-        server.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{config}</code> (table): Reference of the table that was passed by the user
-        to <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{server_capabilities}</code> (table): Response from the server sent on
-        <code>initialize</code> describing the server's capabilities.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{progress}</code> A ring buffer (<a href="lua.html#vim.ringbuf()">vim.ringbuf()</a>) containing progress
-        messages sent by the server.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{settings}</code> Map with language server specific settings. See <code>{config}</code> in
-        <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{flags}</code> A table with flags for the client. See <code>{config}</code> in
-        <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>
-</div>
-</div>
-<div class="help-para">
 client_is_stopped(<code>{client_id}</code>)                   <code id="vim.lsp.client_is_stopped()" class="help-tag-right"><a href="#vim.lsp.client_is_stopped()">vim.lsp.client_is_stopped()</a></code>
     Checks whether a client is stopped.
 
@@ -1086,10 +981,9 @@ formatexpr(<code>{opts}</code>)                                      <code id="v
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{opts}</code>  (<code>table</code>) options for customizing the formatting expression
-                which takes the following optional keys:
-</div><div class="help-li" style="margin-left: 3rem;"> timeout_ms (default 500ms). The timeout period for the
-                  formatting request.
+<div class="help-li" style=""> <code>{opts}</code>  (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{timeout_ms}</code> (<code>integer</code>, default: 500ms) The timeout period
+                  for the formatting request..
 </div>
 </div>
 <div class="help-para">
@@ -1121,7 +1015,7 @@ get_client_by_id(<code>{client_id}</code>)                     <code id="vim.lsp
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return:</div>
-        (<code>lsp.Client?</code>) client rpc object
+        (<code>vim.lsp.Client?</code>) client rpc object
 
 </div>
 <div class="help-para">
@@ -1131,19 +1025,19 @@ get_clients(<code>{filter}</code>)                                  <code id="vi
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{filter}</code>  (<code>table?</code>) A table with key-value pairs used to filter the
-                  returned clients. The available keys are:
-</div><div class="help-li" style="margin-left: 3rem;"> id (number): Only return clients with the given id
-</div><div class="help-li" style="margin-left: 3rem;"> bufnr (number): Only return clients attached to this
+<div class="help-li" style=""> <code>{filter}</code>  (<code>table?</code>) Key-value pairs used to filter the returned
+                  clients.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{id}</code>? (<code>integer</code>) Only return clients with the given id
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{bufnr}</code>? (<code>integer</code>) Only return clients attached to this
                     buffer
-</div><div class="help-li" style="margin-left: 3rem;"> name (string): Only return clients with the given name
-</div><div class="help-li" style="margin-left: 3rem;"> method (string): Only return clients supporting the given
-                    method
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{name}</code>? (<code>string</code>) Only return clients with the given name
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{method}</code>? (<code>string</code>) Only return clients supporting the
+                    given method
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return:</div>
-        (<code>lsp.Client[]</code>) List of <a href="lsp.html#vim.lsp.client">vim.lsp.client</a> objects
+        (<code>vim.lsp.Client[]</code>) List of <a href="lsp.html#vim.lsp.Client">vim.lsp.Client</a> objects
 
 </div>
 <div class="help-para">
@@ -1255,15 +1149,16 @@ start(<code>{config}</code>, <code>{opts}</code>)                               
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{config}</code>  (<code>lsp.ClientConfig</code>) Same configuration as documented in
-                  <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>
-</div><div class="help-li" style=""> <code>{opts}</code>    (<code>lsp.StartOpts?</code>) Optional keyword arguments:
-</div><div class="help-li" style="margin-left: 3rem;"> reuse_client (fun(client: client, config: table): boolean)
-                    Predicate used to decide if a client should be re-used.
-                    Used on all running clients. The default implementation
-                    re-uses a client if name and root_dir matches.
-</div><div class="help-li" style="margin-left: 3rem;"> bufnr (number) Buffer handle to attach to if starting or
-                    re-using a client (0 for current).
+<div class="help-li" style=""> <code>{config}</code>  (<code>vim.lsp.ClientConfig</code>) Configuration for the server. See
+                  <a href="lsp.html#vim.lsp.ClientConfig">vim.lsp.ClientConfig</a>.
+</div><div class="help-li" style=""> <code>{opts}</code>    (<code>table?</code>) Optional keyword arguments
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{reuse_client}</code> (fun(client: vim.lsp.Client, config:
+                    table): boolean`) Predicate used to decide if a client
+                    should be re-used. Used on all running clients. The
+                    default implementation re-uses a client if name and
+                    root_dir matches.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{bufnr}</code> (<code>integer</code>) Buffer handle to attach to if starting
+                    or re-using a client (0 for current).
 </div>
 </div>
 <div class="help-para">
@@ -1277,117 +1172,14 @@ start_client(<code>{config}</code>)                                <code id="vim
 
 </div>
 <div class="help-para">
-    Field <code>cmd</code> in <code>{config}</code> is required.
-
-</div>
-<div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{config}</code>  (<code>lsp.ClientConfig</code>) Configuration for the server:
-</div><div class="help-li" style="margin-left: 3rem;"> cmd: (string[]|fun(dispatchers: table):table) command
-                    string[] that launches the language server (treated as in
-                    <a href="builtin.html#jobstart()">jobstart()</a>, must be absolute or on <code>$PATH</code>, shell
-                    constructs like "~" are not expanded), or function that
-                    creates an RPC client. Function receives a <code>dispatchers</code>
-                    table and returns a table with member functions <code>request</code>,
-                    <code>notify</code>, <code>is_closing</code> and <code>terminate</code>. See
-                    <a href="lsp.html#vim.lsp.rpc.request()">vim.lsp.rpc.request()</a>, <a href="lsp.html#vim.lsp.rpc.notify()">vim.lsp.rpc.notify()</a>. For TCP
-                    there is a builtin RPC client factory:
-                    <a href="lsp.html#vim.lsp.rpc.connect()">vim.lsp.rpc.connect()</a>
-</div><div class="help-li" style="margin-left: 3rem;"> cmd_cwd: (string, default=|getcwd()|) Directory to launch
-                    the <code>cmd</code> process. Not related to <code>root_dir</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> cmd_env: (table) Environment flags to pass to the LSP on
-                    spawn. Must be specified using a table. Non-string values
-                    are coerced to string. Example:<pre>{ PORT = 8080; HOST = "0.0.0.0"; }</pre>
-</div>
-</div>
-<div class="help-para">
-<div class="help-li" style=""> detached: (boolean, default true) Daemonize the server
-                    process so that it runs in a separate process group from
-                    Nvim. Nvim will shutdown the process on exit, but if Nvim
-                    fails to exit cleanly this could leave behind orphaned
-                    server processes.
-</div><div class="help-li" style=""> workspace_folders: (table) List of workspace folders
-                    passed to the language server. For backwards compatibility
-                    rootUri and rootPath will be derived from the first
-                    workspace folder in this list. See <code>workspaceFolders</code> in
-                    the LSP spec.
-</div><div class="help-li" style=""> capabilities: Map overriding the default capabilities
-                    defined by <a href="lsp.html#vim.lsp.protocol.make_client_capabilities()">vim.lsp.protocol.make_client_capabilities()</a>,
-                    passed to the language server on initialization. Hint: use
-                    make_client_capabilities() and modify its result.
-</div><div class="help-li" style="margin-left: 3rem;"><a class="unknown-token" target="_blank" title="Report bug... (unhandled token "note")" href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D+unhandled+token%3A+%60note%60%0DContext%3A%0D%0D%60%60%60%0D%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20defined%20by%20%7Cvim.lsp.protocol.make_client_capabilities()%7C%2C%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20passed%20to%20the%20language%20server%20on%20initialization.%20Hint%3A%20use%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20make_client_capabilities()%20and%20modify%20its%20result.%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%E2%80%A2%20Note%3A%20To%20send%20an%20empty%20dictionary%20use%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7Cvim.empty_dict()%7C%2C%20else%20it%20will%20be%20encoded%20as%20an%20array.%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%E2%80%A2%20handlers%3A%20Map%20of%20language%20server%20method%20names%20to%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7Clsp-handler%7C%0D%60%60%60">Note:</a> To send an empty dictionary use
-                      <a href="lua.html#vim.empty_dict()">vim.empty_dict()</a>, else it will be encoded as an array.
-</div><div class="help-li" style=""> handlers: Map of language server method names to
-                    <a href="lsp.html#lsp-handler">lsp-handler</a>
-</div><div class="help-li" style=""> settings: Map with language server specific settings.
-                    These are returned to the language server if requested via
-                    <code>workspace/configuration</code>. Keys are case-sensitive.
-</div><div class="help-li" style=""> commands: table Table that maps string of clientside
-                    commands to user-defined functions. Commands passed to
-                    start_client take precedence over the global command
-                    registry. Each key must be a unique command name, and the
-                    value is a function which is called if any LSP action
-                    (code action, code lenses, ...) triggers the command.
-</div><div class="help-li" style=""> init_options Values to pass in the initialization request
-                    as <code>initializationOptions</code>. See <code>initialize</code> in the LSP
-                    spec.
-</div><div class="help-li" style=""> name: (string, default=client-id) Name in log messages.
-</div><div class="help-li" style=""> get_language_id: function(bufnr, filetype) -&gt; language ID
-                    as string. Defaults to the filetype.
-</div><div class="help-li" style=""> offset_encoding: (default="utf-16") One of "utf-8",
-                    "utf-16", or "utf-32" which is the encoding that the LSP
-                    server expects. Client does not verify this is correct.
-</div><div class="help-li" style=""> on_error: Callback with parameters (code, ...), invoked
-                    when the client operation throws an error. <code>code</code> is a
-                    number describing the error. Other arguments may be passed
-                    depending on the error kind. See
-                    <code>vim.lsp.rpc.client_errors</code> for possible errors. Use
-                    <code>vim.lsp.rpc.client_errors[code]</code> to get human-friendly
-                    name.
-</div><div class="help-li" style=""> before_init: Callback with parameters (initialize_params,
-                    config) invoked before the LSP "initialize" phase, where
-                    <code>params</code> contains the parameters being sent to the server
-                    and <code>config</code> is the config that was passed to
-                    <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>. You can use this to modify
-                    parameters before they are sent.
-</div><div class="help-li" style=""> on_init: Callback (client, initialize_result) invoked
-                    after LSP "initialize", where <code>result</code> is a table of
-                    <code>capabilities</code> and anything else the server may send. For
-                    example, clangd sends <code>initialize_result.offsetEncoding</code>
-                    if <code>capabilities.offsetEncoding</code> was sent to it. You can
-                    only modify the <code>client.offset_encoding</code> here before any
-                    notifications are sent.
-</div><div class="help-li" style=""> on_exit Callback (code, signal, client_id) invoked on
-                    client exit.
-</div><div class="help-li" style="margin-left: 3rem;"> code: exit code of the process
-</div><div class="help-li" style="margin-left: 3rem;"> signal: number describing the signal used to terminate
-                      (if any)
-</div><div class="help-li" style="margin-left: 3rem;"> client_id: client handle
-</div><div class="help-li" style=""> on_attach: Callback (client, bufnr) invoked when client
-                    attaches to a buffer.
-</div><div class="help-li" style=""> trace: ("off" | "messages" | "verbose" | nil) passed
-                    directly to the language server in the initialize request.
-                    Invalid/empty values will default to "off"
-</div><div class="help-li" style=""> flags: A table with flags for the client. The current
-                    (experimental) flags are:
-</div><div class="help-li" style="margin-left: 3rem;"> allow_incremental_sync (bool, default true): Allow using
-                      incremental sync for buffer edits
-</div><div class="help-li" style="margin-left: 3rem;"> debounce_text_changes (number, default 150): Debounce
-                      didChange notifications to the server by the given
-                      number in milliseconds. No debounce occurs if nil
-</div><div class="help-li" style="margin-left: 3rem;"> exit_timeout (number|boolean, default false):
-                      Milliseconds to wait for server to exit cleanly after
-                      sending the "shutdown" request before sending kill -15.
-                      If set to false, nvim exits immediately after sending
-                      the "shutdown" request to the server.
-</div><div class="help-li" style=""> root_dir: (string) Directory where the LSP server will
-                    base its workspaceFolders, rootUri, and rootPath on
-                    initialization.
+<div class="help-li" style=""> <code>{config}</code>  (<code>vim.lsp.ClientConfig</code>) Configuration for the server. See
+                  <a href="lsp.html#vim.lsp.ClientConfig">vim.lsp.ClientConfig</a>.
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return:</div>
-        (<code>integer?</code>) client_id. <a href="lsp.html#vim.lsp.get_client_by_id()">vim.lsp.get_client_by_id()</a><a class="unknown-token" target="_blank" title="Report bug... (unhandled token "note")" href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D+unhandled+token%3A+%60note%60%0DContext%3A%0D%0D%60%60%60%0D%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20initialization.%0A%0A%20%20%20%20Return%3A%20~%0A%20%20%20%20%20%20%20%20(%60integer%3F%60)%20client_id.%20%7Cvim.lsp.get_client_by_id()%7C%20Note%3A%20client%20may%0A%20%20%20%20%20%20%20%20not%20be%20fully%20initialized.%20Use%20%60on_init%60%20to%20do%20any%20actions%20once%20the%0A%20%20%20%20%20%20%20%20client%20has%20been%20initialized.%0A%0D%60%60%60">Note:</a> client may
+        (<code>integer?</code>) client_id <a href="lsp.html#vim.lsp.get_client_by_id()">vim.lsp.get_client_by_id()</a><a class="unknown-token" target="_blank" title="Report bug... (unhandled token "note")" href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D+unhandled+token%3A+%60note%60%0DContext%3A%0D%0D%60%60%60%0D%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7Cvim.lsp.ClientConfig%7C.%0A%0A%20%20%20%20Return%3A%20~%0A%20%20%20%20%20%20%20%20(%60integer%3F%60)%20client_id%20%7Cvim.lsp.get_client_by_id()%7C%20Note%3A%20client%20may%0A%20%20%20%20%20%20%20%20not%20be%20fully%20initialized.%20Use%20%60on_init%60%20to%20do%20any%20actions%20once%20the%0A%20%20%20%20%20%20%20%20client%20has%20been%20initialized.%0A%0D%60%60%60">Note:</a> client may
         not be fully initialized. Use <code>on_init</code> to do any actions once the
         client has been initialized.
 
@@ -1409,7 +1201,7 @@ stop_client(<code>{client_id}</code>, <code>{force}</code>)                     
 
 </div>
 <div class="help-para">
-    You can also use the <code>stop()</code> function on a <a href="lsp.html#vim.lsp.client">vim.lsp.client</a> object. To
+    You can also use the <code>stop()</code> function on a <a href="lsp.html#vim.lsp.Client">vim.lsp.Client</a> object. To
     stop all clients:<pre><code class="language-lua">vim.lsp.stop_client(vim.lsp.get_clients())</code></pre>
 
 </div>
@@ -1420,8 +1212,8 @@ stop_client(<code>{client_id}</code>, <code>{force}</code>)                     
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{client_id}</code>  (<code>integer|table</code>) id or <a href="lsp.html#vim.lsp.client">vim.lsp.client</a> object, or list
-                     thereof
+<div class="help-li" style=""> <code>{client_id}</code>  (<code>integer|vim.lsp.Client</code>) id or <a href="lsp.html#vim.lsp.Client">vim.lsp.Client</a> object,
+                     or list thereof
 </div><div class="help-li" style=""> <code>{force}</code>      (<code>boolean?</code>) shutdown forcefully
 </div>
 </div>
@@ -1461,9 +1253,302 @@ with(<code>{handler}</code>, <code>{override_config}</code>)                    
 </div>
 </div>
 <div class="help-para">
+<h2 id="lsp-client" class="help-heading">Lua module: vim.lsp.client<span class="help-heading-tags">                                        <span class="help-tag"><a href="#lsp-client">lsp-client</a></span></h2>
+
+
+</div>
+<div class="help-para">
+<code id="vim.lsp.Client" class="help-tag"><a href="#vim.lsp.Client">vim.lsp.Client</a></code>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">    Fields:</div>
+<div class="help-li" style=""> <code>{id}</code>                    (<code>integer</code>) The id allocated to the client.
+</div><div class="help-li" style=""> <code>{name}</code>                  (<code>string</code>) If a name is specified on creation,
+                                that will be used. Otherwise it is just the
+                                client id. This is used for logs and messages.
+</div><div class="help-li" style=""> <code>{rpc}</code>                   (<code>vim.lsp.rpc.PublicClient</code>) RPC client
+                                object, for low level interaction with the
+                                client. See <a href="lsp.html#vim.lsp.rpc.start()">vim.lsp.rpc.start()</a>.
+</div><div class="help-li" style=""> <code>{offset_encoding}</code>       (<code>string</code>) The encoding used for communicating
+                                with the server. You can modify this in the
+                                <code>config</code>'s <code>on_init</code> method before text is
+                                sent to the server.
+</div><div class="help-li" style=""> <code>{handlers}</code>              (<code>table&lt;string,lsp.Handler&gt;</code>) The handlers
+                                used by the client as described in
+                                <a href="lsp.html#lsp-handler">lsp-handler</a>.
+</div><div class="help-li" style=""> <code>{requests}</code>              (<code>table&lt;integer,{ type: string, bufnr: integer, method: string}&gt;</code>)
+                                The current pending requests in flight to the
+                                server. Entries are key-value pairs with the
+                                key being the request ID while the value is a
+                                table with <code>type</code>, <code>bufnr</code>, and <code>method</code>
+                                key-value pairs. <code>type</code> is either "pending"
+                                for an active request, or "cancel" for a
+                                cancel request. It will be "complete"
+                                ephemerally while executing <a href="lsp.html#LspRequest">LspRequest</a>
+                                autocmds when replies are received from the
+                                server.
+</div><div class="help-li" style=""> <code>{config}</code>                (<code>vim.lsp.ClientConfig</code>) copy of the table
+                                that was passed by the user to
+                                <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>.
+</div><div class="help-li" style=""> <code>{server_capabilities}</code>   (<code>lsp.ServerCapabilities?</code>) Response from the
+                                server sent on initialize` describing the
+                                server's capabilities.
+</div><div class="help-li" style=""> <code>{progress}</code>              (<code>vim.lsp.Client.Progress</code>) A ring buffer
+                                (<a href="lua.html#vim.ringbuf()">vim.ringbuf()</a>) containing progress messages
+                                sent by the server.
+</div><div class="help-li" style=""> <code>{initialized}</code>           (<code>true?</code>)
+</div><div class="help-li" style=""> <code>{workspace_folders}</code>     (<code>lsp.WorkspaceFolder[]?</code>) The workspace
+                                folders configured in the client when the
+                                server starts. This property is only available
+                                if the client supports workspace folders. It
+                                can be <code>null</code> if the client supports workspace
+                                folders but none are configured.
+</div><div class="help-li" style=""> <code>{root_dir}</code>              (<code>string</code>)
+</div><div class="help-li" style=""> <code>{attached_buffers}</code>      (<code>table&lt;integer,true&gt;</code>)
+</div><div class="help-li" style=""> <code>{commands}</code>              (table&lt;string,fun(command: lsp.Command, ctx:
+                                table)&gt;`) Table of command name to function
+                                which is called if any LSP action (code
+                                action, code lenses, ...) triggers the
+                                command. Client commands take precedence over
+                                the global command registry.
+</div><div class="help-li" style=""> <code>{settings}</code>              (<code>table</code>)
+</div><div class="help-li" style=""> <code>{flags}</code>                 (<code>table</code>)
+</div><div class="help-li" style=""> <code>{get_language_id}</code>       (<code>fun(bufnr: integer, filetype: string): string</code>)
+</div><div class="help-li" style=""> <code>{capabilities}</code>          (<code>lsp.ClientCapabilities</code>) The capabilities
+                                provided by the client (editor or tool)
+</div><div class="help-li" style=""> <code>{dynamic_capabilities}</code>  (<code>lsp.DynamicCapabilities</code>)
+</div><div class="help-li" style=""> <code>{request}</code>               (<code>fun(method: string, params: table?, handler: lsp.Handler?, bufnr: integer): boolean, integer?</code>)
+                                Sends a request to the server. This is a thin
+                                wrapper around <code>{client.rpc.request}</code> with some
+                                additional checking. If <code>{handler}</code> is not
+                                specified, If one is not found there, then an
+                                error will occur. Returns: <code>{status}</code>,
+                                <code>{[client_id]}</code>. <code>{status}</code> is a boolean
+                                indicating if the notification was successful.
+                                If it is <code>false</code>, then it will always be
+                                <code>false</code> (the client has shutdown). If <code>{status}</code>
+                                is <code>true</code>, the function returns <code>{request_id}</code>
+                                as the second result. You can use this with
+                                <code>client.cancel_request(request_id)</code> to cancel
+                                the request.
+</div><div class="help-li" style=""> <code>{request_sync}</code>          (<code>fun(method: string, params: table?, timeout_ms: integer?, bufnr: integer): {err: lsp.ResponseError?, result:any}?, string?</code>)
+                                err # a dictionary, where
+</div><div class="help-li" style=""> <code>{notify}</code>                (fun(method: string, params: table?):
+                                boolean`) Sends a notification to an LSP
+                                server. Returns: a boolean to indicate if the
+                                notification was successful. If it is false,
+                                then it will always be false (the client has
+                                shutdown).
+</div><div class="help-li" style=""> <code>{cancel_request}</code>        (<code>fun(id: integer): boolean</code>) Cancels a
+                                request with a given request id. Returns: same
+                                as <code>notify()</code>.
+</div><div class="help-li" style=""> <code>{stop}</code>                  (<code>fun(force?: boolean)</code>) Stops a client,
+                                optionally with force. By default, it will
+                                just ask the server to shutdown without force.
+                                If you request to stop a client which has
+                                previously been requested to shutdown, it will
+                                automatically escalate and force shutdown.
+</div><div class="help-li" style=""> <code>{on_attach}</code>             (<code>fun(bufnr: integer)</code>) Runs the on_attach
+                                function from the client's config if it was
+                                defined. Useful for buffer-local setup.
+</div><div class="help-li" style=""> <code>{supports_method}</code>       (<code>fun(method: string, opts?: {bufnr: integer?}): boolean</code>)
+                                Checks if a client supports a given method.
+                                Always returns true for unknown off-spec
+                                methods. [opts] is a optional{bufnr?:
+                                integer}` table. Some language server
+                                capabilities can be file specific.
+</div><div class="help-li" style=""> <code>{is_stopped}</code>            (<code>fun(): boolean</code>) Checks whether a client is
+                                stopped. Returns: true if the client is fully
+                                stopped.
+</div>
+</div>
+<div class="help-para">
+<code id="vim.lsp.Client.Progress" class="help-tag"><a href="#vim.lsp.Client.Progress">vim.lsp.Client.Progress</a></code>
+    Extends: <a href="lua.html#vim.Ringbuf">vim.Ringbuf</a>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">    Fields:</div>
+<div class="help-li" style=""> <code>{pending}</code>  (<code>table&lt;lsp.ProgressToken,lsp.LSPAny&gt;</code>)
+</div>
+</div>
+<div class="help-para">
+<code id="vim.lsp.ClientConfig" class="help-tag"><a href="#vim.lsp.ClientConfig">vim.lsp.ClientConfig</a></code>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">    Fields:</div>
+<div class="help-li" style=""> <code>{cmd}</code>                 (<code>string[]|fun(dispatchers: vim.lsp.rpc.Dispatchers): vim.lsp.rpc.PublicClient?</code>)
+                              command string[] that launches the language
+                              server (treated as in <a href="builtin.html#jobstart()">jobstart()</a>, must be
+                              absolute or on <code>$PATH</code>, shell constructs like
+                              "~" are not expanded), or function that creates
+                              an RPC client. Function receives a <code>dispatchers</code>
+                              table and returns a table with member functions
+                              <code>request</code>, <code>notify</code>, <code>is_closing</code> and
+                              <code>terminate</code>. See <a href="lsp.html#vim.lsp.rpc.request()">vim.lsp.rpc.request()</a>,
+                              <a href="lsp.html#vim.lsp.rpc.notify()">vim.lsp.rpc.notify()</a>. For TCP there is a
+                              builtin RPC client factory:
+                              <a href="lsp.html#vim.lsp.rpc.connect()">vim.lsp.rpc.connect()</a>
+</div><div class="help-li" style=""> <code>{cmd_cwd}</code>?            (<code>string</code>, default: cwd) Directory to launch the
+                              <code>cmd</code> process. Not related to <code>root_dir</code>.
+</div><div class="help-li" style=""> <code>{cmd_env}</code>?            (<code>table</code>) Environment flags to pass to the LSP
+                              on spawn. Must be specified using a table.
+                              Non-string values are coerced to string.
+                              Example:<pre><code class="language-lua">{ PORT = 8080; HOST = "0.0.0.0"; }</code></pre>
+</div>
+</div>
+<div class="help-para">
+<div class="help-li" style=""> <code>{detached}</code>?           (<code>boolean</code>, default: true) Daemonize the server
+                              process so that it runs in a separate process
+                              group from Nvim. Nvim will shutdown the process
+                              on exit, but if Nvim fails to exit cleanly this
+                              could leave behind orphaned server processes.
+</div><div class="help-li" style=""> <code>{workspace_folders}</code>?  (<code>lsp.WorkspaceFolder[]</code>) List of workspace
+                              folders passed to the language server. For
+                              backwards compatibility rootUri and rootPath
+                              will be derived from the first workspace folder
+                              in this list. See <code>workspaceFolders</code> in the LSP
+                              spec.
+</div><div class="help-li" style=""> <code>{capabilities}</code>?       (<code>lsp.ClientCapabilities</code>) Map overriding the
+                              default capabilities defined by
+                              <a href="lsp.html#vim.lsp.protocol.make_client_capabilities()">vim.lsp.protocol.make_client_capabilities()</a>,
+                              passed to the language server on initialization.
+                              Hint: use make_client_capabilities() and modify
+                              its result.
+</div><div class="help-li" style="margin-left: 3rem;"><a class="unknown-token" target="_blank" title="Report bug... (unhandled token "note")" href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D+unhandled+token%3A+%60note%60%0DContext%3A%0D%0D%60%60%60%0D%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20passed%20to%20the%20language%20server%20on%20initialization.%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20Hint%3A%20use%20make_client_capabilities()%20and%20modify%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20its%20result.%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%E2%80%A2%20Note%3A%20To%20send%20an%20empty%20dictionary%20use%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%7Cvim.empty_dict()%7C%2C%20else%20it%20will%20be%20encoded%20as%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20an%20array.%0A%20%20%20%20%20%20%E2%80%A2%20%7Bhandlers%7D%3F%20%20%20%20%20%20%20%20%20%20%20(%60table%3Cstring%2Cfunction%3E%60)%20Map%20of%20language%0D%60%60%60">Note:</a> To send an empty dictionary use
+                                <a href="lua.html#vim.empty_dict()">vim.empty_dict()</a>, else it will be encoded as
+                                an array.
+</div><div class="help-li" style=""> <code>{handlers}</code>?           (<code>table&lt;string,function&gt;</code>) Map of language
+                              server method names to <a href="lsp.html#lsp-handler">lsp-handler</a>
+</div><div class="help-li" style=""> <code>{settings}</code>?           (<code>table</code>) Map with language server specific
+                              settings. These are returned to the language
+                              server if requested via
+                              <code>workspace/configuration</code>. Keys are
+                              case-sensitive.
+</div><div class="help-li" style=""> <code>{commands}</code>?           (table&lt;string,fun(command: lsp.Command, ctx:
+                              table)&gt;`) Table that maps string of clientside
+                              commands to user-defined functions. Commands
+                              passed to start_client take precedence over the
+                              global command registry. Each key must be a
+                              unique command name, and the value is a function
+                              which is called if any LSP action (code action,
+                              code lenses, ...) triggers the command.
+</div><div class="help-li" style=""> <code>{init_options}</code>?       (<code>table</code>) Values to pass in the initialization
+                              request as <code>initializationOptions</code>. See
+                              <code>initialize</code> in the LSP spec.
+</div><div class="help-li" style=""> <code>{name}</code>?               (<code>string</code>, default: client-id) Name in log
+                              messages.
+</div><div class="help-li" style=""> <code>{get_language_id}</code>?    (fun(bufnr: integer, filetype: string):
+                              string`) Language ID as string. Defaults to the
+                              filetype.
+</div><div class="help-li" style=""> <code>{offset_encoding}</code>?    (<code>'utf-8'|'utf-16'|'utf-32'</code>) The encoding that
+                              the LSP server expects. Client does not verify
+                              this is correct.
+</div><div class="help-li" style=""> <code>{on_error}</code>?           (<code>fun(code: integer, err: string)</code>) Callback
+                              invoked when the client operation throws an
+                              error. <code>code</code> is a number describing the error.
+                              Other arguments may be passed depending on the
+                              error kind. See <code>vim.lsp.rpc.client_errors</code> for
+                              possible errors. Use
+                              <code>vim.lsp.rpc.client_errors[code]</code> to get
+                              human-friendly name.
+</div><div class="help-li" style=""> <code>{before_init}</code>?        (<code>vim.lsp.client.before_init_cb</code>) Callback
+                              invoked before the LSP "initialize" phase, where
+                              <code>params</code> contains the parameters being sent to
+                              the server and <code>config</code> is the config that was
+                              passed to <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>. You can use
+                              this to modify parameters before they are sent.
+</div><div class="help-li" style=""> <code>{on_init}</code>?            (<code>elem_or_list&lt;vim.lsp.client.on_init_cb&gt;</code>)
+                              Callback invoked after LSP "initialize", where
+                              <code>result</code> is a table of <code>capabilities</code> and
+                              anything else the server may send. For example,
+                              clangd sends <code>initialize_result.offsetEncoding</code>
+                              if <code>capabilities.offsetEncoding</code> was sent to it.
+                              You can only modify the <code>client.offset_encoding</code>
+                              here before any notifications are sent.
+</div><div class="help-li" style=""> <code>{on_exit}</code>?            (<code>elem_or_list&lt;vim.lsp.client.on_exit_cb&gt;</code>)
+                              Callback invoked on client exit.
+</div><div class="help-li" style="margin-left: 3rem;"> code: exit code of the process
+</div><div class="help-li" style="margin-left: 3rem;"> signal: number describing the signal used to
+                                terminate (if any)
+</div><div class="help-li" style="margin-left: 3rem;"> client_id: client handle
+</div><div class="help-li" style=""> <code>{on_attach}</code>?          (<code>elem_or_list&lt;vim.lsp.client.on_attach_cb&gt;</code>)
+                              Callback invoked when client attaches to a
+                              buffer.
+</div><div class="help-li" style=""> <code>{trace}</code>?              (<code>'off'|'messages'|'verbose'</code>, default: "off")
+                              Passed directly to the language server in the
+                              initialize request. Invalid/empty values will
+</div><div class="help-li" style=""> <code>{flags}</code>?              (<code>table</code>) A table with flags for the client. The
+                              current (experimental) flags are:
+</div><div class="help-li" style="margin-left: 3rem;"> allow_incremental_sync (bool, default true):
+                                Allow using incremental sync for buffer edits
+</div><div class="help-li" style="margin-left: 3rem;"> debounce_text_changes (number, default 150):
+                                Debounce didChange notifications to the server
+                                by the given number in milliseconds. No
+                                debounce occurs if nil
+</div><div class="help-li" style="margin-left: 3rem;"> exit_timeout (number|boolean, default false):
+                                Milliseconds to wait for server to exit
+                                cleanly after sending the "shutdown" request
+                                before sending kill -15. If set to false, nvim
+                                exits immediately after sending the "shutdown"
+                                request to the server.
+</div><div class="help-li" style=""> <code>{root_dir}</code>?           (<code>string</code>) Directory where the LSP server will
+                              base its workspaceFolders, rootUri, and rootPath
+                              on initialization.
+</div>
+</div>
+<div class="help-para">
 <h2 id="lsp-buf" class="help-heading">Lua module: vim.lsp.buf<span class="help-heading-tags">                                              <span class="help-tag"><a href="#lsp-buf">lsp-buf</a></span></h2>
 
 
+</div>
+<div class="help-para">
+<code id="vim.lsp.ListOpts" class="help-tag"><a href="#vim.lsp.ListOpts">vim.lsp.ListOpts</a></code>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">    Fields:</div>
+<div class="help-li" style=""> <code>{on_list}</code>?  (<code>fun(t: vim.lsp.LocationOpts.OnList)</code>) list-handler
+                    replacing the default handler. Called for any non-empty
+                    result. This table can be used with <a href="builtin.html#setqflist()">setqflist()</a> or
+                    <a href="builtin.html#setloclist()">setloclist()</a>. E.g.:<pre><code class="language-lua">local function on_list(options)
+  vim.fn.setqflist({}, ' ', options)
+  vim.cmd.cfirst()
+end
+vim.lsp.buf.definition({ on_list = on_list })
+vim.lsp.buf.references(nil, { on_list = on_list })</code></pre>
+</div>
+</div>
+<div class="help-para">
+                    If you prefer loclist do something like this:<pre><code class="language-lua">local function on_list(options)
+  vim.fn.setloclist(0, {}, ' ', options)
+  vim.cmd.lopen()
+end</code></pre>
+
+</div>
+<div class="help-para">
+<code id="vim.lsp.LocationOpts" class="help-tag"><a href="#vim.lsp.LocationOpts">vim.lsp.LocationOpts</a></code>
+    Extends: <a href="lsp.html#vim.lsp.ListOpts">vim.lsp.ListOpts</a>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">    Fields:</div>
+<div class="help-li" style=""> <code>{reuse_win}</code>?  (<code>boolean</code>) Jump to existing window if buffer is already
+                      open.
+</div>
+</div>
+<div class="help-para">
+<code id="vim.lsp.LocationOpts.OnList" class="help-tag"><a href="#vim.lsp.LocationOpts.OnList">vim.lsp.LocationOpts.OnList</a></code>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">    Fields:</div>
+<div class="help-li" style=""> <code>{items}</code>     (<code>table[]</code>) Structured like <a href="builtin.html#setqflist-what">setqflist-what</a>
+</div><div class="help-li" style=""> <code>{title}</code>?    (<code>string</code>) Title for the list.
+</div><div class="help-li" style=""> <code>{context}</code>?  (<code>table</code>) <code>ctx</code> from <a href="lsp.html#lsp-handler">lsp-handler</a>
+</div>
 </div>
 <div class="help-para">
                                           <code id="vim.lsp.buf.add_workspace_folder()" class="help-tag-right"><a href="#vim.lsp.buf.add_workspace_folder()">vim.lsp.buf.add_workspace_folder()</a></code>
@@ -1489,27 +1574,26 @@ code_action(<code>{options}</code>)                             <code id="vim.ls
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) Optional table which holds the following
-                   optional fields:
-</div><div class="help-li" style="margin-left: 3rem;"> context: (table|nil) Corresponds to <code>CodeActionContext</code>
-                     of the LSP specification:
-</div><div class="help-li" style="margin-left: 4rem;"> diagnostics (table|nil): LSP <code>Diagnostic[]</code>. Inferred
+<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{context}</code>? (<code>lsp.CodeActionContext</code>) Corresponds to
+                     <code>CodeActionContext</code> of the LSP specification:
+</div><div class="help-li" style="margin-left: 4rem;"> <code>{diagnostics}</code>? (<code>table</code>) LSP <code>Diagnostic[]</code>. Inferred
                        from the current position if not provided.
-</div><div class="help-li" style="margin-left: 4rem;"> only (table|nil): List of LSP <code>CodeActionKind</code>s used to
+</div><div class="help-li" style="margin-left: 4rem;"> <code>{only}</code>? (<code>table</code>) List of LSP <code>CodeActionKind</code>s used to
                        filter the code actions. Most language servers support
                        values like <code>refactor</code> or <code>quickfix</code>.
-</div><div class="help-li" style="margin-left: 4rem;"> triggerKind (number|nil): The reason why code actions
+</div><div class="help-li" style="margin-left: 4rem;"> <code>{triggerKind}</code>? (<code>integer</code>) The reason why code actions
                        were requested.
-</div><div class="help-li" style="margin-left: 3rem;"> filter: (function|nil) Predicate taking an <code>CodeAction</code>
-                     and returning a boolean.
-</div><div class="help-li" style="margin-left: 3rem;"> apply: (boolean|nil) When set to <code>true</code>, and there is
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{filter}</code>? (<code>fun(x: lsp.CodeAction|lsp.Command):boolean</code>)
+                     Predicate taking an <code>CodeAction</code> and returning a boolean.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{apply}</code>? (<code>boolean</code>) When set to <code>true</code>, and there is
                      just one remaining action (after filtering), the action
                      is applied without user query.
-</div><div class="help-li" style="margin-left: 3rem;"> range: (table|nil) Range for which code actions should be
-                     requested. If in visual mode this defaults to the active
-                     selection. Table must contain <code>start</code> and <code>end</code> keys with
-                     <code>{row,col}</code> tuples using mark-like indexing. See
-                     <a href="api.html#api-indexing">api-indexing</a>
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{range}</code>? (<code>{start: integer[], end: integer[]}</code>) Range for
+                     which code actions should be requested. If in visual mode
+                     this defaults to the active selection. Table must contain
+                     <code>start</code> and <code>end</code> keys with <code>{row,col}</code> tuples using
+                     mark-like indexing. See <a href="api.html#api-indexing">api-indexing</a>
 </div>
 </div>
 <div class="help-para">
@@ -1550,11 +1634,7 @@ declaration(<code>{options}</code>)                             <code id="vim.ls
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) additional options
-</div><div class="help-li" style="margin-left: 3rem;"> reuse_win: (boolean) Jump to existing window if buffer is
-                     already open.
-</div><div class="help-li" style="margin-left: 3rem;"> on_list: (function) <a href="lsp.html#lsp-on-list-handler">lsp-on-list-handler</a> replacing the
-                     default handler. Called for any non-empty result.
+<div class="help-li" style=""> <code>{options}</code>  (<code>vim.lsp.LocationOpts?</code>) See <a href="lsp.html#vim.lsp.LocationOpts">vim.lsp.LocationOpts</a>.
 </div>
 </div>
 <div class="help-para">
@@ -1564,11 +1644,7 @@ definition(<code>{options}</code>)                               <code id="vim.l
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) additional options
-</div><div class="help-li" style="margin-left: 3rem;"> reuse_win: (boolean) Jump to existing window if buffer is
-                     already open.
-</div><div class="help-li" style="margin-left: 3rem;"> on_list: (function) <a href="lsp.html#lsp-on-list-handler">lsp-on-list-handler</a> replacing the
-                     default handler. Called for any non-empty result.
+<div class="help-li" style=""> <code>{options}</code>  (<code>vim.lsp.LocationOpts?</code>) See <a href="lsp.html#vim.lsp.LocationOpts">vim.lsp.LocationOpts</a>.
 </div>
 </div>
 <div class="help-para">
@@ -1594,9 +1670,7 @@ document_symbol(<code>{options}</code>)                     <code id="vim.lsp.bu
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) additional options
-</div><div class="help-li" style="margin-left: 3rem;"> on_list: (function) handler for list results. See
-                     <a href="lsp.html#lsp-on-list-handler">lsp-on-list-handler</a>
+<div class="help-li" style=""> <code>{options}</code>  (<code>vim.lsp.ListOpts?</code>) See <a href="lsp.html#vim.lsp.ListOpts">vim.lsp.ListOpts</a>.
 </div>
 </div>
 <div class="help-para">
@@ -1606,7 +1680,7 @@ execute_command(<code>{command_params}</code>)              <code id="vim.lsp.bu
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{command_params}</code>  (<code>table</code>) A valid <code>ExecuteCommandParams</code> object
+<div class="help-li" style=""> <code>{command_params}</code>  (<code>lsp.ExecuteCommandParams</code>)
 </div>
 </div>
 <div class="help-para">
@@ -1622,39 +1696,38 @@ format(<code>{options}</code>)                                       <code id="v
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) Optional table which holds the following
-                   optional fields:
-</div><div class="help-li" style="margin-left: 3rem;"> formatting_options (table|nil): Can be used to specify
+<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{formatting_options}</code>? (<code>table</code>) Can be used to specify
                      FormattingOptions. Some unspecified options will be
                      automatically derived from the current Nvim options. See
                      <a href="https://microsoft.github.io/language-server-protocol/specification/#formattingOptions">https://microsoft.github.io/language-server-protocol/specification/#formattingOptions</a>
-</div><div class="help-li" style="margin-left: 3rem;"> timeout_ms (integer|nil, default 1000): Time in
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{timeout_ms}</code>? (<code>integer</code>, default: <code>1000</code>) Time in
                      milliseconds to block for formatting requests. No effect
-                     if async=true
-</div><div class="help-li" style="margin-left: 3rem;"> bufnr (number|nil): Restrict formatting to the clients
-                     attached to the given buffer, defaults to the current
-                     buffer (0).
-</div><div class="help-li" style="margin-left: 3rem;"> filter (function|nil): Predicate used to filter clients.
-                     Receives a client as argument and must return a boolean.
-                     Clients matching the predicate are included. Example:<pre><code class="language-lua">-- Never request typescript-language-server for formatting
+                     if async=true.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{bufnr}</code>? (<code>integer</code>, default: current buffer) Restrict
+                     formatting to the clients attached to the given buffer.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{filter}</code>? (<code>fun(client: vim.lsp.Client): boolean?</code>)
+                     Predicate used to filter clients. Receives a client as
+                     argument and must return a boolean. Clients matching the
+                     predicate are included. Example:<pre><code class="language-lua">-- Never request typescript-language-server for formatting
 vim.lsp.buf.format {
   filter = function(client) return client.name ~= "tsserver" end
 }</code></pre>
 </div>
 </div>
 <div class="help-para">
-<div class="help-li" style=""> async boolean|nil If true the method won't block.
-                     Defaults to false. Editing the buffer while formatting
+<div class="help-li" style=""> <code>{async}</code>? (<code>boolean</code>, default: false) If true the method
+                     won't block. Editing the buffer while formatting
                      asynchronous can lead to unexpected changes.
-</div><div class="help-li" style=""> id (number|nil): Restrict formatting to the client with
+</div><div class="help-li" style=""> <code>{id}</code>? (<code>integer</code>) Restrict formatting to the client with
                      ID (client.id) matching this field.
-</div><div class="help-li" style=""> name (string|nil): Restrict formatting to the client with
+</div><div class="help-li" style=""> <code>{name}</code>? (<code>string</code>) Restrict formatting to the client with
                      name (client.name) matching this field.
-</div><div class="help-li" style=""> range (table|nil) Range to format. Table must contain
-                     <code>start</code> and <code>end</code> keys with <code>{row,col}</code> tuples using (1,0)
-                     indexing. Defaults to current selection in visual mode
-                     Defaults to <code>nil</code> in other modes, formatting the full
-                     buffer
+</div><div class="help-li" style=""> <code>{range}</code>? (<code>{start:integer[],end:integer[]}</code>, default:
+                     current selection in visual mode, <code>nil</code> in other modes,
+                     formatting the full buffer) Range to format. Table must
+                     contain <code>start</code> and <code>end</code> keys with <code>{row,col}</code> tuples
+                     using (1,0) indexing.
 </div>
 </div>
 <div class="help-para">
@@ -1671,9 +1744,7 @@ implementation(<code>{options}</code>)                       <code id="vim.lsp.b
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) additional options
-</div><div class="help-li" style="margin-left: 3rem;"> on_list: (function) <a href="lsp.html#lsp-on-list-handler">lsp-on-list-handler</a> replacing the
-                     default handler. Called for any non-empty result.
+<div class="help-li" style=""> <code>{options}</code>  (<code>vim.lsp.LocationOpts?</code>) See <a href="lsp.html#vim.lsp.LocationOpts">vim.lsp.LocationOpts</a>.
 </div>
 </div>
 <div class="help-para">
@@ -1704,9 +1775,7 @@ references(<code>{context}</code>, <code>{options}</code>)                    <c
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
 <div class="help-li" style=""> <code>{context}</code>  (<code>table?</code>) Context for the request
-</div><div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) additional options
-</div><div class="help-li" style="margin-left: 3rem;"> on_list: (function) handler for list results. See
-                     <a href="lsp.html#lsp-on-list-handler">lsp-on-list-handler</a>
+</div><div class="help-li" style=""> <code>{options}</code>  (<code>vim.lsp.ListOpts?</code>) See <a href="lsp.html#vim.lsp.ListOpts">vim.lsp.ListOpts</a>.
 </div>
 </div>
 <div class="help-para">
@@ -1735,11 +1804,12 @@ rename(<code>{new_name}</code>, <code>{options}</code>)                         
 <div class="help-column_heading">    Parameters:</div>
 <div class="help-li" style=""> <code>{new_name}</code>  (<code>string?</code>) If not provided, the user will be prompted for
                     a new name using <a href="lua.html#vim.ui.input()">vim.ui.input()</a>.
-</div><div class="help-li" style=""> <code>{options}</code>   (<code>table?</code>) additional options
-</div><div class="help-li" style="margin-left: 3rem;"> filter (function|nil): Predicate used to filter clients.
-                      Receives a client as argument and must return a boolean.
-                      Clients matching the predicate are included.
-</div><div class="help-li" style="margin-left: 3rem;"> name (string|nil): Restrict clients used for rename to
+</div><div class="help-li" style=""> <code>{options}</code>   (<code>table?</code>) Additional options:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{filter}</code>? (<code>fun(client: vim.lsp.Client): boolean?</code>)
+                      Predicate used to filter clients. Receives a client as
+                      argument and must return a boolean. Clients matching the
+                      predicate are included.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{name}</code>? (<code>string</code>) Restrict clients used for rename to
                       ones where client.name matches this field.
 </div>
 </div>
@@ -1756,11 +1826,7 @@ type_definition(<code>{options}</code>)                     <code id="vim.lsp.bu
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) additional options
-</div><div class="help-li" style="margin-left: 3rem;"> reuse_win: (boolean) Jump to existing window if buffer is
-                     already open.
-</div><div class="help-li" style="margin-left: 3rem;"> on_list: (function) <a href="lsp.html#lsp-on-list-handler">lsp-on-list-handler</a> replacing the
-                     default handler. Called for any non-empty result.
+<div class="help-li" style=""> <code>{options}</code>  (<code>vim.lsp.LocationOpts?</code>) See <a href="lsp.html#vim.lsp.LocationOpts">vim.lsp.LocationOpts</a>.
 </div>
 </div>
 <div class="help-para">
@@ -1777,9 +1843,7 @@ workspace_symbol(<code>{query}</code>, <code>{options}</code>)          <code id
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
 <div class="help-li" style=""> <code>{query}</code>    (<code>string?</code>) optional
-</div><div class="help-li" style=""> <code>{options}</code>  (<code>table?</code>) additional options
-</div><div class="help-li" style="margin-left: 3rem;"> on_list: (function) handler for list results. See
-                     <a href="lsp.html#lsp-on-list-handler">lsp-on-list-handler</a>
+</div><div class="help-li" style=""> <code>{options}</code>  (<code>vim.lsp.ListOpts?</code>) See <a href="lsp.html#vim.lsp.ListOpts">vim.lsp.ListOpts</a>.
 </div>
 </div>
 <div class="help-para">
@@ -1943,10 +2007,9 @@ refresh(<code>{opts}</code>)                                   <code id="vim.lsp
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{opts}</code>  (<code>vim.lsp.codelens.RefreshOptions?</code>) Table with the following
-                fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>bufnr</code> (integer|nil): filter by buffer. All buffers if nil,
-                  0 for current buffer
+<div class="help-li" style=""> <code>{opts}</code>  (<code>table?</code>) Optional fields
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{bufnr}</code> (<code>integer?</code>) filter by buffer. All buffers if nil, 0
+                  for current buffer
 </div>
 </div>
 <div class="help-para">
@@ -2015,19 +2078,17 @@ client.request('textDocument/hover', {
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
-<div class="help-li" style=""> <code>{filter}</code>  (<code>vim.lsp.inlay_hint.get.filter?</code>) Optional filters
-                  <a href="lua.html#kwargs">kwargs</a>:
-</div><div class="help-li" style="margin-left: 3rem;"> bufnr (integer?): 0 for current buffer
-</div><div class="help-li" style="margin-left: 3rem;"> range (lsp.Range?)
+<div class="help-li" style=""> <code>{filter}</code>  (<code>table?</code>) Optional filters <a href="lua.html#kwargs">kwargs</a>:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{bufnr}</code> (<code>integer?</code>)
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{range}</code> (<code>lsp.Range?</code>)
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return:</div>
-        (<code>vim.lsp.inlay_hint.get.ret[]</code>) Each list item is a table with the
-        following fields:
-<div class="help-li" style=""> bufnr (integer)
-</div><div class="help-li" style=""> client_id (integer)
-</div><div class="help-li" style=""> inlay_hint (lsp.InlayHint)
+        (<code>table[]</code>) A list of objects with the following fields:
+<div class="help-li" style=""> <code>{bufnr}</code> (<code>integer</code>)
+</div><div class="help-li" style=""> <code>{client_id}</code> (<code>integer</code>)
+</div><div class="help-li" style=""> <code>{inlay_hint}</code> (<code>lsp.InlayHint</code>)
 </div>
 </div>
 <div class="help-para">
@@ -2115,12 +2176,12 @@ highlight_token(<code>{token}</code>, <code>{bufnr}</code>, <code>{client_id}</c
 <div class="help-li" style=""> <code>{token}</code>      (<code>table</code>) a semantic token, found as <code>args.data.token</code> in
                      <a href="lsp.html#LspTokenUpdate">LspTokenUpdate</a>.
 </div><div class="help-li" style=""> <code>{bufnr}</code>      (<code>integer</code>) the buffer to highlight
-</div><div class="help-li" style=""> <code>{client_id}</code>  (<code>integer</code>) The ID of the <a href="lsp.html#vim.lsp.client">vim.lsp.client</a>
+</div><div class="help-li" style=""> <code>{client_id}</code>  (<code>integer</code>) The ID of the <a href="lsp.html#vim.lsp.Client">vim.lsp.Client</a>
 </div><div class="help-li" style=""> <code>{hl_group}</code>   (<code>string</code>) Highlight group name
-</div><div class="help-li" style=""> <code>{opts}</code>       (<code>table?</code>) Optional parameters.
-</div><div class="help-li" style="margin-left: 3rem;"> priority: (integer|nil) Priority for the applied
-                       extmark. Defaults to
-                       <code>vim.highlight.priorities.semantic_tokens + 3</code>
+</div><div class="help-li" style=""> <code>{opts}</code>       (<code>table?</code>) Optional parameters:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{priority}</code>? (<code>integer</code>, default:
+                       <code>vim.highlight.priorities.semantic_tokens + 3</code>)
+                       Priority for the applied extmark.
 </div>
 </div>
 <div class="help-para">
@@ -2454,8 +2515,13 @@ locations_to_items(<code>{locations}</code>, <code>{offset_encoding}</code>)
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return:</div>
-        (<code>vim.lsp.util.LocationItem[]</code>) list of items
-
+        (<code>table[]</code>) A list of objects with the following fields:
+<div class="help-li" style=""> <code>{filename}</code> (<code>string</code>)
+</div><div class="help-li" style=""> <code>{lnum}</code> (<code>integer</code>) 1-indexed line number
+</div><div class="help-li" style=""> <code>{col}</code> (<code>integer</code>) 1-indexed column
+</div><div class="help-li" style=""> <code>{text}</code> (<code>string</code>)
+</div><div class="help-li" style=""> <code>{user_data}</code> (<code>lsp.Location|lsp.LocationLink</code>)
+</div>
 </div>
 <div class="help-para">
                                   <code id="vim.lsp.util.make_floating_popup_options()" class="help-tag-right"><a href="#vim.lsp.util.make_floating_popup_options()">vim.lsp.util.make_floating_popup_options()</a></code>
@@ -2629,22 +2695,25 @@ open_floating_preview(<code>{contents}</code>, <code>{syntax}</code>, <code>{opt
 <div class="help-column_heading">    Parameters:</div>
 <div class="help-li" style=""> <code>{contents}</code>  (<code>table</code>) of lines to show in window
 </div><div class="help-li" style=""> <code>{syntax}</code>    (<code>string</code>) of syntax to set for opened buffer
-</div><div class="help-li" style=""> <code>{opts}</code>      (<code>table</code>) with optional fields (additional keys are
+</div><div class="help-li" style=""> <code>{opts}</code>      (<code>table?</code>) with optional fields (additional keys are
                     filtered with <a href="lsp.html#vim.lsp.util.make_floating_popup_options()">vim.lsp.util.make_floating_popup_options()</a>
                     before they are passed on to <a href="api.html#nvim_open_win()">nvim_open_win()</a>)
-</div><div class="help-li" style="margin-left: 3rem;"> height: (integer) height of floating window
-</div><div class="help-li" style="margin-left: 3rem;"> width: (integer) width of floating window
-</div><div class="help-li" style="margin-left: 3rem;"> wrap: (boolean, default true) wrap long lines
-</div><div class="help-li" style="margin-left: 3rem;"> wrap_at: (integer) character to wrap at for computing
-                      height when wrap is enabled
-</div><div class="help-li" style="margin-left: 3rem;"> max_width: (integer) maximal width of floating window
-</div><div class="help-li" style="margin-left: 3rem;"> max_height: (integer) maximal height of floating window
-</div><div class="help-li" style="margin-left: 3rem;"> focus_id: (string) if a popup with this id is opened,
-                      then focus it
-</div><div class="help-li" style="margin-left: 3rem;"> close_events: (table) list of events that closes the
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{height}</code>? (<code>integer</code>) Height of floating window
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{width}</code>? (<code>integer</code>) Width of floating window
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{wrap}</code>? (<code>boolean</code>, default: <code>true</code>) Wrap long lines
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{wrap_at}</code>? (<code>integer</code>) Character to wrap at for
+                      computing height when wrap is enabled
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{max_width}</code>? (<code>integer</code>) Maximal width of floating
+                      window
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{max_height}</code>? (<code>integer</code>) Maximal height of floating
+                      window
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{focus_id}</code>? (<code>string</code>) If a popup with this id is
+                      opened, then focus it
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{close_events}</code>? (<code>table</code>) List of events that closes the
                       floating window
-</div><div class="help-li" style="margin-left: 3rem;"> focusable: (boolean, default true) Make float focusable
-</div><div class="help-li" style="margin-left: 3rem;"> focus: (boolean, default true) If <code>true</code>, and if
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{focusable}</code>? (<code>boolean</code>, default: <code>true</code>) Make float
+                      focusable.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{focus}</code>? (<code>boolean</code>, default: <code>true</code>) If <code>true</code>, and if
                       <code>{focusable}</code> is also <code>true</code>, focus an existing floating
                       window with the same <code>{focus_id}</code>
 </div>
@@ -2688,9 +2757,9 @@ rename(<code>{old_fname}</code>, <code>{new_fname}</code>, <code>{opts}</code>) 
 <div class="help-column_heading">    Parameters:</div>
 <div class="help-li" style=""> <code>{old_fname}</code>  (<code>string</code>)
 </div><div class="help-li" style=""> <code>{new_fname}</code>  (<code>string</code>)
-</div><div class="help-li" style=""> <code>{opts}</code>       (<code>table?</code>) options
-</div><div class="help-li" style="margin-left: 3rem;"> overwrite? boolean
-</div><div class="help-li" style="margin-left: 3rem;"> ignoreIfExists? boolean
+</div><div class="help-li" style=""> <code>{opts}</code>       (<code>table?</code>) Options:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{overwrite}</code>? (<code>boolean</code>)
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignoreIfExists}</code>? (<code>boolean</code>)
 </div>
 </div>
 <div class="help-para">
@@ -2827,6 +2896,20 @@ should_log(<code>{level}</code>)                                 <code id="vim.l
 <h2 id="lsp-rpc" class="help-heading">Lua module: vim.lsp.rpc<span class="help-heading-tags">                                              <span class="help-tag"><a href="#lsp-rpc">lsp-rpc</a></span></h2>
 
 
+</div>
+<div class="help-para">
+<code id="vim.lsp.rpc.PublicClient" class="help-tag"><a href="#vim.lsp.rpc.PublicClient">vim.lsp.rpc.PublicClient</a></code>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">    Fields:</div>
+<div class="help-li" style=""> <code>{request}</code>     (<code>fun(method: string, params: table?, callback: fun(err: lsp.ResponseError?, result: any), notify_reply_callback: fun(integer)?):boolean,integer?</code>)
+                      see <a href="lsp.html#vim.lsp.rpc.request()">vim.lsp.rpc.request()</a>
+</div><div class="help-li" style=""> <code>{notify}</code>      (<code>fun(method: string, params: any):boolean</code>) see
+                      <a href="lsp.html#vim.lsp.rpc.notify()">vim.lsp.rpc.notify()</a>
+</div><div class="help-li" style=""> <code>{is_closing}</code>  (<code>fun(): boolean</code>)
+</div><div class="help-li" style=""> <code>{terminate}</code>   (<code>fun()</code>)
+</div>
 </div>
 <div class="help-para">
 connect(<code>{host}</code>, <code>{port}</code>)                                <code id="vim.lsp.rpc.connect()" class="help-tag-right"><a href="#vim.lsp.rpc.connect()">vim.lsp.rpc.connect()</a></code>
@@ -2966,21 +3049,23 @@ start(<code>{cmd}</code>, <code>{dispatchers}</code>, <code>{extra_spawn_params}
 <div class="help-para">
 <div class="help-column_heading">    Parameters:</div>
 <div class="help-li" style=""> <code>{cmd}</code>                 (<code>string[]</code>) Command to start the LSP server.
-</div><div class="help-li" style=""> <code>{dispatchers}</code>         (<code>vim.lsp.rpc.Dispatchers?</code>) Dispatchers for LSP
-                              message types. Valid dispatcher names are:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>"notification"</code>
-</div><div class="help-li" style="margin-left: 3rem;"> <code>"server_request"</code>
-</div><div class="help-li" style="margin-left: 3rem;"> <code>"on_error"</code>
-</div><div class="help-li" style="margin-left: 3rem;"> <code>"on_exit"</code>
-</div><div class="help-li" style=""> <code>{extra_spawn_params}</code>  (<code>vim.lsp.rpc.ExtraSpawnParams?</code>) Additional
-                              context for the LSP server process. May contain:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{cwd}</code> (string) Working directory for the LSP
-                                server process
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{detached?}</code> (boolean) Detach the LSP server
-                                process from the current process. Defaults to
-                                false on Windows and true otherwise.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{env?}</code> (table) Additional environment
-                                variables for LSP server process
+</div><div class="help-li" style=""> <code>{dispatchers}</code>         (<code>table?</code>) Dispatchers for LSP message types.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{notification}</code> (fun(method: string, params:
+                                table)`)
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{server_request}</code> (fun(method: string, params:
+                                table): any?, lsp.ResponseError?`)
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{on_exit}</code> (fun(code: integer, signal:
+                                integer)`)
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{on_error}</code> (<code>fun(code: integer, err: any)</code>)
+</div><div class="help-li" style=""> <code>{extra_spawn_params}</code>  (<code>table?</code>) Additional context for the LSP server
+                              process.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{cwd}</code>? (<code>string</code>) Working directory for the
+                                LSP server process
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{detached}</code>? (<code>boolean</code>) Detach the LSP server
+                                process from the current process
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{env}</code>? (<code>table&lt;string,string&gt;</code>) Additional
+                                environment variables for LSP server process.
+                                See <a href="lua.html#vim.system()">vim.system()</a>
 </div>
 </div>
 <div class="help-para">
@@ -2989,7 +3074,8 @@ start(<code>{cmd}</code>, <code>{dispatchers}</code>, <code>{extra_spawn_params}
 <div class="help-li" style=""> <code>notify()</code> <a href="lsp.html#vim.lsp.rpc.notify()">vim.lsp.rpc.notify()</a>
 </div><div class="help-li" style=""> <code>request()</code> <a href="lsp.html#vim.lsp.rpc.request()">vim.lsp.rpc.request()</a>
 </div><div class="help-li" style=""> <code>is_closing()</code> returns a boolean indicating if the RPC is closing.
-</div><div class="help-li" style=""> <code>terminate()</code> terminates the RPC client.
+</div><div class="help-li" style=""> <code>terminate()</code> terminates the RPC client. See
+          <a href="lsp.html#vim.lsp.rpc.PublicClient">vim.lsp.rpc.PublicClient</a>.
 </div>
 </div>
 <div class="help-para">
@@ -3058,6 +3144,8 @@ LSP SEMANTIC HIGHLIGHTS                               </a></div>
 EVENTS                                                            </a>
 </div><div class="help-toc-h1"><a href="#lsp-core">
 Lua module: vim.lsp                                                 </a>
+</div><div class="help-toc-h1"><a href="#lsp-client">
+Lua module: vim.lsp.client                                        </a>
 </div><div class="help-toc-h1"><a href="#lsp-buf">
 Lua module: vim.lsp.buf                                              </a>
 </div><div class="help-toc-h1"><a href="#lsp-diagnostic">
@@ -3083,7 +3171,7 @@ Lua module: vim.lsp.protocol                                    </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2024-03-01 05:23 from <code><a href="https://github.com/neovim/neovim/commit/5d4e1693cb415e8b76749e833e28f00f14630b87">5d4e169</a></code>
+        Generated at 2024-03-02 05:22 from <code><a href="https://github.com/neovim/neovim/commit/39928a7f24916b35577864e28e505dda74103fb8">39928a7</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
