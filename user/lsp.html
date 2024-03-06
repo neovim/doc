@@ -904,7 +904,7 @@ buf_request_sync(<code>{bufnr}</code>, <code>{method}</code>, <code>{params}</co
 <div class="help-para">
     Calls <a href="lsp.html#vim.lsp.buf_request_all()">vim.lsp.buf_request_all()</a> but blocks Nvim while awaiting the
     result. Parameters are the same as <a href="lsp.html#vim.lsp.buf_request_all()">vim.lsp.buf_request_all()</a> but the
-    result is different. Waits a maximum of <code>{timeout_ms}</code> (default 1000) ms.
+    result is different. Waits a maximum of <code>{timeout_ms}</code>.
 
 </div>
 <div class="help-para">
@@ -912,13 +912,14 @@ buf_request_sync(<code>{bufnr}</code>, <code>{method}</code>, <code>{params}</co
 <div class="help-li" style=""> <code>{bufnr}</code>       (<code>integer</code>) Buffer handle, or 0 for current.
 </div><div class="help-li" style=""> <code>{method}</code>      (<code>string</code>) LSP method name
 </div><div class="help-li" style=""> <code>{params}</code>      (<code>table?</code>) Parameters to send to the server
-</div><div class="help-li" style=""> <code>{timeout_ms}</code>  (<code>integer?</code>) Maximum time in milliseconds to wait for a
-                      result. Defaults to 1000
+</div><div class="help-li" style=""> <code>{timeout_ms}</code>  (<code>integer?</code>, default: <code>1000</code>) Maximum time in
+                      milliseconds to wait for a result.
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">    Return (multiple):</div>
-        (<code>table</code>) result Map of client_id:request_result.
+        (<code>table&lt;integer, {err: lsp.ResponseError, result: any}&gt;?</code>) result Map
+        of client_id:request_result.
         (<code>string?</code>) err On timeout, cancel, or error, <code>err</code> is a string
         describing the failure reason, and <code>result</code> is nil.
 
@@ -1290,13 +1291,15 @@ with(<code>{handler}</code>, <code>{override_config}</code>)                    
                                 server.
 </div><div class="help-li" style=""> <code>{config}</code>                (<code>vim.lsp.ClientConfig</code>) copy of the table
                                 that was passed by the user to
-                                <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>.
+                                <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>. See
+                                <a href="lsp.html#vim.lsp.ClientConfig">vim.lsp.ClientConfig</a>.
 </div><div class="help-li" style=""> <code>{server_capabilities}</code>   (<code>lsp.ServerCapabilities?</code>) Response from the
                                 server sent on initialize` describing the
                                 server's capabilities.
 </div><div class="help-li" style=""> <code>{progress}</code>              (<code>vim.lsp.Client.Progress</code>) A ring buffer
                                 (<a href="lua.html#vim.ringbuf()">vim.ringbuf()</a>) containing progress messages
-                                sent by the server.
+                                sent by the server. See
+                                <a href="lsp.html#vim.lsp.Client.Progress">vim.lsp.Client.Progress</a>.
 </div><div class="help-li" style=""> <code>{initialized}</code>           (<code>true?</code>)
 </div><div class="help-li" style=""> <code>{workspace_folders}</code>     (<code>lsp.WorkspaceFolder[]?</code>) The workspace
                                 folders configured in the client when the
@@ -1312,9 +1315,28 @@ with(<code>{handler}</code>, <code>{override_config}</code>)                    
                                 action, code lenses, ...) triggers the
                                 command. Client commands take precedence over
                                 the global command registry.
-</div><div class="help-li" style=""> <code>{settings}</code>              (<code>table</code>)
-</div><div class="help-li" style=""> <code>{flags}</code>                 (<code>table</code>)
-</div><div class="help-li" style=""> <code>{get_language_id}</code>       (<code>fun(bufnr: integer, filetype: string): string</code>)
+</div><div class="help-li" style=""> <code>{settings}</code>              (<code>table</code>) Map with language server specific
+                                settings. These are returned to the language
+                                server if requested via
+                                <code>workspace/configuration</code>. Keys are
+                                case-sensitive.
+</div><div class="help-li" style=""> <code>{flags}</code>                 (<code>table</code>) A table with flags for the client.
+                                The current (experimental) flags are:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{allow_incremental_sync}</code> (<code>boolean</code>) Allow
+                                  using incremental sync for buffer edits
+                                  (defailt: <code>true</code>)
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{debounce_text_changes}</code> (<code>integer</code>, default:
+                                  <code>150</code>) Debounce <code>didChange</code> notifications to
+                                  the server by the given number in
+                                  milliseconds. No debounce occurs if <code>nil</code>.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{exit_timeout}</code> (<code>integer|false</code>, default:
+                                  <code>false</code>) Milliseconds to wait for server to
+                                  exit cleanly after sending the "shutdown"
+                                  request before sending kill -15. If set to
+                                  false, nvim exits immediately after sending
+                                  the "shutdown" request to the server.
+</div><div class="help-li" style=""> <code>{get_language_id}</code>       (fun(bufnr: integer, filetype: string):
+                                string`)
 </div><div class="help-li" style=""> <code>{capabilities}</code>          (<code>lsp.ClientCapabilities</code>) The capabilities
                                 provided by the client (editor or tool)
 </div><div class="help-li" style=""> <code>{dynamic_capabilities}</code>  (<code>lsp.DynamicCapabilities</code>)
@@ -1423,10 +1445,8 @@ with(<code>{handler}</code>, <code>{override_config}</code>)                    
 </div><div class="help-li" style=""> <code>{handlers}</code>           (<code>table&lt;string,function&gt;</code>) Map of language
                               server method names to <a href="lsp.html#lsp-handler">lsp-handler</a>
 </div><div class="help-li" style=""> <code>{settings}</code>           (<code>table</code>) Map with language server specific
-                              settings. These are returned to the language
-                              server if requested via
-                              <code>workspace/configuration</code>. Keys are
-                              case-sensitive.
+                              settings. See the <code>{settings}</code> in
+                              <a href="lsp.html#vim.lsp.Client">vim.lsp.Client</a>.
 </div><div class="help-li" style=""> <code>{commands}</code>           (table&lt;string,fun(command: lsp.Command, ctx:
                               table)&gt;`) Table that maps string of clientside
                               commands to user-defined functions. Commands
@@ -1454,13 +1474,14 @@ with(<code>{handler}</code>, <code>{override_config}</code>)                    
                               possible errors. Use
                               <code>vim.lsp.rpc.client_errors[code]</code> to get
                               human-friendly name.
-</div><div class="help-li" style=""> <code>{before_init}</code>        (<code>vim.lsp.client.before_init_cb</code>) Callback
-                              invoked before the LSP "initialize" phase, where
-                              <code>params</code> contains the parameters being sent to
-                              the server and <code>config</code> is the config that was
-                              passed to <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>. You can use
-                              this to modify parameters before they are sent.
-</div><div class="help-li" style=""> <code>{on_init}</code>            (<code>elem_or_list&lt;vim.lsp.client.on_init_cb&gt;</code>)
+</div><div class="help-li" style=""> <code>{before_init}</code>        (<code>fun(params: lsp.InitializeParams, config: vim.lsp.ClientConfig)</code>)
+                              Callback invoked before the LSP "initialize"
+                              phase, where <code>params</code> contains the parameters
+                              being sent to the server and <code>config</code> is the
+                              config that was passed to
+                              <a href="lsp.html#vim.lsp.start_client()">vim.lsp.start_client()</a>. You can use this to
+                              modify parameters before they are sent.
+</div><div class="help-li" style=""> <code>{on_init}</code>            (<code>elem_or_list&lt;fun(client: vim.lsp.Client, initialize_result: lsp.InitializeResult)&gt;</code>)
                               Callback invoked after LSP "initialize", where
                               <code>result</code> is a table of <code>capabilities</code> and
                               anything else the server may send. For example,
@@ -1468,13 +1489,13 @@ with(<code>{handler}</code>, <code>{override_config}</code>)                    
                               if <code>capabilities.offsetEncoding</code> was sent to it.
                               You can only modify the <code>client.offset_encoding</code>
                               here before any notifications are sent.
-</div><div class="help-li" style=""> <code>{on_exit}</code>            (<code>elem_or_list&lt;vim.lsp.client.on_exit_cb&gt;</code>)
+</div><div class="help-li" style=""> <code>{on_exit}</code>            (<code>elem_or_list&lt;fun(code: integer, signal: integer, client_id: integer)&gt;</code>)
                               Callback invoked on client exit.
 </div><div class="help-li" style="margin-left: 3rem;"> code: exit code of the process
 </div><div class="help-li" style="margin-left: 3rem;"> signal: number describing the signal used to
                                 terminate (if any)
 </div><div class="help-li" style="margin-left: 3rem;"> client_id: client handle
-</div><div class="help-li" style=""> <code>{on_attach}</code>          (<code>elem_or_list&lt;vim.lsp.client.on_attach_cb&gt;</code>)
+</div><div class="help-li" style=""> <code>{on_attach}</code>          (<code>elem_or_list&lt;fun(client: vim.lsp.Client, bufnr: integer)&gt;</code>)
                               Callback invoked when client attaches to a
                               buffer.
 </div><div class="help-li" style=""> <code>{trace}</code>              (<code>'off'|'messages'|'verbose'</code>, default: "off")
@@ -1482,18 +1503,19 @@ with(<code>{handler}</code>, <code>{override_config}</code>)                    
                               initialize request. Invalid/empty values will
 </div><div class="help-li" style=""> <code>{flags}</code>              (<code>table</code>) A table with flags for the client. The
                               current (experimental) flags are:
-</div><div class="help-li" style="margin-left: 3rem;"> allow_incremental_sync (bool, default true):
-                                Allow using incremental sync for buffer edits
-</div><div class="help-li" style="margin-left: 3rem;"> debounce_text_changes (number, default 150):
-                                Debounce didChange notifications to the server
-                                by the given number in milliseconds. No
-                                debounce occurs if nil
-</div><div class="help-li" style="margin-left: 3rem;"> exit_timeout (number|boolean, default false):
-                                Milliseconds to wait for server to exit
-                                cleanly after sending the "shutdown" request
-                                before sending kill -15. If set to false, nvim
-                                exits immediately after sending the "shutdown"
-                                request to the server.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{allow_incremental_sync}</code> (<code>boolean</code>) Allow
+                                using incremental sync for buffer edits
+                                (defailt: <code>true</code>)
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{debounce_text_changes}</code> (<code>integer</code>, default:
+                                <code>150</code>) Debounce <code>didChange</code> notifications to
+                                the server by the given number in
+                                milliseconds. No debounce occurs if <code>nil</code>.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{exit_timeout}</code> (<code>integer|false</code>, default:
+                                <code>false</code>) Milliseconds to wait for server to
+                                exit cleanly after sending the "shutdown"
+                                request before sending kill -15. If set to
+                                false, nvim exits immediately after sending
+                                the "shutdown" request to the server.
 </div><div class="help-li" style=""> <code>{root_dir}</code>           (<code>string</code>) Directory where the LSP server will
                               base its workspaceFolders, rootUri, and rootPath
                               on initialization.
@@ -1896,7 +1918,7 @@ on_diagnostic(<code>{_}</code>, <code>{result}</code>, <code>{ctx}</code>, <code
 <div class="help-column_heading">    Parameters:</div>
 <div class="help-li" style=""> <code>{result}</code>  (<code>lsp.DocumentDiagnosticReport</code>)
 </div><div class="help-li" style=""> <code>{ctx}</code>     (<code>lsp.HandlerContext</code>)
-</div><div class="help-li" style=""> <code>{config}</code>  (<code>table</code>) Configuration table (see
+</div><div class="help-li" style=""> <code>{config}</code>  (<code>vim.diagnostic.Opts</code>) Configuration table (see
                   <a href="diagnostic.html#vim.diagnostic.config()">vim.diagnostic.config()</a>).
 </div>
 </div>
@@ -3183,7 +3205,7 @@ Lua module: vim.lsp.protocol                                    </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2024-03-05 05:24 from <code><a href="https://github.com/neovim/neovim/commit/0ffc9264996573e2e8e4ad787c230ebda6fdf8ce">0ffc926</a></code>
+        Generated at 2024-03-06 05:22 from <code><a href="https://github.com/neovim/neovim/commit/a4290f462ed7dc81e17b09bd27877b106b24b6bd">a4290f4</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
