@@ -762,7 +762,7 @@ add_directive(<code>{name}</code>, <code>{handler}</code>, <code>{opts}</code>)
     data by using the capture id on the metadata table
     <code>metadata[capture_id].key = value</code></div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Name of the directive, without leading #
-</div><div class="help-li" style=""> <code>{handler}</code>  (<code>function</code>)
+</div><div class="help-li" style=""> <code>{handler}</code>  (<code>fun(match: table&lt;integer,TSNode[]&gt;, pattern: integer, source: integer|string, predicate: any[], metadata: table)</code>)
 </div><div class="help-li" style="margin-left: 3rem;"> match: A table mapping capture IDs to a list of captured
                      nodes
 </div><div class="help-li" style="margin-left: 3rem;"> pattern: the index of the matching pattern in the query
@@ -770,10 +770,10 @@ add_directive(<code>{name}</code>, <code>{handler}</code>, <code>{opts}</code>)
 </div><div class="help-li" style="margin-left: 3rem;"> predicate: list of strings containing the full directive
                      being called, e.g. <code>(node (#set! conceal "-"))</code> would get
                      the predicate <code>{ "#set!", "conceal", "-" }</code>
-</div><div class="help-li" style=""> <code>{opts}</code>     (<code>table&lt;string, any&gt;</code>) Optional options:
-</div><div class="help-li" style="margin-left: 3rem;"> force (boolean): Override an existing predicate of the
-                     same name
-</div><div class="help-li" style="margin-left: 3rem;"> all (boolean): Use the correct implementation of the
+</div><div class="help-li" style=""> <code>{opts}</code>     (<code>table</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{force}</code> (<code>boolean</code>) Override an existing predicate of
+                     the same name
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{all}</code> (<code>boolean</code>) Use the correct implementation of the
                      match table where capture IDs map to a list of nodes
                      instead of a single node. Defaults to false (for backward
                      compatibility). This option will eventually become the
@@ -783,13 +783,13 @@ add_directive(<code>{name}</code>, <code>{handler}</code>, <code>{opts}</code>)
 add_predicate(<code>{name}</code>, <code>{handler}</code>, <code>{opts}</code>)
     Adds a new predicate to be used in queries</div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Name of the predicate, without leading #
-</div><div class="help-li" style=""> <code>{handler}</code>  (<code>function</code>)
+</div><div class="help-li" style=""> <code>{handler}</code>  (<code>fun(match: table&lt;integer,TSNode[]&gt;, pattern: integer, source: integer|string, predicate: any[], metadata: table)</code>)
 </div><div class="help-li" style="margin-left: 3rem;"> see <a href="treesitter.html#vim.treesitter.query.add_directive()">vim.treesitter.query.add_directive()</a> for argument
                      meanings
-</div><div class="help-li" style=""> <code>{opts}</code>     (<code>table&lt;string, any&gt;</code>) Optional options:
-</div><div class="help-li" style="margin-left: 3rem;"> force (boolean): Override an existing predicate of the
-                     same name
-</div><div class="help-li" style="margin-left: 3rem;"> all (boolean): Use the correct implementation of the
+</div><div class="help-li" style=""> <code>{opts}</code>     (<code>table</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{force}</code> (<code>boolean</code>) Override an existing predicate of
+                     the same name
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{all}</code> (<code>boolean</code>) Use the correct implementation of the
                      match table where capture IDs map to a list of nodes
                      instead of a single node. Defaults to false (for backward
                      compatibility). This option will eventually become the
@@ -844,10 +844,10 @@ get_files(<code>{lang}</code>, <code>{query_name}</code>, <code>{is_included}</c
 </div></div>
 <div class="old-help-para">list_directives()                     <code id="vim.treesitter.query.list_directives()" class="help-tag-right"><a href="#vim.treesitter.query.list_directives()">vim.treesitter.query.list_directives()</a></code>
     Lists the currently available directives to use in queries.</div>
-<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>string[]</code>) List of supported directives.</div>
+<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>string[]</code>) Supported directives.</div>
 <div class="old-help-para">list_predicates()                     <code id="vim.treesitter.query.list_predicates()" class="help-tag-right"><a href="#vim.treesitter.query.list_predicates()">vim.treesitter.query.list_predicates()</a></code>
     Lists the currently available predicates to use in queries.</div>
-<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>string[]</code>) List of supported predicates.</div>
+<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>string[]</code>) Supported predicates.</div>
 <div class="old-help-para">omnifunc(<code>{findstart}</code>, <code>{base}</code>)                <code id="vim.treesitter.query.omnifunc()" class="help-tag-right"><a href="#vim.treesitter.query.omnifunc()">vim.treesitter.query.omnifunc()</a></code>
     Omnifunc for completing node names and predicates in treesitter queries.</div>
 <div class="old-help-para">    Use via<pre><code class="language-lua">vim.bo.omnifunc = 'v:lua.vim.treesitter.query.omnifunc'</code></pre></div>
@@ -1010,16 +1010,16 @@ LanguageTree:language_for_range(<code>{range}</code>)
     Gets the appropriate language that contains <code>{range}</code>.</div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>Range4</code>) <code>{ start_line, start_col, end_line, end_col }</code>
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>vim.treesitter.LanguageTree</code>) Managing <code>{range}</code></div>
+<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>vim.treesitter.LanguageTree</code>) tree Managing <code>{range}</code></div>
 <div class="old-help-para">                                         <code id="LanguageTree%3Anamed_node_for_range()" class="help-tag-right"><a href="#LanguageTree%3Anamed_node_for_range()">LanguageTree:named_node_for_range()</a></code>
 LanguageTree:named_node_for_range(<code>{range}</code>, <code>{opts}</code>)
     Gets the smallest named node that contains <code>{range}</code>.</div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>Range4</code>) <code>{ start_line, start_col, end_line, end_col }</code>
-</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) Optional keyword arguments:
-</div><div class="help-li" style="margin-left: 3rem;"> ignore_injections boolean Ignore injected languages
-                   (default true)
+</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_injections}</code> (<code>boolean</code>, default: <code>true</code>) Ignore
+                   injected languages
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>TSNode?</code>) Found node</div>
+<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>TSNode?</code>)</div>
 <div class="old-help-para">LanguageTree:parse(<code>{range}</code>)                             <code id="LanguageTree%3Aparse()" class="help-tag-right"><a href="#LanguageTree%3Aparse()">LanguageTree:parse()</a></code>
     Recursively parse all regions in the language tree using
     <a href="treesitter.html#treesitter-parsers">treesitter-parsers</a> for the corresponding languages and run injection
@@ -1038,8 +1038,9 @@ LanguageTree:named_node_for_range(<code>{range}</code>, <code>{opts}</code>)
 <div class="old-help-para">                                                 <code id="LanguageTree%3Aregister_cbs()" class="help-tag-right"><a href="#LanguageTree%3Aregister_cbs()">LanguageTree:register_cbs()</a></code>
 LanguageTree:register_cbs(<code>{cbs}</code>, <code>{recursive}</code>)
     Registers callbacks for the <a href="treesitter.html#LanguageTree">LanguageTree</a>.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{cbs}</code>        (<code>table</code>) An <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a>-like table argument with
-                     the following handlers:
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{cbs}</code>        (<code>table&lt;TSCallbackNameOn,function&gt;</code>) An
+                     <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a>-like table argument with the
+                     following handlers:
 </div><div class="help-li" style="margin-left: 3rem;"> <code>on_bytes</code> : see <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a>, but this will be
                        called after the parsers callback.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>on_changedtree</code> : a callback that will be called every
@@ -1063,9 +1064,9 @@ LanguageTree:register_cbs(<code>{cbs}</code>, <code>{recursive}</code>)
 LanguageTree:tree_for_range(<code>{range}</code>, <code>{opts}</code>)
     Gets the tree that contains <code>{range}</code>.</div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>Range4</code>) <code>{ start_line, start_col, end_line, end_col }</code>
-</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) Optional keyword arguments:
-</div><div class="help-li" style="margin-left: 3rem;"> ignore_injections boolean Ignore injected languages
-                   (default true)
+</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_injections}</code> (<code>boolean</code>, default: <code>true</code>) Ignore
+                   injected languages
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>TSTree?</code>)</div>
 <div class="old-help-para">LanguageTree:trees()                                    <code id="LanguageTree%3Atrees()" class="help-tag-right"><a href="#LanguageTree%3Atrees()">LanguageTree:trees()</a></code>
@@ -1113,7 +1114,7 @@ Lua module: vim.treesitter.languagetree          </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2024-03-16 05:23 from <code><a href="https://github.com/neovim/neovim/commit/59aadf33efc2755ef52ff224e7d279a9ee9cd5dd">59aadf3</a></code>
+        Generated at 2024-03-17 05:24 from <code><a href="https://github.com/neovim/neovim/commit/c52dfb6e840827a2de713e40ea8506491ec7ce0b">c52dfb6</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+treesitter.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/treesitter.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
