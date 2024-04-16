@@ -361,6 +361,10 @@ DiagnosticChanged       After diagnostics have changed. When used from Lua,
 </div><div class="help-li" style=""> <code>{user_data}</code>  (<code>any</code>) arbitrary data plugins can add
 </div><div class="help-li" style=""> <code>{namespace}</code>  (<code>integer</code>)
 </div></div>
+<div class="old-help-para"><code id="vim.diagnostic.Filter" class="help-tag"><a href="#vim.diagnostic.Filter">vim.diagnostic.Filter</a></code>
+    Extends: <a href="diagnostic.html#vim.diagnostic.Opts">vim.diagnostic.Opts</a></div>
+<div class="old-help-para"><div class="help-column_heading">    Fields:</div><div class="help-li" style=""> <code>{ns_id}</code>  (<code>integer</code>) Namespace
+</div></div>
 <div class="old-help-para"><code id="vim.diagnostic.GetOpts" class="help-tag"><a href="#vim.diagnostic.GetOpts">vim.diagnostic.GetOpts</a></code>
     A table with the following keys:</div>
 <div class="old-help-para"><div class="help-column_heading">    Fields:</div><div class="help-li" style=""> <code>{namespace}</code>  (<code>integer[]|integer</code>) Limit diagnostics to one or more
@@ -575,19 +579,15 @@ end</code></pre>
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>table</code>) Table with actually present severity values as keys (see
         <a href="diagnostic.html#diagnostic-severity">diagnostic-severity</a>) and integer counts as values.</div>
-<div class="old-help-para">disable(<code>{bufnr}</code>, <code>{namespace}</code>)                       <code id="vim.diagnostic.disable()" class="help-tag-right"><a href="#vim.diagnostic.disable()">vim.diagnostic.disable()</a></code>
-    Disable diagnostics in the given buffer.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{bufnr}</code>      (<code>integer?</code>) Buffer number, or 0 for current buffer. When
-                     omitted, disable diagnostics in all buffers.
-</div><div class="help-li" style=""> <code>{namespace}</code>  (<code>integer?</code>) Only disable diagnostics for the given
-                     namespace.
-</div></div>
-<div class="old-help-para">enable(<code>{bufnr}</code>, <code>{namespace}</code>)                         <code id="vim.diagnostic.enable()" class="help-tag-right"><a href="#vim.diagnostic.enable()">vim.diagnostic.enable()</a></code>
-    Enable diagnostics in the given buffer.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{bufnr}</code>      (<code>integer?</code>) Buffer number, or 0 for current buffer. When
-                     omitted, enable diagnostics in all buffers.
-</div><div class="help-li" style=""> <code>{namespace}</code>  (<code>integer?</code>) Only enable diagnostics for the given
-                     namespace.
+<div class="old-help-para">enable(<code>{bufnr}</code>, <code>{enable}</code>, <code>{opts}</code>)                    <code id="vim.diagnostic.enable()" class="help-tag-right"><a href="#vim.diagnostic.enable()">vim.diagnostic.enable()</a></code>
+    Enables or disables diagnostics.</div>
+<div class="old-help-para">    To "toggle", pass the inverse of <code>is_enabled()</code>:<pre><code class="language-lua">vim.diagnostic.enable(0, not vim.diagnostic.is_enabled())</code></pre></div>
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{bufnr}</code>   (<code>integer?</code>) Buffer number, or 0 for current buffer, or
+                  <code>nil</code> for all buffers.
+</div><div class="help-li" style=""> <code>{enable}</code>  (<code>boolean?</code>) true/nil to enable, false to disable
+</div><div class="help-li" style=""> <code>{opts}</code>    (<code>vim.diagnostic.Filter?</code>) Filter by these opts, or <code>nil</code>
+                  for all. Only <code>ns_id</code> is supported, currently. See
+                  <a href="diagnostic.html#vim.diagnostic.Filter">vim.diagnostic.Filter</a>.
 </div></div>
 <div class="old-help-para">fromqflist(<code>{list}</code>)                               <code id="vim.diagnostic.fromqflist()" class="help-tag-right"><a href="#vim.diagnostic.fromqflist()">vim.diagnostic.fromqflist()</a></code>
     Convert a list of quickfix items to a list of diagnostics.</div>
@@ -650,18 +650,19 @@ end</code></pre>
     be redisplayed with <a href="diagnostic.html#vim.diagnostic.show()">vim.diagnostic.show()</a>. To completely remove
     diagnostics, use <a href="diagnostic.html#vim.diagnostic.reset()">vim.diagnostic.reset()</a>.</div>
 <div class="old-help-para">    To hide diagnostics and prevent them from re-displaying, use
-    <a href="diagnostic.html#vim.diagnostic.disable()">vim.diagnostic.disable()</a>.</div>
+    <a href="diagnostic.html#vim.diagnostic.enable()">vim.diagnostic.enable()</a>.</div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{namespace}</code>  (<code>integer?</code>) Diagnostic namespace. When omitted, hide
                      diagnostics from all namespaces.
 </div><div class="help-li" style=""> <code>{bufnr}</code>      (<code>integer?</code>) Buffer number, or 0 for current buffer. When
                      omitted, hide diagnostics in all buffers.
 </div></div>
-<div class="old-help-para">is_disabled(<code>{bufnr}</code>, <code>{namespace}</code>)               <code id="vim.diagnostic.is_disabled()" class="help-tag-right"><a href="#vim.diagnostic.is_disabled()">vim.diagnostic.is_disabled()</a></code>
-    Check whether diagnostics are disabled in a given buffer.</div>
+<div class="old-help-para">is_enabled(<code>{bufnr}</code>, <code>{namespace}</code>)                 <code id="vim.diagnostic.is_enabled()" class="help-tag-right"><a href="#vim.diagnostic.is_enabled()">vim.diagnostic.is_enabled()</a></code>
+    Check whether diagnostics are enabled.</div>
+<div class="old-help-para"><div class="help-column_heading"><a class="unknown-token" target="_blank" title="Report bug... (unhandled token "note")" href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+diagnostic.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/diagnostic.html%0D+unhandled+token%3A+%60note%60%0DContext%3A%0D%0D%60%60%60%0Dis_enabled(%7Bbufnr%7D%2C%20%7Bnamespace%7D)%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%2Avim.diagnostic.is_enabled()%2A%0A%20%20%20%20Check%20whether%20diagnostics%20are%20enabled.%0A%0A%20%20%20%20Note%3A%20~%0A%20%20%20%20%20%20%E2%80%A2%20This%20API%20is%20pre-release%20(unstable).%0A%0A%20%20%20%20Parameters%3A%20~%0D%60%60%60">Note:</a></div><div class="help-li" style=""> This API is pre-release (unstable).
+</div></div>
 <div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{bufnr}</code>      (<code>integer?</code>) Buffer number, or 0 for current buffer.
-</div><div class="help-li" style=""> <code>{namespace}</code>  (<code>integer?</code>) Diagnostic namespace. When omitted, checks
-                     if all diagnostics are disabled in <code>{bufnr}</code>. Otherwise,
-                     only checks if diagnostics from <code>{namespace}</code> are disabled.
+</div><div class="help-li" style=""> <code>{namespace}</code>  (<code>integer?</code>) Diagnostic namespace, or <code>nil</code> for all
+                     diagnostics in <code>{bufnr}</code>.
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>boolean</code>)</div>
 <div class="old-help-para">                                                      <code id="vim.diagnostic.match()" class="help-tag-right"><a href="#vim.diagnostic.match()">vim.diagnostic.match()</a></code>
@@ -782,7 +783,7 @@ Lua module: vim.diagnostic                                    </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2024-04-16 05:24 from <code><a href="https://github.com/neovim/neovim/commit/47ba96a6b3bf22097134b319ed97ec840b05eaa7">47ba96a</a></code>
+        Generated at 2024-04-16 12:24 from <code><a href="https://github.com/neovim/neovim/commit/2fc2343728831d890a043def5d9d714947737cf6">2fc2343</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+diagnostic.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/diagnostic.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   Diagnostics
