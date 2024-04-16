@@ -10,7 +10,6 @@ This repo contains automation scripts and CI configuration to run the scripts.
     - [doc/ landing page](https://neovim.io/doc)
         - [user/ docs](https://neovim.io/doc/user)
     - Build reports:
-        - [Clang report](https://neovim.io/doc/reports/clang)
         - [Vimpatch report](https://neovim.io/doc/reports/vimpatch)
 
 ## Run Locally
