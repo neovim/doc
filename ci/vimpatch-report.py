@@ -32,7 +32,7 @@ def get_open_pullrequests():
 
 
 tag_link = string.Template(
-    '<li><a href="https://github.com/vim/vim/tree/v8.0.${patch}">vim-patch:8.0.${patch}</a></li>'
+    '<li><a href="https://github.com/vim/vim/tree/v8.1.${patch}">vim-patch:8.1.${patch}</a></li>'
 )
 
 
