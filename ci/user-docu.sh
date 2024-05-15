@@ -6,6 +6,7 @@ source ${BUILD_DIR}/ci/common/common.sh
 
 generate_user_docu() {
   require_environment_variable BUILD_DIR "${BASH_SOURCE[0]}" ${LINENO}
+  require_environment_variable NEOVIM_DIR "${BASH_SOURCE[0]}" ${LINENO}
 
   cd ${NEOVIM_DIR}
   make
