@@ -17,6 +17,10 @@ This repo contains automation scripts and CI configuration to run the scripts.
 To run the scripts locally, execute `./ci/<build script>`, where `build script`
 is any executable shell script. Override environment variables as necessary.
 
+### Example: Build user documentations:
+
+    NEOVIM_DIR=~/neovim-src/ ./ci/user-docu.sh
+
 ### Example: Generate the vim-patch report:
 
     VIM_SOURCE_DIR=~/vim-src/ NEOVIM_DIR=~/neovim-src/ ./ci/vimpatch-report.sh
