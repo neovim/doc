@@ -110,12 +110,13 @@ itself. See also <a href="debug.html#debug.txt">debug.txt</a> for advice that ap
 
 </div>
 <div class="help-para">
-<div class="help-column_heading">LINUX</div>
+<h3 id="_linux" class="help-heading">LINUX</h3>
+
 
 </div>
 <div class="help-para">
-Core dumps are disabled by default on Ubuntu
-<a href="https://stackoverflow.com/a/18368068,">https://stackoverflow.com/a/18368068,</a> CentOS and others. To enable core dumps:
+Core dumps are disabled by default on Ubuntu, CentOS and others.
+To enable core dumps:
 <pre><code class="language-bash">ulimit -c unlimited</code></pre>
 
 </div>
@@ -125,21 +126,30 @@ On systemd-based systems getting a backtrace is as easy as:
 
 </div>
 <div class="help-para">
-It's an optional tool, so you may need to install it:
+<code>coredumpctl</code> is an optional tool, so you may need to install it:
 <pre><code class="language-bash">sudo apt install systemd-coredump</code></pre>
 
 </div>
 <div class="help-para">
-The full backtrace is most useful, send us the <code>bt.txt</code> file:
-<pre><code class="language-bash">2&gt;&amp;1 coredumpctl -1 gdb | tee -a bt.txt
-thread apply all bt full</code></pre>
+The full backtrace is most useful; please send us the <code>backtrace.txt</code> file
+when reporting a bug related to a crash:
+<pre><code class="language-bash">2&gt;&amp;1 coredumpctl -1 gdb | tee -a backtrace.txt
+(gdb) thread apply all bt full</code></pre>
 
 </div>
 <div class="help-para">
-On older systems a <code>core</code> file will appear in the current directory. To get
-a backtrace from the <code>core</code> file:
-<pre><code class="language-bash">gdb build/bin/nvim core 2&gt;&amp;1 | tee backtrace.txt
-thread apply all bt full</code></pre>
+On systems without <code>coredumpctl</code>, you may find a <code>core</code> dump file appearing
+in the current directory or in other locations. On Linux systems where
+<code>apport</code> is installed (such as Ubuntu), the directory where core dump files
+are saved can be <code>/var/lib/apport/coredump</code> or elsewhere, depending on the
+system configuration (see <code>/proc/sys/kernel/core_pattern</code>). See also:
+<a href="https://stackoverflow.com/a/18368068">https://stackoverflow.com/a/18368068</a>
+
+</div>
+<div class="help-para">
+To get a backtrace from the <code>./core</code> dump file:
+<pre><code class="language-bash">gdb build/bin/nvim ./core 2&gt;&amp;1 | tee backtrace.txt
+(gdb) thread apply all bt full</code></pre>
 
 </div>
 <div class="help-para">
@@ -190,7 +200,8 @@ core dumps with <code>/etc/launchd.conf</code>).
 
 </div>
 <div class="help-para">
-<div class="help-column_heading">USING GDB TO STEP THROUGH FUNCTIONAL TESTS</div>
+<h3 id="_using-gdb-to-step-through-functional-tests" class="help-heading">USING GDB TO STEP THROUGH FUNCTIONAL TESTS</h3>
+
 
 </div>
 <div class="help-para">
@@ -202,24 +213,27 @@ Use <code>TEST_TAG</code> to run tests matching busted tags (of the form <code>#
 <div class="help-para">
 Then, in another terminal:
 <pre><code class="language-bash">gdb build/bin/nvim
-target remote localhost:7777</code></pre>
+(gdb) target remote localhost:7777</code></pre>
 -- See <code>nvim_argv</code> in <a href="https://github.com/neovim/neovim/blob/master/test/functional/testnvim.lua">https://github.com/neovim/neovim/blob/master/test/functional/testnvim.lua</a>.
 
 </div>
 <div class="help-para">
-<div class="help-column_heading">USING LLDB TO STEP THROUGH UNIT TESTS</div>
+<h3 id="_using-lldb-to-step-through-unit-tests" class="help-heading">USING LLDB TO STEP THROUGH UNIT TESTS</h3>
+
 
 </div>
 <div class="help-para">
-<pre><code class="language-bash">lldb .deps/usr/bin/luajit -- .deps/usr/bin/busted --lpath="./build/?.lua" test/unit/</code></pre>
+<pre>lldb .deps/usr/bin/luajit -- .deps/usr/bin/busted --lpath="./build/?.lua" test/unit/</pre>
 
 </div>
 <div class="help-para">
-<div class="help-column_heading">USING GDB</div>
+<h3 id="_using-gdb" class="help-heading">USING GDB</h3>
+
 
 </div>
 <div class="help-para">
-To attach to a running <code>nvim</code> process with a pid of 1234:
+To attach to a running <code>nvim</code> process with a pid of 1234 (Tip: the pid of a
+running Nvim instance can be obtained by calling <a href="builtin.html#getpid()">getpid()</a>), for instance:
 <pre><code class="language-bash">gdb -tui -p 1234 build/bin/nvim</code></pre>
 
 </div>
@@ -243,7 +257,8 @@ The <code>gdb</code> interactive prompt will appear. At any time you can:
 </div>
 </div>
 <div class="help-para">
-<div class="help-column_heading">GDB "REVERSE DEBUGGING"</div>
+<h3 id="_gdb-reverse-debugging" class="help-heading">GDB REVERSE DEBUGGING</h3>
+
 
 </div>
 <div class="help-para">
@@ -255,7 +270,8 @@ The <code>gdb</code> interactive prompt will appear. At any time you can:
 </div>
 </div>
 <div class="help-para">
-<div class="help-column_heading">USING GDBSERVER</div>
+<h3 id="_using-gdbserver" class="help-heading">USING GDBSERVER</h3>
+
 
 </div>
 <div class="help-para">
@@ -278,17 +294,17 @@ debugging session in another terminal:
 </div>
 <div class="help-para">
 Once you've entered <code>gdb</code>, you need to attach to the remote session:
-<pre>target remote localhost:6666</pre>
+<pre>(gdb) target remote localhost:6666</pre>
 
 </div>
 <div class="help-para">
 In case gdbserver puts the TUI as a background process, the TUI can become
 unable to read input from pty (and receives SIGTTIN signal) and/or output data
 (SIGTTOU signal). To force the TUI as the foreground process, you can add
-<pre>signal (SIGTTOU, SIG_IGN);
+<pre><code class="language-c">signal (SIGTTOU, SIG_IGN);
 if (!tcsetpgrp(data-&gt;input.in_fd, getpid())) {
     perror("tcsetpgrp failed");
-}</pre>
+}</code></pre>
 
 </div>
 <div class="help-para">
@@ -296,7 +312,8 @@ to <code>tui.c:terminfo_start</code>.
 
 </div>
 <div class="help-para">
-<div class="help-column_heading">USING GDBSERVER IN TMUX</div>
+<h3 id="_using-gdbserver-in-tmux" class="help-heading">USING GDBSERVER IN TMUX</h3>
+
 
 </div>
 <div class="help-para">
@@ -319,8 +336,8 @@ debug: dbg-start dbg-attach</code></pre>
 Here <code>gdb_start.sh</code> includes <code>gdb</code> commands to be called when the debugger
 starts. It needs to attach to the server started by the <code>dbg-start</code> rule. For
 example:
-<pre>target remote localhost:6666
-br main</pre>
+<pre>(gdb) target remote localhost:6666
+(gdb) br main</pre>
 
 </div>
 
@@ -332,15 +349,22 @@ br main</pre>
       <hr/>
   <div class="help-toc-h1"><a href="#dev-tools-backtrace">
 Backtraces                                            </a>
+<div class="help-toc-h2"><a href="#_linux">LINUX</a></div>
 <div class="help-toc-h2"><a href="#_macos">MACOS</a></div>
 </div><div class="help-toc-h1"><a href="#dev-tools-gdb">
 Gdb                                                          </a>
+<div class="help-toc-h2"><a href="#_using-gdb-to-step-through-functional-tests">USING GDB TO STEP THROUGH FUNCTIONAL TESTS</a></div>
+<div class="help-toc-h2"><a href="#_using-lldb-to-step-through-unit-tests">USING LLDB TO STEP THROUGH UNIT TESTS</a></div>
+<div class="help-toc-h2"><a href="#_using-gdb">USING GDB</a></div>
+<div class="help-toc-h2"><a href="#_gdb-reverse-debugging">GDB REVERSE DEBUGGING</a></div>
+<div class="help-toc-h2"><a href="#_using-gdbserver">USING GDBSERVER</a></div>
+<div class="help-toc-h2"><a href="#_using-gdbserver-in-tmux">USING GDBSERVER IN TMUX</a></div>
 </div></div>
 </div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2024-05-21 05:17 from <code><a href="https://github.com/neovim/neovim/commit/b7782daacebf8842bece6e41a20ee9a4859721e6">b7782da</a></code>
+        Generated at 2024-05-22 05:18 from <code><a href="https://github.com/neovim/neovim/commit/10601ac5fa3cf3d26f315873dab4384045999c7f">10601ac</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+dev_tools.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/dev_tools.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="          Nvim
