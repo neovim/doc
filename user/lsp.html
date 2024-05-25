@@ -109,7 +109,7 @@ enhanced LSP tools.
 
 </div>
 <div class="help-para">
-LSP facilitates features like go-to-definition, find-references, hover,
+LSP facilitates features like go-to-definition, find references, hover,
 completion, rename, format, refactor, etc., using semantic whole-project
 analysis (unlike <a href="tagsrch.html#ctags">ctags</a>).
 
@@ -126,28 +126,38 @@ Follow these steps to get LSP features:
 </div>
 <div class="help-para">
 1. Install language servers using your package manager or by following the
-   upstream installation instruction. You can find language servers here:
+   upstream installation instructions. You can find language servers here:
    <a href="https://microsoft.github.io/language-server-protocol/implementors/servers/">https://microsoft.github.io/language-server-protocol/implementors/servers/</a>
 
 </div>
 <div class="help-para">
-2. Configure the LSP client per language server. See <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a> or use
-   this minimal example as a guide:<pre><code class="language-lua">vim.lsp.start({
-  name = 'my-server-name',
-  cmd = {'name-of-language-server-executable'},
-  root_dir = vim.fs.root(0, {'setup.py', 'pyproject.toml'}),
+2. Use <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a> to start the LSP server (or attach to an existing
+   one) when a file is opened. Example:<pre><code class="language-lua">-- Create an event handler for the FileType autocommand
+vim.api.nvim_create_autocmd('FileType', {
+  -- This handler will fire when the buffer's 'filetype' is "python"
+  pattern = 'python',
+  callback = function(ev)
+    vim.lsp.start({
+      name = 'my-server-name',
+      cmd = {'name-of-language-server-executable', '--option', 'arg1', 'arg2'},
+      -- Set the "root directory" to the parent directory of the file in the
+      -- current buffer (`ev.buf`) that contains either a "setup.py" or a
+      -- "pyproject.toml" file. Files that share a root directory will reuse
+      -- the connection to the same LSP server.
+      root_dir = vim.fs.root(ev.buf, {'setup.py', 'pyproject.toml'}),
+    })
+  end,
 })</code></pre>
 
 </div>
 <div class="help-para">
-3. Check that the server attached to the buffer:<pre>:lua =vim.lsp.get_clients()</pre>
-4. Configure keymaps and autocmds to use LSP features. See <a href="lsp.html#lsp-config">lsp-config</a>.
+3. Check that the buffer is attached to the server:<pre><code class="language-vim">:checkhealth lsp</code></pre>
+4. (Optional) Configure keymaps and autocommands to use LSP features. <a href="lsp.html#lsp-config">lsp-config</a>
 
 </div>
 <div class="help-para">
-                                                        <code id="lsp-config" class="help-tag-right"><a href="#lsp-config">lsp-config</a></code>
                                                         <code id="lsp-defaults" class="help-tag-right"><a href="#lsp-defaults">lsp-defaults</a></code>
-When the LSP client starts it enables diagnostics <a href="diagnostic.html#vim.diagnostic">vim.diagnostic</a> (see
+When the Nvim LSP client starts it enables diagnostics <a href="diagnostic.html#vim.diagnostic">vim.diagnostic</a> (see
 <a href="diagnostic.html#vim.diagnostic.config()">vim.diagnostic.config()</a> to customize). It also sets various default options,
 listed below, if (1) the language server supports the functionality and (2)
 the options are empty or were set by the builtin runtime (ftplugin) files. The
@@ -162,29 +172,45 @@ options are not restored when the LSP client is stopped or detached.
   <a href="windows.html#CTRL-W_%7D">CTRL-W_}</a> to utilize the language server.
 </div><div class="help-li" style=""> <a href="options.html#'formatexpr'">'formatexpr'</a> is set to <a href="lsp.html#vim.lsp.formatexpr()">vim.lsp.formatexpr()</a>, so you can format lines via
   <a href="change.html#gq">gq</a> if the language server supports it.
-</div><div class="help-li" style="margin-left: 3rem;"> To opt out of this use <a href="change.html#gw">gw</a> instead of gq, or set <a href="options.html#'formatexpr'">'formatexpr'</a> on LspAttach.
+</div><div class="help-li" style="margin-left: 3rem;"> To opt out of this use <a href="change.html#gw">gw</a> instead of gq, or clear <a href="options.html#'formatexpr'">'formatexpr'</a> on <a href="lsp.html#LspAttach">LspAttach</a>.
 </div><div class="help-li" style=""> <a href="various.html#K">K</a> is mapped to <a href="lsp.html#vim.lsp.buf.hover()">vim.lsp.buf.hover()</a> unless <a href="options.html#'keywordprg'">'keywordprg'</a> is customized or
   a custom keymap for <code>K</code> exists.
 </div>
 </div>
 <div class="help-para">
+                                                <code id="grr" class="help-tag-right"><a href="#grr">grr</a></code> <code id="gra" class="help-tag"><a href="#gra">gra</a></code> <code id="grn" class="help-tag"><a href="#grn">grn</a></code> <code id="i_CTRL-S" class="help-tag"><a href="#i_CTRL-S">i_CTRL-S</a></code>
+Some keymaps are created unconditionally when Nvim starts:
+<div class="help-li" style=""> "grn" is mapped in Normal mode to <a href="lsp.html#vim.lsp.buf.rename()">vim.lsp.buf.rename()</a>
+</div><div class="help-li" style=""> "gra" is mapped in Normal and Visual mode to <a href="lsp.html#vim.lsp.buf.code_action()">vim.lsp.buf.code_action()</a>
+</div><div class="help-li" style=""> "grr" is mapped in Normal mode to <a href="lsp.html#vim.lsp.buf.references()">vim.lsp.buf.references()</a>
+</div><div class="help-li" style=""> <code>CTRL-S</code> is mapped in Insert mode to <a href="lsp.html#vim.lsp.buf.signature_help()">vim.lsp.buf.signature_help()</a>
+</div>
+</div>
+<div class="help-para">
+If not wanted, these keymaps can be removed at any time using
+<a href="lua.html#vim.keymap.del()">vim.keymap.del()</a> or <a href="map.html#%3Aunmap">:unmap</a> (see also <a href="change.html#gr-default">gr-default</a>).
+
+</div>
+<div class="help-para">
                                                         <code id="lsp-defaults-disable" class="help-tag-right"><a href="#lsp-defaults-disable">lsp-defaults-disable</a></code>
-To override the above defaults, set or unset the options on <a href="lsp.html#LspAttach">LspAttach</a>:<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspAttach', {
+To override or delete any of the above defaults, set or unset the options on
+<a href="lsp.html#LspAttach">LspAttach</a>:<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(ev)
     vim.bo[ev.buf].formatexpr = nil
     vim.bo[ev.buf].omnifunc = nil
     vim.keymap.del('n', 'K', { buffer = ev.buf })
   end,
 })</code></pre>
+
+</div>
+<div class="help-para">
+                                                        <code id="lsp-config" class="help-tag-right"><a href="#lsp-config">lsp-config</a></code>
 To use other LSP features, set keymaps on <a href="lsp.html#LspAttach">LspAttach</a>. Not all language
 servers provide the same capabilities. To ensure you only set keymaps if the
 language server supports a feature, guard keymaps behind capability checks.
 Example:<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client.supports_method('textDocument/rename') then
-      -- Create a keymap for vim.lsp.buf.rename()
-    end
     if client.supports_method('textDocument/implementation') then
       -- Create a keymap for vim.lsp.buf.implementation
     end
@@ -3201,7 +3227,7 @@ Lua module: vim.lsp.protocol                                    </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2024-05-24 05:17 from <code><a href="https://github.com/neovim/neovim/commit/0e9c92a900435fb09440398674687e45cc802b08">0e9c92a</a></code>
+        Generated at 2024-05-25 05:16 from <code><a href="https://github.com/neovim/neovim/commit/93c55c238f4c1088da4dc6ec80103eb3ef4085d2">93c55c2</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP

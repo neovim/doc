@@ -17,7 +17,7 @@
 
     <script src="/highlight/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
-    <title> Job_control - Neovim docs</title>
+    <title> Health - Neovim docs</title>
   </head>
   <body>
     <header class="container">
@@ -85,114 +85,103 @@
 
   <div class="container golden-grid help-body">
   <div class="col-wide">
-  <a name="job"></a><h1 id="job_control.txt"> Job_control</h1>
+  <a name="health"></a><h1 id="health.txt"> Health</h1>
   <p>
     <i>
     Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/scripts/gen_help_html.lua">generated</a>
-    from <a href="https://github.com/neovim/neovim/blob/master/runtime/doc/job_control.txt">source</a>
+    from <a href="https://github.com/neovim/neovim/blob/master/runtime/doc/health.txt">source</a>
     using the <a href="https://github.com/neovim/tree-sitter-vimdoc">tree-sitter-vimdoc</a> parser.
     </i>
   </p>
   <hr/>
-  <div class="old-help-para">Nvim job control <code id="job-control" class="help-tag"><a href="#job-control">job-control</a></code></div>
-<div class="old-help-para">Job control is a way to perform multitasking in Nvim, so scripts can spawn and
-control multiple processes without blocking the current Nvim instance.</div>
-<div class="old-help-para"><h2 id="_-concepts" class="help-heading">Concepts</h2></div>
-<div class="old-help-para">Job Id							<code id="job-id" class="help-tag-right"><a href="#job-id">job-id</a></code></div>
-<div class="old-help-para">Each job is identified by an integer id, unique for the life of the current
-Nvim session. Each job-id is a valid <a href="channel.html#channel-id">channel-id</a>: they share the same "key
-space". Functions like <a href="builtin.html#jobstart()">jobstart()</a> return job ids; functions like
-<a href="builtin.html#jobstop()">jobstop()</a>, <a href="builtin.html#chansend()">chansend()</a>, <a href="builtin.html#rpcnotify()">rpcnotify()</a>, and <a href="builtin.html#rpcrequest()">rpcrequest()</a> take job ids.</div>
-<div class="old-help-para">Job stdio streams form a <a href="channel.html#channel">channel</a> which can send and receive raw bytes or
-<a href="api.html#msgpack-rpc">msgpack-rpc</a> messages.</div>
-<div class="old-help-para"><h2 id="job-control-usage" class="help-heading">Usage<span class="help-heading-tags">							<span class="help-tag"><a href="#job-control-usage">job-control-usage</a></span></h2></div>
-<div class="old-help-para">To control jobs, use the "job…" family of functions: <a href="builtin.html#jobstart()">jobstart()</a>,
-<a href="builtin.html#jobstop()">jobstop()</a>, etc.</div>
-<div class="old-help-para">Example:<pre><code class="language-vim">function! s:OnEvent(job_id, data, event) dict
-  if a:event == 'stdout'
-    let str = self.shell.' stdout: '.join(a:data)
-  elseif a:event == 'stderr'
-    let str = self.shell.' stderr: '.join(a:data)
+  <div class="old-help-para"><h2 id="health" class="help-heading">Checkhealth</h2></div>
+<div class="old-help-para">health.vim is a minimal framework to help users troubleshoot configuration and
+any other environment conditions that a plugin might care about. Nvim ships
+with healthchecks for configuration, performance, python support, ruby
+support, clipboard support, and more.</div>
+<div class="old-help-para">To run all healthchecks, use:<pre><code class="language-vim">:checkhealth</code></pre></div>
+<div class="old-help-para">Plugin authors are encouraged to write new healthchecks. <a href="health.html#health-dev">health-dev</a></div>
+<div class="old-help-para">Commands                                                     <code id="health-commands" class="help-tag-right"><a href="#health-commands">health-commands</a></code></div>
+<div class="old-help-para">                                                           <code id="%3Ache" class="help-tag-right"><a href="#%3Ache">:che</a></code> <code id="%3Acheckhealth" class="help-tag"><a href="#%3Acheckhealth">:checkhealth</a></code>
+:che[ckhealth]  Run all healthchecks.
+                                                                       <code id="E5009" class="help-tag-right"><a href="#E5009">E5009</a></code>
+                Nvim depends on <a href="starting.html#%24VIMRUNTIME">$VIMRUNTIME</a>, <a href="options.html#'runtimepath'">'runtimepath'</a> and <a href="options.html#'packpath'">'packpath'</a> to
+                find the standard "runtime files" for syntax highlighting,
+                filetype-specific behavior, and standard plugins (including
+                :checkhealth).  If the runtime files cannot be found then
+                those features will not work.</div>
+<div class="old-help-para">:che[ckhealth] <code>{plugins}</code>
+                Run healthcheck(s) for one or more plugins. E.g. to run only
+                the standard Nvim healthcheck:<pre><code class="language-vim">:checkhealth vim.health</code></pre></div>
+<div class="old-help-para">                To run the healthchecks for the "foo" and "bar" plugins
+                (assuming they are on <a href="options.html#'runtimepath'">'runtimepath'</a> and they have implemented
+                the Lua <code>require("foo.health").check()</code> interface):<pre><code class="language-vim">:checkhealth foo bar</code></pre></div>
+<div class="old-help-para">                To run healthchecks for Lua submodules, use dot notation or
+                "*" to refer to all submodules. For example Nvim provides
+                <code>vim.lsp</code> and <code>vim.treesitter</code>:<pre><code class="language-vim">:checkhealth vim.lsp vim.treesitter
+:checkhealth vim*</code></pre></div>
+<div class="old-help-para">Create a healthcheck                                   <code id="health-dev" class="help-tag-right"><a href="#health-dev">health-dev</a></code> <code id="vim.health" class="help-tag"><a href="#vim.health">vim.health</a></code></div>
+<div class="old-help-para">Healthchecks are functions that check the user environment, configuration, or
+any other prerequisites that a plugin cares about. Nvim ships with
+healthchecks in:
+<div class="help-li" style=""> $VIMRUNTIME/autoload/health/
+</div><div class="help-li" style=""> $VIMRUNTIME/lua/vim/lsp/health.lua
+</div><div class="help-li" style=""> $VIMRUNTIME/lua/vim/treesitter/health.lua
+</div><div class="help-li" style=""> and more...
+</div></div>
+<div class="old-help-para">To add a new healthcheck for your own plugin, simply create a "health.lua"
+module on <a href="options.html#'runtimepath'">'runtimepath'</a> that returns a table with a "check()" function. Then
+<a href="health.html#%3Acheckhealth">:checkhealth</a> will automatically find and invoke the function.</div>
+<div class="old-help-para">For example if your plugin is named "foo", define your healthcheck module at
+one of these locations (on <a href="options.html#'runtimepath'">'runtimepath'</a>):
+<div class="help-li" style=""> lua/foo/health/init.lua
+</div><div class="help-li" style=""> lua/foo/health.lua
+</div></div>
+<div class="old-help-para">If your plugin also provides a submodule named "bar" for which you want
+a separate healthcheck, define the healthcheck at one of these locations:
+<div class="help-li" style=""> lua/foo/bar/health/init.lua
+</div><div class="help-li" style=""> lua/foo/bar/health.lua
+</div></div>
+<div class="old-help-para">All such health modules must return a Lua table containing a <code>check()</code>
+function.</div>
+<div class="old-help-para">Copy this sample code into <code>lua/foo/health.lua</code>, replacing "foo" in the path
+with your plugin name:<pre><code class="language-lua">local M = {}
+M.check = function()
+  vim.health.start("foo report")
+  -- make sure setup function parameters are ok
+  if check_setup() then
+    vim.health.ok("Setup is correct")
   else
-    let str = self.shell.' exited'
-  endif
-  call append(line('$'), str)
-endfunction
-let s:callbacks = {
-\ 'on_stdout': function('s:OnEvent'),
-\ 'on_stderr': function('s:OnEvent'),
-\ 'on_exit': function('s:OnEvent')
-\ }
-let job1 = jobstart(['bash'], extend({'shell': 'shell 1'}, s:callbacks))
-let job2 = jobstart(['bash', '-c', 'for i in {1..10}; do echo hello $i!; sleep 1; done'], extend({'shell': 'shell 2'}, s:callbacks))</code></pre>
-To test the above script, copy it to a file ~/foo.vim and run it:<pre><code class="language-bash">nvim -u ~/foo.vim</code></pre></div>
-<div class="old-help-para">Description of what happens:
-<div class="help-li" style=""> Two bash shells are spawned by <a href="builtin.html#jobstart()">jobstart()</a> with their stdin/stdout/stderr
-    streams connected to nvim.
-</div><div class="help-li" style=""> The first shell is idle, waiting to read commands from its stdin.
-</div><div class="help-li" style=""> The second shell is started with -c which executes the command (a for-loop
-    printing 0 through 9) and then exits.
-</div><div class="help-li" style=""> <code>OnEvent()</code> callback is passed to <a href="builtin.html#jobstart()">jobstart()</a> to handle various job
-    events. It displays stdout/stderr data received from the shells.
+    vim.health.error("Setup is incorrect")
+  end
+  -- do some more checking
+  -- ...
+end
+return M</code></pre>
+error(<code>{msg}</code>, <code>{...}</code>)                                       <code id="vim.health.error()" class="help-tag-right"><a href="#vim.health.error()">vim.health.error()</a></code>
+    Reports an error.</div>
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{msg}</code>  (<code>string</code>)
+</div><div class="help-li" style=""> <code>{...}</code>  (<code>string|string[]</code>) Optional advice
 </div></div>
-<div class="old-help-para">For <a href="channel.html#on_stdout">on_stdout</a> and <a href="channel.html#on_stderr">on_stderr</a> see <a href="channel.html#channel-callback">channel-callback</a>.
-							<code id="on_exit" class="help-tag-right"><a href="#on_exit">on_exit</a></code>
-Arguments passed to on_exit callback:
-  0: <a href="job_control.html#job-id">job-id</a>
-  1: Exit-code of the process, or 128+SIGNUM if by signal (e.g. 143 on SIGTERM).
-  2: Event type: "exit"</div>
-<div class="old-help-para"><b>  Note:</b> Buffered stdout/stderr data which has not been flushed by the sender
-	will not trigger the on_stdout/on_stderr callback (but if the process
-	ends, the on_exit callback will be invoked).
-        For example, "ruby -e" buffers output, so small strings will be
-        buffered unless "auto-flushing" ($stdout.sync=true) is enabled.<pre><code class="language-vim">function! Receive(job_id, data, event)
-  echom printf('%s: %s',a:event,string(a:data))
-endfunction
-call jobstart(['ruby', '-e',
-  \ '$stdout.sync = true; 5.times do sleep 1 and puts "Hello Ruby!" end'],
-  \ {'on_stdout': 'Receive'})</code></pre></div>
-<div class="old-help-para">       <a href="https://github.com/neovim/neovim/issues/1592">https://github.com/neovim/neovim/issues/1592</a></div>
-<div class="old-help-para">  Note 2:
-	Job event handlers may receive partial (incomplete) lines. For a given
-	invocation of on_stdout/on_stderr, <code>a:data</code> is not guaranteed to end
-	with a newline.
-<div class="help-li" style=""> <code>abcdefg</code> may arrive as <code>['abc']</code>, <code>['defg']</code>.
-</div><div class="help-li" style=""> <code>abc\nefg</code> may arrive as <code>['abc', '']</code>, <code>['efg']</code> or <code>['abc']</code>,
-	    <code>['','efg']</code>, or even <code>['ab']</code>, <code>['c','efg']</code>.
-	Easy way to deal with this: initialize a list as <code>['']</code>, then append
-	to it as follows:<pre><code class="language-vim">let s:chunks = ['']
-func! s:on_stdout(job_id, data, event) dict
-  let s:chunks[-1] .= a:data[0]
-  call extend(s:chunks, a:data[1:])
-endf</code></pre>
+<div class="old-help-para">info(<code>{msg}</code>)                                                <code id="vim.health.info()" class="help-tag-right"><a href="#vim.health.info()">vim.health.info()</a></code>
+    Reports an informational message.</div>
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{msg}</code>  (<code>string</code>)
 </div></div>
-<div class="old-help-para">The <a href="builtin.html#jobstart-options">jobstart-options</a> dictionary is passed as <a href="eval.html#self">self</a> to the callback.
-The above example could be written in this "object-oriented" style:<pre><code class="language-vim">let Shell = {}
-function Shell.on_stdout(_job_id, data, event)
-  call append(line('$'),
-        \ printf('[%s] %s: %s', a:event, self.name, join(a:data[:-2])))
-endfunction
-let Shell.on_stderr = function(Shell.on_stdout)
-function Shell.on_exit(job_id, _data, event)
-  let msg = printf('job %d ("%s") finished', a:job_id, self.name)
-  call append(line('$'), printf('[%s] BOOM!', a:event))
-  call append(line('$'), printf('[%s] %s!', a:event, msg))
-endfunction
-function Shell.new(name, cmd)
-  let object = extend(copy(g:Shell), {'name': a:name})
-  let object.cmd = ['sh', '-c', a:cmd]
-  let object.id = jobstart(object.cmd, object)
-  $
-  return object
-endfunction
-let instance = Shell.new('bomb',
-      \ 'for i in $(seq 9 -1 1); do echo $i 1&gt;&amp;$((i % 2 + 1)); sleep 1; done')</code></pre></div>
-<div class="old-help-para">To send data to the job's stdin, use <a href="builtin.html#chansend()">chansend()</a>:<pre><code class="language-vim">:call chansend(job1, "ls\n")
-:call chansend(job1, "invalid-command\n")
-:call chansend(job1, "exit\n")</code></pre></div>
-<div class="old-help-para">A job may be killed at any time with the <a href="builtin.html#jobstop()">jobstop()</a> function:
-<pre><code class="language-vim">:call jobstop(job1)</code></pre></div>
-<div class="old-help-para">Individual streams can be closed without killing the job, see <a href="builtin.html#chanclose()">chanclose()</a>.</div>
+<div class="old-help-para">ok(<code>{msg}</code>)                                                    <code id="vim.health.ok()" class="help-tag-right"><a href="#vim.health.ok()">vim.health.ok()</a></code>
+    Reports a "success" message.</div>
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{msg}</code>  (<code>string</code>)
+</div></div>
+<div class="old-help-para">start(<code>{name}</code>)                                             <code id="vim.health.start()" class="help-tag-right"><a href="#vim.health.start()">vim.health.start()</a></code>
+    Starts a new report. Most plugins should call this only once, but if you
+    want different sections to appear in your report, call this once per
+    section.</div>
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{name}</code>  (<code>string</code>)
+</div></div>
+<div class="old-help-para">warn(<code>{msg}</code>, <code>{...}</code>)                                         <code id="vim.health.warn()" class="help-tag-right"><a href="#vim.health.warn()">vim.health.warn()</a></code>
+    Reports a warning.</div>
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{msg}</code>  (<code>string</code>)
+</div><div class="help-li" style=""> <code>{...}</code>  (<code>string|string[]</code>) Optional advice
+</div></div>
 
   </div>
       <div class="col-narrow toc">
@@ -200,10 +189,8 @@ let instance = Shell.new('bomb',
       <div><a href="vimindex.html">Commands index</a></div>
       <div><a href="quickref.html">Quick reference</a></div>
       <hr/>
-  <div class="help-toc-h1"><a href="#_-concepts">
-Concepts</a>
-</div><div class="help-toc-h1"><a href="#job-control-usage">
-Usage							</a>
+  <div class="help-toc-h1"><a href="#health">
+Checkhealth                                                           </a>
 </div></div>
 </div>
   <footer>
@@ -212,10 +199,9 @@ Usage							</a>
         Generated at 2024-05-25 05:16 from <code><a href="https://github.com/neovim/neovim/commit/93c55c238f4c1088da4dc6ec80103eb3ef4085d2">93c55c2</a></code>
       </div>
       <div class="generator-stats">
-      parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+job_control.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/job_control.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
-		 NVIM REFERENCE MANUAL    by Thiago de Arruda
-				      Type &lt;a href="various.html#gO"&gt;gO&lt;/a&gt; to see the table of contents.
- vim:tw=78:ts=8:noet:ft=help:norl:">noise_lines: 4</span>
+      parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+health.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/health.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="               Nvim
+                 NVIM REFERENCE MANUAL
+                                       Type &lt;a href="various.html#gO"&gt;gO&lt;/a&gt; to see the table of contents.">noise_lines: 3</span>
       </div>
     <div>
 
