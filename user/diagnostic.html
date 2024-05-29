@@ -369,25 +369,35 @@ DiagnosticChanged       After diagnostics have changed. When used from Lua,
 </div><div class="help-li" style=""> <code>{severity}</code>   (<code>vim.diagnostic.SeverityFilter</code>) See
                       <a href="diagnostic.html#diagnostic-severity">diagnostic-severity</a>.
 </div></div>
-<div class="old-help-para"><code id="vim.diagnostic.GotoOpts" class="help-tag"><a href="#vim.diagnostic.GotoOpts">vim.diagnostic.GotoOpts</a></code>
+<div class="old-help-para"><code id="vim.diagnostic.JumpOpts" class="help-tag"><a href="#vim.diagnostic.JumpOpts">vim.diagnostic.JumpOpts</a></code>
     Extends: <a href="diagnostic.html#vim.diagnostic.GetOpts">vim.diagnostic.GetOpts</a></div>
-<div class="old-help-para">    Configuration table with the following keys:</div>
-<div class="old-help-para"><div class="help-column_heading">    Fields:</div><div class="help-li" style=""> <code>{cursor_position}</code>  (<code>{[1]:integer,[2]:integer}</code>, default: current cursor position)
-                            Cursor position as a <code>(row, col)</code> tuple. See
-                            <a href="api.html#nvim_win_get_cursor()">nvim_win_get_cursor()</a>.
-</div><div class="help-li" style=""> <code>{wrap}</code>             (<code>boolean</code>, default: <code>true</code>) Whether to loop
-                            around file or not. Similar to <a href="options.html#'wrapscan'">'wrapscan'</a>.
-</div><div class="help-li" style=""> <code>{severity}</code>         (<code>vim.diagnostic.SeverityFilter</code>) See
-                            <a href="diagnostic.html#diagnostic-severity">diagnostic-severity</a>.
-</div><div class="help-li" style=""> <code>{float}</code>            (<code>boolean|vim.diagnostic.Opts.Float</code>, default:
-                            <code>true</code>) If <code>true</code>, call
-                            <a href="diagnostic.html#vim.diagnostic.open_float()">vim.diagnostic.open_float()</a> after moving. If a
-                            table, pass the table as the <code>{opts}</code> parameter to
-                            <a href="diagnostic.html#vim.diagnostic.open_float()">vim.diagnostic.open_float()</a>. Unless overridden,
-                            the float will show diagnostics at the new cursor
-                            position (as if "cursor" were passed to the
-                            "scope" option).
-</div><div class="help-li" style=""> <code>{win_id}</code>           (<code>integer</code>, default: <code>0</code>) Window ID
+<div class="old-help-para">    Configuration table with the keys listed below. Some parameters can have
+    their default values changed with <a href="diagnostic.html#vim.diagnostic.config()">vim.diagnostic.config()</a>.</div>
+<div class="old-help-para"><div class="help-column_heading">    Fields:</div><div class="help-li" style=""> <code>{diagnostic}</code>  (<code>vim.Diagnostic</code>) The diagnostic to jump to. Mutually
+                       exclusive with <code>{count}</code>, <code>{namespace}</code>, and <code>{severity}</code>.
+                       See <a href="diagnostic.html#vim.Diagnostic">vim.Diagnostic</a>.
+</div><div class="help-li" style=""> <code>{count}</code>       (<code>integer</code>) The number of diagnostics to move by,
+                       starting from <code>{pos}</code>. A positive integer moves forward
+                       by <code>{count}</code> diagnostics, while a negative integer moves
+                       backward by <code>{count}</code> diagnostics. Mutually exclusive
+                       with <code>{diagnostic}</code>.
+</div><div class="help-li" style=""> <code>{pos}</code>         (<code>{[1]:integer,[2]:integer}</code>) Cursor position as a
+                       <code>(row, col)</code> tuple. See <a href="api.html#nvim_win_get_cursor()">nvim_win_get_cursor()</a>. Used
+                       to find the nearest diagnostic when <code>{count}</code> is used.
+                       Only used when <code>{count}</code> is non-nil. Default is the
+                       current cursor position.
+</div><div class="help-li" style=""> <code>{wrap}</code>        (<code>boolean</code>, default: <code>true</code>) Whether to loop around
+                       file or not. Similar to <a href="options.html#'wrapscan'">'wrapscan'</a>.
+</div><div class="help-li" style=""> <code>{severity}</code>    (<code>vim.diagnostic.SeverityFilter</code>) See
+                       <a href="diagnostic.html#diagnostic-severity">diagnostic-severity</a>.
+</div><div class="help-li" style=""> <code>{float}</code>       (<code>boolean|vim.diagnostic.Opts.Float</code>, default: <code>true</code>)
+                       If <code>true</code>, call <a href="diagnostic.html#vim.diagnostic.open_float()">vim.diagnostic.open_float()</a> after
+                       moving. If a table, pass the table as the <code>{opts}</code>
+                       parameter to <a href="diagnostic.html#vim.diagnostic.open_float()">vim.diagnostic.open_float()</a>. Unless
+                       overridden, the float will show diagnostics at the new
+                       cursor position (as if "cursor" were passed to the
+                       "scope" option).
+</div><div class="help-li" style=""> <code>{winid}</code>       (<code>integer</code>, default: <code>0</code>) Window ID
 </div></div>
 <div class="old-help-para"><code id="vim.diagnostic.NS" class="help-tag"><a href="#vim.diagnostic.NS">vim.diagnostic.NS</a></code></div>
 <div class="old-help-para"><div class="help-column_heading">    Fields:</div><div class="help-li" style=""> <code>{name}</code>       (<code>string</code>)
@@ -396,7 +406,7 @@ DiagnosticChanged       After diagnostics have changed. When used from Lua,
 </div><div class="help-li" style=""> <code>{disabled}</code>  (<code>boolean</code>)
 </div></div>
 <div class="old-help-para"><code id="vim.diagnostic.Opts" class="help-tag"><a href="#vim.diagnostic.Opts">vim.diagnostic.Opts</a></code>
-    Each of the configuration options below accepts one of the following:
+    Many of the configuration options below accept one of the following:
 <div class="help-li" style=""> <code>false</code>: Disable this feature
 </div><div class="help-li" style=""> <code>true</code>: Enable this feature, use default settings.
 </div><div class="help-li" style=""> <code>table</code>: Enable this feature with overrides. Use an empty table to use
@@ -426,6 +436,9 @@ DiagnosticChanged       After diagnostics have changed. When used from Lua,
                              displayed before lower severities (e.g. ERROR is
                              displayed before WARN). Options:
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{reverse}</code> (boolean) Reverse sort order
+</div><div class="help-li" style=""> <code>{jump}</code>              (<code>vim.diagnostic.Opts.Jump</code>) Default values for
+                             <a href="diagnostic.html#vim.diagnostic.jump()">vim.diagnostic.jump()</a>. See
+                             <a href="diagnostic.html#vim.diagnostic.Opts.Jump">vim.diagnostic.Opts.Jump</a>.
 </div></div>
 <div class="old-help-para"><code id="vim.diagnostic.Opts.Float" class="help-tag"><a href="#vim.diagnostic.Opts.Float">vim.diagnostic.Opts.Float</a></code></div>
 <div class="old-help-para"><div class="help-column_heading">    Fields:</div><div class="help-li" style=""> <code>{bufnr}</code>          (<code>integer</code>, default: current buffer) Buffer number
@@ -482,6 +495,14 @@ DiagnosticChanged       After diagnostics have changed. When used from Lua,
                           setting from <a href="diagnostic.html#vim.diagnostic.config()">vim.diagnostic.config()</a>.
 </div><div class="help-li" style=""> <code>{focus_id}</code>       (<code>string</code>)
 </div><div class="help-li" style=""> <code>{border}</code>         (<code>string</code>) see <a href="api.html#nvim_open_win()">nvim_open_win()</a>.
+</div></div>
+<div class="old-help-para"><code id="vim.diagnostic.Opts.Jump" class="help-tag"><a href="#vim.diagnostic.Opts.Jump">vim.diagnostic.Opts.Jump</a></code></div>
+<div class="old-help-para"><div class="help-column_heading">    Fields:</div><div class="help-li" style=""> <code>{float}</code>     (<code>boolean|vim.diagnostic.Opts.Float</code>) Default value of
+                     the <code>{float}</code> parameter of <a href="diagnostic.html#vim.diagnostic.jump()">vim.diagnostic.jump()</a>.
+</div><div class="help-li" style=""> <code>{wrap}</code>      (<code>boolean</code>) Default value of the <code>{wrap}</code> parameter of
+                     <a href="diagnostic.html#vim.diagnostic.jump()">vim.diagnostic.jump()</a>.
+</div><div class="help-li" style=""> <code>{severity}</code>  (<code>vim.diagnostic.SeverityFilter</code>) Default value of the
+                     <code>{severity}</code> parameter of <a href="diagnostic.html#vim.diagnostic.jump()">vim.diagnostic.jump()</a>.
 </div></div>
 <div class="old-help-para"><code id="vim.diagnostic.Opts.Signs" class="help-tag"><a href="#vim.diagnostic.Opts.Signs">vim.diagnostic.Opts.Signs</a></code></div>
 <div class="old-help-para"><div class="help-column_heading">    Fields:</div><div class="help-li" style=""> <code>{severity}</code>  (<code>vim.diagnostic.SeverityFilter</code>) Only show virtual text
@@ -613,34 +634,14 @@ end</code></pre>
         namespaces <a href="diagnostic.html#vim.diagnostic">vim.diagnostic</a>.</div>
 <div class="old-help-para">get_next(<code>{opts}</code>)                                   <code id="vim.diagnostic.get_next()" class="help-tag-right"><a href="#vim.diagnostic.get_next()">vim.diagnostic.get_next()</a></code>
     Get the next diagnostic closest to the cursor position.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.GotoOpts?</code>) See <a href="diagnostic.html#vim.diagnostic.GotoOpts">vim.diagnostic.GotoOpts</a>.
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.JumpOpts?</code>) See <a href="diagnostic.html#vim.diagnostic.JumpOpts">vim.diagnostic.JumpOpts</a>.
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>vim.Diagnostic?</code>) Next diagnostic. See <a href="diagnostic.html#vim.Diagnostic">vim.Diagnostic</a>.</div>
-<div class="old-help-para">get_next_pos(<code>{opts}</code>)                           <code id="vim.diagnostic.get_next_pos()" class="help-tag-right"><a href="#vim.diagnostic.get_next_pos()">vim.diagnostic.get_next_pos()</a></code>
-    Return the position of the next diagnostic in the current buffer.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.GotoOpts?</code>) See <a href="diagnostic.html#vim.diagnostic.GotoOpts">vim.diagnostic.GotoOpts</a>.
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>table|false</code>) Next diagnostic position as a <code>(row, col)</code> tuple or
-        false if no next diagnostic.</div>
 <div class="old-help-para">get_prev(<code>{opts}</code>)                                   <code id="vim.diagnostic.get_prev()" class="help-tag-right"><a href="#vim.diagnostic.get_prev()">vim.diagnostic.get_prev()</a></code>
     Get the previous diagnostic closest to the cursor position.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.GotoOpts?</code>) See <a href="diagnostic.html#vim.diagnostic.GotoOpts">vim.diagnostic.GotoOpts</a>.
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.JumpOpts?</code>) See <a href="diagnostic.html#vim.diagnostic.JumpOpts">vim.diagnostic.JumpOpts</a>.
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>vim.Diagnostic?</code>) Previous diagnostic. See <a href="diagnostic.html#vim.Diagnostic">vim.Diagnostic</a>.</div>
-<div class="old-help-para">get_prev_pos(<code>{opts}</code>)                           <code id="vim.diagnostic.get_prev_pos()" class="help-tag-right"><a href="#vim.diagnostic.get_prev_pos()">vim.diagnostic.get_prev_pos()</a></code>
-    Return the position of the previous diagnostic in the current buffer.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.GotoOpts?</code>) See <a href="diagnostic.html#vim.diagnostic.GotoOpts">vim.diagnostic.GotoOpts</a>.
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>table|false</code>) Previous diagnostic position as a <code>(row, col)</code> tuple
-        or <code>false</code> if there is no prior diagnostic.</div>
-<div class="old-help-para">goto_next(<code>{opts}</code>)                                 <code id="vim.diagnostic.goto_next()" class="help-tag-right"><a href="#vim.diagnostic.goto_next()">vim.diagnostic.goto_next()</a></code>
-    Move to the next diagnostic.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.GotoOpts?</code>) See <a href="diagnostic.html#vim.diagnostic.GotoOpts">vim.diagnostic.GotoOpts</a>.
-</div></div>
-<div class="old-help-para">goto_prev(<code>{opts}</code>)                                 <code id="vim.diagnostic.goto_prev()" class="help-tag-right"><a href="#vim.diagnostic.goto_prev()">vim.diagnostic.goto_prev()</a></code>
-    Move to the previous diagnostic in the current buffer.</div>
-<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.GotoOpts?</code>) See <a href="diagnostic.html#vim.diagnostic.GotoOpts">vim.diagnostic.GotoOpts</a>.
-</div></div>
 <div class="old-help-para">hide(<code>{namespace}</code>, <code>{bufnr}</code>)                             <code id="vim.diagnostic.hide()" class="help-tag-right"><a href="#vim.diagnostic.hide()">vim.diagnostic.hide()</a></code>
     Hide currently displayed diagnostics.</div>
 <div class="old-help-para">    This only clears the decorations displayed in the buffer. Diagnostics can
@@ -662,6 +663,12 @@ end</code></pre>
                     buffer, or <code>nil</code> for all buffers.
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>boolean</code>)</div>
+<div class="old-help-para">jump(<code>{opts}</code>)                                           <code id="vim.diagnostic.jump()" class="help-tag-right"><a href="#vim.diagnostic.jump()">vim.diagnostic.jump()</a></code>
+    Move to a diagnostic.</div>
+<div class="old-help-para"><div class="help-column_heading">    Parameters:</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.diagnostic.JumpOpts</code>) See <a href="diagnostic.html#vim.diagnostic.JumpOpts">vim.diagnostic.JumpOpts</a>.
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">    Return:</div>        (<code>vim.Diagnostic?</code>) The diagnostic that was moved to. See
+        <a href="diagnostic.html#vim.Diagnostic">vim.Diagnostic</a>.</div>
 <div class="old-help-para">                                                      <code id="vim.diagnostic.match()" class="help-tag-right"><a href="#vim.diagnostic.match()">vim.diagnostic.match()</a></code>
 match(<code>{str}</code>, <code>{pat}</code>, <code>{groups}</code>, <code>{severity_map}</code>, <code>{defaults}</code>)
     Parse a diagnostic from a string.</div>
@@ -688,7 +695,7 @@ vim.diagnostic.match(s, pattern, groups, { WARNING = vim.diagnostic.WARN })</cod
                 <a href="diagnostic.html#vim.diagnostic.Opts.Float">vim.diagnostic.Opts.Float</a>.
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">    Return (multiple):</div>        (<code>integer?</code>) float_bufnr
-        (<code>integer?</code>) win_id</div>
+        (<code>integer?</code>) winid</div>
 <div class="old-help-para">reset(<code>{namespace}</code>, <code>{bufnr}</code>)                           <code id="vim.diagnostic.reset()" class="help-tag-right"><a href="#vim.diagnostic.reset()">vim.diagnostic.reset()</a></code>
     Remove all diagnostics from the given namespace.</div>
 <div class="old-help-para">    Unlike <a href="diagnostic.html#vim.diagnostic.hide()">vim.diagnostic.hide()</a>, this function removes all saved
@@ -780,7 +787,7 @@ Lua module: vim.diagnostic                                    </a>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2024-05-28 05:17 from <code><a href="https://github.com/neovim/neovim/commit/7b16c1fa8451880c72769f6d3c311f24c74f4fc7">7b16c1f</a></code>
+        Generated at 2024-05-29 05:18 from <code><a href="https://github.com/neovim/neovim/commit/efa45832ea02e777ce3f5556ef3cd959c164ec24">efa4583</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+diagnostic.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/diagnostic.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   Diagnostics
