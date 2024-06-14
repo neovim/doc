@@ -647,28 +647,22 @@ cindent(<code>{lnum}</code>)                                                    
 		window ID instead of the current window.</div>
 <div class="old-help-para">col(<code>{expr}</code> [, <code>{winid}</code>])                                                  <code id="col()" class="help-tag-right"><a href="#col()">col()</a></code>
 		The result is a Number, which is the byte index of the column
-		position given with <code>{expr}</code>.  The accepted positions are:
-		    .	    the cursor position
-		    $	    the end of the cursor line (the result is the
-			    number of bytes in the cursor line plus one)
-		    'x	    position of mark x (if the mark is not set, 0 is
-			    returned)
-		    v       In Visual mode: the start of the Visual area (the
-			    cursor is the end).  When not in Visual mode
-			    returns the cursor position.  Differs from <a href="motion.html#'%3C">'&lt;</a> in
-			    that it's updated right away.
+		position given with <code>{expr}</code>.
+		For accepted positions see <a href="builtin.html#getpos()">getpos()</a>.
+		When <code>{expr}</code> is "$", it means the end of the cursor line, so
+		the result is the number of bytes in the cursor line plus one.
 		Additionally <code>{expr}</code> can be [lnum, col]: a <a href="eval.html#List">List</a> with the line
 		and column number. Most useful when the column is "$", to get
 		the last column of a specific line.  When "lnum" or "col" is
-		out of range then col() returns zero.
-		With the optional <code>{winid}</code> argument the values are obtained for
-		that window instead of the current window.
-		To get the line number use <a href="builtin.html#line()">line()</a>.  To get both use
-		<a href="builtin.html#getpos()">getpos()</a>.
-		For the screen column position use <a href="builtin.html#virtcol()">virtcol()</a>.  For the
-		character position use <a href="builtin.html#charcol()">charcol()</a>.
-		Note that only marks in the current file can be used.
-		Examples:<pre><code class="language-vim">echo col(".")                        " column of cursor
+		out of range then col() returns zero.</div>
+<div class="old-help-para">		With the optional <code>{winid}</code> argument the values are obtained for
+		that window instead of the current window.</div>
+<div class="old-help-para">		To get the line number use <a href="builtin.html#line()">line()</a>.  To get both use
+		<a href="builtin.html#getpos()">getpos()</a>.</div>
+<div class="old-help-para">		For the screen column position use <a href="builtin.html#virtcol()">virtcol()</a>.  For the
+		character position use <a href="builtin.html#charcol()">charcol()</a>.</div>
+<div class="old-help-para">		Note that only marks in the current file can be used.</div>
+<div class="old-help-para">		Examples:<pre><code class="language-vim">echo col(".")                        " column of cursor
 echo col("$")                        " length of cursor line plus one
 echo col("'t")                        " column of mark t
 echo col("'" .. markname)        " column of mark markname</code></pre></div>
@@ -2293,10 +2287,34 @@ echo getmatches()</code></pre></div>
 		Return a Number which is the process ID of the Vim process.
 		This is a unique number, until Vim exits.</div>
 <div class="old-help-para">getpos(<code>{expr}</code>)                                                        <code id="getpos()" class="help-tag-right"><a href="#getpos()">getpos()</a></code>
-		Get the position for String <code>{expr}</code>.  For possible values of
-		<code>{expr}</code> see <a href="builtin.html#line()">line()</a>.  For getting the cursor position see
-		<a href="builtin.html#getcurpos()">getcurpos()</a>.
-		The result is a <a href="eval.html#List">List</a> with four numbers:
+		Get the position for String <code>{expr}</code>.
+		The accepted values for <code>{expr}</code> are:
+		    .	    The cursor position.
+		    $	    The last line in the current buffer.
+		    'x	    Position of mark x (if the mark is not set, 0 is
+			    returned for all values).
+		    w0	    First line visible in current window (one if the
+			    display isn't updated, e.g. in silent Ex mode).
+		    w$	    Last line visible in current window (this is one
+			    less than "w0" if no lines are visible).
+		    v	    When not in Visual mode, returns the cursor
+			    position.  In Visual mode, returns the other end
+			    of the Visual area.  A good way to think about
+			    this is that in Visual mode "v" and "." complement
+			    each other.  While "." refers to the cursor
+			    position, "v" refers to where <a href="visual.html#v_o">v_o</a> would move the
+			    cursor.  As a result, you can use "v" and "."
+			    together to work on all of a selection in
+			    characterwise Visual mode.  If the cursor is at
+			    the end of a characterwise Visual area, "v" refers
+			    to the start of the same Visual area.  And if the
+			    cursor is at the start of a characterwise Visual
+			    area, "v" refers to the end of the same Visual
+			    area.  "v" differs from <a href="motion.html#'%3C">'&lt;</a> and <a href="motion.html#'%3E">'&gt;</a> in that it's
+			    updated right away.
+		Note that a mark in another file can be used.  The line number
+		then applies to another buffer.</div>
+<div class="old-help-para">		The result is a <a href="eval.html#List">List</a> with four numbers:
 		    [bufnum, lnum, col, off]
 		"bufnum" is zero, unless a mark like '0 or 'A is used, then it
 		is the buffer number of the mark.
@@ -2305,17 +2323,18 @@ echo getmatches()</code></pre></div>
 		The "off" number is zero, unless <a href="options.html#'virtualedit'">'virtualedit'</a> is used.  Then
 		it is the offset in screen columns from the start of the
 		character.  E.g., a position within a <code>&lt;Tab&gt;</code> or after the last
-		character.
-		Note that for '&lt; and '&gt; Visual mode matters: when it is "V"
-		(visual line mode) the column of '&lt; is zero and the column of
-		'&gt; is a large number equal to <a href="vvars.html#v%3Amaxcol">v:maxcol</a>.
+		character.</div>
+<div class="old-help-para">		For getting the cursor position see <a href="builtin.html#getcurpos()">getcurpos()</a>.
 		The column number in the returned List is the byte position
 		within the line. To get the character position in the line,
-		use <a href="builtin.html#getcharpos()">getcharpos()</a>.
+		use <a href="builtin.html#getcharpos()">getcharpos()</a>.</div>
+<div class="old-help-para">		Note that for '&lt; and '&gt; Visual mode matters: when it is "V"
+		(visual line mode) the column of '&lt; is zero and the column of
+		'&gt; is a large number equal to <a href="vvars.html#v%3Amaxcol">v:maxcol</a>.
 		A very large column number equal to <a href="vvars.html#v%3Amaxcol">v:maxcol</a> can be returned,
 		in which case it means "after the end of the line".
-		If <code>{expr}</code> is invalid, returns a list with all zeros.
-		This can be used to save and restore the position of a mark:<pre><code class="language-vim">let save_a_mark = getpos("'a")
+		If <code>{expr}</code> is invalid, returns a list with all zeros.</div>
+<div class="old-help-para">		This can be used to save and restore the position of a mark:<pre><code class="language-vim">let save_a_mark = getpos("'a")
 " ...
 call setpos("'a", save_a_mark)</code></pre></div>
 <div class="old-help-para">		Also see <a href="builtin.html#getcharpos()">getcharpos()</a>, <a href="builtin.html#getcurpos()">getcurpos()</a> and <a href="builtin.html#setpos()">setpos()</a>.</div>
@@ -3407,40 +3426,13 @@ libcallnr(<code>{libname}</code>, <code>{funcname}</code>, <code>{argument}</cod
 call libcallnr("libc.so", "printf", "Hello World!\n")
 call libcallnr("libc.so", "sleep", 10)</code></pre></div>
 <div class="old-help-para">line(<code>{expr}</code> [, <code>{winid}</code>])                                                <code id="line()" class="help-tag-right"><a href="#line()">line()</a></code>
-		The result is a Number, which is the line number of the file
-		position given with <code>{expr}</code>.  The <code>{expr}</code> argument is a string.
-		The accepted positions are:
-		    .	    the cursor position
-		    $	    the last line in the current buffer
-		    'x	    position of mark x (if the mark is not set, 0 is
-			    returned)
-		    w0	    first line visible in current window (one if the
-			    display isn't updated, e.g. in silent Ex mode)
-		    w$	    last line visible in current window (this is one
-			    less than "w0" if no lines are visible)
-		    v	    When not in Visual mode, returns the cursor
-			    position.  In Visual mode, returns the other end
-			    of the Visual area.  A good way to think about
-			    this is that in Visual mode "v" and "." complement
-			    each other.  While "." refers to the cursor
-			    position, "v" refers to where <a href="visual.html#v_o">v_o</a> would move the
-			    cursor.  As a result, you can use "v" and "."
-			    together to work on all of a selection in
-			    characterwise visual mode.  If the cursor is at
-			    the end of a characterwise visual area, "v" refers
-			    to the start of the same visual area.  And if the
-			    cursor is at the start of a characterwise visual
-			    area, "v" refers to the end of the same visual
-			    area.  "v" differs from <a href="motion.html#'%3C">'&lt;</a> and <a href="motion.html#'%3E">'&gt;</a> in that it's
-			    updated right away.
-		Note that a mark in another file can be used.  The line number
-		then applies to another buffer.
-		To get the column number use <a href="builtin.html#col()">col()</a>.  To get both use
-		<a href="builtin.html#getpos()">getpos()</a>.
-		With the optional <code>{winid}</code> argument the values are obtained for
-		that window instead of the current window.
-		Returns 0 for invalid values of <code>{expr}</code> and <code>{winid}</code>.
-		Examples:<pre><code class="language-vim">echo line(".")                        " line number of the cursor
+		See <a href="builtin.html#getpos()">getpos()</a> for accepted positions.</div>
+<div class="old-help-para">		To get the column number use <a href="builtin.html#col()">col()</a>.  To get both use
+		<a href="builtin.html#getpos()">getpos()</a>.</div>
+<div class="old-help-para">		With the optional <code>{winid}</code> argument the values are obtained for
+		that window instead of the current window.</div>
+<div class="old-help-para">		Returns 0 for invalid values of <code>{expr}</code> and <code>{winid}</code>.</div>
+<div class="old-help-para">		Examples:<pre><code class="language-vim">echo line(".")                        " line number of the cursor
 echo line(".", winid)                " idem, in window "winid"
 echo line("'t")                        " line number of mark t
 echo line("'" .. marker)        " line number of mark marker</code></pre></div>
@@ -7115,7 +7107,9 @@ echo utf16idx('a😊😊', 9)        " returns -1</code></pre></div>
 		the <code>&lt;Tab&gt;</code>.  For example, for a <code>&lt;Tab&gt;</code> in column 1, with <a href="options.html#'ts'">'ts'</a>
 		set to 8, it returns 8. <a href="syntax.html#conceal">conceal</a> is ignored.
 		For the byte position use <a href="builtin.html#col()">col()</a>.</div>
-<div class="old-help-para">		For the use of <code>{expr}</code> see <a href="builtin.html#col()">col()</a>.</div>
+<div class="old-help-para">		For the use of <code>{expr}</code> see <a href="builtin.html#getpos()">getpos()</a> and <a href="builtin.html#col()">col()</a>.
+		When <code>{expr}</code> is "$", it means the end of the cursor line, so
+		the result is the number of cells in the cursor line plus one.</div>
 <div class="old-help-para">		When <a href="options.html#'virtualedit'">'virtualedit'</a> is used <code>{expr}</code> can be [lnum, col, off],
 		where "off" is the offset in screen columns from the start of
 		the character.  E.g., a position within a <code>&lt;Tab&gt;</code> or after the
@@ -7123,17 +7117,6 @@ echo utf16idx('a😊😊', 9)        " returns -1</code></pre></div>
 		Virtual editing is active in the current mode, a position
 		beyond the end of the line can be returned.  Also see
 		<a href="options.html#'virtualedit'">'virtualedit'</a></div>
-<div class="old-help-para">		The accepted positions are:
-		    .	    the cursor position
-		    $	    the end of the cursor line (the result is the
-			    number of displayed characters in the cursor line
-			    plus one)
-		    'x	    position of mark x (if the mark is not set, 0 is
-			    returned)
-		    v       In Visual mode: the start of the Visual area (the
-			    cursor is the end).  When not in Visual mode
-			    returns the cursor position.  Differs from <a href="motion.html#'%3C">'&lt;</a> in
-			    that it's updated right away.</div>
 <div class="old-help-para">		If <code>{list}</code> is present and non-zero then virtcol() returns a
 		List with the first and last screen position occupied by the
 		character.</div>
@@ -7146,8 +7129,8 @@ echo virtcol(".", 1)        " returns [4, 5]
 echo virtcol("$")        " returns 9
 " With text "          there", with 't at 'h':
 echo virtcol("'t")        " returns 6</code></pre></div>
-<div class="old-help-para">		The first column is 1.  0 or [0, 0] is returned for an error.
-		A more advanced example that echoes the maximum length of
+<div class="old-help-para">		The first column is 1.  0 or [0, 0] is returned for an error.</div>
+<div class="old-help-para">		A more advanced example that echoes the maximum length of
 		all lines:<pre><code class="language-vim">echo max(map(range(1, line('$')), "virtcol([v:val, '$'])"))</code></pre>
 virtcol2col(<code>{winid}</code>, <code>{lnum}</code>, <code>{col}</code>)                              <code id="virtcol2col()" class="help-tag-right"><a href="#virtcol2col()">virtcol2col()</a></code>
 		The result is a Number, which is the byte index of the
@@ -7523,7 +7506,7 @@ Don't forget that "^" will only match at the first character of the String and
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2024-06-13 05:18 from <code><a href="https://github.com/neovim/neovim/commit/0231265c8cf8c13f317bbddcfcbac2639e7022cd">0231265</a></code>
+        Generated at 2024-06-14 05:17 from <code><a href="https://github.com/neovim/neovim/commit/5def8714ad70e71e07773960269fff5c0c95e7ab">5def871</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+builtin.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/builtin.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="	Nvim
