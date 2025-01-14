@@ -816,6 +816,8 @@ is_in_node_range(<code>{node}</code>, <code>{line}</code>, <code>{col}</code>)
 <div class="old-help-para"><b>    Note:</b> By default, disables regex syntax highlighting, which may be
     required for some plugins. In this case, add <code>vim.bo.syntax = 'on'</code> after
     the call to <code>start</code>.</div>
+<div class="old-help-para"><b>    Note:</b> By default, the highlighter parses code asynchronously, using a
+    segment time of 3ms.</div>
 <div class="old-help-para">    Example:<pre><code class="language-lua">vim.api.nvim_create_autocmd( 'FileType', { pattern = 'tex',
     callback = function(args)
         vim.treesitter.start(args.buf, 'latex')
@@ -1040,8 +1042,8 @@ end</code></pre></div>
 </div><div class="help-li" style=""> <code>{stop}</code>    (<code>integer?</code>) Stopping line for the search (end-exclusive).
                   Defaults to <code>node:end_()</code>.
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>fun(end_line: integer?): integer, TSNode, vim.treesitter.query.TSMetadata, TSQueryMatch</code>)
-        capture id, capture node, metadata, match</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>fun(end_line: integer?): integer, TSNode, vim.treesitter.query.TSMetadata, TSQueryMatch, TSTree</code>)
+        capture id, capture node, metadata, match, tree</div>
 <div class="old-help-para">                                                        <span id="Query%3Aiter_matches()" class="help-tag-right"><a href="#Query%3Aiter_matches()">Query:iter_matches()</a></span><br>
 Query:iter_matches(<code>{node}</code>, <code>{source}</code>, <code>{start}</code>, <code>{stop}</code>, <code>{opts}</code>)
     Iterates the matches of self on a given range.</div>
@@ -1077,8 +1079,8 @@ end</code></pre></div>
                     matching nodes. This option is only for backward
                     compatibility and will be removed in a future release.
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>fun(): integer, table&lt;integer, TSNode[]&gt;, vim.treesitter.query.TSMetadata</code>)
-        pattern id, match, metadata</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>fun(): integer, table&lt;integer, TSNode[]&gt;, vim.treesitter.query.TSMetadata, TSTree</code>)
+        pattern id, match, metadata, tree</div>
 <div class="old-help-para">set(<code>{lang}</code>, <code>{query_name}</code>, <code>{text}</code>)                 <span id="vim.treesitter.query.set()" class="help-tag-right"><a href="#vim.treesitter.query.set()">vim.treesitter.query.set()</a></span><br>
     Sets the runtime query named <code>{query_name}</code> for <code>{lang}</code></div>
 <div class="old-help-para">    This allows users to override any runtime files and/or configuration set
@@ -1189,7 +1191,7 @@ LanguageTree:node_for_range(<code>{range}</code>, <code>{opts}</code>)
                    injected languages
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>TSNode?</code>)</div>
-<div class="old-help-para">LanguageTree:parse(<code>{range}</code>)                             <span id="LanguageTree%3Aparse()" class="help-tag-right"><a href="#LanguageTree%3Aparse()">LanguageTree:parse()</a></span><br>
+<div class="old-help-para">LanguageTree:parse(<code>{range}</code>, <code>{on_parse}</code>)                 <span id="LanguageTree%3Aparse()" class="help-tag-right"><a href="#LanguageTree%3Aparse()">LanguageTree:parse()</a></span><br>
     Recursively parse all regions in the language tree using
     <a href="treesitter.html#treesitter-parsers">treesitter-parsers</a> for the corresponding languages and run injection
     queries on the parsed trees to determine whether child trees should be
@@ -1197,13 +1199,25 @@ LanguageTree:node_for_range(<code>{range}</code>, <code>{opts}</code>)
 <div class="old-help-para">    Any region with empty range (<code>{}</code>, typically only the root tree) is always
     parsed; otherwise (typically injections) only if it intersects <code>{range}</code> (or
     if <code>{range}</code> is <code>true</code>).</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>boolean|Range?</code>) Parse this range in the parser's source.
-                 Set to <code>true</code> to run a complete parse of the source (<b>Note:</b>
-                 Can be slow!) Set to <code>false|nil</code> to only parse regions with
-                 empty ranges (typically only the root tree without
-                 injections).
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>     (<code>boolean|Range?</code>) Parse this range in the parser's
+                    source. Set to <code>true</code> to run a complete parse of the
+                    source (<b>Note:</b> Can be slow!) Set to <code>false|nil</code> to only
+                    parse regions with empty ranges (typically only the root
+                    tree without injections).
+</div><div class="help-li" style=""> <code>{on_parse}</code>  (<code>fun(err?: string, trees?: table&lt;integer, TSTree&gt;)?</code>)
+                    Function invoked when parsing completes. When provided and
+                    <code>vim.g._ts_force_sync_parsing</code> is not set, parsing will
+                    run asynchronously. The first argument to the function is
+                    a string respresenting the error type, in case of a
+                    failure (currently only possible for timeouts). The second
+                    argument is the list of trees returned by the parse (upon
+                    success), or <code>nil</code> if the parse timed out (determined by
+                    <a href="options.html#'redrawtime'">'redrawtime'</a>).
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;integer, TSTree&gt;</code>)</div>
+<div class="old-help-para">                    If parsing was still able to finish synchronously (within
+                    3ms), <code>parse()</code> returns the list of trees. Otherwise, it
+                    returns <code>nil</code>.</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;integer, TSTree&gt;?</code>)</div>
 <div class="old-help-para">                                                 <span id="LanguageTree%3Aregister_cbs()" class="help-tag-right"><a href="#LanguageTree%3Aregister_cbs()">LanguageTree:register_cbs()</a></span><br>
 LanguageTree:register_cbs(<code>{cbs}</code>, <code>{recursive}</code>)
     Registers callbacks for the <a href="treesitter.html#LanguageTree">LanguageTree</a>.</div>
@@ -1275,7 +1289,7 @@ LanguageTree:tree_for_range(<code>{range}</code>, <code>{opts}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-01-13 05:20 from <code><a href="https://github.com/neovim/neovim/commit/f4cff3077b21ba110bc498f3e9331c16d3121cb1">f4cff30</a></code>
+        Generated at 2025-01-14 05:21 from <code><a href="https://github.com/neovim/neovim/commit/a4f575abd85e734340ee303daace1a63e5ca9782">a4f575a</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+treesitter.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/treesitter.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
