@@ -627,21 +627,9 @@ on writing and loading a buffer to file, nor in undo/redo cycles.
 
 </div>
 <div class="help-para">
-Highlights are registered using the <a href="api.html#nvim_buf_add_highlight()">nvim_buf_add_highlight()</a> function. If an
-external highlighter plugin wants to add many highlights in a batch,
-performance can be improved by calling <a href="api.html#nvim_buf_add_highlight()">nvim_buf_add_highlight()</a> as an
-asynchronous notification, after first (synchronously) requesting a source id.
-
-</div>
-<div class="help-para">
-<a href="api.html#nvim_buf_add_highlight()">nvim_buf_add_highlight()</a> adds highlights as <a href="api.html#extmarks">extmarks</a>. If highlights need to
-be tracked or manipulated after adding them, it is better to use
-<a href="api.html#nvim_buf_set_extmark()">nvim_buf_set_extmark()</a> directly, as this function returns the placed <a href="api.html#extmark">extmark</a>
-id. Thus, instead of<pre><code class="language-lua">vim.api.nvim_buf_add_highlight(buf, ns_id, hl_group, line, col_start, col_end)</code></pre>
-
-</div>
-<div class="help-para">
-use<pre><code class="language-lua">-- create the highlight through an extmark
+Highlights are registered using the <a href="api.html#nvim_buf_set_extmark()">nvim_buf_set_extmark()</a> function, which
+adds highlights as <a href="api.html#extmarks">extmarks</a>. If highlights need to be tracked or manipulated
+after adding them, the returned <a href="api.html#extmark">extmark</a> id can be used.<pre><code class="language-lua">-- create the highlight through an extmark
 extid = vim.api.nvim_buf_set_extmark(buf, ns_id, line, col_start, {end_col = col_end, hl_group = hl_group})
 -- example: modify the extmark's highlight group
 vim.api.nvim_buf_set_extmark(buf, ns_id, line, col_start, {end_col = col_end, hl_group = NEW_HL_GROUP, id = extid})
@@ -650,29 +638,10 @@ vim.api.nvim_buf_set_extmark(buf, ns_id, NEW_LINE, col_start, {end_col = col_end
 
 </div>
 <div class="help-para">
-Example using the Python API client (<a href="develop.html#pynvim">pynvim</a>):
-<pre><code class="language-python">src = vim.new_highlight_source()
-buf = vim.current.buffer
-for i in range(5):
-    buf.add_highlight("String",i,0,-1,src_id=src)
-# some time later ...
-buf.clear_namespace(src)</code></pre>
+See also <a href="lua.html#vim.hl.range()">vim.hl.range()</a>.
 
 </div>
 <div class="help-para">
-If the highlights don't need to be deleted or updated, just pass -1 as
-src_id (this is the default in python). Use <a href="api.html#nvim_buf_clear_namespace()">nvim_buf_clear_namespace()</a> to
-clear highlights from a specific source, in a specific line range or the
-entire buffer by passing in the line range 0, -1 (the latter is the default in
-python as used above).
-
-</div>
-<div class="help-para">
-Example using the API from Vimscript:<pre><code class="language-vim">call nvim_buf_set_lines(0, 0, 0, v:true, ["test text"])
-let src = nvim_buf_add_highlight(0, 0, "String", 1, 0, 4)
-call nvim_buf_add_highlight(0, src, "Identifier", 0, 5, -1)
-" some time later ...
-call nvim_buf_clear_namespace(0, src, 0, -1)</code></pre>
 <h2 id="_floating-windows" class="help-heading">Floating windows<span class="help-heading-tags">                                                 <span id="api-floatwin" class="help-tag"><a href="#api-floatwin">api-floatwin</a></span></h2>
 
 
@@ -3509,54 +3478,6 @@ nvim_buf_set_var(<code>{buffer}</code>, <code>{name}</code>, <code>{value}</code
 
 </div>
 <div class="help-para">
-                                                    <span id="nvim_buf_add_highlight()" class="help-tag-right"><a href="#nvim_buf_add_highlight()">nvim_buf_add_highlight()</a></span><br>
-nvim_buf_add_highlight(<code>{buffer}</code>, <code>{ns_id}</code>, <code>{hl_group}</code>, <code>{line}</code>, <code>{col_start}</code>,
-                       <code>{col_end}</code>)
-    Adds a highlight to buffer.
-
-</div>
-<div class="help-para">
-    Useful for plugins that dynamically generate highlights to a buffer (like
-    a semantic highlighter or linter). The function adds a single highlight to
-    a buffer. Unlike <a href="builtin.html#matchaddpos()">matchaddpos()</a> highlights follow changes to line
-    numbering (as lines are inserted/removed above the highlighted line), like
-    signs and marks do.
-
-</div>
-<div class="help-para">
-    Namespaces are used for batch deletion/updating of a set of highlights. To
-    create a namespace, use <a href="api.html#nvim_create_namespace()">nvim_create_namespace()</a> which returns a
-    namespace id. Pass it in to this function as <code>ns_id</code> to add highlights to
-    the namespace. All highlights in the same namespace can then be cleared
-    with single call to <a href="api.html#nvim_buf_clear_namespace()">nvim_buf_clear_namespace()</a>. If the highlight never
-    will be deleted by an API call, pass <code>ns_id = -1</code>.
-
-</div>
-<div class="help-para">
-    As a shorthand, <code>ns_id = 0</code> can be used to create a new namespace for the
-    highlight, the allocated id is then returned. If <code>hl_group</code> is the empty
-    string no highlight is added, but a new <code>ns_id</code> is still returned. This is
-    supported for backwards compatibility, new code should use
-    <a href="api.html#nvim_create_namespace()">nvim_create_namespace()</a> to create a new empty namespace.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{buffer}</code>     Buffer handle, or 0 for current buffer
-</div><div class="help-li" style=""> <code>{ns_id}</code>      namespace to use or -1 for ungrouped highlight
-</div><div class="help-li" style=""> <code>{hl_group}</code>   Name of the highlight group to use
-</div><div class="help-li" style=""> <code>{line}</code>       Line to highlight (zero-indexed)
-</div><div class="help-li" style=""> <code>{col_start}</code>  Start of (byte-indexed) column range to highlight
-</div><div class="help-li" style=""> <code>{col_end}</code>    End of (byte-indexed) column range to highlight, or -1 to
-                     highlight to end of line
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        The ns_id that was used
-
-</div>
-<div class="help-para">
                                                   <span id="nvim_buf_clear_namespace()" class="help-tag-right"><a href="#nvim_buf_clear_namespace()">nvim_buf_clear_namespace()</a></span><br>
 nvim_buf_clear_namespace(<code>{buffer}</code>, <code>{ns_id}</code>, <code>{line_start}</code>, <code>{line_end}</code>)
     Clears <a href="api.html#namespace">namespace</a>d objects (highlights, <a href="api.html#extmarks">extmarks</a>, virtual text) from a
@@ -3838,7 +3759,7 @@ nvim_create_namespace(<code>{name}</code>)                        <span id="nvim
 </div>
 <div class="help-para">
     Namespaces are used for buffer highlights and virtual text, see
-    <a href="api.html#nvim_buf_add_highlight()">nvim_buf_add_highlight()</a> and <a href="api.html#nvim_buf_set_extmark()">nvim_buf_set_extmark()</a>.
+    <a href="api.html#nvim_buf_set_extmark()">nvim_buf_set_extmark()</a>.
 
 </div>
 <div class="help-para">
@@ -5182,7 +5103,7 @@ nvim_ui_try_resize_grid(<code>{grid}</code>, <code>{width}</code>, <code>{height
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-01-20 05:20 from <code><a href="https://github.com/neovim/neovim/commit/5f527f24f0ea89e9071e065530cbed449507df5c">5f527f2</a></code>
+        Generated at 2025-01-21 05:19 from <code><a href="https://github.com/neovim/neovim/commit/05435bf10585e7f850ff44acd63446fbcc56bfe5">05435bf</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+api.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/api.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="               Nvim
