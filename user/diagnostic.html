@@ -155,8 +155,8 @@ function for a config option, the function has already been evaluated).</div>
 <div class="old-help-para">If a diagnostic handler is configured with a "severity" key then the list of
 diagnostics passed to that handler will be filtered using the value of that
 key (see example below).</div>
-<div class="old-help-para">Nvim provides these handlers by default: "virtual_text", "signs", and
-"underline".</div>
+<div class="old-help-para">Nvim provides these handlers by default: "virtual_text", "virtual_lines",
+"signs", and "underline".</div>
 <div class="old-help-para">                                                <span id="diagnostic-handlers-example" class="help-tag-right"><a href="#diagnostic-handlers-example">diagnostic-handlers-example</a></span><br>
 The example below creates a new handler that notifies the user of diagnostics
 with <a href="lua.html#vim.notify()">vim.notify()</a>:<pre><code class="language-lua">-- It's good practice to namespace custom handlers to avoid collisions
@@ -212,6 +212,12 @@ vim.diagnostic.handlers.signs = {
     orig_signs_handler.hide(ns, bufnr)
   end,
 }</code></pre></div>
+<div class="old-help-para">                                          <span id="diagnostic-toggle-virtual-lines-example" class="help-tag-right"><a href="#diagnostic-toggle-virtual-lines-example">diagnostic-toggle-virtual-lines-example</a></span><br>
+Diagnostic handlers can also be toggled. For example, you might want to toggle
+the <code>virtual_lines</code> handler with the following keymap:<pre><code class="language-lua">vim.keymap.set('n', 'gK', function()
+  local new_config = not vim.diagnostic.config().virtual_lines
+  vim.diagnostic.config({ virtual_lines = new_config })
+end, { desc = 'Toggle diagnostic virtual_lines' })</code></pre></div>
 <div class="old-help-para">                                          <span id="diagnostic-loclist-example" class="help-tag-right"><a href="#diagnostic-loclist-example">diagnostic-loclist-example</a></span><br>
 Whenever the <a href="quickfix.html#location-list">location-list</a> is opened, the following <code>show</code> handler will show
 the most recent diagnostics:<pre><code class="language-lua">vim.diagnostic.handlers.loclist = {
@@ -444,6 +450,8 @@ DiagnosticChanged       After diagnostics have changed. When used from Lua,
                              diagnostics are set for a namespace, one prefix
                              per diagnostic + the last diagnostic message are
                              shown.
+</div><div class="help-li" style=""> <code>{virtual_lines}</code>     (<code>boolean|vim.diagnostic.Opts.VirtualLines|fun(namespace: integer, bufnr:integer): vim.diagnostic.Opts.VirtualLines</code>, default: <code>false</code>)
+                             Use virtual lines for diagnostics.
 </div><div class="help-li" style=""> <code>{signs}</code>             (<code>boolean|vim.diagnostic.Opts.Signs|fun(namespace: integer, bufnr:integer): vim.diagnostic.Opts.Signs</code>, default: <code>true</code>)
                              Use signs for diagnostics <a href="diagnostic.html#diagnostic-signs">diagnostic-signs</a>.
 </div><div class="help-li" style=""> <code>{float}</code>             (<code>boolean|vim.diagnostic.Opts.Float|fun(namespace: integer, bufnr:integer): vim.diagnostic.Opts.Float</code>)
@@ -555,6 +563,14 @@ DiagnosticChanged       After diagnostics have changed. When used from Lua,
 <div class="old-help-para"><div class="help-column_heading">Fields:</div><div class="help-li" style=""> <code>{severity}</code>  (<code>vim.diagnostic.SeverityFilter</code>) Only underline
                      diagnostics matching the given severity
                      <a href="diagnostic.html#diagnostic-severity">diagnostic-severity</a>.
+</div></div>
+<div class="old-help-para"><span id="vim.diagnostic.Opts.VirtualLines" class="help-tag"><a href="#vim.diagnostic.Opts.VirtualLines">vim.diagnostic.Opts.VirtualLines</a></span></div>
+<div class="old-help-para"><div class="help-column_heading">Fields:</div><div class="help-li" style=""> <code>{current_line}</code>  (<code>boolean</code>, default: <code>false</code>) Only show diagnostics
+                         for the current line.
+</div><div class="help-li" style=""> <code>{format}</code>        (<code>fun(diagnostic:vim.Diagnostic): string</code>) A function
+                         that takes a diagnostic as input and returns a
+                         string. The return value is the text used to display
+                         the diagnostic.
 </div></div>
 <div class="old-help-para"><span id="vim.diagnostic.Opts.VirtualText" class="help-tag"><a href="#vim.diagnostic.Opts.VirtualText">vim.diagnostic.Opts.VirtualText</a></span></div>
 <div class="old-help-para"><div class="help-column_heading">Fields:</div><div class="help-li" style=""> <code>{severity}</code>           (<code>vim.diagnostic.SeverityFilter</code>) Only show
@@ -806,7 +822,7 @@ show(<code>{namespace}</code>, <code>{bufnr}</code>, <code>{diagnostics}</code>,
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-01-26 05:19 from <code><a href="https://github.com/neovim/neovim/commit/b8e947ed4ed04f9aeef471f579451bbf2bb2993d">b8e947e</a></code>
+        Generated at 2025-01-27 05:19 from <code><a href="https://github.com/neovim/neovim/commit/c7d4a77ff9040c8b242f9d12a98472fe6217328c">c7d4a77</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+diagnostic.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/diagnostic.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   Diagnostics
