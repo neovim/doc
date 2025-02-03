@@ -2345,14 +2345,16 @@ getcellwidths()                                                <span id="getcell
 <div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{buf}</code> (<code>integer|string?</code>)
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>table[]</code>)</div>
-<div class="old-help-para">getchar([<code>{expr}</code>])                                                    <span id="getchar()" class="help-tag-right"><a href="#getchar()">getchar()</a></span><br>
+<div class="old-help-para">getchar([<code>{expr}</code> [, <code>{opts}</code>]])                                         <span id="getchar()" class="help-tag-right"><a href="#getchar()">getchar()</a></span><br>
 		Get a single character from the user or input stream.
-		If <code>{expr}</code> is omitted, wait until a character is available.
+		If <code>{expr}</code> is omitted or is -1, wait until a character is
+			available.
 		If <code>{expr}</code> is 0, only get a character when one is available.
 			Return zero otherwise.
 		If <code>{expr}</code> is 1, only check if a character is available, it is
 			not consumed.  Return zero if no character available.
-		If you prefer always getting a string use <a href="builtin.html#getcharstr()">getcharstr()</a>.</div>
+		If you prefer always getting a string use <a href="builtin.html#getcharstr()">getcharstr()</a>, or
+		specify <a href="eval.html#FALSE">FALSE</a> as "number" in <code>{opts}</code>.</div>
 <div class="old-help-para">		Without <code>{expr}</code> and when <code>{expr}</code> is 0 a whole character or
 		special key is returned.  If it is a single character, the
 		result is a Number.  Use <a href="builtin.html#nr2char()">nr2char()</a> to convert it to a String.
@@ -2361,7 +2363,8 @@ getcellwidths()                                                <span id="getcell
 		starting with 0x80 (decimal: 128).  This is the same value as
 		the String "\&lt;Key&gt;", e.g., "\&lt;Left&gt;".  The returned value is
 		also a String when a modifier (shift, control, alt) was used
-		that is not included in the character.</div>
+		that is not included in the character.  <a href="builtin.html#keytrans()">keytrans()</a> can also
+		be used to convert a returned String into a readable form.</div>
 <div class="old-help-para">		When <code>{expr}</code> is 0 and Esc is typed, there will be a short delay
 		while Vim waits to see if this is the start of an escape
 		sequence.</div>
@@ -2369,6 +2372,28 @@ getcellwidths()                                                <span id="getcell
 		one-byte character it is the character itself as a number.
 		Use nr2char() to convert it to a String.</div>
 <div class="old-help-para">		Use getcharmod() to obtain any additional modifiers.</div>
+<div class="old-help-para">		The optional argument <code>{opts}</code> is a Dict and supports the
+		following items:</div>
+<div class="old-help-para">			cursor		A String specifying cursor behavior
+					when waiting for a character.
+					"hide": hide the cursor.
+					"keep": keep current cursor unchanged.
+					"msg": move cursor to message area.
+					(default: automagically decide
+					between "keep" and "msg")</div>
+<div class="old-help-para">			number		If <a href="eval.html#TRUE">TRUE</a>, return a Number when getting
+					a single character.
+					If <a href="eval.html#FALSE">FALSE</a>, the return value is always
+					converted to a String, and an empty
+					String (instead of 0) is returned when
+					no character is available.
+					(default: <a href="eval.html#TRUE">TRUE</a>)</div>
+<div class="old-help-para">			simplify	If <a href="eval.html#TRUE">TRUE</a>, include modifiers in the
+					character if possible.  E.g., return
+					the same value for <code>CTRL-I</code> and <code>&lt;Tab&gt;</code>.
+					If <a href="eval.html#FALSE">FALSE</a>, don't include modifiers in
+					the character.
+					(default: <a href="eval.html#TRUE">TRUE</a>)</div>
 <div class="old-help-para">		When the user clicks a mouse button, the mouse event will be
 		returned.  The position can then be found in <a href="vvars.html#v%3Amouse_col">v:mouse_col</a>,
 		<a href="vvars.html#v%3Amouse_lnum">v:mouse_lnum</a>, <a href="vvars.html#v%3Amouse_winid">v:mouse_winid</a> and <a href="vvars.html#v%3Amouse_win">v:mouse_win</a>.
@@ -2398,9 +2423,10 @@ function FindChar()
     endif
   endwhile
 endfunction</code></pre></div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{expr}</code> (<code>0|1?</code>)
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{expr}</code> (<code>-1|0|1?</code>)
+</div><div class="help-li" style=""> <code>{opts}</code> (<code>table?</code>)
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>integer</code>)</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>integer|string</code>)</div>
 <div class="old-help-para">getcharmod()                                                      <span id="getcharmod()" class="help-tag-right"><a href="#getcharmod()">getcharmod()</a></span><br>
 		The result is a Number which is the state of the modifiers for
 		the last obtained character with getchar() or in another way.
@@ -2448,17 +2474,10 @@ nnoremap &lt;expr&gt; , getcharsearch().forward ? ',' : ';'</code></pre></div>
 <div class="old-help-para">		Also see <a href="builtin.html#setcharsearch()">setcharsearch()</a>.</div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>table</code>)</div>
 <div class="old-help-para">getcharstr([<code>{expr}</code>])                                              <span id="getcharstr()" class="help-tag-right"><a href="#getcharstr()">getcharstr()</a></span><br>
-		Get a single character from the user or input stream as a
-		string.
-		If <code>{expr}</code> is omitted, wait until a character is available.
-		If <code>{expr}</code> is 0 or false, only get a character when one is
-			available.  Return an empty string otherwise.
-		If <code>{expr}</code> is 1 or true, only check if a character is
-			available, it is not consumed.  Return an empty string
-			if no character is available.
-		Otherwise this works like <a href="builtin.html#getchar()">getchar()</a>, except that a number
-		result is converted to a string.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{expr}</code> (<code>0|1?</code>)
+		The same as <a href="builtin.html#getchar()">getchar()</a>, except that this always returns a
+		String, and "number" isn't allowed in <code>{opts}</code>.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{expr}</code> (<code>-1|0|1?</code>)
+</div><div class="help-li" style=""> <code>{opts}</code> (<code>table?</code>)
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>string</code>)</div>
 <div class="old-help-para">getcmdcomplpat()                                              <span id="getcmdcomplpat()" class="help-tag-right"><a href="#getcmdcomplpat()">getcmdcomplpat()</a></span><br>
@@ -9203,7 +9222,7 @@ Don't forget that "^" will only match at the first character of the String and
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-02-02 05:19 from <code><a href="https://github.com/neovim/neovim/commit/289c9d21cb91ec6c47496230ca49eef42a04250c">289c9d2</a></code>
+        Generated at 2025-02-03 05:19 from <code><a href="https://github.com/neovim/neovim/commit/0c8890e7a771ca26c75a767b9851aaf7bf2c0f90">0c8890e</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+builtin.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/builtin.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="	Nvim
