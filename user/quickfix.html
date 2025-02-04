@@ -1106,59 +1106,134 @@ b/g:maven_makeprg_params variable.  For example:<pre>let g:maven_makeprg_params 
 It scans the Java bytecode of all classes in the currently open buffer.
 (Therefore, <code>:compiler! spotbugs</code> is not supported.)</div>
 <div class="old-help-para">Commonly used compiler options can be added to <a href="options.html#'makeprg'">'makeprg'</a> by setting the
-"b:" or "g:spotbugs_makeprg_params" variable.  For example:<pre>let b:spotbugs_makeprg_params = "-longBugCodes -effort:max -low"</pre>
+"b:" or "g:spotbugs_makeprg_params" variable.  For example:<pre><code class="language-vim">let b:spotbugs_makeprg_params = "-longBugCodes -effort:max -low"</code></pre>
 The global default is "-workHard -experimental".</div>
 <div class="old-help-para">By default, the class files are searched in the directory where the source
 files are placed.  However, typical Java projects use distinct directories
 for source files and class files.  To make both known to SpotBugs, assign
 their paths (distinct and relative to their common root directory) to the
-following properties (using the example of a common Maven project):<pre>let g:spotbugs_properties = {
-        \ 'sourceDirPath':        'src/main/java',
-        \ 'classDirPath':        'target/classes',
-        \ 'testSourceDirPath':        'src/test/java',
-        \ 'testClassDirPath':        'target/test-classes',
-\ }</pre>
+following properties (using the example of a common Maven project):<pre><code class="language-vim">let g:spotbugs_properties = {
+        \ 'sourceDirPath':        ['src/main/java'],
+        \ 'classDirPath':        ['target/classes'],
+        \ 'testSourceDirPath':        ['src/test/java'],
+        \ 'testClassDirPath':        ['target/test-classes'],
+\ }</code></pre>
+Note that source and class path entries are expected to come in pairs: define
+both "sourceDirPath" and "classDirPath" when you are considering at least one,
+and apply the same logic to "testSourceDirPath" and "testClassDirPath".
 Note that values for the path keys describe only for SpotBugs where to look
 for files; refer to the documentation for particular compiler plugins for more
 information.</div>
 <div class="old-help-para">The default pre- and post-compiler actions are provided for Ant, Maven, and
 Javac compiler plugins and can be selected by assigning the name of a compiler
-plugin to the "compiler" key:<pre>let g:spotbugs_properties = {
+plugin (<code>ant</code>, <code>maven</code>, or <code>javac</code>) to the "compiler" key:<pre><code class="language-vim">let g:spotbugs_properties = {
         \ 'compiler':                'maven',
-\ }</pre>
+\ }</code></pre>
 This single setting is essentially equivalent to all the settings below, with
 the exception made for the "PreCompilerAction" and "PreCompilerTestAction"
 values: their listed <a href="eval.html#Funcref">Funcref</a>s will obtain no-op implementations whereas the
 implicit Funcrefs of the "compiler" key will obtain the requested defaults if
-available.<pre>let g:spotbugs_properties = {
+available.<pre><code class="language-vim">let g:spotbugs_properties = {
         \ 'PreCompilerAction':
                 \ function('spotbugs#DefaultPreCompilerAction'),
         \ 'PreCompilerTestAction':
                 \ function('spotbugs#DefaultPreCompilerTestAction'),
         \ 'PostCompilerAction':
                 \ function('spotbugs#DefaultPostCompilerAction'),
-        \ 'sourceDirPath':        'src/main/java',
-        \ 'classDirPath':        'target/classes',
-        \ 'testSourceDirPath':        'src/test/java',
-        \ 'testClassDirPath':        'target/test-classes',
-\ }</pre>
+        \ 'sourceDirPath':        ['src/main/java'],
+        \ 'classDirPath':        ['target/classes'],
+        \ 'testSourceDirPath':        ['src/test/java'],
+        \ 'testClassDirPath':        ['target/test-classes'],
+\ }</code></pre>
 With default actions, the compiler of choice will attempt to rebuild the class
 files for the buffer (and possibly for the whole project) as soon as a Java
 syntax file is loaded; then, <code>spotbugs</code> will attempt to analyze the quality of
 the compilation unit of the buffer.</div>
-<div class="old-help-para">When default actions are not suited to a desired workflow, consider writing
-arbitrary functions yourself and matching their <a href="eval.html#Funcref">Funcref</a>s to the supported
+<div class="old-help-para">Vim commands proficient in <a href="options.html#'makeprg'">'makeprg'</a> [0] can be composed with default actions.
+Begin by considering which of the supported keys, "DefaultPreCompilerCommand",
+"DefaultPreCompilerTestCommand", or "DefaultPostCompilerCommand", you need to
+write an implementation for, observing that each of these keys corresponds to
+a particular "*Action" key.  Follow it by defining a new function that always
+declares an only parameter of type string and puts to use a command equivalent
+of <a href="quickfix.html#%3Amake">:make</a>, and assigning its <a href="eval.html#Funcref">Funcref</a> to the selected key.  For example:
+<pre><code class="language-vim">function! GenericPostCompilerCommand(arguments) abort
+        execute 'make ' . a:arguments
+endfunction
+let g:spotbugs_properties = {
+        \ 'DefaultPostCompilerCommand':
+                \ function('GenericPostCompilerCommand'),
+\ }</code></pre>
+When "PostCompilerAction" is available, "PostCompilerActionExecutor" is also
+supported.  Its value must be a Funcref pointing to a function that always
+declares a single parameter of type string and decides whether <a href="eval.html#%3Aexecute">:execute</a> can
+be dispatched on its argument, containing a pending post-compiler action,
+after ascertaining the current status of <a href="quickfix.html#%3Acc">:cc</a> (or <a href="quickfix.html#%3All">:ll</a>):<pre><code class="language-vim">function! GenericPostCompilerActionExecutor(action) abort
+        try
+                cc
+        catch /\&lt;E42:/
+                execute a:action
+        endtry
+endfunction</code></pre>
+Complementary, some or all of the available "Pre*Action"s (or "*Pre*Command"s)
+may run <code>:doautocmd java_spotbugs_post User</code> in their implementations before
+<a href="quickfix.html#%3Amake">:make</a> (or its equivalent) to define a once-only <a href="autocmd.html#ShellCmdPost">ShellCmdPost</a> <code>:autocmd</code>
+that will arrange for "PostCompilerActionExecutor" to be invoked; and then run
+<code>:doautocmd java_spotbugs_post ShellCmdPost</code> to consume this event:<pre><code class="language-vim">function! GenericPreCompilerCommand(arguments) abort
+        if !exists('g:spotbugs_compilation_done')
+                doautocmd java_spotbugs_post User
+                execute 'make ' . a:arguments
+                " only run doautocmd when :make was synchronous
+                " see note below
+                doautocmd java_spotbugs_post ShellCmdPost " XXX: (a)
+                let g:spotbugs_compilation_done = 1
+        else
+                cc
+        endif
+endfunction
+function! GenericPreCompilerTestCommand(arguments) abort
+        if !exists('g:spotbugs_test_compilation_done')
+                doautocmd java_spotbugs_post User
+                execute 'make ' . a:arguments
+                " only run doautocmd when :make was synchronous
+                " see note below
+                doautocmd java_spotbugs_post ShellCmdPost " XXX: (b)
+                let g:spotbugs_test_compilation_done = 1
+        else
+                cc
+        endif
+endfunction
+let g:spotbugs_properties = {
+        \ 'compiler':                'maven',
+        \ 'DefaultPreCompilerCommand':
+                \ function('GenericPreCompilerCommand'),
+        \ 'DefaultPreCompilerTestCommand':
+                \ function('GenericPreCompilerTestCommand'),
+        \ 'PostCompilerActionExecutor':
+                \ function('GenericPostCompilerActionExecutor'),
+\ }</code></pre>
+If a command equivalent of <code>:make</code> is capable of asynchronous execution and
+consuming <code>ShellCmdPost</code> events, <code>:doautocmd java_spotbugs_post ShellCmdPost</code>
+must be removed from such "*Action" (or "*Command") implementations (i.e. the
+lines <code>(a)</code> and <code>(b)</code> in the listed examples) to retain a sequential order for
+non-blocking execution, and any notification (see below) must be suppressed.
+A <code>ShellCmdPost</code> <code>:autocmd</code> can be associated with any <a href="autocmd.html#%3Aaugroup">:augroup</a> by assigning
+its name to the "augroupForPostCompilerAction" key.</div>
+<div class="old-help-para">When default actions are not suited to a desired workflow, proceed by writing
+arbitrary functions yourself and matching their Funcrefs to the supported
 keys: "PreCompilerAction", "PreCompilerTestAction", and "PostCompilerAction".</div>
 <div class="old-help-para">The next example re-implements the default pre-compiler actions for a Maven
-project and requests other default Maven settings with the "compiler" entry:<pre>function! MavenPreCompilerAction() abort
+project and requests other default Maven settings with the "compiler" entry:
+<pre><code class="language-vim">function! MavenPreCompilerAction() abort
         call spotbugs#DeleteClassFiles()
         compiler maven
         make compile
+        cc
 endfunction
 function! MavenPreCompilerTestAction() abort
         call spotbugs#DeleteClassFiles()
         compiler maven
         make test-compile
+        cc
 endfunction
 let g:spotbugs_properties = {
         \ 'compiler':                'maven',
@@ -1166,15 +1241,39 @@ let g:spotbugs_properties = {
                 \ function('MavenPreCompilerAction'),
         \ 'PreCompilerTestAction':
                 \ function('MavenPreCompilerTestAction'),
-\ }</pre>
+\ }</code></pre>
 Note that all entered custom settings will take precedence over the matching
-default settings in "g:spotbugs_properties".</div>
+default settings in "g:spotbugs_properties".
+Note that it is necessary to notify the plugin of the result of a pre-compiler
+action before further work can be undertaken.  Using <a href="quickfix.html#%3Acc">:cc</a> after <a href="quickfix.html#%3Amake">:make</a> (or
+<a href="quickfix.html#%3All">:ll</a> after <a href="quickfix.html#%3Almake">:lmake</a>) as the last command of an action is the supported means
+of such communication.</div>
+<div class="old-help-para">Two commands, "SpotBugsRemoveBufferAutocmd" and "SpotBugsDefineBufferAutocmd",
+are provided to toggle actions for buffer-local autocommands.  For example, to
+also run actions on any <a href="autocmd.html#BufWritePost">BufWritePost</a> and <a href="autocmd.html#Signal">Signal</a> event, add these lines to
+<code>~/.config/nvim/after/ftplugin/java.vim</code>:<pre><code class="language-vim">if exists(':SpotBugsDefineBufferAutocmd') == 2
+        SpotBugsDefineBufferAutocmd BufWritePost Signal
+endif</code></pre>
+Otherwise, you can turn to <code>:doautocmd java_spotbugs User</code> at any time.</div>
 <div class="old-help-para">The "g:spotbugs_properties" variable is consulted by the Java filetype plugin
 (<a href="filetype.html#ft-java-plugin">ft-java-plugin</a>) to arrange for the described automation, and, therefore, it
 must be defined before <a href="autocmd.html#FileType">FileType</a> events can take place for the buffers loaded
 with Java source files.  It could, for example, be set in a project-local
-<a href="starting.html#vimrc">vimrc</a> loaded by [0].</div>
-<div class="old-help-para">[0] <a href="https://github.com/MarcWeber/vim-addon-local-vimrc/">https://github.com/MarcWeber/vim-addon-local-vimrc/</a></div>
+<a href="starting.html#vimrc">vimrc</a> loaded by [1].</div>
+<div class="old-help-para">Both "g:spotbugs_properties" and "b:spotbugs_properties" are recognized and
+must be modifiable (<a href="eval.html#%3Aunlockvar">:unlockvar</a>).  The "*Command" entries are always treated
+as global functions to be shared among all Java buffers.</div>
+<div class="old-help-para">The SpotBugs Java library and, by extension, its distributed shell scripts do
+not support in the <code>-textui</code> mode listed pathnames with directory filenames
+that contain blank characters [2].  To work around this limitation, consider
+making a symbolic link to such a directory from a directory that does not have
+blank characters in its name and passing this information to SpotBugs:<pre><code class="language-vim">let g:spotbugs_alternative_path = {
+        \ 'fromPath':        'path/to/dir_without_blanks',
+        \ 'toPath':        'path/to/dir with blanks',
+\ }</code></pre>
+[0] <a href="https://github.com/Konfekt/vim-compilers">https://github.com/Konfekt/vim-compilers</a>
+[1] <a href="https://github.com/MarcWeber/vim-addon-local-vimrc">https://github.com/MarcWeber/vim-addon-local-vimrc</a>
+[2] <a href="https://github.com/spotbugs/spotbugs/issues/909">https://github.com/spotbugs/spotbugs/issues/909</a></div>
 <div class="old-help-para"><h3 id="_gnu-make" class="help-heading">GNU MAKE<span class="help-heading-tags">						<span id="compiler-make" class="help-tag"><a href="#compiler-make">compiler-make</a></span></h3></div>
 <div class="old-help-para">Since the default make program is "make", the compiler plugin for make,
 :compiler make, will reset the <a href="options.html#'makeprg'">'makeprg'</a> and <a href="options.html#'errorformat'">'errorformat'</a> option to
@@ -1814,7 +1913,7 @@ endfunc</pre></div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-02-03 05:19 from <code><a href="https://github.com/neovim/neovim/commit/0c8890e7a771ca26c75a767b9851aaf7bf2c0f90">0c8890e</a></code>
+        Generated at 2025-02-04 05:20 from <code><a href="https://github.com/neovim/neovim/commit/8ce2833411534f44dc810b282da283f69e78a28a">8ce2833</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+quickfix.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/quickfix.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="  Nvim
