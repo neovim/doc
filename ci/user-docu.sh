@@ -13,7 +13,7 @@ generate_user_docu() {
 
   # Generate HTML from :help docs.
   VIMRUNTIME=runtime/ ./build/bin/nvim -V1 -es --clean \
-    +"lua require('scripts.gen_help_html').gen('./build/runtime/doc/', '${DOC_DIR}/user', nil, '${NEOVIM_COMMIT}')" +0cq
+    +"lua require('src.gen.gen_help_html').gen('./build/runtime/doc/', '${DOC_DIR}/user', nil, '${NEOVIM_COMMIT}')" +0cq
 }
 
 DOC_SUBTREE="/user/"
