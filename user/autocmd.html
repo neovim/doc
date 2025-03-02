@@ -88,7 +88,7 @@
   <a name="autocmd.txt" href="#autocmd"><h1 id="autocmd"> Autocmd</h1></a>
   <p>
     <i>
-    Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/scripts/gen_help_html.lua">generated</a>
+    Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/src/gen/gen_help_html.lua">generated</a>
     from <a href="https://github.com/neovim/neovim/blob/master/runtime/doc/autocmd.txt">source</a>
     using the <a href="https://github.com/neovim/tree-sitter-vimdoc">tree-sitter-vimdoc</a> parser.
     </i>
@@ -220,7 +220,7 @@ or &lt;buffer=N&gt;.  See <a href="autocmd.html#autocmd-buflocal">autocmd-bufloc
 When <a href="options.html#'verbose'">'verbose'</a> is non-zero, listing an autocommand will also display where it
 was last defined. Example:<pre>:verbose autocmd BufEnter
 FileExplorer  BufEnter
-    *          call s:LocalBrowse(expand("&lt;amatch&gt;"))
+    *	  call s:LocalBrowse(expand("&lt;amatch&gt;"))
         Last set from /usr/share/vim/vim-7.0/plugin/NetrwPlugin.vim</pre></div>
 <div class="old-help-para">See <a href="various.html#%3Averbose-cmd">:verbose-cmd</a> for more information.</div>
 <div class="old-help-para"><h2 id="_5.-events" class="help-heading">5. Events<span class="help-heading-tags">					<span id="autocmd-events" class="help-tag"><a href="#autocmd-events">autocmd-events</a></span> <span id="E215" class="help-tag"><a href="#E215">E215</a></span> <span id="E216" class="help-tag"><a href="#E216">E216</a></span></span></h2></div>
@@ -1188,13 +1188,13 @@ two ways:
 <div class="old-help-para">The special pattern <code>&lt;buffer&gt;</code> or &lt;buffer=N&gt; is used for buffer-local
 autocommands <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a>.  This pattern is not matched against the name
 of a buffer.</div>
-<div class="old-help-para">Examples:<pre>:autocmd BufRead *.txt                set et</pre>
-Set the <a href="options.html#'et'">'et'</a> option for all text files.<pre>:autocmd BufRead /vim/src/*.c        set cindent</pre>
-Set the <a href="options.html#'cindent'">'cindent'</a> option for C files in the /vim/src directory.<pre>:autocmd BufRead /tmp/*.c        set ts=5</pre>
+<div class="old-help-para">Examples:<pre>:autocmd BufRead *.txt		set et</pre>
+Set the <a href="options.html#'et'">'et'</a> option for all text files.<pre>:autocmd BufRead /vim/src/*.c	set cindent</pre>
+Set the <a href="options.html#'cindent'">'cindent'</a> option for C files in the /vim/src directory.<pre>:autocmd BufRead /tmp/*.c	set ts=5</pre>
 If you have a link from "/tmp/test.c" to "/home/nobody/vim/src/test.c", and
 you start editing "/tmp/test.c", this autocommand will match.</div>
 <div class="old-help-para"><b>Note:</b>  To match part of a path, but not from the root directory, use a "*" as
-the first character.  Example:<pre>:autocmd BufRead */doc/*.txt        set tw=78</pre>
+the first character.  Example:<pre>:autocmd BufRead */doc/*.txt	set tw=78</pre>
 This autocommand will for example be executed for "/tmp/doc/xx.txt" and
 "/usr/home/piet/doc/yy.txt".  The number of directories does not matter here.</div>
 <div class="old-help-para">The file name that the pattern is matched against is after expanding
@@ -1257,13 +1257,13 @@ pattern.  But it also means they must be explicitly added to each buffer.</div>
 :au CursorHold &lt;buffer=33&gt;  echo 'hold'
 :au BufNewFile * au CursorHold &lt;buffer=abuf&gt;  echo 'hold'</pre>
 All the commands for autocommands also work with buffer-local autocommands,
-simply use the special string instead of the pattern.  Examples:<pre>:au! * &lt;buffer&gt;                     " remove buffer-local autocommands for
+simply use the special string instead of the pattern.  Examples:<pre>:au! * &lt;buffer&gt;		     " remove buffer-local autocommands for
                                  " current buffer
-:au! * &lt;buffer=33&gt;                     " remove buffer-local autocommands for
+:au! * &lt;buffer=33&gt;		     " remove buffer-local autocommands for
                                  " buffer #33
 :bufdo :au! CursorHold &lt;buffer&gt;  " remove autocmd for given event for all
                                  " buffers
-:au * &lt;buffer&gt;                     " list buffer-local autocommands for
+:au * &lt;buffer&gt;		     " list buffer-local autocommands for
                                  " current buffer</pre>
 Note that when an autocommand is defined for the current buffer, it is stored
 with the buffer number.  Thus it uses the form "&lt;buffer=12&gt;", where 12 is the
@@ -1314,7 +1314,7 @@ name!</div>
 4. Go back to the default group with "augroup END".</div>
 <div class="old-help-para">Example:<pre>:augroup uncompress
 :  au!
-:  au BufEnter *.gz        %!gunzip
+:  au BufEnter *.gz	%!gunzip
 :augroup END</pre>
 This prevents having the autocommands defined twice (e.g., after sourcing the
 vimrc file again).</div>
@@ -1409,16 +1409,16 @@ work for files without a buffer (e.g., with ":r file").</div>
 <div class="old-help-para">							<span id="gzip-example" class="help-tag-right"><a href="#gzip-example">gzip-example</a></span>  <br>
 Examples for reading and writing compressed files:<pre>:augroup gzip
 :  autocmd!
-:  autocmd BufReadPre,FileReadPre        *.gz set bin
-:  autocmd BufReadPost,FileReadPost        *.gz '[,']!gunzip
-:  autocmd BufReadPost,FileReadPost        *.gz set nobin
-:  autocmd BufReadPost,FileReadPost        *.gz execute ":doautocmd BufReadPost " .. expand("%:r")
-:  autocmd BufWritePost,FileWritePost        *.gz !mv &lt;afile&gt; &lt;afile&gt;:r
-:  autocmd BufWritePost,FileWritePost        *.gz !gzip &lt;afile&gt;:r
-:  autocmd FileAppendPre                *.gz !gunzip &lt;afile&gt;
-:  autocmd FileAppendPre                *.gz !mv &lt;afile&gt;:r &lt;afile&gt;
-:  autocmd FileAppendPost                *.gz !mv &lt;afile&gt; &lt;afile&gt;:r
-:  autocmd FileAppendPost                *.gz !gzip &lt;afile&gt;:r
+:  autocmd BufReadPre,FileReadPre	*.gz set bin
+:  autocmd BufReadPost,FileReadPost	*.gz '[,']!gunzip
+:  autocmd BufReadPost,FileReadPost	*.gz set nobin
+:  autocmd BufReadPost,FileReadPost	*.gz execute ":doautocmd BufReadPost " .. expand("%:r")
+:  autocmd BufWritePost,FileWritePost	*.gz !mv &lt;afile&gt; &lt;afile&gt;:r
+:  autocmd BufWritePost,FileWritePost	*.gz !gzip &lt;afile&gt;:r
+:  autocmd FileAppendPre		*.gz !gunzip &lt;afile&gt;
+:  autocmd FileAppendPre		*.gz !mv &lt;afile&gt;:r &lt;afile&gt;
+:  autocmd FileAppendPost		*.gz !mv &lt;afile&gt; &lt;afile&gt;:r
+:  autocmd FileAppendPost		*.gz !gzip &lt;afile&gt;:r
 :augroup END</pre>
 The "gzip" group is used to be able to delete any existing autocommands with
 ":autocmd!", for when the file is sourced twice.</div>
@@ -1459,22 +1459,22 @@ a compressed file:<pre>:autocmd FileWritePre *.gz   set bin|'[,']!gzip
 :autocmd FileWritePost *.gz  undo|set nobin</pre></div>
 <div class="old-help-para">							<span id="autocommand-pattern" class="help-tag-right"><a href="#autocommand-pattern">autocommand-pattern</a></span>  <br>
 You can specify multiple patterns, separated by commas.  Here are some
-examples:<pre>:autocmd BufRead   *                set tw=79 nocin ic infercase fo=2croq
-:autocmd BufRead   .letter        set tw=72 fo=2tcrq
-:autocmd BufEnter  .letter        set dict=/usr/lib/dict/words
-:autocmd BufLeave  .letter        set dict=
-:autocmd BufRead,BufNewFile   *.c,*.h        set tw=0 cin noic
-:autocmd BufEnter  *.c,*.h        abbr FOR for (i = 0; i &lt; 3; ++i)&lt;CR&gt;{&lt;CR&gt;}&lt;Esc&gt;O
-:autocmd BufLeave  *.c,*.h        unabbr FOR</pre>
-For makefiles (makefile, Makefile, imakefile, makefile.unix, etc.):<pre>:autocmd BufEnter  ?akefile*        set include=^s\=include
-:autocmd BufLeave  ?akefile*        set include&amp;</pre>
-To always start editing C files at the first function:<pre>:autocmd BufRead   *.c,*.h        1;/^{</pre>
+examples:<pre>:autocmd BufRead   *		set tw=79 nocin ic infercase fo=2croq
+:autocmd BufRead   .letter	set tw=72 fo=2tcrq
+:autocmd BufEnter  .letter	set dict=/usr/lib/dict/words
+:autocmd BufLeave  .letter	set dict=
+:autocmd BufRead,BufNewFile   *.c,*.h	set tw=0 cin noic
+:autocmd BufEnter  *.c,*.h	abbr FOR for (i = 0; i &lt; 3; ++i)&lt;CR&gt;{&lt;CR&gt;}&lt;Esc&gt;O
+:autocmd BufLeave  *.c,*.h	unabbr FOR</pre>
+For makefiles (makefile, Makefile, imakefile, makefile.unix, etc.):<pre>:autocmd BufEnter  ?akefile*	set include=^s\=include
+:autocmd BufLeave  ?akefile*	set include&amp;</pre>
+To always start editing C files at the first function:<pre>:autocmd BufRead   *.c,*.h	1;/^{</pre>
 Without the "1;" above, the search would start from wherever the file was
 entered, rather than from the start of the file.</div>
 <div class="old-help-para">						<span id="skeleton" class="help-tag"><a href="#skeleton">skeleton</a></span> <span id="template" class="help-tag"><a href="#template">template</a></span>
-To read a skeleton (template) file when opening a new file:<pre>:autocmd BufNewFile  *.c        0r ~/vim/skeleton.c
-:autocmd BufNewFile  *.h        0r ~/vim/skeleton.h
-:autocmd BufNewFile  *.java        0r ~/vim/skeleton.java</pre>
+To read a skeleton (template) file when opening a new file:<pre>:autocmd BufNewFile  *.c	0r ~/vim/skeleton.c
+:autocmd BufNewFile  *.h	0r ~/vim/skeleton.h
+:autocmd BufNewFile  *.java	0r ~/vim/skeleton.java</pre>
 To insert the current date and time in a "*.html" file when writing it:<pre>:autocmd BufWritePre,FileWritePre *.html   ks|call LastMod()|'s
 :fun LastMod()
 :  if line("$") &gt; 20
@@ -1574,7 +1574,7 @@ This specifically applies to <a href="autocmd.html#CursorMoved">CursorMoved</a> 
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-02-26 05:21 from <code><a href="https://github.com/neovim/neovim/commit/a2b464944a4eb391fe6213304a4df5677845b52c">a2b4649</a></code>
+        Generated at 2025-03-02 19:11 from <code><a href="https://github.com/neovim/neovim/commit/65c7033cbe75825c4cc948b71aba9a6d7a14540d">65c7033</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+autocmd.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/autocmd.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   Nvim
