@@ -88,7 +88,7 @@
   <a name="treesitter.txt" href="#treesitter"><h1 id="treesitter"> Treesitter</h1></a>
   <p>
     <i>
-    Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/scripts/gen_help_html.lua">generated</a>
+    Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/src/gen/gen_help_html.lua">generated</a>
     from <a href="https://github.com/neovim/neovim/blob/master/runtime/doc/treesitter.txt">source</a>
     using the <a href="https://github.com/neovim/tree-sitter-vimdoc">tree-sitter-vimdoc</a> parser.
     </i>
@@ -448,6 +448,15 @@ priority of 100. This enables plugins to set a highlighting priority lower or
 higher than treesitter. It is also possible to change the priority of an
 individual query pattern manually by setting its <code>"priority"</code> metadata
 attribute:<pre><code class="language-query">((super_important_node) @superimportant (#set! priority 105))</code></pre></div>
+<div class="old-help-para">                                          <span id="treesitter-highlight-commentstring" class="help-tag-right"><a href="#treesitter-highlight-commentstring">treesitter-highlight-commentstring</a></span><br>
+Treesitter highlighting supports finer-grained <a href="options.html#'commentstring'">'commentstring'</a>s, used by the
+built-in <a href="various.html#commenting">commenting</a> plugin. When the cursor is within a node that sets the
+<code>bo.commentstring</code> metadata property (<a href="treesitter.html#treesitter-directive-set%21">treesitter-directive-set!</a>), that
+property defines the comment delimiter (where "innermost wins"). This is
+useful for languages like <code>JSX</code> that have different comment syntax depending
+on the code region, for example:<pre><code class="language-query">((jsx_element) @_tag (#set! @_tag bo.commentstring "{/* %s */}"))</code></pre></div>
+<div class="old-help-para">When multiple captures set this metadata over a region, only the innermost
+(most specific) one is applied to a given area.</div>
 <div class="old-help-para"><h2 id="_treesitter-language-injections" class="help-heading">TREESITTER LANGUAGE INJECTIONS<span class="help-heading-tags">                <span id="treesitter-language-injections" class="help-tag"><a href="#treesitter-language-injections">treesitter-language-injections</a></span></h2></div>
 <div class="old-help-para">Note the following information is adapted from:
   <a href="https://tree-sitter.github.io/tree-sitter/syntax-highlighting#language-injection">https://tree-sitter.github.io/tree-sitter/syntax-highlighting#language-injection</a></div>
@@ -686,7 +695,7 @@ TSNode:named_descendant_for_range(<code>{start_row}</code>, <code>{start_col}</c
 <div class="old-help-para">                                     <span id="vim.treesitter.get_captures_at_cursor()" class="help-tag-right"><a href="#vim.treesitter.get_captures_at_cursor()">vim.treesitter.get_captures_at_cursor()</a></span><br>
 get_captures_at_cursor(<code>{winnr}</code>)
     Returns a list of highlight capture names under the cursor</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{winnr}</code>  (<code>integer?</code>) Window handle or 0 for current window (default)
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{winnr}</code>  (<code>integer?</code>) <a href="windows.html#window-ID">window-ID</a> or 0 for current window (default)
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>string[]</code>) List of capture names</div>
 <div class="old-help-para">                                        <span id="vim.treesitter.get_captures_at_pos()" class="help-tag-right"><a href="#vim.treesitter.get_captures_at_pos()">vim.treesitter.get_captures_at_pos()</a></span><br>
@@ -880,12 +889,14 @@ end</code></pre></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>string?</code>)</div>
 <div class="old-help-para">inspect(<code>{lang}</code>)                            <span id="vim.treesitter.language.inspect()" class="help-tag-right"><a href="#vim.treesitter.language.inspect()">vim.treesitter.language.inspect()</a></span><br>
     Inspects the provided language.</div>
-<div class="old-help-para">    Inspecting provides some useful information on the language like node and
-    field names, ABI version, and whether the language came from a WASM
-    module.</div>
+<div class="old-help-para">    Inspecting provides some useful information on the language like ABI
+    version, parser state count (a measure of parser complexity), node and
+    field names, and whether the language came from a WASM module.</div>
 <div class="old-help-para">    Node names are returned in a table mapping each node name to a <code>boolean</code>
     indicating whether or not the node is named (i.e., not anonymous).
     Anonymous nodes are surrounded with double quotes (<code>"</code>).</div>
+<div class="old-help-para">    For ABI 15 parsers, also show parser metadata (major, minor, patch
+    version) and a table of supertypes with their respective subtypes.</div>
 <div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{lang}</code>  (<code>string</code>) Language
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>TSLangInfo</code>)</div>
@@ -1317,7 +1328,7 @@ LanguageTree:tree_for_range(<code>{range}</code>, <code>{opts}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-02-26 05:21 from <code><a href="https://github.com/neovim/neovim/commit/a2b464944a4eb391fe6213304a4df5677845b52c">a2b4649</a></code>
+        Generated at 2025-03-02 19:11 from <code><a href="https://github.com/neovim/neovim/commit/65c7033cbe75825c4cc948b71aba9a6d7a14540d">65c7033</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+treesitter.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/treesitter.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
