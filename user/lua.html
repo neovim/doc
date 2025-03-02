@@ -88,7 +88,7 @@
   <a name="lua.txt" href="#lua"><h1 id="lua"> Lua</h1></a>
   <p>
     <i>
-    Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/scripts/gen_help_html.lua">generated</a>
+    Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/src/gen/gen_help_html.lua">generated</a>
     from <a href="https://github.com/neovim/neovim/blob/master/runtime/doc/lua.txt">source</a>
     using the <a href="https://github.com/neovim/tree-sitter-vimdoc">tree-sitter-vimdoc</a> parser.
     </i>
@@ -3464,6 +3464,10 @@ vim.ui.open(<code>{path}</code>, <code>{opt}</code>)                            
 
 </div>
 <div class="help-para">
+    Can also be invoked with <code>:Open</code>.                                  <span id="%3AOpen" class="help-tag-right"><a href="#%3AOpen">:Open</a></span><br>
+
+</div>
+<div class="help-para">
     Expands "~/" and environment variables in filesystem paths.
 
 </div>
@@ -5432,11 +5436,11 @@ Iter:enumerate()                                            <span id="Iter%3Aenu
 <div class="help-para">
     Example:<pre><code class="language-lua">local it = vim.iter(vim.gsplit('abc', '')):enumerate()
 it:next()
--- 1        'a'
+-- 1	'a'
 it:next()
--- 2        'b'
+-- 2	'b'
 it:next()
--- 3        'c'</code></pre>
+-- 3	'c'</code></pre>
 
 </div>
 <div class="help-para">
@@ -5756,9 +5760,9 @@ Iter:rfind(<code>{f}</code>)                                                 <sp
 <div class="help-para">
     Examples:<pre><code class="language-lua">local it = vim.iter({ 1, 2, 3, 2, 1 }):enumerate()
 it:rfind(1)
--- 5        1
+-- 5	1
 it:rfind(1)
--- 1        1</code></pre>
+-- 1	1</code></pre>
 
 </div>
 <div class="help-para">
@@ -6047,6 +6051,49 @@ vim.text.hexencode(<code>{str}</code>)                               <span id="v
 
 </div>
 <div class="help-para">
+vim.text.indent(<code>{size}</code>, <code>{text}</code>, <code>{opts}</code>)                    <span id="vim.text.indent()" class="help-tag-right"><a href="#vim.text.indent()">vim.text.indent()</a></span><br>
+    Sets the indent (i.e. the common leading whitespace) of non-empty lines in
+    <code>text</code> to <code>size</code> spaces/tabs.
+
+</div>
+<div class="help-para">
+    Indent is calculated by number of consecutive indent chars.
+<div class="help-li" style=""> The first indented, non-empty line decides the indent char (space/tab):
+</div><div class="help-li" style="margin-left: 3rem;"> <code>SPC SPC TAB …</code> = two-space indent.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>TAB SPC …</code> = one-tab indent.
+</div><div class="help-li" style=""> Set <code>opts.expandtab</code> to treat tabs as spaces.
+</div>
+</div>
+<div class="help-para">
+    To "dedent" (remove the common indent), pass <code>size=0</code>:<pre><code class="language-lua">vim.print(vim.text.indent(0, ' a\n  b\n'))</code></pre>
+
+</div>
+<div class="help-para">
+    To adjust relative-to an existing indent, call indent() twice:<pre><code class="language-lua">local indented, old_indent = vim.text.indent(0, ' a\n b\n')
+indented = vim.text.indent(old_indent + 2, indented)
+vim.print(indented)</code></pre>
+
+</div>
+<div class="help-para">
+    To ignore the final, blank line when calculating the indent, use gsub()
+    before calling indent():<pre><code class="language-lua">local text = '  a\n  b\n '
+vim.print(vim.text.indent(0, (text:gsub('\n[\t ]+\n?$', '\n'))))</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{size}</code>  (<code>integer</code>) Number of spaces.
+</div><div class="help-li" style=""> <code>{text}</code>  (<code>string</code>) Text to indent.
+</div><div class="help-li" style=""> <code>{opts}</code>  (<code>{ expandtab?: number }?</code>)
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return (multiple):</div>
+        (<code>string</code>) Indented text.
+        (<code>integer</code>) Indent size before modification.
+
+</div>
+<div class="help-para">
 <h2 id="_lua-module:-tohtml" class="help-heading">Lua module: tohtml<span class="help-heading-tags">                                                <span id="vim.tohtml" class="help-tag"><a href="#vim.tohtml">vim.tohtml</a></span></h2>
 
 
@@ -6131,7 +6178,7 @@ tohtml.tohtml(<code>{winid}</code>, <code>{opt}</code>)                         
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-02-26 05:21 from <code><a href="https://github.com/neovim/neovim/commit/a2b464944a4eb391fe6213304a4df5677845b52c">a2b4649</a></code>
+        Generated at 2025-03-02 19:11 from <code><a href="https://github.com/neovim/neovim/commit/65c7033cbe75825c4cc948b71aba9a6d7a14540d">65c7033</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
