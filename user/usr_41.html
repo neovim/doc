@@ -88,7 +88,7 @@
   <a name="usr_41.txt" href="#41.1"><h1 id="41.1"> Usr_41</h1></a>
   <p>
     <i>
-    Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/scripts/gen_help_html.lua">generated</a>
+    Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/src/gen/gen_help_html.lua">generated</a>
     from <a href="https://github.com/neovim/neovim/blob/master/runtime/doc/usr_41.txt">source</a>
     using the <a href="https://github.com/neovim/tree-sitter-vimdoc">tree-sitter-vimdoc</a> parser.
     </i>
@@ -1093,7 +1093,7 @@ You get an error when the function doesn't exist.</div>
 <div class="old-help-para"><h3 id="_function-references" class="help-heading">FUNCTION REFERENCES</h3></div>
 <div class="old-help-para">Sometimes it can be useful to have a variable point to one function or
 another.  You can do it with the function() function.  It turns the name of a
-function into a reference:<pre>:let result = 0                " or 1
+function into a reference:<pre>:let result = 0		" or 1
 :function! Right()
 :  return 'Right!'
 :endfunc
@@ -1347,10 +1347,10 @@ will issue an error, because it is interpreted as:<pre>:set tags=my
 and including this character until the end-of-line is considered a comment and
 is ignored, except for commands that don't consider comments, as shown in
 examples below.  A comment can start on any character position on the line.</div>
-<div class="old-help-para">There is a little "catch" with comments for some commands.  Examples:<pre>:abbrev dev development                " shorthand
-:map &lt;F3&gt; o#include                " insert include
-:execute cmd                        " do it
-:!ls *.c                        " list C files</pre>
+<div class="old-help-para">There is a little "catch" with comments for some commands.  Examples:<pre>:abbrev dev development		" shorthand
+:map &lt;F3&gt; o#include		" insert include
+:execute cmd			" do it
+:!ls *.c			" list C files</pre>
 The abbreviation "dev" will be expanded todevelopment     " shorthand'.  The
 mapping of <code>&lt;F3&gt;</code> will actually be the whole line after the 'o# ....' including
 the '" insert include'.  The "execute" command will give an error.  The "!"
@@ -1360,10 +1360,10 @@ unmatched '"' character.
 commands (there are a few more commands with this restriction).  For the
 ":map", ":abbreviate" and ":execute" commands there is a trick:<pre>:abbrev dev development|" shorthand
 :map &lt;F3&gt; o#include|" insert include
-:execute cmd                        |" do it</pre>
+:execute cmd			|" do it</pre>
 With the '|' character the command is separated from the next one.  And that
 next command is only a comment.  For the last command you need to do two
-things: <a href="eval.html#%3Aexecute">:execute</a> and use '|':<pre>:exe '!ls *.c'                        |" list C files</pre>
+things: <a href="eval.html#%3Aexecute">:execute</a> and use '|':<pre>:exe '!ls *.c'			|" list C files</pre>
 Notice that there is no white space before the '|' in the abbreviation and
 mapping.  For these commands, any character until the end-of-line or '|' is
 included.  As a consequence of this behavior, you don't always see that
@@ -1446,12 +1446,12 @@ will use it here as an example.</div>
 <div class="old-help-para">For the plugin to work for everybody, it should follow a few guidelines.  This
 will be explained step-by-step.  The complete example plugin is at the end.</div>
 <div class="old-help-para"><h3 id="_body" class="help-heading">BODY</h3></div>
-<div class="old-help-para">Let's start with the body of the plugin, the lines that do the actual work:<pre>14        iabbrev teh the
-15        iabbrev otehr other
-16        iabbrev wnat want
-17        iabbrev synchronisation
-18                \ synchronization
-19        let s:count = 4</pre>
+<div class="old-help-para">Let's start with the body of the plugin, the lines that do the actual work:<pre>14	iabbrev teh the
+15	iabbrev otehr other
+16	iabbrev wnat want
+17	iabbrev synchronisation
+18		\ synchronization
+19	let s:count = 4</pre>
 The actual list should be much longer, of course.</div>
 <div class="old-help-para">The line numbers have only been added to explain a few things, don't put them
 in your plugin file!</div>
@@ -1459,24 +1459,24 @@ in your plugin file!</div>
 <div class="old-help-para">You will probably add new corrections to the plugin and soon have several
 versions lying around.  And when distributing this file, people will want to
 know who wrote this wonderful plugin and where they can send remarks.
-Therefore, put a header at the top of your plugin:<pre>1        " Vim global plugin for correcting typing mistakes
-2        " Last Change:        2000 Oct 15
-3        " Maintainer:        Bram Moolenaar &lt;Bram@vim.org&gt;</pre>
+Therefore, put a header at the top of your plugin:<pre>1	" Vim global plugin for correcting typing mistakes
+2	" Last Change:	2000 Oct 15
+3	" Maintainer:	Bram Moolenaar &lt;Bram@vim.org&gt;</pre>
 About copyright and licensing: Since plugins are very useful and it's hardly
 worth restricting their distribution, please consider making your plugin
 either public domain or use the Vim <a href="uganda.html#license">license</a>.  A short note about this near
-the top of the plugin should be sufficient.  Example:<pre>4        " License:        This file is placed in the public domain.</pre>
+the top of the plugin should be sufficient.  Example:<pre>4	" License:	This file is placed in the public domain.</pre>
 LINE CONTINUATION, AVOIDING SIDE EFFECTS		<span id="use-cpo-save" class="help-tag-right"><a href="#use-cpo-save">use-cpo-save</a></span>  <br></div>
 <div class="old-help-para">In line 18 above, the line-continuation mechanism is used <a href="repeat.html#line-continuation">line-continuation</a>.
 Users with <a href="vim_diff.html#'compatible'">'compatible'</a> set will run into trouble here, they will get an error
 message.  We can't just reset <a href="vim_diff.html#'compatible'">'compatible'</a>, because that has a lot of side
 effects.  To avoid this, we will set the <a href="options.html#'cpoptions'">'cpoptions'</a> option to its Vim default
 value and restore it later.  That will allow the use of line-continuation and
-make the script work for most people.  It is done like this:<pre>11        let s:save_cpo = &amp;cpo
-12        set cpo&amp;vim
+make the script work for most people.  It is done like this:<pre>11	let s:save_cpo = &amp;cpo
+12	set cpo&amp;vim
 ..
-42        let &amp;cpo = s:save_cpo
-43        unlet s:save_cpo</pre>
+42	let &amp;cpo = s:save_cpo
+43	unlet s:save_cpo</pre>
 We first store the old value of <a href="options.html#'cpoptions'">'cpoptions'</a> in the s:save_cpo variable.  At
 the end of the plugin this value is restored.</div>
 <div class="old-help-para">Notice that a script-local variable is used <a href="eval.html#s%3Avar">s:var</a>.  A global variable could
@@ -1486,10 +1486,10 @@ things that are only used in the script.</div>
 <div class="old-help-para">It's possible that a user doesn't always want to load this plugin.  Or the
 system administrator has dropped it in the system-wide plugin directory, but a
 user has their own plugin they want to use.  Then the user must have a chance to
-disable loading this specific plugin.  This will make it possible:<pre>6        if exists("g:loaded_typecorr")
-7          finish
-8        endif
-9        let g:loaded_typecorr = 1</pre>
+disable loading this specific plugin.  This will make it possible:<pre>6	if exists("g:loaded_typecorr")
+7	  finish
+8	endif
+9	let g:loaded_typecorr = 1</pre>
 This also avoids that when the script is loaded twice it would cause error
 messages for redefining functions and cause trouble for autocommands that are
 added twice.</div>
@@ -1504,7 +1504,7 @@ than using if-endif around the whole file.</div>
 correction for the word under the cursor.  We could just pick a key sequence
 for this mapping, but the user might already use it for something else.  To
 allow the user to define which keys a mapping in a plugin uses, the <code>&lt;Leader&gt;</code>
-item can be used:<pre>22          map &lt;unique&gt; &lt;Leader&gt;a  &lt;Plug&gt;TypecorrAdd;</pre>
+item can be used:<pre>22	  map &lt;unique&gt; &lt;Leader&gt;a  &lt;Plug&gt;TypecorrAdd;</pre>
 The "&lt;Plug&gt;TypecorrAdd;" thing will do the work, more about that further on.</div>
 <div class="old-help-para">The user can set the "mapleader" variable to the key sequence that they want
 this mapping to start with.  Thus if the user has done:<pre>let mapleader = "_"</pre>
@@ -1513,9 +1513,9 @@ will be used, which is a backslash.  Then a map for "\a" will be defined.</div>
 <div class="old-help-para">Note that <code>&lt;unique&gt;</code> is used, this will cause an error message if the mapping
 already happened to exist. <a href="map.html#%3Amap-%3Cunique%3E">:map-&lt;unique&gt;</a></div>
 <div class="old-help-para">But what if the user wants to define their own key sequence?  We can allow that
-with this mechanism:<pre>21        if !hasmapto('&lt;Plug&gt;TypecorrAdd;')
-22          map &lt;unique&gt; &lt;Leader&gt;a  &lt;Plug&gt;TypecorrAdd;
-23        endif</pre>
+with this mechanism:<pre>21	if !hasmapto('&lt;Plug&gt;TypecorrAdd;')
+22	  map &lt;unique&gt; &lt;Leader&gt;a  &lt;Plug&gt;TypecorrAdd;
+23	endif</pre>
 This checks if a mapping to "&lt;Plug&gt;TypecorrAdd;" already exists, and only
 defines the mapping from "&lt;Leader&gt;a" if it doesn't.  The user then has a
 chance of putting this in their vimrc file:<pre>map ,c  &lt;Plug&gt;TypecorrAdd;</pre>
@@ -1527,19 +1527,19 @@ and mappings to interfere with the ones from other scripts.  For example, you
 could define a function Add(), but another script could try to define the same
 function.  To avoid this, we define the function local to the script by
 prepending it with "s:".</div>
-<div class="old-help-para">We will define a function that adds a new typing correction:<pre>30        function s:Add(from, correct)
-31          let to = input("type the correction for " .. a:from .. ": ")
-32          exe ":iabbrev " .. a:from .. " " .. to
+<div class="old-help-para">We will define a function that adds a new typing correction:<pre>30	function s:Add(from, correct)
+31	  let to = input("type the correction for " .. a:from .. ": ")
+32	  exe ":iabbrev " .. a:from .. " " .. to
 ..
-36        endfunction</pre>
+36	endfunction</pre>
 Now we can call the function s:Add() from within this script.  If another
 script also defines s:Add(), it will be local to that script and can only
 be called from the script it was defined in.  There can also be a global Add()
 function (without the "s:"), which is again another function.</div>
 <div class="old-help-para"><code>&lt;SID&gt;</code> can be used with mappings.  It generates a script ID, which identifies
-the current script.  In our typing correction plugin we use it like this:<pre>24        noremap &lt;unique&gt; &lt;script&gt; &lt;Plug&gt;TypecorrAdd;  &lt;SID&gt;Add
+the current script.  In our typing correction plugin we use it like this:<pre>24	noremap &lt;unique&gt; &lt;script&gt; &lt;Plug&gt;TypecorrAdd;  &lt;SID&gt;Add
 ..
-28        noremap &lt;SID&gt;Add  :call &lt;SID&gt;Add(expand("&lt;cword&gt;"), 1)&lt;CR&gt;</pre>
+28	noremap &lt;SID&gt;Add  :call &lt;SID&gt;Add(expand("&lt;cword&gt;"), 1)&lt;CR&gt;</pre>
 Thus when a user types "\a", this sequence is invoked:<pre>\a  -&gt;  &lt;Plug&gt;TypecorrAdd;  -&gt;  &lt;SID&gt;Add  -&gt;  :call &lt;SID&gt;Add()</pre>
 If another script also maps <code>&lt;SID&gt;</code>Add, it will get another script ID and
 thus define another mapping.</div>
@@ -1550,7 +1550,7 @@ the Add() function.</div>
 <div class="old-help-para">This is a bit complicated, but it's required for the plugin to work together
 with other plugins.  The basic rule is that you use <code>&lt;SID&gt;</code>Add() in mappings and
 s:Add() in other places (the script itself, autocommands, user commands).</div>
-<div class="old-help-para">We can also add a menu entry to do the same as the mapping:<pre>26        noremenu &lt;script&gt; Plugin.Add\ Correction      &lt;SID&gt;Add</pre>
+<div class="old-help-para">We can also add a menu entry to do the same as the mapping:<pre>26	noremenu &lt;script&gt; Plugin.Add\ Correction      &lt;SID&gt;Add</pre>
 The "Plugin" menu is recommended for adding menu items for plugins.  In this
 case only one item is used.  When adding more items, creating a submenu is
 recommended.  For example, "Plugin.CVS" could be used for a plugin that offers
@@ -1582,9 +1582,9 @@ difference between using <code>&lt;SID&gt;</code> and <code>&lt;Plug&gt;</code>:
 	translation of <code>&lt;SID&gt;</code> in mappings is exactly the same, that's how you
 	can call a script-local function from a mapping.</div>
 <div class="old-help-para"><h3 id="_user-command" class="help-heading">USER COMMAND</h3></div>
-<div class="old-help-para">Now let's add a user command to add a correction:<pre>38        if !exists(":Correct")
-39          command -nargs=1  Correct  :call s:Add(&lt;q-args&gt;, 0)
-40        endif</pre>
+<div class="old-help-para">Now let's add a user command to add a correction:<pre>38	if !exists(":Correct")
+39	  command -nargs=1  Correct  :call s:Add(&lt;q-args&gt;, 0)
+40	endif</pre>
 The user command is defined only if no command with the same name already
 exists.  Otherwise we would get an error here.  Overriding the existing user
 command with ":command!" is not a good idea, this would probably make the user
@@ -1597,61 +1597,61 @@ kept as long as Vim is running.  And the same variables are used when sourcing
 the same script again. <a href="eval.html#s%3Avar">s:var</a></div>
 <div class="old-help-para">The fun is that these variables can also be used in functions, autocommands
 and user commands that are defined in the script.  In our example we can add
-a few lines to count the number of corrections:<pre>19        let s:count = 4
+a few lines to count the number of corrections:<pre>19	let s:count = 4
 ..
-30        function s:Add(from, correct)
+30	function s:Add(from, correct)
 ..
-34          let s:count = s:count + 1
-35          echo s:count .. " corrections now"
-36        endfunction</pre>
+34	  let s:count = s:count + 1
+35	  echo s:count .. " corrections now"
+36	endfunction</pre>
 First s:count is initialized to 4 in the script itself.  When later the
 s:Add() function is called, it increments s:count.  It doesn't matter from
 where the function was called, since it has been defined in the script, it
 will use the local variables from this script.</div>
 <div class="old-help-para"><h3 id="_the-result" class="help-heading">THE RESULT</h3></div>
-<div class="old-help-para">Here is the resulting complete example:<pre> 1        " Vim global plugin for correcting typing mistakes
- 2        " Last Change:        2000 Oct 15
- 3        " Maintainer:        Bram Moolenaar &lt;Bram@vim.org&gt;
- 4        " License:        This file is placed in the public domain.
+<div class="old-help-para">Here is the resulting complete example:<pre> 1	" Vim global plugin for correcting typing mistakes
+ 2	" Last Change:	2000 Oct 15
+ 3	" Maintainer:	Bram Moolenaar &lt;Bram@vim.org&gt;
+ 4	" License:	This file is placed in the public domain.
  5
- 6        if exists("g:loaded_typecorr")
- 7          finish
- 8        endif
- 9        let g:loaded_typecorr = 1
+ 6	if exists("g:loaded_typecorr")
+ 7	  finish
+ 8	endif
+ 9	let g:loaded_typecorr = 1
 10
-11        let s:save_cpo = &amp;cpo
-12        set cpo&amp;vim
+11	let s:save_cpo = &amp;cpo
+12	set cpo&amp;vim
 13
-14        iabbrev teh the
-15        iabbrev otehr other
-16        iabbrev wnat want
-17        iabbrev synchronisation
-18                \ synchronization
-19        let s:count = 4
+14	iabbrev teh the
+15	iabbrev otehr other
+16	iabbrev wnat want
+17	iabbrev synchronisation
+18		\ synchronization
+19	let s:count = 4
 20
-21        if !hasmapto('&lt;Plug&gt;TypecorrAdd;')
-22          map &lt;unique&gt; &lt;Leader&gt;a  &lt;Plug&gt;TypecorrAdd;
-23        endif
-24        noremap &lt;unique&gt; &lt;script&gt; &lt;Plug&gt;TypecorrAdd;  &lt;SID&gt;Add
+21	if !hasmapto('&lt;Plug&gt;TypecorrAdd;')
+22	  map &lt;unique&gt; &lt;Leader&gt;a  &lt;Plug&gt;TypecorrAdd;
+23	endif
+24	noremap &lt;unique&gt; &lt;script&gt; &lt;Plug&gt;TypecorrAdd;  &lt;SID&gt;Add
 25
-26        noremenu &lt;script&gt; Plugin.Add\ Correction      &lt;SID&gt;Add
+26	noremenu &lt;script&gt; Plugin.Add\ Correction      &lt;SID&gt;Add
 27
-28        noremap &lt;SID&gt;Add  :call &lt;SID&gt;Add(expand("&lt;cword&gt;"), 1)&lt;CR&gt;
+28	noremap &lt;SID&gt;Add  :call &lt;SID&gt;Add(expand("&lt;cword&gt;"), 1)&lt;CR&gt;
 29
-30        function s:Add(from, correct)
-31          let to = input("type the correction for " .. a:from .. ": ")
-32          exe ":iabbrev " .. a:from .. " " .. to
-33          if a:correct | exe "normal viws\&lt;C-R&gt;\" \b\e" | endif
-34          let s:count = s:count + 1
-35          echo s:count .. " corrections now"
-36        endfunction
+30	function s:Add(from, correct)
+31	  let to = input("type the correction for " .. a:from .. ": ")
+32	  exe ":iabbrev " .. a:from .. " " .. to
+33	  if a:correct | exe "normal viws\&lt;C-R&gt;\" \b\e" | endif
+34	  let s:count = s:count + 1
+35	  echo s:count .. " corrections now"
+36	endfunction
 37
-38        if !exists(":Correct")
-39          command -nargs=1  Correct  :call s:Add(&lt;q-args&gt;, 0)
-40        endif
+38	if !exists(":Correct")
+39	  command -nargs=1  Correct  :call s:Add(&lt;q-args&gt;, 0)
+40	endif
 41
-42        let &amp;cpo = s:save_cpo
-43        unlet s:save_cpo</pre>
+42	let &amp;cpo = s:save_cpo
+43	unlet s:save_cpo</pre>
 Line 33 wasn't explained yet.  It applies the new correction to the word under
 the cursor.  The <a href="various.html#%3Anormal">:normal</a> command is used to use the new abbreviation.  Note
 that mappings and abbreviations are expanded here, even though the function
@@ -1664,23 +1664,23 @@ writing the file:<pre>:set fileformat=unix</pre>
 <div class="old-help-para">It's a good idea to also write some documentation for your plugin.  Especially
 when its behavior can be changed by the user.  See <a href="usr_05.html#add-local-help">add-local-help</a> for how
 they are installed.</div>
-<div class="old-help-para">Here is a simple example for a plugin help file, called "typecorr.txt":<pre> 1        *typecorr.txt*        Plugin for correcting typing mistakes
+<div class="old-help-para">Here is a simple example for a plugin help file, called "typecorr.txt":<pre> 1	*typecorr.txt*	Plugin for correcting typing mistakes
  2
- 3        If you make typing mistakes, this plugin will have them corrected
- 4        automatically.
+ 3	If you make typing mistakes, this plugin will have them corrected
+ 4	automatically.
  5
- 6        There are currently only a few corrections.  Add your own if you like.
+ 6	There are currently only a few corrections.  Add your own if you like.
  7
- 8        Mappings:
- 9        &lt;Leader&gt;a   or   &lt;Plug&gt;TypecorrAdd;
-10                Add a correction for the word under the cursor.
+ 8	Mappings:
+ 9	&lt;Leader&gt;a   or   &lt;Plug&gt;TypecorrAdd;
+10		Add a correction for the word under the cursor.
 11
-12        Commands:
-13        :Correct {word}
-14                Add a correction for {word}.
+12	Commands:
+13	:Correct {word}
+14		Add a correction for {word}.
 15
-16                                                        *typecorr-settings*
-17        This plugin doesn't have any settings.</pre>
+16							*typecorr-settings*
+17	This plugin doesn't have any settings.</pre>
 The first line is actually the only one for which the format matters.  It will
 be extracted from the help file to be put in the "LOCAL ADDITIONS:" section of
 first line.  After adding your help file do ":help" and check that the entries
@@ -1694,7 +1694,7 @@ it easy for the user to find associated help.</div>
 <div class="old-help-para">If your filetype is not already detected by Vim, you should create a filetype
 detection snippet in a separate file.  It is usually in the form of an
 autocommand that sets the filetype when the file name matches a pattern.
-Example:<pre>au BufNewFile,BufRead *.foo                        set filetype=foofoo</pre>
+Example:<pre>au BufNewFile,BufRead *.foo			set filetype=foofoo</pre>
 Write this single-line file as "ftdetect/foofoo.vim" in the first directory
 that appears in <a href="options.html#'runtimepath'">'runtimepath'</a>.  For Unix that would be
 "~/.config/nvim/ftdetect/foofoo.vim".  The convention is to use the name of
@@ -1845,7 +1845,7 @@ variable to make the default file skip the settings.
 							<span id="%3ACompilerSet" class="help-tag-right"><a href="#%3ACompilerSet">:CompilerSet</a></span>  <br>
 The second mechanism is to use ":set" for ":compiler!" and ":setlocal" for
 ":compiler".  Vim defines the ":CompilerSet" user command for this.  This is
-an example:<pre>CompilerSet errorformat&amp;                " use the default 'errorformat'
+an example:<pre>CompilerSet errorformat&amp;		" use the default 'errorformat'
 CompilerSet makeprg=nmake</pre>
 When you write a compiler plugin for the Vim distribution or for a system-wide
 runtime directory, use the mechanism mentioned above.  When
@@ -1868,9 +1868,9 @@ you always use the functionality it actually gets slower!</div>
 <div class="old-help-para">Note that since Vim 7 there is an alternative: use the <a href="userfunc.html#autoload">autoload</a>
 functionality <a href="usr_41.html#41.15">41.15</a>.</div>
 <div class="old-help-para">The following example shows how it's done:<pre>" Vim global plugin for demonstrating quick loading
-" Last Change:        2005 Feb 25
-" Maintainer:        Bram Moolenaar &lt;Bram@vim.org&gt;
-" License:        This file is placed in the public domain.
+" Last Change:	2005 Feb 25
+" Maintainer:	Bram Moolenaar &lt;Bram@vim.org&gt;
+" License:	This file is placed in the public domain.
 if !exists("s:did_load")
         command -nargs=* BNRead  call BufNetRead(&lt;f-args&gt;)
         map &lt;F19&gt; :call BufNetWrite('something')&lt;CR&gt;
@@ -1980,7 +1980,7 @@ utility is recommended.</div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-02-26 05:21 from <code><a href="https://github.com/neovim/neovim/commit/a2b464944a4eb391fe6213304a4df5677845b52c">a2b4649</a></code>
+        Generated at 2025-03-02 19:11 from <code><a href="https://github.com/neovim/neovim/commit/65c7033cbe75825c4cc948b71aba9a6d7a14540d">65c7033</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+usr_41.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/usr_41.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="	Nvim
