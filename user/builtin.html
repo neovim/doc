@@ -835,12 +835,12 @@ endif</code></pre></div>
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>string</code>)</div>
 <div class="old-help-para">cindent(<code>{lnum}</code>)                                                      <span id="cindent()" class="help-tag-right"><a href="#cindent()">cindent()</a></span><br>
-		Get the amount of indent for line <code>{lnum}</code> according the C
-		indenting rules, as with <a href="options.html#'cindent'">'cindent'</a>.
+		Get the amount of indent for line <code>{lnum}</code> according the
+		<a href="indent.html#C-indenting">C-indenting</a> rules, as with <a href="options.html#'cindent'">'cindent'</a>.
 		The indent is counted in spaces, the value of <a href="options.html#'tabstop'">'tabstop'</a> is
 		relevant.  <code>{lnum}</code> is used just like in <a href="builtin.html#getline()">getline()</a>.
-		When <code>{lnum}</code> is invalid -1 is returned.
-		See <a href="indent.html#C-indenting">C-indenting</a>.</div>
+		When <code>{lnum}</code> is invalid -1 is returned.</div>
+<div class="old-help-para">		To get or set indent of lines in a string, see <a href="lua.html#vim.text.indent()">vim.text.indent()</a>.</div>
 <div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{lnum}</code> (<code>integer</code>)
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>integer</code>)</div>
@@ -3740,6 +3740,7 @@ let @/ = histget("search", -1)</code></pre></div>
 		of <a href="options.html#'tabstop'">'tabstop'</a> is relevant.  <code>{lnum}</code> is used just like in
 		<a href="builtin.html#getline()">getline()</a>.
 		When <code>{lnum}</code> is invalid -1 is returned.</div>
+<div class="old-help-para">		To get or set indent of lines in a string, see <a href="lua.html#vim.text.indent()">vim.text.indent()</a>.</div>
 <div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{lnum}</code> (<code>integer|string</code>)
 </div></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>integer</code>)</div>
@@ -4472,9 +4473,8 @@ call map(myDict, function('KeyValue'))</code></pre></div>
 		When <code>{mode}</code> is omitted, the modes for "" are used.</div>
 <div class="old-help-para">		When <code>{abbr}</code> is there and it is <a href="eval.html#TRUE">TRUE</a> use abbreviations
 		instead of mappings.</div>
-<div class="old-help-para">		When <code>{dict}</code> is there and it is <a href="eval.html#TRUE">TRUE</a> return a dictionary
-		containing all the information of the mapping with the
-		following items:			<span id="mapping-dict" class="help-tag-right"><a href="#mapping-dict">mapping-dict</a></span>  <br>
+<div class="old-help-para">		When <code>{dict}</code> is <a href="eval.html#TRUE">TRUE</a>, return a dictionary describing the
+		mapping, with these items:		<span id="mapping-dict" class="help-tag-right"><a href="#mapping-dict">mapping-dict</a></span>  <br>
 		  "lhs"	     The <code>{lhs}</code> of the mapping as it would be typed
 		  "lhsraw"   The <code>{lhs}</code> of the mapping as raw bytes
 		  "lhsrawalt" The <code>{lhs}</code> of the mapping as raw bytes, alternate
@@ -5676,26 +5676,25 @@ msgstr "waarde %2$s komt terug van %1$s"</code></pre></div>
 		The callback is invoked with one argument, which is the text
 		that was entered at the prompt.  This can be an empty string
 		if the user only typed Enter.
-		Example:<pre><code class="language-vim">   func s:TextEntered(text)
-     if a:text == 'exit' || a:text == 'quit'
-       stopinsert
-       " Reset 'modified' to allow the buffer to be closed.
-       " We assume there is nothing useful to be saved.
-       set nomodified
-       close
-     else
-       " Do something useful with "a:text".  In this example
-       " we just repeat it.
-       call append(line('$') - 1, 'Entered: "' .. a:text .. '"')
-     endif
-   endfunc
-   call prompt_setcallback(bufnr(), function('s:TextEntered'))
-Parameters: ~
-  • {buf} (`integer|string`)
-  • {expr} (`string|function`)
-Return: ~
-  (`any`)</code></pre>
-prompt_setinterrupt(<code>{buf}</code>, <code>{expr}</code>)                       <span id="prompt_setinterrupt()" class="help-tag-right"><a href="#prompt_setinterrupt()">prompt_setinterrupt()</a></span><br>
+		Example:<pre><code class="language-vim">func s:TextEntered(text)
+  if a:text == 'exit' || a:text == 'quit'
+    stopinsert
+    " Reset 'modified' to allow the buffer to be closed.
+    " We assume there is nothing useful to be saved.
+    set nomodified
+    close
+  else
+    " Do something useful with "a:text".  In this example
+    " we just repeat it.
+    call append(line('$') - 1, 'Entered: "' .. a:text .. '"')
+  endif
+endfunc
+call prompt_setcallback(bufnr(), function('s:TextEntered'))</code></pre></div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{buf}</code> (<code>integer|string</code>)
+</div><div class="help-li" style=""> <code>{expr}</code> (<code>string|function</code>)
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>any</code>)</div>
+<div class="old-help-para">prompt_setinterrupt(<code>{buf}</code>, <code>{expr}</code>)                       <span id="prompt_setinterrupt()" class="help-tag-right"><a href="#prompt_setinterrupt()">prompt_setinterrupt()</a></span><br>
 		Set a callback for buffer <code>{buf}</code> to <code>{expr}</code>.  When <code>{expr}</code> is an
 		empty string the callback is removed.  This has only effect if
 		<code>{buf}</code> has <a href="options.html#'buftype'">'buftype'</a> set to "prompt".</div>
@@ -7717,7 +7716,9 @@ echo rand(seed)</code></pre></div>
 <div class="old-help-para"><div class="help-column_heading">Return:</div>                  (<code>any</code>)</div>
 <div class="old-help-para">stdpath(<code>{what}</code>)                                                <span id="stdpath()" class="help-tag"><a href="#stdpath()">stdpath()</a></span> <span id="E6100" class="help-tag"><a href="#E6100">E6100</a></span>
 		Returns <a href="starting.html#standard-path">standard-path</a> locations of various default files and
-		directories.</div>
+		directories. The locations are driven by <a href="starting.html#base-directories">base-directories</a>
+		which you can configure via <a href="starting.html#%24NVIM_APPNAME">$NVIM_APPNAME</a> or the <code>$XDG_…</code>
+		environment variables.</div>
 <div class="old-help-para"><div class="help-column_heading"><code>{what}</code>       Type    Description</div>		cache        String  Cache directory: arbitrary temporary
 		                     storage for plugins, etc.
 		config       String  User configuration directory. <a href="starting.html#init.vim">init.vim</a>
@@ -9224,7 +9225,7 @@ Don't forget that "^" will only match at the first character of the String and
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-03-02 19:11 from <code><a href="https://github.com/neovim/neovim/commit/65c7033cbe75825c4cc948b71aba9a6d7a14540d">65c7033</a></code>
+        Generated at 2025-03-03 05:21 from <code><a href="https://github.com/neovim/neovim/commit/948179cb19c75a9e79cdf2c86c441304c5285e81">948179c</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+builtin.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/builtin.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="	Nvim

@@ -388,30 +388,29 @@ autocmd BufWritePre *.rs lua vim.lsp.buf.format({ async = false })</code></pre>
 
 </div>
 <div class="help-para">
-LSP core API is described at <a href="lsp.html#lsp-core">lsp-core</a>.  Those are the core functions for
-creating and managing clients.
+The <a href="lsp.html#lsp-core">lsp-core</a> API provides core functions for creating and managing clients.
+The <a href="lsp.html#lsp-buf">lsp-buf</a> functions perform operations for LSP clients attached to the
+current buffer.
 
 </div>
 <div class="help-para">
-The <code>vim.lsp.buf_…</code> functions perform operations for all LSP clients attached
-to the given buffer. <a href="lsp.html#lsp-buf">lsp-buf</a>
-
-</div>
-<div class="help-para">
-LSP request/response handlers are implemented as Lua functions (see
-<a href="lsp.html#lsp-handler">lsp-handler</a>).
                                                                   <span id="lsp-method" class="help-tag-right"><a href="#lsp-method">lsp-method</a></span><br>
-
-</div>
-<div class="help-para">
 Requests and notifications defined by the LSP specification are referred to as
-"LSP methods". The Nvim LSP client provides default handlers in the global
-<a href="lsp.html#vim.lsp.handlers">vim.lsp.handlers</a> table, you can list them with this command:<pre><code class="language-vim">:lua vim.print(vim.tbl_keys(vim.lsp.handlers))</code></pre>
+"LSP methods". These are handled by Lua <a href="lsp.html#lsp-handler">lsp-handler</a> functions.
 
 </div>
 <div class="help-para">
-They are also listed below. Note that handlers depend on server support: they
-won't run if your server doesn't support them.
+The <a href="lsp.html#vim.lsp.handlers">vim.lsp.handlers</a> global table defines default handlers (only for
+server-to-client requests/notifications, not client-to-server).<b> Note:</b> depends
+on server support; they won't run if your server doesn't support them.
+
+</div>
+<div class="help-para">
+You can list them with:<pre><code class="language-vim">:lua vim.print(vim.tbl_keys(vim.lsp.handlers))</code></pre>
+
+</div>
+<div class="help-para">
+They are also listed below.
 
 </div>
 <div class="help-para">
@@ -498,14 +497,15 @@ Handlers can be set by (in increasing priority):
 </div>
 <div class="help-para">
                                                             <span id="vim.lsp.handlers" class="help-tag-right"><a href="#vim.lsp.handlers">vim.lsp.handlers</a></span><br>
-<div class="help-li" style=""> Setting a field in <code>vim.lsp.handlers</code>. This global table contains the
+<div class="help-li" style=""> Directly calling a LSP method via <a href="lsp.html#Client%3Arequest()">Client:request()</a>. This is the only way
+  to "override" the default client-to-server request handling (by
+  side-stepping <code>vim.lsp.buf</code> and related interfaces).<pre><code class="language-lua">local client = assert(vim.lsp.get_clients()[1])
+client:request('textDocument/definition')</code></pre>
+</div><div class="help-li" style=""> Setting a field in <code>vim.lsp.handlers</code>. This global table contains the
   default mappings of <a href="lsp.html#lsp-method">lsp-method</a> names to handlers. (<b>Note:</b> only for
   server-to-client requests/notifications, not client-to-server.)
   Example:<pre><code class="language-lua">vim.lsp.handlers['textDocument/publishDiagnostics'] = my_custom_diagnostics_handler</code></pre>
-</div>
-</div>
-<div class="help-para">
-<div class="help-li" style=""> Passing a <code>{handlers}</code> parameter to <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a>. This sets the default
+</div><div class="help-li" style=""> Passing a <code>{handlers}</code> parameter to <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a>. This sets the default
   <a href="lsp.html#lsp-handler">lsp-handler</a> for a specific server. (<b>Note:</b> only for server-to-client
   requests/notifications, not client-to-server.)
   Example:<pre><code class="language-lua">vim.lsp.start {
@@ -514,10 +514,7 @@ Handlers can be set by (in increasing priority):
     ['textDocument/publishDiagnostics'] = my_custom_server_definition
   },
 }</code></pre>
-</div>
-</div>
-<div class="help-para">
-<div class="help-li" style=""> Passing a <code>{handler}</code> parameter to <a href="lsp.html#vim.lsp.buf_request_all()">vim.lsp.buf_request_all()</a>. This sets the
+</div><div class="help-li" style=""> Passing a <code>{handler}</code> parameter to <a href="lsp.html#vim.lsp.buf_request_all()">vim.lsp.buf_request_all()</a>. This sets the
   <a href="lsp.html#lsp-handler">lsp-handler</a> ONLY for the given request(s).
   Example:<pre><code class="language-lua">vim.lsp.buf_request_all(
   0,
@@ -1664,12 +1661,12 @@ tagfunc(<code>{pattern}</code>, <code>{flags}</code>)                           
                               config that was passed to <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a>. You
                               can use this to modify parameters before they
                               are sent.
-</div><div class="help-li" style=""> <code>{on_init}</code>            (<code>elem_or_list&lt;fun(client: vim.lsp.Client, initialize_result: lsp.InitializeResult)&gt;</code>)
+</div><div class="help-li" style=""> <code>{on_init}</code>            (<code>elem_or_list&lt;fun(client: vim.lsp.Client, init_result: lsp.InitializeResult)&gt;</code>)
                               Callback invoked after LSP "initialize", where
                               <code>result</code> is a table of <code>capabilities</code> and
                               anything else the server may send. For example,
-                              clangd sends <code>initialize_result.offsetEncoding</code>
-                              if <code>capabilities.offsetEncoding</code> was sent to it.
+                              clangd sends <code>init_result.offsetEncoding</code> if
+                              <code>capabilities.offsetEncoding</code> was sent to it.
                               You can only modify the <code>client.offset_encoding</code>
                               here before any notifications are sent.
 </div><div class="help-li" style=""> <code>{on_exit}</code>            (<code>elem_or_list&lt;fun(code: integer, signal: integer, client_id: integer)&gt;</code>)
@@ -1876,6 +1873,11 @@ Client:supports_method(<code>{method}</code>, <code>{bufnr}</code>)           <s
 <div class="help-para">
 <h2 id="_lua-module:-vim.lsp.buf" class="help-heading">Lua module: vim.lsp.buf<span class="help-heading-tags">                                              <span id="lsp-buf" class="help-tag"><a href="#lsp-buf">lsp-buf</a></span></h2>
 
+
+</div>
+<div class="help-para">
+The <code>vim.lsp.buf_…</code> functions perform operations for LSP clients attached to
+the current buffer.
 
 </div>
 <div class="help-para">
@@ -2412,6 +2414,29 @@ save(<code>{lenses}</code>, <code>{bufnr}</code>, <code>{client_id}</code>)     
 
 </div>
 <div class="help-para">
+The <code>vim.lsp.completion</code> module enables insert-mode completion driven by an
+LSP server. Call <code>enable()</code> to make it available through Nvim builtin
+completion (via the <a href="autocmd.html#CompleteDone">CompleteDone</a> event). Specify <code>autotrigger=true</code> to
+activate "auto-completion" when you type any of the server-defined
+<code>triggerCharacters</code>.
+
+</div>
+<div class="help-para">
+Example: activate LSP-driven auto-completion:<pre><code class="language-lua">vim.lsp.start({
+  name = 'ts_ls',
+  cmd = …,
+  on_attach = function(client, bufnr)
+    vim.lsp.completion.enable(true, client.id, bufnr, {
+      autotrigger = true,
+      convert = function(item)
+        return { abbr = item.label:gsub('%b()', '') }
+      end,
+    })
+  end,
+})</code></pre>
+
+</div>
+<div class="help-para">
 <span id="vim.lsp.completion.BufferOpts" class="help-tag"><a href="#vim.lsp.completion.BufferOpts">vim.lsp.completion.BufferOpts</a></span>
 
 </div>
@@ -2442,7 +2467,7 @@ enable(<code>{enable}</code>, <code>{client_id}</code>, <code>{bufnr}</code>, <c
 </div>
 <div class="help-para">
 trigger()                                       <span id="vim.lsp.completion.trigger()" class="help-tag-right"><a href="#vim.lsp.completion.trigger()">vim.lsp.completion.trigger()</a></span><br>
-    Trigger LSP completion in the current buffer.
+    Triggers LSP completion once in the current buffer.
 
 </div>
 <div class="help-para">
@@ -2684,9 +2709,10 @@ stop(<code>{bufnr}</code>, <code>{client_id}</code>)                    <span id
 </div><div class="help-li" style=""> <code>{title}</code>         (<code>string</code>)
 </div><div class="help-li" style=""> <code>{title_pos}</code>     (<code>'left'|'center'|'right'</code>)
 </div><div class="help-li" style=""> <code>{relative}</code>      (<code>'mouse'|'cursor'|'editor'</code>) (default: <code>'cursor'</code>)
-</div><div class="help-li" style=""> <code>{anchor_bias}</code>   (<code>'auto'|'above'|'below'</code>, default: <code>'auto'</code>) -
-                         "auto": place window based on which side of the
-                         cursor has more lines
+</div><div class="help-li" style=""> <code>{anchor_bias}</code>   (<code>'auto'|'above'|'below'</code>, default: <code>'auto'</code>) Adjusts
+                         placement relative to cursor.
+</div><div class="help-li" style="margin-left: 3rem;"> "auto": place window based on which side of the
+                           cursor has more lines
 </div><div class="help-li" style="margin-left: 3rem;"> "above": place the window above the cursor unless
                            there are not enough lines to display the full
                            window height.
@@ -3508,7 +3534,7 @@ resolve_capabilities(<code>{server_capabilities}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-03-02 19:11 from <code><a href="https://github.com/neovim/neovim/commit/65c7033cbe75825c4cc948b71aba9a6d7a14540d">65c7033</a></code>
+        Generated at 2025-03-03 05:21 from <code><a href="https://github.com/neovim/neovim/commit/948179cb19c75a9e79cdf2c86c441304c5285e81">948179c</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
