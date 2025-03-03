@@ -238,7 +238,7 @@ UI embedders (clients that start Nvim with <a href="starting.html#--embed">--emb
 <a href="api.html#nvim_ui_attach()">nvim_ui_attach()</a>) must start Nvim without <a href="starting.html#--headless">--headless</a>:<pre><code class="language-bash">nvim --embed</code></pre>
 Nvim will pause before loading startup files and reading buffers, so the UI
 has a chance to invoke requests and do early initialization. Startup will
-continue as soon as the UI invokes <a href="api.html#nvim_ui_attach()">nvim_ui_attach()</a>.
+continue when the UI invokes <a href="api.html#nvim_ui_attach()">nvim_ui_attach()</a>.
 
 </div>
 <div class="help-para">
@@ -274,18 +274,16 @@ procedure:
 </div>
 <div class="help-para">
 							   <span id="ui-startup-stdin" class="help-tag-right"><a href="#ui-startup-stdin">ui-startup-stdin</a></span><br>
-An UI can support the native read from stdin feature as invoked with
-<code>command | nvim -</code> for the builtin TUI. <a href="starting.html#--">--</a>
-The embedding process can detect that its stdin is open to a file which
-not is a terminal, just like Nvim does. It then needs to forward this fd
-to Nvim. As fd=0 is already is used to send rpc data from the embedder to
-Nvim, it needs to use some other file descriptor, like fd=3 or higher.
+UIs can support reading from stdin (like <code>command | nvim -</code>, see <a href="starting.html#--">--</a>) as follows:
 
 </div>
 <div class="help-para">
-Then, <code>stdin_fd</code> option should be passed to <code>nvim_ui_attach</code> and Nvim will
-implicitly read it as a buffer. This option can only be used when Nvim is
-launched with <code>--embed</code> option, as described above.
+1. The embedding process detects that the stdin fd is not a terminal.
+2. It then needs to forward this fd to Nvim. Because fd=0 is already is used
+   to send RPC data from embedder to Nvim, it must use some other file
+   descriptor, like fd=3 or higher.
+3. Then pass the fd as the <code>stdin_fd</code> parameter of <code>nvim_ui_attach</code>. Nvim will
+   read it as text into buffer 1.
 
 </div>
 <div class="help-para">
@@ -1259,7 +1257,7 @@ must handle.
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-03-02 19:11 from <code><a href="https://github.com/neovim/neovim/commit/65c7033cbe75825c4cc948b71aba9a6d7a14540d">65c7033</a></code>
+        Generated at 2025-03-03 05:21 from <code><a href="https://github.com/neovim/neovim/commit/948179cb19c75a9e79cdf2c86c441304c5285e81">948179c</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+ui.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/ui.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="	Nvim
