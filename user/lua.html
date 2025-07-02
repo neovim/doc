@@ -5106,6 +5106,7 @@ versions (1.2.3-rc1) are not matched.<pre>1.2.3             is 1.2.3
 &gt;1.2.3            greater than 1.2.3
 &lt;1.2.3            before 1.2.3
 &gt;=1.2.3           at least 1.2.3
+&lt;=1.2.3           at most 1.2.3
 ~1.2.3            is &gt;=1.2.3 &lt;1.3.0       "reasonably close to 1.2.3"
 ^1.2.3            is &gt;=1.2.3 &lt;2.0.0       "compatible with 1.2.3"
 ^0.2.3            is &gt;=0.2.3 &lt;0.3.0       (0.x.x is special)
@@ -5119,13 +5120,63 @@ versions (1.2.3-rc1) are not matched.<pre>1.2.3             is 1.2.3
 1                 same
 *                 any version
 x                 same
-1.2.3 - 2.3.4     is &gt;=1.2.3 &lt;=2.3.4
+1.2.3 - 2.3.4     is &gt;=1.2.3 &lt;2.3.4
 Partial right: missing pieces treated as x (2.3 =&gt; 2.3.x).
 1.2.3 - 2.3       is &gt;=1.2.3 &lt;2.4.0
 1.2.3 - 2         is &gt;=1.2.3 &lt;3.0.0
 Partial left: missing pieces treated as 0 (1.2 =&gt; 1.2.0).
 1.2 - 2.3.0       is 1.2.0 - 2.3.0</pre>
 
+</div>
+<div class="help-para">
+<span id="vim.VersionRange" class="help-tag"><a href="#vim.VersionRange">vim.VersionRange</a></span>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Fields:</div>
+<div class="help-li" style=""> <code>{from}</code>  (<code>vim.Version</code>)
+</div><div class="help-li" style=""> <code>{to}</code>   (<code>vim.Version</code>)
+</div><div class="help-li" style=""> <code>{has}</code>   (<code>fun(self: vim.VersionRange, version: string|vim.Version): boolean</code>)
+                See <a href="lua.html#VersionRange%3Ahas()">VersionRange:has()</a>.
+</div>
+</div>
+<div class="help-para">
+VersionRange:has(<code>{version}</code>)                               <span id="VersionRange%3Ahas()" class="help-tag-right"><a href="#VersionRange%3Ahas()">VersionRange:has()</a></span><br>
+    Check if a version is in the range (inclusive <code>from</code>, exclusive <code>to</code>).
+
+</div>
+<div class="help-para">
+    Example:<pre><code class="language-lua">local r = vim.version.range('1.0.0 - 2.0.0')
+print(r:has('1.9.9'))       -- true
+print(r:has('2.0.0'))       -- false
+print(r:has(vim.version())) -- check against current Nvim version</code></pre>
+
+</div>
+<div class="help-para">
+    Or use cmp(), le(), lt(), ge(), gt(), and/or eq() to compare a version
+    against <code>.to</code> and <code>.from</code> directly:<pre><code class="language-lua">local r = vim.version.range('1.0.0 - 2.0.0') -- &gt;=1.0, &lt;2.0
+print(vim.version.ge({1,0,3}, r.from) and vim.version.lt({1,0,3}, r.to))</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.9.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{version}</code>  (<code>string|vim.Version</code>)
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>boolean</code>)
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">See also:</div>
+<div class="help-li" style=""> <a href="https://github.com/npm/node-semver#ranges">https://github.com/npm/node-semver#ranges</a>
+</div>
 </div>
 <div class="help-para">
 vim.version.cmp(<code>{v1}</code>, <code>{v2}</code>)                                <span id="vim.version.cmp()" class="help-tag-right"><a href="#vim.version.cmp()">vim.version.cmp()</a></span><br>
@@ -5232,6 +5283,29 @@ vim.version.gt(<code>{v1}</code>, <code>{v2}</code>)                            
 
 </div>
 <div class="help-para">
+vim.version.intersect(<code>{r1}</code>, <code>{r2}</code>)                    <span id="vim.version.intersect()" class="help-tag-right"><a href="#vim.version.intersect()">vim.version.intersect()</a></span><br>
+<b>    WARNING:</b> This feature is experimental/unstable.
+
+</div>
+<div class="help-para">
+    Computes the common range shared by the given ranges.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{r1}</code>  (<code>vim.VersionRange</code>) First range to intersect. See
+              <a href="lua.html#vim.VersionRange">vim.VersionRange</a>.
+</div><div class="help-li" style=""> <code>{r2}</code>  (<code>vim.VersionRange</code>) Second range to intersect. See
+              <a href="lua.html#vim.VersionRange">vim.VersionRange</a>.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>vim.VersionRange?</code>) Maximal range that is present inside both <code>r1</code>
+        and <code>r2</code>. <code>nil</code> if such range does not exist. See <a href="lua.html#vim.VersionRange">vim.VersionRange</a>.
+
+</div>
+<div class="help-para">
 vim.version.last(<code>{versions}</code>)                              <span id="vim.version.last()" class="help-tag-right"><a href="#vim.version.last()">vim.version.last()</a></span><br>
     TODO: generalize this, move to func.lua
 
@@ -5322,29 +5396,8 @@ vim.version.parse(<code>{version}</code>, <code>{opts}</code>)                  
 </div>
 <div class="help-para">
 vim.version.range(<code>{spec}</code>)                                <span id="vim.version.range()" class="help-tag-right"><a href="#vim.version.range()">vim.version.range()</a></span><br>
-    Parses a semver <a href="lua.html#version-range">version-range</a> "spec" and returns a range object:<pre>{
-  from: Version
-  to: Version
-  has(v: string|Version)
-}</pre>
-
-</div>
-<div class="help-para">
-    <code>:has()</code> checks if a version is in the range (inclusive <code>from</code>, exclusive
-    <code>to</code>).
-
-</div>
-<div class="help-para">
-    Example:<pre><code class="language-lua">local r = vim.version.range('1.0.0 - 2.0.0')
-print(r:has('1.9.9'))       -- true
-print(r:has('2.0.0'))       -- false
-print(r:has(vim.version())) -- check against current Nvim version</code></pre>
-
-</div>
-<div class="help-para">
-    Or use cmp(), le(), lt(), ge(), gt(), and/or eq() to compare a version
-    against <code>.to</code> and <code>.from</code> directly:<pre><code class="language-lua">local r = vim.version.range('1.0.0 - 2.0.0') -- &gt;=1.0, &lt;2.0
-print(vim.version.ge({1,0,3}, r.from) and vim.version.lt({1,0,3}, r.to))</code></pre>
+    Parses a semver <a href="lua.html#version-range">version-range</a> "spec" and returns <a href="lua.html#vim.VersionRange">vim.VersionRange</a>
+    object:
 
 </div>
 <div class="help-para">
@@ -5359,16 +5412,8 @@ print(vim.version.ge({1,0,3}, r.from) and vim.version.lt({1,0,3}, r.to))</code><
 </div>
 <div class="help-para">
 <div class="help-column_heading">Return:</div>
-        (<code>table?</code>) A table with the following fields:
-<div class="help-li" style=""> <code>{from}</code> (<code>vim.Version</code>)
-</div><div class="help-li" style=""> <code>{to}</code> (<code>vim.Version</code>)
-</div><div class="help-li" style=""> <code>{has}</code> (<code>fun(self: vim.VersionRange, version: string|vim.Version)</code>)
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="https://github.com/npm/node-semver#ranges">https://github.com/npm/node-semver#ranges</a>
-</div>
+        (<code>vim.VersionRange?</code>) See <a href="lua.html#vim.VersionRange">vim.VersionRange</a>.
+
 </div>
 <div class="help-para">
 <h2 id="_lua-module:-vim.iter" class="help-heading">Lua module: vim.iter<span class="help-heading-tags">                                                <span id="vim.iter" class="help-tag"><a href="#vim.iter">vim.iter</a></span></h2>
@@ -6234,7 +6279,7 @@ tohtml.tohtml(<code>{winid}</code>, <code>{opt}</code>)                         
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-07-01 05:27 from <code><a href="https://github.com/neovim/neovim/commit/66f02ee1fea2cf3c033e48e58bd49e8b81c7a11e">66f02ee</a></code>
+        Generated at 2025-07-02 05:27 from <code><a href="https://github.com/neovim/neovim/commit/807bc00dd68dccb55d5aa12e0a568d2551b08d04">807bc00</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
