@@ -1556,14 +1556,16 @@ editing text paragraphs.  A few hints on how to use this:</div>
 </div></div>
 <div class="old-help-para"><h2 id="_7.-sorting-text" class="help-heading">7. Sorting text<span class="help-heading-tags">						<span id="sorting" class="help-tag"><a href="#sorting">sorting</a></span></h2></div>
 <div class="old-help-para">Vim has a sorting function and a sorting command.  The sorting function can be
-found here: <a href="vimfn.html#sort()">sort()</a>, <a href="vimfn.html#uniq()">uniq()</a>.</div>
+found here: <a href="vimfn.html#sort()">sort()</a>, <a href="vimfn.html#uniq()">uniq()</a>.
+Also see <a href="change.html#%3Auniq">:uniq</a>.</div>
 <div class="old-help-para">							<span id="%3Asor" class="help-tag"><a href="#%3Asor">:sor</a></span> <span id="%3Asort" class="help-tag"><a href="#%3Asort">:sort</a></span>
 :[range]sor[t][!] [b][f][i][l][n][o][r][u][x] [/{pattern}/]
 			Sort lines in [range].  When no range is given all
 			lines are sorted.</div>
 <div class="old-help-para">			With [!] the order is reversed.</div>
-<div class="old-help-para">			With [i] case is ignored.</div>
-<div class="old-help-para">			With [l] sort uses the current collation locale.
+<div class="old-help-para">			With [i] case is ignored.
+							<span id="%3Asort-l" class="help-tag-right"><a href="#%3Asort-l">:sort-l</a></span>  <br>
+			With [l] sort uses the current collation locale.
 			Implementation details: strcoll() is used to compare
 			strings. See <a href="mlang.html#%3Alanguage">:language</a> to check or set the collation
 			locale. Example:<pre>:language collate en_US.UTF-8
@@ -1586,13 +1588,15 @@ found here: <a href="vimfn.html#sort()">sort()</a>, <a href="vimfn.html#uniq()">
 <div class="old-help-para">			With [o] sorting is done on the first octal number in
 			the line (after or inside a <code>{pattern}</code> match).</div>
 <div class="old-help-para">			With [b] sorting is done on the first binary number in
-			the line (after or inside a <code>{pattern}</code> match).</div>
-<div class="old-help-para">			With [u] (u stands for unique) only keep the first of
+			the line (after or inside a <code>{pattern}</code> match).
+							<span id="%3Asort-u" class="help-tag"><a href="#%3Asort-u">:sort-u</a></span> <span id="%3Asort-uniq" class="help-tag"><a href="#%3Asort-uniq">:sort-uniq</a></span>
+			With [u] (u stands for unique) only keep the first of
 			a sequence of identical lines (ignoring case when [i]
 			is used).  Without this flag, a sequence of identical
 			lines will be kept in their original order.
 			Note that leading and trailing white space may cause
-			lines to be different.</div>
+			lines to be different.
+			When you just want to make things unique, use <a href="change.html#%3Auniq">:uniq</a>.</div>
 <div class="old-help-para">			When /{pattern}/ is specified and there is no [r] flag
 			the text matched with <code>{pattern}</code> is skipped, so that
 			you sort on what comes after the match.
@@ -1628,6 +1632,42 @@ Vim does do a "stable" sort.</div>
 <div class="old-help-para">The sorting can be interrupted, but if you interrupt it too late in the
 process you may end up with duplicated lines.  This also depends on the system
 library function used.</div>
+<div class="old-help-para"><h2 id="_8.-deduplicating-text" class="help-heading">8. Deduplicating text<span class="help-heading-tags">				<span id="deduplicating" class="help-tag"><a href="#deduplicating">deduplicating</a></span> <span id="unique" class="help-tag"><a href="#unique">unique</a></span></span></h2></div>
+<div class="old-help-para">Vim has a deduplicating function and a deduplicating command.  The
+deduplicating function can be found here: <a href="vimfn.html#uniq()">uniq()</a>.
+Also see <a href="change.html#%3Asort-uniq">:sort-uniq</a>.</div>
+<div class="old-help-para">							<span id="%3Auni" class="help-tag"><a href="#%3Auni">:uni</a></span> <span id="%3Auniq" class="help-tag"><a href="#%3Auniq">:uniq</a></span>
+:[range]uni[q][!] [i][l][r][u] [/{pattern}/]
+			Remove duplicate lines that are adjacent to each other
+			in [range].  When no range is given, all lines are
+			processed.</div>
+<div class="old-help-para">			With [i] case is ignored when comparing lines.</div>
+<div class="old-help-para">			With [l] comparison uses the current collation locale.
+			See <a href="change.html#%3Asort-l">:sort-l</a> for more details.</div>
+<div class="old-help-para">			With [r] comparison is done on the text that matches
+			/{pattern}/ instead of the full line.</div>
+<div class="old-help-para">			With [u] only keep lines that do not repeat (i.e., are
+			not immediately followed by the same line).</div>
+<div class="old-help-para">			With [!] only keep lines that are immediately followed
+			by a duplicate.</div>
+<div class="old-help-para">			If both [!] and [u] are given, [u] is ignored and [!]
+			takes effect.</div>
+<div class="old-help-para">			When /{pattern}/ is specified and [r] is not used, the
+			text matched with <code>{pattern}</code> is skipped and comparison
+			is done on what comes after the match.
+			<a href="options.html#'ignorecase'">'ignorecase'</a> applies to the pattern, but <a href="options.html#'smartcase'">'smartcase'</a>
+			is not used.
+			Instead of the slash any non-letter can be used.</div>
+<div class="old-help-para">			For example, to remove adjacent duplicate lines based
+			on the second comma-separated field:<pre>:uniq /[^,]*,/</pre></div>
+<div class="old-help-para">			Or to keep only unique lines ignoring the first 5
+			characters:<pre>:uniq u /.\{5}/</pre></div>
+<div class="old-help-para">			If <code>{pattern}</code> is empty (e.g. // is used), the last
+			search pattern is used.</div>
+<div class="old-help-para">			Note that leading and trailing white space may cause
+			lines to be considered different.
+			To remove all duplicates regardless of position, use
+			<a href="change.html#%3Asort-u">:sort-u</a> or external tools.</div>
 
   </div>
       <div class="col-narrow toc">
@@ -1643,12 +1683,13 @@ library function used.</div>
 </div><div class="help-toc-h1"><a href="#_5.-copying-and-moving-text">5. Copying and moving text</a>
 </div><div class="help-toc-h1"><a href="#_6.-formatting-text">6. Formatting text</a>
 </div><div class="help-toc-h1"><a href="#_7.-sorting-text">7. Sorting text</a>
+</div><div class="help-toc-h1"><a href="#_8.-deduplicating-text">8. Deduplicating text</a>
 </div></div>
 </div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-07-05 05:23 from <code><a href="https://github.com/neovim/neovim/commit/d9465e984b34ab7f98007e52edaf1ebc0ccef038">d9465e9</a></code>
+        Generated at 2025-07-06 05:23 from <code><a href="https://github.com/neovim/neovim/commit/025c0703123fac78cf93535dd284d00c3d64a245">025c070</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+change.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/change.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
