@@ -1126,20 +1126,15 @@ buf_request_sync(<code>{bufnr}</code>, <code>{method}</code>, <code>{params}</co
 </div>
 <div class="help-para">
 commands                                                    <span id="vim.lsp.commands" class="help-tag-right"><a href="#vim.lsp.commands">vim.lsp.commands</a></span><br>
-    Registry (a table) for client-side handlers, for custom server-commands
-    that are not in the LSP specification.
+    Map of client-defined handlers implementing custom (off-spec) commands
+    which a server may invoke. Each key is a unique command name; each value
+    is a function which is called when an LSP action (code action, code
+    lenses, …) requests it by name.
 
 </div>
 <div class="help-para">
-    If an LSP response contains a command which is not found in
-    <code>vim.lsp.commands</code>, the command will be executed via the LSP server using
-    <code>workspace/executeCommand</code>.
-
-</div>
-<div class="help-para">
-    Each key in the table is a unique command name, and each value is a
-    function which is called when an LSP action (code action, code lenses,
-    …) triggers the command.
+    If an LSP response requests a command not defined client-side, Nvim will
+    forward it to the server as <code>workspace/executeCommand</code>.
 <div class="help-li" style=""> Argument 1 is the <code>Command</code>:
 <pre>Command
 title: String
@@ -1786,13 +1781,8 @@ tagfunc(<code>{pattern}</code>, <code>{flags}</code>)                           
 </div>
 <div class="help-para">
 <div class="help-li" style=""> <code>{commands}</code>            (<code>table&lt;string,fun(command: lsp.Command, ctx: table)&gt;</code>)
-                               Client commands. Map of command names to
-                               user-defined functions. Commands passed to
-                               <code>start()</code> take precedence over the global
-                               command registry. Each key must be a unique
-                               command name, and the value is a function which
-                               is called if any LSP action (code action, code
-                               lenses, …) triggers the command.
+                               Map of client-defined commands overriding the
+                               global <a href="lsp.html#vim.lsp.commands">vim.lsp.commands</a>.
 </div><div class="help-li" style=""> <code>{detached}</code>            (<code>boolean</code>, default: <code>true</code>) Daemonize the
                                server process so that it runs in a separate
                                process group from Nvim. Nvim will shutdown the
@@ -2473,7 +2463,8 @@ workspace_symbol(<code>{query}</code>, <code>{opts}</code>)             <span id
 This module provides functionality for requesting LSP diagnostics for a
 document/workspace and populating them using <a href="diagnostic.html#vim.Diagnostic">vim.Diagnostic</a>s.
 <code>DiagnosticRelatedInformation</code> is supported: it is included in the window
-shown by <a href="diagnostic.html#vim.diagnostic.open_float()">vim.diagnostic.open_float()</a>.
+shown by <a href="diagnostic.html#vim.diagnostic.open_float()">vim.diagnostic.open_float()</a>. When the cursor is on a line with
+related information, <a href="editing.html#gf">gf</a> jumps to the problem location.
 
 </div>
 <div class="help-para">
@@ -2951,6 +2942,11 @@ stop(<code>{bufnr}</code>, <code>{client_id}</code>)                    <span id
 <div class="help-para">
 <h2 id="_lua-module:-vim.lsp.document_color" class="help-heading">Lua module: vim.lsp.document_color<span class="help-heading-tags">                        <span id="lsp-document_color" class="help-tag"><a href="#lsp-document_color">lsp-document_color</a></span></h2>
 
+
+</div>
+<div class="help-para">
+color_presentation()             <span id="vim.lsp.document_color.color_presentation()" class="help-tag-right"><a href="#vim.lsp.document_color.color_presentation()">vim.lsp.document_color.color_presentation()</a></span><br>
+    Select from a list of presentations for the color under the cursor.
 
 </div>
 <div class="help-para">
@@ -3848,7 +3844,7 @@ resolve_capabilities(<code>{server_capabilities}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-07-10 05:26 from <code><a href="https://github.com/neovim/neovim/commit/fb0dc825e9bbb9bed0d98b8c7f6ac1d117408c90">fb0dc82</a></code>
+        Generated at 2025-07-11 05:27 from <code><a href="https://github.com/neovim/neovim/commit/4f3aa7bafb75b56acb3d16a7c35a9cb589d86c1e">4f3aa7b</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
