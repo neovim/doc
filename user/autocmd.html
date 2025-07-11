@@ -147,7 +147,8 @@ Or use <code>:execute</code>:<pre>:augroup mine | exe "au! BufRead *" | augroup 
 Note that special characters (e.g., "%", "&lt;cword&gt;") in the ":autocmd"
 arguments are not expanded when the autocommand is defined.  These will be
 expanded when the Event is recognized, and the <code>{cmd}</code> is executed.  The only
-exception is that "&lt;sfile&gt;" is expanded when the autocmd is defined.  Example:
+exception is that "&lt;sfile&gt;" (unlike "&lt;script&gt;") is expanded when the autocmd
+is defined.  Example:
 <pre>:au BufNewFile,BufRead *.html so &lt;sfile&gt;:h/html.vim</pre>
 Here Vim expands <code>&lt;sfile&gt;</code> to the name of the file containing this line.
 However, <code>&lt;sfile&gt;</code> works differently in a function, in which case it's better to
@@ -290,7 +291,7 @@ BufLeave			Before leaving to another buffer.  Also when
 <div class="old-help-para">				Not used for ":qa" or ":q" when exiting Vim.
 							<span id="BufModifiedSet" class="help-tag-right"><a href="#BufModifiedSet">BufModifiedSet</a></span>  <br>
 BufModifiedSet			After the <code>'modified'</code> value of a buffer has
-				been changed.
+				been changed. Special-case of <a href="autocmd.html#OptionSet">OptionSet</a>.
 							<span id="BufNew" class="help-tag-right"><a href="#BufNew">BufNew</a></span>  <br>
 BufNew				After creating a new buffer (except during
 				startup, see <a href="autocmd.html#VimEnter">VimEnter</a>) or renaming an
@@ -518,22 +519,11 @@ CompleteDone			After Insert mode completion is done.  Either
 						  abandoned for other reason.
 </div></div>
 <div class="old-help-para">							<span id="CursorHold" class="help-tag-right"><a href="#CursorHold">CursorHold</a></span>  <br>
-CursorHold			When the user doesn't press a key for the time
-				specified with <a href="options.html#'updatetime'">'updatetime'</a>.  Not triggered
-				until the user has pressed a key (i.e. doesn't
-				fire every <a href="options.html#'updatetime'">'updatetime'</a> ms if you leave Vim to
-				make some coffee. :)  See <a href="windows.html#CursorHold-example">CursorHold-example</a>
-				for previewing tags.
-				This event is only triggered in Normal mode.
-				It is not triggered when waiting for a command
-				argument to be typed, or a movement after an
-				operator.
-				While recording the CursorHold event is not
-				triggered. <a href="repeat.html#q">q</a>
-							<span id="%3CCursorHold%3E" class="help-tag-right"><a href="#%3CCursorHold%3E">&lt;CursorHold&gt;</a></span>  <br>
-				Internally the autocommand is triggered by the
-				<code>&lt;CursorHold&gt;</code> key. In an expression mapping
-				<a href="vimfn.html#getchar()">getchar()</a> may see this character.</div>
+CursorHold			When there is no user input for <a href="options.html#'updatetime'">'updatetime'</a>
+				duration, in Normal-mode. Not triggered while
+				waiting for a command argument or movement
+				after an operator, nor while <a href="repeat.html#recording">recording</a>
+				a macro. See <a href="windows.html#CursorHold-example">CursorHold-example</a>.</div>
 <div class="old-help-para"><b>				Note:</b> Interactive commands cannot be used for
 				this event.  There is no hit-enter prompt,
 				the screen is updated directly (when needed).
@@ -845,6 +835,9 @@ OptionSet			After setting an option (except during
 				autocommand, that may break plugins. You can
 				always use <a href="autocmd.html#%3Anoautocmd">:noautocmd</a> to prevent triggering
 				OptionSet.</div>
+<div class="old-help-para"><b>				Note:</b> Not triggered by the <a href="options.html#'modified'">'modified'</a> option;
+				the <a href="autocmd.html#BufModifiedSet">BufModifiedSet</a> event may be used to
+				handle that.</div>
 <div class="old-help-para">				Non-recursive: <a href="options.html#%3Aset">:set</a> in the autocommand does
 				not trigger OptionSet again.</div>
 <div class="old-help-para">				Not triggered on startup.</div>
@@ -1622,7 +1615,7 @@ This specifically applies to <a href="autocmd.html#CursorMoved">CursorMoved</a> 
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-07-10 05:26 from <code><a href="https://github.com/neovim/neovim/commit/fb0dc825e9bbb9bed0d98b8c7f6ac1d117408c90">fb0dc82</a></code>
+        Generated at 2025-07-11 05:27 from <code><a href="https://github.com/neovim/neovim/commit/4f3aa7bafb75b56acb3d16a7c35a9cb589d86c1e">4f3aa7b</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+autocmd.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/autocmd.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   Nvim

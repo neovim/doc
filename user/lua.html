@@ -1334,14 +1334,14 @@ vim.ui_attach(<code>{ns}</code>, <code>{opts}</code>, <code>{callback}</code>)  
 
 </div>
 <div class="help-para">
-    Subscribe to <a href="ui.html#ui-events">ui-events</a>, similar to <a href="api.html#nvim_ui_attach()">nvim_ui_attach()</a> but receive events
+    Subscribe to <a href="api-ui-events.html#ui-events">ui-events</a>, similar to <a href="api.html#nvim_ui_attach()">nvim_ui_attach()</a> but receive events
     in a Lua callback. Used to implement screen elements like popupmenu or
     message handling in Lua.
 
 </div>
 <div class="help-para">
     <code>{callback}</code> receives event name plus additional parameters. See
-    <a href="ui.html#ui-popupmenu">ui-popupmenu</a> and the sections below for event format for respective
+    <a href="api-ui-events.html#ui-popupmenu">ui-popupmenu</a> and the sections below for event format for respective
     events.
 
 </div>
@@ -1363,7 +1363,7 @@ vim.ui_attach(<code>{ns}</code>, <code>{opts}</code>, <code>{callback}</code>)  
 
 </div>
 <div class="help-para">
-    Example (stub for a <a href="ui.html#ui-popupmenu">ui-popupmenu</a> implementation):<pre><code class="language-lua">ns = vim.api.nvim_create_namespace('my_fancy_pum')
+    Example (stub for a <a href="api-ui-events.html#ui-popupmenu">ui-popupmenu</a> implementation):<pre><code class="language-lua">ns = vim.api.nvim_create_namespace('my_fancy_pum')
 vim.ui_attach(ns, {ext_popupmenu=true}, function(event, ...)
   if event == 'popupmenu_show' then
     local items, selected, row, col, grid = ...
@@ -1381,7 +1381,7 @@ end)</code></pre>
 <div class="help-column_heading">Parameters:</div>
 <div class="help-li" style=""> <code>{ns}</code>        (<code>integer</code>) Namespace ID
 </div><div class="help-li" style=""> <code>{opts}</code>      (<code>table&lt;string, any&gt;</code>) Optional parameters.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ext_…}</code> (<code>boolean</code>) Any of <a href="ui.html#ui-ext-options">ui-ext-options</a>, if true
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ext_…}</code> (<code>boolean</code>) Any of <a href="api-ui-events.html#ui-ext-options">ui-ext-options</a>, if true
                       enable events for the respective UI element.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{set_cmdheight}</code> (<code>boolean</code>) If false, avoid setting
                       <a href="options.html#'cmdheight'">'cmdheight'</a> to 0 when <code>ext_messages</code> is enabled.
@@ -2261,6 +2261,141 @@ vim.str_utfindex(<code>{s}</code>, <code>{encoding}</code>, <code>{index}</code>
 
 </div>
 <div class="help-para">
+<h2 id="_lua-module:-vim.system" class="help-heading">Lua module: vim.system<span class="help-heading-tags">                                        <span id="lua-vim-system" class="help-tag"><a href="#lua-vim-system">lua-vim-system</a></span></h2>
+
+
+</div>
+<div class="help-para">
+<span id="vim.SystemCompleted" class="help-tag"><a href="#vim.SystemCompleted">vim.SystemCompleted</a></span>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Fields:</div>
+<div class="help-li" style=""> <code>{code}</code>     (<code>integer</code>)
+</div><div class="help-li" style=""> <code>{signal}</code>   (<code>integer</code>)
+</div><div class="help-li" style=""> <code>{stdout}</code>  (<code>string</code>) <code>nil</code> if stdout is disabled or has a custom
+                   handler.
+</div><div class="help-li" style=""> <code>{stderr}</code>  (<code>string</code>) <code>nil</code> if stderr is disabled or has a custom
+                   handler.
+</div>
+</div>
+<div class="help-para">
+<span id="vim.SystemObj" class="help-tag"><a href="#vim.SystemObj">vim.SystemObj</a></span>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Fields:</div>
+<div class="help-li" style=""> <code>{cmd}</code>         (<code>string[]</code>) Command name and args
+</div><div class="help-li" style=""> <code>{pid}</code>         (<code>integer</code>) Process ID
+</div><div class="help-li" style=""> <code>{kill}</code>        (<code>fun(self: vim.SystemObj, signal: integer|string)</code>) See
+                      <a href="lua.html#SystemObj%3Akill()">SystemObj:kill()</a>.
+</div><div class="help-li" style=""> <code>{wait}</code>        (<code>fun(self: vim.SystemObj, timeout: integer?): vim.SystemCompleted</code>)
+                      See <a href="lua.html#SystemObj%3Await()">SystemObj:wait()</a>.
+</div><div class="help-li" style=""> <code>{write}</code>       (<code>fun(self: vim.SystemObj, data: string[]|string?)</code>) See
+                      <a href="lua.html#SystemObj%3Awrite()">SystemObj:write()</a>.
+</div><div class="help-li" style=""> <code>{is_closing}</code>  (<code>fun(self: vim.SystemObj): boolean</code>) See
+                      <a href="lua.html#SystemObj%3Ais_closing()">SystemObj:is_closing()</a>.
+</div>
+</div>
+<div class="help-para">
+SystemObj:is_closing()                                <span id="SystemObj%3Ais_closing()" class="help-tag-right"><a href="#SystemObj%3Ais_closing()">SystemObj:is_closing()</a></span><br>
+    Checks if the process handle is closing or already closed.
+
+</div>
+<div class="help-para">
+    This method returns <code>true</code> if the underlying process handle is either
+    <code>nil</code> or is in the process of closing. It is useful for determining
+    whether it is safe to perform operations on the process handle.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>boolean</code>)
+
+</div>
+<div class="help-para">
+SystemObj:kill(<code>{signal}</code>)                                    <span id="SystemObj%3Akill()" class="help-tag-right"><a href="#SystemObj%3Akill()">SystemObj:kill()</a></span><br>
+    Sends a signal to the process.
+
+</div>
+<div class="help-para">
+    The signal can be specified as an integer or as a string.
+
+</div>
+<div class="help-para">
+    Example:<pre><code class="language-lua">local obj = vim.system({'sleep', '10'})
+obj:kill('TERM') -- sends SIGTERM to the process</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{signal}</code>  (<code>integer|string</code>) Signal to send to the process.
+</div>
+</div>
+<div class="help-para">
+SystemObj:wait(<code>{timeout}</code>)                                   <span id="SystemObj%3Await()" class="help-tag-right"><a href="#SystemObj%3Await()">SystemObj:wait()</a></span><br>
+    Waits for the process to complete or until the specified timeout elapses.
+
+</div>
+<div class="help-para">
+    This method blocks execution until the associated process has exited or
+    the optional <code>timeout</code> (in milliseconds) has been reached. If the process
+    does not exit before the timeout, it is forcefully terminated with SIGKILL
+    (signal 9), and the exit code is set to 124.
+
+</div>
+<div class="help-para">
+    If no <code>timeout</code> is provided, the method will wait indefinitely (or use the
+    timeout specified in the options when the process was started).
+
+</div>
+<div class="help-para">
+    Example:<pre><code class="language-lua">local obj = vim.system({'echo', 'hello'}, { text = true })
+local result = obj:wait(1000) -- waits up to 1000ms
+print(result.code, result.signal, result.stdout, result.stderr)</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{timeout}</code>  (<code>integer?</code>)
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>vim.SystemCompleted</code>) See <a href="lua.html#vim.SystemCompleted">vim.SystemCompleted</a>.
+
+</div>
+<div class="help-para">
+SystemObj:write(<code>{data}</code>)                                    <span id="SystemObj%3Awrite()" class="help-tag-right"><a href="#SystemObj%3Awrite()">SystemObj:write()</a></span><br>
+    Writes data to the stdin of the process or closes stdin.
+
+</div>
+<div class="help-para">
+    If <code>data</code> is a list of strings, each string is written followed by a
+    newline.
+
+</div>
+<div class="help-para">
+    If <code>data</code> is a string, it is written as-is.
+
+</div>
+<div class="help-para">
+    If <code>data</code> is <code>nil</code>, the write side of the stream is shut down and the pipe
+    is closed.
+
+</div>
+<div class="help-para">
+    Example:<pre><code class="language-lua">local obj = vim.system({'cat'}, { stdin = true })
+obj:write({'hello', 'world'}) -- writes 'hello\nworld\n' to stdin
+obj:write(nil) -- closes stdin</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{data}</code>  (<code>string[]|string?</code>)
+</div>
+</div>
+<div class="help-para">
 vim.system(<code>{cmd}</code>, <code>{opts}</code>, <code>{on_exit}</code>)                            <span id="vim.system()" class="help-tag-right"><a href="#vim.system()">vim.system()</a></span><br>
     Runs a system command or throws an error if <code>{cmd}</code> cannot be run.
 
@@ -2287,32 +2422,30 @@ local obj = vim.system({'echo', 'hello'}, { text = true }):wait()
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
 <div class="help-li" style=""> <code>{cmd}</code>      (<code>string[]</code>) Command to execute
-</div><div class="help-li" style=""> <code>{opts}</code>     (<code>vim.SystemOpts?</code>) Options:
-</div><div class="help-li" style="margin-left: 3rem;"> cwd: (string) Set the current working directory for the
-                     sub-process.
-</div><div class="help-li" style="margin-left: 3rem;"> env: table&lt;string,string&gt; Set environment variables for
-                     the new process. Inherits the current environment with
-                     <code>NVIM</code> set to <a href="vvars.html#v%3Aservername">v:servername</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> clear_env: (boolean) <code>env</code> defines the job environment
-                     exactly, instead of merging current environment.<b> Note:</b> if
-                     <code>env</code> is <code>nil</code>, the current environment is used but
-                     without <code>NVIM</code> set.
-</div><div class="help-li" style="margin-left: 3rem;"> stdin: (string|string[]|boolean) If <code>true</code>, then a pipe
+</div><div class="help-li" style=""> <code>{opts}</code>     (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{cwd}</code> (<code>string</code>) Set the current working directory for
+                     the sub-process.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{env}</code> (<code>table&lt;string,string|number&gt;</code>) Set environment
+                     variables for the new process. Inherits the current
+                     environment with <code>NVIM</code> set to <a href="vvars.html#v%3Aservername">v:servername</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{clear_env}</code> (<code>boolean</code>) <code>env</code> defines the job
+                     environment exactly, instead of merging current
+                     environment.<b> Note:</b> if <code>env</code> is <code>nil</code>, the current
+                     environment is used but without <code>NVIM</code> set.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{stdin}</code> (<code>string|string[]|true</code>) If <code>true</code>, then a pipe
                      to stdin is opened and can be written to via the
-                     <code>write()</code> method to SystemObj. If string or string[] then
-                     will be written to stdin and closed. Defaults to <code>false</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> stdout: (boolean|function) Handle output from stdout.
-                     When passed as a function must have the signature
-                     <code>fun(err: string, data: string)</code>. Defaults to <code>true</code>
-</div><div class="help-li" style="margin-left: 3rem;"> stderr: (boolean|function) Handle output from stderr.
-                     When passed as a function must have the signature
-                     <code>fun(err: string, data: string)</code>. Defaults to <code>true</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> text: (boolean) Handle stdout and stderr as text.
-                     Replaces <code>\r\n</code> with <code>\n</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> timeout: (integer) Run the command with a time limit.
-                     Upon timeout the process is sent the TERM signal (15) and
-                     the exit code is set to 124.
-</div><div class="help-li" style="margin-left: 3rem;"> detach: (boolean) If true, spawn the child process in a
+                     <code>write()</code> method to SystemObj. If <code>string</code> or <code>string[]</code>
+                     then will be written to stdin and closed.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{stdout}</code> (<code>fun(err:string?, data: string?)|boolean</code>,
+                     default: <code>true</code>) Handle output from stdout.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{stderr}</code> (<code>fun(err:string?, data: string?)|boolean</code>,
+                     default: <code>true</code>) Handle output from stderr.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{text}</code> (<code>boolean</code>) Handle stdout and stderr as text.
+                     Normalizes line endings by replacing <code>\r\n</code> with <code>\n</code>.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{timeout}</code> (<code>integer</code>) Run the command with a time limit
+                     in ms. Upon timeout the process is sent the TERM signal
+                     (15) and the exit code is set to 124.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{detach}</code> (<code>boolean</code>) Spawn the child process in a
                      detached state - this will make it a process group
                      leader, and will effectively enable the child to keep
                      running after the parent exits. Note that the child
@@ -2320,32 +2453,19 @@ local obj = vim.system({'echo', 'hello'}, { text = true }):wait()
                      unless the parent process calls <a href="luvref.html#uv.unref()">uv.unref()</a> on the
                      child's process handle.
 </div><div class="help-li" style=""> <code>{on_exit}</code>  (<code>fun(out: vim.SystemCompleted)?</code>) Called when subprocess
-                   exits. When provided, the command runs asynchronously.
-                   Receives SystemCompleted object, see return of
-                   SystemObj:wait().
+                   exits. When provided, the command runs asynchronously. See
+                   return of SystemObj:wait().
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Overloads:</div>
+<div class="help-li" style=""> <code>fun(cmd: string, on_exit: fun(out: vim.SystemCompleted)): vim.SystemObj</code>
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">Return:</div>
-        (<code>vim.SystemObj</code>) Object with the fields:
-<div class="help-li" style=""> cmd (string[]) Command name and args
-</div><div class="help-li" style=""> pid (integer) Process ID
-</div><div class="help-li" style=""> wait (fun(timeout: integer|nil): SystemCompleted) Wait for the
-          process to complete, including any open handles for background
-          processes (e.g., <code>bash -c 'sleep 10 &amp;'</code>). To avoid waiting for
-          handles, set stdout=false and stderr=false. Upon timeout the process
-          is sent the KILL signal (9) and the exit code is set to 124. Cannot
-          be called in <a href="api.html#api-fast">api-fast</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> SystemCompleted is an object with the fields:
-</div><div class="help-li" style="margin-left: 4rem;"> code: (integer)
-</div><div class="help-li" style="margin-left: 4rem;"> signal: (integer)
-</div><div class="help-li" style="margin-left: 4rem;"> stdout: (string), nil if stdout argument is passed
-</div><div class="help-li" style="margin-left: 4rem;"> stderr: (string), nil if stderr argument is passed
-</div><div class="help-li" style="margin-left: 3rem;"> kill (fun(signal: integer|string))
-</div><div class="help-li" style="margin-left: 3rem;"> write (fun(data: string|nil)) Requires <code>stdin=true</code>. Pass <code>nil</code> to
-          close the stream.
-</div><div class="help-li" style="margin-left: 3rem;"> is_closing (fun(): boolean)
-</div>
+        (<code>vim.SystemObj</code>) See <a href="lua.html#vim.SystemObj">vim.SystemObj</a>.
+
 </div>
 <div class="help-para">
 <h2 id="_lua-module:-vim.inspector" class="help-heading">Lua module: vim.inspector<span class="help-heading-tags">                                      <span id="vim.inspector" class="help-tag"><a href="#vim.inspector">vim.inspector</a></span></h2>
@@ -3698,7 +3818,8 @@ end</code></pre>
 </div>
 <div class="help-para">
 <div class="help-column_heading">Return (multiple):</div>
-        (<code>vim.SystemObj?</code>) Command object, or nil if not found.
+        (<code>vim.SystemObj?</code>) Command object, or nil if not found. See
+        <a href="lua.html#vim.SystemObj">vim.SystemObj</a>.
         (<code>string?</code>) Error message on failure, or nil on success.
 
 </div>
@@ -4024,12 +4145,12 @@ vim.keymap.set(<code>{mode}</code>, <code>{lhs}</code>, <code>{rhs}</code>, <cod
 </div>
 <div class="help-para">
     Examples:<pre><code class="language-lua">-- Map "x" to a Lua function:
-vim.keymap.set('n', 'x', function() print("real lua function") end)
+vim.keymap.set('n', 'x', function() print('real lua function') end)
 -- Map "&lt;leader&gt;x" to multiple modes for the current buffer:
 vim.keymap.set({'n', 'v'}, '&lt;leader&gt;x', vim.lsp.buf.references, { buffer = true })
 -- Map &lt;Tab&gt; to an expression (|:map-&lt;expr&gt;|):
 vim.keymap.set('i', '&lt;Tab&gt;', function()
-  return vim.fn.pumvisible() == 1 and "&lt;C-n&gt;" or "&lt;Tab&gt;"
+  return vim.fn.pumvisible() == 1 and '&lt;C-n&gt;' or '&lt;Tab&gt;'
 end, { expr = true })
 -- Map "[%%" to a &lt;Plug&gt; mapping:
 vim.keymap.set('n', '[%%', '&lt;Plug&gt;(MatchitNormalMultiBackward)')</code></pre>
@@ -6499,6 +6620,7 @@ tohtml.tohtml(<code>{winid}</code>, <code>{opt}</code>)                         
 </div><div class="help-toc-h1"><a href="#_vim">VIM</a>
 </div><div class="help-toc-h1"><a href="#_lua-vimscript-bridge">LUA-VIMSCRIPT BRIDGE</a>
 </div><div class="help-toc-h1"><a href="#_lua-module:-vim">Lua module: vim</a>
+</div><div class="help-toc-h1"><a href="#_lua-module:-vim.system">Lua module: vim.system</a>
 </div><div class="help-toc-h1"><a href="#_lua-module:-vim.inspector">Lua module: vim.inspector</a>
 </div><div class="help-toc-h1"><a href="#_lua-module:-vim.loader">Lua module: vim.loader</a>
 </div><div class="help-toc-h1"><a href="#_lua-module:-vim.pack">Lua module: vim.pack</a>
@@ -6523,7 +6645,7 @@ tohtml.tohtml(<code>{winid}</code>, <code>{opt}</code>)                         
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-07-10 05:26 from <code><a href="https://github.com/neovim/neovim/commit/fb0dc825e9bbb9bed0d98b8c7f6ac1d117408c90">fb0dc82</a></code>
+        Generated at 2025-07-11 05:27 from <code><a href="https://github.com/neovim/neovim/commit/4f3aa7bafb75b56acb3d16a7c35a9cb589d86c1e">4f3aa7b</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
