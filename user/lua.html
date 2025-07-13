@@ -742,7 +742,7 @@ A subset of the <code>vim.*</code> stdlib is available in threads, including:
 </div><div class="help-li" style=""> <code>vim.mpack</code> and <code>vim.json</code> (useful for serializing messages between threads)
 </div><div class="help-li" style=""> <code>require</code> in threads can use Lua packages from the global <a href="luaref.html#package.path">package.path</a>
 </div><div class="help-li" style=""> <code>print()</code> and <code>vim.inspect</code>
-</div><div class="help-li" style=""> <code>vim.diff</code>
+</div><div class="help-li" style=""> <code>vim.text.diff</code>
 </div><div class="help-li" style=""> Most utility functions in <code>vim.*</code> that work with pure Lua values, like
   <code>vim.split</code>, <code>vim.tbl_*</code>, <code>vim.list_*</code>, etc.
 </div><div class="help-li" style=""> <code>vim.is_thread()</code> returns true from a non-main thread.
@@ -819,80 +819,6 @@ vim.hl.range(<code>{bufnr}</code>, <code>{ns}</code>, <code>{higroup}</code>, <c
         highlight has left
         (<code>fun()?</code>) range_clear A function which allows clearing the highlight
         manually. nil is returned if timeout is not specified
-
-</div>
-<div class="help-para">
-<h2 id="_vim.diff" class="help-heading">VIM.DIFF<span class="help-heading-tags">                                                            <span id="vim.diff" class="help-tag"><a href="#vim.diff">vim.diff</a></span></h2>
-
-
-</div>
-<div class="help-para">
-vim.diff(<code>{a}</code>, <code>{b}</code>, <code>{opts}</code>)                                        <span id="vim.diff()" class="help-tag-right"><a href="#vim.diff()">vim.diff()</a></span><br>
-    Run diff on strings <code>{a}</code> and <code>{b}</code>. Any indices returned by this function,
-    either directly or via callback arguments, are 1-based.
-
-</div>
-<div class="help-para">
-    Examples:<pre><code class="language-lua">vim.diff('a\n', 'b\nc\n')
--- =&gt;
--- @@ -1 +1,2 @@
--- -a
--- +b
--- +c
-vim.diff('a\n', 'b\nc\n', {result_type = 'indices'})
--- =&gt;
--- {
---   {1, 1, 1, 2}
--- }</code></pre>
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{a}</code>     (<code>string</code>) First string to compare
-</div><div class="help-li" style=""> <code>{b}</code>     (<code>string</code>) Second string to compare
-</div><div class="help-li" style=""> <code>{opts}</code>  (<code>table?</code>) Optional parameters:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{on_hunk}</code>
-                  (<code>fun(start_a: integer, count_a: integer, start_b: integer, count_b: integer): integer?</code>)
-                  Invoked for each hunk in the diff. Return a negative number
-                  to cancel the callback for any remaining hunks. Arguments:
-</div><div class="help-li" style="margin-left: 4rem;"> <code>start_a</code> (<code>integer</code>): Start line of hunk in <code>{a}</code>.
-</div><div class="help-li" style="margin-left: 4rem;"> <code>count_a</code> (<code>integer</code>): Hunk size in <code>{a}</code>.
-</div><div class="help-li" style="margin-left: 4rem;"> <code>start_b</code> (<code>integer</code>): Start line of hunk in <code>{b}</code>.
-</div><div class="help-li" style="margin-left: 4rem;"> <code>count_b</code> (<code>integer</code>): Hunk size in <code>{b}</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{result_type}</code> (<code>'unified'|'indices'</code>, default: <code>'unified'</code>)
-                  Form of the returned diff:
-</div><div class="help-li" style="margin-left: 4rem;"> <code>unified</code>: String in unified format.
-</div><div class="help-li" style="margin-left: 4rem;"> <code>indices</code>: Array of hunk locations.<b> Note:</b> This option is
-                    ignored if <code>on_hunk</code> is used.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{linematch}</code> (<code>boolean|integer</code>) Run linematch on the
-                  resulting hunks from xdiff. When integer, only hunks upto
-                  this size in lines are run through linematch. Requires
-                  <code>result_type = indices</code>, ignored otherwise.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{algorithm}</code> (<code>'myers'|'minimal'|'patience'|'histogram'</code>,
-                  default: <code>'myers'</code>) Diff algorithm to use. Values:
-</div><div class="help-li" style="margin-left: 4rem;"> <code>myers</code>: the default algorithm
-</div><div class="help-li" style="margin-left: 4rem;"> <code>minimal</code>: spend extra time to generate the smallest
-                    possible diff
-</div><div class="help-li" style="margin-left: 4rem;"> <code>patience</code>: patience diff algorithm
-</div><div class="help-li" style="margin-left: 4rem;"> <code>histogram</code>: histogram diff algorithm
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ctxlen}</code> (<code>integer</code>) Context length
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{interhunkctxlen}</code> (<code>integer</code>) Inter hunk context length
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_whitespace}</code> (<code>boolean</code>) Ignore whitespace
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_whitespace_change}</code> (<code>boolean</code>) Ignore whitespace
-                  change
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_whitespace_change_at_eol}</code> (<code>boolean</code>) Ignore
-                  whitespace change at end-of-line.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_cr_at_eol}</code> (<code>boolean</code>) Ignore carriage return at
-                  end-of-line
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_blank_lines}</code> (<code>boolean</code>) Ignore blank lines
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{indent_heuristic}</code> (<code>boolean</code>) Use the indent heuristic for
-                  the internal diff library.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>string|integer[][]?</code>) See <code>{opts.result_type}</code>. <code>nil</code> if
-        <code>{opts.on_hunk}</code> is given.
 
 </div>
 <div class="help-para">
@@ -6484,6 +6410,75 @@ vim.snippet.stop()                                        <span id="vim.snippet.
 
 </div>
 <div class="help-para">
+vim.text.diff(<code>{a}</code>, <code>{b}</code>, <code>{opts}</code>)                              <span id="vim.text.diff()" class="help-tag-right"><a href="#vim.text.diff()">vim.text.diff()</a></span><br>
+    Run diff on strings <code>{a}</code> and <code>{b}</code>. Any indices returned by this function,
+    either directly or via callback arguments, are 1-based.
+
+</div>
+<div class="help-para">
+    Examples:<pre><code class="language-lua">vim.text.diff('a\n', 'b\nc\n')
+-- =&gt;
+-- @@ -1 +1,2 @@
+-- -a
+-- +b
+-- +c
+vim.text.diff('a\n', 'b\nc\n', {result_type = 'indices'})
+-- =&gt;
+-- {
+--   {1, 1, 1, 2}
+-- }</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{a}</code>     (<code>string</code>) First string to compare
+</div><div class="help-li" style=""> <code>{b}</code>     (<code>string</code>) Second string to compare
+</div><div class="help-li" style=""> <code>{opts}</code>  (<code>table?</code>) Optional parameters:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{on_hunk}</code>
+                  (<code>fun(start_a: integer, count_a: integer, start_b: integer, count_b: integer): integer?</code>)
+                  Invoked for each hunk in the diff. Return a negative number
+                  to cancel the callback for any remaining hunks. Arguments:
+</div><div class="help-li" style="margin-left: 4rem;"> <code>start_a</code> (<code>integer</code>): Start line of hunk in <code>{a}</code>.
+</div><div class="help-li" style="margin-left: 4rem;"> <code>count_a</code> (<code>integer</code>): Hunk size in <code>{a}</code>.
+</div><div class="help-li" style="margin-left: 4rem;"> <code>start_b</code> (<code>integer</code>): Start line of hunk in <code>{b}</code>.
+</div><div class="help-li" style="margin-left: 4rem;"> <code>count_b</code> (<code>integer</code>): Hunk size in <code>{b}</code>.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{result_type}</code> (<code>'unified'|'indices'</code>, default: <code>'unified'</code>)
+                  Form of the returned diff:
+</div><div class="help-li" style="margin-left: 4rem;"> <code>unified</code>: String in unified format.
+</div><div class="help-li" style="margin-left: 4rem;"> <code>indices</code>: Array of hunk locations.<b> Note:</b> This option is
+                    ignored if <code>on_hunk</code> is used.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{linematch}</code> (<code>boolean|integer</code>) Run linematch on the
+                  resulting hunks from xdiff. When integer, only hunks upto
+                  this size in lines are run through linematch. Requires
+                  <code>result_type = indices</code>, ignored otherwise.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{algorithm}</code> (<code>'myers'|'minimal'|'patience'|'histogram'</code>,
+                  default: <code>'myers'</code>) Diff algorithm to use. Values:
+</div><div class="help-li" style="margin-left: 4rem;"> <code>myers</code>: the default algorithm
+</div><div class="help-li" style="margin-left: 4rem;"> <code>minimal</code>: spend extra time to generate the smallest
+                    possible diff
+</div><div class="help-li" style="margin-left: 4rem;"> <code>patience</code>: patience diff algorithm
+</div><div class="help-li" style="margin-left: 4rem;"> <code>histogram</code>: histogram diff algorithm
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ctxlen}</code> (<code>integer</code>) Context length
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{interhunkctxlen}</code> (<code>integer</code>) Inter hunk context length
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_whitespace}</code> (<code>boolean</code>) Ignore whitespace
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_whitespace_change}</code> (<code>boolean</code>) Ignore whitespace
+                  change
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_whitespace_change_at_eol}</code> (<code>boolean</code>) Ignore
+                  whitespace change at end-of-line.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_cr_at_eol}</code> (<code>boolean</code>) Ignore carriage return at
+                  end-of-line
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_blank_lines}</code> (<code>boolean</code>) Ignore blank lines
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{indent_heuristic}</code> (<code>boolean</code>) Use the indent heuristic for
+                  the internal diff library.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>string|integer[][]?</code>) See <code>{opts.result_type}</code>. <code>nil</code> if
+        <code>{opts.on_hunk}</code> is given.
+
+</div>
+<div class="help-para">
 vim.text.hexdecode(<code>{enc}</code>)                               <span id="vim.text.hexdecode()" class="help-tag-right"><a href="#vim.text.hexdecode()">vim.text.hexdecode()</a></span><br>
     Hex decode a string.
 
@@ -6612,7 +6607,6 @@ tohtml.tohtml(<code>{winid}</code>, <code>{opt}</code>)                         
 </div><div class="help-toc-h1"><a href="#_vimscript-v:lua-interface">Vimscript v:lua interface</a>
 </div><div class="help-toc-h1"><a href="#_lua-standard-modules">Lua standard modules</a>
 </div><div class="help-toc-h1"><a href="#_vim.hl">VIM.HL</a>
-</div><div class="help-toc-h1"><a href="#_vim.diff">VIM.DIFF</a>
 </div><div class="help-toc-h1"><a href="#_vim.mpack">VIM.MPACK</a>
 </div><div class="help-toc-h1"><a href="#_vim.json">VIM.JSON</a>
 </div><div class="help-toc-h1"><a href="#_vim.base64">VIM.BASE64</a>
@@ -6645,7 +6639,7 @@ tohtml.tohtml(<code>{winid}</code>, <code>{opt}</code>)                         
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-07-12 05:26 from <code><a href="https://github.com/neovim/neovim/commit/f1babb322b359262a881ca2dcf6acba73d7e2881">f1babb3</a></code>
+        Generated at 2025-07-13 05:26 from <code><a href="https://github.com/neovim/neovim/commit/73fbc693b593faa62337aa3ae8142bb3f5798541">73fbc69</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
