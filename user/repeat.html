@@ -290,12 +290,12 @@ Q			Repeat the last recorded register [count] times.
 			When <a href="options.html#'verbose'">'verbose'</a> is two or higher, there is a message
 			about each searched file.</div>
 <div class="old-help-para">							<span id="%3Apa" class="help-tag"><a href="#%3Apa">:pa</a></span> <span id="%3Apackadd" class="help-tag"><a href="#%3Apackadd">:packadd</a></span> <span id="E919" class="help-tag"><a href="#E919">E919</a></span>
-:pa[ckadd][!] <code>{name}</code>	<a href="repeat.html#pack-add">pack-add</a> Search for an optional plugin directory in
+:pa[ckadd][!] <code>{name}</code>	<a href="pack.html#pack-add">pack-add</a> Search for an optional plugin directory in
 			<a href="options.html#'packpath'">'packpath'</a>, source any plugin files found, and add it
 			to <a href="options.html#'runtimepath'">'runtimepath'</a>.  The directory must match:<pre>pack/*/opt/{name}</pre></div>
 <div class="old-help-para">			If the directory pack/*/opt/{name}/after exists it is
 			added at the end of <a href="options.html#'runtimepath'">'runtimepath'</a>.</div>
-<div class="old-help-para"><b>			Note:</b> Usevim.pack.add()) to install from a URL.</div>
+<div class="old-help-para"><b>			Note:</b> Use <a href="pack.html#vim.pack.add()">vim.pack.add()</a> to install from a URL.</div>
 <div class="old-help-para">			If loading packages from "pack/*/start" was skipped,
 			then this directory is searched first:<pre>pack/*/start/{name}</pre></div>
 <div class="old-help-para">			Note that <code>{name}</code> is the directory name, not the name
@@ -325,7 +325,7 @@ pack/*/opt/{name}/plugin/**/*.lua</pre></div>
 			<a href="options.html#'runtimepath'">'runtimepath'</a>, then the plugins found in the
 			directories are sourced.  This allows for a plugin to
 			depend on something of another plugin, e.g. an
-			"autoload" directory.  See <a href="repeat.html#packload-two-steps">packload-two-steps</a> for
+			"autoload" directory.  See <a href="pack.html#packload-two-steps">packload-two-steps</a> for
 			how this can be useful.</div>
 <div class="old-help-para">			This is normally done automatically during startup,
 			after loading your <a href="starting.html#vimrc">vimrc</a> file.  With this command it
@@ -341,7 +341,7 @@ pack/*/opt/{name}/plugin/**/*.lua</pre></div>
 			handle that.</div>
 <div class="old-help-para">			An error only causes sourcing the script where it
 			happens to be aborted, further plugins will be loaded.
-			See <a href="repeat.html#packages">packages</a>.</div>
+			See <a href="pack.html#packages">packages</a>.</div>
 <div class="old-help-para">:scripte[ncoding] [encoding]		<span id="%3Ascripte" class="help-tag"><a href="#%3Ascripte">:scripte</a></span> <span id="%3Ascriptencoding" class="help-tag"><a href="#%3Ascriptencoding">:scriptencoding</a></span> <span id="E167" class="help-tag"><a href="#E167">E167</a></span>
 			Specify the character encoding used in the script.
 			The following lines will be converted from [encoding]
@@ -494,142 +494,6 @@ Rationale:
 	that was a valid continuation line.  Using <code>'"\ '</code> comes closest, even
 	though it may look a bit weird.  Requiring the space after the
 	backslash is to make it very unlikely this is a normal comment line.</div>
-<div class="old-help-para"><h2 id="_using-vim-packages" class="help-heading">Using Vim packages<span class="help-heading-tags">					<span id="packages" class="help-tag"><a href="#packages">packages</a></span></h2></div>
-<div class="old-help-para">A Vim "package" is a directory that contains <a href="usr_05.html#plugin">plugin</a>s.  Compared to normal
-plugins, a package can...
-<div class="help-li" style=""> be downloaded as an archive and unpacked in its own directory, so the files
-  are not mixed with files of other plugins.
-</div><div class="help-li" style=""> be a git, mercurial, etc. repository, thus easy to update.
-</div><div class="help-li" style=""> contain multiple plugins that depend on each other.
-</div><div class="help-li" style=""> contain plugins that are automatically loaded on startup ("start" packages,
-  located in "pack/*/start/*") and ones that are only loaded when needed with
-  <a href="repeat.html#%3Apackadd">:packadd</a> ("opt" packages, located in "pack/*/opt/*").
-</div></div>
-<div class="old-help-para">							<span id="runtime-search-path" class="help-tag-right"><a href="#runtime-search-path">runtime-search-path</a></span>  <br>
-Nvim searches for <a href="repeat.html#%3Aruntime">:runtime</a> files in:
-	1. all paths in <a href="options.html#'runtimepath'">'runtimepath'</a>
-	2. all "pack/*/start/*" dirs</div>
-<div class="old-help-para">Note that the "pack/*/start/*" paths are not explicitly included in
-<a href="options.html#'runtimepath'">'runtimepath'</a>, so they will not be reported by ":set rtp" or "echo &amp;rtp".
-Scripts can use <a href="api.html#nvim_list_runtime_paths()">nvim_list_runtime_paths()</a> to list all used directories, and
-<a href="api.html#nvim_get_runtime_file()">nvim_get_runtime_file()</a> to query for specific files or sub-folders within
-the runtime path. Example:<pre>" List all runtime dirs and packages with Lua paths.
-:echo nvim_get_runtime_file("lua/", v:true)</pre>
-<div class="help-column_heading">Using a package and loading automatically</div></div>
-<div class="old-help-para">Let's assume your Nvim files are in "~/.local/share/nvim/site" and you want to
-add a package from a zip archive "/tmp/foopack.zip":<pre>% mkdir -p ~/.local/share/nvim/site/pack/foo
-% cd ~/.local/share/nvim/site/pack/foo
-% unzip /tmp/foopack.zip</pre>
-The directory name "foo" is arbitrary, you can pick anything you like.</div>
-<div class="old-help-para">You would now have these files under ~/.local/share/nvim/site:
-	pack/foo/README.txt
-	pack/foo/start/foobar/plugin/foo.vim
-	pack/foo/start/foobar/syntax/some.vim
-	pack/foo/opt/foodebug/plugin/debugger.vim</div>
-<div class="old-help-para">On startup after processing your <a href="starting.html#config">config</a>, Nvim scans all directories in
-<a href="options.html#'packpath'">'packpath'</a> for plugins in "pack/*/start/*", then loads the plugins.</div>
-<div class="old-help-para">To allow for calling into package functionality while parsing your <a href="starting.html#vimrc">vimrc</a>,
-<a href="syntax.html#%3Acolorscheme">:colorscheme</a> and <a href="userfunc.html#autoload">autoload</a> will both automatically search under <a href="options.html#'packpath'">'packpath'</a>
-as well in addition to <a href="options.html#'runtimepath'">'runtimepath'</a>.  See the documentation for each for
-details.</div>
-<div class="old-help-para">In the example Nvim will find "pack/foo/start/foobar/plugin/foo.vim" and load
-it.</div>
-<div class="old-help-para">If the "foobar" plugin kicks in and sets the <a href="options.html#'filetype'">'filetype'</a> to "some", Nvim will
-find the syntax/some.vim file, because its directory is in the runtime search
-path.</div>
-<div class="old-help-para">Nvim will also load ftdetect files, if there are any.</div>
-<div class="old-help-para">Note that the files under "pack/foo/opt" are not loaded automatically, only the
-ones under "pack/foo/start".  See <a href="repeat.html#pack-add">pack-add</a> below for how the "opt" directory
-is used.</div>
-<div class="old-help-para">Loading packages automatically will not happen if loading plugins is disabled,
-see <a href="starting.html#load-plugins">load-plugins</a>.</div>
-<div class="old-help-para">To load packages earlier, so that plugin/ files are sourced:
-	:packloadall
-This also works when loading plugins is disabled.  The automatic loading will
-only happen once.</div>
-<div class="old-help-para">If the package has an "after" directory, that directory is added to the end of
-<a href="options.html#'runtimepath'">'runtimepath'</a>, so that anything there will be loaded later.</div>
-<div class="old-help-para"><div class="help-column_heading">Using a single plugin and loading it automatically</div></div>
-<div class="old-help-para">If you don't have a package but a single plugin, you need to create the extra
-directory level:<pre>% mkdir -p ~/.local/share/nvim/site/pack/foo/start/foobar
-% cd ~/.local/share/nvim/site/pack/foo/start/foobar
-% unzip /tmp/someplugin.zip</pre>
-You would now have these files:
-	pack/foo/start/foobar/plugin/foo.vim
-	pack/foo/start/foobar/syntax/some.vim</div>
-<div class="old-help-para">From here it works like above.</div>
-<div class="old-help-para"><div class="help-column_heading">Optional plugins</div>							<span id="pack-add" class="help-tag-right"><a href="#pack-add">pack-add</a></span>  <br>
-To load an optional plugin from a pack use the <code>:packadd</code> command:<pre>:packadd foodebug</pre>
-This searches for "pack/*/opt/foodebug" in <a href="options.html#'packpath'">'packpath'</a> and will find
-~/.local/share/nvim/site/pack/foo/opt/foodebug/plugin/debugger.vim and source
-it.</div>
-<div class="old-help-para">This could be done if some conditions are met.  For example, depending on
-whether Nvim supports a feature or a dependency is missing.</div>
-<div class="old-help-para">You can also load an optional plugin at startup, by putting this command in
-your <a href="starting.html#config">config</a>:<pre>:packadd! foodebug</pre>
-The extra "!" is so that the plugin isn't loaded if Nvim was started with
-<a href="starting.html#--noplugin">--noplugin</a>.</div>
-<div class="old-help-para">It is perfectly normal for a package to only have files in the "opt"
-directory.  You then need to load each plugin when you want to use it.</div>
-<div class="old-help-para"><div class="help-column_heading">Where to put what</div></div>
-<div class="old-help-para">Since color schemes, loaded with <code>:colorscheme</code>, are found below
-"pack/*/start" and "pack/*/opt", you could put them anywhere.  We recommend
-you put them below "pack/*/opt", for example
-"~/.config/nvim/pack/mycolors/opt/dark/colors/very_dark.vim".</div>
-<div class="old-help-para">Filetype plugins should go under "pack/*/start", so that they are always
-found.  Unless you have more than one plugin for a file type and want to
-select which one to load with <code>:packadd</code>.  E.g. depending on the compiler
-version:<pre>if foo_compiler_version &gt; 34
-  packadd foo_new
-else
-  packadd foo_old
-endif</pre>
-The "after" directory is most likely not useful in a package.  It's not
-disallowed though.</div>
-<div class="old-help-para"><h2 id="_creating-vim-packages" class="help-heading">Creating Vim packages<span class="help-heading-tags">					<span id="package-create" class="help-tag"><a href="#package-create">package-create</a></span></h2></div>
-<div class="old-help-para">This assumes you write one or more plugins that you distribute as a package.</div>
-<div class="old-help-para">If you have two unrelated plugins you would use two packages, so that Vim
-users can choose what they include or not.  Or you can decide to use one
-package with optional plugins, and tell the user to add the preferred ones with
-<code>:packadd</code>.</div>
-<div class="old-help-para">Decide how you want to distribute the package.  You can create an archive or
-you could use a repository.  An archive can be used by more users, but is a
-bit harder to update to a new version.  A repository can usually be kept
-up-to-date easily, but it requires a program like "git" to be available.
-You can do both, github can automatically create an archive for a release.</div>
-<div class="old-help-para">Your directory layout would be like this:
-   start/foobar/plugin/foo.vim		" always loaded, defines commands
-   start/foobar/plugin/bar.vim		" always loaded, defines commands
-   start/foobar/autoload/foo.vim	" loaded when foo command used
-   start/foobar/doc/foo.txt		" help for foo.vim
-   start/foobar/doc/tags		" help tags
-   opt/fooextra/plugin/extra.vim	" optional plugin, defines commands
-   opt/fooextra/autoload/extra.vim	" loaded when extra command used
-   opt/fooextra/doc/extra.txt		" help for extra.vim
-   opt/fooextra/doc/tags		" help tags</div>
-<div class="old-help-para">This allows for the user to do:<pre>mkdir ~/.local/share/nvim/site/pack
-cd ~/.local/share/nvim/site/pack
-git clone https://github.com/you/foobar.git myfoobar</pre>
-Here "myfoobar" is a name that the user can choose, the only condition is that
-it differs from other packages.</div>
-<div class="old-help-para">In your documentation you explain what the plugins do, and tell the user how
-to load the optional plugin:<pre>:packadd! fooextra</pre>
-You could add this packadd command in one of your plugins, to be executed when
-the optional plugin is needed.</div>
-<div class="old-help-para">Run the <code>:helptags</code> command to generate the doc/tags file.  Including this
-generated file in the package means that the user can drop the package in the
-pack directory and the help command works right away.  Don't forget to re-run
-the command after changing the plugin help:<pre>:helptags path/start/foobar/doc
-:helptags path/opt/fooextra/doc</pre>
-<div class="help-column_heading">Dependencies between plugins</div>							<span id="packload-two-steps" class="help-tag-right"><a href="#packload-two-steps">packload-two-steps</a></span>  <br>
-Suppose you have two plugins that depend on the same functionality. You can
-put the common functionality in an autoload directory, so that it will be
-found automatically.  Your package would have these files:</div>
-<div class="old-help-para">	pack/foo/start/one/plugin/one.vim<pre>call foolib#getit()</pre></div>
-<div class="old-help-para">	pack/foo/start/two/plugin/two.vim<pre>call foolib#getit()</pre></div>
-<div class="old-help-para">	pack/foo/start/lib/autoload/foolib.vim<pre>func foolib#getit()</pre>
-This works, because start packages will be searched for autoload files, when
-sourcing the plugins.</div>
 <div class="old-help-para"><h2 id="_debugging-scripts" class="help-heading">Debugging scripts<span class="help-heading-tags">					<span id="debug-scripts" class="help-tag"><a href="#debug-scripts">debug-scripts</a></span></h2></div>
 <div class="old-help-para">Besides the obvious messages that you can add to your scripts to find out what
 they are doing, Vim offers a debug mode.  This allows you to step through a
@@ -927,8 +791,6 @@ functions (see <a href="usr_41.html#ctx-functions">ctx-functions</a>).</div>
 </div><div class="help-toc-h1"><a href="#_multiple-repeats">Multiple repeats</a>
 </div><div class="help-toc-h1"><a href="#_complex-repeats">Complex repeats</a>
 </div><div class="help-toc-h1"><a href="#_using-vim-scripts">Using Vim scripts</a>
-</div><div class="help-toc-h1"><a href="#_using-vim-packages">Using Vim packages</a>
-</div><div class="help-toc-h1"><a href="#_creating-vim-packages">Creating Vim packages</a>
 </div><div class="help-toc-h1"><a href="#_debugging-scripts">Debugging scripts</a>
 <div class="help-toc-h2"><a href="#_starting-debug-mode">STARTING DEBUG MODE</a></div>
 <div class="help-toc-h2"><a href="#_debug-mode">DEBUG MODE</a></div>
@@ -943,7 +805,7 @@ functions (see <a href="usr_41.html#ctx-functions">ctx-functions</a>).</div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-07-18 05:30 from <code><a href="https://github.com/neovim/neovim/commit/fd5d04fbffec9a4ba87add584b36abbefa21a69e">fd5d04f</a></code>
+        Generated at 2025-07-20 05:32 from <code><a href="https://github.com/neovim/neovim/commit/e5c2ce59058084a1d5c2107d557447e7c5c59ab9">e5c2ce5</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+repeat.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/repeat.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
