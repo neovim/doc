@@ -131,22 +131,18 @@ Follow these steps to get LSP features:
 
 </div>
 <div class="help-para">
-2. Use <a href="lsp.html#vim.lsp.config()">vim.lsp.config()</a> to define a configuration for an LSP client
-   (see <a href="https://github.com/neovim/nvim-lspconfig">https://github.com/neovim/nvim-lspconfig</a> for examples).
+2. Define a new config <a href="lsp.html#lsp-new-config">lsp-new-config</a> (or install <a href="https://github.com/neovim/nvim-lspconfig">https://github.com/neovim/nvim-lspconfig</a>).
    Example:<pre><code class="language-lua">vim.lsp.config['luals'] = {
   -- Command and arguments to start the server.
   cmd = { 'lua-language-server' },
   -- Filetypes to automatically attach to.
   filetypes = { 'lua' },
-  -- Sets the "root directory" to the parent directory of the file in the
-  -- current buffer that contains either a ".luarc.json" or a
-  -- ".luarc.jsonc" file. Files that share a root directory will reuse
-  -- the connection to the same LSP server.
+  -- Sets the "workspace" to the directory where any of these files is found.
+  -- Files that share a root directory will reuse the LSP server connection.
   -- Nested lists indicate equal priority, see |vim.lsp.Config|.
   root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
-  -- Specific settings to send to the server. The schema for this is
-  -- defined by the server. For example the schema for lua-language-server
-  -- can be found here https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
+  -- Specific settings to send to the server. The schema is server-defined.
+  -- Example: https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
   settings = {
     Lua = {
       runtime = {
@@ -155,7 +151,7 @@ Follow these steps to get LSP features:
     }
   }
 }</code></pre>
-3. Use <a href="lsp.html#vim.lsp.enable()">vim.lsp.enable()</a> to enable a configuration.
+3. Use <a href="lsp.html#vim.lsp.enable()">vim.lsp.enable()</a> to enable the config.
    Example:<pre><code class="language-lua">vim.lsp.enable('luals')</code></pre>
 
 </div>
@@ -251,14 +247,48 @@ dynamically via <a href="lsp.html#lsp-attach">lsp-attach</a> or <a href="lsp.htm
 
 </div>
 <div class="help-para">
-Use <a href="lsp.html#vim.lsp.config()">vim.lsp.config()</a> to define, and selectively enable, LSP configurations.
-This is basically a wrapper around <a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a> which allows you to share
-and merge configs (which may be provided by Nvim or third-party plugins).
+Use <a href="lsp.html#vim.lsp.config()">vim.lsp.config()</a> to define or modify LSP configurations, and
+<a href="lsp.html#vim.lsp.enable()">vim.lsp.enable()</a> to auto-activate them. This is basically a wrapper around
+<a href="lsp.html#vim.lsp.start()">vim.lsp.start()</a> which allows you to share and merge configs (provided by
+Nvim, plugins, and your local config).
 
 </div>
 <div class="help-para">
-When an LSP client starts, it resolves its configuration by merging from the
-following (in increasing priority):
+                                                        <span id="lsp-new-config" class="help-tag-right"><a href="#lsp-new-config">lsp-new-config</a></span><br>
+To create a new config you can either use <code>vim.lsp.config()</code> or create
+a <code>lsp/&lt;config-name&gt;.lua</code> file.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">EXAMPLE: DEFINE A CONFIG AS CODE</div>
+
+</div>
+<div class="help-para">
+1. Run <code>:lua vim.lsp.config('foo', {cmd={'true'}})</code>
+2. Run <code>:lua vim.lsp.enable('foo')</code>
+3. Run <code>:checkhealth vim.lsp</code>, check "Enabled Configurations". 😎
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">EXAMPLE: DEFINE A CONFIG AS A FILE</div>
+
+</div>
+<div class="help-para">
+1. Create a file <code>lsp/foo.lua</code> somewhere on your <a href="options.html#'runtimepath'">'runtimepath'</a>.<pre>:exe 'edit' stdpath('config') .. '/lsp/foo.lua'</pre>
+2. Add this code to the file (or copy an example from
+   <a href="https://github.com/neovim/nvim-lspconfig">https://github.com/neovim/nvim-lspconfig</a>):<pre>return {
+  cmd = { 'true' },
+}</pre>
+3. Save the file (with <code>++p</code> to ensure its parent directory is created).<pre>:write ++p</pre>
+4. Enable the config.<pre>:lua vim.lsp.enable('foo')</pre>
+5. Run <code>:checkhealth vim.lsp</code>, check "Enabled Configurations". 🌈
+
+</div>
+<div class="help-para">
+                                                        <span id="lsp-config-merge" class="help-tag-right"><a href="#lsp-config-merge">lsp-config-merge</a></span><br>
+When an LSP client starts, it resolves its configuration by merging the
+following sources (merge semantics defined by <a href="lua.html#vim.tbl_deep_extend()">vim.tbl_deep_extend()</a>), in
+order of increasing priority:
 
 </div>
 <div class="help-para">
@@ -266,11 +296,6 @@ following (in increasing priority):
 2. Configuration from the result of merging all tables returned by
    <code>lsp/&lt;name&gt;.lua</code> files in <a href="options.html#'runtimepath'">'runtimepath'</a> for a server of name <code>name</code>.
 3. Configurations defined anywhere else.
-
-</div>
-<div class="help-para">
-<b>Note:</b> The merge semantics of configurations follow the behaviour of
-<a href="lua.html#vim.tbl_deep_extend()">vim.tbl_deep_extend()</a>.
 
 </div>
 <div class="help-para">
@@ -3878,7 +3903,7 @@ resolve_capabilities(<code>{server_capabilities}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-07-28 05:33 from <code><a href="https://github.com/neovim/neovim/commit/7a051a4c389452b4955c22e3c29071433e01905a">7a051a4</a></code>
+        Generated at 2025-07-29 05:34 from <code><a href="https://github.com/neovim/neovim/commit/029b7a149fa77cefe45e8df5524ef41ed4ee78eb">029b7a1</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
