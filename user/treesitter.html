@@ -917,6 +917,188 @@ end</code></pre></div>
 <div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{lang}</code>      (<code>string</code>) Name of parser
 </div><div class="help-li" style=""> <code>{filetype}</code>  (<code>string|string[]</code>) Filetype(s) to associate with lang
 </div></div>
+<div class="old-help-para"><h2 id="_lua-module:-vim.treesitter.languagetree" class="help-heading">Lua module: vim.treesitter.languagetree<span class="help-heading-tags">              <span id="treesitter-languagetree" class="help-tag"><a href="#treesitter-languagetree">treesitter-languagetree</a></span></h2></div>
+<div class="old-help-para">A <span id="LanguageTree" class="help-tag"><a href="#LanguageTree">LanguageTree</a></span> contains a tree of parsers: the root treesitter parser for
+<code>{lang}</code> and any "injected" language parsers, which themselves may inject other
+languages, recursively. For example a Lua buffer containing some Vimscript
+commands needs multiple parsers to fully understand its contents.</div>
+<div class="old-help-para">To create a LanguageTree (parser object) for a given buffer and language, use:<pre><code class="language-lua">local parser = vim.treesitter.get_parser(bufnr, lang)</code></pre></div>
+<div class="old-help-para">(where <code>bufnr=0</code> means current buffer). <code>lang</code> defaults to <a href="options.html#'filetype'">'filetype'</a>.<b> Note:</b>
+currently the parser is retained for the lifetime of a buffer but this may
+change; a plugin should keep a reference to the parser object if it wants
+incremental updates.</div>
+<div class="old-help-para">Whenever you need to access the current syntax tree, parse the buffer:<pre><code class="language-lua">local tree = parser:parse({ start_row, end_row })</code></pre></div>
+<div class="old-help-para">This returns a table of immutable <a href="treesitter.html#treesitter-tree">treesitter-tree</a> objects representing the
+current state of the buffer. When the plugin wants to access the state after a
+(possible) edit it must call <code>parse()</code> again. If the buffer wasn't edited, the
+same tree will be returned again without extra work. If the buffer was parsed
+before, incremental parsing will be done of the changed parts.</div>
+<div class="old-help-para"><b>Note:</b> To use the parser directly inside a <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a> Lua callback,
+you must call <a href="treesitter.html#vim.treesitter.get_parser()">vim.treesitter.get_parser()</a> before you register your callback.
+But preferably parsing shouldn't be done directly in the change callback
+anyway as they will be very frequent. Rather a plugin that does any kind of
+analysis on a tree should use a timer to throttle too frequent updates.</div>
+<div class="old-help-para">LanguageTree:children()                              <span id="LanguageTree%3Achildren()" class="help-tag-right"><a href="#LanguageTree%3Achildren()">LanguageTree:children()</a></span><br>
+    Returns a map of language to child tree.</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;string,vim.treesitter.LanguageTree&gt;</code>)</div>
+<div class="old-help-para">LanguageTree:contains(<code>{range}</code>)                       <span id="LanguageTree%3Acontains()" class="help-tag-right"><a href="#LanguageTree%3Acontains()">LanguageTree:contains()</a></span><br>
+    Determines whether <code>{range}</code> is contained in the <a href="treesitter.html#LanguageTree">LanguageTree</a>.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>boolean</code>)</div>
+<div class="old-help-para">LanguageTree:destroy()                                <span id="LanguageTree%3Adestroy()" class="help-tag-right"><a href="#LanguageTree%3Adestroy()">LanguageTree:destroy()</a></span><br>
+    Destroys this <a href="treesitter.html#LanguageTree">LanguageTree</a> and all its children.</div>
+<div class="old-help-para">    Any cleanup logic should be performed here.</div>
+<div class="old-help-para"><b>    Note:</b> This DOES NOT remove this tree from a parent. Instead,
+    <code>remove_child</code> must be called on the parent to remove it.</div>
+<div class="old-help-para">LanguageTree:for_each_tree(<code>{fn}</code>)                <span id="LanguageTree%3Afor_each_tree()" class="help-tag-right"><a href="#LanguageTree%3Afor_each_tree()">LanguageTree:for_each_tree()</a></span><br>
+    Invokes the callback for each <a href="treesitter.html#LanguageTree">LanguageTree</a> recursively.</div>
+<div class="old-help-para"><b>    Note:</b> This includes the invoking tree's child trees as well.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{fn}</code>  (<code>fun(tree: TSTree, ltree: vim.treesitter.LanguageTree)</code>)
+</div></div>
+<div class="old-help-para">LanguageTree:included_regions()              <span id="LanguageTree%3Aincluded_regions()" class="help-tag-right"><a href="#LanguageTree%3Aincluded_regions()">LanguageTree:included_regions()</a></span><br>
+    Gets the set of included regions managed by this LanguageTree. This can be
+    different from the regions set by injection query, because a partial
+    <a href="treesitter.html#LanguageTree%3Aparse()">LanguageTree:parse()</a> drops the regions outside the requested range. Each
+    list represents a range in the form of { <code>{start_row}</code>, <code>{start_col}</code>,
+    <code>{start_bytes}</code>, <code>{end_row}</code>, <code>{end_col}</code>, <code>{end_bytes}</code> }.</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;integer, Range6[]&gt;</code>)</div>
+<div class="old-help-para">LanguageTree:invalidate(<code>{reload}</code>)                  <span id="LanguageTree%3Ainvalidate()" class="help-tag-right"><a href="#LanguageTree%3Ainvalidate()">LanguageTree:invalidate()</a></span><br>
+    Invalidates this parser and its children.</div>
+<div class="old-help-para">    Should only be called when the tracked state of the LanguageTree is not
+    valid against the parse tree in treesitter. Doesn't clear filesystem
+    cache. Called often, so needs to be fast.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{reload}</code>  (<code>boolean?</code>)
+</div></div>
+<div class="old-help-para">                                                     <span id="LanguageTree%3Ais_valid()" class="help-tag-right"><a href="#LanguageTree%3Ais_valid()">LanguageTree:is_valid()</a></span><br>
+LanguageTree:is_valid(<code>{exclude_children}</code>, <code>{range}</code>)
+    Returns whether this LanguageTree is valid, i.e., <a href="treesitter.html#LanguageTree%3Atrees()">LanguageTree:trees()</a>
+    reflects the latest state of the source. If invalid, user should call
+    <a href="treesitter.html#LanguageTree%3Aparse()">LanguageTree:parse()</a>.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{exclude_children}</code>  (<code>boolean?</code>) whether to ignore the validity of
+                            children (default <code>false</code>)
+</div><div class="help-li" style=""> <code>{range}</code>             (<code>Range?</code>) range to check for validity
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>boolean</code>)</div>
+<div class="old-help-para">LanguageTree:lang()                                      <span id="LanguageTree%3Alang()" class="help-tag-right"><a href="#LanguageTree%3Alang()">LanguageTree:lang()</a></span><br>
+    Gets the language of this tree node.</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>string</code>)</div>
+<div class="old-help-para">                                           <span id="LanguageTree%3Alanguage_for_range()" class="help-tag-right"><a href="#LanguageTree%3Alanguage_for_range()">LanguageTree:language_for_range()</a></span><br>
+LanguageTree:language_for_range(<code>{range}</code>)
+    Gets the appropriate language that contains <code>{range}</code>.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>vim.treesitter.LanguageTree</code>) tree Managing <code>{range}</code></div>
+<div class="old-help-para">                                         <span id="LanguageTree%3Anamed_node_for_range()" class="help-tag-right"><a href="#LanguageTree%3Anamed_node_for_range()">LanguageTree:named_node_for_range()</a></span><br>
+LanguageTree:named_node_for_range(<code>{range}</code>, <code>{opts}</code>)
+    Gets the smallest named node that contains <code>{range}</code>.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
+</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_injections}</code> (<code>boolean</code>, default: <code>true</code>) Ignore
+                   injected languages
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>TSNode?</code>)</div>
+<div class="old-help-para">                                               <span id="LanguageTree%3Anode_for_range()" class="help-tag-right"><a href="#LanguageTree%3Anode_for_range()">LanguageTree:node_for_range()</a></span><br>
+LanguageTree:node_for_range(<code>{range}</code>, <code>{opts}</code>)
+    Gets the smallest node that contains <code>{range}</code>.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
+</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_injections}</code> (<code>boolean</code>, default: <code>true</code>) Ignore
+                   injected languages
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>TSNode?</code>)</div>
+<div class="old-help-para">LanguageTree:parent()                                  <span id="LanguageTree%3Aparent()" class="help-tag-right"><a href="#LanguageTree%3Aparent()">LanguageTree:parent()</a></span><br>
+    Returns the parent tree. <code>nil</code> for the root tree.</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>vim.treesitter.LanguageTree?</code>)</div>
+<div class="old-help-para">LanguageTree:parse(<code>{range}</code>, <code>{on_parse}</code>)                 <span id="LanguageTree%3Aparse()" class="help-tag-right"><a href="#LanguageTree%3Aparse()">LanguageTree:parse()</a></span><br>
+    Recursively parse all regions in the language tree using
+    <a href="treesitter.html#treesitter-parsers">treesitter-parsers</a> for the corresponding languages and run injection
+    queries on the parsed trees to determine whether child trees should be
+    created and parsed.</div>
+<div class="old-help-para">    Any region with empty range (<code>{}</code>, typically only the root tree) is always
+    parsed; otherwise (typically injections) only if it intersects <code>{range}</code> (or
+    if <code>{range}</code> is <code>true</code>).</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>     (<code>boolean|Range?</code>) Parse this range in the parser's
+                    source. Set to <code>true</code> to run a complete parse of the
+                    source (<b>Note:</b> Can be slow!) Set to <code>false|nil</code> to only
+                    parse regions with empty ranges (typically only the root
+                    tree without injections).
+</div><div class="help-li" style=""> <code>{on_parse}</code>  (<code>fun(err?: string, trees?: table&lt;integer, TSTree&gt;)?</code>)
+                    Function invoked when parsing completes. When provided and
+                    <code>vim.g._ts_force_sync_parsing</code> is not set, parsing will
+                    run asynchronously. The first argument to the function is
+                    a string representing the error type, in case of a failure
+                    (currently only possible for timeouts). The second
+                    argument is the list of trees returned by the parse (upon
+                    success), or <code>nil</code> if the parse timed out (determined by
+                    <a href="options.html#'redrawtime'">'redrawtime'</a>).
+</div></div>
+<div class="old-help-para">                    If parsing was still able to finish synchronously (within
+                    3ms), <code>parse()</code> returns the list of trees. Otherwise, it
+                    returns <code>nil</code>.</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;integer, TSTree&gt;?</code>)</div>
+<div class="old-help-para">                                                 <span id="LanguageTree%3Aregister_cbs()" class="help-tag-right"><a href="#LanguageTree%3Aregister_cbs()">LanguageTree:register_cbs()</a></span><br>
+LanguageTree:register_cbs(<code>{cbs}</code>, <code>{recursive}</code>)
+    Registers callbacks for the <a href="treesitter.html#LanguageTree">LanguageTree</a>.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{cbs}</code>        (<code>table&lt;TSCallbackNameOn,function&gt;</code>) An
+                     <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a>-like table argument with the
+                     following handlers:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>on_bytes</code> : see <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>on_changedtree</code> : a callback that will be called every
+                       time the tree has syntactical changes. It will be
+                       passed two arguments: a table of the ranges (as node
+                       ranges) that changed and the changed tree.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>on_child_added</code> : emitted when a child is added to the
+                       tree.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>on_child_removed</code> : emitted when a child is removed
+                       from the tree.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>on_detach</code> : emitted when the buffer is detached, see
+                       <a href="api.html#nvim_buf_detach_event">nvim_buf_detach_event</a>. Takes one argument, the number
+                       of the buffer.
+</div><div class="help-li" style=""> <code>{recursive}</code>  (<code>boolean?</code>) Apply callbacks recursively for all
+                     children. Any new children will also inherit the
+                     callbacks.
+</div></div>
+<div class="old-help-para">LanguageTree:source()                                  <span id="LanguageTree%3Asource()" class="help-tag-right"><a href="#LanguageTree%3Asource()">LanguageTree:source()</a></span><br>
+    Returns the source content of the language tree (bufnr or string).</div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>integer|string</code>)</div>
+<div class="old-help-para">                                               <span id="LanguageTree%3Atree_for_range()" class="help-tag-right"><a href="#LanguageTree%3Atree_for_range()">LanguageTree:tree_for_range()</a></span><br>
+LanguageTree:tree_for_range(<code>{range}</code>, <code>{opts}</code>)
+    Gets the tree that contains <code>{range}</code>.</div>
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
+</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_injections}</code> (<code>boolean</code>, default: <code>true</code>) Ignore
+                   injected languages
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>TSTree?</code>)</div>
+<div class="old-help-para">LanguageTree:trees()                                    <span id="LanguageTree%3Atrees()" class="help-tag-right"><a href="#LanguageTree%3Atrees()">LanguageTree:trees()</a></span><br>
+    Returns all trees of the regions parsed by this parser. Does not include
+    child languages. The result is list-like if
+<div class="help-li" style=""> this LanguageTree is the root, in which case the result is empty or a
+      singleton list; or
+</div><div class="help-li" style=""> the root LanguageTree is fully parsed.
+</div></div>
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;integer, TSTree&gt;</code>)</div>
 <div class="old-help-para"><h2 id="_lua-module:-vim.treesitter.query" class="help-heading">Lua module: vim.treesitter.query<span class="help-heading-tags">                        <span id="lua-treesitter-query" class="help-tag"><a href="#lua-treesitter-query">lua-treesitter-query</a></span></h2></div>
 <div class="old-help-para">This Lua <a href="treesitter.html#treesitter-query">treesitter-query</a> interface allows you to create queries and use
 them to parse text. See <a href="treesitter.html#vim.treesitter.query.parse()">vim.treesitter.query.parse()</a> for a working example.</div>
@@ -1190,188 +1372,6 @@ query.query:disable_pattern(link_pattern)
 local tree = vim.treesitter.get_parser():parse()[1]</code></pre></div>
 <div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{pattern_index}</code>  (<code>integer</code>)
 </div></div>
-<div class="old-help-para"><h2 id="_lua-module:-vim.treesitter.languagetree" class="help-heading">Lua module: vim.treesitter.languagetree<span class="help-heading-tags">              <span id="treesitter-languagetree" class="help-tag"><a href="#treesitter-languagetree">treesitter-languagetree</a></span></h2></div>
-<div class="old-help-para">A <span id="LanguageTree" class="help-tag"><a href="#LanguageTree">LanguageTree</a></span> contains a tree of parsers: the root treesitter parser for
-<code>{lang}</code> and any "injected" language parsers, which themselves may inject other
-languages, recursively. For example a Lua buffer containing some Vimscript
-commands needs multiple parsers to fully understand its contents.</div>
-<div class="old-help-para">To create a LanguageTree (parser object) for a given buffer and language, use:<pre><code class="language-lua">local parser = vim.treesitter.get_parser(bufnr, lang)</code></pre></div>
-<div class="old-help-para">(where <code>bufnr=0</code> means current buffer). <code>lang</code> defaults to <a href="options.html#'filetype'">'filetype'</a>.<b> Note:</b>
-currently the parser is retained for the lifetime of a buffer but this may
-change; a plugin should keep a reference to the parser object if it wants
-incremental updates.</div>
-<div class="old-help-para">Whenever you need to access the current syntax tree, parse the buffer:<pre><code class="language-lua">local tree = parser:parse({ start_row, end_row })</code></pre></div>
-<div class="old-help-para">This returns a table of immutable <a href="treesitter.html#treesitter-tree">treesitter-tree</a> objects representing the
-current state of the buffer. When the plugin wants to access the state after a
-(possible) edit it must call <code>parse()</code> again. If the buffer wasn't edited, the
-same tree will be returned again without extra work. If the buffer was parsed
-before, incremental parsing will be done of the changed parts.</div>
-<div class="old-help-para"><b>Note:</b> To use the parser directly inside a <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a> Lua callback,
-you must call <a href="treesitter.html#vim.treesitter.get_parser()">vim.treesitter.get_parser()</a> before you register your callback.
-But preferably parsing shouldn't be done directly in the change callback
-anyway as they will be very frequent. Rather a plugin that does any kind of
-analysis on a tree should use a timer to throttle too frequent updates.</div>
-<div class="old-help-para">LanguageTree:children()                              <span id="LanguageTree%3Achildren()" class="help-tag-right"><a href="#LanguageTree%3Achildren()">LanguageTree:children()</a></span><br>
-    Returns a map of language to child tree.</div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;string,vim.treesitter.LanguageTree&gt;</code>)</div>
-<div class="old-help-para">LanguageTree:contains(<code>{range}</code>)                       <span id="LanguageTree%3Acontains()" class="help-tag-right"><a href="#LanguageTree%3Acontains()">LanguageTree:contains()</a></span><br>
-    Determines whether <code>{range}</code> is contained in the <a href="treesitter.html#LanguageTree">LanguageTree</a>.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>boolean</code>)</div>
-<div class="old-help-para">LanguageTree:destroy()                                <span id="LanguageTree%3Adestroy()" class="help-tag-right"><a href="#LanguageTree%3Adestroy()">LanguageTree:destroy()</a></span><br>
-    Destroys this <a href="treesitter.html#LanguageTree">LanguageTree</a> and all its children.</div>
-<div class="old-help-para">    Any cleanup logic should be performed here.</div>
-<div class="old-help-para"><b>    Note:</b> This DOES NOT remove this tree from a parent. Instead,
-    <code>remove_child</code> must be called on the parent to remove it.</div>
-<div class="old-help-para">LanguageTree:for_each_tree(<code>{fn}</code>)                <span id="LanguageTree%3Afor_each_tree()" class="help-tag-right"><a href="#LanguageTree%3Afor_each_tree()">LanguageTree:for_each_tree()</a></span><br>
-    Invokes the callback for each <a href="treesitter.html#LanguageTree">LanguageTree</a> recursively.</div>
-<div class="old-help-para"><b>    Note:</b> This includes the invoking tree's child trees as well.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{fn}</code>  (<code>fun(tree: TSTree, ltree: vim.treesitter.LanguageTree)</code>)
-</div></div>
-<div class="old-help-para">LanguageTree:included_regions()              <span id="LanguageTree%3Aincluded_regions()" class="help-tag-right"><a href="#LanguageTree%3Aincluded_regions()">LanguageTree:included_regions()</a></span><br>
-    Gets the set of included regions managed by this LanguageTree. This can be
-    different from the regions set by injection query, because a partial
-    <a href="treesitter.html#LanguageTree%3Aparse()">LanguageTree:parse()</a> drops the regions outside the requested range. Each
-    list represents a range in the form of { <code>{start_row}</code>, <code>{start_col}</code>,
-    <code>{start_bytes}</code>, <code>{end_row}</code>, <code>{end_col}</code>, <code>{end_bytes}</code> }.</div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;integer, Range6[]&gt;</code>)</div>
-<div class="old-help-para">LanguageTree:invalidate(<code>{reload}</code>)                  <span id="LanguageTree%3Ainvalidate()" class="help-tag-right"><a href="#LanguageTree%3Ainvalidate()">LanguageTree:invalidate()</a></span><br>
-    Invalidates this parser and its children.</div>
-<div class="old-help-para">    Should only be called when the tracked state of the LanguageTree is not
-    valid against the parse tree in treesitter. Doesn't clear filesystem
-    cache. Called often, so needs to be fast.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{reload}</code>  (<code>boolean?</code>)
-</div></div>
-<div class="old-help-para">                                                     <span id="LanguageTree%3Ais_valid()" class="help-tag-right"><a href="#LanguageTree%3Ais_valid()">LanguageTree:is_valid()</a></span><br>
-LanguageTree:is_valid(<code>{exclude_children}</code>, <code>{range}</code>)
-    Returns whether this LanguageTree is valid, i.e., <a href="treesitter.html#LanguageTree%3Atrees()">LanguageTree:trees()</a>
-    reflects the latest state of the source. If invalid, user should call
-    <a href="treesitter.html#LanguageTree%3Aparse()">LanguageTree:parse()</a>.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{exclude_children}</code>  (<code>boolean?</code>) whether to ignore the validity of
-                            children (default <code>false</code>)
-</div><div class="help-li" style=""> <code>{range}</code>             (<code>Range?</code>) range to check for validity
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>boolean</code>)</div>
-<div class="old-help-para">LanguageTree:lang()                                      <span id="LanguageTree%3Alang()" class="help-tag-right"><a href="#LanguageTree%3Alang()">LanguageTree:lang()</a></span><br>
-    Gets the language of this tree node.</div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>string</code>)</div>
-<div class="old-help-para">                                           <span id="LanguageTree%3Alanguage_for_range()" class="help-tag-right"><a href="#LanguageTree%3Alanguage_for_range()">LanguageTree:language_for_range()</a></span><br>
-LanguageTree:language_for_range(<code>{range}</code>)
-    Gets the appropriate language that contains <code>{range}</code>.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>vim.treesitter.LanguageTree</code>) tree Managing <code>{range}</code></div>
-<div class="old-help-para">                                         <span id="LanguageTree%3Anamed_node_for_range()" class="help-tag-right"><a href="#LanguageTree%3Anamed_node_for_range()">LanguageTree:named_node_for_range()</a></span><br>
-LanguageTree:named_node_for_range(<code>{range}</code>, <code>{opts}</code>)
-    Gets the smallest named node that contains <code>{range}</code>.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
-</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_injections}</code> (<code>boolean</code>, default: <code>true</code>) Ignore
-                   injected languages
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>TSNode?</code>)</div>
-<div class="old-help-para">                                               <span id="LanguageTree%3Anode_for_range()" class="help-tag-right"><a href="#LanguageTree%3Anode_for_range()">LanguageTree:node_for_range()</a></span><br>
-LanguageTree:node_for_range(<code>{range}</code>, <code>{opts}</code>)
-    Gets the smallest node that contains <code>{range}</code>.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
-</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_injections}</code> (<code>boolean</code>, default: <code>true</code>) Ignore
-                   injected languages
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>TSNode?</code>)</div>
-<div class="old-help-para">LanguageTree:parent()                                  <span id="LanguageTree%3Aparent()" class="help-tag-right"><a href="#LanguageTree%3Aparent()">LanguageTree:parent()</a></span><br>
-    Returns the parent tree. <code>nil</code> for the root tree.</div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>vim.treesitter.LanguageTree?</code>)</div>
-<div class="old-help-para">LanguageTree:parse(<code>{range}</code>, <code>{on_parse}</code>)                 <span id="LanguageTree%3Aparse()" class="help-tag-right"><a href="#LanguageTree%3Aparse()">LanguageTree:parse()</a></span><br>
-    Recursively parse all regions in the language tree using
-    <a href="treesitter.html#treesitter-parsers">treesitter-parsers</a> for the corresponding languages and run injection
-    queries on the parsed trees to determine whether child trees should be
-    created and parsed.</div>
-<div class="old-help-para">    Any region with empty range (<code>{}</code>, typically only the root tree) is always
-    parsed; otherwise (typically injections) only if it intersects <code>{range}</code> (or
-    if <code>{range}</code> is <code>true</code>).</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>     (<code>boolean|Range?</code>) Parse this range in the parser's
-                    source. Set to <code>true</code> to run a complete parse of the
-                    source (<b>Note:</b> Can be slow!) Set to <code>false|nil</code> to only
-                    parse regions with empty ranges (typically only the root
-                    tree without injections).
-</div><div class="help-li" style=""> <code>{on_parse}</code>  (<code>fun(err?: string, trees?: table&lt;integer, TSTree&gt;)?</code>)
-                    Function invoked when parsing completes. When provided and
-                    <code>vim.g._ts_force_sync_parsing</code> is not set, parsing will
-                    run asynchronously. The first argument to the function is
-                    a string representing the error type, in case of a failure
-                    (currently only possible for timeouts). The second
-                    argument is the list of trees returned by the parse (upon
-                    success), or <code>nil</code> if the parse timed out (determined by
-                    <a href="options.html#'redrawtime'">'redrawtime'</a>).
-</div></div>
-<div class="old-help-para">                    If parsing was still able to finish synchronously (within
-                    3ms), <code>parse()</code> returns the list of trees. Otherwise, it
-                    returns <code>nil</code>.</div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;integer, TSTree&gt;?</code>)</div>
-<div class="old-help-para">                                                 <span id="LanguageTree%3Aregister_cbs()" class="help-tag-right"><a href="#LanguageTree%3Aregister_cbs()">LanguageTree:register_cbs()</a></span><br>
-LanguageTree:register_cbs(<code>{cbs}</code>, <code>{recursive}</code>)
-    Registers callbacks for the <a href="treesitter.html#LanguageTree">LanguageTree</a>.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{cbs}</code>        (<code>table&lt;TSCallbackNameOn,function&gt;</code>) An
-                     <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a>-like table argument with the
-                     following handlers:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>on_bytes</code> : see <a href="api.html#nvim_buf_attach()">nvim_buf_attach()</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>on_changedtree</code> : a callback that will be called every
-                       time the tree has syntactical changes. It will be
-                       passed two arguments: a table of the ranges (as node
-                       ranges) that changed and the changed tree.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>on_child_added</code> : emitted when a child is added to the
-                       tree.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>on_child_removed</code> : emitted when a child is removed
-                       from the tree.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>on_detach</code> : emitted when the buffer is detached, see
-                       <a href="api.html#nvim_buf_detach_event">nvim_buf_detach_event</a>. Takes one argument, the number
-                       of the buffer.
-</div><div class="help-li" style=""> <code>{recursive}</code>  (<code>boolean?</code>) Apply callbacks recursively for all
-                     children. Any new children will also inherit the
-                     callbacks.
-</div></div>
-<div class="old-help-para">LanguageTree:source()                                  <span id="LanguageTree%3Asource()" class="help-tag-right"><a href="#LanguageTree%3Asource()">LanguageTree:source()</a></span><br>
-    Returns the source content of the language tree (bufnr or string).</div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>integer|string</code>)</div>
-<div class="old-help-para">                                               <span id="LanguageTree%3Atree_for_range()" class="help-tag-right"><a href="#LanguageTree%3Atree_for_range()">LanguageTree:tree_for_range()</a></span><br>
-LanguageTree:tree_for_range(<code>{range}</code>, <code>{opts}</code>)
-    Gets the tree that contains <code>{range}</code>.</div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{range}</code>  (<code>table</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[1]}</code> (<code>integer</code>) start row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[2]}</code> (<code>integer</code>) start column
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[3]}</code> (<code>integer</code>) end row
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{[4]}</code> (<code>integer</code>) end column
-</div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{ignore_injections}</code> (<code>boolean</code>, default: <code>true</code>) Ignore
-                   injected languages
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>TSTree?</code>)</div>
-<div class="old-help-para">LanguageTree:trees()                                    <span id="LanguageTree%3Atrees()" class="help-tag-right"><a href="#LanguageTree%3Atrees()">LanguageTree:trees()</a></span><br>
-    Returns all trees of the regions parsed by this parser. Does not include
-    child languages. The result is list-like if
-<div class="help-li" style=""> this LanguageTree is the root, in which case the result is empty or a
-      singleton list; or
-</div><div class="help-li" style=""> the root LanguageTree is fully parsed.
-</div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>table&lt;integer, TSTree&gt;</code>)</div>
 
   </div>
       <div class="col-narrow toc">
@@ -1391,14 +1391,14 @@ LanguageTree:tree_for_range(<code>{range}</code>, <code>{opts}</code>)
 </div><div class="help-toc-h1"><a href="#_treesitter-nodes">TREESITTER NODES</a>
 </div><div class="help-toc-h1"><a href="#_lua-module:-vim.treesitter">Lua module: vim.treesitter</a>
 </div><div class="help-toc-h1"><a href="#_lua-module:-vim.treesitter.language">Lua module: vim.treesitter.language</a>
-</div><div class="help-toc-h1"><a href="#_lua-module:-vim.treesitter.query">Lua module: vim.treesitter.query</a>
 </div><div class="help-toc-h1"><a href="#_lua-module:-vim.treesitter.languagetree">Lua module: vim.treesitter.languagetree</a>
+</div><div class="help-toc-h1"><a href="#_lua-module:-vim.treesitter.query">Lua module: vim.treesitter.query</a>
 </div></div>
 </div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-08-02 05:28 from <code><a href="https://github.com/neovim/neovim/commit/68eece8b849da73bb9c93dabd6403ed0fb2f4174">68eece8</a></code>
+        Generated at 2025-08-03 05:30 from <code><a href="https://github.com/neovim/neovim/commit/39e402caa511f311b4f43a6c6f18bacba8c47c49">39e402c</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+treesitter.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/treesitter.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim

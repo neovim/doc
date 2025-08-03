@@ -2755,43 +2755,14 @@ nvim_parse_expression(<code>{expr}</code>, <code>{flags}</code>, <code>{highligh
 </div>
 </div>
 <div class="help-para">
-<h2 id="_command-functions" class="help-heading">Command Functions<span class="help-heading-tags">                                                <span id="api-command" class="help-tag"><a href="#api-command">api-command</a></span></h2>
+<h2 id="_autocmd-functions" class="help-heading">Autocmd Functions<span class="help-heading-tags">                                                <span id="api-autocmd" class="help-tag"><a href="#api-autocmd">api-autocmd</a></span></h2>
 
 
 </div>
 <div class="help-para">
-                                              <span id="nvim_buf_create_user_command()" class="help-tag-right"><a href="#nvim_buf_create_user_command()">nvim_buf_create_user_command()</a></span><br>
-nvim_buf_create_user_command(<code>{buffer}</code>, <code>{name}</code>, <code>{command}</code>, <code>{opts}</code>)
-    Creates a buffer-local command <a href="map.html#user-commands">user-commands</a>.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{buffer}</code>   (<code>integer</code>) Buffer id, or 0 for current buffer.
-</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>)
-</div><div class="help-li" style=""> <code>{command}</code>  (<code>any</code>)
-</div><div class="help-li" style=""> <code>{opts}</code>     (<code>vim.api.keyset.user_command</code>)
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> nvim_create_user_command
-</div>
-</div>
-<div class="help-para">
-                                                 <span id="nvim_buf_del_user_command()" class="help-tag-right"><a href="#nvim_buf_del_user_command()">nvim_buf_del_user_command()</a></span><br>
-nvim_buf_del_user_command(<code>{buffer}</code>, <code>{name}</code>)
-    Delete a buffer-local user-defined command.
-
-</div>
-<div class="help-para">
-    Only commands created with <a href="map.html#%3Acommand-buffer">:command-buffer</a> or
-    <a href="api.html#nvim_buf_create_user_command()">nvim_buf_create_user_command()</a> can be deleted with this function.
+nvim_clear_autocmds(<code>{opts}</code>)                            <span id="nvim_clear_autocmds()" class="help-tag-right"><a href="#nvim_clear_autocmds()">nvim_clear_autocmds()</a></span><br>
+    Clears all autocommands selected by <code>{opts}</code>. To delete autocmds see
+    <a href="api.html#nvim_del_autocmd()">nvim_del_autocmd()</a>.
 
 </div>
 <div class="help-para">
@@ -2801,156 +2772,87 @@ nvim_buf_del_user_command(<code>{buffer}</code>, <code>{name}</code>)
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{buffer}</code>  (<code>integer</code>) Buffer id, or 0 for current buffer.
-</div><div class="help-li" style=""> <code>{name}</code>    (<code>string</code>) Name of the command to delete.
+<div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.clear_autocmds</code>) Parameters
+</div><div class="help-li" style="margin-left: 3rem;"> event: (vim.api.keyset.events|vim.api.keyset.events[])
+                  Examples:
+</div><div class="help-li" style="margin-left: 4rem;"> event: "pat1"
+</div><div class="help-li" style="margin-left: 4rem;"> event: { "pat1" }
+</div><div class="help-li" style="margin-left: 4rem;"> event: { "pat1", "pat2", "pat3" }
+</div><div class="help-li" style="margin-left: 3rem;"> pattern: (string|table)
+</div><div class="help-li" style="margin-left: 4rem;"> pattern or patterns to match exactly.
+</div><div class="help-li" style="margin-left: 6rem;"> For example, if you have <code>*.py</code> as that pattern for the
+                      autocmd, you must pass <code>*.py</code> exactly to clear it.
+                      <code>test.py</code> will not match the pattern.
+</div><div class="help-li" style="margin-left: 4rem;"> defaults to clearing all patterns.
+</div><div class="help-li" style="margin-left: 4rem;"><b> NOTE:</b> Cannot be used with <code>{buffer}</code>
+</div><div class="help-li" style="margin-left: 3rem;"> buffer: (bufnr)
+</div><div class="help-li" style="margin-left: 4rem;"> clear only <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a> autocommands.
+</div><div class="help-li" style="margin-left: 4rem;"><b> NOTE:</b> Cannot be used with <code>{pattern}</code>
+</div><div class="help-li" style="margin-left: 3rem;"> group: (string|int) The augroup name or id.
+</div><div class="help-li" style="margin-left: 4rem;"><b> NOTE:</b> If not passed, will only delete autocmds not in any
+                    group.
 </div>
 </div>
 <div class="help-para">
-nvim_buf_get_commands(<code>{buffer}</code>, <code>{opts}</code>)              <span id="nvim_buf_get_commands()" class="help-tag-right"><a href="#nvim_buf_get_commands()">nvim_buf_get_commands()</a></span><br>
-    Gets a map of buffer-local <a href="map.html#user-commands">user-commands</a>.
+nvim_create_augroup(<code>{name}</code>, <code>{opts}</code>)                    <span id="nvim_create_augroup()" class="help-tag-right"><a href="#nvim_create_augroup()">nvim_create_augroup()</a></span><br>
+    Create or get an autocommand group <a href="autocmd.html#autocmd-groups">autocmd-groups</a>.
+
+</div>
+<div class="help-para">
+    To get an existing group id, do:<pre><code class="language-lua">local id = vim.api.nvim_create_augroup('my.lsp.config', {
+    clear = false
+})</code></pre>
 
 </div>
 <div class="help-para">
 <div class="help-column_heading">Attributes:</div>
-        Since: 0.3.0
+        Since: 0.7.0
 
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{buffer}</code>  (<code>integer</code>) Buffer id, or 0 for current buffer
-</div><div class="help-li" style=""> <code>{opts}</code>    (<code>vim.api.keyset.get_commands</code>) Optional parameters.
-                  Currently not used.
+<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) String: The name of the group
+</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.create_augroup</code>) Dict Parameters
+</div><div class="help-li" style="margin-left: 3rem;"> clear (bool) optional: defaults to true. Clear existing
+                  commands if the group already exists <a href="autocmd.html#autocmd-groups">autocmd-groups</a>.
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">Return:</div>
-        (<code>vim.api.keyset.command_info</code>) Map of maps describing commands.
-
-</div>
-<div class="help-para">
-nvim_cmd(<code>{cmd}</code>, <code>{opts}</code>)                                           <span id="nvim_cmd()" class="help-tag-right"><a href="#nvim_cmd()">nvim_cmd()</a></span><br>
-    Executes an Ex command.
-
-</div>
-<div class="help-para">
-    Unlike <a href="api.html#nvim_command()">nvim_command()</a> this command takes a structured Dict instead of a
-    String. This allows for easier construction and manipulation of an Ex
-    command. This also allows for things such as having spaces inside a
-    command argument, expanding filenames in a command that otherwise doesn't
-    expand filenames, etc. Command arguments may also be Number, Boolean or
-    String.
-
-</div>
-<div class="help-para">
-    The first argument may also be used instead of count for commands that
-    support it in order to make their usage simpler with <a href="lua.html#vim.cmd()">vim.cmd()</a>. For
-    example, instead of <code>vim.cmd.bdelete{ count = 2 }</code>, you may do
-    <code>vim.cmd.bdelete(2)</code>.
-
-</div>
-<div class="help-para">
-    On execution error: fails with Vimscript error, updates v:errmsg.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.8.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{cmd}</code>   (<code>vim.api.keyset.cmd</code>) Command to execute. Must be a Dict that
-                can contain the same values as the return value of
-                <a href="api.html#nvim_parse_cmd()">nvim_parse_cmd()</a> except "addr", "nargs" and "nextcmd" which
-                are ignored if provided. All values except for "cmd" are
-                optional.
-</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.cmd_opts</code>) Optional parameters.
-</div><div class="help-li" style="margin-left: 3rem;"> output: (boolean, default false) Whether to return command
-                  output.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>string</code>) Command output (non-error, non-shell <a href="various.html#%3A%21">:!</a>) if <code>output</code> is
-        true, else empty string.
+        (<code>integer</code>) Integer id of the created group.
 
 </div>
 <div class="help-para">
 <div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="api.html#nvim_exec2()">nvim_exec2()</a>
-</div><div class="help-li" style=""> <a href="api.html#nvim_command()">nvim_command()</a>
+<div class="help-li" style=""> <a href="autocmd.html#autocmd-groups">autocmd-groups</a>
 </div>
 </div>
 <div class="help-para">
-                                                  <span id="nvim_create_user_command()" class="help-tag-right"><a href="#nvim_create_user_command()">nvim_create_user_command()</a></span><br>
-nvim_create_user_command(<code>{name}</code>, <code>{command}</code>, <code>{opts}</code>)
-    Creates a global <a href="map.html#user-commands">user-commands</a> command.
+nvim_create_autocmd(<code>{event}</code>, <code>{opts}</code>)                   <span id="nvim_create_autocmd()" class="help-tag-right"><a href="#nvim_create_autocmd()">nvim_create_autocmd()</a></span><br>
+    Creates an <a href="autocmd.html#autocommand">autocommand</a> event handler, defined by <code>callback</code> (Lua
+    function or Vimscript function name string) or <code>command</code> (Ex command
+    string).
 
 </div>
 <div class="help-para">
-    For Lua usage see <a href="lua-guide.html#lua-guide-commands-create">lua-guide-commands-create</a>.
+    Example using Lua callback:<pre><code class="language-lua">vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
+  pattern = {'*.c', '*.h'},
+  callback = function(ev)
+    print(string.format('event fired: %s', vim.inspect(ev)))
+  end
+})</code></pre>
 
 </div>
 <div class="help-para">
-    Example:<pre><code class="language-vim">:call nvim_create_user_command('SayHello', 'echo "Hello world!"', {'bang': v:true})
-:SayHello
-Hello world!</code></pre>
+    Example using an Ex command as the handler:<pre><code class="language-lua">vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
+  pattern = {'*.c', '*.h'},
+  command = "echo 'Entering a C or C++ file'",
+})</code></pre>
 
 </div>
 <div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Name of the new user command. Must begin with an
-                   uppercase letter.
-</div><div class="help-li" style=""> <code>{command}</code>  (<code>string|fun(args: vim.api.keyset.create_user_command.command_args)</code>)
-                   Replacement command to execute when this user command is
-                   executed. When called from Lua, the command can also be a
-                   Lua function. The function is called with a single table
-                   argument that contains the following keys:
-</div><div class="help-li" style="margin-left: 3rem;"> name: (string) Command name
-</div><div class="help-li" style="margin-left: 3rem;"> args: (string) The args passed to the command, if any
-                     <code>&lt;args&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> fargs: (table) The args split by unescaped whitespace
-                     (when more than one argument is allowed), if any <code>&lt;f-args&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> nargs: (string) Number of arguments <a href="map.html#%3Acommand-nargs">:command-nargs</a>
-</div><div class="help-li" style="margin-left: 3rem;"> bang: (boolean) "true" if the command was executed with a
-                     ! modifier <code>&lt;bang&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> line1: (number) The starting line of the command range
-                     <code>&lt;line1&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> line2: (number) The final line of the command range
-                     <code>&lt;line2&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> range: (number) The number of items in the command range:
-                     0, 1, or 2 <code>&lt;range&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> count: (number) Any count supplied <code>&lt;count&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> reg: (string) The optional register, if specified <code>&lt;reg&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> mods: (string) Command modifiers, if any <code>&lt;mods&gt;</code>
-</div><div class="help-li" style="margin-left: 3rem;"> smods: (table) Command modifiers in a structured format.
-                     Has the same structure as the "mods" key of
-                     <a href="api.html#nvim_parse_cmd()">nvim_parse_cmd()</a>.
-</div><div class="help-li" style=""> <code>{opts}</code>     (<code>vim.api.keyset.user_command</code>) Optional
-                   <a href="map.html#command-attributes">command-attributes</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> Set boolean attributes such as <a href="map.html#%3Acommand-bang">:command-bang</a> or
-                     <a href="map.html#%3Acommand-bar">:command-bar</a> to true (but not <a href="map.html#%3Acommand-buffer">:command-buffer</a>, use
-                     <a href="api.html#nvim_buf_create_user_command()">nvim_buf_create_user_command()</a> instead).
-</div><div class="help-li" style="margin-left: 3rem;"> "complete" <a href="map.html#%3Acommand-complete">:command-complete</a> also accepts a Lua
-                     function which works like
-                     <a href="map.html#%3Acommand-completion-customlist">:command-completion-customlist</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> Other parameters:
-</div><div class="help-li" style="margin-left: 4rem;"> desc: (string) Used for listing the command when a Lua
-                       function is used for <code>{command}</code>.
-</div><div class="help-li" style="margin-left: 4rem;"> force: (boolean, default true) Override any previous
-                       definition.
-</div><div class="help-li" style="margin-left: 4rem;"> preview: (function) Preview callback for <a href="options.html#'inccommand'">'inccommand'</a>
-                       <a href="map.html#%3Acommand-preview">:command-preview</a>
-</div>
-</div>
-<div class="help-para">
-nvim_del_user_command(<code>{name}</code>)                        <span id="nvim_del_user_command()" class="help-tag-right"><a href="#nvim_del_user_command()">nvim_del_user_command()</a></span><br>
-    Delete a user-defined command.
+<b>    Note:</b> <code>pattern</code> is NOT automatically expanded (unlike with <a href="autocmd.html#%3Aautocmd">:autocmd</a>),
+    thus names like "$HOME" and "~" must be expanded explicitly:<pre><code class="language-lua">pattern = vim.fn.expand('~') .. '/some/path/*.py'</code></pre>
 
 </div>
 <div class="help-para">
@@ -2960,206 +2862,92 @@ nvim_del_user_command(<code>{name}</code>)                        <span id="nvim
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) Name of the command to delete.
-</div>
-</div>
-<div class="help-para">
-nvim_get_commands(<code>{opts}</code>)                                <span id="nvim_get_commands()" class="help-tag-right"><a href="#nvim_get_commands()">nvim_get_commands()</a></span><br>
-    Gets a map of global (non-buffer-local) Ex commands.
-
-</div>
-<div class="help-para">
-    Currently only <a href="map.html#user-commands">user-commands</a> are supported, not builtin Ex commands.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.3.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.get_commands</code>) Optional parameters. Currently
-                only supports <code>{"builtin":false}</code>
+<div class="help-li" style=""> <code>{event}</code>  (<code>vim.api.keyset.events|vim.api.keyset.events[]</code>) Event(s)
+                 that will trigger the handler (<code>callback</code> or <code>command</code>).
+</div><div class="help-li" style=""> <code>{opts}</code>   (<code>vim.api.keyset.create_autocmd</code>) Options dict:
+</div><div class="help-li" style="margin-left: 3rem;"> group (string|integer) optional: autocommand group name or
+                   id to match against.
+</div><div class="help-li" style="margin-left: 3rem;"> pattern (string|array) optional: pattern(s) to match
+                   literally <a href="autocmd.html#autocmd-pattern">autocmd-pattern</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> buffer (integer) optional: buffer number for buffer-local
+                   autocommands <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a>. Cannot be used with
+                   <code>{pattern}</code>.
+</div><div class="help-li" style="margin-left: 3rem;"> desc (string) optional: description (for documentation and
+                   troubleshooting).
+</div><div class="help-li" style="margin-left: 3rem;"> callback (function|string) optional: Lua function (or
+                   Vimscript function name, if string) called when the
+                   event(s) is triggered. Lua callback can return a truthy
+                   value (not <code>false</code> or <code>nil</code>) to delete the autocommand, and
+                   receives one argument, a table with these keys:
+                                                                  <span id="event-args" class="help-tag-right"><a href="#event-args">event-args</a></span><br>
+</div><div class="help-li" style="margin-left: 4rem;"> id: (number) autocommand id
+</div><div class="help-li" style="margin-left: 4rem;"> event: (vim.api.keyset.events) name of the triggered
+                     event <a href="autocmd.html#autocmd-events">autocmd-events</a>
+</div><div class="help-li" style="margin-left: 4rem;"> group: (number|nil) autocommand group id, if any
+</div><div class="help-li" style="margin-left: 4rem;"> file: (string) <code>&lt;afile&gt;</code> (not expanded to a full path)
+</div><div class="help-li" style="margin-left: 4rem;"> match: (string) <code>&lt;amatch&gt;</code> (expanded to a full path)
+</div><div class="help-li" style="margin-left: 4rem;"> buf: (number) <code>&lt;abuf&gt;</code>
+</div><div class="help-li" style="margin-left: 4rem;"> data: (any) arbitrary data passed from
+                     <a href="api.html#nvim_exec_autocmds()">nvim_exec_autocmds()</a>                       <span id="event-data" class="help-tag-right"><a href="#event-data">event-data</a></span><br>
+</div><div class="help-li" style="margin-left: 3rem;"> command (string) optional: Vim command to execute on event.
+                   Cannot be used with <code>{callback}</code>
+</div><div class="help-li" style="margin-left: 3rem;"> once (boolean) optional: defaults to false. Run the
+                   autocommand only once <a href="autocmd.html#autocmd-once">autocmd-once</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> nested (boolean) optional: defaults to false. Run nested
+                   autocommands <a href="autocmd.html#autocmd-nested">autocmd-nested</a>.
 </div>
 </div>
 <div class="help-para">
 <div class="help-column_heading">Return:</div>
-        (<code>table&lt;string,vim.api.keyset.command_info&gt;</code>) Map of maps describing
-        commands.
+        (<code>integer</code>) Autocommand id (number)
 
 </div>
 <div class="help-para">
 <div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="api.html#nvim_get_all_options_info()">nvim_get_all_options_info()</a>
+<div class="help-li" style=""> <a href="autocmd.html#autocommand">autocommand</a>
+</div><div class="help-li" style=""> <a href="api.html#nvim_del_autocmd()">nvim_del_autocmd()</a>
 </div>
 </div>
 <div class="help-para">
-nvim_parse_cmd(<code>{str}</code>, <code>{opts}</code>)                               <span id="nvim_parse_cmd()" class="help-tag-right"><a href="#nvim_parse_cmd()">nvim_parse_cmd()</a></span><br>
-    Parse command line.
+nvim_del_augroup_by_id(<code>{id}</code>)                        <span id="nvim_del_augroup_by_id()" class="help-tag-right"><a href="#nvim_del_augroup_by_id()">nvim_del_augroup_by_id()</a></span><br>
+    Delete an autocommand group by id.
 
 </div>
 <div class="help-para">
-    Doesn't check the validity of command arguments.
+    To get a group id one can use <a href="api.html#nvim_get_autocmds()">nvim_get_autocmds()</a>.
+
+</div>
+<div class="help-para">
+<b>    NOTE:</b> behavior differs from <a href="autocmd.html#%3Aaugroup-delete">:augroup-delete</a>. When deleting a group,
+    autocommands contained in this group will also be deleted and cleared.
+    This group will no longer exist.
 
 </div>
 <div class="help-para">
 <div class="help-column_heading">Attributes:</div>
-        <a href="api.html#api-fast">api-fast</a>
-        Since: 0.8.0
+        Since: 0.7.0
 
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{str}</code>   (<code>string</code>) Command line string to parse. Cannot contain "\n".
-</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.empty</code>) Optional parameters. Reserved for
-                future use.
+<div class="help-li" style=""> <code>{id}</code>  (<code>integer</code>) Integer The id of the group.
 </div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>vim.api.keyset.cmd</code>) Dict containing command information, with these
-        keys:
-<div class="help-li" style=""> cmd: (string) Command name.
-</div><div class="help-li" style=""> range: (array) (optional) Command range (<code>&lt;line1&gt;</code> <code>&lt;line2&gt;</code>). Omitted
-          if command doesn't accept a range. Otherwise, has no elements if no
-          range was specified, one element if only a single range item was
-          specified, or two elements if both range items were specified.
-</div><div class="help-li" style=""> count: (number) (optional) Command <code>&lt;count&gt;</code>. Omitted if command
-          cannot take a count.
-</div><div class="help-li" style=""> reg: (string) (optional) Command <code>&lt;register&gt;</code>. Omitted if command
-          cannot take a register.
-</div><div class="help-li" style=""> bang: (boolean) Whether command contains a <code>&lt;bang&gt;</code> (!) modifier.
-</div><div class="help-li" style=""> args: (array) Command arguments.
-</div><div class="help-li" style=""> addr: (string) Value of <a href="map.html#%3Acommand-addr">:command-addr</a>. Uses short name or "line"
-          for -addr=lines.
-</div><div class="help-li" style=""> nargs: (string) Value of <a href="map.html#%3Acommand-nargs">:command-nargs</a>.
-</div><div class="help-li" style=""> nextcmd: (string) Next command if there are multiple commands
-          separated by a <a href="cmdline.html#%3Abar">:bar</a>. Empty if there isn't a next command.
-</div><div class="help-li" style=""> magic: (dict) Which characters have special meaning in the command
-          arguments.
-</div><div class="help-li" style="margin-left: 3rem;"> file: (boolean) The command expands filenames. Which means
-            characters such as "%", "#" and wildcards are expanded.
-</div><div class="help-li" style="margin-left: 3rem;"> bar: (boolean) The "|" character is treated as a command separator
-            and the double quote character (") is treated as the start of a
-            comment.
-</div><div class="help-li" style=""> mods: (dict) <a href="map.html#%3Acommand-modifiers">:command-modifiers</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> filter: (dict) <a href="various.html#%3Afilter">:filter</a>.
-</div><div class="help-li" style="margin-left: 4rem;"> pattern: (string) Filter pattern. Empty string if there is no
-              filter.
-</div><div class="help-li" style="margin-left: 4rem;"> force: (boolean) Whether filter is inverted or not.
-</div><div class="help-li" style="margin-left: 3rem;"> silent: (boolean) <a href="various.html#%3Asilent">:silent</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> emsg_silent: (boolean) <a href="various.html#%3Asilent%21">:silent!</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> unsilent: (boolean) <a href="various.html#%3Aunsilent">:unsilent</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> sandbox: (boolean) <a href="vimeval.html#%3Asandbox">:sandbox</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> noautocmd: (boolean) <a href="autocmd.html#%3Anoautocmd">:noautocmd</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> browse: (boolean) <a href="editing.html#%3Abrowse">:browse</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> confirm: (boolean) <a href="editing.html#%3Aconfirm">:confirm</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> hide: (boolean) <a href="windows.html#%3Ahide">:hide</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> horizontal: (boolean) <a href="windows.html#%3Ahorizontal">:horizontal</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> keepalt: (boolean) <a href="editing.html#%3Akeepalt">:keepalt</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> keepjumps: (boolean) <a href="motion.html#%3Akeepjumps">:keepjumps</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> keepmarks: (boolean) <a href="motion.html#%3Akeepmarks">:keepmarks</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> keeppatterns: (boolean) <a href="cmdline.html#%3Akeeppatterns">:keeppatterns</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> lockmarks: (boolean) <a href="motion.html#%3Alockmarks">:lockmarks</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> noswapfile: (boolean) <a href="recover.html#%3Anoswapfile">:noswapfile</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> tab: (integer) <a href="tabpage.html#%3Atab">:tab</a>. -1 when omitted.
-</div><div class="help-li" style="margin-left: 3rem;"> verbose: (integer) <a href="various.html#%3Averbose">:verbose</a>. -1 when omitted.
-</div><div class="help-li" style="margin-left: 3rem;"> vertical: (boolean) <a href="windows.html#%3Avertical">:vertical</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> split: (string) Split modifier string, is an empty string when
-            there's no split modifier. If there is a split modifier it can be
-            one of:
-</div><div class="help-li" style="margin-left: 4rem;"> "aboveleft": <a href="windows.html#%3Aaboveleft">:aboveleft</a>.
-</div><div class="help-li" style="margin-left: 4rem;"> "belowright": <a href="windows.html#%3Abelowright">:belowright</a>.
-</div><div class="help-li" style="margin-left: 4rem;"> "topleft": <a href="windows.html#%3Atopleft">:topleft</a>.
-</div><div class="help-li" style="margin-left: 4rem;"> "botright": <a href="windows.html#%3Abotright">:botright</a>.
-</div>
-</div>
-<div class="help-para">
-<h2 id="_options-functions" class="help-heading">Options Functions<span class="help-heading-tags">                                                <span id="api-options" class="help-tag"><a href="#api-options">api-options</a></span></h2>
-
-
-</div>
-<div class="help-para">
-nvim_get_all_options_info()                      <span id="nvim_get_all_options_info()" class="help-tag-right"><a href="#nvim_get_all_options_info()">nvim_get_all_options_info()</a></span><br>
-    Gets the option information for all options.
-
-</div>
-<div class="help-para">
-    The dict has the full option names as keys and option metadata dicts as
-    detailed at <a href="api.html#nvim_get_option_info2()">nvim_get_option_info2()</a>.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.5.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>table&lt;string,any&gt;</code>) dict of all options
-
 </div>
 <div class="help-para">
 <div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="api.html#nvim_get_commands()">nvim_get_commands()</a>
+<div class="help-li" style=""> <a href="api.html#nvim_del_augroup_by_name()">nvim_del_augroup_by_name()</a>
+</div><div class="help-li" style=""> <a href="api.html#nvim_create_augroup()">nvim_create_augroup()</a>
 </div>
 </div>
 <div class="help-para">
-nvim_get_option_info2(<code>{name}</code>, <code>{opts}</code>)                <span id="nvim_get_option_info2()" class="help-tag-right"><a href="#nvim_get_option_info2()">nvim_get_option_info2()</a></span><br>
-    Gets the option information for one option from arbitrary buffer or window
+nvim_del_augroup_by_name(<code>{name}</code>)                  <span id="nvim_del_augroup_by_name()" class="help-tag-right"><a href="#nvim_del_augroup_by_name()">nvim_del_augroup_by_name()</a></span><br>
+    Delete an autocommand group by name.
 
 </div>
 <div class="help-para">
-    Resulting dict has keys:
-<div class="help-li" style=""> name: Name of the option (like <a href="options.html#'filetype'">'filetype'</a>)
-</div><div class="help-li" style=""> shortname: Shortened name of the option (like <a href="options.html#'ft'">'ft'</a>)
-</div><div class="help-li" style=""> type: type of option ("string", "number" or "boolean")
-</div><div class="help-li" style=""> default: The default value for the option
-</div><div class="help-li" style=""> was_set: Whether the option was set.
-</div><div class="help-li" style=""> last_set_sid: Last set script id (if any)
-</div><div class="help-li" style=""> last_set_linenr: line number where option was set
-</div><div class="help-li" style=""> last_set_chan: Channel where option was set (0 for local)
-</div><div class="help-li" style=""> scope: one of "global", "win", or "buf"
-</div><div class="help-li" style=""> global_local: whether win or buf option has a global value
-</div><div class="help-li" style=""> commalist: List of comma separated values
-</div><div class="help-li" style=""> flaglist: List of single char flags
-</div>
-</div>
-<div class="help-para">
-    When <code>{scope}</code> is not provided, the last set information applies to the
-    local value in the current buffer or window if it is available, otherwise
-    the global value information is returned. This behavior can be disabled by
-    explicitly specifying <code>{scope}</code> in the <code>{opts}</code> table.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.9.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) Option name
-</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.option</code>) Optional parameters
-</div><div class="help-li" style="margin-left: 3rem;"> scope: One of "global" or "local". Analogous to <a href="options.html#%3Asetglobal">:setglobal</a>
-                  and <a href="options.html#%3Asetlocal">:setlocal</a>, respectively.
-</div><div class="help-li" style="margin-left: 3rem;"> win: <a href="windows.html#window-ID">window-ID</a>. Used for getting window local options.
-</div><div class="help-li" style="margin-left: 3rem;"> buf: Buffer number. Used for getting buffer local options.
-                  Implies <code>{scope}</code> is "local".
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>vim.api.keyset.get_option_info</code>) Option Information
-
-</div>
-<div class="help-para">
-nvim_get_option_value(<code>{name}</code>, <code>{opts}</code>)                <span id="nvim_get_option_value()" class="help-tag-right"><a href="#nvim_get_option_value()">nvim_get_option_value()</a></span><br>
-    Gets the value of an option. The behavior of this function matches that of
-    <a href="options.html#%3Aset">:set</a>: the local value of an option is returned if it exists; otherwise,
-    the global value is returned. Local values always correspond to the
-    current buffer or window, unless "buf" or "win" is set in <code>{opts}</code>.
+<b>    NOTE:</b> behavior differs from <a href="autocmd.html#%3Aaugroup-delete">:augroup-delete</a>. When deleting a group,
+    autocommands contained in this group will also be deleted and cleared.
+    This group will no longer exist.
 
 </div>
 <div class="help-para">
@@ -3169,34 +2957,17 @@ nvim_get_option_value(<code>{name}</code>, <code>{opts}</code>)                <
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) Option name
-</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.option</code>) Optional parameters
-</div><div class="help-li" style="margin-left: 3rem;"> scope: One of "global" or "local". Analogous to <a href="options.html#%3Asetglobal">:setglobal</a>
-                  and <a href="options.html#%3Asetlocal">:setlocal</a>, respectively.
-</div><div class="help-li" style="margin-left: 3rem;"> win: <a href="windows.html#window-ID">window-ID</a>. Used for getting window local options.
-</div><div class="help-li" style="margin-left: 3rem;"> buf: Buffer number. Used for getting buffer local options.
-                  Implies <code>{scope}</code> is "local".
-</div><div class="help-li" style="margin-left: 3rem;"> filetype: <a href="filetype.html#filetype">filetype</a>. Used to get the default option for a
-                  specific filetype. Cannot be used with any other option.
-<b>                  Note:</b> this will trigger <a href="usr_41.html#ftplugin">ftplugin</a> and all <a href="autocmd.html#FileType">FileType</a>
-                  autocommands for the corresponding filetype.
+<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) String The name of the group.
 </div>
 </div>
 <div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>any</code>) Option value
-
+<div class="help-column_heading">See also:</div>
+<div class="help-li" style=""> <a href="autocmd.html#autocmd-groups">autocmd-groups</a>
+</div>
 </div>
 <div class="help-para">
-                                                     <span id="nvim_set_option_value()" class="help-tag-right"><a href="#nvim_set_option_value()">nvim_set_option_value()</a></span><br>
-nvim_set_option_value(<code>{name}</code>, <code>{value}</code>, <code>{opts}</code>)
-    Sets the value of an option. The behavior of this function matches that of
-    <a href="options.html#%3Aset">:set</a>: for global-local options, both the global and local value are set
-    unless otherwise specified with <code>{scope}</code>.
-
-</div>
-<div class="help-para">
-    Note the options <code>{win}</code> and <code>{buf}</code> cannot be used together.
+nvim_del_autocmd(<code>{id}</code>)                                    <span id="nvim_del_autocmd()" class="help-tag-right"><a href="#nvim_del_autocmd()">nvim_del_autocmd()</a></span><br>
+    Deletes an autocommand by id.
 
 </div>
 <div class="help-para">
@@ -3206,13 +2977,106 @@ nvim_set_option_value(<code>{name}</code>, <code>{value}</code>, <code>{opts}</c
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{name}</code>   (<code>string</code>) Option name
-</div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>) New option value
-</div><div class="help-li" style=""> <code>{opts}</code>   (<code>vim.api.keyset.option</code>) Optional parameters
-</div><div class="help-li" style="margin-left: 3rem;"> scope: One of "global" or "local". Analogous to
-                   <a href="options.html#%3Asetglobal">:setglobal</a> and <a href="options.html#%3Asetlocal">:setlocal</a>, respectively.
-</div><div class="help-li" style="margin-left: 3rem;"> win: <a href="windows.html#window-ID">window-ID</a>. Used for setting window local option.
-</div><div class="help-li" style="margin-left: 3rem;"> buf: Buffer number. Used for setting buffer local option.
+<div class="help-li" style=""> <code>{id}</code>  (<code>integer</code>) Integer Autocommand id returned by
+              <a href="api.html#nvim_create_autocmd()">nvim_create_autocmd()</a>
+</div>
+</div>
+<div class="help-para">
+nvim_exec_autocmds(<code>{event}</code>, <code>{opts}</code>)                     <span id="nvim_exec_autocmds()" class="help-tag-right"><a href="#nvim_exec_autocmds()">nvim_exec_autocmds()</a></span><br>
+    Execute all autocommands for <code>{event}</code> that match the corresponding <code>{opts}</code>
+    <a href="autocmd.html#autocmd-execute">autocmd-execute</a>.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.7.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{event}</code>  (<code>vim.api.keyset.events|vim.api.keyset.events[]</code>) The event
+                 or events to execute
+</div><div class="help-li" style=""> <code>{opts}</code>   (<code>vim.api.keyset.exec_autocmds</code>) Dict of autocommand options:
+</div><div class="help-li" style="margin-left: 3rem;"> group (string|integer) optional: the autocommand group name
+                   or id to match against. <a href="autocmd.html#autocmd-groups">autocmd-groups</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> pattern (string|array) optional: defaults to "*"
+                   <a href="autocmd.html#autocmd-pattern">autocmd-pattern</a>. Cannot be used with <code>{buffer}</code>.
+</div><div class="help-li" style="margin-left: 3rem;"> buffer (integer) optional: buffer number
+                   <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a>. Cannot be used with <code>{pattern}</code>.
+</div><div class="help-li" style="margin-left: 3rem;"> modeline (bool) optional: defaults to true. Process the
+                   modeline after the autocommands <code>&lt;nomodeline&gt;</code>.
+</div><div class="help-li" style="margin-left: 3rem;"> data (any): arbitrary data to send to the autocommand
+                   callback. See <a href="api.html#nvim_create_autocmd()">nvim_create_autocmd()</a> for details.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">See also:</div>
+<div class="help-li" style=""> <a href="autocmd.html#%3Adoautocmd">:doautocmd</a>
+</div>
+</div>
+<div class="help-para">
+nvim_get_autocmds(<code>{opts}</code>)                                <span id="nvim_get_autocmds()" class="help-tag-right"><a href="#nvim_get_autocmds()">nvim_get_autocmds()</a></span><br>
+    Get all autocommands that match the corresponding <code>{opts}</code>.
+
+</div>
+<div class="help-para">
+    These examples will get autocommands matching ALL the given criteria:<pre><code class="language-lua">-- Matches all criteria
+autocommands = vim.api.nvim_get_autocmds({
+  group = 'MyGroup',
+  event = {'BufEnter', 'BufWinEnter'},
+  pattern = {'*.c', '*.h'}
+})
+-- All commands from one group
+autocommands = vim.api.nvim_get_autocmds({
+  group = 'MyGroup',
+})</code></pre>
+
+</div>
+<div class="help-para">
+<b>    NOTE:</b> When multiple patterns or events are provided, it will find all the
+    autocommands that match any combination of them.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.7.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.get_autocmds</code>) Dict with at least one of the
+                following:
+</div><div class="help-li" style="margin-left: 3rem;"> buffer: (integer) Buffer number or list of buffer numbers
+                  for buffer local autocommands <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a>. Cannot be
+                  used with <code>{pattern}</code>
+</div><div class="help-li" style="margin-left: 3rem;"> event: (vim.api.keyset.events|vim.api.keyset.events[]) event
+                  or events to match against <a href="autocmd.html#autocmd-events">autocmd-events</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> id: (integer) Autocommand ID to match.
+</div><div class="help-li" style="margin-left: 3rem;"> group: (string|table) the autocommand group name or id to
+                  match against.
+</div><div class="help-li" style="margin-left: 3rem;"> pattern: (string|table) pattern or patterns to match against
+                  <a href="autocmd.html#autocmd-pattern">autocmd-pattern</a>. Cannot be used with <code>{buffer}</code>
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>vim.api.keyset.get_autocmds.ret[]</code>) Array of autocommands matching
+        the criteria, with each item containing the following fields:
+<div class="help-li" style=""> buffer: (integer) the buffer number.
+</div><div class="help-li" style=""> buflocal: (boolean) true if the autocommand is buffer local.
+</div><div class="help-li" style=""> command: (string) the autocommand command.<b> Note:</b> this will be empty
+          if a callback is set.
+</div><div class="help-li" style=""> callback: (function|string|nil): Lua function or name of a Vim
+          script function which is executed when this autocommand is
+          triggered.
+</div><div class="help-li" style=""> desc: (string) the autocommand description.
+</div><div class="help-li" style=""> event: (vim.api.keyset.events) the autocommand event.
+</div><div class="help-li" style=""> id: (integer) the autocommand id (only when defined with the API).
+</div><div class="help-li" style=""> group: (integer) the autocommand group id.
+</div><div class="help-li" style=""> group_name: (string) the autocommand group name.
+</div><div class="help-li" style=""> once: (boolean) whether the autocommand is only run once.
+</div><div class="help-li" style=""> pattern: (string) the autocommand pattern. If the autocommand is
+          buffer local <a href="autocmd.html#autocmd-buffer-local">autocmd-buffer-local</a>:
 </div>
 </div>
 <div class="help-para">
@@ -3982,6 +3846,327 @@ nvim_buf_set_var(<code>{buffer}</code>, <code>{name}</code>, <code>{value}</code
 </div>
 </div>
 <div class="help-para">
+<h2 id="_command-functions" class="help-heading">Command Functions<span class="help-heading-tags">                                                <span id="api-command" class="help-tag"><a href="#api-command">api-command</a></span></h2>
+
+
+</div>
+<div class="help-para">
+                                              <span id="nvim_buf_create_user_command()" class="help-tag-right"><a href="#nvim_buf_create_user_command()">nvim_buf_create_user_command()</a></span><br>
+nvim_buf_create_user_command(<code>{buffer}</code>, <code>{name}</code>, <code>{command}</code>, <code>{opts}</code>)
+    Creates a buffer-local command <a href="map.html#user-commands">user-commands</a>.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.7.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{buffer}</code>   (<code>integer</code>) Buffer id, or 0 for current buffer.
+</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>)
+</div><div class="help-li" style=""> <code>{command}</code>  (<code>any</code>)
+</div><div class="help-li" style=""> <code>{opts}</code>     (<code>vim.api.keyset.user_command</code>)
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">See also:</div>
+<div class="help-li" style=""> nvim_create_user_command
+</div>
+</div>
+<div class="help-para">
+                                                 <span id="nvim_buf_del_user_command()" class="help-tag-right"><a href="#nvim_buf_del_user_command()">nvim_buf_del_user_command()</a></span><br>
+nvim_buf_del_user_command(<code>{buffer}</code>, <code>{name}</code>)
+    Delete a buffer-local user-defined command.
+
+</div>
+<div class="help-para">
+    Only commands created with <a href="map.html#%3Acommand-buffer">:command-buffer</a> or
+    <a href="api.html#nvim_buf_create_user_command()">nvim_buf_create_user_command()</a> can be deleted with this function.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.7.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{buffer}</code>  (<code>integer</code>) Buffer id, or 0 for current buffer.
+</div><div class="help-li" style=""> <code>{name}</code>    (<code>string</code>) Name of the command to delete.
+</div>
+</div>
+<div class="help-para">
+nvim_buf_get_commands(<code>{buffer}</code>, <code>{opts}</code>)              <span id="nvim_buf_get_commands()" class="help-tag-right"><a href="#nvim_buf_get_commands()">nvim_buf_get_commands()</a></span><br>
+    Gets a map of buffer-local <a href="map.html#user-commands">user-commands</a>.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.3.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{buffer}</code>  (<code>integer</code>) Buffer id, or 0 for current buffer
+</div><div class="help-li" style=""> <code>{opts}</code>    (<code>vim.api.keyset.get_commands</code>) Optional parameters.
+                  Currently not used.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>vim.api.keyset.command_info</code>) Map of maps describing commands.
+
+</div>
+<div class="help-para">
+nvim_cmd(<code>{cmd}</code>, <code>{opts}</code>)                                           <span id="nvim_cmd()" class="help-tag-right"><a href="#nvim_cmd()">nvim_cmd()</a></span><br>
+    Executes an Ex command.
+
+</div>
+<div class="help-para">
+    Unlike <a href="api.html#nvim_command()">nvim_command()</a> this command takes a structured Dict instead of a
+    String. This allows for easier construction and manipulation of an Ex
+    command. This also allows for things such as having spaces inside a
+    command argument, expanding filenames in a command that otherwise doesn't
+    expand filenames, etc. Command arguments may also be Number, Boolean or
+    String.
+
+</div>
+<div class="help-para">
+    The first argument may also be used instead of count for commands that
+    support it in order to make their usage simpler with <a href="lua.html#vim.cmd()">vim.cmd()</a>. For
+    example, instead of <code>vim.cmd.bdelete{ count = 2 }</code>, you may do
+    <code>vim.cmd.bdelete(2)</code>.
+
+</div>
+<div class="help-para">
+    On execution error: fails with Vimscript error, updates v:errmsg.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.8.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{cmd}</code>   (<code>vim.api.keyset.cmd</code>) Command to execute. Must be a Dict that
+                can contain the same values as the return value of
+                <a href="api.html#nvim_parse_cmd()">nvim_parse_cmd()</a> except "addr", "nargs" and "nextcmd" which
+                are ignored if provided. All values except for "cmd" are
+                optional.
+</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.cmd_opts</code>) Optional parameters.
+</div><div class="help-li" style="margin-left: 3rem;"> output: (boolean, default false) Whether to return command
+                  output.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>string</code>) Command output (non-error, non-shell <a href="various.html#%3A%21">:!</a>) if <code>output</code> is
+        true, else empty string.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">See also:</div>
+<div class="help-li" style=""> <a href="api.html#nvim_exec2()">nvim_exec2()</a>
+</div><div class="help-li" style=""> <a href="api.html#nvim_command()">nvim_command()</a>
+</div>
+</div>
+<div class="help-para">
+                                                  <span id="nvim_create_user_command()" class="help-tag-right"><a href="#nvim_create_user_command()">nvim_create_user_command()</a></span><br>
+nvim_create_user_command(<code>{name}</code>, <code>{command}</code>, <code>{opts}</code>)
+    Creates a global <a href="map.html#user-commands">user-commands</a> command.
+
+</div>
+<div class="help-para">
+    For Lua usage see <a href="lua-guide.html#lua-guide-commands-create">lua-guide-commands-create</a>.
+
+</div>
+<div class="help-para">
+    Example:<pre><code class="language-vim">:call nvim_create_user_command('SayHello', 'echo "Hello world!"', {'bang': v:true})
+:SayHello
+Hello world!</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.7.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Name of the new user command. Must begin with an
+                   uppercase letter.
+</div><div class="help-li" style=""> <code>{command}</code>  (<code>string|fun(args: vim.api.keyset.create_user_command.command_args)</code>)
+                   Replacement command to execute when this user command is
+                   executed. When called from Lua, the command can also be a
+                   Lua function. The function is called with a single table
+                   argument that contains the following keys:
+</div><div class="help-li" style="margin-left: 3rem;"> name: (string) Command name
+</div><div class="help-li" style="margin-left: 3rem;"> args: (string) The args passed to the command, if any
+                     <code>&lt;args&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> fargs: (table) The args split by unescaped whitespace
+                     (when more than one argument is allowed), if any <code>&lt;f-args&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> nargs: (string) Number of arguments <a href="map.html#%3Acommand-nargs">:command-nargs</a>
+</div><div class="help-li" style="margin-left: 3rem;"> bang: (boolean) "true" if the command was executed with a
+                     ! modifier <code>&lt;bang&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> line1: (number) The starting line of the command range
+                     <code>&lt;line1&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> line2: (number) The final line of the command range
+                     <code>&lt;line2&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> range: (number) The number of items in the command range:
+                     0, 1, or 2 <code>&lt;range&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> count: (number) Any count supplied <code>&lt;count&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> reg: (string) The optional register, if specified <code>&lt;reg&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> mods: (string) Command modifiers, if any <code>&lt;mods&gt;</code>
+</div><div class="help-li" style="margin-left: 3rem;"> smods: (table) Command modifiers in a structured format.
+                     Has the same structure as the "mods" key of
+                     <a href="api.html#nvim_parse_cmd()">nvim_parse_cmd()</a>.
+</div><div class="help-li" style=""> <code>{opts}</code>     (<code>vim.api.keyset.user_command</code>) Optional
+                   <a href="map.html#command-attributes">command-attributes</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> Set boolean attributes such as <a href="map.html#%3Acommand-bang">:command-bang</a> or
+                     <a href="map.html#%3Acommand-bar">:command-bar</a> to true (but not <a href="map.html#%3Acommand-buffer">:command-buffer</a>, use
+                     <a href="api.html#nvim_buf_create_user_command()">nvim_buf_create_user_command()</a> instead).
+</div><div class="help-li" style="margin-left: 3rem;"> "complete" <a href="map.html#%3Acommand-complete">:command-complete</a> also accepts a Lua
+                     function which works like
+                     <a href="map.html#%3Acommand-completion-customlist">:command-completion-customlist</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> Other parameters:
+</div><div class="help-li" style="margin-left: 4rem;"> desc: (string) Used for listing the command when a Lua
+                       function is used for <code>{command}</code>.
+</div><div class="help-li" style="margin-left: 4rem;"> force: (boolean, default true) Override any previous
+                       definition.
+</div><div class="help-li" style="margin-left: 4rem;"> preview: (function) Preview callback for <a href="options.html#'inccommand'">'inccommand'</a>
+                       <a href="map.html#%3Acommand-preview">:command-preview</a>
+</div>
+</div>
+<div class="help-para">
+nvim_del_user_command(<code>{name}</code>)                        <span id="nvim_del_user_command()" class="help-tag-right"><a href="#nvim_del_user_command()">nvim_del_user_command()</a></span><br>
+    Delete a user-defined command.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.7.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) Name of the command to delete.
+</div>
+</div>
+<div class="help-para">
+nvim_get_commands(<code>{opts}</code>)                                <span id="nvim_get_commands()" class="help-tag-right"><a href="#nvim_get_commands()">nvim_get_commands()</a></span><br>
+    Gets a map of global (non-buffer-local) Ex commands.
+
+</div>
+<div class="help-para">
+    Currently only <a href="map.html#user-commands">user-commands</a> are supported, not builtin Ex commands.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.3.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.get_commands</code>) Optional parameters. Currently
+                only supports <code>{"builtin":false}</code>
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>table&lt;string,vim.api.keyset.command_info&gt;</code>) Map of maps describing
+        commands.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">See also:</div>
+<div class="help-li" style=""> <a href="api.html#nvim_get_all_options_info()">nvim_get_all_options_info()</a>
+</div>
+</div>
+<div class="help-para">
+nvim_parse_cmd(<code>{str}</code>, <code>{opts}</code>)                               <span id="nvim_parse_cmd()" class="help-tag-right"><a href="#nvim_parse_cmd()">nvim_parse_cmd()</a></span><br>
+    Parse command line.
+
+</div>
+<div class="help-para">
+    Doesn't check the validity of command arguments.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#api-fast">api-fast</a>
+        Since: 0.8.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{str}</code>   (<code>string</code>) Command line string to parse. Cannot contain "\n".
+</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.empty</code>) Optional parameters. Reserved for
+                future use.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>vim.api.keyset.cmd</code>) Dict containing command information, with these
+        keys:
+<div class="help-li" style=""> cmd: (string) Command name.
+</div><div class="help-li" style=""> range: (array) (optional) Command range (<code>&lt;line1&gt;</code> <code>&lt;line2&gt;</code>). Omitted
+          if command doesn't accept a range. Otherwise, has no elements if no
+          range was specified, one element if only a single range item was
+          specified, or two elements if both range items were specified.
+</div><div class="help-li" style=""> count: (number) (optional) Command <code>&lt;count&gt;</code>. Omitted if command
+          cannot take a count.
+</div><div class="help-li" style=""> reg: (string) (optional) Command <code>&lt;register&gt;</code>. Omitted if command
+          cannot take a register.
+</div><div class="help-li" style=""> bang: (boolean) Whether command contains a <code>&lt;bang&gt;</code> (!) modifier.
+</div><div class="help-li" style=""> args: (array) Command arguments.
+</div><div class="help-li" style=""> addr: (string) Value of <a href="map.html#%3Acommand-addr">:command-addr</a>. Uses short name or "line"
+          for -addr=lines.
+</div><div class="help-li" style=""> nargs: (string) Value of <a href="map.html#%3Acommand-nargs">:command-nargs</a>.
+</div><div class="help-li" style=""> nextcmd: (string) Next command if there are multiple commands
+          separated by a <a href="cmdline.html#%3Abar">:bar</a>. Empty if there isn't a next command.
+</div><div class="help-li" style=""> magic: (dict) Which characters have special meaning in the command
+          arguments.
+</div><div class="help-li" style="margin-left: 3rem;"> file: (boolean) The command expands filenames. Which means
+            characters such as "%", "#" and wildcards are expanded.
+</div><div class="help-li" style="margin-left: 3rem;"> bar: (boolean) The "|" character is treated as a command separator
+            and the double quote character (") is treated as the start of a
+            comment.
+</div><div class="help-li" style=""> mods: (dict) <a href="map.html#%3Acommand-modifiers">:command-modifiers</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> filter: (dict) <a href="various.html#%3Afilter">:filter</a>.
+</div><div class="help-li" style="margin-left: 4rem;"> pattern: (string) Filter pattern. Empty string if there is no
+              filter.
+</div><div class="help-li" style="margin-left: 4rem;"> force: (boolean) Whether filter is inverted or not.
+</div><div class="help-li" style="margin-left: 3rem;"> silent: (boolean) <a href="various.html#%3Asilent">:silent</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> emsg_silent: (boolean) <a href="various.html#%3Asilent%21">:silent!</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> unsilent: (boolean) <a href="various.html#%3Aunsilent">:unsilent</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> sandbox: (boolean) <a href="vimeval.html#%3Asandbox">:sandbox</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> noautocmd: (boolean) <a href="autocmd.html#%3Anoautocmd">:noautocmd</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> browse: (boolean) <a href="editing.html#%3Abrowse">:browse</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> confirm: (boolean) <a href="editing.html#%3Aconfirm">:confirm</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> hide: (boolean) <a href="windows.html#%3Ahide">:hide</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> horizontal: (boolean) <a href="windows.html#%3Ahorizontal">:horizontal</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> keepalt: (boolean) <a href="editing.html#%3Akeepalt">:keepalt</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> keepjumps: (boolean) <a href="motion.html#%3Akeepjumps">:keepjumps</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> keepmarks: (boolean) <a href="motion.html#%3Akeepmarks">:keepmarks</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> keeppatterns: (boolean) <a href="cmdline.html#%3Akeeppatterns">:keeppatterns</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> lockmarks: (boolean) <a href="motion.html#%3Alockmarks">:lockmarks</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> noswapfile: (boolean) <a href="recover.html#%3Anoswapfile">:noswapfile</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> tab: (integer) <a href="tabpage.html#%3Atab">:tab</a>. -1 when omitted.
+</div><div class="help-li" style="margin-left: 3rem;"> verbose: (integer) <a href="various.html#%3Averbose">:verbose</a>. -1 when omitted.
+</div><div class="help-li" style="margin-left: 3rem;"> vertical: (boolean) <a href="windows.html#%3Avertical">:vertical</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> split: (string) Split modifier string, is an empty string when
+            there's no split modifier. If there is a split modifier it can be
+            one of:
+</div><div class="help-li" style="margin-left: 4rem;"> "aboveleft": <a href="windows.html#%3Aaboveleft">:aboveleft</a>.
+</div><div class="help-li" style="margin-left: 4rem;"> "belowright": <a href="windows.html#%3Abelowright">:belowright</a>.
+</div><div class="help-li" style="margin-left: 4rem;"> "topleft": <a href="windows.html#%3Atopleft">:topleft</a>.
+</div><div class="help-li" style="margin-left: 4rem;"> "botright": <a href="windows.html#%3Abotright">:botright</a>.
+</div>
+</div>
+<div class="help-para">
 <h2 id="_extmark-functions" class="help-heading">Extmark Functions<span class="help-heading-tags">                                                <span id="api-extmark" class="help-tag"><a href="#api-extmark">api-extmark</a></span></h2>
 
 
@@ -4473,6 +4658,762 @@ nvim__ns_set(<code>{ns_id}</code>, <code>{opts}</code>)                         
 </div>
 </div>
 <div class="help-para">
+<h2 id="_options-functions" class="help-heading">Options Functions<span class="help-heading-tags">                                                <span id="api-options" class="help-tag"><a href="#api-options">api-options</a></span></h2>
+
+
+</div>
+<div class="help-para">
+nvim_get_all_options_info()                      <span id="nvim_get_all_options_info()" class="help-tag-right"><a href="#nvim_get_all_options_info()">nvim_get_all_options_info()</a></span><br>
+    Gets the option information for all options.
+
+</div>
+<div class="help-para">
+    The dict has the full option names as keys and option metadata dicts as
+    detailed at <a href="api.html#nvim_get_option_info2()">nvim_get_option_info2()</a>.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.5.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>table&lt;string,any&gt;</code>) dict of all options
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">See also:</div>
+<div class="help-li" style=""> <a href="api.html#nvim_get_commands()">nvim_get_commands()</a>
+</div>
+</div>
+<div class="help-para">
+nvim_get_option_info2(<code>{name}</code>, <code>{opts}</code>)                <span id="nvim_get_option_info2()" class="help-tag-right"><a href="#nvim_get_option_info2()">nvim_get_option_info2()</a></span><br>
+    Gets the option information for one option from arbitrary buffer or window
+
+</div>
+<div class="help-para">
+    Resulting dict has keys:
+<div class="help-li" style=""> name: Name of the option (like <a href="options.html#'filetype'">'filetype'</a>)
+</div><div class="help-li" style=""> shortname: Shortened name of the option (like <a href="options.html#'ft'">'ft'</a>)
+</div><div class="help-li" style=""> type: type of option ("string", "number" or "boolean")
+</div><div class="help-li" style=""> default: The default value for the option
+</div><div class="help-li" style=""> was_set: Whether the option was set.
+</div><div class="help-li" style=""> last_set_sid: Last set script id (if any)
+</div><div class="help-li" style=""> last_set_linenr: line number where option was set
+</div><div class="help-li" style=""> last_set_chan: Channel where option was set (0 for local)
+</div><div class="help-li" style=""> scope: one of "global", "win", or "buf"
+</div><div class="help-li" style=""> global_local: whether win or buf option has a global value
+</div><div class="help-li" style=""> commalist: List of comma separated values
+</div><div class="help-li" style=""> flaglist: List of single char flags
+</div>
+</div>
+<div class="help-para">
+    When <code>{scope}</code> is not provided, the last set information applies to the
+    local value in the current buffer or window if it is available, otherwise
+    the global value information is returned. This behavior can be disabled by
+    explicitly specifying <code>{scope}</code> in the <code>{opts}</code> table.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.9.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) Option name
+</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.option</code>) Optional parameters
+</div><div class="help-li" style="margin-left: 3rem;"> scope: One of "global" or "local". Analogous to <a href="options.html#%3Asetglobal">:setglobal</a>
+                  and <a href="options.html#%3Asetlocal">:setlocal</a>, respectively.
+</div><div class="help-li" style="margin-left: 3rem;"> win: <a href="windows.html#window-ID">window-ID</a>. Used for getting window local options.
+</div><div class="help-li" style="margin-left: 3rem;"> buf: Buffer number. Used for getting buffer local options.
+                  Implies <code>{scope}</code> is "local".
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>vim.api.keyset.get_option_info</code>) Option Information
+
+</div>
+<div class="help-para">
+nvim_get_option_value(<code>{name}</code>, <code>{opts}</code>)                <span id="nvim_get_option_value()" class="help-tag-right"><a href="#nvim_get_option_value()">nvim_get_option_value()</a></span><br>
+    Gets the value of an option. The behavior of this function matches that of
+    <a href="options.html#%3Aset">:set</a>: the local value of an option is returned if it exists; otherwise,
+    the global value is returned. Local values always correspond to the
+    current buffer or window, unless "buf" or "win" is set in <code>{opts}</code>.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.7.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) Option name
+</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.option</code>) Optional parameters
+</div><div class="help-li" style="margin-left: 3rem;"> scope: One of "global" or "local". Analogous to <a href="options.html#%3Asetglobal">:setglobal</a>
+                  and <a href="options.html#%3Asetlocal">:setlocal</a>, respectively.
+</div><div class="help-li" style="margin-left: 3rem;"> win: <a href="windows.html#window-ID">window-ID</a>. Used for getting window local options.
+</div><div class="help-li" style="margin-left: 3rem;"> buf: Buffer number. Used for getting buffer local options.
+                  Implies <code>{scope}</code> is "local".
+</div><div class="help-li" style="margin-left: 3rem;"> filetype: <a href="filetype.html#filetype">filetype</a>. Used to get the default option for a
+                  specific filetype. Cannot be used with any other option.
+<b>                  Note:</b> this will trigger <a href="usr_41.html#ftplugin">ftplugin</a> and all <a href="autocmd.html#FileType">FileType</a>
+                  autocommands for the corresponding filetype.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>any</code>) Option value
+
+</div>
+<div class="help-para">
+                                                     <span id="nvim_set_option_value()" class="help-tag-right"><a href="#nvim_set_option_value()">nvim_set_option_value()</a></span><br>
+nvim_set_option_value(<code>{name}</code>, <code>{value}</code>, <code>{opts}</code>)
+    Sets the value of an option. The behavior of this function matches that of
+    <a href="options.html#%3Aset">:set</a>: for global-local options, both the global and local value are set
+    unless otherwise specified with <code>{scope}</code>.
+
+</div>
+<div class="help-para">
+    Note the options <code>{win}</code> and <code>{buf}</code> cannot be used together.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.7.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{name}</code>   (<code>string</code>) Option name
+</div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>) New option value
+</div><div class="help-li" style=""> <code>{opts}</code>   (<code>vim.api.keyset.option</code>) Optional parameters
+</div><div class="help-li" style="margin-left: 3rem;"> scope: One of "global" or "local". Analogous to
+                   <a href="options.html#%3Asetglobal">:setglobal</a> and <a href="options.html#%3Asetlocal">:setlocal</a>, respectively.
+</div><div class="help-li" style="margin-left: 3rem;"> win: <a href="windows.html#window-ID">window-ID</a>. Used for setting window local option.
+</div><div class="help-li" style="margin-left: 3rem;"> buf: Buffer number. Used for setting buffer local option.
+</div>
+</div>
+<div class="help-para">
+<h2 id="_tabpage-functions" class="help-heading">Tabpage Functions<span class="help-heading-tags">                                                <span id="api-tabpage" class="help-tag"><a href="#api-tabpage">api-tabpage</a></span></h2>
+
+
+</div>
+<div class="help-para">
+nvim_tabpage_del_var(<code>{tabpage}</code>, <code>{name}</code>)               <span id="nvim_tabpage_del_var()" class="help-tag-right"><a href="#nvim_tabpage_del_var()">nvim_tabpage_del_var()</a></span><br>
+    Removes a tab-scoped (t:) variable
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
+</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Variable name
+</div>
+</div>
+<div class="help-para">
+nvim_tabpage_get_number(<code>{tabpage}</code>)                 <span id="nvim_tabpage_get_number()" class="help-tag-right"><a href="#nvim_tabpage_get_number()">nvim_tabpage_get_number()</a></span><br>
+    Gets the tabpage number
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>integer</code>) Tabpage number
+
+</div>
+<div class="help-para">
+nvim_tabpage_get_var(<code>{tabpage}</code>, <code>{name}</code>)               <span id="nvim_tabpage_get_var()" class="help-tag-right"><a href="#nvim_tabpage_get_var()">nvim_tabpage_get_var()</a></span><br>
+    Gets a tab-scoped (t:) variable
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
+</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Variable name
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>any</code>) Variable value
+
+</div>
+<div class="help-para">
+nvim_tabpage_get_win(<code>{tabpage}</code>)                       <span id="nvim_tabpage_get_win()" class="help-tag-right"><a href="#nvim_tabpage_get_win()">nvim_tabpage_get_win()</a></span><br>
+    Gets the current window in a tabpage
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>
+
+</div>
+<div class="help-para">
+nvim_tabpage_is_valid(<code>{tabpage}</code>)                     <span id="nvim_tabpage_is_valid()" class="help-tag-right"><a href="#nvim_tabpage_is_valid()">nvim_tabpage_is_valid()</a></span><br>
+    Checks if a tabpage is valid
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>boolean</code>) true if the tabpage is valid, false otherwise
+
+</div>
+<div class="help-para">
+nvim_tabpage_list_wins(<code>{tabpage}</code>)                   <span id="nvim_tabpage_list_wins()" class="help-tag-right"><a href="#nvim_tabpage_list_wins()">nvim_tabpage_list_wins()</a></span><br>
+    Gets the windows in a tabpage
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>integer[]</code>) List of windows in <code>tabpage</code>
+
+</div>
+<div class="help-para">
+                                                      <span id="nvim_tabpage_set_var()" class="help-tag-right"><a href="#nvim_tabpage_set_var()">nvim_tabpage_set_var()</a></span><br>
+nvim_tabpage_set_var(<code>{tabpage}</code>, <code>{name}</code>, <code>{value}</code>)
+    Sets a tab-scoped (t:) variable
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
+</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Variable name
+</div><div class="help-li" style=""> <code>{value}</code>    (<code>any</code>) Variable value
+</div>
+</div>
+<div class="help-para">
+nvim_tabpage_set_win(<code>{tabpage}</code>, <code>{win}</code>)                <span id="nvim_tabpage_set_win()" class="help-tag-right"><a href="#nvim_tabpage_set_win()">nvim_tabpage_set_win()</a></span><br>
+    Sets the current window in a tabpage
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.10.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
+</div><div class="help-li" style=""> <code>{win}</code>      (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>, must already belong to <code>{tabpage}</code>
+</div>
+</div>
+<div class="help-para">
+<h2 id="_ui-functions" class="help-heading">UI Functions<span class="help-heading-tags">                                                          <span id="api-ui" class="help-tag"><a href="#api-ui">api-ui</a></span></h2>
+
+
+</div>
+<div class="help-para">
+nvim_ui_attach(<code>{width}</code>, <code>{height}</code>, <code>{options}</code>)                <span id="nvim_ui_attach()" class="help-tag-right"><a href="#nvim_ui_attach()">nvim_ui_attach()</a></span><br>
+    Activates UI events on the channel.
+
+</div>
+<div class="help-para">
+    Entry point of all UI clients. Allows <a href="starting.html#--embed">--embed</a> to continue startup.
+    Implies that the client is ready to show the UI. Adds the client to the
+    list of UIs. <a href="api.html#nvim_list_uis()">nvim_list_uis()</a>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading"><b>    Note:</b></div>
+<div class="help-li" style=""> If multiple UI clients are attached, the global screen dimensions
+        degrade to the smallest client. E.g. if client A requests 80x40 but
+        client B requests 200x100, the global screen has size 80x40.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{width}</code>    (<code>integer</code>) Requested screen columns
+</div><div class="help-li" style=""> <code>{height}</code>   (<code>integer</code>) Requested screen rows
+</div><div class="help-li" style=""> <code>{options}</code>  (<code>table&lt;string,any&gt;</code>) <a href="api-ui-events.html#ui-option">ui-option</a> map
+</div>
+</div>
+<div class="help-para">
+nvim_ui_detach()                                            <span id="nvim_ui_detach()" class="help-tag-right"><a href="#nvim_ui_detach()">nvim_ui_detach()</a></span><br>
+    Deactivates UI events on the channel.
+
+</div>
+<div class="help-para">
+    Removes the client from the list of UIs. <a href="api.html#nvim_list_uis()">nvim_list_uis()</a>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+                                                    <span id="nvim_ui_pum_set_bounds()" class="help-tag-right"><a href="#nvim_ui_pum_set_bounds()">nvim_ui_pum_set_bounds()</a></span><br>
+nvim_ui_pum_set_bounds(<code>{width}</code>, <code>{height}</code>, <code>{row}</code>, <code>{col}</code>)
+    Tells Nvim the geometry of the popupmenu, to align floating windows with
+    an external popup menu.
+
+</div>
+<div class="help-para">
+    Note that this method is not to be confused with
+    <a href="api.html#nvim_ui_pum_set_height()">nvim_ui_pum_set_height()</a>, which sets the number of visible items in the
+    popup menu, while this function sets the bounding box of the popup menu,
+    including visual elements such as borders and sliders. Floats need not use
+    the same font size, nor be anchored to exact grid corners, so one can set
+    floating-point numbers to the popup menu geometry.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.5.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{width}</code>   (<code>number</code>) Popupmenu width.
+</div><div class="help-li" style=""> <code>{height}</code>  (<code>number</code>) Popupmenu height.
+</div><div class="help-li" style=""> <code>{row}</code>     (<code>number</code>) Popupmenu row.
+</div><div class="help-li" style=""> <code>{col}</code>     (<code>number</code>) Popupmenu height.
+</div>
+</div>
+<div class="help-para">
+nvim_ui_pum_set_height(<code>{height}</code>)                    <span id="nvim_ui_pum_set_height()" class="help-tag-right"><a href="#nvim_ui_pum_set_height()">nvim_ui_pum_set_height()</a></span><br>
+    Tells Nvim the number of elements displaying in the popupmenu, to decide
+    <code>&lt;PageUp&gt;</code> and <code>&lt;PageDown&gt;</code> movement.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.4.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{height}</code>  (<code>integer</code>) Popupmenu height, must be greater than zero.
+</div>
+</div>
+<div class="help-para">
+nvim_ui_set_focus(<code>{gained}</code>)                              <span id="nvim_ui_set_focus()" class="help-tag-right"><a href="#nvim_ui_set_focus()">nvim_ui_set_focus()</a></span><br>
+    Tells the nvim server if focus was gained or lost by the GUI
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.9.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{gained}</code>  (<code>boolean</code>)
+</div>
+</div>
+<div class="help-para">
+nvim_ui_set_option(<code>{name}</code>, <code>{value}</code>)                     <span id="nvim_ui_set_option()" class="help-tag-right"><a href="#nvim_ui_set_option()">nvim_ui_set_option()</a></span><br>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{name}</code>   (<code>string</code>)
+</div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>)
+</div>
+</div>
+<div class="help-para">
+nvim_ui_term_event(<code>{event}</code>, <code>{value}</code>)                    <span id="nvim_ui_term_event()" class="help-tag-right"><a href="#nvim_ui_term_event()">nvim_ui_term_event()</a></span><br>
+    Tells Nvim when a terminal event has occurred
+
+</div>
+<div class="help-para">
+    The following terminal events are supported:
+<div class="help-li" style=""> "termresponse": The terminal sent a DA1, OSC, DCS, or APC response
+      sequence to Nvim. The payload is the received response. Sets
+      <a href="vvars.html#v%3Atermresponse">v:termresponse</a> and fires <a href="autocmd.html#TermResponse">TermResponse</a>.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.10.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{event}</code>  (<code>string</code>) Event name
+</div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>) Event payload
+</div>
+</div>
+<div class="help-para">
+nvim_ui_try_resize(<code>{width}</code>, <code>{height}</code>)                   <span id="nvim_ui_try_resize()" class="help-tag-right"><a href="#nvim_ui_try_resize()">nvim_ui_try_resize()</a></span><br>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.1.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{width}</code>   (<code>integer</code>)
+</div><div class="help-li" style=""> <code>{height}</code>  (<code>integer</code>)
+</div>
+</div>
+<div class="help-para">
+                                                   <span id="nvim_ui_try_resize_grid()" class="help-tag-right"><a href="#nvim_ui_try_resize_grid()">nvim_ui_try_resize_grid()</a></span><br>
+nvim_ui_try_resize_grid(<code>{grid}</code>, <code>{width}</code>, <code>{height}</code>)
+    Tell Nvim to resize a grid. Triggers a grid_resize event with the
+    requested grid size or the maximum size if it exceeds size limits.
+
+</div>
+<div class="help-para">
+    On invalid grid handle, fails with error.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.4.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{grid}</code>    (<code>integer</code>) The handle of the grid to be changed.
+</div><div class="help-li" style=""> <code>{width}</code>   (<code>integer</code>) The new requested width.
+</div><div class="help-li" style=""> <code>{height}</code>  (<code>integer</code>) The new requested height.
+</div>
+</div>
+<div class="help-para">
+<h2 id="_win_config-functions" class="help-heading">Win_config Functions<span class="help-heading-tags">                                          <span id="api-win_config" class="help-tag"><a href="#api-win_config">api-win_config</a></span></h2>
+
+
+</div>
+<div class="help-para">
+nvim_open_win(<code>{buffer}</code>, <code>{enter}</code>, <code>{config}</code>)                   <span id="nvim_open_win()" class="help-tag-right"><a href="#nvim_open_win()">nvim_open_win()</a></span><br>
+    Opens a new split window, or a floating window if <code>relative</code> is specified,
+    or an external window (managed by the UI) if <code>external</code> is specified.
+
+</div>
+<div class="help-para">
+    Floats are windows that are drawn above the split layout, at some anchor
+    position in some other window. Floats can be drawn internally or by
+    external GUI with the <a href="api-ui-events.html#ui-multigrid">ui-multigrid</a> extension. External windows are only
+    supported with multigrid GUIs, and are displayed as separate top-level
+    windows.
+
+</div>
+<div class="help-para">
+    For a general overview of floats, see <a href="api.html#api-floatwin">api-floatwin</a>.
+
+</div>
+<div class="help-para">
+    The <code>width</code> and <code>height</code> of the new window must be specified when opening
+    a floating window, but are optional for normal windows.
+
+</div>
+<div class="help-para">
+    If <code>relative</code> and <code>external</code> are omitted, a normal "split" window is
+    created. The <code>win</code> property determines which window will be split. If no
+    <code>win</code> is provided or <code>win == 0</code>, a window will be created adjacent to the
+    current window. If -1 is provided, a top-level split will be created.
+    <code>vertical</code> and <code>split</code> are only valid for normal windows, and are used to
+    control split direction. For <code>vertical</code>, the exact direction is determined
+    by <a href="options.html#'splitright'">'splitright'</a> and <a href="options.html#'splitbelow'">'splitbelow'</a>. Split windows cannot have
+    <code>bufpos</code>/`row`/`col`/`border`/`title`/`footer` properties.
+
+</div>
+<div class="help-para">
+    With relative=editor (row=0,col=0) refers to the top-left corner of the
+    screen-grid and (row=Lines-1,col=Columns-1) refers to the bottom-right
+    corner. Fractional values are allowed, but the builtin implementation
+    (used by non-multigrid UIs) will always round down to nearest integer.
+
+</div>
+<div class="help-para">
+    Out-of-bounds values, and configurations that make the float not fit
+    inside the main editor, are allowed. The builtin implementation truncates
+    values so floats are fully within the main screen grid. External GUIs
+    could let floats hover outside of the main window like a tooltip, but this
+    should not be used to specify arbitrary WM screen positions.
+
+</div>
+<div class="help-para">
+    Example (Lua): window-relative float<pre><code class="language-lua">vim.api.nvim_open_win(0, false,
+  {relative='win', row=3, col=3, width=12, height=3})</code></pre>
+
+</div>
+<div class="help-para">
+    Example (Lua): buffer-relative float (travels as buffer is scrolled)<pre><code class="language-lua">vim.api.nvim_open_win(0, false,
+  {relative='win', width=12, height=3, bufpos={100,10}})</code></pre>
+
+</div>
+<div class="help-para">
+    Example (Lua): vertical split left of the current window<pre><code class="language-lua">vim.api.nvim_open_win(0, false, {
+  split = 'left',
+  win = 0
+})</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        not allowed when <a href="vimeval.html#textlock">textlock</a> is active
+        Since: 0.4.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{buffer}</code>  (<code>integer</code>) Buffer to display, or 0 for current buffer
+</div><div class="help-li" style=""> <code>{enter}</code>   (<code>boolean</code>) Enter the window (make it the current window)
+</div><div class="help-li" style=""> <code>{config}</code>  (<code>vim.api.keyset.win_config</code>) Map defining the window
+                  configuration. Keys:
+</div><div class="help-li" style="margin-left: 3rem;"> relative: Sets the window layout to "floating", placed at
+                    (row,col) coordinates relative to:
+</div><div class="help-li" style="margin-left: 4rem;"> "cursor" Cursor position in current window.
+</div><div class="help-li" style="margin-left: 4rem;"> "editor" The global editor grid.
+</div><div class="help-li" style="margin-left: 4rem;"> "laststatus" <a href="options.html#'laststatus'">'laststatus'</a> if present, or last row.
+</div><div class="help-li" style="margin-left: 4rem;"> "mouse" Mouse position.
+</div><div class="help-li" style="margin-left: 4rem;"> "tabline" Tabline if present, or first row.
+</div><div class="help-li" style="margin-left: 4rem;"> "win" Window given by the <code>win</code> field, or current
+                      window.
+</div><div class="help-li" style="margin-left: 3rem;"> win: <a href="windows.html#window-ID">window-ID</a> window to split, or relative window when
+                    creating a float (relative="win").
+</div><div class="help-li" style="margin-left: 3rem;"> anchor: Decides which corner of the float to place at
+                    (row,col):
+</div><div class="help-li" style="margin-left: 4rem;"> "NW" northwest (default)
+</div><div class="help-li" style="margin-left: 4rem;"> "NE" northeast
+</div><div class="help-li" style="margin-left: 4rem;"> "SW" southwest
+</div><div class="help-li" style="margin-left: 4rem;"> "SE" southeast
+</div><div class="help-li" style="margin-left: 3rem;"> width: Window width (in character cells). Minimum of 1.
+</div><div class="help-li" style="margin-left: 3rem;"> height: Window height (in character cells). Minimum of 1.
+</div><div class="help-li" style="margin-left: 3rem;"> bufpos: Places float relative to buffer text (only when
+                    relative="win"). Takes a tuple of zero-indexed
+                    <code>[line, column]</code>. <code>row</code> and <code>col</code> if given are applied
+                    relative to this position, else they default to:
+</div><div class="help-li" style="margin-left: 4rem;"> <code>row=1</code> and <code>col=0</code> if <code>anchor</code> is "NW" or "NE"
+</div><div class="help-li" style="margin-left: 4rem;"> <code>row=0</code> and <code>col=0</code> if <code>anchor</code> is "SW" or "SE" (thus
+                      like a tooltip near the buffer text).
+</div><div class="help-li" style="margin-left: 3rem;"> row: Row position in units of "screen cell height", may be
+                    fractional.
+</div><div class="help-li" style="margin-left: 3rem;"> col: Column position in units of screen cell width, may be
+                    fractional.
+</div><div class="help-li" style="margin-left: 3rem;"> focusable: Enable focus by user actions (wincmds, mouse
+                    events). Defaults to true. Non-focusable windows can be
+                    entered by <a href="api.html#nvim_set_current_win()">nvim_set_current_win()</a>, or, when the <code>mouse</code>
+                    field is set to true, by mouse events. See <a href="windows.html#focusable">focusable</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> mouse: Specify how this window interacts with mouse
+                    events. Defaults to <code>focusable</code> value.
+</div><div class="help-li" style="margin-left: 4rem;"> If false, mouse events pass through this window.
+</div><div class="help-li" style="margin-left: 4rem;"> If true, mouse events interact with this window
+                      normally.
+</div><div class="help-li" style="margin-left: 3rem;"> external: GUI should display the window as an external
+                    top-level window. Currently accepts no other positioning
+                    configuration together with this.
+</div><div class="help-li" style="margin-left: 3rem;"> zindex: Stacking order. floats with higher <code>zindex</code> go on
+                    top on floats with lower indices. Must be larger than
+                    zero. The following screen elements have hard-coded
+                    z-indices:
+</div><div class="help-li" style="margin-left: 4rem;"> 100: insert completion popupmenu
+</div><div class="help-li" style="margin-left: 4rem;"> 200: message scrollback
+</div><div class="help-li" style="margin-left: 4rem;"> 250: cmdline completion popupmenu (when
+                      wildoptions+=pum) The default value for floats are 50.
+                      In general, values below 100 are recommended, unless
+                      there is a good reason to overshadow builtin elements.
+</div><div class="help-li" style="margin-left: 3rem;"> style: (optional) Configure the appearance of the window.
+                    Currently only supports one value:
+</div><div class="help-li" style="margin-left: 4rem;"> "minimal" Nvim will display the window with many UI
+                      options disabled. This is useful when displaying a
+                      temporary float where the text should not be edited.
+                      Disables <a href="options.html#'number'">'number'</a>, <a href="options.html#'relativenumber'">'relativenumber'</a>, <a href="options.html#'cursorline'">'cursorline'</a>,
+                      <a href="options.html#'cursorcolumn'">'cursorcolumn'</a>, <a href="options.html#'foldcolumn'">'foldcolumn'</a>, <a href="options.html#'spell'">'spell'</a> and <a href="options.html#'list'">'list'</a>
+                      options. <a href="options.html#'signcolumn'">'signcolumn'</a> is changed to <code>auto</code> and
+                      <a href="options.html#'colorcolumn'">'colorcolumn'</a> is cleared. <a href="options.html#'statuscolumn'">'statuscolumn'</a> is changed to
+                      empty. The end-of-buffer region is hidden by setting
+                      <code>eob</code> flag of <a href="options.html#'fillchars'">'fillchars'</a> to a space char, and clearing
+                      the <a href="syntax.html#hl-EndOfBuffer">hl-EndOfBuffer</a> region in <a href="options.html#'winhighlight'">'winhighlight'</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> border: (<code>string|string[]</code>) (defaults to <a href="options.html#'winborder'">'winborder'</a>
+                    option) Window border. The string form accepts the same
+                    values as the <a href="options.html#'winborder'">'winborder'</a> option. The array form must have
+                    a length of eight or any divisor of eight, specifying the
+                    chars that form the border in a clockwise fashion starting
+                    from the top-left corner. For example, the double-box
+                    style can be specified as:<pre>[ "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" ].</pre>
+</div>
+</div>
+<div class="help-para">
+                    If fewer than eight chars are given, they will be
+                    repeated. An ASCII border could be specified as:<pre>[ "/", "-", \"\\\\\", "|" ],</pre>
+
+</div>
+<div class="help-para">
+                    Or one char for all sides:<pre>[ "x" ].</pre>
+
+</div>
+<div class="help-para">
+                    Empty string can be used to hide a specific border. This
+                    example will show only vertical borders, not horizontal:<pre>[ "", "", "", "&gt;", "", "", "", "&lt;" ]</pre>
+
+</div>
+<div class="help-para">
+                    By default, <a href="syntax.html#hl-FloatBorder">hl-FloatBorder</a> highlight is used, which
+                    links to <a href="syntax.html#hl-WinSeparator">hl-WinSeparator</a> when not defined. Each border
+                    side can specify an optional highlight:<pre>[ ["+", "MyCorner"], ["x", "MyBorder"] ].</pre>
+
+</div>
+<div class="help-para">
+<div class="help-li" style=""> title: (optional) Title in window border, string or list.
+                    List should consist of <code>[text, highlight]</code> tuples. If
+                    string, or a tuple lacks a highlight, the default
+                    highlight group is <code>FloatTitle</code>.
+</div><div class="help-li" style=""> title_pos: Title position. Must be set with <code>title</code>
+                    option. Value can be one of "left", "center", or "right".
+                    Default is <code>"left"</code>.
+</div><div class="help-li" style=""> footer: (optional) Footer in window border, string or
+                    list. List should consist of <code>[text, highlight]</code> tuples.
+                    If string, or a tuple lacks a highlight, the default
+                    highlight group is <code>FloatFooter</code>.
+</div><div class="help-li" style=""> footer_pos: Footer position. Must be set with <code>footer</code>
+                    option. Value can be one of "left", "center", or "right".
+                    Default is <code>"left"</code>.
+</div><div class="help-li" style=""> noautocmd: If true then all autocommands are blocked for
+                    the duration of the call.
+</div><div class="help-li" style=""> fixed: If true when anchor is NW or SW, the float window
+                    would be kept fixed even if the window would be truncated.
+</div><div class="help-li" style=""> hide: If true the floating window will be hidden and the
+                    cursor will be invisible when focused on it.
+</div><div class="help-li" style=""> vertical: Split vertically <a href="windows.html#%3Avertical">:vertical</a>.
+</div><div class="help-li" style=""> split: Split direction: "left", "right", "above", "below".
+</div><div class="help-li" style=""> _cmdline_offset: (EXPERIMENTAL) When provided, anchor the
+                    <a href="cmdline.html#cmdline-completion">cmdline-completion</a> popupmenu to this window, with an
+                    offset in screen cell width.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>, or 0 on error
+
+</div>
+<div class="help-para">
+nvim_win_get_config(<code>{window}</code>)                          <span id="nvim_win_get_config()" class="help-tag-right"><a href="#nvim_win_get_config()">nvim_win_get_config()</a></span><br>
+    Gets window configuration.
+
+</div>
+<div class="help-para">
+    The returned value may be given to <a href="api.html#nvim_open_win()">nvim_open_win()</a>.
+
+</div>
+<div class="help-para">
+    <code>relative</code> is empty for normal windows.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.4.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{window}</code>  (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>, or 0 for current window
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>vim.api.keyset.win_config</code>) Map defining the window configuration,
+        see <a href="api.html#nvim_open_win()">nvim_open_win()</a>
+
+</div>
+<div class="help-para">
+nvim_win_set_config(<code>{window}</code>, <code>{config}</code>)                <span id="nvim_win_set_config()" class="help-tag-right"><a href="#nvim_win_set_config()">nvim_win_set_config()</a></span><br>
+    Configures window layout. Cannot be used to move the last window in a
+    tabpage to a different one.
+
+</div>
+<div class="help-para">
+    When reconfiguring a window, absent option keys will not be changed.
+    <code>row</code>/`col` and <code>relative</code> must be reconfigured together.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.4.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{window}</code>  (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>, or 0 for current window
+</div><div class="help-li" style=""> <code>{config}</code>  (<code>vim.api.keyset.win_config</code>) Map defining the window
+                  configuration, see <a href="api.html#nvim_open_win()">nvim_open_win()</a>
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">See also:</div>
+<div class="help-li" style=""> <a href="api.html#nvim_open_win()">nvim_open_win()</a>
+</div>
+</div>
+<div class="help-para">
 <h2 id="_window-functions" class="help-heading">Window Functions<span class="help-heading-tags">                                                  <span id="api-window" class="help-tag"><a href="#api-window">api-window</a></span></h2>
 
 
@@ -4924,947 +5865,6 @@ nvim_win_text_height(<code>{window}</code>, <code>{opts}</code>)                
 <div class="help-li" style=""> <a href="vimfn.html#virtcol()">virtcol()</a> for text width.
 </div>
 </div>
-<div class="help-para">
-<h2 id="_win_config-functions" class="help-heading">Win_config Functions<span class="help-heading-tags">                                          <span id="api-win_config" class="help-tag"><a href="#api-win_config">api-win_config</a></span></h2>
-
-
-</div>
-<div class="help-para">
-nvim_open_win(<code>{buffer}</code>, <code>{enter}</code>, <code>{config}</code>)                   <span id="nvim_open_win()" class="help-tag-right"><a href="#nvim_open_win()">nvim_open_win()</a></span><br>
-    Opens a new split window, or a floating window if <code>relative</code> is specified,
-    or an external window (managed by the UI) if <code>external</code> is specified.
-
-</div>
-<div class="help-para">
-    Floats are windows that are drawn above the split layout, at some anchor
-    position in some other window. Floats can be drawn internally or by
-    external GUI with the <a href="api-ui-events.html#ui-multigrid">ui-multigrid</a> extension. External windows are only
-    supported with multigrid GUIs, and are displayed as separate top-level
-    windows.
-
-</div>
-<div class="help-para">
-    For a general overview of floats, see <a href="api.html#api-floatwin">api-floatwin</a>.
-
-</div>
-<div class="help-para">
-    The <code>width</code> and <code>height</code> of the new window must be specified when opening
-    a floating window, but are optional for normal windows.
-
-</div>
-<div class="help-para">
-    If <code>relative</code> and <code>external</code> are omitted, a normal "split" window is
-    created. The <code>win</code> property determines which window will be split. If no
-    <code>win</code> is provided or <code>win == 0</code>, a window will be created adjacent to the
-    current window. If -1 is provided, a top-level split will be created.
-    <code>vertical</code> and <code>split</code> are only valid for normal windows, and are used to
-    control split direction. For <code>vertical</code>, the exact direction is determined
-    by <a href="options.html#'splitright'">'splitright'</a> and <a href="options.html#'splitbelow'">'splitbelow'</a>. Split windows cannot have
-    <code>bufpos</code>/`row`/`col`/`border`/`title`/`footer` properties.
-
-</div>
-<div class="help-para">
-    With relative=editor (row=0,col=0) refers to the top-left corner of the
-    screen-grid and (row=Lines-1,col=Columns-1) refers to the bottom-right
-    corner. Fractional values are allowed, but the builtin implementation
-    (used by non-multigrid UIs) will always round down to nearest integer.
-
-</div>
-<div class="help-para">
-    Out-of-bounds values, and configurations that make the float not fit
-    inside the main editor, are allowed. The builtin implementation truncates
-    values so floats are fully within the main screen grid. External GUIs
-    could let floats hover outside of the main window like a tooltip, but this
-    should not be used to specify arbitrary WM screen positions.
-
-</div>
-<div class="help-para">
-    Example (Lua): window-relative float<pre><code class="language-lua">vim.api.nvim_open_win(0, false,
-  {relative='win', row=3, col=3, width=12, height=3})</code></pre>
-
-</div>
-<div class="help-para">
-    Example (Lua): buffer-relative float (travels as buffer is scrolled)<pre><code class="language-lua">vim.api.nvim_open_win(0, false,
-  {relative='win', width=12, height=3, bufpos={100,10}})</code></pre>
-
-</div>
-<div class="help-para">
-    Example (Lua): vertical split left of the current window<pre><code class="language-lua">vim.api.nvim_open_win(0, false, {
-  split = 'left',
-  win = 0
-})</code></pre>
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        not allowed when <a href="vimeval.html#textlock">textlock</a> is active
-        Since: 0.4.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{buffer}</code>  (<code>integer</code>) Buffer to display, or 0 for current buffer
-</div><div class="help-li" style=""> <code>{enter}</code>   (<code>boolean</code>) Enter the window (make it the current window)
-</div><div class="help-li" style=""> <code>{config}</code>  (<code>vim.api.keyset.win_config</code>) Map defining the window
-                  configuration. Keys:
-</div><div class="help-li" style="margin-left: 3rem;"> relative: Sets the window layout to "floating", placed at
-                    (row,col) coordinates relative to:
-</div><div class="help-li" style="margin-left: 4rem;"> "cursor" Cursor position in current window.
-</div><div class="help-li" style="margin-left: 4rem;"> "editor" The global editor grid.
-</div><div class="help-li" style="margin-left: 4rem;"> "laststatus" <a href="options.html#'laststatus'">'laststatus'</a> if present, or last row.
-</div><div class="help-li" style="margin-left: 4rem;"> "mouse" Mouse position.
-</div><div class="help-li" style="margin-left: 4rem;"> "tabline" Tabline if present, or first row.
-</div><div class="help-li" style="margin-left: 4rem;"> "win" Window given by the <code>win</code> field, or current
-                      window.
-</div><div class="help-li" style="margin-left: 3rem;"> win: <a href="windows.html#window-ID">window-ID</a> window to split, or relative window when
-                    creating a float (relative="win").
-</div><div class="help-li" style="margin-left: 3rem;"> anchor: Decides which corner of the float to place at
-                    (row,col):
-</div><div class="help-li" style="margin-left: 4rem;"> "NW" northwest (default)
-</div><div class="help-li" style="margin-left: 4rem;"> "NE" northeast
-</div><div class="help-li" style="margin-left: 4rem;"> "SW" southwest
-</div><div class="help-li" style="margin-left: 4rem;"> "SE" southeast
-</div><div class="help-li" style="margin-left: 3rem;"> width: Window width (in character cells). Minimum of 1.
-</div><div class="help-li" style="margin-left: 3rem;"> height: Window height (in character cells). Minimum of 1.
-</div><div class="help-li" style="margin-left: 3rem;"> bufpos: Places float relative to buffer text (only when
-                    relative="win"). Takes a tuple of zero-indexed
-                    <code>[line, column]</code>. <code>row</code> and <code>col</code> if given are applied
-                    relative to this position, else they default to:
-</div><div class="help-li" style="margin-left: 4rem;"> <code>row=1</code> and <code>col=0</code> if <code>anchor</code> is "NW" or "NE"
-</div><div class="help-li" style="margin-left: 4rem;"> <code>row=0</code> and <code>col=0</code> if <code>anchor</code> is "SW" or "SE" (thus
-                      like a tooltip near the buffer text).
-</div><div class="help-li" style="margin-left: 3rem;"> row: Row position in units of "screen cell height", may be
-                    fractional.
-</div><div class="help-li" style="margin-left: 3rem;"> col: Column position in units of screen cell width, may be
-                    fractional.
-</div><div class="help-li" style="margin-left: 3rem;"> focusable: Enable focus by user actions (wincmds, mouse
-                    events). Defaults to true. Non-focusable windows can be
-                    entered by <a href="api.html#nvim_set_current_win()">nvim_set_current_win()</a>, or, when the <code>mouse</code>
-                    field is set to true, by mouse events. See <a href="windows.html#focusable">focusable</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> mouse: Specify how this window interacts with mouse
-                    events. Defaults to <code>focusable</code> value.
-</div><div class="help-li" style="margin-left: 4rem;"> If false, mouse events pass through this window.
-</div><div class="help-li" style="margin-left: 4rem;"> If true, mouse events interact with this window
-                      normally.
-</div><div class="help-li" style="margin-left: 3rem;"> external: GUI should display the window as an external
-                    top-level window. Currently accepts no other positioning
-                    configuration together with this.
-</div><div class="help-li" style="margin-left: 3rem;"> zindex: Stacking order. floats with higher <code>zindex</code> go on
-                    top on floats with lower indices. Must be larger than
-                    zero. The following screen elements have hard-coded
-                    z-indices:
-</div><div class="help-li" style="margin-left: 4rem;"> 100: insert completion popupmenu
-</div><div class="help-li" style="margin-left: 4rem;"> 200: message scrollback
-</div><div class="help-li" style="margin-left: 4rem;"> 250: cmdline completion popupmenu (when
-                      wildoptions+=pum) The default value for floats are 50.
-                      In general, values below 100 are recommended, unless
-                      there is a good reason to overshadow builtin elements.
-</div><div class="help-li" style="margin-left: 3rem;"> style: (optional) Configure the appearance of the window.
-                    Currently only supports one value:
-</div><div class="help-li" style="margin-left: 4rem;"> "minimal" Nvim will display the window with many UI
-                      options disabled. This is useful when displaying a
-                      temporary float where the text should not be edited.
-                      Disables <a href="options.html#'number'">'number'</a>, <a href="options.html#'relativenumber'">'relativenumber'</a>, <a href="options.html#'cursorline'">'cursorline'</a>,
-                      <a href="options.html#'cursorcolumn'">'cursorcolumn'</a>, <a href="options.html#'foldcolumn'">'foldcolumn'</a>, <a href="options.html#'spell'">'spell'</a> and <a href="options.html#'list'">'list'</a>
-                      options. <a href="options.html#'signcolumn'">'signcolumn'</a> is changed to <code>auto</code> and
-                      <a href="options.html#'colorcolumn'">'colorcolumn'</a> is cleared. <a href="options.html#'statuscolumn'">'statuscolumn'</a> is changed to
-                      empty. The end-of-buffer region is hidden by setting
-                      <code>eob</code> flag of <a href="options.html#'fillchars'">'fillchars'</a> to a space char, and clearing
-                      the <a href="syntax.html#hl-EndOfBuffer">hl-EndOfBuffer</a> region in <a href="options.html#'winhighlight'">'winhighlight'</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> border: (<code>string|string[]</code>) (defaults to <a href="options.html#'winborder'">'winborder'</a>
-                    option) Window border. The string form accepts the same
-                    values as the <a href="options.html#'winborder'">'winborder'</a> option. The array form must have
-                    a length of eight or any divisor of eight, specifying the
-                    chars that form the border in a clockwise fashion starting
-                    from the top-left corner. For example, the double-box
-                    style can be specified as:<pre>[ "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" ].</pre>
-</div>
-</div>
-<div class="help-para">
-                    If fewer than eight chars are given, they will be
-                    repeated. An ASCII border could be specified as:<pre>[ "/", "-", \"\\\\\", "|" ],</pre>
-
-</div>
-<div class="help-para">
-                    Or one char for all sides:<pre>[ "x" ].</pre>
-
-</div>
-<div class="help-para">
-                    Empty string can be used to hide a specific border. This
-                    example will show only vertical borders, not horizontal:<pre>[ "", "", "", "&gt;", "", "", "", "&lt;" ]</pre>
-
-</div>
-<div class="help-para">
-                    By default, <a href="syntax.html#hl-FloatBorder">hl-FloatBorder</a> highlight is used, which
-                    links to <a href="syntax.html#hl-WinSeparator">hl-WinSeparator</a> when not defined. Each border
-                    side can specify an optional highlight:<pre>[ ["+", "MyCorner"], ["x", "MyBorder"] ].</pre>
-
-</div>
-<div class="help-para">
-<div class="help-li" style=""> title: (optional) Title in window border, string or list.
-                    List should consist of <code>[text, highlight]</code> tuples. If
-                    string, or a tuple lacks a highlight, the default
-                    highlight group is <code>FloatTitle</code>.
-</div><div class="help-li" style=""> title_pos: Title position. Must be set with <code>title</code>
-                    option. Value can be one of "left", "center", or "right".
-                    Default is <code>"left"</code>.
-</div><div class="help-li" style=""> footer: (optional) Footer in window border, string or
-                    list. List should consist of <code>[text, highlight]</code> tuples.
-                    If string, or a tuple lacks a highlight, the default
-                    highlight group is <code>FloatFooter</code>.
-</div><div class="help-li" style=""> footer_pos: Footer position. Must be set with <code>footer</code>
-                    option. Value can be one of "left", "center", or "right".
-                    Default is <code>"left"</code>.
-</div><div class="help-li" style=""> noautocmd: If true then all autocommands are blocked for
-                    the duration of the call.
-</div><div class="help-li" style=""> fixed: If true when anchor is NW or SW, the float window
-                    would be kept fixed even if the window would be truncated.
-</div><div class="help-li" style=""> hide: If true the floating window will be hidden and the
-                    cursor will be invisible when focused on it.
-</div><div class="help-li" style=""> vertical: Split vertically <a href="windows.html#%3Avertical">:vertical</a>.
-</div><div class="help-li" style=""> split: Split direction: "left", "right", "above", "below".
-</div><div class="help-li" style=""> _cmdline_offset: (EXPERIMENTAL) When provided, anchor the
-                    <a href="cmdline.html#cmdline-completion">cmdline-completion</a> popupmenu to this window, with an
-                    offset in screen cell width.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>, or 0 on error
-
-</div>
-<div class="help-para">
-nvim_win_get_config(<code>{window}</code>)                          <span id="nvim_win_get_config()" class="help-tag-right"><a href="#nvim_win_get_config()">nvim_win_get_config()</a></span><br>
-    Gets window configuration.
-
-</div>
-<div class="help-para">
-    The returned value may be given to <a href="api.html#nvim_open_win()">nvim_open_win()</a>.
-
-</div>
-<div class="help-para">
-    <code>relative</code> is empty for normal windows.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.4.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{window}</code>  (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>, or 0 for current window
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>vim.api.keyset.win_config</code>) Map defining the window configuration,
-        see <a href="api.html#nvim_open_win()">nvim_open_win()</a>
-
-</div>
-<div class="help-para">
-nvim_win_set_config(<code>{window}</code>, <code>{config}</code>)                <span id="nvim_win_set_config()" class="help-tag-right"><a href="#nvim_win_set_config()">nvim_win_set_config()</a></span><br>
-    Configures window layout. Cannot be used to move the last window in a
-    tabpage to a different one.
-
-</div>
-<div class="help-para">
-    When reconfiguring a window, absent option keys will not be changed.
-    <code>row</code>/`col` and <code>relative</code> must be reconfigured together.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.4.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{window}</code>  (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>, or 0 for current window
-</div><div class="help-li" style=""> <code>{config}</code>  (<code>vim.api.keyset.win_config</code>) Map defining the window
-                  configuration, see <a href="api.html#nvim_open_win()">nvim_open_win()</a>
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="api.html#nvim_open_win()">nvim_open_win()</a>
-</div>
-</div>
-<div class="help-para">
-<h2 id="_tabpage-functions" class="help-heading">Tabpage Functions<span class="help-heading-tags">                                                <span id="api-tabpage" class="help-tag"><a href="#api-tabpage">api-tabpage</a></span></h2>
-
-
-</div>
-<div class="help-para">
-nvim_tabpage_del_var(<code>{tabpage}</code>, <code>{name}</code>)               <span id="nvim_tabpage_del_var()" class="help-tag-right"><a href="#nvim_tabpage_del_var()">nvim_tabpage_del_var()</a></span><br>
-    Removes a tab-scoped (t:) variable
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
-</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Variable name
-</div>
-</div>
-<div class="help-para">
-nvim_tabpage_get_number(<code>{tabpage}</code>)                 <span id="nvim_tabpage_get_number()" class="help-tag-right"><a href="#nvim_tabpage_get_number()">nvim_tabpage_get_number()</a></span><br>
-    Gets the tabpage number
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>integer</code>) Tabpage number
-
-</div>
-<div class="help-para">
-nvim_tabpage_get_var(<code>{tabpage}</code>, <code>{name}</code>)               <span id="nvim_tabpage_get_var()" class="help-tag-right"><a href="#nvim_tabpage_get_var()">nvim_tabpage_get_var()</a></span><br>
-    Gets a tab-scoped (t:) variable
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
-</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Variable name
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>any</code>) Variable value
-
-</div>
-<div class="help-para">
-nvim_tabpage_get_win(<code>{tabpage}</code>)                       <span id="nvim_tabpage_get_win()" class="help-tag-right"><a href="#nvim_tabpage_get_win()">nvim_tabpage_get_win()</a></span><br>
-    Gets the current window in a tabpage
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>
-
-</div>
-<div class="help-para">
-nvim_tabpage_is_valid(<code>{tabpage}</code>)                     <span id="nvim_tabpage_is_valid()" class="help-tag-right"><a href="#nvim_tabpage_is_valid()">nvim_tabpage_is_valid()</a></span><br>
-    Checks if a tabpage is valid
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>boolean</code>) true if the tabpage is valid, false otherwise
-
-</div>
-<div class="help-para">
-nvim_tabpage_list_wins(<code>{tabpage}</code>)                   <span id="nvim_tabpage_list_wins()" class="help-tag-right"><a href="#nvim_tabpage_list_wins()">nvim_tabpage_list_wins()</a></span><br>
-    Gets the windows in a tabpage
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>integer[]</code>) List of windows in <code>tabpage</code>
-
-</div>
-<div class="help-para">
-                                                      <span id="nvim_tabpage_set_var()" class="help-tag-right"><a href="#nvim_tabpage_set_var()">nvim_tabpage_set_var()</a></span><br>
-nvim_tabpage_set_var(<code>{tabpage}</code>, <code>{name}</code>, <code>{value}</code>)
-    Sets a tab-scoped (t:) variable
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
-</div><div class="help-li" style=""> <code>{name}</code>     (<code>string</code>) Variable name
-</div><div class="help-li" style=""> <code>{value}</code>    (<code>any</code>) Variable value
-</div>
-</div>
-<div class="help-para">
-nvim_tabpage_set_win(<code>{tabpage}</code>, <code>{win}</code>)                <span id="nvim_tabpage_set_win()" class="help-tag-right"><a href="#nvim_tabpage_set_win()">nvim_tabpage_set_win()</a></span><br>
-    Sets the current window in a tabpage
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.10.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{tabpage}</code>  (<code>integer</code>) <a href="tabpage.html#tab-ID">tab-ID</a>, or 0 for current tabpage
-</div><div class="help-li" style=""> <code>{win}</code>      (<code>integer</code>) <a href="windows.html#window-ID">window-ID</a>, must already belong to <code>{tabpage}</code>
-</div>
-</div>
-<div class="help-para">
-<h2 id="_autocmd-functions" class="help-heading">Autocmd Functions<span class="help-heading-tags">                                                <span id="api-autocmd" class="help-tag"><a href="#api-autocmd">api-autocmd</a></span></h2>
-
-
-</div>
-<div class="help-para">
-nvim_clear_autocmds(<code>{opts}</code>)                            <span id="nvim_clear_autocmds()" class="help-tag-right"><a href="#nvim_clear_autocmds()">nvim_clear_autocmds()</a></span><br>
-    Clears all autocommands selected by <code>{opts}</code>. To delete autocmds see
-    <a href="api.html#nvim_del_autocmd()">nvim_del_autocmd()</a>.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.clear_autocmds</code>) Parameters
-</div><div class="help-li" style="margin-left: 3rem;"> event: (vim.api.keyset.events|vim.api.keyset.events[])
-                  Examples:
-</div><div class="help-li" style="margin-left: 4rem;"> event: "pat1"
-</div><div class="help-li" style="margin-left: 4rem;"> event: { "pat1" }
-</div><div class="help-li" style="margin-left: 4rem;"> event: { "pat1", "pat2", "pat3" }
-</div><div class="help-li" style="margin-left: 3rem;"> pattern: (string|table)
-</div><div class="help-li" style="margin-left: 4rem;"> pattern or patterns to match exactly.
-</div><div class="help-li" style="margin-left: 6rem;"> For example, if you have <code>*.py</code> as that pattern for the
-                      autocmd, you must pass <code>*.py</code> exactly to clear it.
-                      <code>test.py</code> will not match the pattern.
-</div><div class="help-li" style="margin-left: 4rem;"> defaults to clearing all patterns.
-</div><div class="help-li" style="margin-left: 4rem;"><b> NOTE:</b> Cannot be used with <code>{buffer}</code>
-</div><div class="help-li" style="margin-left: 3rem;"> buffer: (bufnr)
-</div><div class="help-li" style="margin-left: 4rem;"> clear only <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a> autocommands.
-</div><div class="help-li" style="margin-left: 4rem;"><b> NOTE:</b> Cannot be used with <code>{pattern}</code>
-</div><div class="help-li" style="margin-left: 3rem;"> group: (string|int) The augroup name or id.
-</div><div class="help-li" style="margin-left: 4rem;"><b> NOTE:</b> If not passed, will only delete autocmds not in any
-                    group.
-</div>
-</div>
-<div class="help-para">
-nvim_create_augroup(<code>{name}</code>, <code>{opts}</code>)                    <span id="nvim_create_augroup()" class="help-tag-right"><a href="#nvim_create_augroup()">nvim_create_augroup()</a></span><br>
-    Create or get an autocommand group <a href="autocmd.html#autocmd-groups">autocmd-groups</a>.
-
-</div>
-<div class="help-para">
-    To get an existing group id, do:<pre><code class="language-lua">local id = vim.api.nvim_create_augroup('my.lsp.config', {
-    clear = false
-})</code></pre>
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) String: The name of the group
-</div><div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.create_augroup</code>) Dict Parameters
-</div><div class="help-li" style="margin-left: 3rem;"> clear (bool) optional: defaults to true. Clear existing
-                  commands if the group already exists <a href="autocmd.html#autocmd-groups">autocmd-groups</a>.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>integer</code>) Integer id of the created group.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="autocmd.html#autocmd-groups">autocmd-groups</a>
-</div>
-</div>
-<div class="help-para">
-nvim_create_autocmd(<code>{event}</code>, <code>{opts}</code>)                   <span id="nvim_create_autocmd()" class="help-tag-right"><a href="#nvim_create_autocmd()">nvim_create_autocmd()</a></span><br>
-    Creates an <a href="autocmd.html#autocommand">autocommand</a> event handler, defined by <code>callback</code> (Lua
-    function or Vimscript function name string) or <code>command</code> (Ex command
-    string).
-
-</div>
-<div class="help-para">
-    Example using Lua callback:<pre><code class="language-lua">vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
-  pattern = {'*.c', '*.h'},
-  callback = function(ev)
-    print(string.format('event fired: %s', vim.inspect(ev)))
-  end
-})</code></pre>
-
-</div>
-<div class="help-para">
-    Example using an Ex command as the handler:<pre><code class="language-lua">vim.api.nvim_create_autocmd({'BufEnter', 'BufWinEnter'}, {
-  pattern = {'*.c', '*.h'},
-  command = "echo 'Entering a C or C++ file'",
-})</code></pre>
-
-</div>
-<div class="help-para">
-<b>    Note:</b> <code>pattern</code> is NOT automatically expanded (unlike with <a href="autocmd.html#%3Aautocmd">:autocmd</a>),
-    thus names like "$HOME" and "~" must be expanded explicitly:<pre><code class="language-lua">pattern = vim.fn.expand('~') .. '/some/path/*.py'</code></pre>
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{event}</code>  (<code>vim.api.keyset.events|vim.api.keyset.events[]</code>) Event(s)
-                 that will trigger the handler (<code>callback</code> or <code>command</code>).
-</div><div class="help-li" style=""> <code>{opts}</code>   (<code>vim.api.keyset.create_autocmd</code>) Options dict:
-</div><div class="help-li" style="margin-left: 3rem;"> group (string|integer) optional: autocommand group name or
-                   id to match against.
-</div><div class="help-li" style="margin-left: 3rem;"> pattern (string|array) optional: pattern(s) to match
-                   literally <a href="autocmd.html#autocmd-pattern">autocmd-pattern</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> buffer (integer) optional: buffer number for buffer-local
-                   autocommands <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a>. Cannot be used with
-                   <code>{pattern}</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> desc (string) optional: description (for documentation and
-                   troubleshooting).
-</div><div class="help-li" style="margin-left: 3rem;"> callback (function|string) optional: Lua function (or
-                   Vimscript function name, if string) called when the
-                   event(s) is triggered. Lua callback can return a truthy
-                   value (not <code>false</code> or <code>nil</code>) to delete the autocommand, and
-                   receives one argument, a table with these keys:
-                                                                  <span id="event-args" class="help-tag-right"><a href="#event-args">event-args</a></span><br>
-</div><div class="help-li" style="margin-left: 4rem;"> id: (number) autocommand id
-</div><div class="help-li" style="margin-left: 4rem;"> event: (vim.api.keyset.events) name of the triggered
-                     event <a href="autocmd.html#autocmd-events">autocmd-events</a>
-</div><div class="help-li" style="margin-left: 4rem;"> group: (number|nil) autocommand group id, if any
-</div><div class="help-li" style="margin-left: 4rem;"> file: (string) <code>&lt;afile&gt;</code> (not expanded to a full path)
-</div><div class="help-li" style="margin-left: 4rem;"> match: (string) <code>&lt;amatch&gt;</code> (expanded to a full path)
-</div><div class="help-li" style="margin-left: 4rem;"> buf: (number) <code>&lt;abuf&gt;</code>
-</div><div class="help-li" style="margin-left: 4rem;"> data: (any) arbitrary data passed from
-                     <a href="api.html#nvim_exec_autocmds()">nvim_exec_autocmds()</a>                       <span id="event-data" class="help-tag-right"><a href="#event-data">event-data</a></span><br>
-</div><div class="help-li" style="margin-left: 3rem;"> command (string) optional: Vim command to execute on event.
-                   Cannot be used with <code>{callback}</code>
-</div><div class="help-li" style="margin-left: 3rem;"> once (boolean) optional: defaults to false. Run the
-                   autocommand only once <a href="autocmd.html#autocmd-once">autocmd-once</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> nested (boolean) optional: defaults to false. Run nested
-                   autocommands <a href="autocmd.html#autocmd-nested">autocmd-nested</a>.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>integer</code>) Autocommand id (number)
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="autocmd.html#autocommand">autocommand</a>
-</div><div class="help-li" style=""> <a href="api.html#nvim_del_autocmd()">nvim_del_autocmd()</a>
-</div>
-</div>
-<div class="help-para">
-nvim_del_augroup_by_id(<code>{id}</code>)                        <span id="nvim_del_augroup_by_id()" class="help-tag-right"><a href="#nvim_del_augroup_by_id()">nvim_del_augroup_by_id()</a></span><br>
-    Delete an autocommand group by id.
-
-</div>
-<div class="help-para">
-    To get a group id one can use <a href="api.html#nvim_get_autocmds()">nvim_get_autocmds()</a>.
-
-</div>
-<div class="help-para">
-<b>    NOTE:</b> behavior differs from <a href="autocmd.html#%3Aaugroup-delete">:augroup-delete</a>. When deleting a group,
-    autocommands contained in this group will also be deleted and cleared.
-    This group will no longer exist.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{id}</code>  (<code>integer</code>) Integer The id of the group.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="api.html#nvim_del_augroup_by_name()">nvim_del_augroup_by_name()</a>
-</div><div class="help-li" style=""> <a href="api.html#nvim_create_augroup()">nvim_create_augroup()</a>
-</div>
-</div>
-<div class="help-para">
-nvim_del_augroup_by_name(<code>{name}</code>)                  <span id="nvim_del_augroup_by_name()" class="help-tag-right"><a href="#nvim_del_augroup_by_name()">nvim_del_augroup_by_name()</a></span><br>
-    Delete an autocommand group by name.
-
-</div>
-<div class="help-para">
-<b>    NOTE:</b> behavior differs from <a href="autocmd.html#%3Aaugroup-delete">:augroup-delete</a>. When deleting a group,
-    autocommands contained in this group will also be deleted and cleared.
-    This group will no longer exist.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{name}</code>  (<code>string</code>) String The name of the group.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="autocmd.html#autocmd-groups">autocmd-groups</a>
-</div>
-</div>
-<div class="help-para">
-nvim_del_autocmd(<code>{id}</code>)                                    <span id="nvim_del_autocmd()" class="help-tag-right"><a href="#nvim_del_autocmd()">nvim_del_autocmd()</a></span><br>
-    Deletes an autocommand by id.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{id}</code>  (<code>integer</code>) Integer Autocommand id returned by
-              <a href="api.html#nvim_create_autocmd()">nvim_create_autocmd()</a>
-</div>
-</div>
-<div class="help-para">
-nvim_exec_autocmds(<code>{event}</code>, <code>{opts}</code>)                     <span id="nvim_exec_autocmds()" class="help-tag-right"><a href="#nvim_exec_autocmds()">nvim_exec_autocmds()</a></span><br>
-    Execute all autocommands for <code>{event}</code> that match the corresponding <code>{opts}</code>
-    <a href="autocmd.html#autocmd-execute">autocmd-execute</a>.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{event}</code>  (<code>vim.api.keyset.events|vim.api.keyset.events[]</code>) The event
-                 or events to execute
-</div><div class="help-li" style=""> <code>{opts}</code>   (<code>vim.api.keyset.exec_autocmds</code>) Dict of autocommand options:
-</div><div class="help-li" style="margin-left: 3rem;"> group (string|integer) optional: the autocommand group name
-                   or id to match against. <a href="autocmd.html#autocmd-groups">autocmd-groups</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> pattern (string|array) optional: defaults to "*"
-                   <a href="autocmd.html#autocmd-pattern">autocmd-pattern</a>. Cannot be used with <code>{buffer}</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> buffer (integer) optional: buffer number
-                   <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a>. Cannot be used with <code>{pattern}</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> modeline (bool) optional: defaults to true. Process the
-                   modeline after the autocommands <code>&lt;nomodeline&gt;</code>.
-</div><div class="help-li" style="margin-left: 3rem;"> data (any): arbitrary data to send to the autocommand
-                   callback. See <a href="api.html#nvim_create_autocmd()">nvim_create_autocmd()</a> for details.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">See also:</div>
-<div class="help-li" style=""> <a href="autocmd.html#%3Adoautocmd">:doautocmd</a>
-</div>
-</div>
-<div class="help-para">
-nvim_get_autocmds(<code>{opts}</code>)                                <span id="nvim_get_autocmds()" class="help-tag-right"><a href="#nvim_get_autocmds()">nvim_get_autocmds()</a></span><br>
-    Get all autocommands that match the corresponding <code>{opts}</code>.
-
-</div>
-<div class="help-para">
-    These examples will get autocommands matching ALL the given criteria:<pre><code class="language-lua">-- Matches all criteria
-autocommands = vim.api.nvim_get_autocmds({
-  group = 'MyGroup',
-  event = {'BufEnter', 'BufWinEnter'},
-  pattern = {'*.c', '*.h'}
-})
--- All commands from one group
-autocommands = vim.api.nvim_get_autocmds({
-  group = 'MyGroup',
-})</code></pre>
-
-</div>
-<div class="help-para">
-<b>    NOTE:</b> When multiple patterns or events are provided, it will find all the
-    autocommands that match any combination of them.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        Since: 0.7.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{opts}</code>  (<code>vim.api.keyset.get_autocmds</code>) Dict with at least one of the
-                following:
-</div><div class="help-li" style="margin-left: 3rem;"> buffer: (integer) Buffer number or list of buffer numbers
-                  for buffer local autocommands <a href="autocmd.html#autocmd-buflocal">autocmd-buflocal</a>. Cannot be
-                  used with <code>{pattern}</code>
-</div><div class="help-li" style="margin-left: 3rem;"> event: (vim.api.keyset.events|vim.api.keyset.events[]) event
-                  or events to match against <a href="autocmd.html#autocmd-events">autocmd-events</a>.
-</div><div class="help-li" style="margin-left: 3rem;"> id: (integer) Autocommand ID to match.
-</div><div class="help-li" style="margin-left: 3rem;"> group: (string|table) the autocommand group name or id to
-                  match against.
-</div><div class="help-li" style="margin-left: 3rem;"> pattern: (string|table) pattern or patterns to match against
-                  <a href="autocmd.html#autocmd-pattern">autocmd-pattern</a>. Cannot be used with <code>{buffer}</code>
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Return:</div>
-        (<code>vim.api.keyset.get_autocmds.ret[]</code>) Array of autocommands matching
-        the criteria, with each item containing the following fields:
-<div class="help-li" style=""> buffer: (integer) the buffer number.
-</div><div class="help-li" style=""> buflocal: (boolean) true if the autocommand is buffer local.
-</div><div class="help-li" style=""> command: (string) the autocommand command.<b> Note:</b> this will be empty
-          if a callback is set.
-</div><div class="help-li" style=""> callback: (function|string|nil): Lua function or name of a Vim
-          script function which is executed when this autocommand is
-          triggered.
-</div><div class="help-li" style=""> desc: (string) the autocommand description.
-</div><div class="help-li" style=""> event: (vim.api.keyset.events) the autocommand event.
-</div><div class="help-li" style=""> id: (integer) the autocommand id (only when defined with the API).
-</div><div class="help-li" style=""> group: (integer) the autocommand group id.
-</div><div class="help-li" style=""> group_name: (string) the autocommand group name.
-</div><div class="help-li" style=""> once: (boolean) whether the autocommand is only run once.
-</div><div class="help-li" style=""> pattern: (string) the autocommand pattern. If the autocommand is
-          buffer local <a href="autocmd.html#autocmd-buffer-local">autocmd-buffer-local</a>:
-</div>
-</div>
-<div class="help-para">
-<h2 id="_ui-functions" class="help-heading">UI Functions<span class="help-heading-tags">                                                          <span id="api-ui" class="help-tag"><a href="#api-ui">api-ui</a></span></h2>
-
-
-</div>
-<div class="help-para">
-nvim_ui_attach(<code>{width}</code>, <code>{height}</code>, <code>{options}</code>)                <span id="nvim_ui_attach()" class="help-tag-right"><a href="#nvim_ui_attach()">nvim_ui_attach()</a></span><br>
-    Activates UI events on the channel.
-
-</div>
-<div class="help-para">
-    Entry point of all UI clients. Allows <a href="starting.html#--embed">--embed</a> to continue startup.
-    Implies that the client is ready to show the UI. Adds the client to the
-    list of UIs. <a href="api.html#nvim_list_uis()">nvim_list_uis()</a>
-
-</div>
-<div class="help-para">
-<div class="help-column_heading"><b>    Note:</b></div>
-<div class="help-li" style=""> If multiple UI clients are attached, the global screen dimensions
-        degrade to the smallest client. E.g. if client A requests 80x40 but
-        client B requests 200x100, the global screen has size 80x40.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{width}</code>    (<code>integer</code>) Requested screen columns
-</div><div class="help-li" style=""> <code>{height}</code>   (<code>integer</code>) Requested screen rows
-</div><div class="help-li" style=""> <code>{options}</code>  (<code>table&lt;string,any&gt;</code>) <a href="api-ui-events.html#ui-option">ui-option</a> map
-</div>
-</div>
-<div class="help-para">
-nvim_ui_detach()                                            <span id="nvim_ui_detach()" class="help-tag-right"><a href="#nvim_ui_detach()">nvim_ui_detach()</a></span><br>
-    Deactivates UI events on the channel.
-
-</div>
-<div class="help-para">
-    Removes the client from the list of UIs. <a href="api.html#nvim_list_uis()">nvim_list_uis()</a>
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-                                                    <span id="nvim_ui_pum_set_bounds()" class="help-tag-right"><a href="#nvim_ui_pum_set_bounds()">nvim_ui_pum_set_bounds()</a></span><br>
-nvim_ui_pum_set_bounds(<code>{width}</code>, <code>{height}</code>, <code>{row}</code>, <code>{col}</code>)
-    Tells Nvim the geometry of the popupmenu, to align floating windows with
-    an external popup menu.
-
-</div>
-<div class="help-para">
-    Note that this method is not to be confused with
-    <a href="api.html#nvim_ui_pum_set_height()">nvim_ui_pum_set_height()</a>, which sets the number of visible items in the
-    popup menu, while this function sets the bounding box of the popup menu,
-    including visual elements such as borders and sliders. Floats need not use
-    the same font size, nor be anchored to exact grid corners, so one can set
-    floating-point numbers to the popup menu geometry.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.5.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{width}</code>   (<code>number</code>) Popupmenu width.
-</div><div class="help-li" style=""> <code>{height}</code>  (<code>number</code>) Popupmenu height.
-</div><div class="help-li" style=""> <code>{row}</code>     (<code>number</code>) Popupmenu row.
-</div><div class="help-li" style=""> <code>{col}</code>     (<code>number</code>) Popupmenu height.
-</div>
-</div>
-<div class="help-para">
-nvim_ui_pum_set_height(<code>{height}</code>)                    <span id="nvim_ui_pum_set_height()" class="help-tag-right"><a href="#nvim_ui_pum_set_height()">nvim_ui_pum_set_height()</a></span><br>
-    Tells Nvim the number of elements displaying in the popupmenu, to decide
-    <code>&lt;PageUp&gt;</code> and <code>&lt;PageDown&gt;</code> movement.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.4.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{height}</code>  (<code>integer</code>) Popupmenu height, must be greater than zero.
-</div>
-</div>
-<div class="help-para">
-nvim_ui_set_focus(<code>{gained}</code>)                              <span id="nvim_ui_set_focus()" class="help-tag-right"><a href="#nvim_ui_set_focus()">nvim_ui_set_focus()</a></span><br>
-    Tells the nvim server if focus was gained or lost by the GUI
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.9.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{gained}</code>  (<code>boolean</code>)
-</div>
-</div>
-<div class="help-para">
-nvim_ui_set_option(<code>{name}</code>, <code>{value}</code>)                     <span id="nvim_ui_set_option()" class="help-tag-right"><a href="#nvim_ui_set_option()">nvim_ui_set_option()</a></span><br>
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{name}</code>   (<code>string</code>)
-</div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>)
-</div>
-</div>
-<div class="help-para">
-nvim_ui_term_event(<code>{event}</code>, <code>{value}</code>)                    <span id="nvim_ui_term_event()" class="help-tag-right"><a href="#nvim_ui_term_event()">nvim_ui_term_event()</a></span><br>
-    Tells Nvim when a terminal event has occurred
-
-</div>
-<div class="help-para">
-    The following terminal events are supported:
-<div class="help-li" style=""> "termresponse": The terminal sent a DA1, OSC, DCS, or APC response
-      sequence to Nvim. The payload is the received response. Sets
-      <a href="vvars.html#v%3Atermresponse">v:termresponse</a> and fires <a href="autocmd.html#TermResponse">TermResponse</a>.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.10.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{event}</code>  (<code>string</code>) Event name
-</div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>) Event payload
-</div>
-</div>
-<div class="help-para">
-nvim_ui_try_resize(<code>{width}</code>, <code>{height}</code>)                   <span id="nvim_ui_try_resize()" class="help-tag-right"><a href="#nvim_ui_try_resize()">nvim_ui_try_resize()</a></span><br>
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.1.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{width}</code>   (<code>integer</code>)
-</div><div class="help-li" style=""> <code>{height}</code>  (<code>integer</code>)
-</div>
-</div>
-<div class="help-para">
-                                                   <span id="nvim_ui_try_resize_grid()" class="help-tag-right"><a href="#nvim_ui_try_resize_grid()">nvim_ui_try_resize_grid()</a></span><br>
-nvim_ui_try_resize_grid(<code>{grid}</code>, <code>{width}</code>, <code>{height}</code>)
-    Tell Nvim to resize a grid. Triggers a grid_resize event with the
-    requested grid size or the maximum size if it exceeds size limits.
-
-</div>
-<div class="help-para">
-    On invalid grid handle, fails with error.
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.4.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{grid}</code>    (<code>integer</code>) The handle of the grid to be changed.
-</div><div class="help-li" style=""> <code>{width}</code>   (<code>integer</code>) The new requested width.
-</div><div class="help-li" style=""> <code>{height}</code>  (<code>integer</code>) The new requested height.
-</div>
-</div>
 
   </div>
       <div class="col-narrow toc">
@@ -5884,21 +5884,21 @@ nvim_ui_try_resize_grid(<code>{grid}</code>, <code>{width}</code>, <code>{height
 </div><div class="help-toc-h1"><a href="#_extended-marks">Extended marks</a>
 </div><div class="help-toc-h1"><a href="#_global-functions">Global Functions</a>
 </div><div class="help-toc-h1"><a href="#_vimscript-functions">Vimscript Functions</a>
-</div><div class="help-toc-h1"><a href="#_command-functions">Command Functions</a>
-</div><div class="help-toc-h1"><a href="#_options-functions">Options Functions</a>
-</div><div class="help-toc-h1"><a href="#_buffer-functions">Buffer Functions</a>
-</div><div class="help-toc-h1"><a href="#_extmark-functions">Extmark Functions</a>
-</div><div class="help-toc-h1"><a href="#_window-functions">Window Functions</a>
-</div><div class="help-toc-h1"><a href="#_win_config-functions">Win_config Functions</a>
-</div><div class="help-toc-h1"><a href="#_tabpage-functions">Tabpage Functions</a>
 </div><div class="help-toc-h1"><a href="#_autocmd-functions">Autocmd Functions</a>
+</div><div class="help-toc-h1"><a href="#_buffer-functions">Buffer Functions</a>
+</div><div class="help-toc-h1"><a href="#_command-functions">Command Functions</a>
+</div><div class="help-toc-h1"><a href="#_extmark-functions">Extmark Functions</a>
+</div><div class="help-toc-h1"><a href="#_options-functions">Options Functions</a>
+</div><div class="help-toc-h1"><a href="#_tabpage-functions">Tabpage Functions</a>
 </div><div class="help-toc-h1"><a href="#_ui-functions">UI Functions</a>
+</div><div class="help-toc-h1"><a href="#_win_config-functions">Win_config Functions</a>
+</div><div class="help-toc-h1"><a href="#_window-functions">Window Functions</a>
 </div></div>
 </div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-08-02 05:28 from <code><a href="https://github.com/neovim/neovim/commit/68eece8b849da73bb9c93dabd6403ed0fb2f4174">68eece8</a></code>
+        Generated at 2025-08-03 05:30 from <code><a href="https://github.com/neovim/neovim/commit/39e402caa511f311b4f43a6c6f18bacba8c47c49">39e402c</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+api.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/api.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="               Nvim
