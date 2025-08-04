@@ -2290,6 +2290,64 @@ vim.islist(<code>{t}</code>)                                                 <sp
 </div>
 </div>
 <div class="help-para">
+vim.list.bisect(<code>{t}</code>, <code>{val}</code>, <code>{opts}</code>)                        <span id="vim.list.bisect()" class="help-tag-right"><a href="#vim.list.bisect()">vim.list.bisect()</a></span><br>
+    Search for a position in a sorted list <code>{t}</code> where <code>{val}</code> can be inserted
+    while keeping the list sorted.
+
+</div>
+<div class="help-para">
+    Use <code>{bound}</code> to determine whether to return the first or the last position,
+    defaults to "lower", i.e., the first position.
+
+</div>
+<div class="help-para">
+<b>    NOTE:</b> Behavior is undefined on unsorted lists!
+
+</div>
+<div class="help-para">
+    Example:<pre><code class="language-lua">local t = { 1, 2, 2, 3, 3, 3 }
+local first = vim.list.bisect(t, 3)
+-- `first` is `val`'s first index if found,
+-- useful for existence checks.
+print(t[first]) -- 3
+local last = vim.list.bisect(t, 3, { bound = 'upper' })
+-- Note that `last` is 7, not 6,
+-- this is suitable for insertion.
+table.insert(t, last, 4)
+-- t is now { 1, 2, 2, 3, 3, 3, 4 }
+-- You can use lower bound and upper bound together
+-- to obtain the range of occurrences of `val`.
+-- 3 is in [first, last)
+for i = first, last - 1 do
+  print(t[i]) -- { 3, 3, 3 }
+end</code></pre>
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{t}</code>     (<code>any[]</code>) A comparable list.
+</div><div class="help-li" style=""> <code>{val}</code>   (<code>any</code>) The value to search.
+</div><div class="help-li" style=""> <code>{opts}</code>  (<code>table?</code>) A table with the following fields:
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{lo}</code> (<code>integer</code>, default: <code>1</code>) Start index of the list.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{hi}</code> (<code>integer</code>, default: <code>#t + 1</code>) End index of the list,
+                  exclusive.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{key}</code> (<code>fun(val: any): any</code>) Optional, compare the return
+                  value instead of the <code>{val}</code> itself if provided.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{bound}</code> (<code>'lower'|'upper'</code>, default: <code>'lower'</code>) Specifies
+                  the search variant.
+</div><div class="help-li" style="margin-left: 4rem;"> "lower": returns the first position where inserting <code>{val}</code>
+                    keeps the list sorted.
+</div><div class="help-li" style="margin-left: 4rem;"> "upper": returns the last position where inserting <code>{val}</code>
+                    keeps the list sorted..
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Return:</div>
+        (<code>integer</code>) index serves as either the lower bound or the upper bound
+        position.
+
+</div>
+<div class="help-para">
 vim.list.unique(<code>{t}</code>, <code>{key}</code>)                                <span id="vim.list.unique()" class="help-tag-right"><a href="#vim.list.unique()">vim.list.unique()</a></span><br>
     Removes duplicate values from a list-like table in-place.
 
@@ -2300,7 +2358,7 @@ vim.list.unique(<code>{t}</code>, <code>{key}</code>)                           
 
 </div>
 <div class="help-para">
-    Accepts an optional <code>hash</code> argument that if provided is called for each
+    Accepts an optional <code>key</code> argument that if provided is called for each
     value in the list to compute a hash key for uniqueness comparison. This is
     useful for deduplicating table values or complex objects.
 
@@ -2317,7 +2375,7 @@ vim.list.unique(t, function(x) return x.id end)
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
 <div class="help-li" style=""> <code>{t}</code>    (<code>any[]</code>)
-</div><div class="help-li" style=""> <code>{key}</code>  (<code>fun(x: T): any??</code>) Optional hash function to determine
+</div><div class="help-li" style=""> <code>{key}</code>  (<code>fun(x: T): any?</code>) Optional hash function to determine
                uniqueness of values
 </div>
 </div>
@@ -6495,7 +6553,7 @@ spilled lines. To see the full message, the <a href="message.html#g%3C">g&lt;</a
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-08-03 05:30 from <code><a href="https://github.com/neovim/neovim/commit/39e402caa511f311b4f43a6c6f18bacba8c47c49">39e402c</a></code>
+        Generated at 2025-08-04 05:39 from <code><a href="https://github.com/neovim/neovim/commit/a9a4c271b13fffba2a21567c86b0f40ae4c180a1">a9a4c27</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
