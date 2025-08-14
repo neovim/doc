@@ -1291,32 +1291,39 @@ class, and they will match newlines as well.</div>
 		and ":2match" for another plugin or even better make use of
 		the more flexible <a href="vimfn.html#matchadd()">matchadd()</a> (and similar) functions instead.</div>
 <div class="old-help-para"><h2 id="_11.-fuzzy-matching" class="help-heading">11. Fuzzy matching<span class="help-heading-tags">					<span id="fuzzy-matching" class="help-tag"><a href="#fuzzy-matching">fuzzy-matching</a></span></h2></div>
-<div class="old-help-para">Fuzzy matching refers to matching strings using a non-exact search string.
-Fuzzy matching will match a string, if all the characters in the search string
-are present anywhere in the string in the same order.  Case is ignored.  In a
-matched string, other characters can be present between two consecutive
-characters in the search string.  If the search string has multiple words, then
-each word is matched separately.  So the words in the search string can be
-present in any order in a string.</div>
-<div class="old-help-para">Fuzzy matching assigns a score for each matched string based on the following
-criteria:
-<div class="help-li" style=""> The number of sequentially matching characters.
-</div><div class="help-li" style=""> The number of characters (distance) between two consecutive matching
-      characters.
-</div><div class="help-li" style=""> Matches at the beginning of a word
-</div><div class="help-li" style=""> Matches at a camel case character (e.g. Case in CamelCase)
-</div><div class="help-li" style=""> Matches after a path separator or a hyphen.
-</div><div class="help-li" style=""> The number of unmatched characters in a string.
-</div><div class="help-li" style=""> A full/exact match is preferred.
-The matching string with the highest score is returned first.
-</div></div>
-<div class="old-help-para">For example, when you search for the "get pat" string using fuzzy matching, it
-will match the strings "GetPattern", "PatternGet", "getPattern", "patGetter",
-"getSomePattern", "MatchpatternGet" etc.</div>
-<div class="old-help-para">The functions <a href="vimfn.html#matchfuzzy()">matchfuzzy()</a> and <a href="vimfn.html#matchfuzzypos()">matchfuzzypos()</a> can be used to fuzzy search
-a string in a List of strings.  The matchfuzzy() function returns a List of
-matching strings.  The matchfuzzypos() functions returns the List of matches,
-the matching positions and the fuzzy match scores.</div>
+<div class="old-help-para">Fuzzy matching scores how well a string matches a pattern when the pattern
+characters appear in order but not necessarily contiguously.</div>
+<div class="old-help-para">Example:<pre>Pattern:    "vim"
+Candidates: "vim"        -&gt; perfect
+            "vimeo"      -&gt; good (v i m)
+            "voice mail" -&gt; weaker (v _ i _ _ _ m)
+            "vintage"    -&gt; no match (no "m")</pre></div>
+<div class="old-help-para">If the search string has multiple words, each word is matched separately and
+may appear in any order in the candidate.  For example "get pat" matches
+"GetPattern", "PatternGet", "getPattern", "patGetter", "getSomePattern",
+"MatchpatternGet", etc.</div>
+<div class="old-help-para">The <a href="options.html#'ignorecase'">'ignorecase'</a> and <a href="options.html#'smartcase'">'smartcase'</a> options do not apply, case is ignored if the
+pattern is all lower case.</div>
+<div class="old-help-para">Vim's implementation is based on the algorithm from the fzy project:
+<a href="https://github.com/jhawthorn/fzy">https://github.com/jhawthorn/fzy</a></div>
+<div class="old-help-para">It uses dynamic programming to compute an optimal score for a given pattern
+and candidate.</div>
+<div class="old-help-para">The algorithm works in two stages:</div>
+<div class="old-help-para">1. Forward pass
+   Scan the candidate left to right, tracking the best score for each
+   pattern position.  Matches score higher when they occur at the start
+   of the candidate, the start of a word (space, underscore, dash,
+   camelCase), or directly after the previous match.</div>
+<div class="old-help-para">2. Backward pass
+   Start from the best-scoring end position and step back to find match
+   positions, ensuring the alignment is optimal.</div>
+<div class="old-help-para">Vim extends the original algorithm to support multibyte codepoints, allowing
+correct matching for UTF-8 and other encodings.</div>
+<div class="old-help-para">Time complexity is O(pattern * candidate).  Memory usage is proportional
+to the same.</div>
+<div class="old-help-para">The <a href="vimfn.html#matchfuzzy()">matchfuzzy()</a> and <a href="vimfn.html#matchfuzzypos()">matchfuzzypos()</a> functions perform fuzzy searching in
+a List of strings.  <a href="vimfn.html#matchfuzzy()">matchfuzzy()</a> returns the matching strings, while
+<a href="vimfn.html#matchfuzzypos()">matchfuzzypos()</a> returns the matches along with their positions and scores.</div>
 <div class="old-help-para">The "f" flag of <code>:vimgrep</code> enables fuzzy matching.</div>
 <div class="old-help-para">To enable fuzzy matching for <a href="insert.html#ins-completion">ins-completion</a>, add the "fuzzy" value to the
 <a href="options.html#'completeopt'">'completeopt'</a> option.</div>
@@ -1343,7 +1350,7 @@ the matching positions and the fuzzy match scores.</div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-08-13 05:25 from <code><a href="https://github.com/neovim/neovim/commit/35be59cc7b8d39f91b70aa57eaa09dc9b4636806">35be59c</a></code>
+        Generated at 2025-08-14 05:24 from <code><a href="https://github.com/neovim/neovim/commit/d19d2b44914037402437de53fad197fd91be795a">d19d2b4</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+pattern.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/pattern.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   Nvim
