@@ -128,6 +128,23 @@ cycle.</div>
 </div><div class="help-li" style=""> <a href="https://github.com/neovim/neovim/pull/18375">https://github.com/neovim/neovim/pull/18375</a>
 </div><div class="help-li" style=""> <a href="https://github.com/neovim/neovim/pull/21605">https://github.com/neovim/neovim/pull/21605</a>
 </div></div>
+<div class="old-help-para"><h2 id="_api" class="help-heading">API</h2></div>
+<div class="old-help-para">                                                        <span id="dev-api-fast" class="help-tag-right"><a href="#dev-api-fast">dev-api-fast</a></span><br>
+API functions and Vimscript "eval" functions may be marked as <a href="api.html#api-fast">api-fast</a> which
+means they are safe to call in Lua callbacks and other scenarios. A functions
+CANNOT be marked as "fast" if could trigger <code>os_breakcheck()</code>, which may
+"yield" the current execution and start a new execution of code not expecting
+this:
+<div class="help-li" style=""> accidentally recursing into a function not expecting this.
+</div><div class="help-li" style=""> changing (global) state without restoring it before returning to the
+  "yielded" callsite.
+</div></div>
+<div class="old-help-para">In practice, this means any code that could trigger <code>os_breakcheck()</code> cannot
+be "fast". For example, commit 3940c435e405 fixed such a bug with
+<code>nvim__get_runtime</code> by explicitly disallowing <code>os_breakcheck()</code> via the
+<code>EW_NOBREAK</code> flag.</div>
+<div class="old-help-para">Common examples of non-fast code: regexp matching, wildcard expansion,
+expression evaluation.</div>
 
   </div>
       <div class="col-narrow toc">
@@ -137,12 +154,13 @@ cycle.</div>
       <hr/>
   <div class="help-toc-h1"><a href="#_data-structures">Data structures</a>
 </div><div class="help-toc-h1"><a href="#_ui-events">UI events</a>
+</div><div class="help-toc-h1"><a href="#_api">API</a>
 </div></div>
 </div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-08-17 05:24 from <code><a href="https://github.com/neovim/neovim/commit/7e450aa3839fb815f1f000a503bb3210022ce67a">7e450aa</a></code>
+        Generated at 2025-08-18 05:28 from <code><a href="https://github.com/neovim/neovim/commit/f363ea8547cc9d351f4231ce601dca8dabbcf876">f363ea8</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+dev_arch.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/dev_arch.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="          Nvim
