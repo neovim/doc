@@ -790,16 +790,21 @@ created for extmark changes.
 </div>
 <div class="help-para">
 nvim_chan_send(<code>{chan}</code>, <code>{data}</code>)                              <span id="nvim_chan_send()" class="help-tag-right"><a href="#nvim_chan_send()">nvim_chan_send()</a></span><br>
-    Send data to channel <code>id</code>. For a job, it writes it to the stdin of the
-    process. For the stdio channel <a href="channel.html#channel-stdio">channel-stdio</a>, it writes to Nvim's
-    stdout. For an internal terminal instance (<a href="api.html#nvim_open_term()">nvim_open_term()</a>) it writes
-    directly to terminal output. See <a href="channel.html#channel-bytes">channel-bytes</a> for more information.
+    Sends raw data to channel <code>chan</code>. <a href="channel.html#channel-bytes">channel-bytes</a>
+<div class="help-li" style=""> For a job, it writes it to the stdin of the process.
+</div><div class="help-li" style=""> For the stdio channel <a href="channel.html#channel-stdio">channel-stdio</a>, it writes to Nvim's stdout.
+</div><div class="help-li" style=""> For an internal terminal instance (<a href="api.html#nvim_open_term()">nvim_open_term()</a>) it writes
+      directly to terminal output.
+</div>
+</div>
+<div class="help-para">
+    This function writes raw data, not RPC messages. Use <a href="lua.html#vim.rpcrequest()">vim.rpcrequest()</a>
+    and <a href="lua.html#vim.rpcnotify()">vim.rpcnotify()</a> if the channel expects RPC messages (i.e. it was
+    created with <code>rpc=true</code>).
 
 </div>
 <div class="help-para">
-    This function writes raw data, not RPC messages. If the channel was
-    created with <code>rpc=true</code> then the channel expects RPC messages, use
-    <a href="lua.html#vim.rpcnotify()">vim.rpcnotify()</a> and <a href="lua.html#vim.rpcrequest()">vim.rpcrequest()</a> instead.
+    To write data to the <a href="tui.html#TUI">TUI</a> host terminal, see <a href="api.html#nvim_ui_send()">nvim_ui_send()</a>.
 
 </div>
 <div class="help-para">
@@ -811,8 +816,8 @@ nvim_chan_send(<code>{chan}</code>, <code>{data}</code>)                        
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{chan}</code>  (<code>integer</code>) id of the channel
-</div><div class="help-li" style=""> <code>{data}</code>  (<code>string</code>) data to write. 8-bit clean: can contain NUL bytes.
+<div class="help-li" style=""> <code>{chan}</code>  (<code>integer</code>) Channel id
+</div><div class="help-li" style=""> <code>{data}</code>  (<code>string</code>) Data to write. 8-bit clean: may contain NUL bytes.
 </div>
 </div>
 <div class="help-para">
@@ -5057,13 +5062,15 @@ nvim_ui_send(<code>{content}</code>)                                       <span
 
 </div>
 <div class="help-para">
-    Sends arbitrary data to a UI.
+    Sends arbitrary data to a UI. Use this instead of <a href="api.html#nvim_chan_send()">nvim_chan_send()</a> or
+    <code>io.stdout:write()</code>, if you really want to write to the <a href="tui.html#TUI">TUI</a> host
+    terminal.
 
 </div>
 <div class="help-para">
-    This sends a "ui_send" event to any UI that has the "stdout_tty"
-    <a href="api-ui-events.html#ui-option">ui-option</a> set. UIs are expected to write the received data to a
-    connected TTY if one exists.
+    Emits a "ui_send" event to all UIs with the "stdout_tty" <a href="api-ui-events.html#ui-option">ui-option</a> set.
+    UIs are expected to write the received data to a connected TTY if one
+    exists.
 
 </div>
 <div class="help-para">
@@ -5105,12 +5112,12 @@ nvim_ui_set_option(<code>{name}</code>, <code>{value}</code>)                   
 </div>
 <div class="help-para">
 nvim_ui_term_event(<code>{event}</code>, <code>{value}</code>)                    <span id="nvim_ui_term_event()" class="help-tag-right"><a href="#nvim_ui_term_event()">nvim_ui_term_event()</a></span><br>
-    Tells Nvim when a terminal event has occurred
+    Tells Nvim when a host-terminal event occurred.
 
 </div>
 <div class="help-para">
-    The following terminal events are supported:
-<div class="help-li" style=""> "termresponse": The terminal sent a DA1, OSC, DCS, or APC response
+    Supports these events:
+<div class="help-li" style=""> "termresponse": The host-terminal sent a DA1, OSC, DCS, or APC response
       sequence to Nvim. The payload is the received response. Sets
       <a href="vvars.html#v%3Atermresponse">v:termresponse</a> and fires <a href="autocmd.html#TermResponse">TermResponse</a>.
 </div>
@@ -5918,7 +5925,7 @@ nvim_win_text_height(<code>{window}</code>, <code>{opts}</code>)                
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-08-24 05:24 from <code><a href="https://github.com/neovim/neovim/commit/810a234978d3013e736c6efce0dd5875759cfc56">810a234</a></code>
+        Generated at 2025-08-25 05:24 from <code><a href="https://github.com/neovim/neovim/commit/58060c2340a52377a0e1d2b782ce1deef13b2b9b">58060c2</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+api.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/api.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="               Nvim
