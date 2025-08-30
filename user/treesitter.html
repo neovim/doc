@@ -1114,7 +1114,7 @@ them to parse text. See <a href="treesitter.html#vim.treesitter.query.parse()">v
 </div><div class="help-li" style=""> <code>{has_combined_injections}</code>  (<code>boolean</code>) whether the query contains
                                    combined injections
 </div><div class="help-li" style=""> <code>{query}</code>                    (<code>TSQuery</code>) userdata query object
-</div><div class="help-li" style=""> <code>{iter_captures}</code>            (<code>fun(self: vim.treesitter.Query, node: TSNode, source: integer|string, start: integer?, stop: integer?, opts: table?): fun(end_line: integer?): integer, TSNode, vim.treesitter.query.TSMetadata, TSQueryMatch, TSTree</code>)
+</div><div class="help-li" style=""> <code>{iter_captures}</code>            (<code>fun(self: vim.treesitter.Query, node: TSNode, source: integer|string, start_row: integer?, end_row: integer?, opts: table?): fun(end_line: integer?, end_col: integer?): integer, TSNode, vim.treesitter.query.TSMetadata, TSQueryMatch, TSTree</code>)
                                    See <a href="treesitter.html#Query%3Aiter_captures()">Query:iter_captures()</a>.
 </div><div class="help-li" style=""> <code>{iter_matches}</code>             (<code>fun(self: vim.treesitter.Query, node: TSNode, source: integer|string, start: integer?, stop: integer?, opts: table?): fun(): integer, table&lt;integer, TSNode[]&gt;, vim.treesitter.query.TSMetadata, TSTree</code>)
                                    See <a href="treesitter.html#Query%3Aiter_matches()">Query:iter_matches()</a>.
@@ -1246,7 +1246,7 @@ end</code></pre></div>
 <div class="old-help-para"><div class="help-column_heading">See also:</div><div class="help-li" style=""> <a href="treesitter.html#vim.treesitter.query.get()">vim.treesitter.query.get()</a>
 </div></div>
 <div class="old-help-para">                                                       <span id="Query%3Aiter_captures()" class="help-tag-right"><a href="#Query%3Aiter_captures()">Query:iter_captures()</a></span><br>
-Query:iter_captures(<code>{node}</code>, <code>{source}</code>, <code>{start}</code>, <code>{stop}</code>, <code>{opts}</code>)
+Query:iter_captures(<code>{node}</code>, <code>{source}</code>, <code>{start_row}</code>, <code>{end_row}</code>, <code>{opts}</code>)
     Iterates over all captures from all matches in <code>{node}</code>.</div>
 <div class="old-help-para">    <code>{source}</code> is required if the query contains predicates; then the caller
     must ensure to use a freshly parsed tree consistent with the current text
@@ -1270,21 +1270,25 @@ end</code></pre></div>
 <div class="old-help-para"><div class="help-column_heading"><b>    Note:</b></div><div class="help-li" style=""> Captures are only returned if the query pattern of a specific capture
         contained predicates.
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{node}</code>    (<code>TSNode</code>) under which the search will occur
-</div><div class="help-li" style=""> <code>{source}</code>  (<code>integer|string</code>) Source buffer or string to extract text
-                  from
-</div><div class="help-li" style=""> <code>{start}</code>   (<code>integer?</code>) Starting line for the search. Defaults to
-                  <code>node:start()</code>.
-</div><div class="help-li" style=""> <code>{stop}</code>    (<code>integer?</code>) Stopping line for the search (end-exclusive).
-                  Defaults to <code>node:end_()</code>.
-</div><div class="help-li" style=""> <code>{opts}</code>    (<code>table?</code>) Optional keyword arguments:
+<div class="old-help-para"><div class="help-column_heading">Parameters:</div><div class="help-li" style=""> <code>{node}</code>       (<code>TSNode</code>) under which the search will occur
+</div><div class="help-li" style=""> <code>{source}</code>     (<code>integer|string</code>) Source buffer or string to extract
+                     text from
+</div><div class="help-li" style=""> <code>{start_row}</code>  (<code>integer?</code>) Starting line for the search. Defaults to
+                     <code>node:start()</code>.
+</div><div class="help-li" style=""> <code>{end_row}</code>    (<code>integer?</code>) Stopping line for the search (end-inclusive,
+                     unless <code>stop_col</code> is provided). Defaults to
+                     <code>node:end_()</code>.
+</div><div class="help-li" style=""> <code>{opts}</code>       (<code>table?</code>) Optional keyword arguments:
 </div><div class="help-li" style="margin-left: 3rem;"> max_start_depth (integer) if non-zero, sets the maximum
-                    start depth for each match. This is used to prevent
-                    traversing too deep into a tree.
+                       start depth for each match. This is used to prevent
+                       traversing too deep into a tree.
 </div><div class="help-li" style="margin-left: 3rem;"> match_limit (integer) Set the maximum number of
-                    in-progress matches (Default: 256).
+                       in-progress matches (Default: 256).
+</div><div class="help-li" style="margin-left: 3rem;"> start_col (integer) Starting column for the search.
+</div><div class="help-li" style="margin-left: 3rem;"> end_col (integer) Stopping column for the search
+                       (end-exclusive).
 </div></div>
-<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>fun(end_line: integer?): integer, TSNode, vim.treesitter.query.TSMetadata, TSQueryMatch, TSTree</code>)
+<div class="old-help-para"><div class="help-column_heading">Return:</div>        (<code>fun(end_line: integer?, end_col: integer?): integer, TSNode, vim.treesitter.query.TSMetadata, TSQueryMatch, TSTree</code>)
         capture id, capture node, metadata, match, tree</div>
 <div class="old-help-para">                                                        <span id="Query%3Aiter_matches()" class="help-tag-right"><a href="#Query%3Aiter_matches()">Query:iter_matches()</a></span><br>
 Query:iter_matches(<code>{node}</code>, <code>{source}</code>, <code>{start}</code>, <code>{stop}</code>, <code>{opts}</code>)
@@ -1398,7 +1402,7 @@ local tree = vim.treesitter.get_parser():parse()[1]</code></pre></div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-08-29 05:22 from <code><a href="https://github.com/neovim/neovim/commit/19f2e5c3eb4194a4b4255abb01991af63c1979b3">19f2e5c</a></code>
+        Generated at 2025-08-30 05:20 from <code><a href="https://github.com/neovim/neovim/commit/4edeaaa6e2c1454a6e2ceeca515727954333c2a6">4edeaaa</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+treesitter.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/treesitter.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
