@@ -1089,33 +1089,29 @@ vim.ui_detach(<code>{ns}</code>)                                          <span 
 </div>
 <div class="help-para">
 vim.wait(<code>{time}</code>, <code>{callback}</code>, <code>{interval}</code>, <code>{fast_only}</code>)             <span id="vim.wait()" class="help-tag-right"><a href="#vim.wait()">vim.wait()</a></span><br>
-    Wait for <code>{time}</code> in milliseconds until <code>{callback}</code> returns <code>true</code>.
+    Waits up to <code>time</code> milliseconds, until <code>callback</code> returns <code>true</code>
+    (success). Executes <code>callback</code> immediately, then at intervals of
+    approximately <code>interval</code> milliseconds (default 200). Returns all
+    <code>callback</code> results on success.
 
 </div>
 <div class="help-para">
-    Executes <code>{callback}</code> immediately and at approximately <code>{interval}</code>
-    milliseconds (default 200). Nvim still processes other events during this
-    time.
+    Nvim processes other events while waiting. Cannot be called during an
+    <a href="api.html#api-fast">api-fast</a> event.
 
 </div>
 <div class="help-para">
-    Cannot be called while in an <a href="api.html#api-fast">api-fast</a> event.
-
-</div>
-<div class="help-para">
-    Examples:<pre><code class="language-lua">---
--- Wait for 100 ms, allowing other events to process
-vim.wait(100, function() end)
----
--- Wait for 100 ms or until global variable set.
-vim.wait(100, function() return vim.g.waiting_for_var end)
----
--- Wait for 1 second or until global variable set, checking every ~500 ms
-vim.wait(1000, function() return vim.g.waiting_for_var end, 500)
----
--- Schedule a function to set a value in 100ms
+    Examples:<pre><code class="language-lua">-- Wait for 100 ms, allowing other events to process.
+vim.wait(100)
+-- Wait up to 1000 ms or until `vim.g.foo` is true, at intervals of ~500 ms.
+vim.wait(1000, function() return vim.g.foo end, 500)
+-- Wait up to 100 ms or until `vim.g.foo` is true, and get the callback results.
+local ok, rv1, rv2, rv3 = vim.wait(100, function()
+  return vim.g.foo, 'a', 42, { ok = { 'yes' } }
+end)
+-- Schedule a function to set a value in 100ms. This would wait 10s if blocked, but actually
+-- only waits 100ms because `vim.wait` processes other events while waiting.
 vim.defer_fn(function() vim.g.timer_result = true end, 100)
--- Would wait ten seconds if results blocked. Actually only waits  100 ms
 if vim.wait(10000, function() return vim.g.timer_result end) then
   print('Only waiting a little bit of time!')
 end</code></pre>
@@ -1136,10 +1132,10 @@ end</code></pre>
 <div class="help-column_heading">Return (multiple):</div>
         (<code>boolean</code>)
         (<code>-1|-2?</code>)
-<div class="help-li" style=""> If <code>{callback}</code> returns <code>true</code> during the <code>{time}</code>: <code>true, nil</code>
-</div><div class="help-li" style=""> If <code>{callback}</code> never returns <code>true</code> during the <code>{time}</code>: <code>false, -1</code>
-</div><div class="help-li" style=""> If <code>{callback}</code> is interrupted during the <code>{time}</code>: <code>false, -2</code>
-</div><div class="help-li" style=""> If <code>{callback}</code> errors, the error is raised.
+<div class="help-li" style=""> If callback returns <code>true</code> before timeout: <code>true, nil, ...</code>
+</div><div class="help-li" style=""> On timeout: <code>false, -1</code>
+</div><div class="help-li" style=""> On interrupt: <code>false, -2</code>
+</div><div class="help-li" style=""> On error: the error is raised.
 </div>
 </div>
 <div class="help-para">
@@ -6849,7 +6845,7 @@ spilled lines. To see the full message, the <a href="message.html#g%3C">g&lt;</a
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-09-01 05:23 from <code><a href="https://github.com/neovim/neovim/commit/c6bfc203f10f325fa6d09d3624fc01e91697bd67">c6bfc20</a></code>
+        Generated at 2025-09-02 05:23 from <code><a href="https://github.com/neovim/neovim/commit/79bfeecdb483c683e79abca3e9a1bd98b3a30b0f">79bfeec</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
