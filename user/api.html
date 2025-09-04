@@ -427,27 +427,6 @@ The idea is "versionless evolution", in the words of Rich Hickey:
 </div>
 </div>
 <div class="help-para">
-<h2 id="_global-events" class="help-heading">Global events<span class="help-heading-tags">                                               <span id="api-global-events" class="help-tag"><a href="#api-global-events">api-global-events</a></span></h2>
-
-
-</div>
-<div class="help-para">
-When a client invokes an API request as an async notification, it is not
-possible for Nvim to send an error response. Instead, in case of error, the
-following notification will be sent to the client:
-
-</div>
-<div class="help-para">
-                                                             <span id="nvim_error_event" class="help-tag-right"><a href="#nvim_error_event">nvim_error_event</a></span><br>
-nvim_error_event[<code>{type}</code>, <code>{message}</code>]
-
-</div>
-<div class="help-para">
-<code>{type}</code> is a numeric id as defined by <code>api_info().error_types</code>, and <code>{message}</code> is
-a string with the error message.
-
-</div>
-<div class="help-para">
 <h2 id="_buffer-update-events" class="help-heading">Buffer update events<span class="help-heading-tags">                                    <span id="api-buffer-updates" class="help-tag"><a href="#api-buffer-updates">api-buffer-updates</a></span></h2>
 
 
@@ -782,6 +761,53 @@ Extmark positions changed by an edit will be restored on undo/redo. Creating
 and deleting extmarks is not a buffer change, thus new undo states are not
 created for extmark changes.
 
+</div>
+<div class="help-para">
+<h2 id="_global-events" class="help-heading">Global Events<span class="help-heading-tags">                                                     <span id="api-events" class="help-tag"><a href="#api-events">api-events</a></span></h2>
+
+
+</div>
+<div class="help-para">
+nvim_error_event(<code>{type}</code>, <code>{msg}</code>)                             <span id="nvim_error_event" class="help-tag-right"><a href="#nvim_error_event">nvim_error_event</a></span><br>
+    Emitted on the client channel if an async API request responds with an
+    error.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{type}</code>  (<code>integer</code>) Error type id as defined by
+                <code>api_info().error_types</code>.
+</div><div class="help-li" style=""> <code>{msg}</code>   (<code>string</code>) Error message.
+</div>
+</div>
+<div class="help-para">
+nvim_ui_term_event(<code>{event}</code>, <code>{value}</code>)                      <span id="nvim_ui_term_event" class="help-tag-right"><a href="#nvim_ui_term_event">nvim_ui_term_event</a></span><br>
+    Emitted by the TUI client to signal when a host-terminal event occurred.
+
+</div>
+<div class="help-para">
+    Supports these events:
+<div class="help-li" style=""> "termresponse": The host-terminal sent a DA1, OSC, DCS, or APC response
+      sequence to Nvim. The payload is the received response. Sets
+      <a href="vvars.html#v%3Atermresponse">v:termresponse</a> and fires <a href="autocmd.html#TermResponse">TermResponse</a>.
+</div>
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        <a href="api.html#RPC">RPC</a> only
+        Since: 0.10.0
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Parameters:</div>
+<div class="help-li" style=""> <code>{event}</code>  (<code>string</code>) Event name
+</div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>) Event payload
+</div>
 </div>
 <div class="help-para">
 <h2 id="_global-functions" class="help-heading">Global Functions<span class="help-heading-tags">                                                  <span id="api-global" class="help-tag"><a href="#api-global">api-global</a></span></h2>
@@ -1998,9 +2024,9 @@ nvim_set_client_info(<code>{name}</code>, <code>{version}</code>, <code>{type}</
 
 </div>
 <div class="help-para">
-    Can be called more than once; the caller should merge old info if
-    appropriate. Example: library first identifies the channel, then a plugin
-    using that library later identifies itself.
+    Can be called more than once; caller should merge old info if appropriate.
+    Example: a library first identifies the channel, then a plugin using that
+    library later identifies itself.
 
 </div>
 <div class="help-para">
@@ -4638,9 +4664,8 @@ nvim_set_decoration_provider(<code>{ns_id}</code>, <code>{opts}</code>)
 <pre>["win", winid, bufnr, toprow, botrow]</pre></div>
 </div>
 <div class="help-para">
-<div class="help-li" style=""> on_line: called for each buffer line being redrawn. (The
-                   interaction with fold lines is subject to change)<pre>["line", winid, bufnr, row]</pre>
-</div>
+<div class="help-li" style=""> on_line: (deprecated, use on_range instead)
+<pre>["line", winid, bufnr, row]</pre></div>
 </div>
 <div class="help-para">
 <div class="help-li" style=""> on_range: called for each buffer range being redrawn. Range
@@ -5137,30 +5162,6 @@ nvim_ui_set_option(<code>{name}</code>, <code>{value}</code>)                   
 <div class="help-column_heading">Parameters:</div>
 <div class="help-li" style=""> <code>{name}</code>   (<code>string</code>)
 </div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>)
-</div>
-</div>
-<div class="help-para">
-nvim_ui_term_event(<code>{event}</code>, <code>{value}</code>)                    <span id="nvim_ui_term_event()" class="help-tag-right"><a href="#nvim_ui_term_event()">nvim_ui_term_event()</a></span><br>
-    Tells Nvim when a host-terminal event occurred.
-
-</div>
-<div class="help-para">
-    Supports these events:
-<div class="help-li" style=""> "termresponse": The host-terminal sent a DA1, OSC, DCS, or APC response
-      sequence to Nvim. The payload is the received response. Sets
-      <a href="vvars.html#v%3Atermresponse">v:termresponse</a> and fires <a href="autocmd.html#TermResponse">TermResponse</a>.
-</div>
-</div>
-<div class="help-para">
-<div class="help-column_heading">Attributes:</div>
-        <a href="api.html#RPC">RPC</a> only
-        Since: 0.10.0
-
-</div>
-<div class="help-para">
-<div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{event}</code>  (<code>string</code>) Event name
-</div><div class="help-li" style=""> <code>{value}</code>  (<code>any</code>) Event payload
 </div>
 </div>
 <div class="help-para">
@@ -5933,11 +5934,11 @@ nvim_win_text_height(<code>{window}</code>, <code>{opts}</code>)                
 </div><div class="help-toc-h1"><a href="#_api-definitions">API Definitions</a>
 </div><div class="help-toc-h1"><a href="#_api-metadata">API metadata</a>
 </div><div class="help-toc-h1"><a href="#_api-contract">API contract</a>
-</div><div class="help-toc-h1"><a href="#_global-events">Global events</a>
 </div><div class="help-toc-h1"><a href="#_buffer-update-events">Buffer update events</a>
 </div><div class="help-toc-h1"><a href="#_buffer-highlighting">Buffer highlighting</a>
 </div><div class="help-toc-h1"><a href="#_floating-windows">Floating windows</a>
 </div><div class="help-toc-h1"><a href="#_extended-marks">Extended marks</a>
+</div><div class="help-toc-h1"><a href="#_global-events">Global Events</a>
 </div><div class="help-toc-h1"><a href="#_global-functions">Global Functions</a>
 </div><div class="help-toc-h1"><a href="#_vimscript-functions">Vimscript Functions</a>
 </div><div class="help-toc-h1"><a href="#_autocmd-functions">Autocmd Functions</a>
@@ -5954,7 +5955,7 @@ nvim_win_text_height(<code>{window}</code>, <code>{opts}</code>)                
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-09-03 05:20 from <code><a href="https://github.com/neovim/neovim/commit/f9ce939bf53b84f7e6e4ecca3875dd0c378991db">f9ce939</a></code>
+        Generated at 2025-09-04 05:20 from <code><a href="https://github.com/neovim/neovim/commit/2b421d518faec9e1b0a6d1c46026d2f13f4fb73f">2b421d5</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+api.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/api.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="               Nvim
