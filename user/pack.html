@@ -356,6 +356,15 @@ tags following semver convention <code>v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt
 
 </div>
 <div class="help-para">
+The latest state of all managed plugins is stored inside a <span id="vim.pack-lockfile" class="help-tag"><a href="#vim.pack-lockfile">vim.pack-lockfile</a></span>
+located at <code>$XDG_CONFIG_HOME/nvim/nvim-pack-lock.json</code>. It is a JSON file that
+is used to persistently track data about plugins. For a more robust config
+treat lockfile like its part: put under version control, etc. In this case
+initial install prefers revision from the lockfile instead of inferring from
+<code>version</code>. Should not be edited by hand or deleted.
+
+</div>
+<div class="help-para">
 <div class="help-column_heading">Example workflows</div>
 
 </div>
@@ -387,19 +396,22 @@ plugin1 = require('plugin1')</code></pre></div>
 </div>
 <div class="help-para">
 <div class="help-li" style=""> Restart Nvim (for example, with <a href="gui.html#%3Arestart">:restart</a>). Plugins that were not yet
-  installed will be available on disk in target state after <code>add()</code> call.
+  installed will be available on disk after <code>add()</code> call. Their revision is
+  taken from <a href="pack.html#vim.pack-lockfile">vim.pack-lockfile</a> (if present) or inferred from the <code>version</code>.
 </div><div class="help-li" style=""> To update all plugins with new changes:
 </div><div class="help-li" style="margin-left: 3rem;"> Execute <a href="pack.html#vim.pack.update()">vim.pack.update()</a>. This will download updates from source and
     show confirmation buffer in a separate tabpage.
 </div><div class="help-li" style="margin-left: 3rem;"> Review changes. To confirm all updates execute <a href="editing.html#%3Awrite">:write</a>. To discard
     updates execute <a href="editing.html#%3Aquit">:quit</a>.
+</div><div class="help-li" style="margin-left: 3rem;"> (Optionally) <a href="gui.html#%3Arestart">:restart</a> to start using code from updated plugins.
 </div>
 </div>
 <div class="help-para">
 Switch plugin's version:
 <div class="help-li" style=""> Update 'init.lua' for plugin to have desired <code>version</code>. Let's say, plugin
   named 'plugin1' has changed to <code>vim.version.range('*')</code>.
-</div><div class="help-li" style=""> <a href="gui.html#%3Arestart">:restart</a>. The plugin's actual state on disk is not yet changed.
+</div><div class="help-li" style=""> <a href="gui.html#%3Arestart">:restart</a>. The plugin's actual state on disk is not yet changed. Only
+  plugin's <code>version</code> in <a href="pack.html#vim.pack-lockfile">vim.pack-lockfile</a> is updated.
 </div><div class="help-li" style=""> Execute <code>vim.pack.update({ 'plugin1' })</code>.
 </div><div class="help-li" style=""> Review changes and either confirm or discard them. If discarded, revert any
   changes in 'init.lua' as well or you will be prompted again next time you
@@ -409,7 +421,7 @@ Switch plugin's version:
 <div class="help-para">
 Freeze plugin from being updated:
 <div class="help-li" style=""> Update 'init.lua' for plugin to have <code>version</code> set to current revision. Get
-  it with <code>:=vim.pack.get({ 'plug-name' })[1].rev</code> (looks like <code>abc12345</code>).
+  it from <a href="pack.html#vim.pack-lockfile">vim.pack-lockfile</a> (plugin's field <code>rev</code>; looks like <code>abc12345</code>).
 </div><div class="help-li" style=""> <a href="gui.html#%3Arestart">:restart</a>.
 </div>
 </div>
@@ -534,7 +546,7 @@ get(<code>{names}</code>, <code>{opts}</code>)                                  
 </div><div class="help-li" style=""> <code>{branches}?</code> (<code>string[]</code>) Available Git branches (first is default).
           Missing if <code>info=false</code>.
 </div><div class="help-li" style=""> <code>{path}</code> (<code>string</code>) Plugin's path on disk.
-</div><div class="help-li" style=""> <code>{rev}?</code> (<code>string</code>) Current Git revision. Missing if <code>info=false</code>.
+</div><div class="help-li" style=""> <code>{rev}</code> (<code>string</code>) Current Git revision.
 </div><div class="help-li" style=""> <code>{spec}</code> (<code>vim.pack.SpecResolved</code>) A <a href="pack.html#vim.pack.Spec">vim.pack.Spec</a> with resolved
           <code>name</code>.
 </div><div class="help-li" style=""> <code>{tags}?</code> (<code>string[]</code>) Available Git tags. Missing if <code>info=false</code>.
@@ -571,8 +583,7 @@ update(<code>{names}</code>, <code>{opts}</code>)                               
 <div class="help-column_heading">Parameters:</div>
 <div class="help-li" style=""> <code>{names}</code>  (<code>string[]?</code>) List of plugin names to update. Must be managed
                  by <a href="pack.html#vim.pack">vim.pack</a>, not necessarily already added to current
-                 session. Default: names of all plugins added to current
-                 session via <a href="pack.html#vim.pack.add()">vim.pack.add()</a>.
+                 session. Default: names of all plugins managed by <a href="pack.html#vim.pack">vim.pack</a>.
 </div><div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) A table with the following fields:
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{force}?</code> (<code>boolean</code>) Whether to skip confirmation and make
                    updates immediately. Default <code>false</code>.
@@ -593,7 +604,7 @@ update(<code>{names}</code>, <code>{opts}</code>)                               
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-10-04 05:20 from <code><a href="https://github.com/neovim/neovim/commit/96e9041a7886ca56bc0e59d1d76acf6110aa7e6e">96e9041</a></code>
+        Generated at 2025-10-05 05:21 from <code><a href="https://github.com/neovim/neovim/commit/b938638d2d069f71a3e80e3589dc2050396f0243">b938638</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+pack.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/pack.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="                            Nvim
