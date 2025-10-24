@@ -414,6 +414,13 @@ script.
 
 </div>
 <div class="help-para">
+For buffers owned by your plugin (often used to show a custom UI or view),
+typically your plugin will set a custom <a href="options.html#'filetype'">'filetype'</a>. In that case, it's useful
+to set the <a href="options.html#'filetype'">'filetype'</a> "as late as possible", so that users can override
+buffer-local settings after your plugin has (re)initialized the buffer.
+
+</div>
+<div class="help-para">
 <h3 id="_filetype-example" class="help-heading">FILETYPE EXAMPLE</h3>
 
 
@@ -442,6 +449,12 @@ end, { buffer = bufnr, })</code></pre>
 
 </div>
 <div class="help-para">
+To allow users to override buffer-local configuration for filetypes owned by
+your plugin, publish a <a href="autocmd.html#FileType">FileType</a> event, "as late as possible".
+<a href="lua-plugin.html#lua-plugin-filetype">lua-plugin-filetype</a>
+
+</div>
+<div class="help-para">
 Once you have merged the default configuration with the user's config, you
 should validate configs.
 
@@ -456,6 +469,37 @@ Validations could include:
   This can be tricky to implement, and may be better suited for a <a href="health.html#health">health</a>
   check, to reduce overhead.
 </div>
+</div>
+<div class="help-para">
+<h2 id="_ui" class="help-heading">UI<span class="help-heading-tags">                                                           <span id="lua-plugin-ui" class="help-tag"><a href="#lua-plugin-ui">lua-plugin-ui</a></span></h2>
+
+
+</div>
+<div class="help-para">
+Some plugins have their own "UI" which they present in a buffer that the
+plugin "owns". In that buffer typically you will want to provide custom
+actions.
+
+</div>
+<div class="help-para">
+Besides creating <a href="map.html#%3CPlug%3E">&lt;Plug&gt;</a> mappings, you may want to consider providing actions
+by defining an in-process LSP server. Offering actions as code-actions
+<a href="lsp.html#vim.lsp.buf.code_action()">vim.lsp.buf.code_action()</a> means the user can see all available actions using
+the default <a href="lsp.html#gra">gra</a> mapping to view the code-actions menu. They can even define
+mappings to a specific action by invoking <code>vim.lsp.buf.code_action()</code> with the
+<code>filter</code> + <code>apply</code> parameters:<pre><code class="language-lua">vim.lsp.buf.code_action({
+    apply = true,
+    filter = function(a)
+        return a.title == 'Do something'
+    end,
+})</code></pre>
+
+</div>
+<div class="help-para">
+Example: See <code>runtime/lua/vim/pack/_lsp.lua</code> for how vim.pack defines an
+in-process LSP server to provide interactive features in its <code>nvim-pack://</code>
+buffer.
+
 </div>
 <div class="help-para">
 <h2 id="_troubleshooting" class="help-heading">Troubleshooting<span class="help-heading-tags">                                   <span id="lua-plugin-troubleshooting" class="help-tag"><a href="#lua-plugin-troubleshooting">lua-plugin-troubleshooting</a></span></h2>
@@ -586,6 +630,7 @@ regenerated using the <a href="helphelp.html#%3Ahelptags">:helptags</a> command.
 <div class="help-toc-h2"><a href="#_filetype-specific-functionality">Filetype-specific functionality</a></div>
 <div class="help-toc-h2"><a href="#_filetype-example">FILETYPE EXAMPLE</a></div>
 </div><div class="help-toc-h1"><a href="#_configuration">Configuration</a>
+</div><div class="help-toc-h1"><a href="#_ui">UI</a>
 </div><div class="help-toc-h1"><a href="#_troubleshooting">Troubleshooting</a>
 <div class="help-toc-h2"><a href="#_health">HEALTH</a></div>
 <div class="help-toc-h2"><a href="#_minimal-config-template">MINIMAL CONFIG TEMPLATE</a></div>
@@ -599,7 +644,7 @@ regenerated using the <a href="helphelp.html#%3Ahelptags">:helptags</a> command.
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-10-23 05:27 from <code><a href="https://github.com/neovim/neovim/commit/af0f7b59b1fcd92e64841cb5da8a577e944ce5bb">af0f7b5</a></code>
+        Generated at 2025-10-24 05:21 from <code><a href="https://github.com/neovim/neovim/commit/095b9f98f3e37b53520c766a12cb413dd0589028">095b9f9</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua-plugin.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua-plugin.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="                     Nvim

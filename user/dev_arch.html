@@ -95,19 +95,59 @@
   </p>
   <hr/>
   <div class="old-help-para">How to develop Nvim, explanation of modules and subsystems</div>
-<div class="old-help-para">The top of each major module has (or should have) an overview in a comment at
-the top of its file. The purpose of this document is to give:</div>
+<div class="old-help-para">Module-specific details are documented at the top of each module
+(<code>terminal.c</code>, <code>undo.c</code>, …). The top of each major module has (or should have)
+an overview in a comment at the top of its file.</div>
+<div class="old-help-para">The purpose of this document is to give:</div>
 <div class="old-help-para">1. an overview of how it all fits together
 2. how-to guides for common tasks such as:
-<div class="help-li" style=""> deprecating public functions
-</div><div class="help-li" style=""> adding a new public (API) function
-</div><div class="help-li" style=""> adding a new public (UI) event
-3. TODO: move src/nvim/README.md into this doc.
+<div class="help-li" style=""> (TODO) deprecating public functions
+</div><div class="help-li" style=""> (TODO) adding a new public (API) function or (UI) event
+</div></div>
+<div class="old-help-para"><h2 id="_filename-conventions" class="help-heading">Filename conventions</h2></div>
+<div class="old-help-para">The source filenames use extensions to hint about their purpose.</div>
+<div class="old-help-para"><div class="help-li" style=""> <code>*.c</code>, <code>*.generated.c</code> - full C files, with all includes, etc.
+</div><div class="help-li" style=""> <code>*.c.h</code> - parametrized C files, contain all necessary includes, but require
+  defining macros before actually using. Example: <code>typval_encode.c.h</code>
+</div><div class="help-li" style=""> <code>*.h</code> - full headers, with all includes. Does <span id="not" class="help-tag"><a href="#not">not</a></span> apply to <code>*.generated.h</code>.
+</div><div class="help-li" style=""> <code>*.h.generated.h</code> - exported functions’ declarations.
+</div><div class="help-li" style=""> <code>*.c.generated.h</code> - static functions’ declarations.
 </div></div>
 <div class="old-help-para"><h2 id="_data-structures" class="help-heading">Data structures</h2></div>
+<div class="old-help-para"><div class="help-li" style=""> StringBuilder
+</div><div class="help-li" style=""> kvec or garray.c for dynamic lists / vectors (use StringBuilder for strings)
+</div></div>
 <div class="old-help-para">Use <code>kvec.h</code> for most lists. When you absolutely need a linked list, use
 <code>lib/queue_defs.h</code> which defines an "intrusive" linked list.</div>
-<div class="old-help-para"><h2 id="_ui-events" class="help-heading">UI events</h2></div>
+<div class="old-help-para">Buffer text is stored as a tree of line segments, defined in <code>src/nvim/memline.c</code>.
+The central idea is found in <code>ml_find_line</code>.</div>
+<div class="old-help-para">Many of the editor concepts are defined as Lua data files:</div>
+<div class="old-help-para"><div class="help-li" style=""> Events (autocmds): src/nvim/auevents.lua
+</div><div class="help-li" style=""> Ex (cmdline) commands: src/nvim/ex_cmds.lua
+</div><div class="help-li" style=""> Options: src/nvim/options.lua
+</div><div class="help-li" style=""> Vimscript functions: src/nvim/eval.lua
+</div><div class="help-li" style=""> v: variables: src/nvim/vvars.lua
+</div></div>
+<div class="old-help-para"><h2 id="_events" class="help-heading">Events<span class="help-heading-tags">                                                            <span id="dev-events" class="help-tag"><a href="#dev-events">dev-events</a></span></h2></div>
+<div class="old-help-para">The events historically called "autocmds", referred to here as "editor events"
+or simply "events", are high-level events for use by plugins, user config, and
+the Nvim editor. (There is an unrelated, low-level concept defined by the
+<code>event/defs.h#Event</code> struct, which is just a bag of data passed along the
+internal <a href="dev_arch.html#event-loop">event-loop</a>.)</div>
+<div class="old-help-para">All new editor events must be implemented using <code>aucmd_defer()</code> (and where
+possible, old events should be migrated to this), so that they are processed
+in a predictable manner, which avoids crashes and race conditions. See
+<code>do_markset_autocmd</code> for an example.</div>
+<div class="old-help-para"><h2 id="_ui-events" class="help-heading">UI events<span class="help-heading-tags">                                                      <span id="dev-ui-events" class="help-tag"><a href="#dev-ui-events">dev-ui-events</a></span></h2></div>
+<div class="old-help-para">The long-term vision is that UI events are just another type of "editor event"
+(formerly known as "autocmds"). There is no real reason that we have separate
+types of user-facing or plugin-facing events. Events are events. Their
+"transport" is irrelevant and any event should be possible to emit over any
+transport (editor or RPC).</div>
+<div class="old-help-para">Meanwhile the current situation is that UI events are a particular RPC event
+packaged in a generic <code>redraw</code> notification. They also can be listened to
+in-process via <a href="lua.html#vim.ui_attach()">vim.ui_attach()</a>.</div>
+<div class="old-help-para">UI events are deferred to UIs, which implies a deepcopy of the UI event data.</div>
 <div class="old-help-para">The source files most directly involved with UI events are:
 1. <code>src/nvim/ui.*</code>: calls handler functions of registered UI structs (independent from msgpack-rpc)
 2. <code>src/nvim/api/ui.*</code>: forwards messages over msgpack-rpc to remote UIs.</div>
@@ -117,10 +157,8 @@ compiled directly, rather it parsed by
 functions used by the source files above. It also generates metadata
 accessible as <code>api_info().ui_events</code>.</div>
 <div class="old-help-para">See commit d3a8e9217f39c59dd7762bd22a76b8bd03ca85ff for an example of adding
-a new UI event.</div>
-<div class="old-help-para">UI events are deferred to UIs, which implies a deepcopy of the UI event data.</div>
-<div class="old-help-para">Remember to bump NVIM_API_LEVEL if it wasn't already during this development
-cycle.</div>
+a new UI event. Remember to bump NVIM_API_LEVEL if it wasn't already during
+this development cycle.</div>
 <div class="old-help-para">Other references:
 <div class="help-li" style=""> <a href="api.html#msgpack-rpc">msgpack-rpc</a>
 </div><div class="help-li" style=""> <a href="api-ui-events.html#ui">ui</a>
@@ -145,6 +183,201 @@ be "fast". For example, commit 3940c435e405 fixed such a bug with
 <code>EW_NOBREAK</code> flag.</div>
 <div class="old-help-para">Common examples of non-fast code: regexp matching, wildcard expansion,
 expression evaluation.</div>
+<div class="old-help-para"><h2 id="_the-event-loop" class="help-heading">The event-loop<span class="help-heading-tags">                                                    <span id="event-loop" class="help-tag"><a href="#event-loop">event-loop</a></span></h2></div>
+<div class="old-help-para">The internal, low-level, libuv event-loop (<a href="luvref.html#luv-event-loop">luv-event-loop</a>) is used to
+schedule arbitrary work in a predictable way. One such obvious use-case for
+scheduling is deferred editor-events (autocmds). Another example is
+<a href="job_control.html#job-control">job-control</a>.</div>
+<div class="old-help-para"><h3 id="_async-event-support" class="help-heading">ASYNC EVENT SUPPORT</h3></div>
+<div class="old-help-para">One of the features Nvim added is the support for handling arbitrary
+asynchronous events, which can include:</div>
+<div class="old-help-para"><div class="help-li" style=""> RPC requests
+</div><div class="help-li" style=""> job control callbacks
+</div><div class="help-li" style=""> timers
+</div></div>
+<div class="old-help-para">Nvim implements this functionality by entering another event loop while
+waiting for characters, so instead of:<pre><code class="language-py">def state_enter(state_callback, data):
+  do
+    key = readkey()                 # read a key from the user
+  while state_callback(data, key)   # invoke the callback for the current state</code></pre></div>
+<div class="old-help-para">The Nvim program loop is more like:<pre><code class="language-py">def state_enter(state_callback, data):
+  do
+    event = read_next_event()       # read an event from the operating system
+  while state_callback(data, event) # invoke the callback for the current state</code></pre></div>
+<div class="old-help-para">where <code>event</code> is something the operating system delivers to us, including (but
+not limited to) user input. The <code>read_next_event()</code> part is internally
+implemented by libuv, the platform layer used by Nvim.</div>
+<div class="old-help-para">Since Nvim inherited its code from Vim, the states are not prepared to receive
+"arbitrary events", so we use a special key to represent those (When a state
+receives an "arbitrary event", it normally doesn't do anything other than
+update the screen).</div>
+<div class="old-help-para"><h3 id="_main-loop" class="help-heading">MAIN LOOP</h3></div>
+<div class="old-help-para">The <code>Loop</code> structure (which describes <code>main_loop</code>) abstracts multiple queues
+into one loop:<pre>uv_loop_t uv;
+MultiQueue *events;
+MultiQueue *thread_events;
+MultiQueue *fast_events;</pre>
+<code>loop_poll_events</code> checks <code>Loop.uv</code> and <code>Loop.fast_events</code> whenever Nvim is
+idle, and also at <code>os_breakcheck</code> intervals.</div>
+<div class="old-help-para">MultiQueue is cool because you can attach throw-away "child queues" trivially.
+For example <code>do_os_system()</code> does this (for every spawned process!) to
+automatically route events onto the <code>main_loop</code>:<pre>Process *proc = &amp;uvproc.process;
+MultiQueue *events = multiqueue_new_child(main_loop.events);
+proc-&gt;events = events;</pre>
+<h3 id="_nvim-lifecycle" class="help-heading">NVIM LIFECYCLE</h3></div>
+<div class="old-help-para">How Nvim processes input.</div>
+<div class="old-help-para">Consider a typical Vim-like editing session:</div>
+<div class="old-help-para">01. Vim displays the welcome screen
+02. User types: <code>:</code>
+03. Vim enters command-line mode
+04. User types: <code>edit README.txt&lt;CR&gt;</code>
+05. Vim opens the file and returns to normal mode
+06. User types: <code>G</code>
+07. Vim navigates to the end of the file
+09. User types: <code>5</code>
+10. Vim enters count-pending mode
+11. User types: <code>d</code>
+12. Vim enters operator-pending mode
+13. User types: <code>w</code>
+14. Vim deletes 5 words
+15. User types: <code>g</code>
+16. Vim enters the "g command mode"
+17. User types: <code>g</code>
+18. Vim goes to the beginning of the file
+19. User types: <code>i</code>
+20. Vim enters insert mode
+21. User types: <code>word&lt;ESC&gt;</code>
+22. Vim inserts "word" at the beginning and returns to normal mode</div>
+<div class="old-help-para">Note that we split user actions into sequences of inputs that change the state
+of the editor. While there's no documentation about a "g command mode" (step
+16), internally it is implemented similarly to "operator-pending mode".</div>
+<div class="old-help-para">From this we can see that Vim has the behavior of an input-driven state machine
+(more specifically, a pushdown automaton since it requires a stack for
+transitioning back from states). Assuming each state has a callback responsible
+for handling keys, this pseudocode represents the main program loop:<pre><code class="language-py">def state_enter(state_callback, data):
+  do
+    key = readkey()                 # read a key from the user
+  while state_callback(data, key)   # invoke the callback for the current state</code></pre></div>
+<div class="old-help-para">That is, each state is entered by calling <code>state_enter</code> and passing a
+state-specific callback and data. Here is a high-level pseudocode for a program
+that implements something like the workflow described above:<pre><code class="language-py">def main()
+  state_enter(normal_state, {}):
+def normal_state(data, key):
+  if key == ':':
+    state_enter(command_line_state, {})
+  elif key == 'i':
+    state_enter(insert_state, {})
+  elif key == 'd':
+    state_enter(delete_operator_state, {})
+  elif key == 'g':
+    state_enter(g_command_state, {})
+  elif is_number(key):
+    state_enter(get_operator_count_state, {'count': key})
+  elif key == 'G'
+    jump_to_eof()
+  return true
+def command_line_state(data, key):
+  if key == '&lt;cr&gt;':
+    if data['input']:
+      execute_ex_command(data['input'])
+    return false
+  elif key == '&lt;esc&gt;'
+    return false
+  if not data['input']:
+    data['input'] = ''
+  data['input'] += key
+  return true
+def delete_operator_state(data, key):
+  count = data['count'] or 1
+  if key == 'w':
+    delete_word(count)
+  elif key == '$':
+    delete_to_eol(count)
+  return false  # return to normal mode
+def g_command_state(data, key):
+  if key == 'g':
+    go_top()
+  elif key == 'v':
+    reselect()
+  return false  # return to normal mode
+def get_operator_count_state(data, key):
+  if is_number(key):
+    data['count'] += key
+    return true
+  unshift_key(key)  # return key to the input buffer
+  state_enter(delete_operator_state, data)
+  return false
+def insert_state(data, key):
+  if key == '&lt;esc&gt;':
+    return false  # exit insert mode
+  self_insert(key)
+  return true</code></pre></div>
+<div class="old-help-para">The above gives an idea of how Nvim is organized internally. Some states like
+the <code>g_command_state</code> or <code>get_operator_count_state</code> do not have a dedicated
+<code>state_enter</code> callback, but are implicitly embedded into other states (this
+will change later as we continue the refactoring effort). To start reading the
+actual code, here's the recommended order:</div>
+<div class="old-help-para">1. <code>state_enter()</code> function (state.c). This is the actual program loop,
+   note that a <code>VimState</code> structure is used, which contains function pointers
+   for the callback and state data.
+2. <code>main()</code> function (main.c). After all startup, <code>normal_enter</code> is called
+   at the end of function to enter normal mode.
+3. <code>normal_enter()</code> function (normal.c) is a small wrapper for setting
+   up the NormalState structure and calling <code>state_enter</code>.
+4. <code>normal_check()</code> function (normal.c) is called before each iteration of
+   normal mode.
+5. <code>normal_execute()</code> function (normal.c) is called when a key is read in normal
+   mode.</div>
+<div class="old-help-para">The basic structure described for normal mode in 3, 4 and 5 is used for other
+modes managed by the <code>state_enter</code> loop:</div>
+<div class="old-help-para"><div class="help-li" style=""> command-line mode: <code>command_line_{enter,check,execute}()</code>(<code>ex_getln.c</code>)
+</div><div class="help-li" style=""> insert mode: <code>insert_{enter,check,execute}()</code>(<code>edit.c</code>)
+</div><div class="help-li" style=""> terminal mode: <code>terminal_{enter,execute}()</code>(<code>terminal.c</code>)
+</div></div>
+<div class="old-help-para"><h3 id="_important-variables" class="help-heading">IMPORTANT VARIABLES</h3></div>
+<div class="old-help-para">The current mode is stored in <code>State</code>.  The values it can have are <code>MODE_NORMAL</code>,
+<code>MODE_INSERT</code>, <code>MODE_CMDLINE</code>, and a few others.</div>
+<div class="old-help-para">The current window is <code>curwin</code>.  The current buffer is <code>curbuf</code>.  These point
+to structures with the cursor position in the window, option values, the file
+name, etc.</div>
+<div class="old-help-para">All the global variables are declared in <code>globals.h</code>.</div>
+<div class="old-help-para"><h3 id="_the-main-event-loop" class="help-heading">THE MAIN EVENT-LOOP</h3></div>
+<div class="old-help-para">The main loop is implemented in state_enter. The basic idea is that Vim waits
+for the user to type a character and processes it until another character is
+needed.  Thus there are several places where Vim waits for a character to be
+typed.  The <code>vgetc()</code> function is used for this.  It also handles mapping.</div>
+<div class="old-help-para">What we consider the "Nvim event loop" is actually a wrapper around <code>uv_run</code> to
+handle both the <code>fast_events</code> queue and possibly (a suitable subset of) deferred
+events. Therefore "raw" <code>vim.uv.run()</code> is often not enough to "yield" from Lua
+plugins; instead they can call <code>vim.wait(0)</code>.</div>
+<div class="old-help-para">Updating the screen is mostly postponed until a command or a sequence of
+commands has finished.  The work is done by <code>update_screen()</code>, which calls
+<code>win_update()</code> for every window, which calls <code>win_line()</code> for every line.
+See the start of [drawscreen.c](drawscreen.c) for more explanations.</div>
+<div class="old-help-para"><h3 id="_command-line-mode" class="help-heading">COMMAND-LINE MODE</h3></div>
+<div class="old-help-para">When typing a <code>:</code>, <code>normal_cmd()</code> will call <code>getcmdline()</code> to obtain a line with
+an Ex command.  <code>getcmdline()</code> calls a loop that will handle each typed
+character.  It returns when hitting <code>&lt;CR&gt;</code> or <code>&lt;Esc&gt;</code> or some other character that
+ends the command line mode.</div>
+<div class="old-help-para"><h3 id="_ex-commands" class="help-heading">EX COMMANDS</h3></div>
+<div class="old-help-para">Ex commands are handled by the function <code>do_cmdline()</code>.  It does the generic
+parsing of the <code>:</code> command line and calls <code>do_one_cmd()</code> for each separate
+command.  It also takes care of while loops.</div>
+<div class="old-help-para"><code>do_one_cmd()</code> parses the range and generic arguments and puts them in the
+exarg_t and passes it to the function that handles the command.</div>
+<div class="old-help-para">The <code>:</code> commands are listed in [ex_cmds.lua](ex_cmds.lua).</div>
+<div class="old-help-para"><h3 id="_normal-mode-commands" class="help-heading">NORMAL MODE COMMANDS</h3></div>
+<div class="old-help-para">The Normal mode commands are handled by the <code>normal_cmd()</code> function.  It also
+handles the optional count and an extra character for some commands.  These
+are passed in a <code>cmdarg_T</code> to the function that handles the command.</div>
+<div class="old-help-para">There is a table <code>nv_cmds</code> in [normal.c](normal.c) which
+lists the first character of every
+command.  The second entry of each item is the name of the function that
+handles the command.</div>
+<div class="old-help-para"><h3 id="_insert-mode-commands" class="help-heading">INSERT MODE COMMANDS</h3></div>
+<div class="old-help-para">When doing an <code>i</code> or <code>a</code> command, <code>normal_cmd()</code> will call the <code>edit()</code> function.
+It contains a loop that waits for the next character and handles it.  It
+returns when leaving Insert mode.</div>
 
   </div>
       <div class="col-narrow toc">
@@ -152,15 +385,27 @@ expression evaluation.</div>
       <div><a href="vimindex.html">Commands index</a></div>
       <div><a href="quickref.html">Quick reference</a></div>
       <hr/>
-  <div class="help-toc-h1"><a href="#_data-structures">Data structures</a>
+  <div class="help-toc-h1"><a href="#_filename-conventions">Filename conventions</a>
+</div><div class="help-toc-h1"><a href="#_data-structures">Data structures</a>
+</div><div class="help-toc-h1"><a href="#_events">Events</a>
 </div><div class="help-toc-h1"><a href="#_ui-events">UI events</a>
 </div><div class="help-toc-h1"><a href="#_api">API</a>
+</div><div class="help-toc-h1"><a href="#_the-event-loop">The event-loop</a>
+<div class="help-toc-h2"><a href="#_async-event-support">ASYNC EVENT SUPPORT</a></div>
+<div class="help-toc-h2"><a href="#_main-loop">MAIN LOOP</a></div>
+<div class="help-toc-h2"><a href="#_nvim-lifecycle">NVIM LIFECYCLE</a></div>
+<div class="help-toc-h2"><a href="#_important-variables">IMPORTANT VARIABLES</a></div>
+<div class="help-toc-h2"><a href="#_the-main-event-loop">THE MAIN EVENT-LOOP</a></div>
+<div class="help-toc-h2"><a href="#_command-line-mode">COMMAND-LINE MODE</a></div>
+<div class="help-toc-h2"><a href="#_ex-commands">EX COMMANDS</a></div>
+<div class="help-toc-h2"><a href="#_normal-mode-commands">NORMAL MODE COMMANDS</a></div>
+<div class="help-toc-h2"><a href="#_insert-mode-commands">INSERT MODE COMMANDS</a></div>
 </div></div>
 </div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-10-23 05:26 from <code><a href="https://github.com/neovim/neovim/commit/af0f7b59b1fcd92e64841cb5da8a577e944ce5bb">af0f7b5</a></code>
+        Generated at 2025-10-24 05:21 from <code><a href="https://github.com/neovim/neovim/commit/095b9f98f3e37b53520c766a12cb413dd0589028">095b9f9</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+dev_arch.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/dev_arch.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="          Nvim

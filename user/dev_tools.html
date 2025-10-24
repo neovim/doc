@@ -99,16 +99,240 @@ Tools and techniques for developing Nvim
 
 </div>
 <div class="help-para">
-The following advice is helpful when working on or debugging issues with Nvim
-itself.
+This is for developing or debugging Nvim itself.
 
 </div>
 <div class="help-para">
-TODO: merge <a href="debug.html#debug.txt">debug.txt</a> into here.
+<h2 id="_logs" class="help-heading">Logs<span class="help-heading-tags">                                                          <span id="dev-tools-logs" class="help-tag"><a href="#dev-tools-logs">dev-tools-logs</a></span></h2>
+
 
 </div>
 <div class="help-para">
-<h2 id="_backtraces" class="help-heading">Backtraces<span class="help-heading-tags">                                            <span id="dev-tools-backtrace" class="help-tag"><a href="#dev-tools-backtrace">dev-tools-backtrace</a></span></h2>
+Low-level log messages sink to <code>$NVIM_LOG_FILE</code>.
+
+</div>
+<div class="help-para">
+UI events are logged at DEBUG level.<pre>rm -rf build/
+make CMAKE_EXTRA_FLAGS="-DLOG_DEBUG"</pre>
+Use <code>LOG_CALLSTACK()</code> (Linux only) to log the current stacktrace. To log to an
+alternate file (e.g. stderr) use <code>LOG_CALLSTACK_TO_FILE(FILE*)</code>. Requires
+<code>-no-pie</code> ([ref](<a href="https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=860394#15">https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=860394#15</a>)):<pre>rm -rf build/
+make CMAKE_EXTRA_FLAGS="-DLOG_DEBUG -DCMAKE_C_FLAGS=-no-pie"</pre>
+Many log messages have a shared prefix, such as "UI" or "RPC". Use the shell to
+filter the log, e.g. at DEBUG level you might want to exclude UI messages:<pre>tail -F ~/.local/state/nvim/log | cat -v | stdbuf -o0 grep -v UI | stdbuf -o0 tee -a log</pre>
+<h2 id="_reproducible-build" class="help-heading">Reproducible build</h2>
+
+
+</div>
+<div class="help-para">
+To make a reproducible build of Nvim, set cmake variable <code>LUA_GEN_PRG</code> to
+a LuaJIT binary built with <code>LUAJIT_SECURITY_PRN=0</code>. See commit
+cb757f2663e6950e655c6306d713338dfa66b18d.
+
+</div>
+<div class="help-para">
+<h2 id="_debug-tui" class="help-heading">Debug TUI<span class="help-heading-tags">                                                      <span id="dev-tools-tui" class="help-tag"><a href="#dev-tools-tui">dev-tools-tui</a></span></h2>
+
+
+</div>
+<div class="help-para">
+<h3 id="_tui-inspect" class="help-heading">TUI INSPECT</h3>
+
+
+</div>
+<div class="help-para">
+Use the Ghostty <a href="https://ghostty.org/">https://ghostty.org/</a> inspector tool to observe and query the
+output and events from any terminal application such as Nvim.
+
+</div>
+<div class="help-para">
+<h3 id="_terminfo-logging" class="help-heading">TERMINFO LOGGING</h3>
+
+
+</div>
+<div class="help-para">
+At <a href="options.html#'verbose'">'verbose'</a> level 3, Nvim logs its internal terminfo state, so you can see
+exactly what terminfo values it is using on the current system.<pre>nvim -V3log</pre>
+<h3 id="_tui-debugging-with-gdb-lldb" class="help-heading">TUI DEBUGGING WITH GDB LLDB</h3>
+
+
+</div>
+<div class="help-para">
+Launching the Nvim TUI involves two processes, one for main editor state and one
+for rendering the TUI. Both of these processes use the nvim binary, so somewhat
+confusingly setting a breakpoint in either will generally succeed but may not be
+hit depending on which process the breakpoints were set in.
+
+</div>
+<div class="help-para">
+To debug the main process, you can debug the nvim binary with the <code>--headless</code>
+flag which does not launch the TUI and will allow you to set breakpoints in code
+not related to TUI rendering like so:<pre>lldb -- ./build/bin/nvim --headless --listen ~/.cache/nvim/debug-server.pipe</pre>
+While in lldb, enter <code>run</code>. You can then attach to the headless process in a
+new terminal window to interact with the editor like so:<pre>./build/bin/nvim --remote-ui --server ~/.cache/nvim/debug-server.pipe</pre>
+Conversely for debugging TUI rendering, you can start a headless process and
+debug the remote-ui process multiple times without losing editor state.
+
+</div>
+<div class="help-para">
+For details on using nvim-dap and automatically debugging the child (main)
+process, see [here](<a href="https://zignar.net/2023/02/17/debugging-neovim-with-neovim-and-nvim-dap/">https://zignar.net/2023/02/17/debugging-neovim-with-neovim-and-nvim-dap/</a>)
+
+</div>
+<div class="help-para">
+<h3 id="_tui-redraw" class="help-heading">TUI REDRAW</h3>
+
+
+</div>
+<div class="help-para">
+For debugging Nvim TUI redraw behavior it is sometimes useful to slow down its
+redraws. Set the <a href="options.html#'writedelay'">'writedelay'</a> and <a href="options.html#'redrawdebug'">'redrawdebug'</a> options to see where and when
+the UI is painted.<pre>:set writedelay=50 rdb=compositor</pre>
+<b>Note:</b> Nvim uses an internal screenbuffer to only send minimal updates even if a large
+region is repainted internally. To also highlight excess internal redraws, use<pre>:set writedelay=50 rdb=compositor,nodelta</pre>
+<h3 id="_tui-trace" class="help-heading">TUI TRACE</h3>
+
+
+</div>
+<div class="help-para">
+In the rare case that you want to collect a trace of terminal output, the
+ancient <code>script</code> command is still the "state of the art". The libvterm
+<code>vterm-dump</code> utility formats the result for human-readability.
+
+</div>
+<div class="help-para">
+Record a Nvim terminal session and format it with <code>vterm-dump</code>:<pre><code class="language-sh">script foo
+./build/bin/nvim -u NONE
+# Exit the script session with CTRL-d
+# Use `vterm-dump` utility to format the result.
+./.deps/usr/bin/vterm-dump foo &gt; bar</code></pre>
+Then you can compare <code>bar</code> with another session, to debug TUI behavior.
+
+</div>
+<div class="help-para">
+<h3 id="_terminal-reference" class="help-heading">TERMINAL REFERENCE</h3>
+
+
+</div>
+<div class="help-para">
+<div class="help-li" style=""> <code>man terminfo</code>
+</div><div class="help-li" style=""> <a href="https://github.com/vim/vim/blob/0124320c97b0fbbb44613f42fc1c34fee6181fc8/src/libvterm/doc/seqs.txt">https://github.com/vim/vim/blob/0124320c97b0fbbb44613f42fc1c34fee6181fc8/src/libvterm/doc/seqs.txt</a>
+</div><div class="help-li" style=""> <a href="https://invisible-island.net/xterm/ctlseqs/ctlseqs.html">https://invisible-island.net/xterm/ctlseqs/ctlseqs.html</a>
+</div>
+</div>
+<div class="help-para">
+<h2 id="_debug-performance" class="help-heading">Debug Performance<span class="help-heading-tags">                                             <span id="dev-tools-perf" class="help-tag"><a href="#dev-tools-perf">dev-tools-perf</a></span></h2>
+
+
+</div>
+<div class="help-para">
+<h3 id="_profiling-(easy)" class="help-heading">PROFILING (EASY)</h3>
+
+
+</div>
+<div class="help-para">
+For debugging performance bottlenecks in any code, there is a simple (and very
+effective) approach:
+
+</div>
+<div class="help-para">
+1. Run the slow code in a loop.
+2. Break execution ~5 times and save the stacktrace.
+3. The cause of the bottleneck will (almost always) appear in most of the stacktraces.
+
+</div>
+<div class="help-para">
+<h3 id="_profiling-(fancy)" class="help-heading">PROFILING (FANCY)</h3>
+
+
+</div>
+<div class="help-para">
+For more advanced profiling, consider <code>perf</code> + <code>flamegraph</code>.
+
+</div>
+<div class="help-para">
+<h3 id="_usdt-profiling-(powerful)" class="help-heading">USDT PROFILING (POWERFUL)</h3>
+
+
+</div>
+<div class="help-para">
+Or you can use USDT probes via <code>NVIM_PROBE</code> ([#12036](<a href="https://github.com/neovim/neovim/pull/12036">https://github.com/neovim/neovim/pull/12036</a>)).
+
+</div>
+<div class="help-para">
+&gt; USDT is basically a way to define stable probe points in userland binaries.
+&gt; The benefit of bcc is the ability to define logic to go along with the probe
+&gt; points.
+
+</div>
+<div class="help-para">
+Tools:
+<div class="help-li" style=""> bpftrace provides an awk-like language to the kernel bytecode, BPF.
+</div><div class="help-li" style=""> BCC provides a subset of C. Provides more complex logic than bpftrace, but takes a bit more effort.
+</div>
+</div>
+<div class="help-para">
+Example using bpftrace to track slow vim functions, and print out any files
+that were opened during the trace. At the end, it prints a histogram of
+function timing:<pre>#!/usr/bin/env bpftrace
+BEGIN {
+  @depth = -1;
+}
+tracepoint:sched:sched_process_fork /@pidmap[args-&gt;parent_pid]/ {
+  @pidmap[args-&gt;child_pid] = 1;
+}
+tracepoint:sched:sched_process_exit /@pidmap[args-&gt;pid]/ {
+  delete(@pidmap[args-&gt;pid]);
+}
+usdt:build/bin/nvim:neovim:eval__call_func__entry {
+    @pidmap[pid] = 1;
+    @depth++;
+    @funcentry[@depth] = nsecs;
+}
+usdt:build/bin/nvim:neovim:eval__call_func__return {
+    $func = str(arg0);
+    $msecs = (nsecs - @funcentry[@depth]) / 1000000;
+    @time_histo = hist($msecs);
+    if ($msecs &gt;= 1000) {
+      printf("%u ms for %s\n", $msecs, $func);
+      print(@files);
+    }
+    clear(@files);
+    delete(@funcentry[@depth]);
+    @depth--;
+}
+tracepoint:syscalls:sys_enter_open,
+tracepoint:syscalls:sys_enter_openat {
+  if (@pidmap[pid] == 1 &amp;&amp; @depth &gt;= 0) {
+    @files[str(args-&gt;filename)] = count();
+  }
+}
+END {
+  clear(@depth);
+}
+$ sudo bpftrace funcslower.bt
+1527 ms for Slower
+@files[/usr/lib/libstdc++.so.6]: 2
+@files[/etc/fish/config.fish]: 2
+&lt;snip&gt;
+^C
+@time_histo:
+[0]                71430 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
+[1]                  346 |                                                    |
+[2, 4)               208 |                                                    |
+[4, 8)                91 |                                                    |
+[8, 16)               22 |                                                    |
+[16, 32)              85 |                                                    |
+[32, 64)               7 |                                                    |
+[64, 128)              0 |                                                    |
+[128, 256)             0 |                                                    |
+[256, 512)             6 |                                                    |
+[512, 1K)              1 |                                                    |
+[1K, 2K)               5 |                                                    |</pre>
+
+</div>
+<div class="help-para">
+<h2 id="_backtraces" class="help-heading">Backtraces<span class="help-heading-tags">                                               <span id="dev-tools-backtrace" class="help-tag"><a href="#dev-tools-backtrace">dev-tools-backtrace</a></span></h2>
 
 
 </div>
@@ -195,6 +419,83 @@ Apple's documentation archive has some other useful information
 <a href="https://developer.apple.com/library/archive/technotes/tn2124/_index.html#//apple_ref/doc/uid/DTS10003391-CH1-SECCOREDUMPS,">https://developer.apple.com/library/archive/technotes/tn2124/_index.html#//apple_ref/doc/uid/DTS10003391-CH1-SECCOREDUMPS,</a>
 but note that some of the things on this page are out of date (such as enabling
 core dumps with <code>/etc/launchd.conf</code>).
+
+</div>
+<div class="help-para">
+<h3 id="_windows" class="help-heading">WINDOWS</h3>
+
+
+</div>
+<div class="help-para">
+If the Windows version of Nvim crashes in a reproducible manner, you can take
+some steps to provide a useful bug report.
+
+</div>
+<div class="help-para">
+You must obtain the debugger symbols (PDB) file for the Nvim executable: nvim.pdb.
+The PDB should be available from the same place that you obtained the
+executable (TODO: not currently provided by Nvim CI releases).  Be sure to use
+the PDB that matches the EXE (same build).
+
+</div>
+<div class="help-para">
+If you built the executable yourself with the Microsoft Visual C++ compiler,
+then the PDB was built with the EXE.
+
+</div>
+<div class="help-para">
+If you have Visual Studio, use that instead of the VC Toolkit and WinDbg.
+
+</div>
+<div class="help-para">
+For other compilers, always use the corresponding debugger: gdb or lldb.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Debugging Nvim crashes with Visual Studio 2005</div>
+
+</div>
+<div class="help-para">
+First launch nvim.exe and then launch Visual Studio.  (If you don't have
+Visual Studio, get it from <a href="https://visualstudio.microsoft.com/downloads/">https://visualstudio.microsoft.com/downloads/</a>).
+
+</div>
+<div class="help-para">
+On the Tools menu, click Attach to Process.  Choose the Nvim process.
+
+</div>
+<div class="help-para">
+In Nvim, reproduce the crash.  A dialog will appear in Visual Studio, telling
+you about the unhandled exception in the Nvim process.  Click Break to break
+into the process.
+
+</div>
+<div class="help-para">
+Visual Studio will pop up another dialog, telling you that no symbols are
+loaded and that the source code cannot be displayed.  Click OK.
+
+</div>
+<div class="help-para">
+Several windows will open.  Right-click in the Call Stack window.  Choose Load
+Symbols.  The Find Symbols dialog will open, looking for (g)vim.pdb.  Navigate
+to the directory where you have the PDB file and click Open.
+
+</div>
+<div class="help-para">
+At this point, you should have a full call stack with vim function names and
+line numbers.  Double-click one of the lines and the Find Source dialog will
+navigate to the directory where the Nvim source is (if you have it.)
+
+</div>
+<div class="help-para">
+If you don't know how to debug this any further, follow the instructions
+at ":help bug-report".  Paste the call stack into the bug report.
+
+</div>
+<div class="help-para">
+From Visual Studio you can also try saving a minidump via the Debug menu and
+send it with the bug report.  A minidump is a small file (&lt;100KB), which
+contains information about the state of your process.
 
 </div>
 <div class="help-para">
@@ -343,6 +644,41 @@ example:
 (gdb) br main</pre>
 
 </div>
+<div class="help-para">
+<h2 id="_debugging-crashes-or-memory-leaks" class="help-heading">Debugging crashes or memory leaks<span class="help-heading-tags">                             <span id="dev-tools-asan" class="help-tag"><a href="#dev-tools-asan">dev-tools-asan</a></span></h2>
+
+
+</div>
+<div class="help-para">
+<h3 id="_build-with-asan" class="help-heading">BUILD WITH ASAN</h3>
+
+
+</div>
+<div class="help-para">
+Building Nvim with Clang sanitizers (Address Sanitizer: ASan, Undefined
+Behavior Sanitizer: UBSan, Memory Sanitizer: MSan, Thread Sanitizer: TSan) is
+a good way to catch undefined behavior, leaks and other errors as soon as they
+happen.  It's significantly faster than Valgrind.
+
+</div>
+<div class="help-para">
+Requires clang 3.4 or later, and <code>llvm-symbolizer</code> must be in <code>$PATH</code>:<pre>clang --version</pre>
+Build Nvim with sanitizer instrumentation (choose one):<pre>CC=clang make CMAKE_EXTRA_FLAGS="-DENABLE_ASAN_UBSAN=ON"
+CC=clang make CMAKE_EXTRA_FLAGS="-DENABLE_MSAN=ON"
+CC=clang make CMAKE_EXTRA_FLAGS="-DENABLE_TSAN=ON"</pre>
+Create a directory to store logs:<pre>mkdir -p "$HOME/logs"</pre>
+Configure the sanitizer(s) via these environment variables:<pre># Change to detect_leaks=1 to detect memory leaks (slower, noisier).
+export ASAN_OPTIONS="detect_leaks=0:log_path=$HOME/logs/asan"
+# Show backtraces in the logs.
+export MSAN_OPTIONS="log_path=${HOME}/logs/msan"
+export TSAN_OPTIONS="log_path=${HOME}/logs/tsan"</pre>
+Logs will be written to <code>${HOME}/logs/*san.PID</code> then.
+
+</div>
+<div class="help-para">
+For more information: <a href="https://github.com/google/sanitizers/wiki/SanitizerCommonFlags">https://github.com/google/sanitizers/wiki/SanitizerCommonFlags</a>
+
+</div>
 
   </div>
       <div class="col-narrow toc">
@@ -350,9 +686,23 @@ example:
       <div><a href="vimindex.html">Commands index</a></div>
       <div><a href="quickref.html">Quick reference</a></div>
       <hr/>
-  <div class="help-toc-h1"><a href="#_backtraces">Backtraces</a>
+  <div class="help-toc-h1"><a href="#_logs">Logs</a>
+</div><div class="help-toc-h1"><a href="#_reproducible-build">Reproducible build</a>
+</div><div class="help-toc-h1"><a href="#_debug-tui">Debug TUI</a>
+<div class="help-toc-h2"><a href="#_tui-inspect">TUI INSPECT</a></div>
+<div class="help-toc-h2"><a href="#_terminfo-logging">TERMINFO LOGGING</a></div>
+<div class="help-toc-h2"><a href="#_tui-debugging-with-gdb-lldb">TUI DEBUGGING WITH GDB LLDB</a></div>
+<div class="help-toc-h2"><a href="#_tui-redraw">TUI REDRAW</a></div>
+<div class="help-toc-h2"><a href="#_tui-trace">TUI TRACE</a></div>
+<div class="help-toc-h2"><a href="#_terminal-reference">TERMINAL REFERENCE</a></div>
+</div><div class="help-toc-h1"><a href="#_debug-performance">Debug Performance</a>
+<div class="help-toc-h2"><a href="#_profiling-(easy)">PROFILING (EASY)</a></div>
+<div class="help-toc-h2"><a href="#_profiling-(fancy)">PROFILING (FANCY)</a></div>
+<div class="help-toc-h2"><a href="#_usdt-profiling-(powerful)">USDT PROFILING (POWERFUL)</a></div>
+</div><div class="help-toc-h1"><a href="#_backtraces">Backtraces</a>
 <div class="help-toc-h2"><a href="#_linux">LINUX</a></div>
 <div class="help-toc-h2"><a href="#_macos">MACOS</a></div>
+<div class="help-toc-h2"><a href="#_windows">WINDOWS</a></div>
 </div><div class="help-toc-h1"><a href="#_gdb">Gdb</a>
 <div class="help-toc-h2"><a href="#_using-gdb-to-step-through-functional-tests">USING GDB TO STEP THROUGH FUNCTIONAL TESTS</a></div>
 <div class="help-toc-h2"><a href="#_using-lldb-to-step-through-unit-tests">USING LLDB TO STEP THROUGH UNIT TESTS</a></div>
@@ -360,12 +710,14 @@ example:
 <div class="help-toc-h2"><a href="#_gdb-reverse-debugging">GDB REVERSE DEBUGGING</a></div>
 <div class="help-toc-h2"><a href="#_using-gdbserver">USING GDBSERVER</a></div>
 <div class="help-toc-h2"><a href="#_using-gdbserver-in-tmux">USING GDBSERVER IN TMUX</a></div>
+</div><div class="help-toc-h1"><a href="#_debugging-crashes-or-memory-leaks">Debugging crashes or memory leaks</a>
+<div class="help-toc-h2"><a href="#_build-with-asan">BUILD WITH ASAN</a></div>
 </div></div>
 </div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-10-23 05:26 from <code><a href="https://github.com/neovim/neovim/commit/af0f7b59b1fcd92e64841cb5da8a577e944ce5bb">af0f7b5</a></code>
+        Generated at 2025-10-24 05:21 from <code><a href="https://github.com/neovim/neovim/commit/095b9f98f3e37b53520c766a12cb413dd0589028">095b9f9</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+dev_tools.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/dev_tools.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="          Nvim

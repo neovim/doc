@@ -447,11 +447,35 @@ Remove plugins from disk:
 </div>
 <div class="help-para">
 Each event populates the following <a href="api.html#event-data">event-data</a> fields:
-<div class="help-li" style=""> <code>kind</code> - one of "install" (install on disk), "update" (update existing
-  plugin), "delete" (delete from disk).
+<div class="help-li" style=""> <code>active</code> - whether plugin was added via <a href="pack.html#vim.pack.add()">vim.pack.add()</a> to current session.
+</div><div class="help-li" style=""> <code>kind</code> - one of "install" (install on disk; before loading), "update"
+  (update already installed plugin; might be not loaded), "delete" (delete
+  from disk).
 </div><div class="help-li" style=""> <code>spec</code> - plugin's specification with defaults made explicit.
 </div><div class="help-li" style=""> <code>path</code> - full path to plugin's directory.
 </div>
+</div>
+<div class="help-para">
+These events can be used to execute plugin hooks. For example:<pre><code class="language-lua">local hooks = function(ev)
+  -- Use available |event-data|
+  local name, kind = ev.data.spec.name, ev.data.kind
+  -- Run build script after plugin's code has changed
+  if name == 'plug-1' and (kind == 'install' or kind == 'update') then
+    vim.system({ 'make' }, { cwd = ev.data.path })
+  end
+  -- If action relies on code from the plugin (like user command or
+  -- Lua code), make sure to explicitly load it first
+  if name == 'plug-2' and kind == 'update' then
+    if not ev.data.active then
+      vim.cmd.packadd('plug-2')
+    end
+    vim.cmd('PlugTwoUpdate')
+    require('plug2').after_update()
+  end
+end
+-- If hooks need to run on install, run this before `vim.pack.add()`
+vim.api.nvim_create_autocmd('PackChanged', { callback = hooks })</code></pre>
+
 </div>
 <div class="help-para">
 <span id="vim.pack.Spec" class="help-tag"><a href="#vim.pack.Spec">vim.pack.Spec</a></span>
@@ -608,7 +632,7 @@ update(<code>{names}</code>, <code>{opts}</code>)                               
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-10-23 05:27 from <code><a href="https://github.com/neovim/neovim/commit/af0f7b59b1fcd92e64841cb5da8a577e944ce5bb">af0f7b5</a></code>
+        Generated at 2025-10-24 05:21 from <code><a href="https://github.com/neovim/neovim/commit/095b9f98f3e37b53520c766a12cb413dd0589028">095b9f9</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+pack.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/pack.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="                            Nvim
