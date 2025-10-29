@@ -17,7 +17,7 @@
 
     <script src="/highlight/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
-    <title> Job_control - Neovim docs</title>
+    <title> L10n-vietnamese - Neovim docs</title>
   </head>
   <body>
     <header class="container">
@@ -85,114 +85,62 @@
 
   <div class="container golden-grid help-body">
   <div class="col-wide">
-  <a name="job_control.txt" href="#job"><h1 id="job"> Job_control</h1></a>
+  <a name="l10n-vietnamese.txt" href="#vietnamese-intro"><h1 id="vietnamese-intro"> L10n-vietnamese</h1></a>
   <p>
     <i>
     Nvim <code>:help</code> pages, <a href="https://github.com/neovim/neovim/blob/master/src/gen/gen_help_html.lua">generated</a>
-    from <a href="https://github.com/neovim/neovim/blob/master/runtime/doc/job_control.txt">source</a>
+    from <a href="https://github.com/neovim/neovim/blob/master/runtime/doc/l10n-vietnamese.txt">source</a>
     using the <a href="https://github.com/neovim/tree-sitter-vimdoc">tree-sitter-vimdoc</a> parser.
     </i>
   </p>
   <hr/>
-  <div class="old-help-para">Nvim job control <span id="job-control" class="help-tag"><a href="#job-control">job-control</a></span></div>
-<div class="old-help-para">Job control is a way to perform multitasking in Nvim, so scripts can spawn and
-control multiple processes without blocking the current Nvim instance.</div>
-<div class="old-help-para"><h2 id="_concepts" class="help-heading">Concepts</h2></div>
-<div class="old-help-para">Job Id							<span id="job-id" class="help-tag-right"><a href="#job-id">job-id</a></span>  <br></div>
-<div class="old-help-para">Each job is identified by an integer id, unique for the life of the current
-Nvim session. Each job-id is a valid <a href="channel.html#channel-id">channel-id</a>: they share the same "key
-space". Functions like <a href="vimfn.html#jobstart()">jobstart()</a> return job ids; functions like
-<a href="vimfn.html#jobstop()">jobstop()</a>, <a href="vimfn.html#chansend()">chansend()</a>, <a href="vimfn.html#rpcnotify()">rpcnotify()</a>, and <a href="vimfn.html#rpcrequest()">rpcrequest()</a> take job ids.</div>
-<div class="old-help-para">Job stdio streams form a <a href="channel.html#channel">channel</a> which can send and receive raw bytes or
-<a href="api.html#msgpack-rpc">msgpack-rpc</a> messages.</div>
-<div class="old-help-para"><h2 id="_usage" class="help-heading">Usage<span class="help-heading-tags">							<span id="job-control-usage" class="help-tag"><a href="#job-control-usage">job-control-usage</a></span></h2></div>
-<div class="old-help-para">To control jobs, use the "job…" family of functions: <a href="vimfn.html#jobstart()">jobstart()</a>,
-<a href="vimfn.html#jobstop()">jobstop()</a>, etc.</div>
-<div class="old-help-para">Example:<pre><code class="language-vim">function! s:OnEvent(job_id, data, event) dict
-  if a:event == 'stdout'
-    let str = self.shell.' stdout: '.join(a:data)
-  elseif a:event == 'stderr'
-    let str = self.shell.' stderr: '.join(a:data)
-  else
-    let str = self.shell.' exited'
-  endif
-  call append(line('$'), str)
-endfunction
-let s:callbacks = {
-\ 'on_stdout': function('s:OnEvent'),
-\ 'on_stderr': function('s:OnEvent'),
-\ 'on_exit': function('s:OnEvent')
-\ }
-let job1 = jobstart(['bash'], extend({'shell': 'shell 1'}, s:callbacks))
-let job2 = jobstart(['bash', '-c', 'for i in {1..10}; do echo hello $i!; sleep 1; done'], extend({'shell': 'shell 2'}, s:callbacks))</code></pre>
-To test the above script, copy it to a file ~/foo.vim and run it:<pre><code class="language-bash">nvim -u ~/foo.vim</code></pre></div>
-<div class="old-help-para">Description of what happens:
-<div class="help-li" style=""> Two bash shells are spawned by <a href="vimfn.html#jobstart()">jobstart()</a> with their stdin/stdout/stderr
-    streams connected to nvim.
-</div><div class="help-li" style=""> The first shell is idle, waiting to read commands from its stdin.
-</div><div class="help-li" style=""> The second shell is started with -c which executes the command (a for-loop
-    printing 0 through 9) and then exits.
-</div><div class="help-li" style=""> <code>OnEvent()</code> callback is passed to <a href="vimfn.html#jobstart()">jobstart()</a> to handle various job
-    events. It displays stdout/stderr data received from the shells.
+  <div class="old-help-para"><h2 id="_1.-introduction" class="help-heading">1. Introduction</h2>Vim supports Vietnamese language in the following ways:</div>
+<div class="old-help-para"><div class="help-li" style=""> Built-in <a href="l10n-vietnamese.html#vietnamese-keymap">vietnamese-keymap</a>, which allows you to type Vietnamese characters
+  in <a href="insert.html#Insert-mode">Insert-mode</a> and <a href="pattern.html#search-commands">search-commands</a> using US keyboard layout.
+</div><div class="help-li" style=""> Localization in Vietnamese. See <a href="l10n-vietnamese.html#vietnamese-l10n">vietnamese-l10n</a>
 </div></div>
-<div class="old-help-para">For <a href="channel.html#on_stdout">on_stdout</a> and <a href="channel.html#on_stderr">on_stderr</a> see <a href="channel.html#channel-callback">channel-callback</a>.
-							<span id="on_exit" class="help-tag-right"><a href="#on_exit">on_exit</a></span>  <br>
-Arguments passed to on_exit callback:
-  0: <a href="job_control.html#job-id">job-id</a>
-  1: Exit-code of the process, or 128+SIGNUM if by signal (e.g. 143 on SIGTERM).
-  2: Event type: "exit"</div>
-<div class="old-help-para"><b>  Note:</b> Buffered stdout/stderr data which has not been flushed by the sender
-	will not trigger the on_stdout/on_stderr callback (but if the process
-	ends, the on_exit callback will be invoked).
-        For example, "ruby -e" buffers output, so small strings will be
-        buffered unless "auto-flushing" ($stdout.sync=true) is enabled.<pre><code class="language-vim">function! Receive(job_id, data, event)
-  echom printf('%s: %s',a:event,string(a:data))
-endfunction
-call jobstart(['ruby', '-e',
-  \ '$stdout.sync = true; 5.times do sleep 1 and puts "Hello Ruby!" end'],
-  \ {'on_stdout': 'Receive'})</code></pre></div>
-<div class="old-help-para">       <a href="https://github.com/neovim/neovim/issues/1592">https://github.com/neovim/neovim/issues/1592</a></div>
-<div class="old-help-para">  Note 2:
-	Job event handlers may receive partial (incomplete) lines. For a given
-	invocation of on_stdout/on_stderr, <code>a:data</code> is not guaranteed to end
-	with a newline.
-<div class="help-li" style=""> <code>abcdefg</code> may arrive as <code>['abc']</code>, <code>['defg']</code>.
-</div><div class="help-li" style=""> <code>abc\nefg</code> may arrive as <code>['abc', '']</code>, <code>['efg']</code> or <code>['abc']</code>,
-	    <code>['','efg']</code>, or even <code>['ab']</code>, <code>['c','efg']</code>.
-	Easy way to deal with this: initialize a list as <code>['']</code>, then append
-	to it as follows:<pre><code class="language-vim">let s:chunks = ['']
-func! s:on_stdout(job_id, data, event) dict
-  let s:chunks[-1] .= a:data[0]
-  call extend(s:chunks, a:data[1:])
-endf</code></pre>
+<div class="old-help-para"><h2 id="_2.-vietnamese-keymaps" class="help-heading">2. Vietnamese keymaps</h2>							<span id="vietnamese-keymap" class="help-tag-right"><a href="#vietnamese-keymap">vietnamese-keymap</a></span>  <br>
+To switch between languages you can use your system native keyboard switcher,
+or use one of the Vietnamese keymaps included in the Vim distribution, like
+below<pre>:set keymap=vietnamese-telex_utf-8</pre></div>
+<div class="old-help-para">See <a href="options.html#'keymap'">'keymap'</a> for more information.</div>
+<div class="old-help-para">In the latter case, you can type Vietnamese even if you do not have a
+Vietnamese input method engine (IME) or you want Vim to be independent from a
+system-wide keyboard settings (when <a href="vim_diff.html#'imdisable'">'imdisable'</a> is set). You can also <a href="map.html#%3Amap">:map</a>
+a key to switch between keyboards.</div>
+<div class="old-help-para">Vim comes with the following Vietnamese keymaps:
+<div class="help-li" style=""> <span id="vietnamese-telex_utf-8" class="help-tag"><a href="#vietnamese-telex_utf-8">vietnamese-telex_utf-8</a></span>  	Telex input method, <a href="mbyte.html#UTF-8">UTF-8</a> encoding.
+</div><div class="help-li" style=""> <span id="vietnamese-viqr_utf-8" class="help-tag"><a href="#vietnamese-viqr_utf-8">vietnamese-viqr_utf-8</a></span>  	VIQR input method, <a href="mbyte.html#UTF-8">UTF-8</a> encoding.
+</div><div class="help-li" style=""> <span id="vietnamese-vni_utf-8" class="help-tag"><a href="#vietnamese-vni_utf-8">vietnamese-vni_utf-8</a></span>  	VNI input method, <a href="mbyte.html#UTF-8">UTF-8</a> encoding.
 </div></div>
-<div class="old-help-para">The <a href="vimfn.html#jobstart-options">jobstart-options</a> dictionary is passed as <a href="vimeval.html#self">self</a> to the callback.
-The above example could be written in this "object-oriented" style:<pre><code class="language-vim">let Shell = {}
-function Shell.on_stdout(_job_id, data, event)
-  call append(line('$'),
-        \ printf('[%s] %s: %s', a:event, self.name, join(a:data[:-2])))
-endfunction
-let Shell.on_stderr = function(Shell.on_stdout)
-function Shell.on_exit(job_id, _data, event)
-  let msg = printf('job %d ("%s") finished', a:job_id, self.name)
-  call append(line('$'), printf('[%s] BOOM!', a:event))
-  call append(line('$'), printf('[%s] %s!', a:event, msg))
-endfunction
-function Shell.new(name, cmd)
-  let object = extend(copy(g:Shell), {'name': a:name})
-  let object.cmd = ['sh', '-c', a:cmd]
-  let object.id = jobstart(object.cmd, object)
-  $
-  return object
-endfunction
-let instance = Shell.new('bomb',
-      \ 'for i in $(seq 9 -1 1); do echo $i 1&gt;&amp;$((i % 2 + 1)); sleep 1; done')</code></pre></div>
-<div class="old-help-para">To send data to the job's stdin, use <a href="vimfn.html#chansend()">chansend()</a>:<pre><code class="language-vim">:call chansend(job1, "ls\n")
-:call chansend(job1, "invalid-command\n")
-:call chansend(job1, "exit\n")</code></pre></div>
-<div class="old-help-para">A job may be killed at any time with the <a href="vimfn.html#jobstop()">jobstop()</a> function:
-<pre><code class="language-vim">:call jobstop(job1)</code></pre></div>
-<div class="old-help-para">Individual streams can be closed without killing the job, see <a href="vimfn.html#chanclose()">chanclose()</a>.</div>
+<div class="old-help-para">                                                   <span id="vietnamese-ime_diff" class="help-tag-right"><a href="#vietnamese-ime_diff">vietnamese-ime_diff</a></span><br>
+Since these keymaps were designed to be minimalistic, they do not support all
+features of the corresponding input methods. The differences are described
+below:</div>
+<div class="old-help-para"><div class="help-li" style=""> You can only type each character individually, entering the base letter first
+  and then the diacritics later.  For example, to type the word <code>nến</code> using
+  <a href="l10n-vietnamese.html#vietnamese-vni_utf-8">vietnamese-vni_utf-8</a>, you must type <code>ne61n</code>, not <code>nen61</code> or <code>ne6n1</code>
+</div><div class="help-li" style=""> For characters with more than 1 diacritic, you need to type vowel mark before
+  tone mark. For example, to type <code>ồ</code> using <a href="l10n-vietnamese.html#vietnamese-telex_utf-8">vietnamese-telex_utf-8</a>, you need
+  to type <code>oof</code>, not <code>ofo</code>.
+</div><div class="help-li" style=""> With <a href="l10n-vietnamese.html#vietnamese-telex_utf-8">vietnamese-telex_utf-8</a>, you need to type all uppercase letters to
+  produce uppercase characters with diacritics. For example, <code>Ừ</code> must be typed
+  as <code>UWF</code>.
+</div><div class="help-li" style=""> With <a href="l10n-vietnamese.html#vietnamese-telex_utf-8">vietnamese-telex_utf-8</a>, the escape character <code>\</code> from VNI is added,
+  hence the confusing <code>ooo</code> input to type <code>oo</code> is removed, which could lead to
+  ambiguities.  For example, to type the word <code>Đoòng</code>, you would type
+  <code>DDo\ofng</code>.
+</div><div class="help-li" style=""> Simple Telex (both v1 and v2), including the <code>w[]{}</code> style, is not
+  supported.
+</div><div class="help-li" style=""> Removing diacritics using <code>z</code> in Telex or <code>0</code> in VNI and VIQR is not supported.
+</div></div>
+<div class="old-help-para"><h2 id="_3.-localization" class="help-heading">3. Localization</h2>							<span id="vietnamese-l10n" class="help-tag-right"><a href="#vietnamese-l10n">vietnamese-l10n</a></span>  <br>
+Vim <a href="message.html#messages">messages</a> are also available in Vietnamese.  If you wish to see messages
+in Vietnamese, you can run the command <a href="mlang.html#%3Alanguage">:language</a> with an argument being the
+name of the Vietnamese locale.  For example,<pre>:language vi_VN</pre></div>
+<div class="old-help-para"> or<pre>:language vi_VN.utf-8</pre></div>
+<div class="old-help-para">Note that the name of the Vietnamese locale may vary depending on your system.
+See <a href="mbyte.html#mbyte-first">mbyte-first</a> for details.</div>
 
   </div>
       <div class="col-narrow toc">
@@ -200,8 +148,9 @@ let instance = Shell.new('bomb',
       <div><a href="vimindex.html">Commands index</a></div>
       <div><a href="quickref.html">Quick reference</a></div>
       <hr/>
-  <div class="help-toc-h1"><a href="#_concepts">Concepts</a>
-</div><div class="help-toc-h1"><a href="#_usage">Usage</a>
+  <div class="help-toc-h1"><a href="#_1.-introduction">1. Introduction</a>
+</div><div class="help-toc-h1"><a href="#_2.-vietnamese-keymaps">2. Vietnamese keymaps</a>
+</div><div class="help-toc-h1"><a href="#_3.-localization">3. Localization</a>
 </div></div>
 </div>
   <footer>
@@ -210,9 +159,9 @@ let instance = Shell.new('bomb',
         Generated at 2025-10-29 05:24 from <code><a href="https://github.com/neovim/neovim/commit/6dd6c5b523b11a1316f7c161217bd7b97cdb8b39">6dd6c5b</a></code>
       </div>
       <div class="generator-stats">
-      parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+job_control.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/job_control.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim
-		 NVIM REFERENCE MANUAL    by Thiago de Arruda
-				      Type &lt;a href="various.html#gO"&gt;gO&lt;/a&gt; to see the table of contents.">noise_lines: 3</span>
+      parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+l10n-vietnamese.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/l10n-vietnamese.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   Nvim
+		  VIM REFERENCE MANUAL    by Phạm Bình An
+                                      Type &lt;a href="various.html#gO"&gt;gO&lt;/a&gt; to see the table of contents.">noise_lines: 3</span>
       </div>
     <div>
 
