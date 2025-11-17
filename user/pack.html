@@ -350,9 +350,9 @@ directory are managed exclusively by <code>vim.pack</code>.
 
 </div>
 <div class="help-para">
-Uses Git to manage plugins and requires present <code>git</code> executable of at least
-version 2.36. Target plugins should be Git repositories with versions as named
-tags following semver convention <code>v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>.
+Uses Git to manage plugins and requires present <code>git</code> executable. Target
+plugins should be Git repositories with versions as named tags following
+semver convention <code>v&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;</code>.
 
 </div>
 <div class="help-para">
@@ -419,6 +419,12 @@ Switch plugin's version:
 </div>
 </div>
 <div class="help-para">
+Switch plugin's source:
+<div class="help-li" style=""> Update 'init.lua' for plugin to have desired <code>src</code>.
+</div><div class="help-li" style=""> <a href="gui.html#%3Arestart">:restart</a>. This will cleanly reinstall plugin from the new source.
+</div>
+</div>
+<div class="help-para">
 Freeze plugin from being updated:
 <div class="help-li" style=""> Update 'init.lua' for plugin to have <code>version</code> set to current revision. Get
   it from <a href="pack.html#vim.pack-lockfile">vim.pack-lockfile</a> (plugin's field <code>rev</code>; looks like <code>abc12345</code>).
@@ -430,6 +436,20 @@ Unfreeze plugin to start receiving updates:
 <div class="help-li" style=""> Update 'init.lua' for plugin to have <code>version</code> set to whichever version you
   want it to be updated.
 </div><div class="help-li" style=""> <a href="gui.html#%3Arestart">:restart</a>.
+</div>
+</div>
+<div class="help-para">
+Revert plugin after an update:
+<div class="help-li" style=""> Locate plugin's revision at working state. For example:
+</div><div class="help-li" style="margin-left: 3rem;"> If there is a previous version of <a href="pack.html#vim.pack-lockfile">vim.pack-lockfile</a> (like from version
+    control history), use it to get plugin's <code>rev</code> field.
+</div><div class="help-li" style="margin-left: 3rem;"> If there is a log file ("nvim-pack.log" at "log" <a href="vimfn.html#stdpath()">stdpath()</a>), open it and
+    navigate to latest updates (at the bottom). Locate lines about plugin
+    update details and use revision from "State before".
+</div><div class="help-li" style=""> Freeze plugin to target revision (set <code>version</code> and <a href="gui.html#%3Arestart">:restart</a>).
+</div><div class="help-li" style=""> Run <code>vim.pack.update({ 'plugin-name' }, { force = true })</code> to make plugin
+  state on disk follow target revision. <a href="gui.html#%3Arestart">:restart</a>.
+</div><div class="help-li" style=""> When ready to deal with updating plugin, unfreeze it.
 </div>
 </div>
 <div class="help-para">
@@ -502,10 +522,12 @@ add(<code>{specs}</code>, <code>{opts}</code>)                                  
     Add plugin to current session
 <div class="help-li" style=""> For each specification check that plugin exists on disk in
       <a href="pack.html#vim.pack-directory">vim.pack-directory</a>:
-</div><div class="help-li" style="margin-left: 3rem;"> If exists, do nothing in this step.
+</div><div class="help-li" style="margin-left: 3rem;"> If exists, check if its <code>src</code> is the same as input. If not - delete
+        immediately to clean install from the new source. Otherwise do
+        nothing.
 </div><div class="help-li" style="margin-left: 3rem;"> If doesn't exist, install it by downloading from <code>src</code> into <code>name</code>
-        subdirectory (via <code>git clone</code>) and update revision to follow <code>version</code>
-        (via <code>git checkout</code>).
+        subdirectory (via partial blobless <code>git clone</code>) and update revision to
+        match <code>version</code> (via <code>git checkout</code>).
 </div><div class="help-li" style=""> For each plugin execute <a href="repeat.html#%3Apackadd">:packadd</a> (or customizable <code>load</code> function)
       making it reachable by Nvim.
 </div>
@@ -531,7 +553,7 @@ add(<code>{specs}</code>, <code>{opts}</code>)                                  
                    Load <code>plugin/</code> files and <code>ftdetect/</code> scripts. If <code>false</code>,
                    works like <code>:packadd!</code>. If function, called with plugin
                    data and is fully responsible for loading plugin. Default
-                   <code>false</code> during startup and <code>true</code> afterwards.
+                   <code>false</code> during <a href="starting.html#init.lua">init.lua</a> sourcing and <code>true</code> afterwards.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{confirm}?</code> (<code>boolean</code>) Whether to ask user to confirm
                    initial install. Default <code>true</code>.
 </div>
@@ -632,7 +654,7 @@ update(<code>{names}</code>, <code>{opts}</code>)                               
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-11-16 06:15 from <code><a href="https://github.com/neovim/neovim/commit/39e27d64ad69ac4a33c1c34915110991405af337">39e27d6</a></code>
+        Generated at 2025-11-17 05:24 from <code><a href="https://github.com/neovim/neovim/commit/1be37c245f27e2fa74347e002c5fd1c59f14422a">1be37c2</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+pack.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/pack.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="                            Nvim
