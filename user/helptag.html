@@ -1,0 +1,46 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>Redirecting…</title>
+      <script type="module">
+        async function do_redirect() {
+          const errorDiv = document.getElementById('error-message');
+          try {
+            const params = new URLSearchParams(window.location.search)
+            const tag = params.get('tag')
+            if (!tag) {
+              throw new Error('No tag parameter')
+            }
+
+            // helptags.json lives next to helptag.html
+            const res = await fetch('./helptags.json')
+            if (!res.ok) {
+              throw new Error('helptags.json not found')
+            }
+
+            const tagmap = await res.json()
+            if (!tagmap[tag]) {
+              throw new Error('helptag not found: "' + tag + '"')
+            }
+
+            window.location.href = tagmap[tag]
+          } catch (err) {
+            console.error(err)
+            if (errorDiv) {
+              errorDiv.textContent = err.message
+            }
+            // Optionally, redirect to index after showing error
+            // setTimeout(() => window.location.href = './index.html', 3000)
+          }
+        }
+
+        do_redirect()
+      </script>
+    </head>
+    <body>
+      <p>Redirecting…</p>
+      <div id="error-message" style="margin-top:1em; font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;"></div>
+    </body>
+    </html>
+  
