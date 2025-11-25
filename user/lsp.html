@@ -197,7 +197,7 @@ These GLOBAL keymaps are created unconditionally when Nvim starts:
 </div><div class="help-li" style=""> "grt" is mapped to <a href="lsp.html#vim.lsp.buf.type_definition()">vim.lsp.buf.type_definition()</a>
 </div><div class="help-li" style=""> "gO" is mapped to <a href="lsp.html#vim.lsp.buf.document_symbol()">vim.lsp.buf.document_symbol()</a>
 </div><div class="help-li" style=""> <code>CTRL-S</code> (Insert mode) is mapped to <a href="lsp.html#vim.lsp.buf.signature_help()">vim.lsp.buf.signature_help()</a>
-</div><div class="help-li" style=""> "an" and "in" (Visual mode) are mapped to outer and inner incremental
+</div><div class="help-li" style=""> "an" and "in" (Visual and Operator-pending mode) are mapped to outer and inner incremental
   selections, respectively, using <a href="lsp.html#vim.lsp.buf.selection_range()">vim.lsp.buf.selection_range()</a>
 </div>
 </div>
@@ -305,10 +305,15 @@ following sources (merge semantics defined by <a href="lua.html#vim.tbl_deep_ext
 </div>
 <div class="help-para">
 1. Configuration defined for the <code>'*'</code> name.
-2. Configuration from the result of merging all tables returned by
-   <code>lsp/&lt;config&gt;.lua</code> files in <a href="options.html#'runtimepath'">'runtimepath'</a> for the config named <code>&lt;config&gt;</code>.
-3. Configurations defined anywhere else.
-
+2. The merged configuration of all <code>lsp/&lt;config&gt;.lua</code> files in <a href="options.html#'runtimepath'">'runtimepath'</a>
+   for the config named <code>&lt;config&gt;</code>.
+3. The merged configuration of all <code>after/lsp/&lt;config&gt;.lua</code> files in
+   <a href="options.html#'runtimepath'">'runtimepath'</a>.
+<div class="help-li" style=""> This behavior of the "after/" directory is a standard Vim feature
+     <a href="options.html#after-directory">after-directory</a> which allows you to override <code>lsp/*.lua</code> configs
+     provided by plugins (such as nvim-lspconfig).
+4. Configurations defined anywhere else.
+</div>
 </div>
 <div class="help-para">
 Example: given the following configs...<pre><code class="language-lua">-- Defined in init.lua
@@ -1969,7 +1974,8 @@ rename(<code>{new_name}</code>, <code>{opts}</code>)                            
 </div>
 </div>
 <div class="help-para">
-selection_range(<code>{direction}</code>)                   <span id="vim.lsp.buf.selection_range()" class="help-tag-right"><a href="#vim.lsp.buf.selection_range()">vim.lsp.buf.selection_range()</a></span><br>
+                                               <span id="vim.lsp.buf.selection_range()" class="help-tag-right"><a href="#vim.lsp.buf.selection_range()">vim.lsp.buf.selection_range()</a></span><br>
+selection_range(<code>{direction}</code>, <code>{timeout_ms}</code>)
     Perform an incremental selection at the cursor position based on ranges
     given by the LSP. The <code>direction</code> parameter specifies the number of times
     to expand the selection. Negative values will shrink the selection.
@@ -1977,7 +1983,9 @@ selection_range(<code>{direction}</code>)                   <span id="vim.lsp.bu
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{direction}</code>  (<code>integer</code>)
+<div class="help-li" style=""> <code>{direction}</code>   (<code>integer</code>)
+</div><div class="help-li" style=""> <code>{timeout_ms}</code>  (<code>integer?</code>) (default: <code>1000</code>) Maximum time
+                      (milliseconds) to wait for a result.
 </div>
 </div>
 <div class="help-para">
@@ -4047,7 +4055,7 @@ resolve_capabilities(<code>{server_capabilities}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-11-23 05:22 from <code><a href="https://github.com/neovim/neovim/commit/4bbdffe8298e8bf6e0590684092a25f5effc0f14">4bbdffe</a></code>
+        Generated at 2025-11-25 05:18 from <code><a href="https://github.com/neovim/neovim/commit/e82aef2e22a57688dcc19a978cbe083349ad8a2a">e82aef2</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
