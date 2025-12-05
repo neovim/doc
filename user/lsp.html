@@ -2146,7 +2146,7 @@ workspace_symbol(<code>{query}</code>, <code>{opts}</code>)             <span id
                                 See <a href="lsp.html#Client%3Anotify()">Client:notify()</a>.
 </div><div class="help-li" style=""> <code>{cancel_request}</code>        (<code>fun(self: vim.lsp.Client, id: integer): boolean</code>)
                                 See <a href="lsp.html#Client%3Acancel_request()">Client:cancel_request()</a>.
-</div><div class="help-li" style=""> <code>{stop}</code>                  (<code>fun(self: vim.lsp.Client, force: boolean|integer?)</code>)
+</div><div class="help-li" style=""> <code>{stop}</code>                  (<code>fun(self: vim.lsp.Client, force: integer|boolean?)</code>)
                                 See <a href="lsp.html#Client%3Astop()">Client:stop()</a>.
 </div><div class="help-li" style=""> <code>{is_stopped}</code>            (<code>fun(self: vim.lsp.Client): boolean</code>) See
                                 <a href="lsp.html#Client%3Ais_stopped()">Client:is_stopped()</a>.
@@ -2443,18 +2443,15 @@ Client:request_sync(<code>{method}</code>, <code>{params}</code>, <code>{timeout
 </div>
 <div class="help-para">
 Client:stop(<code>{force}</code>)                                           <span id="Client%3Astop()" class="help-tag-right"><a href="#Client%3Astop()">Client:stop()</a></span><br>
-    Stops a client, optionally with force.
+    Stops a client, optionally with force after a timeout.
 
 </div>
 <div class="help-para">
-    By default, it will just request the server to shutdown without force. If
+    By default, it will request the server to shutdown, then force a shutdown
+    if the server has not exited after <code>self.exit_timeout</code> milliseconds. If
     you request to stop a client which has previously been requested to
-    shutdown, it will automatically escalate and force shutdown.
-
-</div>
-<div class="help-para">
-    If <code>force</code> is a number, it will be treated as the time in milliseconds to
-    wait before forcing the shutdown.
+    shutdown, it will automatically escalate and force shutdown immediately,
+    regardless of the value of <code>force</code> (or <code>self.exit_timeout</code> if <code>nil</code>).
 
 </div>
 <div class="help-para">
@@ -2464,7 +2461,10 @@ Client:stop(<code>{force}</code>)                                           <spa
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{force}</code>  (<code>boolean|integer?</code>)
+<div class="help-li" style=""> <code>{force}</code>  (<code>integer|boolean?</code>, default: <code>self.exit_timeout</code>) Time in
+                 milliseconds to wait before forcing a shutdown. If false,
+                 only request the server to shutdown, but don't force it. If
+                 true, force a shutdown immediately.
 </div>
 </div>
 <div class="help-para">
@@ -4057,7 +4057,7 @@ resolve_capabilities(<code>{server_capabilities}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-12-04 05:24 from <code><a href="https://github.com/neovim/neovim/commit/6383123326483db401c09a5e1f4dc99f11c900d6">6383123</a></code>
+        Generated at 2025-12-05 05:24 from <code><a href="https://github.com/neovim/neovim/commit/903335a6d50b020b36d1c4d5e9da362c31439d6e">903335a</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
