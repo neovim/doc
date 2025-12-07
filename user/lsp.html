@@ -287,7 +287,7 @@ a <code>lsp/&lt;config-name&gt;.lua</code> file.
 <div class="help-para">
 1. Create a file <code>lsp/foo.lua</code> somewhere on your <a href="options.html#'runtimepath'">'runtimepath'</a>.<pre>:exe 'edit' stdpath('config') .. '/lsp/foo.lua'</pre>
 2. Add this code to the file (or copy an example from
-   <a href="https://github.com/neovim/nvim-lspconfig">https://github.com/neovim/nvim-lspconfig</a>):<pre>return {
+   <a href="https://github.com/neovim/nvim-lspconfig):">https://github.com/neovim/nvim-lspconfig):</a><pre>return {
   cmd = { 'true' },
 }</pre>
 3. Save the file (with <code>++p</code> to ensure its parent directory is created).<pre>:write ++p</pre>
@@ -1322,8 +1322,13 @@ config(<code>{name}</code>, <code>{cfg}</code>)                                 
 </div>
 <div class="help-para">
 enable(<code>{name}</code>, <code>{enable}</code>)                                    <span id="vim.lsp.enable()" class="help-tag-right"><a href="#vim.lsp.enable()">vim.lsp.enable()</a></span><br>
-    Auto-starts LSP when a buffer is opened, based on the <a href="lsp.html#lsp-config">lsp-config</a>
-    <code>filetypes</code>, <code>root_markers</code>, and <code>root_dir</code> fields.
+    Auto-activates LSP in each buffer based on the <a href="lsp.html#lsp-config">lsp-config</a> <code>filetypes</code>,
+    <code>root_markers</code>, and <code>root_dir</code>.
+
+</div>
+<div class="help-para">
+    To disable, pass <code>enable=false</code>: Stops related clients and servers
+    (force-stops servers after a timeout, unless <code>exit_timeout=false</code>).
 
 </div>
 <div class="help-para">
@@ -1357,10 +1362,11 @@ vim.lsp.enable('clangd', true)</code></pre>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
 <div class="help-li" style=""> <code>{name}</code>    (<code>string|string[]</code>) Name(s) of client(s) to enable.
-</div><div class="help-li" style=""> <code>{enable}</code>  (<code>boolean?</code>) <code>true|nil</code> to enable, <code>false</code> to disable
-                  (actively stops and detaches clients as needed, and force
-                  stops them if necessary after <code>client.exit_timeout</code>
-                  milliseconds)
+</div><div class="help-li" style=""> <code>{enable}</code>  (<code>boolean?</code>) If <code>true|nil</code>, enables auto-activation of the
+                  given LSP config on current and future buffers. If <code>false</code>,
+                  disables auto-activation and stops related LSP clients and
+                  servers (force-stops servers after <code>exit_timeout</code>
+                  milliseconds).
 </div>
 </div>
 <div class="help-para">
@@ -2093,8 +2099,7 @@ workspace_symbol(<code>{query}</code>, <code>{opts}</code>)             <span id
                                 before sending kill -15. If set to false,
                                 waits indefinitely. If set to true, nvim will
                                 kill the server immediately.
-</div><div class="help-li" style=""> <code>{flags}</code>                 (<code>table</code>) A table with flags for the client.
-                                The current (experimental) flags are:
+</div><div class="help-li" style=""> <code>{flags}</code>                 (<code>table</code>) Experimental client flags:
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{allow_incremental_sync}?</code> (<code>boolean</code>,
                                   default: <code>true</code>) Allow using incremental
                                   sync for buffer edits
@@ -2155,7 +2160,7 @@ workspace_symbol(<code>{query}</code>, <code>{opts}</code>)             <span id
                                 See <a href="lsp.html#Client%3Aexec_cmd()">Client:exec_cmd()</a>.
 </div><div class="help-li" style=""> <code>{on_attach}</code>             (<code>fun(self: vim.lsp.Client, bufnr: integer)</code>)
                                 See <a href="lsp.html#Client%3Aon_attach()">Client:on_attach()</a>.
-</div><div class="help-li" style=""> <code>{supports_method}</code>       (<code>fun(self: vim.lsp.Client, method: string, bufnr: integer?)</code>)
+</div><div class="help-li" style=""> <code>{supports_method}</code>       (<code>fun(self: vim.lsp.Client, method: string|string, bufnr: integer?)</code>)
                                 See <a href="lsp.html#Client%3Asupports_method()">Client:supports_method()</a>.
 </div>
 </div>
@@ -2228,8 +2233,7 @@ workspace_symbol(<code>{query}</code>, <code>{opts}</code>)             <span id
                                sending kill -15. If set to false, waits
                                indefinitely. If set to true, nvim will kill
                                the server immediately.
-</div><div class="help-li" style=""> <code>{flags}?</code>               (<code>table</code>) A table with flags for the client.
-                               The current (experimental) flags are:
+</div><div class="help-li" style=""> <code>{flags}?</code>               (<code>table</code>) Experimental client flags:
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{allow_incremental_sync}?</code> (<code>boolean</code>,
                                  default: <code>true</code>) Allow using incremental sync
                                  for buffer edits
@@ -2480,7 +2484,7 @@ Client:supports_method(<code>{method}</code>, <code>{bufnr}</code>)           <s
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{method}</code>  (<code>string</code>)
+<div class="help-li" style=""> <code>{method}</code>  (<code>string|string</code>)
 </div><div class="help-li" style=""> <code>{bufnr}</code>   (<code>integer?</code>)
 </div>
 </div>
@@ -2931,7 +2935,7 @@ To try it out, here is a quickstart example using Copilot:       <span id="lsp-c
 </div>
 <div class="help-para">
 2. Define a config, (or copy <code>lsp/copilot.lua</code> from
-   <a href="https://github.com/neovim/nvim-lspconfig">https://github.com/neovim/nvim-lspconfig</a>):<pre><code class="language-lua"> vim.lsp.config('copilot', {
+   <a href="https://github.com/neovim/nvim-lspconfig):">https://github.com/neovim/nvim-lspconfig):</a><pre><code class="language-lua"> vim.lsp.config('copilot', {
   cmd = { 'copilot-language-server', '--stdio', },
   root_markers = { '.git' },
 })</code></pre>
@@ -4058,7 +4062,7 @@ resolve_capabilities(<code>{server_capabilities}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-12-06 05:23 from <code><a href="https://github.com/neovim/neovim/commit/d6bee7e407442112ee9008ea35d6fe73dbb3eaaf">d6bee7e</a></code>
+        Generated at 2025-12-07 05:22 from <code><a href="https://github.com/neovim/neovim/commit/62dd74d472f694d1386c54afc1c65e2aff4f4396">62dd74d</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
