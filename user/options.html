@@ -4890,11 +4890,18 @@ setlocal scrolloff=-1</code></pre></div>
 	Note that such processing is done after <a href="options.html#%3Aset">:set</a> did its own round of
 	unescaping, so to keep yourself sane use <a href="vimeval.html#%3Alet-%26">:let-&amp;</a> like shown above.
 							<span id="shell-powershell" class="help-tag-right"><a href="#shell-powershell">shell-powershell</a></span>  <br>
-	To use PowerShell:<pre><code class="language-vim">let &amp;shell = executable('pwsh') ? 'pwsh' : 'powershell'
-let &amp;shellcmdflag = '-NoLogo -NonInteractive -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$PSDefaultParameterValues[''Out-File:Encoding'']=''utf8'';$PSStyle.OutputRendering=''plaintext'';Remove-Alias -Force -ErrorAction SilentlyContinue tee;'
-let &amp;shellredir = '2&gt;&amp;1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
-let &amp;shellpipe  = '2&gt;&amp;1 | %%{ "$_" } | tee %s; exit $LastExitCode'
+	To use PowerShell:<pre><code class="language-vim">set noshelltemp
+let &amp;shell = 'powershell'
+let &amp;shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command '
+let &amp;shellcmdflag .= '[Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();'
+let &amp;shellcmdflag .= '$PSDefaultParameterValues[''Out-File:Encoding'']=''utf8'';'
+let &amp;shellpipe  = '&gt; %s 2&gt;&amp;1'
 set shellquote= shellxquote=</code></pre></div>
+<div class="old-help-para">							<span id="shell-pwsh" class="help-tag-right"><a href="#shell-pwsh">shell-pwsh</a></span>  <br>
+	To use pwsh, use the above settings with <code>let &amp;shell = 'pwsh'</code>, and
+	add:<pre><code class="language-vim">let &amp;shellcmdflag .= '$PSStyle.OutputRendering = ''PlainText'';'
+" Workaround (may not be needed in future version of pwsh):
+let $__SuppressAnsiEscapeSequences = 1</code></pre></div>
 <div class="old-help-para">	This option cannot be set from a <a href="options.html#modeline">modeline</a> or in the <a href="vimeval.html#sandbox">sandbox</a>, for
 	security reasons.</div>
 <div class="old-help-para">						<span id="'shellcmdflag'" class="help-tag"><a href="#'shellcmdflag'">'shellcmdflag'</a></span> <span id="'shcf'" class="help-tag"><a href="#'shcf'">'shcf'</a></span>
@@ -6780,7 +6787,7 @@ set listchars+=precedes:&lt;,extends:&gt;</code></pre></div>
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2025-12-10 05:26 from <code><a href="https://github.com/neovim/neovim/commit/c40cb2a4cf324812d46479480f6065e2c28bcb80">c40cb2a</a></code>
+        Generated at 2025-12-11 05:27 from <code><a href="https://github.com/neovim/neovim/commit/3a70fc8cb8fedf78b5e0d7c606d99967faad70ab">3a70fc8</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+options.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/options.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="	Nvim
