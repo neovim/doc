@@ -361,9 +361,11 @@ located at <code>$XDG_CONFIG_HOME/nvim/nvim-pack-lock.json</code>. It is a JSON 
 is used to persistently track data about plugins. For a more robust config
 treat lockfile like its part: put under version control, etc. In this case all
 plugins from the lockfile will be installed at once and at lockfile's revision
-(instead of inferring from <code>version</code>). Should not be edited by hand. Corrupted
-data for installed plugins is repaired (including after deleting whole file),
-but <code>version</code> fields will be missing for not yet added plugins.
+(instead of inferring from <code>version</code>). This is done on the very first
+<code>vim.pack</code> function call to ensure that lockfile is aligned with what is
+actually on the disk. Lockfile should not be edited by hand. Corrupted data
+for installed plugins is repaired (including after deleting whole file), but
+<code>version</code> fields will be missing for not yet added plugins.
 
 </div>
 <div class="help-para">
@@ -503,6 +505,10 @@ Another approach is to utilize Git's <code>insteadOf</code> configuration:
 </div>
 <div class="help-para">
                                                              <span id="vim.pack-events" class="help-tag-right"><a href="#vim.pack-events">vim.pack-events</a></span><br>
+
+</div>
+<div class="help-para">
+Performing actions via <code>vim.pack</code> functions can trigger these events:
 <div class="help-li" style=""> <span id="PackChangedPre" class="help-tag"><a href="#PackChangedPre">PackChangedPre</a></span> - before trying to change plugin's state.
 </div><div class="help-li" style=""> <span id="PackChanged" class="help-tag"><a href="#PackChanged">PackChanged</a></span> - after plugin's state has changed.
 </div>
@@ -537,6 +543,7 @@ These events can be used to execute plugin hooks. For example:<pre><code class="
   end
 end
 -- If hooks need to run on install, run this before `vim.pack.add()`
+-- To act on install from lockfile, run before very first `vim.pack.add()`
 vim.api.nvim_create_autocmd('PackChanged', { callback = hooks })</code></pre>
 
 </div>
@@ -713,7 +720,7 @@ update(<code>{names}</code>, <code>{opts}</code>)                               
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2026-01-29 05:49 from <code><a href="https://github.com/neovim/neovim/commit/4e4e1b09d30523076f3841a2c65d7ddcd9c481c4">4e4e1b0</a></code>
+        Generated at 2026-01-30 05:51 from <code><a href="https://github.com/neovim/neovim/commit/a60d5f863e060ff35a38e0d5a829dfe5b8aaecac">a60d5f8</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+pack.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/pack.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="                            Nvim
