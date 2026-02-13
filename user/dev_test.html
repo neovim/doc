@@ -454,17 +454,27 @@ To run only the tagged tests:<pre>TEST_TAG=foo make functionaltest</pre>
   files.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>#define</code> constants must be rewritten <code>const</code> or <code>enum</code> so they can be
     "visible" to the tests.
-</div><div class="help-li" style=""> Use <code>pending()</code> to skip tests
-  ([example](<a href="https://github.com/neovim/neovim/commit/5c1dc0fbe7388528875aff9d7b5055ad718014de#diff-bf80b24c724b0004e8418102f68b0679R18">https://github.com/neovim/neovim/commit/5c1dc0fbe7388528875aff9d7b5055ad718014de#diff-bf80b24c724b0004e8418102f68b0679R18</a>)).
-  Do not silently skip the test with <code>if-else</code>. If a functional test depends on
-  some external factor (e.g. the existence of <code>md5sum</code> on <code>$PATH</code>), _and_ you
-  can't mock or fake the dependency, then skip the test via <code>pending()</code> if the
-  external factor is missing. This ensures that the _total_ test-count
-  (success + fail + error + pending) is the same in all environments.
+</div><div class="help-li" style=""> Use <code>pending()</code> or <code>t.skip()</code> to skip tests.
+</div><div class="help-li" style="margin-left: 3rem;"> Example: <a href="https://github.com/neovim/neovim/commit/5c1dc0fbe7388528875aff9d7b5055ad718014de#diff-bf80b24c724b0004e8418102f68b0679R18">https://github.com/neovim/neovim/commit/5c1dc0fbe7388528875aff9d7b5055ad718014de#diff-bf80b24c724b0004e8418102f68b0679R18</a>
+</div><div class="help-li" style="margin-left: 3rem;"><b> Note:</b> If a test is skipped because of a non-actionable reason, we don't
+    want it to appear in the "pending" list. Include "N/A" in the skip
+    description, then it won't be added to the "pending" list. For example, if
+    a test is skipped because it's running on a non-LuaJit system, including
+    it in the "pending" list is just noise. Thus, its pending reason should
+    say "N/A":<pre>pending('N/A: missing LuaJIT FFI')</pre>
+</div>
+</div>
+<div class="help-para">
+<div class="help-li" style=""> Do not silently skip the test with <code>if-else</code>. If a functional test depends
+    on some external factor (e.g. the existence of <code>md5sum</code> on <code>$PATH</code>), _and_
+    you can't mock or fake the dependency, then skip the test via <code>pending()</code>
+    if the external factor is missing. This ensures that the _total_
+    test-count (success + fail + error + pending) is the same in all
+    environments.
 </div><div class="help-li" style="margin-left: 3rem;"><b> Note:</b> <code>pending()</code> is ignored if it is missing an argument, unless it is
       [contained in an <code>it()</code> block](<a href="https://github.com/neovim/neovim/blob/d21690a66e7eb5ebef18046c7a79ef898966d786/test/functional/ex_cmds/grep_spec.lua#L11">https://github.com/neovim/neovim/blob/d21690a66e7eb5ebef18046c7a79ef898966d786/test/functional/ex_cmds/grep_spec.lua#L11</a>).
       Provide empty function argument if the <code>pending()</code> call is outside <code>it()</code>
-      ([example](<a href="https://github.com/neovim/neovim/commit/5c1dc0fbe7388528875aff9d7b5055ad718014de#diff-bf80b24c724b0004e8418102f68b0679R18">https://github.com/neovim/neovim/commit/5c1dc0fbe7388528875aff9d7b5055ad718014de#diff-bf80b24c724b0004e8418102f68b0679R18</a>)).
+      Example: <a href="https://github.com/neovim/neovim/commit/5c1dc0fbe7388528875aff9d7b5055ad718014de#diff-bf80b24c724b0004e8418102f68b0679R18">https://github.com/neovim/neovim/commit/5c1dc0fbe7388528875aff9d7b5055ad718014de#diff-bf80b24c724b0004e8418102f68b0679R18</a>
 </div>
 </div>
 <div class="help-para">
@@ -686,7 +696,7 @@ Number; !must be defined to function properly):
 <div class="help-para">
 <div class="help-li" style=""> <code>NVIM_TEST_TRACE_LEVEL</code> (U) (N): specifies unit tests tracing level:
 </div><div class="help-li" style="margin-left: 3rem;"> <code>0</code> disables tracing (the fastest, but you get no data if tests crash and
-    there no core dump was generated),
+    no core dump was generated),
 </div><div class="help-li" style="margin-left: 3rem;"> <code>1</code> leaves only C function calls and returns in the trace (faster than
     recording everything),
 </div><div class="help-li" style="margin-left: 3rem;"> <code>2</code> records all function calls, returns and executed Lua source lines.
@@ -738,7 +748,7 @@ Number; !must be defined to function properly):
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2026-02-12 06:07 from <code><a href="https://github.com/neovim/neovim/commit/6b4ec2264e1d8ba027b85f3883d532c5068be92a">6b4ec22</a></code>
+        Generated at 2026-02-13 06:06 from <code><a href="https://github.com/neovim/neovim/commit/88dc44260f833db66ed3d9fa4950345ea34efd72">88dc442</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+dev_test.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/dev_test.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="          Nvim

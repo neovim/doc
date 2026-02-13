@@ -3217,12 +3217,16 @@ Example:<pre><code class="language-lua">vim.print(vim.fn.readblob('.git/config')
 </div>
 <div class="help-para">
 vim.fs.abspath(<code>{path}</code>)                                      <span id="vim.fs.abspath()" class="help-tag-right"><a href="#vim.fs.abspath()">vim.fs.abspath()</a></span><br>
-    Convert path to an absolute path. A tilde (~) character at the beginning
-    of the path is expanded to the user's home directory. Does not check if
-    the path exists, normalize the path, resolve symlinks or hardlinks
-    (including <code>.</code> and <code>..</code>), or expand environment variables. If the path is
-    already absolute, it is returned unchanged. Also converts <code>\</code> path
-    separators to <code>/</code>.
+    Converts <code>path</code> to an absolute path. Expands tilde (~) at the beginning of
+    the path to the user's home directory. Does not check if the path exists,
+    normalize the path, resolve symlinks or hardlinks (including <code>.</code> and
+    <code>..</code>), or expand environment variables. If the path is already absolute,
+    it is returned unchanged. Also converts <code>\</code> path separators to <code>/</code>.
+
+</div>
+<div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.11.0
 
 </div>
 <div class="help-para">
@@ -3237,7 +3241,7 @@ vim.fs.abspath(<code>{path}</code>)                                      <span i
 </div>
 <div class="help-para">
 vim.fs.basename(<code>{file}</code>)                                    <span id="vim.fs.basename()" class="help-tag-right"><a href="#vim.fs.basename()">vim.fs.basename()</a></span><br>
-    Return the basename of the given path
+    Gets the basename of the given path (not expanded/resolved).
 
 </div>
 <div class="help-para">
@@ -3257,7 +3261,8 @@ vim.fs.basename(<code>{file}</code>)                                    <span id
 </div>
 <div class="help-para">
 vim.fs.dir(<code>{path}</code>, <code>{opts}</code>)                                      <span id="vim.fs.dir()" class="help-tag-right"><a href="#vim.fs.dir()">vim.fs.dir()</a></span><br>
-    Return an iterator over the items located in <code>{path}</code>
+    Gets an iterator over items found in <code>path</code> (normalized via
+    <a href="lua.html#vim.fs.normalize()">vim.fs.normalize()</a>).
 
 </div>
 <div class="help-para">
@@ -3267,11 +3272,10 @@ vim.fs.dir(<code>{path}</code>, <code>{opts}</code>)                            
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{path}</code>  (<code>string</code>) An absolute or relative path to the directory to
-                iterate over. The path is first normalized
+<div class="help-li" style=""> <code>{path}</code>  (<code>string</code>) Directory to iterate over, normalized via
                 <a href="lua.html#vim.fs.normalize()">vim.fs.normalize()</a>.
 </div><div class="help-li" style=""> <code>{opts}</code>  (<code>table?</code>) Optional keyword arguments:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{depth}?</code> (<code>integer</code>, default: <code>1</code>) How deep the traverse.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{depth}?</code> (<code>integer</code>, default: <code>1</code>) How deep to traverse.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{skip}?</code> (<code>fun(dir_name: string): boolean</code>) Predicate to
                   control traversal. Return false to stop searching the
                   current directory. Only useful when depth &gt; 1 Return an
@@ -3359,18 +3363,17 @@ end, { limit = math.huge, type = 'file' })</code></pre>
                  The function should return <code>true</code> if the given item is
                  considered a match.
 <div class="help-li" style=""> <code>{opts}</code>   (<code>table?</code>) Optional keyword arguments:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{path}?</code> (<code>string</code>) Path to begin searching from. If
-                   omitted, the <a href="editing.html#current-directory">current-directory</a> is used.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{path}?</code> (<code>string</code>) Path to begin searching from, defaults
+                   to <a href="editing.html#current-directory">current-directory</a>. Not expanded.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{upward}?</code> (<code>boolean</code>, default: <code>false</code>) Search upward
-                   through parent directories. Otherwise, search through child
+                   through parent directories. Otherwise, search child
                    directories (recursively).
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{stop}?</code> (<code>string</code>) Stop searching when this directory is
                    reached. The directory itself is not searched.
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{type}?</code> (<code>string</code>) Find only items of the given type. If
                    omitted, all items that match <code>{names}</code> are included.
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{limit}?</code> (<code>number</code>, default: <code>1</code>) Stop the search after
-                   finding this many matches. Use <code>math.huge</code> to place no
-                   limit on the number of matches.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{limit}?</code> (<code>number</code>, default: <code>1</code>) Stop searching after this
+                   many matches. Use <code>math.huge</code> for "unlimited".
 </div><div class="help-li" style="margin-left: 3rem;"> <code>{follow}?</code> (<code>boolean</code>, default: <code>false</code>) Follow symbolic
                    links.
 </div>
@@ -3386,6 +3389,7 @@ vim.fs.joinpath(<code>{...}</code>)                                     <span id
     Concatenates partial paths (one absolute or relative path followed by zero
     or more relative paths). Slashes are normalized: redundant slashes are
     removed, and (on Windows) backslashes are replaced with forward-slashes.
+    Paths are not expanded/resolved.
 
 </div>
 <div class="help-para">
@@ -3511,6 +3515,11 @@ vim.fs.relpath('/var', '/usr/bin') -- nil</code></pre>
 
 </div>
 <div class="help-para">
+<div class="help-column_heading">Attributes:</div>
+        Since: 0.11.0
+
+</div>
+<div class="help-para">
 <div class="help-column_heading">Parameters:</div>
 <div class="help-li" style=""> <code>{base}</code>    (<code>string</code>)
 </div><div class="help-li" style=""> <code>{target}</code>  (<code>string</code>)
@@ -3524,7 +3533,12 @@ vim.fs.relpath('/var', '/usr/bin') -- nil</code></pre>
 </div>
 <div class="help-para">
 vim.fs.rm(<code>{path}</code>, <code>{opts}</code>)                                        <span id="vim.fs.rm()" class="help-tag-right"><a href="#vim.fs.rm()">vim.fs.rm()</a></span><br>
-    Remove files or directories
+    Removes a file or directory.
+
+</div>
+<div class="help-para">
+    Removes symlinks without touching the origin. To remove the origin,
+    resolve it explicitly with <a href="luvref.html#uv.fs_realpath()">uv.fs_realpath()</a>:<pre><code class="language-lua">vim.fs.rm(vim.uv.fs_realpath('symlink-dir'), { recursive = true })</code></pre>
 
 </div>
 <div class="help-para">
@@ -3534,13 +3548,11 @@ vim.fs.rm(<code>{path}</code>, <code>{opts}</code>)                             
 </div>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
-<div class="help-li" style=""> <code>{path}</code>  (<code>string</code>) Path to remove. Removes symlinks without touching
-                the origin. To remove the origin, resolve explicitly with
-                <a href="luvref.html#uv.fs_realpath()">uv.fs_realpath()</a>.
+<div class="help-li" style=""> <code>{path}</code>  (<code>string</code>) Path to remove (not expanded/resolved).
 </div><div class="help-li" style=""> <code>{opts}</code>  (<code>table?</code>) A table with the following fields:
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{recursive}?</code> (<code>boolean</code>) Remove directories and their
-                  contents recursively
-</div><div class="help-li" style="margin-left: 3rem;"> <code>{force}?</code> (<code>boolean</code>) Ignore nonexistent files and arguments
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{recursive}?</code> (<code>boolean</code>) Remove directory contents
+                  recursively.
+</div><div class="help-li" style="margin-left: 3rem;"> <code>{force}?</code> (<code>boolean</code>) Ignore nonexistent files and arguments.
 </div>
 </div>
 <div class="help-para">
@@ -3576,7 +3588,7 @@ vim.fs.root(0, { { 'stylua.toml', '.luarc.json' }, '.git' })</code></pre>
 <div class="help-para">
 <div class="help-column_heading">Parameters:</div>
 <div class="help-li" style=""> <code>{source}</code>  (<code>integer|string</code>) Buffer number (0 for current buffer) or
-                  file path (absolute or relative to the <a href="editing.html#current-directory">current-directory</a>)
+                  file path (absolute or relative, expanded via <code>abspath()</code>)
                   to begin the search from.
 </div><div class="help-li" style=""> <code>{marker}</code>  (<code>(string|string[]|fun(name: string, path: string): boolean)[]|string|fun(name: string, path: string): boolean</code>)
                   Filename, function, or list thereof, that decides how to
@@ -4115,7 +4127,12 @@ it2:nth(-2)
 </div>
 <div class="help-para">
 Iter:peek()                                                      <span id="Iter%3Apeek()" class="help-tag-right"><a href="#Iter%3Apeek()">Iter:peek()</a></span><br>
-    Gets the next value in a <a href="lua.html#list-iterator">list-iterator</a> without consuming it.
+    Gets the next value from the iterator without consuming it.
+
+</div>
+<div class="help-para">
+    The value returned by <a href="lua.html#Iter%3Apeek()">Iter:peek()</a> will be returned again by the next
+    call to <a href="lua.html#Iter%3Anext()">Iter:next()</a>.
 
 </div>
 <div class="help-para">
@@ -4252,8 +4269,14 @@ it:pop()
 </div>
 <div class="help-para">
 Iter:skip(<code>{n}</code>)                                                   <span id="Iter%3Askip()" class="help-tag-right"><a href="#Iter%3Askip()">Iter:skip()</a></span><br>
-    Skips <code>n</code> values of an iterator pipeline, or all values satisfying a
-    predicate of a <a href="lua.html#list-iterator">list-iterator</a>.
+    Skips <code>n</code> values of an iterator pipeline, or skips values while a
+    predicate returns <a href="lua.html#lua-truthy">lua-truthy</a>.
+
+</div>
+<div class="help-para">
+    When a predicate is used, skipping stops at the first value for which the
+    predicate returns non-truthy. That value is not consumed and will be
+    returned by the next call to <a href="lua.html#Iter%3Anext()">Iter:next()</a>
 
 </div>
 <div class="help-para">
@@ -6961,7 +6984,7 @@ spilled lines. To see the full message, the <a href="message.html#g%3C">g&lt;</a
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2026-02-12 06:07 from <code><a href="https://github.com/neovim/neovim/commit/6b4ec2264e1d8ba027b85f3883d532c5068be92a">6b4ec22</a></code>
+        Generated at 2026-02-13 06:06 from <code><a href="https://github.com/neovim/neovim/commit/88dc44260f833db66ed3d9fa4950345ea34efd72">88dc442</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lua.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lua.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="    Nvim

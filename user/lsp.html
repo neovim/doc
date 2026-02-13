@@ -154,7 +154,14 @@ Follow these steps to get LSP features:
 <b>   Note:</b> Depending on the LSP server, you may need to ensure your project has
    a <a href="lsp.html#lsp-root_markers">lsp-root_markers</a> file so the workspace can be recognized.
 </div><div class="help-li-num" style=""> Check that LSP is active ("attached") for the buffer:
-<pre><code class="language-vim">:checkhealth vim.lsp</code></pre></div><div class="help-li-num" style=""> (Optional) Configure keymaps and autocommands to use LSP features.
+<pre><code class="language-vim">:checkhealth vim.lsp</code></pre></div><div class="help-li-num" style=""> Please note that certain LSP features are disabled by default,
+   you may choose to enable them manually. See:
+</div><div class="help-li" style="margin-left: 3rem;"> <a href="lsp.html#lsp-codelens">lsp-codelens</a>
+</div><div class="help-li" style="margin-left: 3rem;"> <a href="lsp.html#lsp-document_color">lsp-document_color</a>
+</div><div class="help-li" style="margin-left: 3rem;"> <a href="lsp.html#lsp-linked_editing_range">lsp-linked_editing_range</a>
+</div><div class="help-li" style="margin-left: 3rem;"> <a href="lsp.html#lsp-inlay_hint">lsp-inlay_hint</a>
+</div><div class="help-li" style="margin-left: 3rem;"> <a href="lsp.html#lsp-inline_completion">lsp-inline_completion</a>
+</div><div class="help-li-num" style=""> (Optional) Configure keymaps and autocommands to use LSP features.
    <a href="lsp.html#lsp-attach">lsp-attach</a>
 </div>
 </div>
@@ -885,17 +892,15 @@ LspProgress                                                       <span id="LspP
 
 </div>
 <div class="help-para">
-    Tell the parent terminal to indicate progress using a native progress
-    indicator (requires a supporting terminal):<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspProgress', {
-  callback = function(ev)
+    Emit a <a href="message.html#progress-message">progress-message</a> on LSP progress events:<pre><code class="language-lua">vim.api.nvim_create_autocmd('LspProgress', { buffer = buf, callback = function(ev)
     local value = ev.data.params.value
-    if value.kind == 'begin' then
-      vim.api.nvim_ui_send('\027]9;4;1;0\027\\')
-    elseif value.kind == 'end' then
-      vim.api.nvim_ui_send('\027]9;4;0\027\\')
-    elseif value.kind == 'report' then
-      vim.api.nvim_ui_send(string.format('\027]9;4;1;%d\027\\', value.percentage or 0))
-    end
+    vim.api.nvim_echo({ { value.message or 'done' } }, false, {
+      id = 'lsp',
+      kind = 'progress',
+      title = value.title,
+      status = value.kind ~= 'end' and 'running' or 'success',
+      percent = value.percentage,
+    })
   end,
 })</code></pre>
 
@@ -4033,7 +4038,7 @@ resolve_capabilities(<code>{server_capabilities}</code>)
   <footer>
     <div class="container flex">
       <div class="generator-stats">
-        Generated at 2026-02-12 06:07 from <code><a href="https://github.com/neovim/neovim/commit/6b4ec2264e1d8ba027b85f3883d532c5068be92a">6b4ec22</a></code>
+        Generated at 2026-02-13 06:06 from <code><a href="https://github.com/neovim/neovim/commit/88dc44260f833db66ed3d9fa4950345ea34efd72">88dc442</a></code>
       </div>
       <div class="generator-stats">
       parse_errors: 0 (<a href="https://github.com/neovim/neovim/issues/new?labels=bug&title=user+docs+HTML%3A+lsp.txt+&body=%60gen_help_html.lua%60+problem+at%3A+https://neovim.io/doc/user/lsp.html%0D%0DContext%3A%0D%0D%60%60%60%0DTODO%0D%60%60%60" target="_blank">report docs bug...</a>) | <span title="   LSP
