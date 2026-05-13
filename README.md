@@ -1,5 +1,10 @@
 # doc/: Generated docs and reports for Neovim
 
+> [!WARNING]  
+> This repo is no longer needed since https://github.com/neovim/neovim.github.io/pull/437.
+> 
+> Instead the website repo (`neovim/neovim.github.io`), plus scripts in `neovim/neovim`, generate reports as needed.
+
 This repo contains automation scripts and CI configuration to run the scripts.
 
 - The CI job runs the scripts which generate stuff, which is committed to the
